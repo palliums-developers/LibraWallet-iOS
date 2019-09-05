@@ -3,10 +3,13 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01694EF4D3F368EB6A685132 /* Pods_LibraWalletUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7658E656E8E8976B3E75152 /* Pods_LibraWalletUITests.framework */; };
+		1A8251333880EBAB4D609292 /* Pods_LibraWallet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4308B3ACDBB4EC274104FA26 /* Pods_LibraWallet.framework */; };
+		84F942D4E0AB7CC3C4350654 /* Pods_LibraWalletTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68DEF872B52FD220FD8C8434 /* Pods_LibraWalletTests.framework */; };
 		9DA8E2A22317ABC400E28D07 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA8E2A12317ABC400E28D07 /* AppDelegate.swift */; };
 		9DA8E2A42317ABC400E28D07 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA8E2A32317ABC400E28D07 /* ViewController.swift */; };
 		9DA8E2A72317ABC400E28D07 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9DA8E2A52317ABC400E28D07 /* Main.storyboard */; };
@@ -14,6 +17,46 @@
 		9DA8E2AC2317ABC600E28D07 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9DA8E2AA2317ABC600E28D07 /* LaunchScreen.storyboard */; };
 		9DA8E2B72317ABC600E28D07 /* LibraWalletTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA8E2B62317ABC600E28D07 /* LibraWalletTests.swift */; };
 		9DA8E2C22317ABC600E28D07 /* LibraWalletUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA8E2C12317ABC600E28D07 /* LibraWalletUITests.swift */; };
+		9DC487FB231FA10A005FF254 /* LibraKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC487FA231FA10A005FF254 /* LibraKit.swift */; };
+		9DC487FD2320AF4E005FF254 /* LibraWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC487FC2320AF4E005FF254 /* LibraWallet.swift */; };
+		9DC487FF2320AFB8005FF254 /* LibraError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC487FE2320AFB8005FF254 /* LibraError.swift */; };
+		9DC488012320BE88005FF254 /* LibraNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488002320BE88005FF254 /* LibraNetwork.swift */; };
+		9DC488032320D6A1005FF254 /* LibraMnemonic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488022320D6A1005FF254 /* LibraMnemonic.swift */; };
+		9DC488052320DBCB005FF254 /* LibraPublicKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488042320DBCB005FF254 /* LibraPublicKey.swift */; };
+		9DC488072320E419005FF254 /* LibraSDKTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488062320E419005FF254 /* LibraSDKTests.swift */; };
+		9DC488092320E68B005FF254 /* LibraSeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488082320E68B005FF254 /* LibraSeed.swift */; };
+		9DC4880B2320E6C1005FF254 /* LibraPrivateKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4880A2320E6C1005FF254 /* LibraPrivateKey.swift */; };
+		9DC4880D2320EDF8005FF254 /* LibraUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4880C2320EDF8005FF254 /* LibraUtils.swift */; };
+		9DC4880F2320EE4C005FF254 /* LibraTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4880E2320EE4C005FF254 /* LibraTransaction.swift */; };
+		9DC488292320F7CE005FF254 /* proof.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488102320F7CB005FF254 /* proof.pb.swift */; };
+		9DC4882A2320F7CE005FF254 /* validator_set.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488112320F7CB005FF254 /* validator_set.pb.swift */; };
+		9DC4882B2320F7CE005FF254 /* vm_errors.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488122320F7CC005FF254 /* vm_errors.pb.swift */; };
+		9DC4882C2320F7CE005FF254 /* execution.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488132320F7CC005FF254 /* execution.pb.swift */; };
+		9DC4882D2320F7CE005FF254 /* admission_control.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488142320F7CC005FF254 /* admission_control.pb.swift */; };
+		9DC4882E2320F7CE005FF254 /* get_with_proof.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488152320F7CC005FF254 /* get_with_proof.pb.swift */; };
+		9DC4882F2320F7CE005FF254 /* access_path.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488162320F7CC005FF254 /* access_path.pb.swift */; };
+		9DC488302320F7CE005FF254 /* secret_service.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488172320F7CC005FF254 /* secret_service.pb.swift */; };
+		9DC488312320F7CE005FF254 /* validator_public_keys.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488182320F7CC005FF254 /* validator_public_keys.pb.swift */; };
+		9DC488322320F7CE005FF254 /* account_state_blob.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488192320F7CD005FF254 /* account_state_blob.pb.swift */; };
+		9DC488332320F7CE005FF254 /* secret_service.grpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4881A2320F7CD005FF254 /* secret_service.grpc.swift */; };
+		9DC488342320F7CE005FF254 /* ledger_info.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4881B2320F7CD005FF254 /* ledger_info.pb.swift */; };
+		9DC488352320F7CE005FF254 /* execution.grpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4881C2320F7CD005FF254 /* execution.grpc.swift */; };
+		9DC488362320F7CE005FF254 /* transaction_info.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4881D2320F7CD005FF254 /* transaction_info.pb.swift */; };
+		9DC488382320F7CE005FF254 /* state_synchronizer.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4881F2320F7CD005FF254 /* state_synchronizer.pb.swift */; };
+		9DC488392320F7CE005FF254 /* language_storage.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488202320F7CD005FF254 /* language_storage.pb.swift */; };
+		9DC4883A2320F7CE005FF254 /* storage.grpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488212320F7CD005FF254 /* storage.grpc.swift */; };
+		9DC4883B2320F7CE005FF254 /* consensus.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488222320F7CE005FF254 /* consensus.pb.swift */; };
+		9DC4883C2320F7CE005FF254 /* mempool_status.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488232320F7CE005FF254 /* mempool_status.pb.swift */; };
+		9DC4883D2320F7CE005FF254 /* admission_control.grpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488242320F7CE005FF254 /* admission_control.grpc.swift */; };
+		9DC4883E2320F7CE005FF254 /* network.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488252320F7CE005FF254 /* network.pb.swift */; };
+		9DC4883F2320F7CE005FF254 /* validator_change.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488262320F7CE005FF254 /* validator_change.pb.swift */; };
+		9DC488402320F7CE005FF254 /* events.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488272320F7CE005FF254 /* events.pb.swift */; };
+		9DC488412320F7CE005FF254 /* storage.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488282320F7CE005FF254 /* storage.pb.swift */; };
+		9DC488442320F81E005FF254 /* mempool.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488422320F81E005FF254 /* mempool.pb.swift */; };
+		9DC488452320F81E005FF254 /* mempool.grpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488432320F81E005FF254 /* mempool.grpc.swift */; };
+		9DC4884723210C7F005FF254 /* transaction.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4884623210C7F005FF254 /* transaction.pb.swift */; };
+		9DC4884923211180005FF254 /* LibraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4884823211180005FF254 /* LibraManager.swift */; };
+		9DC4884B232111E9005FF254 /* TransferViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4884A232111E9005FF254 /* TransferViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +77,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4308B3ACDBB4EC274104FA26 /* Pods_LibraWallet.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LibraWallet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5186520DDD2B7E61F7417817 /* Pods-LibraWalletUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LibraWalletUITests.release.xcconfig"; path = "Target Support Files/Pods-LibraWalletUITests/Pods-LibraWalletUITests.release.xcconfig"; sourceTree = "<group>"; };
+		68DEF872B52FD220FD8C8434 /* Pods_LibraWalletTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LibraWalletTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7378AE2C0E4A760533962991 /* Pods-LibraWalletTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LibraWalletTests.release.xcconfig"; path = "Target Support Files/Pods-LibraWalletTests/Pods-LibraWalletTests.release.xcconfig"; sourceTree = "<group>"; };
 		9DA8E29E2317ABC400E28D07 /* LibraWallet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LibraWallet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DA8E2A12317ABC400E28D07 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9DA8E2A32317ABC400E28D07 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -47,6 +94,51 @@
 		9DA8E2BD2317ABC600E28D07 /* LibraWalletUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LibraWalletUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DA8E2C12317ABC600E28D07 /* LibraWalletUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraWalletUITests.swift; sourceTree = "<group>"; };
 		9DA8E2C32317ABC600E28D07 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9DC487FA231FA10A005FF254 /* LibraKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraKit.swift; sourceTree = "<group>"; };
+		9DC487FC2320AF4E005FF254 /* LibraWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraWallet.swift; sourceTree = "<group>"; };
+		9DC487FE2320AFB8005FF254 /* LibraError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraError.swift; sourceTree = "<group>"; };
+		9DC488002320BE88005FF254 /* LibraNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraNetwork.swift; sourceTree = "<group>"; };
+		9DC488022320D6A1005FF254 /* LibraMnemonic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraMnemonic.swift; sourceTree = "<group>"; };
+		9DC488042320DBCB005FF254 /* LibraPublicKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraPublicKey.swift; sourceTree = "<group>"; };
+		9DC488062320E419005FF254 /* LibraSDKTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraSDKTests.swift; sourceTree = "<group>"; };
+		9DC488082320E68B005FF254 /* LibraSeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraSeed.swift; sourceTree = "<group>"; };
+		9DC4880A2320E6C1005FF254 /* LibraPrivateKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraPrivateKey.swift; sourceTree = "<group>"; };
+		9DC4880C2320EDF8005FF254 /* LibraUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraUtils.swift; sourceTree = "<group>"; };
+		9DC4880E2320EE4C005FF254 /* LibraTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraTransaction.swift; sourceTree = "<group>"; };
+		9DC488102320F7CB005FF254 /* proof.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = proof.pb.swift; sourceTree = "<group>"; };
+		9DC488112320F7CB005FF254 /* validator_set.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = validator_set.pb.swift; sourceTree = "<group>"; };
+		9DC488122320F7CC005FF254 /* vm_errors.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = vm_errors.pb.swift; sourceTree = "<group>"; };
+		9DC488132320F7CC005FF254 /* execution.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = execution.pb.swift; sourceTree = "<group>"; };
+		9DC488142320F7CC005FF254 /* admission_control.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = admission_control.pb.swift; sourceTree = "<group>"; };
+		9DC488152320F7CC005FF254 /* get_with_proof.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = get_with_proof.pb.swift; sourceTree = "<group>"; };
+		9DC488162320F7CC005FF254 /* access_path.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = access_path.pb.swift; sourceTree = "<group>"; };
+		9DC488172320F7CC005FF254 /* secret_service.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = secret_service.pb.swift; sourceTree = "<group>"; };
+		9DC488182320F7CC005FF254 /* validator_public_keys.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = validator_public_keys.pb.swift; sourceTree = "<group>"; };
+		9DC488192320F7CD005FF254 /* account_state_blob.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = account_state_blob.pb.swift; sourceTree = "<group>"; };
+		9DC4881A2320F7CD005FF254 /* secret_service.grpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = secret_service.grpc.swift; sourceTree = "<group>"; };
+		9DC4881B2320F7CD005FF254 /* ledger_info.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ledger_info.pb.swift; sourceTree = "<group>"; };
+		9DC4881C2320F7CD005FF254 /* execution.grpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = execution.grpc.swift; sourceTree = "<group>"; };
+		9DC4881D2320F7CD005FF254 /* transaction_info.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = transaction_info.pb.swift; sourceTree = "<group>"; };
+		9DC4881F2320F7CD005FF254 /* state_synchronizer.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = state_synchronizer.pb.swift; sourceTree = "<group>"; };
+		9DC488202320F7CD005FF254 /* language_storage.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = language_storage.pb.swift; sourceTree = "<group>"; };
+		9DC488212320F7CD005FF254 /* storage.grpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = storage.grpc.swift; sourceTree = "<group>"; };
+		9DC488222320F7CE005FF254 /* consensus.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = consensus.pb.swift; sourceTree = "<group>"; };
+		9DC488232320F7CE005FF254 /* mempool_status.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = mempool_status.pb.swift; sourceTree = "<group>"; };
+		9DC488242320F7CE005FF254 /* admission_control.grpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = admission_control.grpc.swift; sourceTree = "<group>"; };
+		9DC488252320F7CE005FF254 /* network.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = network.pb.swift; sourceTree = "<group>"; };
+		9DC488262320F7CE005FF254 /* validator_change.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = validator_change.pb.swift; sourceTree = "<group>"; };
+		9DC488272320F7CE005FF254 /* events.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = events.pb.swift; sourceTree = "<group>"; };
+		9DC488282320F7CE005FF254 /* storage.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = storage.pb.swift; sourceTree = "<group>"; };
+		9DC488422320F81E005FF254 /* mempool.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = mempool.pb.swift; sourceTree = "<group>"; };
+		9DC488432320F81E005FF254 /* mempool.grpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = mempool.grpc.swift; sourceTree = "<group>"; };
+		9DC4884623210C7F005FF254 /* transaction.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = transaction.pb.swift; sourceTree = "<group>"; };
+		9DC4884823211180005FF254 /* LibraManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraManager.swift; sourceTree = "<group>"; };
+		9DC4884A232111E9005FF254 /* TransferViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferViewController.swift; sourceTree = "<group>"; };
+		A0BB048939C1729A911C1FC8 /* Pods-LibraWallet.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LibraWallet.release.xcconfig"; path = "Target Support Files/Pods-LibraWallet/Pods-LibraWallet.release.xcconfig"; sourceTree = "<group>"; };
+		B53FCCF097BEA491ED046F0A /* Pods-LibraWallet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LibraWallet.debug.xcconfig"; path = "Target Support Files/Pods-LibraWallet/Pods-LibraWallet.debug.xcconfig"; sourceTree = "<group>"; };
+		CC19B6BCD5C39DC5526FDDC4 /* Pods-LibraWalletUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LibraWalletUITests.debug.xcconfig"; path = "Target Support Files/Pods-LibraWalletUITests/Pods-LibraWalletUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		D2E0E83CD4617090AC4DEFF6 /* Pods-LibraWalletTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LibraWalletTests.debug.xcconfig"; path = "Target Support Files/Pods-LibraWalletTests/Pods-LibraWalletTests.debug.xcconfig"; sourceTree = "<group>"; };
+		F7658E656E8E8976B3E75152 /* Pods_LibraWalletUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LibraWalletUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +146,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A8251333880EBAB4D609292 /* Pods_LibraWallet.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -61,6 +154,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84F942D4E0AB7CC3C4350654 /* Pods_LibraWalletTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -68,12 +162,26 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				01694EF4D3F368EB6A685132 /* Pods_LibraWalletUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8A31C9F53C56F3885EBFF128 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				B53FCCF097BEA491ED046F0A /* Pods-LibraWallet.debug.xcconfig */,
+				A0BB048939C1729A911C1FC8 /* Pods-LibraWallet.release.xcconfig */,
+				D2E0E83CD4617090AC4DEFF6 /* Pods-LibraWalletTests.debug.xcconfig */,
+				7378AE2C0E4A760533962991 /* Pods-LibraWalletTests.release.xcconfig */,
+				CC19B6BCD5C39DC5526FDDC4 /* Pods-LibraWalletUITests.debug.xcconfig */,
+				5186520DDD2B7E61F7417817 /* Pods-LibraWalletUITests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		9DA8E2952317ABC400E28D07 = {
 			isa = PBXGroup;
 			children = (
@@ -81,6 +189,8 @@
 				9DA8E2B52317ABC600E28D07 /* LibraWalletTests */,
 				9DA8E2C02317ABC600E28D07 /* LibraWalletUITests */,
 				9DA8E29F2317ABC400E28D07 /* Products */,
+				8A31C9F53C56F3885EBFF128 /* Pods */,
+				A7902CF620DABC30E1C74270 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -99,6 +209,10 @@
 			children = (
 				9DA8E2A12317ABC400E28D07 /* AppDelegate.swift */,
 				9DA8E2A32317ABC400E28D07 /* ViewController.swift */,
+				9DC4884823211180005FF254 /* LibraManager.swift */,
+				9DC4884A232111E9005FF254 /* TransferViewController.swift */,
+				9DC487F9231FA0C6005FF254 /* LibraKit */,
+				9DC57A18231CECFE00989173 /* Protobuf */,
 				9DA8E2A52317ABC400E28D07 /* Main.storyboard */,
 				9DA8E2A82317ABC600E28D07 /* Assets.xcassets */,
 				9DA8E2AA2317ABC600E28D07 /* LaunchScreen.storyboard */,
@@ -111,6 +225,7 @@
 			isa = PBXGroup;
 			children = (
 				9DA8E2B62317ABC600E28D07 /* LibraWalletTests.swift */,
+				9DC488062320E419005FF254 /* LibraSDKTests.swift */,
 				9DA8E2B82317ABC600E28D07 /* Info.plist */,
 			);
 			path = LibraWalletTests;
@@ -125,6 +240,67 @@
 			path = LibraWalletUITests;
 			sourceTree = "<group>";
 		};
+		9DC487F9231FA0C6005FF254 /* LibraKit */ = {
+			isa = PBXGroup;
+			children = (
+				9DC487FA231FA10A005FF254 /* LibraKit.swift */,
+				9DC487FC2320AF4E005FF254 /* LibraWallet.swift */,
+				9DC488042320DBCB005FF254 /* LibraPublicKey.swift */,
+				9DC4880A2320E6C1005FF254 /* LibraPrivateKey.swift */,
+				9DC487FE2320AFB8005FF254 /* LibraError.swift */,
+				9DC488002320BE88005FF254 /* LibraNetwork.swift */,
+				9DC488022320D6A1005FF254 /* LibraMnemonic.swift */,
+				9DC488082320E68B005FF254 /* LibraSeed.swift */,
+				9DC4880C2320EDF8005FF254 /* LibraUtils.swift */,
+				9DC4880E2320EE4C005FF254 /* LibraTransaction.swift */,
+			);
+			path = LibraKit;
+			sourceTree = "<group>";
+		};
+		9DC57A18231CECFE00989173 /* Protobuf */ = {
+			isa = PBXGroup;
+			children = (
+				9DC488162320F7CC005FF254 /* access_path.pb.swift */,
+				9DC488192320F7CD005FF254 /* account_state_blob.pb.swift */,
+				9DC488242320F7CE005FF254 /* admission_control.grpc.swift */,
+				9DC488142320F7CC005FF254 /* admission_control.pb.swift */,
+				9DC488222320F7CE005FF254 /* consensus.pb.swift */,
+				9DC488272320F7CE005FF254 /* events.pb.swift */,
+				9DC4881C2320F7CD005FF254 /* execution.grpc.swift */,
+				9DC488132320F7CC005FF254 /* execution.pb.swift */,
+				9DC488152320F7CC005FF254 /* get_with_proof.pb.swift */,
+				9DC488202320F7CD005FF254 /* language_storage.pb.swift */,
+				9DC4881B2320F7CD005FF254 /* ledger_info.pb.swift */,
+				9DC488232320F7CE005FF254 /* mempool_status.pb.swift */,
+				9DC488432320F81E005FF254 /* mempool.grpc.swift */,
+				9DC488422320F81E005FF254 /* mempool.pb.swift */,
+				9DC488252320F7CE005FF254 /* network.pb.swift */,
+				9DC488102320F7CB005FF254 /* proof.pb.swift */,
+				9DC4881A2320F7CD005FF254 /* secret_service.grpc.swift */,
+				9DC488172320F7CC005FF254 /* secret_service.pb.swift */,
+				9DC4881F2320F7CD005FF254 /* state_synchronizer.pb.swift */,
+				9DC488212320F7CD005FF254 /* storage.grpc.swift */,
+				9DC488282320F7CE005FF254 /* storage.pb.swift */,
+				9DC4881D2320F7CD005FF254 /* transaction_info.pb.swift */,
+				9DC4884623210C7F005FF254 /* transaction.pb.swift */,
+				9DC488262320F7CE005FF254 /* validator_change.pb.swift */,
+				9DC488182320F7CC005FF254 /* validator_public_keys.pb.swift */,
+				9DC488112320F7CB005FF254 /* validator_set.pb.swift */,
+				9DC488122320F7CC005FF254 /* vm_errors.pb.swift */,
+			);
+			path = Protobuf;
+			sourceTree = "<group>";
+		};
+		A7902CF620DABC30E1C74270 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4308B3ACDBB4EC274104FA26 /* Pods_LibraWallet.framework */,
+				68DEF872B52FD220FD8C8434 /* Pods_LibraWalletTests.framework */,
+				F7658E656E8E8976B3E75152 /* Pods_LibraWalletUITests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -132,9 +308,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9DA8E2C62317ABC600E28D07 /* Build configuration list for PBXNativeTarget "LibraWallet" */;
 			buildPhases = (
+				C35CB2A3A2F4035395F70876 /* [CP] Check Pods Manifest.lock */,
 				9DA8E29A2317ABC400E28D07 /* Sources */,
 				9DA8E29B2317ABC400E28D07 /* Frameworks */,
 				9DA8E29C2317ABC400E28D07 /* Resources */,
+				D71851B3D98CBB398DFD88C5 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -149,6 +327,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9DA8E2C92317ABC600E28D07 /* Build configuration list for PBXNativeTarget "LibraWalletTests" */;
 			buildPhases = (
+				3A87436535D6401C437311E8 /* [CP] Check Pods Manifest.lock */,
 				9DA8E2AE2317ABC600E28D07 /* Sources */,
 				9DA8E2AF2317ABC600E28D07 /* Frameworks */,
 				9DA8E2B02317ABC600E28D07 /* Resources */,
@@ -167,6 +346,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9DA8E2CC2317ABC600E28D07 /* Build configuration list for PBXNativeTarget "LibraWalletUITests" */;
 			buildPhases = (
+				0774E8B7F7073BBF203C323E /* [CP] Check Pods Manifest.lock */,
 				9DA8E2B92317ABC600E28D07 /* Sources */,
 				9DA8E2BA2317ABC600E28D07 /* Frameworks */,
 				9DA8E2BB2317ABC600E28D07 /* Resources */,
@@ -251,13 +431,138 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		0774E8B7F7073BBF203C323E /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-LibraWalletUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		3A87436535D6401C437311E8 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-LibraWalletTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C35CB2A3A2F4035395F70876 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-LibraWallet-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D71851B3D98CBB398DFD88C5 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-LibraWallet/Pods-LibraWallet-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-LibraWallet/Pods-LibraWallet-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-LibraWallet/Pods-LibraWallet-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		9DA8E29A2317ABC400E28D07 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9DC488012320BE88005FF254 /* LibraNetwork.swift in Sources */,
+				9DC4882F2320F7CE005FF254 /* access_path.pb.swift in Sources */,
+				9DC4882C2320F7CE005FF254 /* execution.pb.swift in Sources */,
+				9DC4882E2320F7CE005FF254 /* get_with_proof.pb.swift in Sources */,
+				9DC488382320F7CE005FF254 /* state_synchronizer.pb.swift in Sources */,
+				9DC488352320F7CE005FF254 /* execution.grpc.swift in Sources */,
+				9DC4883A2320F7CE005FF254 /* storage.grpc.swift in Sources */,
+				9DC488302320F7CE005FF254 /* secret_service.pb.swift in Sources */,
+				9DC4883D2320F7CE005FF254 /* admission_control.grpc.swift in Sources */,
+				9DC488342320F7CE005FF254 /* ledger_info.pb.swift in Sources */,
+				9DC4880F2320EE4C005FF254 /* LibraTransaction.swift in Sources */,
+				9DC488402320F7CE005FF254 /* events.pb.swift in Sources */,
 				9DA8E2A42317ABC400E28D07 /* ViewController.swift in Sources */,
+				9DC4880D2320EDF8005FF254 /* LibraUtils.swift in Sources */,
+				9DC488312320F7CE005FF254 /* validator_public_keys.pb.swift in Sources */,
+				9DC488362320F7CE005FF254 /* transaction_info.pb.swift in Sources */,
+				9DC4883C2320F7CE005FF254 /* mempool_status.pb.swift in Sources */,
+				9DC488322320F7CE005FF254 /* account_state_blob.pb.swift in Sources */,
+				9DC4882B2320F7CE005FF254 /* vm_errors.pb.swift in Sources */,
+				9DC488392320F7CE005FF254 /* language_storage.pb.swift in Sources */,
+				9DC487FB231FA10A005FF254 /* LibraKit.swift in Sources */,
+				9DC488332320F7CE005FF254 /* secret_service.grpc.swift in Sources */,
+				9DC4883E2320F7CE005FF254 /* network.pb.swift in Sources */,
+				9DC4882D2320F7CE005FF254 /* admission_control.pb.swift in Sources */,
+				9DC4880B2320E6C1005FF254 /* LibraPrivateKey.swift in Sources */,
+				9DC488092320E68B005FF254 /* LibraSeed.swift in Sources */,
+				9DC488452320F81E005FF254 /* mempool.grpc.swift in Sources */,
 				9DA8E2A22317ABC400E28D07 /* AppDelegate.swift in Sources */,
+				9DC4883B2320F7CE005FF254 /* consensus.pb.swift in Sources */,
+				9DC487FD2320AF4E005FF254 /* LibraWallet.swift in Sources */,
+				9DC4883F2320F7CE005FF254 /* validator_change.pb.swift in Sources */,
+				9DC488032320D6A1005FF254 /* LibraMnemonic.swift in Sources */,
+				9DC488442320F81E005FF254 /* mempool.pb.swift in Sources */,
+				9DC488052320DBCB005FF254 /* LibraPublicKey.swift in Sources */,
+				9DC4884B232111E9005FF254 /* TransferViewController.swift in Sources */,
+				9DC4884923211180005FF254 /* LibraManager.swift in Sources */,
+				9DC487FF2320AFB8005FF254 /* LibraError.swift in Sources */,
+				9DC4882A2320F7CE005FF254 /* validator_set.pb.swift in Sources */,
+				9DC4884723210C7F005FF254 /* transaction.pb.swift in Sources */,
+				9DC488292320F7CE005FF254 /* proof.pb.swift in Sources */,
+				9DC488412320F7CE005FF254 /* storage.pb.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -266,6 +571,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9DA8E2B72317ABC600E28D07 /* LibraWalletTests.swift in Sources */,
+				9DC488072320E419005FF254 /* LibraSDKTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -430,6 +736,7 @@
 		};
 		9DA8E2C72317ABC600E28D07 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B53FCCF097BEA491ED046F0A /* Pods-LibraWallet.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -448,6 +755,7 @@
 		};
 		9DA8E2C82317ABC600E28D07 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A0BB048939C1729A911C1FC8 /* Pods-LibraWallet.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -466,6 +774,7 @@
 		};
 		9DA8E2CA2317ABC600E28D07 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D2E0E83CD4617090AC4DEFF6 /* Pods-LibraWalletTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -487,6 +796,7 @@
 		};
 		9DA8E2CB2317ABC600E28D07 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7378AE2C0E4A760533962991 /* Pods-LibraWalletTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -508,6 +818,7 @@
 		};
 		9DA8E2CD2317ABC600E28D07 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CC19B6BCD5C39DC5526FDDC4 /* Pods-LibraWalletUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -528,6 +839,7 @@
 		};
 		9DA8E2CE2317ABC600E28D07 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5186520DDD2B7E61F7417817 /* Pods-LibraWalletUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
