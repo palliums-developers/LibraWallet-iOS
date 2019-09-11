@@ -59,3 +59,17 @@ func base64Decoding(encodedString:String)-> Data {
     let base64Data = Data.init(base64Encoded: encodedString)
     return base64Data!
 }
+func hw_getInt(_ array:[UInt8]) -> Int {
+    var value : UInt8 = 0
+    let data = NSData(bytes: array, length: array.count)
+    data.getBytes(&value, length: array.count)
+    value = UInt8(bigEndian: value)
+    return Int(value)
+}
+func hw_getInt64(_ array:[UInt8]) -> Int {
+    var value : Int = 0
+    let data = NSData(bytes: array, length: array.count)
+    data.getBytes(&value, length: array.count)
+    //        value = Int(bigEndian: value)
+    return Int(value)
+}

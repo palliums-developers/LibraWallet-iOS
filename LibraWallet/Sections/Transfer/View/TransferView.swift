@@ -1,13 +1,12 @@
 //
-//  Mnemonic.swift
+//  TransferView.swift
 //  LibraWallet
 //
-//  Created by palliums on 2019/9/5.
+//  Created by palliums on 2019/9/6.
 //  Copyright © 2019 palliums. All rights reserved.
 //
 
 import UIKit
 
-class Mnemonic: NSObject {
-
+class TransferView: UIView {
 }

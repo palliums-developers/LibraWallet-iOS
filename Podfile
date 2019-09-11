@@ -12,6 +12,10 @@ target 'LibraWallet' do
   pod 'SwiftProtobuf'
   pod 'BigInt'
   pod 'SwiftGRPC'
+  pod 'SnapKit'
+  pod 'Toast-Swift'
+  pod 'Hue'
+  pod 'SQLite.swift'
   # Pods for LibraWallet
 
   target 'LibraWalletTests' do

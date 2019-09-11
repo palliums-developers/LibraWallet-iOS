@@ -13,8 +13,8 @@ public final class LibraWallet {
     
     let LibraBaseURL = "18.220.66.235:34042"
     
-    public init (seed: LibraSeed)  {
-        self.seed = seed.seed
+    public init (seed: Data)  {
+        self.seed = seed
     }
     func publicKey() -> LibraPublicKey {
         return LibraPublicKey.init(dk: self.seed)

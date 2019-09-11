@@ -18,39 +18,53 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ucp-84-qcS">
-                                <rect key="frame" x="179" y="374" width="57" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Transfer"/>
-                                <connections>
-                                    <segue destination="maA-J0-GdM" kind="show" id="YV9-pV-flw"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XQM-5c-M8n">
-                                <rect key="frame" x="181" y="211" width="53" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0.0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FD6-x2-Gwo">
+                                <rect key="frame" x="20" y="234" width="374" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XQM-5c-M8n">
+                                <rect key="frame" x="20" y="274" width="53" height="30"/>
                                 <state key="normal" title="Refresh"/>
                                 <connections>
                                     <action selector="Balance:" destination="BYZ-38-t0r" eventType="touchUpInside" id="c1n-lw-cSV"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4sV-cg-RCt">
-                                <rect key="frame" x="198" y="493" width="30" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="test"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KAt-L9-C9n">
+                                <rect key="frame" x="20" y="167" width="46" height="30"/>
+                                <state key="normal" title="Create"/>
                                 <connections>
-                                    <action selector="test:" destination="BYZ-38-t0r" eventType="touchUpInside" id="3gs-13-ish"/>
+                                    <action selector="createWallet:" destination="BYZ-38-t0r" eventType="touchUpInside" id="yt7-DN-geN"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0.0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FD6-x2-Gwo">
-                                <rect key="frame" x="20" y="134" width="374" height="21"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qtv-nu-KT7">
+                                <rect key="frame" x="307" y="373" width="54" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                                <state key="normal" title="Receive"/>
+                                <connections>
+                                    <action selector="receive:" destination="BYZ-38-t0r" eventType="touchUpInside" id="bS2-f4-dNm"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ucp-84-qcS">
+                                <rect key="frame" x="20" y="373" width="57" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Transfer"/>
+                                <connections>
+                                    <segue destination="maA-J0-GdM" kind="show" identifier="Transfer" id="YV9-pV-flw"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="KAt-L9-C9n" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="70J-M7-l7S"/>
+                            <constraint firstItem="KAt-L9-C9n" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="79" id="BNE-Nb-Z77"/>
+                            <constraint firstItem="FD6-x2-Gwo" firstAttribute="top" secondItem="KAt-L9-C9n" secondAttribute="bottom" constant="37" id="BmX-q6-RHv"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="FD6-x2-Gwo" secondAttribute="trailing" constant="20" id="UwU-8t-GDd"/>
+                            <constraint firstItem="XQM-5c-M8n" firstAttribute="leading" secondItem="KAt-L9-C9n" secondAttribute="leading" id="VDG-z1-4J3"/>
+                            <constraint firstItem="XQM-5c-M8n" firstAttribute="top" secondItem="FD6-x2-Gwo" secondAttribute="bottom" constant="19" id="nhE-Px-cko"/>
+                            <constraint firstItem="FD6-x2-Gwo" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="obd-VF-C6d"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" id="LON-SE-bYH"/>
@@ -62,30 +76,61 @@
             </objects>
             <point key="canvasLocation" x="1047.8260869565217" y="126.5625"/>
         </scene>
-        <!--View Controller-->
+        <!--Transfer View Controller-->
         <scene sceneID="eel-Fv-YcQ">
             <objects>
-                <viewController id="maA-J0-GdM" sceneMemberID="viewController">
+                <viewController id="maA-J0-GdM" customClass="TransferViewController" customModule="LibraWallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="xZQ-Bp-93v">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Address" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="bPY-bW-PAV">
-                                <rect key="frame" x="159" y="296" width="97" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Address" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="bPY-bW-PAV">
+                                <rect key="frame" x="20" y="168" width="74" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Pm-Uq-ahY">
-                                <rect key="frame" x="183" y="444" width="49" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Amount" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="dsL-AW-T72">
+                                <rect key="frame" x="20" y="218" width="374" height="30"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4xO-AD-NH7">
+                                <rect key="frame" x="359" y="168" width="35" height="30"/>
+                                <state key="normal" title="Scan"/>
+                                <connections>
+                                    <action selector="scan:" destination="maA-J0-GdM" eventType="touchUpInside" id="NYz-Ew-bF2"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Pm-Uq-ahY">
+                                <rect key="frame" x="157" y="446" width="100" height="30"/>
                                 <state key="normal" title="Submit"/>
+                                <connections>
+                                    <action selector="confirm:" destination="maA-J0-GdM" eventType="touchUpInside" id="pDU-OL-Crb"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="4xO-AD-NH7" firstAttribute="top" secondItem="WAp-Xp-mpC" secondAttribute="top" constant="80" id="A6o-To-wul"/>
+                            <constraint firstItem="WAp-Xp-mpC" firstAttribute="trailing" secondItem="4xO-AD-NH7" secondAttribute="trailing" constant="20" id="Ccc-KM-HZa"/>
+                            <constraint firstItem="8Pm-Uq-ahY" firstAttribute="centerX" secondItem="xZQ-Bp-93v" secondAttribute="centerX" id="FFe-Mm-aYN"/>
+                            <constraint firstItem="4xO-AD-NH7" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="bPY-bW-PAV" secondAttribute="trailing" constant="8" symbolic="YES" id="Jwr-Dz-2mq"/>
+                            <constraint firstItem="bPY-bW-PAV" firstAttribute="top" secondItem="WAp-Xp-mpC" secondAttribute="top" constant="80" id="Y8B-Qv-TAf"/>
+                            <constraint firstItem="dsL-AW-T72" firstAttribute="top" secondItem="bPY-bW-PAV" secondAttribute="bottom" constant="20" id="gbk-bm-BOm"/>
+                            <constraint firstItem="WAp-Xp-mpC" firstAttribute="bottom" secondItem="8Pm-Uq-ahY" secondAttribute="bottom" constant="386" id="hDd-vp-2a0"/>
+                            <constraint firstItem="8Pm-Uq-ahY" firstAttribute="leading" secondItem="WAp-Xp-mpC" secondAttribute="leading" constant="157" id="jcY-mh-IkY"/>
+                            <constraint firstItem="bPY-bW-PAV" firstAttribute="leading" secondItem="WAp-Xp-mpC" secondAttribute="leading" constant="20" id="v17-GK-aJs"/>
+                            <constraint firstItem="8Pm-Uq-ahY" firstAttribute="centerX" secondItem="dsL-AW-T72" secondAttribute="centerX" id="xa7-Zp-ebQ"/>
+                            <constraint firstItem="dsL-AW-T72" firstAttribute="leading" secondItem="bPY-bW-PAV" secondAttribute="leading" id="yt2-T2-urW"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="WAp-Xp-mpC"/>
                     </view>
+                    <connections>
+                        <outlet property="AddressTextField" destination="bPY-bW-PAV" id="K7v-cd-aju"/>
+                        <outlet property="AmountTextField" destination="dsL-AW-T72" id="ODf-Wf-OE0"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="g7Q-Q1-vMr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
