@@ -13,7 +13,7 @@ class WalletReceiveViewController: UIViewController {
         super.viewDidLoad()
         // 加载子View
         self.view.addSubview(detailView)
-        self.detailView.model = self.wallet
+        self.detailView.model = LibraWalletManager.wallet
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -29,9 +29,28 @@ class WalletReceiveViewController: UIViewController {
     var wallet: LibraWallet? 
     private lazy var detailView : WalletReceiveView = {
         let view = WalletReceiveView.init()
+        view.delegate = self
         return view
     }()
     deinit {
         print("WalletReceiveViewController销毁了")
+    }
+    @objc private func saveImage(image: UIImage, didFinishSavingWithError error: NSError?, contextInfo: AnyObject) {
+        if error != nil {
+//            self.view.makeToast(HKWalletError.WalletSaveScreenError(reason: .saveScreenFailed).localizedDescription,
+//                                position: .center)
+        } else {
+            self.view.makeToast(localLanguage(keyString: "wallet_receive_save_qrcode_success_title"), position: .center)
+        }
+    }
+}
+extension WalletReceiveViewController: WalletReceiveViewDelegate {
+    func saveQrcode() {
+        if let resultImage = screenSnapshot() {
+            UIImageWriteToSavedPhotosAlbum(resultImage, self, #selector(saveImage(image:didFinishSavingWithError:contextInfo:)), nil)
+        } else {
+//            self.view.makeToast(HKWalletError.WalletSaveScreenError(reason: .saveScreenFailed).localizedDescription,
+//                                position: .center)
+        }
     }
 }

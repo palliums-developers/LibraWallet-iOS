@@ -12,7 +12,6 @@ import SwiftEd25519
 import BigInt
 import SwiftGRPC
 import SwiftProtobuf
-import Toast_Swift
 class ViewController: UIViewController {
 
     override func viewDidLoad() {
@@ -93,8 +92,8 @@ class ViewController: UIViewController {
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "Transfer" {
-            let resultsViewController = segue.destination as! TransferViewController
-            resultsViewController.wallet = self.wallet
+//            let resultsViewController = segue.destination as! TransferViewController
+//            resultsViewController.wallet = self.wallet
             
         }
     }

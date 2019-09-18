@@ -27,7 +27,9 @@ struct LibraAccount {
         self.deserialize()
     }
     mutating func deserialize() {
-        
+        guard self.accountData.count != 0 else {
+            return
+        }
         let (countsData, lastData) = cutData(originData: self.accountData, length: 4)
         // 读取数据个数
         let dataCounts = hw_getInt(countsData.bytes)

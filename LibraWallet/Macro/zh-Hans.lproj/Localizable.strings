@@ -1,0 +1,33 @@
+/* 
+  Localizable.strings
+  LibraWallet
+
+  Created by palliums on 2019/9/12.
+  Copyright © 2019 palliums. All rights reserved.
+*/
+/************* 首页 *******************/
+wallet_home_title = "我的钱包";
+wallet_home_total_amount_title = "总金额";
+wallet_home_send_button_title = "扫码付款";
+wallet_home_receive_button_title = "收款";
+
+wallet_create_button_title = "创建钱包";
+/************* 接收 *******************/
+
+wallet_receive_title = "扫一扫，向我付款";
+wallet_receive_set_qrcode_amout_button_title = "设置金额";
+wallet_receive_clear_qrcode_amout_button_title = "清除金额";
+wallet_receive_save_qrcode_button_title = "保存图片";
+wallet_receive_get_receive_history_title = "查看收款记录";
+wallet_receive_save_qrcode_success_title = "保存成功";
+wallet_receive_save_qrcode_failed_title = "保存失败";
+
+/************* 转账 *******************/
+wallet_withdraw_address_title = "转账地址";
+wallet_withdraw_address_textfield_placeholder = "输入或长按粘贴地址";
+wallet_withdraw_amount_title = "数量";
+wallet_withdraw_amount_textfield_placeholder = "最小转账数量0.001 Libra";
+wallet_withdraw_wallet_balance_prefix_title = "账户余额";
+wallet_withdraw_select_total_coin_title = "全部";
+wallet_withdraw_transaction_fee_title = "手续费";
+wallet_withdraw_confirm_button_title = "转账";

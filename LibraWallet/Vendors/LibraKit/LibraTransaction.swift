@@ -42,7 +42,7 @@ public struct LibraTransaction {
 
         let resultAmount = Data.init(hex: tempArray).bytes.reversed()
 
-        print("---\((Data() + resultAmount).toHexString())")
+//        print("---\((Data() + resultAmount).toHexString())")
 
 
         var amountArgument = Types_TransactionArgument.init()

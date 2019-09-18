@@ -13,9 +13,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        window = UIWindow.init(frame: UIScreen.main.bounds)
+        
+        let home = MainViewController()
+//        home.needShowBiometricCheck = true
+        let navi = UINavigationController.init(rootViewController: home)
+        window?.rootViewController = navi
+//        window?.backgroundColor = UIColor.white
+        window?.makeKeyAndVisible()
+        
+        DataBaseManager.DBManager.creatLibraDB()
+        DataBaseManager.DBManager.createWalletTable()
         return true
     }
 

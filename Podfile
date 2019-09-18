@@ -16,6 +16,10 @@ target 'LibraWallet' do
   pod 'Toast-Swift'
   pod 'Hue'
   pod 'SQLite.swift'
+  pod 'Localize-Swift'
+  pod 'Alamofire'
+  pod 'Moya'
+  pod 'MJRefresh'
   # Pods for LibraWallet
 
   target 'LibraWalletTests' do

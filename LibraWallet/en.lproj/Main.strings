@@ -1,0 +1,27 @@
+
+/* Class = "UIButton"; normalTitle = "Scan"; ObjectID = "4xO-AD-NH7"; */
+"4xO-AD-NH7.normalTitle" = "Scan";
+
+/* Class = "UIButton"; normalTitle = "Submit"; ObjectID = "8Pm-Uq-ahY"; */
+"8Pm-Uq-ahY.normalTitle" = "Submit";
+
+/* Class = "UILabel"; text = "0.0"; ObjectID = "FD6-x2-Gwo"; */
+"FD6-x2-Gwo.text" = "0.0";
+
+/* Class = "UIButton"; normalTitle = "Create"; ObjectID = "KAt-L9-C9n"; */
+"KAt-L9-C9n.normalTitle" = "Create";
+
+/* Class = "UIButton"; normalTitle = "Refresh"; ObjectID = "XQM-5c-M8n"; */
+"XQM-5c-M8n.normalTitle" = "Refresh";
+
+/* Class = "UITextField"; placeholder = "Address"; ObjectID = "bPY-bW-PAV"; */
+"bPY-bW-PAV.placeholder" = "Address";
+
+/* Class = "UITextField"; placeholder = "Amount"; ObjectID = "dsL-AW-T72"; */
+"dsL-AW-T72.placeholder" = "Amount";
+
+/* Class = "UIButton"; normalTitle = "Receive"; ObjectID = "qtv-nu-KT7"; */
+"qtv-nu-KT7.normalTitle" = "Receive";
+
+/* Class = "UIButton"; normalTitle = "Transfer"; ObjectID = "ucp-84-qcS"; */
+"ucp-84-qcS.normalTitle" = "Transfer";

@@ -14,92 +14,102 @@ class TransferViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        self.view.addSubview(detailView)
+        self.initKVO()
     }
-    var wallet: LibraWallet?
-    @IBOutlet weak var AddressTextField: UITextField!
-    @IBOutlet weak var AmountTextField: UITextField!
-    var sequenceNumber: Int64? {
-        didSet {
-
-            
-            guard let address = self.AddressTextField.text else {
-                return
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        detailView.snp.makeConstraints { (make) in
+            if #available(iOS 11.0, *) {
+                make.bottom.equalTo(self.view.safeAreaLayoutGuide)
+            } else {
+                make.bottom.equalTo(self.view)
             }
-            guard let amount = self.AmountTextField.text else {
-                return
-            }
-            let request = LibraTransaction.init(receiveAddress: address, amount: Double(amount)!, wallet: self.wallet!, sequenceNumber: UInt64(self.sequenceNumber ?? 0))
-            
-            let channel = Channel.init(address: libraMainURL, secure: false)
-            
-            
-            let client = AdmissionControl_AdmissionControlServiceClient.init(channel: channel)
-            do {
-                //           _ = try client.submitTransaction(mission, completion: { (Response, request) in
-                //                print(Response?.acStatus as Any)
-                //                print(request.resultData ?? "")
-                //            })
-                let response = try client.submitTransaction(request.request)
-                print(response.acStatus.code)
-                self.view.hideToastActivity()
-            } catch {
-                print(error.localizedDescription)
-            }
+            make.top.left.right.equalTo(self.view)
         }
     }
-
-   
-    
-    @IBAction func scan(_ sender: Any) {
+    //子View
+    private lazy var detailView : TransferView = {
+        let view = TransferView.init()
+        view.delegate = self
+        return view
+    }()
+    lazy var dataModel: TransferModel = {
+        let model = TransferModel.init()
+        return model
+    }()
+    typealias successClosure = () -> Void
+    var actionClosure: successClosure?
+    var myContext = 0
+}
+extension TransferViewController {
+    //MARK: - KVO
+    func initKVO() {
+        dataModel.addObserver(self, forKeyPath: "dataDic", options: NSKeyValueObservingOptions.new, context: &myContext)
+    }
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?)  {
+        
+        guard context == &myContext else {
+            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+            return
+        }
+        guard (change?[NSKeyValueChangeKey.newKey]) != nil else {
+            return
+        }
+        guard let jsonData = (object! as AnyObject).value(forKey: "dataDic") as? NSDictionary else {
+            return
+        }
+        if let error = jsonData.value(forKey: "error") as? LibraWalletError {
+            if error.localizedDescription == LibraWalletError.WalletRequestError(reason: .networkInvalid).localizedDescription {
+                // 网络无法访问
+                print(error.localizedDescription)
+            } else if error.localizedDescription == LibraWalletError.WalletRequestError(reason: .walletNotExist).localizedDescription {
+                // 钱包不存在
+                print(error.localizedDescription)
+                let vc = WalletCreateViewController()
+                let navi = UINavigationController.init(rootViewController: vc)
+                self.present(navi, animated: true, completion: nil)
+            } else if error.localizedDescription == LibraWalletError.WalletRequestError(reason: .walletVersionTooOld).localizedDescription {
+                // 版本太久
+                print(error.localizedDescription)
+            } else if error.localizedDescription == LibraWalletError.WalletRequestError(reason: .parseJsonError).localizedDescription {
+                // 解析失败
+                print(error.localizedDescription)
+            } else if error.localizedDescription == LibraWalletError.WalletRequestError(reason: .dataEmpty).localizedDescription {
+                print(error.localizedDescription)
+                // 数据为空
+            }
+            self.view.hideToastActivity()
+            return
+        }
+        let type = jsonData.value(forKey: "type") as! String
+        
+        if type == "Transfer" {
+            // 转账成功
+            print("Success")
+            if let action = self.actionClosure {
+                action()
+                self.navigationController?.popViewController(animated: true)
+            }
+        }
+        self.view.hideToastActivity()
+    }
+}
+extension TransferViewController: TransferViewDelegate {
+    func scanAddressQRcode() {
         let vc = ScanViewController()
         vc.actionClosure = { address in
-            self.AddressTextField.text = address
+            self.detailView.addressTextField.text = address
         }
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
-    
-    
-    @IBAction func confirm(_ sender: Any) {
-//        let semaphore = DispatchSemaphore.init(value: 1)
-//        semaphore.wait()
-        self.view.makeToastActivity(.center)
-        
-        self.getBalance()
-        
-//        semaphore.signal()
+    func chooseAddress() {
         
     }
-    func getBalance() {
-        guard let tempWallet = self.wallet else {
-            self.view.makeToast("请创建钱包", position: .center)
-            return
-        }
-        let channel = Channel.init(address: libraMainURL, secure: false)
-//        let channel = Channel.init(address: "18.220.66.235:34042", secure:  false)
-        
-        
-        let client = AdmissionControl_AdmissionControlServiceClient.init(channel: channel)
-        do {
-            var jjj = Types_GetAccountStateRequest()
-            jjj.address = Data.init(hex: tempWallet.publicKey().toAddress())
-            
-            var item = Types_RequestItem()
-            item.getAccountStateRequest = jjj
-            
-            var sequenceNumber = Types_UpdateToLatestLedgerRequest()
-            sequenceNumber.requestedItems = [item]
-            
-            let gaaa = try client.updateToLatestLedger(sequenceNumber)
-            
-            guard let response = gaaa.responseItems.first else {
-                return
-            }
-            let streamData = response.getAccountStateResponse.accountStateWithProof.blob.blob
-            self.sequenceNumber = LibraAccount.init(accountData: streamData).sequenceNumber
-            
-        } catch {
-            print(error.localizedDescription)
-        }
+    
+    func confirmWithdraw() {
+        self.view.makeToastActivity(.center)
+        self.dataModel.transfer(address: self.detailView.addressTextField.text!, amount: Double(self.detailView.amountTextField.text!)!)
     }
 }
