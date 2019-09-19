@@ -64,7 +64,7 @@ extension WalletCreateViewController: WalletCreateViewDelegate {
             
             LibraWalletManager.wallet.initWallet(walletID: 999,
                                                  walletBalance: 0,
-                                                 walletAddress: wallet.publicKey().toAddress(),
+                                                 walletAddress: wallet.publicKey.toAddress(),
                                                  walletCreateTime: Int(Date().timeIntervalSince1970),
                                                  walletName: "---",
                                                  walletMnemonic: menmonicString,

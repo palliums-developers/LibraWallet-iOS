@@ -8,6 +8,6 @@
 
 import UIKit
 
-class Network: NSObject {
+struct Network {
 
 }

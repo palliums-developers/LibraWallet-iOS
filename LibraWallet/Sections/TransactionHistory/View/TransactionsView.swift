@@ -1,5 +1,5 @@
 //
-//  TransactionHistoryView.swift
+//  TransactionsView.swift
 //  LibraWallet
 //
 //  Created by palliums on 2019/9/17.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TransactionHistoryView: UIView {
+class TransactionsView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(topBackgroundImageView)
@@ -19,7 +19,7 @@ class TransactionHistoryView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
-        print("BalanceHistoryView销毁了")
+        print("TransactionsView销毁了")
     }
     //MARK: - 布局
     override func layoutSubviews() {

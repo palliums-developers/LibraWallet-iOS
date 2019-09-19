@@ -7,19 +7,22 @@
 //
 
 import Foundation
-
+import SwiftEd25519
 public final class LibraWallet {
-    let seed: Data
+    let seed: Seed
     
-    let LibraBaseURL = "18.220.66.235:34042"
+    let publicKey: LibraPublicKey
     
-    public init (seed: Data)  {
+    let privateKey: LibraPrivateKey
+    
+    let keyPairManager: KeyPair
+    
+    public init (seed: Seed) {
+        
+        self.keyPairManager = KeyPair.init(seed: seed)
         self.seed = seed
-    }
-    func publicKey() -> LibraPublicKey {
-        return LibraPublicKey.init(dk: self.seed)
-    }
-    func signTransaction() {
+        self.publicKey = LibraPublicKey.init(publicKey: self.keyPairManager.publicKey)
+        self.privateKey = LibraPrivateKey.init(privateKey: self.keyPairManager.privateKey)
         
     }
 }

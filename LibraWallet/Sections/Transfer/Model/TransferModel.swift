@@ -10,10 +10,10 @@ import UIKit
 import SwiftGRPC
 class TransferModel: NSObject {
     @objc var dataDic: NSMutableDictionary = [:]
-    fileprivate func getSequenceNumber(channel: Channel, client: AdmissionControl_AdmissionControlServiceClient) throws -> UInt64 {
+    fileprivate func getSequenceNumber(client: AdmissionControl_AdmissionControlServiceClient, wallet: LibraWallet) throws -> UInt64 {
         do {
             var stateRequest = Types_GetAccountStateRequest()
-            stateRequest.address = Data.init(hex: LibraWalletManager.wallet.walletAddress ?? "")
+            stateRequest.address = Data.init(hex: wallet.publicKey.toAddress())
             
             var sequenceRequest = Types_RequestItem()
             sequenceRequest.getAccountStateRequest = stateRequest
@@ -21,21 +21,22 @@ class TransferModel: NSObject {
             var requests = Types_UpdateToLatestLedgerRequest()
             requests.requestedItems = [sequenceRequest]
             
-            let gaaa = try client.updateToLatestLedger(requests)
+            let result = try client.updateToLatestLedger(requests)
 
-            guard let response = gaaa.responseItems.first else {
-                throw LibraWalletError.error("error")
+            guard let response = result.responseItems.first else {
+                throw LibraWalletError.error("Data empty")
             }
             let streamData = response.getAccountStateResponse.accountStateWithProof.blob.blob
-            return UInt64(LibraAccount.init(accountData: streamData).sequenceNumber ?? 0)
-//            let data = setKVOData(type: "UpdateLocalWallet", data: balance)
-//            self.setValue(data, forKey: "dataDic")
+            
+            guard let sequenceNumber = LibraAccount.init(accountData: streamData).sequenceNumber else {
+                throw LibraWalletError.error("Sequence number error")
+            }
+            return UInt64(sequenceNumber)
         } catch {
             throw error
-//            print(error.localizedDescription)
         }
     }
-    func transfer(address: String, amount: Double)  {
+    func transfer(address: String, amount: Double, wallet: LibraWallet)  {
         // 创建通道
         let channel = Channel.init(address: libraMainURL, secure: false)
         // 创建请求端
@@ -44,17 +45,22 @@ class TransferModel: NSObject {
         let queue = DispatchQueue.init(label: "TransferQueue")
         queue.async {
             do {
-                let sequenceNumber = try self.getSequenceNumber(channel: channel, client: client)
-                
-                let request = LibraTransaction.init(receiveAddress: address, amount: amount, wallet: LibraWalletManager.wallet.wallet!, sequenceNumber: sequenceNumber)
-                
-                let response = try client.submitTransaction(request.request)
+                // 获取SequenceNumber
+                let sequenceNumber = try self.getSequenceNumber(client: client, wallet: wallet)
+                // 拼接交易
+                let request = LibraTransaction.init(receiveAddress: address, amount: amount, sendAddress: wallet.publicKey.toAddress(), sequenceNumber: sequenceNumber)
+                // 签名交易
+                let aaa = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
+                // 组装请求
+                var mission = AdmissionControl_SubmitTransactionRequest.init()
+                mission.signedTxn = aaa
+                // 发送请求
+                let response = try client.submitTransaction(mission)
                 if response.acStatus.code == AdmissionControl_AdmissionControlStatusCode.accepted {
                     DispatchQueue.main.async(execute: {
                         let data = setKVOData(type: "Transfer")
                         self.setValue(data, forKey: "dataDic")
                     })
-                    
                 } else {
                     DispatchQueue.main.async(execute: {
                         let data = setKVOData(error: LibraWalletError.error("转账失败"), type: "Transfer")

@@ -8,6 +8,6 @@
 
 import UIKit
 
-class LibraError: NSObject {
+struct LibraError {
 
 }

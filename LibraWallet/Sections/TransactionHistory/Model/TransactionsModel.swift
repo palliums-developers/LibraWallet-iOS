@@ -1,5 +1,5 @@
 //
-//  TransactionHistoryModel.swift
+//  TransactionsModel.swift
 //  LibraWallet
 //
 //  Created by palliums on 2019/9/17.
@@ -19,11 +19,11 @@ struct Transaction: Codable {
     let type: String?
 }
 
-struct TransactionsModel: Codable {
+struct TransactionsDataModel: Codable {
     let transactions: [Transaction]?
     
 }
-class TransactionHistoryModel: NSObject {
+class TransactionsModel: NSObject {
     private var requests: [Cancellable] = []
     @objc var dataDic: NSMutableDictionary = [:]
     //requestStatus: 0:第一页，1:更多
@@ -33,7 +33,7 @@ class TransactionHistoryModel: NSObject {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(TransactionsModel.self)
+                    let json = try response.map(TransactionsDataModel.self)
                     if let listData = json.transactions, listData.isEmpty == false {
                         let data = setKVOData(type: type, data: listData)
                         self?.setValue(data, forKey: "dataDic")
@@ -64,7 +64,7 @@ class TransactionHistoryModel: NSObject {
             cancellable.cancel()
         }
         requests.removeAll()
-        print("BalanceHistoryModel销毁了")
+        print("TransactionsModel销毁了")
     }
 }
 

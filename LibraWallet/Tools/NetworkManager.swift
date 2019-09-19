@@ -40,10 +40,7 @@ extension mainRequest:TargetType {
         case .GetTestCoin(_, _),
              .GetTransactionHistory(_, _):
             return .post
-            
         }
-        
-        
     }
     public var validate: Bool {
         return false

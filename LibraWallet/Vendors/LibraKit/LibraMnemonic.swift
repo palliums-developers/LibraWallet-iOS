@@ -8,13 +8,13 @@
 
 import Foundation
 import CryptoSwift
+import SwiftEd25519
 public struct LibraMnemonic {
     public enum Strength: Int {
         case `default` = 128
         case low = 160
         case medium = 192
         case high = 256
-//        case veryHigh = 256
     }
     
     public enum Language {
@@ -55,12 +55,13 @@ public struct LibraMnemonic {
         }
         return mnemonic
     }
-    public static func seed(mnemonic: [String]) throws -> Data {
+    public static func seed(mnemonic: [String]) throws -> Seed {
         let salt: Array<UInt8> = Array("LIBRA WALLET: mnemonic salt prefix$LIBRA".utf8)
         let mnemonicTemp = mnemonic.joined(separator: " ")
         do {
             let dk = try PKCS5.PBKDF2(password: Array(mnemonicTemp.utf8), salt: salt, iterations: 2048, keyLength: 32, variant: .sha3_256).calculate()
-            let seed = Data.init(bytes: dk, count: dk.count)
+//            let seed = Data.init(bytes: dk, count: dk.count)
+            let seed = try Seed.init(bytes: dk)
             return seed
         } catch {
             throw error

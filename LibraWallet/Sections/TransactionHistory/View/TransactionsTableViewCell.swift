@@ -1,5 +1,5 @@
 //
-//  TransactionHistoryTableViewCell.swift
+//  TransactionsTableViewCell.swift
 //  LibraWallet
 //
 //  Created by palliums on 2019/9/17.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TransactionHistoryTableViewCell: UITableViewCell {
+class TransactionsTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(nameLabel)
@@ -21,7 +21,7 @@ class TransactionHistoryTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
-        print("TransactionHistoryTableViewCell销毁了")
+        print("TransactionsTableViewCell销毁了")
     }
     //pragma MARK: 布局
     override func layoutSubviews() {

@@ -1,5 +1,5 @@
 //
-//  TransactionHistoryViewTableViewManager.swift
+//  TransactionsViewTableViewManager.swift
 //  LibraWallet
 //
 //  Created by palliums on 2019/9/17.
@@ -7,18 +7,18 @@
 //
 
 import UIKit
-protocol TransactionHistoryViewTableViewManagerDelegate: NSObjectProtocol {
+protocol TransactionsViewTableViewManagerDelegate: NSObjectProtocol {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, url: String)
 }
-class TransactionHistoryViewTableViewManager: NSObject {
-    weak var delegate: TransactionHistoryViewTableViewManagerDelegate?
+class TransactionsViewTableViewManager: NSObject {
+    weak var delegate: TransactionsViewTableViewManagerDelegate?
     var dataModel: [Transaction]?
     var selectRow: Int?
     deinit {
-        print("TransactionHistoryViewTableViewManager销毁了")
+        print("TransactionsViewTableViewManager销毁了")
     }
 }
-extension TransactionHistoryViewTableViewManager: UITableViewDelegate {
+extension TransactionsViewTableViewManager: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 68
     }
@@ -32,7 +32,7 @@ extension TransactionHistoryViewTableViewManager: UITableViewDelegate {
         self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, url: linkURL)
     }
 }
-extension TransactionHistoryViewTableViewManager: UITableViewDataSource {
+extension TransactionsViewTableViewManager: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dataModel?.count ?? 0
     }
@@ -40,11 +40,11 @@ extension TransactionHistoryViewTableViewManager: UITableViewDataSource {
         let identifier = "CellNormal"
         if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) {
             if let data = dataModel, data.isEmpty == false {
-                (cell as! TransactionHistoryTableViewCell).model = data[indexPath.row]
+                (cell as! TransactionsTableViewCell).model = data[indexPath.row]
             }
             return cell
         } else {
-            let cell = TransactionHistoryTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
+            let cell = TransactionsTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
             if let data = dataModel, data.isEmpty == false {
                 cell.model = data[indexPath.row]
             }

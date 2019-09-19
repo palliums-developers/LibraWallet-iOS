@@ -126,7 +126,7 @@ class MainViewController: UIViewController {
 //        self.navigationController?.pushViewController(vc, animated: true)
     }
     @objc func recharge() {
-        let vc = TransactionHistoryViewController()
+        let vc = TransactionsViewController()
         self.navigationController?.pushViewController(vc, animated: true)
         
     }
