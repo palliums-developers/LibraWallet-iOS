@@ -39,14 +39,14 @@ struct RawTransaction {
     }
     func serialize() -> Data {
         var result = Data()
-        // senderAddress
+        // senderAddressCount
         let senderAddressData = Data.init(hex: self.senderAddress)
         result += dealData(originData: BigUInt(senderAddressData.bytes.count).serialize(), appendBytesCount: 4)
-        // TransactionPayload
+        // senderAddress
         result += senderAddressData
         // sequenceNumber
         result += dealData(originData: BigUInt(sequenceNumber).serialize(), appendBytesCount: 8)
-        // programOrWrite
+        // TransactionPayload
         result += self.programOrWrite
         // maxGasAmount
         result += dealData(originData: BigUInt(maxGasAmount).serialize(), appendBytesCount: 8)
@@ -59,7 +59,7 @@ struct RawTransaction {
     fileprivate func dealData(originData: Data, appendBytesCount: Int) -> Data {
         var newData = Data()
         // 长度序列化
-        let dataLenth = BigUInt(originData.bytes.count).serialize()
+        let dataLenth = originData//BigUInt(originData.bytes.count).serialize()
         // 补全长度
         for _ in 0..<(appendBytesCount - dataLenth.count) {
             newData.append(Data.init(hex: "00"))

@@ -26,11 +26,11 @@
 		9D712441232F621B009DED52 /* LibraWalletTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D712440232F621B009DED52 /* LibraWalletTool.swift */; };
 		9D712443232F7662009DED52 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D712442232F7662009DED52 /* Assets.xcassets */; };
 		9D712445232F7C36009DED52 /* TransferModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D712444232F7C36009DED52 /* TransferModel.swift */; };
+		9D96755923347EFD00710B21 /* transaction.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D96755823347EFD00710B21 /* transaction.pb.swift */; };
 		9DA8E2A22317ABC400E28D07 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA8E2A12317ABC400E28D07 /* AppDelegate.swift */; };
 		9DA8E2AC2317ABC600E28D07 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9DA8E2AA2317ABC600E28D07 /* LaunchScreen.storyboard */; };
 		9DA8E2B72317ABC600E28D07 /* LibraWalletTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA8E2B62317ABC600E28D07 /* LibraWalletTests.swift */; };
 		9DA8E2C22317ABC600E28D07 /* LibraWalletUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA8E2C12317ABC600E28D07 /* LibraWalletUITests.swift */; };
-		9DC487FB231FA10A005FF254 /* LibraKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC487FA231FA10A005FF254 /* LibraKit.swift */; };
 		9DC487FD2320AF4E005FF254 /* LibraWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC487FC2320AF4E005FF254 /* LibraWallet.swift */; };
 		9DC487FF2320AFB8005FF254 /* LibraError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC487FE2320AFB8005FF254 /* LibraError.swift */; };
 		9DC488012320BE88005FF254 /* LibraNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488002320BE88005FF254 /* LibraNetwork.swift */; };
@@ -81,7 +81,6 @@
 		9DC902262328989E0097FD85 /* mempool.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC9020B2328989D0097FD85 /* mempool.pb.swift */; };
 		9DC902272328989E0097FD85 /* account_state_blob.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC9020C2328989D0097FD85 /* account_state_blob.pb.swift */; };
 		9DC902282328989E0097FD85 /* events.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC9020D2328989D0097FD85 /* events.pb.swift */; };
-		9DC902292328989E0097FD85 /* transaction.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC9020E2328989D0097FD85 /* transaction.pb.swift */; };
 		9DC9022A2328989E0097FD85 /* state_synchronizer.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC9020F2328989D0097FD85 /* state_synchronizer.pb.swift */; };
 		9DC9022B2328989E0097FD85 /* secret_service.grpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC902102328989D0097FD85 /* secret_service.grpc.swift */; };
 		9DC9022C2328989E0097FD85 /* validator_public_keys.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC902112328989D0097FD85 /* validator_public_keys.pb.swift */; };
@@ -138,6 +137,7 @@
 		9D712440232F621B009DED52 /* LibraWalletTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraWalletTool.swift; sourceTree = "<group>"; };
 		9D712442232F7662009DED52 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9D712444232F7C36009DED52 /* TransferModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferModel.swift; sourceTree = "<group>"; };
+		9D96755823347EFD00710B21 /* transaction.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = transaction.pb.swift; sourceTree = "<group>"; };
 		9DA8E29E2317ABC400E28D07 /* LibraWallet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LibraWallet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DA8E2A12317ABC400E28D07 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9DA8E2AB2317ABC600E28D07 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -148,7 +148,6 @@
 		9DA8E2BD2317ABC600E28D07 /* LibraWalletUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LibraWalletUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DA8E2C12317ABC600E28D07 /* LibraWalletUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraWalletUITests.swift; sourceTree = "<group>"; };
 		9DA8E2C32317ABC600E28D07 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9DC487FA231FA10A005FF254 /* LibraKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraKit.swift; sourceTree = "<group>"; };
 		9DC487FC2320AF4E005FF254 /* LibraWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraWallet.swift; sourceTree = "<group>"; };
 		9DC487FE2320AFB8005FF254 /* LibraError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraError.swift; sourceTree = "<group>"; };
 		9DC488002320BE88005FF254 /* LibraNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraNetwork.swift; sourceTree = "<group>"; };
@@ -199,7 +198,6 @@
 		9DC9020B2328989D0097FD85 /* mempool.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = mempool.pb.swift; sourceTree = "<group>"; };
 		9DC9020C2328989D0097FD85 /* account_state_blob.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = account_state_blob.pb.swift; sourceTree = "<group>"; };
 		9DC9020D2328989D0097FD85 /* events.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = events.pb.swift; sourceTree = "<group>"; };
-		9DC9020E2328989D0097FD85 /* transaction.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = transaction.pb.swift; sourceTree = "<group>"; };
 		9DC9020F2328989D0097FD85 /* state_synchronizer.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = state_synchronizer.pb.swift; sourceTree = "<group>"; };
 		9DC902102328989D0097FD85 /* secret_service.grpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = secret_service.grpc.swift; sourceTree = "<group>"; };
 		9DC902112328989D0097FD85 /* validator_public_keys.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = validator_public_keys.pb.swift; sourceTree = "<group>"; };
@@ -483,7 +481,6 @@
 			children = (
 				9DC901E5232628860097FD85 /* MakeTransaction */,
 				9DC902332328E27B0097FD85 /* Request */,
-				9DC487FA231FA10A005FF254 /* LibraKit.swift */,
 				9DC487FC2320AF4E005FF254 /* LibraWallet.swift */,
 				9DC488042320DBCB005FF254 /* LibraPublicKey.swift */,
 				9DC4880A2320E6C1005FF254 /* LibraPrivateKey.swift */,
@@ -640,7 +637,7 @@
 				9DC901FC2328989C0097FD85 /* storage.grpc.swift */,
 				9DC901FF2328989D0097FD85 /* storage.pb.swift */,
 				9DC901FD2328989C0097FD85 /* transaction_info.pb.swift */,
-				9DC9020E2328989D0097FD85 /* transaction.pb.swift */,
+				9D96755823347EFD00710B21 /* transaction.pb.swift */,
 				9DC902032328989D0097FD85 /* validator_change.pb.swift */,
 				9DC902112328989D0097FD85 /* validator_public_keys.pb.swift */,
 				9DC901FE2328989D0097FD85 /* validator_set.pb.swift */,
@@ -996,7 +993,6 @@
 				9DC4886D232222CF005FF254 /* LBXScanViewStyle.swift in Sources */,
 				9DC9022F2328989E0097FD85 /* mempool.grpc.swift in Sources */,
 				9DC902162328989E0097FD85 /* consensus.pb.swift in Sources */,
-				9DC487FB231FA10A005FF254 /* LibraKit.swift in Sources */,
 				9D71243D2329F183009DED52 /* WalletCreateViewController.swift in Sources */,
 				9DC4887E2322320B005FF254 /* ScanView.swift in Sources */,
 				9DC901EF23274E510097FD85 /* TransactionProgram.swift in Sources */,
@@ -1007,7 +1003,6 @@
 				9DC4880B2320E6C1005FF254 /* LibraPrivateKey.swift in Sources */,
 				9DA8E2A22317ABC400E28D07 /* AppDelegate.swift in Sources */,
 				9DC4886B232222CF005FF254 /* LBXScanViewController.swift in Sources */,
-				9DC902292328989E0097FD85 /* transaction.pb.swift in Sources */,
 				9DC902352328E2E80097FD85 /* LibraRequestResponse.swift in Sources */,
 				9DC4886F232222CF005FF254 /* LBXScanWrapper.swift in Sources */,
 				9DC48869232222CF005FF254 /* LBXScanNetAnimation.swift in Sources */,
@@ -1036,6 +1031,7 @@
 				9D08AD372330BA75004687E8 /* NetworkManager.swift in Sources */,
 				9DC4884B232111E9005FF254 /* TransferViewController.swift in Sources */,
 				9D712441232F621B009DED52 /* LibraWalletTool.swift in Sources */,
+				9D96755923347EFD00710B21 /* transaction.pb.swift in Sources */,
 				9DC4884923211180005FF254 /* LibraWalletManager.swift in Sources */,
 				9DC487FF2320AFB8005FF254 /* LibraError.swift in Sources */,
 				9DC902212328989E0097FD85 /* admission_control.grpc.swift in Sources */,
@@ -1275,8 +1271,9 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = VRC68UPH8Q;
+				CODE_SIGN_IDENTITY = "Apple Development: Jay Zou (JR6LZNW9NA)";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = LibraWalletTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1285,6 +1282,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.palliums.LibraWalletTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LibraWallet.app/LibraWallet";
@@ -1297,8 +1295,9 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = VRC68UPH8Q;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Jay Zou (ND49YBN8B3)";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = LibraWalletTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1307,6 +1306,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.palliums.LibraWalletTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LibraWallet.app/LibraWallet";
@@ -1318,6 +1318,7 @@
 			baseConfigurationReference = CC19B6BCD5C39DC5526FDDC4 /* Pods-LibraWalletUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VRC68UPH8Q;
 				INFOPLIST_FILE = LibraWalletUITests/Info.plist;
@@ -1328,6 +1329,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.palliums.LibraWalletUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = LibraWallet;
@@ -1339,6 +1341,7 @@
 			baseConfigurationReference = 5186520DDD2B7E61F7417817 /* Pods-LibraWalletUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VRC68UPH8Q;
 				INFOPLIST_FILE = LibraWalletUITests/Info.plist;
@@ -1349,6 +1352,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.palliums.LibraWalletUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = LibraWallet;

@@ -98,7 +98,7 @@ class MainViewController: UIViewController {
             button.frame = CGRect(x: 0, y: 0, width: 70, height: 37)
         }
         // 给按钮设置返回箭头图片
-        button.setTitle("交易历史", for: UIControl.State.normal)
+        button.setTitle(localLanguage(keyString: "wallet_home_right_bar_title"), for: UIControl.State.normal)
         button.setTitleColor(UIColor.black, for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.regular)
         button.setTitleColor(UIColor.init(hex: "707071"), for: UIControl.State.normal)

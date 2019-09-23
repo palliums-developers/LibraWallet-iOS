@@ -7,7 +7,10 @@
 //
 
 import UIKit
-
+enum NetworkState {
+    case mainnet
+    case testnet
+}
 struct Network {
 
 }

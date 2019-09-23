@@ -15,8 +15,25 @@ import Localize_Swift
 let libraMainURL = "ac.testnet.libra.org:8000"
 
 /************* Libra交易盐 *******************/
-let libraProgramCode = "4c49425241564d0a010007014a00000004000000034e000000060000000c54000000060000000d5a0000000600000005600000002900000004890000002000000007a90000000f00000000000001000200010300020002040200030003020402063c53454c463e0c4c696272614163636f756e74046d61696e0f7061795f66726f6d5f73656e6465720000000000000000000000000000000000000000000000000000000000000000000100020104000c000c0113010002"
+let libraProgramCode = "{\"code\":[76,73,66,82,65,86,77,10,1,0,7,1,74,0,0,0,4,0,0,0,3,78,0,0,0,6,0,0,0,13,84,0,0,0,6,0,0,0,14,90,0,0,0,6,0,0,0,5,96,0,0,0,41,0,0,0,4,137,0,0,0,32,0,0,0,8,169,0,0,0,15,0,0,0,0,0,0,1,0,2,0,1,3,0,2,0,2,4,2,0,3,2,4,2,3,0,6,60,83,69,76,70,62,12,76,105,98,114,97,65,99,99,111,117,110,116,4,109,97,105,110,15,112,97,121,95,102,114,111,109,95,115,101,110,100,101,114,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,2,0,4,0,12,0,12,1,19,1,1,2],\"args\":[],\"modules\":[]}"
 let signTransactionSalt = "46f174df6ca8de5ad29745f91584bb913e7df8dd162e3e921a5c1d8637c88d16"
+
+func getProgramCode() -> Data {
+    let temp = stringValueDic(libraProgramCode)
+    let code = temp!["code"] as! [UInt8]
+//    let dataArray = "\(code ?? "")".split(separator: ",")
+    
+    let data = Data.init(bytes: code, count: code.count)
+    
+    return data
+}
+func stringValueDic(_ str: String) -> [String : Any]? {
+    let data = str.data(using: String.Encoding.utf8)
+    if let dict = try? JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as? [String : Any] {
+        return dict
+    }
+    return nil
+}
 /***************************************/
 /// 待iOS支持最低版本位11的时候启用UIColor.init(named: "DefaultBackgroundColor")
 let defaultBackgroundColor = UIColor.white

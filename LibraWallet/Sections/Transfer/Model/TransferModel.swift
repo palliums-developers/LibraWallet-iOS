@@ -63,6 +63,7 @@ class TransferModel: NSObject {
                     })
                 } else {
                     DispatchQueue.main.async(execute: {
+                        print(response.acStatus.message)
                         let data = setKVOData(error: LibraWalletError.error("转账失败"), type: "Transfer")
                         self.setValue(data, forKey: "dataDic")
                     })

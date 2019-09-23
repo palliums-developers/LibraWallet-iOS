@@ -96,12 +96,12 @@ class TransactionsTableViewCell: UITableViewCell {
             var amountState = ""
             var amountColor = DefaultGreenColor
             if tempModel.event == "received" {
-                nameLabel.text = "收款"
+                nameLabel.text = localLanguage(keyString: "wallet_transactions_receive_title")
                 amountState = "+"
             } else {
                 amountState = "-"
                 amountColor = UIColor.init(hex: "FF4C4C")
-                nameLabel.text = "转账"
+                nameLabel.text = localLanguage(keyString: "wallet_transactions_transfer_title")
 
             }
             dateLabel.text = tempModel.date

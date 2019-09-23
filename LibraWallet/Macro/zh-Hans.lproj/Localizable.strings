@@ -12,6 +12,7 @@ wallet_home_send_button_title = "扫码付款";
 wallet_home_receive_button_title = "收款";
 
 wallet_create_button_title = "创建钱包";
+wallet_home_right_bar_title = "交易历史";
 /************* 接收 *******************/
 
 wallet_receive_title = "扫一扫，向我付款";
@@ -31,3 +32,7 @@ wallet_withdraw_wallet_balance_prefix_title = "账户余额";
 wallet_withdraw_select_total_coin_title = "全部";
 wallet_withdraw_transaction_fee_title = "手续费";
 wallet_withdraw_confirm_button_title = "转账";
+
+/************* 交易历史 *******************/
+wallet_transactions_receive_title = "收款";
+wallet_transactions_transfer_title = "转账";

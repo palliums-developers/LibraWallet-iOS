@@ -42,12 +42,17 @@ struct TransactionProgram {
         }
         // 追加modules数量
         result += dealData(originData: BigUInt(modules.count).serialize(), appendBytesCount: 4)
-        for module in modules {
-            // 追加module长度
-            result += dealData(originData: BigUInt(module.count).serialize(), appendBytesCount: 4)
-            // 追加module数据
-            result += module
+        if modules.isEmpty == true {
+            
+        } else {
+            for module in modules {
+                // 追加module长度
+                result += dealData(originData: BigUInt(module.count).serialize(), appendBytesCount: 4)
+                // 追加module数据
+                result += module
+            }
         }
+        
         return result
     }
     fileprivate func dealData(originData: Data, appendBytesCount: Int) -> Data {

@@ -12,6 +12,7 @@ wallet_home_send_button_title = "Scan to pay";
 wallet_home_receive_button_title = "Paid for";
 
 wallet_create_button_title = "Create";
+wallet_home_right_bar_title = "Transactions";
 /************* 接收 *******************/
 
 wallet_receive_title = "Scan to pay me";
@@ -31,3 +32,7 @@ wallet_withdraw_wallet_balance_prefix_title = "Available";
 wallet_withdraw_select_total_coin_title = "Total";
 wallet_withdraw_transaction_fee_title = "Fee";
 wallet_withdraw_confirm_button_title = "Transfer";
+
+/************* 交易历史 *******************/
+wallet_transactions_receive_title = "Receive";
+wallet_transactions_transfer_title = "Transfer";

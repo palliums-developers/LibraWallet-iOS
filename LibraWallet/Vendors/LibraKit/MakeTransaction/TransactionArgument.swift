@@ -45,8 +45,20 @@ struct TransactionArgument {
         switch self.code {
         case .U64:
             #warning("强转,待修改错误提醒")
-            let tempData = BigUInt(self.value)!.serialize().bytes.reversed()
-            result += tempData
+//            let tempData = BigUInt(self.value)!.serialize().bytes.reversed()
+            
+            
+            var amountData = Data()
+            //长度4个字节反转
+            let dataLenth = BigUInt(self.value)!.serialize()
+            for _ in 0..<(8 - dataLenth.count) {
+                amountData.append(Data.init(hex: "00"))
+            }
+            amountData.append(dataLenth)
+            
+            let reversedAmount = amountData.bytes.reversed()
+            
+            result += reversedAmount
         case .Address:
             #warning("强转,待修改错误提醒")
             let re = Data.init(hex: self.value)
