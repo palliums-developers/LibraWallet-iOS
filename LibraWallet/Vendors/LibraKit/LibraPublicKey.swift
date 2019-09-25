@@ -9,7 +9,7 @@
 import Foundation
 import SwiftEd25519
 import CryptoSwift
-class LibraPublicKey {
+struct LibraPublicKey {
     
     let raw: Data
     

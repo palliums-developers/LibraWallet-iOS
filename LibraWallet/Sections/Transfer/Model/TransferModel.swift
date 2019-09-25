@@ -69,6 +69,7 @@ class TransferModel: NSObject {
                     })
                 }
             } catch {
+//                print(error)
                 print(error.localizedDescription)
             }
         }

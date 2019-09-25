@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import BigInt
 struct TransactionProgram {
     fileprivate let code: Data
     
@@ -31,40 +30,29 @@ struct TransactionProgram {
         // 追加类型
         result += programHeaderData
         // 追加code长度
-        result += dealData(originData: BigUInt(self.code.bytes.count).serialize(), appendBytesCount: 4)
+        result += getLengthData(length: self.code.bytes.count, appendBytesCount: 4)
         // 追加code数据
         result += self.code
         // 追加argument数量
-        result += dealData(originData: BigUInt(argruments.count).serialize(), appendBytesCount: 4)
+        result += getLengthData(length: argruments.count, appendBytesCount: 4)
         // 追加argument数组数据
         for argument in argruments {
             result += argument.serialize()
         }
         // 追加modules数量
-        result += dealData(originData: BigUInt(modules.count).serialize(), appendBytesCount: 4)
+        result += getLengthData(length: modules.count, appendBytesCount: 4)
+
         if modules.isEmpty == true {
             
         } else {
             for module in modules {
                 // 追加module长度
-                result += dealData(originData: BigUInt(module.count).serialize(), appendBytesCount: 4)
+                result += getLengthData(length: module.count, appendBytesCount: 4)
                 // 追加module数据
                 result += module
             }
         }
         
         return result
-    }
-    fileprivate func dealData(originData: Data, appendBytesCount: Int) -> Data {
-        var newData = Data()
-        // 补全长度
-        for _ in 0..<(appendBytesCount - originData.count) {
-            newData.append(Data.init(hex: "00"))
-        }
-        // 追加原始数据
-        newData.append(originData)
-        // 倒序输出
-        let reversedAmount = newData.bytes.reversed()
-        return Data() + reversedAmount
     }
 }

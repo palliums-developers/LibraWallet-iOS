@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import BigInt
 enum ArgumentsCode {
     case Address
     case U64
@@ -44,68 +43,24 @@ struct TransactionArgument {
         
         switch self.code {
         case .U64:
-            #warning("强转,待修改错误提醒")
-//            let tempData = BigUInt(self.value)!.serialize().bytes.reversed()
-            
-            
-            var amountData = Data()
-            //长度4个字节反转
-            let dataLenth = BigUInt(self.value)!.serialize()
-            for _ in 0..<(8 - dataLenth.count) {
-                amountData.append(Data.init(hex: "00"))
-            }
-            amountData.append(dataLenth)
-            
-            let reversedAmount = amountData.bytes.reversed()
-            
-            result += reversedAmount
+            result += getLengthData(length: Int(self.value)!, appendBytesCount: 8)
+
         case .Address:
-            #warning("强转,待修改错误提醒")
             let re = Data.init(hex: self.value)
             
-            var address = Data()
-            //长度4个字节反转
-            let dataLenth = BigUInt(re.bytes.count).serialize()
-            for _ in 0..<(4 - dataLenth.count) {
-                address.append(Data.init(hex: "00"))
-            }
-            address.append(dataLenth)
-            
-            let reversedAmount = address.bytes.reversed()
-            
-            result += reversedAmount
+            result += getLengthData(length: re.bytes.count, appendBytesCount: 4)
+
             result += re
         case .String:
-            #warning("强转,待修改错误提醒")
             let re = self.value.data(using: String.Encoding.utf8)!
             
-            var stringData = Data()
-            //长度4个字节反转
-            let dataLenth = BigUInt(re.bytes.count).serialize()
-            for _ in 0..<(4 - dataLenth.count) {
-                stringData.append(Data.init(hex: "00"))
-            }
-            stringData.append(dataLenth)
-            
-            let reversedAmount = stringData.bytes.reversed()
-            
-            result += reversedAmount
+            result += getLengthData(length: re.bytes.count, appendBytesCount: 4)
+
             result += re
         case .Bytes:
-            #warning("强转,待修改错误提醒")
             let tempData = Data.init(hex: self.value)
-            
-            var stringData = Data()
-            //长度4个字节反转
-            let dataLenth = BigUInt(tempData.bytes.count).serialize()
-            for _ in 0..<(4 - dataLenth.count) {
-                stringData.append(Data.init(hex: "00"))
-            }
-            stringData.append(dataLenth)
-            
-            let reversedAmount = stringData.bytes.reversed()
-            
-            result += reversedAmount
+
+            result += getLengthData(length: tempData.bytes.count, appendBytesCount: 4)
             
             result += tempData
         }

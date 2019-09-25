@@ -8,8 +8,7 @@
 
 import UIKit
 import SwiftEd25519
-import BigInt
-public struct LibraPrivateKey {
+struct LibraPrivateKey {
     
     let raw: Data
     
@@ -31,31 +30,21 @@ public struct LibraPrivateKey {
         // 公钥数据
         var publicKeyData = Data()
         // 追加publicKey长度
-        publicKeyData += dealData(originData: BigUInt(wallet.publicKey.raw.bytes.count).serialize(), appendBytesCount: 4)
+        publicKeyData += getLengthData(length: wallet.publicKey.raw.bytes.count, appendBytesCount: 4)
+
         // 追加publicKey
         publicKeyData += wallet.publicKey.raw
         
         // 签名数据
         var signData = Data()
         // 追加签名长度
-        signData += dealData(originData: BigUInt(sign.count).serialize(), appendBytesCount: 4)
+        signData += getLengthData(length: sign.count, appendBytesCount: 4)
+
         // 追加签名
         signData += Data.init(bytes: sign, count: sign.count)
         
         signedTransation.signedTxn = raw + publicKeyData + signData
 
         return signedTransation
-    }
-    fileprivate func dealData(originData: Data, appendBytesCount: Int) -> Data {
-        var newData = Data()
-        // 补全长度
-        for _ in 0..<(appendBytesCount - originData.count) {
-            newData.append(Data.init(hex: "00"))
-        }
-        // 追加原始数据
-        newData.append(originData)
-        // 倒序输出
-        let reversedAmount = newData.bytes.reversed()
-        return Data() + reversedAmount
     }
 }

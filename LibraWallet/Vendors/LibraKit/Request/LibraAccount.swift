@@ -51,34 +51,34 @@ struct LibraAccount {
         for result in resultArray {
             let (addressLengthData, lastData6) = cutData(originData: result, length: 4)
             let (address, lastData7) = cutData(originData: lastData6, length: hw_getInt(addressLengthData.bytes))
-            print("address = \(address)")
+//            print("address = \(address)")
             
             let (balance, lastData8) = cutData(originData: lastData7, length: 8)
-            print("balance = \(hw_getInt64(balance.bytes) / 1000000)")
+//            print("balance = \(hw_getInt64(balance.bytes) / 1000000)")
             
             let (delegatedWithdrawalCapability, lastData9) = cutData(originData: lastData8, length: 1)
-            print("delegatedWithdrawalCapability = \(hw_getInt(delegatedWithdrawalCapability.bytes))")
+//            print("delegatedWithdrawalCapability = \(hw_getInt(delegatedWithdrawalCapability.bytes))")
             
             let (receivedEventsCount, lastData10) = cutData(originData: lastData9, length: 8)
-            print(hw_getInt(receivedEventsCount.bytes))
+//            print(hw_getInt(receivedEventsCount.bytes))
             
             let (receivedEventsLength, lastData11) = cutData(originData: lastData10, length: 4)
-            print(hw_getInt(receivedEventsLength.bytes))
+//            print(hw_getInt(receivedEventsLength.bytes))
             
             let (receivedEvents, lastData12) = cutData(originData: lastData11, length: hw_getInt(receivedEventsLength.bytes))
-            print(receivedEvents.toHexString())
+//            print(receivedEvents.toHexString())
             
             let (sentEventsCount, lastData13) = cutData(originData: lastData12, length: 8)
-            print(hw_getInt(sentEventsCount.bytes))
+//            print(hw_getInt(sentEventsCount.bytes))
             
             let (sentEventsLength, lastData14) = cutData(originData: lastData13, length: 4)
-            print(hw_getInt(sentEventsLength.bytes))
+//            print(hw_getInt(sentEventsLength.bytes))
             
             let (sentEvents, lastData15) = cutData(originData: lastData14, length: hw_getInt(sentEventsLength.bytes))
-            print(sentEvents.toHexString())
+//            print(sentEvents.toHexString())
             
             let (sequenceNumber, _) = cutData(originData: lastData15, length: 8)
-            print(hw_getInt64(sequenceNumber.bytes))
+//            print(hw_getInt64(sequenceNumber.bytes))
             //            print(hw_getInt(sequenceNumber.bytes))
             self.address = address.toHexString()
             self.sequenceNumber = Int64(hw_getInt64(sequenceNumber.bytes))

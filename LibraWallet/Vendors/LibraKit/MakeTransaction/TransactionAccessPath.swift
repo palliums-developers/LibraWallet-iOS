@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import BigInt
 enum TransactionWriteType {
     case Delete
     case Write
@@ -41,27 +40,17 @@ struct TransactionAccessPath {
         var result = Data()
         // 添加地址
         let addressData = Data.init(hex: self.address)
-        result += dealData(originData: BigUInt(addressData.bytes.count).serialize(), appendBytesCount: 4)
+        result += getLengthData(length: addressData.bytes.count, appendBytesCount: 4)
+
         result += addressData
         // 添加路径
         let pathData = Data.init(hex: self.path)
-        result += dealData(originData: BigUInt(pathData.bytes.count).serialize(), appendBytesCount: 4)
+//        result += dealData(originData: BigUInt(pathData.bytes.count).serialize(), appendBytesCount: 4)
+        result += getLengthData(length: pathData.bytes.count, appendBytesCount: 4)
+
         result += pathData
         // 追加类型
         result += self.writeType.raw
         return result
     }
-    fileprivate func dealData(originData: Data, appendBytesCount: Int) -> Data {
-        var newData = Data()
-        // 补全长度
-        for _ in 0..<(appendBytesCount - originData.count) {
-            newData.append(Data.init(hex: "00"))
-        }
-        // 追加原始数据
-        newData.append(originData)
-        // 倒序输出
-        let reversedAmount = newData.bytes.reversed()
-        return Data() + reversedAmount
-    }
-    
 }

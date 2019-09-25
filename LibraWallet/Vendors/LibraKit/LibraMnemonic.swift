@@ -9,7 +9,7 @@
 import Foundation
 import CryptoSwift
 import SwiftEd25519
-public struct LibraMnemonic {
+struct LibraMnemonic {
     public enum Strength: Int {
         case `default` = 128
         case low = 160
@@ -31,7 +31,10 @@ public struct LibraMnemonic {
     public static func generate(strength: Strength = .default, language: Language = .english) throws -> [String] {
         let byteCount = strength.rawValue / 8
         var bytes = Data(count: byteCount)
-        let status = bytes.withUnsafeMutableBytes { SecRandomCopyBytes(kSecRandomDefault, byteCount, $0) }
+        let status = bytes.withUnsafeMutableBytes { SecRandomCopyBytes(kSecRandomDefault, byteCount, $0.baseAddress!)}
+//        let status = bytes.withUnsafeMutableBytes { (buffer) in
+//            SecRandomCopyBytes(kSecRandomDefault, byteCount, buffer.baseAddress!)
+//        }
         guard status == errSecSuccess else { throw MnemonicError.randomBytesError }
         return generate(entropy: bytes, language: language)
     }
@@ -60,7 +63,6 @@ public struct LibraMnemonic {
         let mnemonicTemp = mnemonic.joined(separator: " ")
         do {
             let dk = try PKCS5.PBKDF2(password: Array(mnemonicTemp.utf8), salt: salt, iterations: 2048, keyLength: 32, variant: .sha3_256).calculate()
-//            let seed = Data.init(bytes: dk, count: dk.count)
             let seed = try Seed.init(bytes: dk)
             return seed
         } catch {

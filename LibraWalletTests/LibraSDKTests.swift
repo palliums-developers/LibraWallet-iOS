@@ -80,7 +80,7 @@ class LibraSDKTests: XCTestCase {
 
     }
     
-    func testDeSerialize() {
+    func testDeserialize() {
         let testData = Data.init(hex: "010000002100000001217da6c6b3e19f1825cfb2676daecce3bf3de03cf26647c78df00b371b25cc978d00000020000000b8c39fc6910816ad21bc2be4f7e804539e7529b7b7d188c80f093e1e61f192cf00a8e6cf00000000000700000000000000200000003b07b78954be13a5bc5cb2e0eaf48312a85d864091d5cb5faee296d5248d89df0400000000000000200000003f486909a2abd12a387797d9d1f78496c95b7d3878767a56dafe8f2260e5144d0400000000000000")
         let account = LibraAccount.init(accountData: testData)
         XCTAssertEqual(account.address, "b8c39fc6910816ad21bc2be4f7e804539e7529b7b7d188c80f093e1e61f192cf")
@@ -98,7 +98,7 @@ class LibraSDKTests: XCTestCase {
         let string3 = TransactionArgument.init(code: .Address, value: "4fddcee027aa66e4e144d44dd218a345fb5af505284cb03368b7739e92dd6b3c")
         let string4 = TransactionArgument.init(code: .U64, value: "\(9 * 1000000)")
         let program2 = TransactionProgram.init(code: getProgramCode(), argruments: [string3, string4], modules: []).serialize()
-        print(program2.toHexString())
+        print(string4.serialize().toHexString())
         let raw = RawTransaction.init(senderAddres: wallet.publicKey.toAddress(),
                                       sequenceNumber: 0,
                                       maxGasAmount: 140000,
@@ -110,5 +110,10 @@ class LibraSDKTests: XCTestCase {
         let signResult = try! wallet.privateKey.signTransaction(transaction: raw, wallet: wallet).serializedData()
         print(signResult.toHexString())
     }
-    
+    func testPrint() {
+        let mnemonic = try! LibraMnemonic.generate(language: LibraMnemonic.Language.french)
+        print(mnemonic)
+//        let data = getLengthData(length: 9 * 1000000, appendBytesCount: 8)
+//        print(data.toHexString())
+    }
 }
