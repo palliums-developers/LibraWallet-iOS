@@ -46,25 +46,24 @@ struct TransactionArgument {
             result += getLengthData(length: Int(self.value)!, appendBytesCount: 8)
 
         case .Address:
-            let re = Data.init(hex: self.value)
+            let data = Data.init(hex: self.value)
             
-            result += getLengthData(length: re.bytes.count, appendBytesCount: 4)
+            result += getLengthData(length: data.bytes.count, appendBytesCount: 4)
 
-            result += re
+            result += data
         case .String:
-            let re = self.value.data(using: String.Encoding.utf8)!
+            let data = self.value.data(using: String.Encoding.utf8)!
             
-            result += getLengthData(length: re.bytes.count, appendBytesCount: 4)
+            result += getLengthData(length: data.bytes.count, appendBytesCount: 4)
 
-            result += re
+            result += data
         case .Bytes:
-            let tempData = Data.init(hex: self.value)
+            let data = Data.init(hex: self.value)
 
-            result += getLengthData(length: tempData.bytes.count, appendBytesCount: 4)
+            result += getLengthData(length: data.bytes.count, appendBytesCount: 4)
             
-            result += tempData
+            result += data
         }
-        
         return result
     }
 }

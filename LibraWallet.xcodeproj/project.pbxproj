@@ -721,9 +721,9 @@
 			children = (
 				9DC4884823211180005FF254 /* LibraWalletManager.swift */,
 				9DC9023C2328E8290097FD85 /* CommonData.swift */,
+				9D712440232F621B009DED52 /* LibraWalletTool.swift */,
 				9DC902442328FCD00097FD85 /* LibraWalletError.swift */,
 				9DC902462328FDB90097FD85 /* DataBaseManager.swift */,
-				9D712440232F621B009DED52 /* LibraWalletTool.swift */,
 				9D08AD362330BA75004687E8 /* NetworkManager.swift */,
 			);
 			path = Tools;

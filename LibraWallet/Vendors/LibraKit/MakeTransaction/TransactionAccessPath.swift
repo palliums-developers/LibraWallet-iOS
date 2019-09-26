@@ -45,7 +45,6 @@ struct TransactionAccessPath {
         result += addressData
         // 添加路径
         let pathData = Data.init(hex: self.path)
-//        result += dealData(originData: BigUInt(pathData.bytes.count).serialize(), appendBytesCount: 4)
         result += getLengthData(length: pathData.bytes.count, appendBytesCount: 4)
 
         result += pathData

@@ -14,8 +14,7 @@ struct TransactionProgram {
     
     fileprivate let modules: [Data]
     
-    fileprivate let programHeaderData: Data = Data.init(hex: "00000000")
-
+    fileprivate let programPrefixData: Data = Data.init(hex: "00000000")
     
     init(code: Data, argruments: [TransactionArgument], modules: [Data]) {
         
@@ -28,7 +27,7 @@ struct TransactionProgram {
     func serialize() -> Data {
         var result = Data()
         // 追加类型
-        result += programHeaderData
+        result += programPrefixData
         // 追加code长度
         result += getLengthData(length: self.code.bytes.count, appendBytesCount: 4)
         // 追加code数据
@@ -41,18 +40,13 @@ struct TransactionProgram {
         }
         // 追加modules数量
         result += getLengthData(length: modules.count, appendBytesCount: 4)
-
-        if modules.isEmpty == true {
-            
-        } else {
-            for module in modules {
-                // 追加module长度
-                result += getLengthData(length: module.count, appendBytesCount: 4)
-                // 追加module数据
-                result += module
-            }
+        // 追加modules数据
+        for module in modules {
+            // 追加module长度
+            result += getLengthData(length: module.count, appendBytesCount: 4)
+            // 追加module数据
+            result += module
         }
-        
         return result
     }
 }
