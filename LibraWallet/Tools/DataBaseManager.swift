@@ -114,7 +114,8 @@ struct DataBaseManager {
                         return "\(item)"
                     }
                     let seed = try LibraMnemonic.seed(mnemonic: mnemonicArray)
-                    let tempWallet = LibraWallet.init(seed: seed)
+//                    let tempWallet = LibraWallet.init(seed: seed)
+                    let tempWallet = try LibraWallet.init(seed: seed)
                     LibraWalletManager.wallet.initWallet(walletID: walletID,
                                                          walletBalance: walletBalance,
                                                          walletAddress: walletAddress,

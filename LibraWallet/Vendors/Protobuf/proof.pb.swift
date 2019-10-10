@@ -87,18 +87,9 @@ struct Types_AccumulatorConsistencyProof {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  /// The root hashes of the frozen subtrees that form the small accumulator.
-  /// Note that none of these hashes should be default hash.
-  var frozenSubtreeRoots: [Data] = []
-
-  /// The total number of siblings.
-  var numSiblings: UInt32 = 0
-
-  /// The non-default siblings. Note that the entire list of siblings always
-  /// start of zero or more non-default siblings, followed by zero of more
-  /// default siblings. So given the total number of siblings and the non-default
-  /// siblings we should be able to construct the entire sibling list.
-  var nonDefaultSiblings: [Data] = []
+  /// The root hashes of the subtrees that represent new leaves. Note that none
+  /// of these hashes should be default hash.
+  var subtrees: [Data] = []
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -299,39 +290,27 @@ extension Types_SparseMerkleProof: SwiftProtobuf.Message, SwiftProtobuf._Message
 extension Types_AccumulatorConsistencyProof: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".AccumulatorConsistencyProof"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .standard(proto: "frozen_subtree_roots"),
-    2: .standard(proto: "num_siblings"),
-    3: .standard(proto: "non_default_siblings"),
+    1: .same(proto: "subtrees"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
-      case 1: try decoder.decodeRepeatedBytesField(value: &self.frozenSubtreeRoots)
-      case 2: try decoder.decodeSingularUInt32Field(value: &self.numSiblings)
-      case 3: try decoder.decodeRepeatedBytesField(value: &self.nonDefaultSiblings)
+      case 1: try decoder.decodeRepeatedBytesField(value: &self.subtrees)
       default: break
       }
     }
   }
 
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if !self.frozenSubtreeRoots.isEmpty {
-      try visitor.visitRepeatedBytesField(value: self.frozenSubtreeRoots, fieldNumber: 1)
-    }
-    if self.numSiblings != 0 {
-      try visitor.visitSingularUInt32Field(value: self.numSiblings, fieldNumber: 2)
-    }
-    if !self.nonDefaultSiblings.isEmpty {
-      try visitor.visitRepeatedBytesField(value: self.nonDefaultSiblings, fieldNumber: 3)
+    if !self.subtrees.isEmpty {
+      try visitor.visitRepeatedBytesField(value: self.subtrees, fieldNumber: 1)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   func _protobuf_generated_isEqualTo(other: Types_AccumulatorConsistencyProof) -> Bool {
-    if self.frozenSubtreeRoots != other.frozenSubtreeRoots {return false}
-    if self.numSiblings != other.numSiblings {return false}
-    if self.nonDefaultSiblings != other.nonDefaultSiblings {return false}
+    if self.subtrees != other.subtrees {return false}
     if unknownFields != other.unknownFields {return false}
     return true
   }

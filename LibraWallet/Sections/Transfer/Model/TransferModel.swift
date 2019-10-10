@@ -54,6 +54,7 @@ class TransferModel: NSObject {
                 // 组装请求
                 var mission = AdmissionControl_SubmitTransactionRequest.init()
                 mission.signedTxn = aaa
+                print(aaa.signedTxn.toHexString())
                 // 发送请求
                 let response = try client.submitTransaction(mission)
                 if response.acStatus.code == AdmissionControl_AdmissionControlStatusCode.accepted {

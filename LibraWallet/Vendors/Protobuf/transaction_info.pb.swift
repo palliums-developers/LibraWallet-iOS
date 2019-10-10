@@ -45,6 +45,9 @@ struct Types_TransactionInfo {
   /// The amount of gas used by this transaction.
   var gasUsed: UInt64 = 0
 
+  /// The major status of executing this transaction.
+  var majorStatus: UInt64 = 0
+
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   init() {}
@@ -61,6 +64,7 @@ extension Types_TransactionInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
     2: .standard(proto: "state_root_hash"),
     3: .standard(proto: "event_root_hash"),
     4: .standard(proto: "gas_used"),
+    5: .standard(proto: "major_status"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -70,6 +74,7 @@ extension Types_TransactionInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
       case 2: try decoder.decodeSingularBytesField(value: &self.stateRootHash)
       case 3: try decoder.decodeSingularBytesField(value: &self.eventRootHash)
       case 4: try decoder.decodeSingularUInt64Field(value: &self.gasUsed)
+      case 5: try decoder.decodeSingularUInt64Field(value: &self.majorStatus)
       default: break
       }
     }
@@ -88,6 +93,9 @@ extension Types_TransactionInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
     if self.gasUsed != 0 {
       try visitor.visitSingularUInt64Field(value: self.gasUsed, fieldNumber: 4)
     }
+    if self.majorStatus != 0 {
+      try visitor.visitSingularUInt64Field(value: self.majorStatus, fieldNumber: 5)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -96,6 +104,7 @@ extension Types_TransactionInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
     if self.stateRootHash != other.stateRootHash {return false}
     if self.eventRootHash != other.eventRootHash {return false}
     if self.gasUsed != other.gasUsed {return false}
+    if self.majorStatus != other.majorStatus {return false}
     if unknownFields != other.unknownFields {return false}
     return true
   }

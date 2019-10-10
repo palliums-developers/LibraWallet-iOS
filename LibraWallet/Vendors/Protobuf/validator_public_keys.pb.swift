@@ -34,6 +34,9 @@ struct Types_ValidatorPublicKeys {
   /// Consensus public key
   var consensusPublicKey: Data = SwiftProtobuf.Internal.emptyData
 
+  /// Validator voting power for consensus
+  var consensusVotingPower: UInt64 = 0
+
   /// Network signing publick key
   var networkSigningPublicKey: Data = SwiftProtobuf.Internal.emptyData
 
@@ -54,8 +57,9 @@ extension Types_ValidatorPublicKeys: SwiftProtobuf.Message, SwiftProtobuf._Messa
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "account_address"),
     2: .standard(proto: "consensus_public_key"),
-    3: .standard(proto: "network_signing_public_key"),
-    4: .standard(proto: "network_identity_public_key"),
+    3: .standard(proto: "consensus_voting_power"),
+    4: .standard(proto: "network_signing_public_key"),
+    5: .standard(proto: "network_identity_public_key"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -63,8 +67,9 @@ extension Types_ValidatorPublicKeys: SwiftProtobuf.Message, SwiftProtobuf._Messa
       switch fieldNumber {
       case 1: try decoder.decodeSingularBytesField(value: &self.accountAddress)
       case 2: try decoder.decodeSingularBytesField(value: &self.consensusPublicKey)
-      case 3: try decoder.decodeSingularBytesField(value: &self.networkSigningPublicKey)
-      case 4: try decoder.decodeSingularBytesField(value: &self.networkIdentityPublicKey)
+      case 3: try decoder.decodeSingularUInt64Field(value: &self.consensusVotingPower)
+      case 4: try decoder.decodeSingularBytesField(value: &self.networkSigningPublicKey)
+      case 5: try decoder.decodeSingularBytesField(value: &self.networkIdentityPublicKey)
       default: break
       }
     }
@@ -77,11 +82,14 @@ extension Types_ValidatorPublicKeys: SwiftProtobuf.Message, SwiftProtobuf._Messa
     if !self.consensusPublicKey.isEmpty {
       try visitor.visitSingularBytesField(value: self.consensusPublicKey, fieldNumber: 2)
     }
+    if self.consensusVotingPower != 0 {
+      try visitor.visitSingularUInt64Field(value: self.consensusVotingPower, fieldNumber: 3)
+    }
     if !self.networkSigningPublicKey.isEmpty {
-      try visitor.visitSingularBytesField(value: self.networkSigningPublicKey, fieldNumber: 3)
+      try visitor.visitSingularBytesField(value: self.networkSigningPublicKey, fieldNumber: 4)
     }
     if !self.networkIdentityPublicKey.isEmpty {
-      try visitor.visitSingularBytesField(value: self.networkIdentityPublicKey, fieldNumber: 4)
+      try visitor.visitSingularBytesField(value: self.networkIdentityPublicKey, fieldNumber: 5)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -89,6 +97,7 @@ extension Types_ValidatorPublicKeys: SwiftProtobuf.Message, SwiftProtobuf._Messa
   func _protobuf_generated_isEqualTo(other: Types_ValidatorPublicKeys) -> Bool {
     if self.accountAddress != other.accountAddress {return false}
     if self.consensusPublicKey != other.consensusPublicKey {return false}
+    if self.consensusVotingPower != other.consensusVotingPower {return false}
     if self.networkSigningPublicKey != other.networkSigningPublicKey {return false}
     if self.networkIdentityPublicKey != other.networkIdentityPublicKey {return false}
     if unknownFields != other.unknownFields {return false}

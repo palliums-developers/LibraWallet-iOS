@@ -45,7 +45,7 @@ class WalletCreateViewController: UIViewController {
 extension WalletCreateViewController: WalletCreateViewDelegate {
     func createWallet() {
         do {
-            let mnemonic = try LibraMnemonic.generate()
+            let mnemonic = try LibraMnemonic.generate(language: .japanese)
             //有钱助词
 //            let mnemonic = ["net", "dice", "divide", "amount", "stamp", "flock", "brave", "nuclear", "fox", "aim", "father", "apology"]
             // 没钱助词
@@ -53,7 +53,9 @@ extension WalletCreateViewController: WalletCreateViewDelegate {
             
             
             let seed = try LibraMnemonic.seed(mnemonic: mnemonic)
-            let wallet = LibraWallet.init(seed: seed)
+//            let wallet = LibraWallet.init(seed: seed)
+            let wallet = try LibraWallet.init(seed: seed)
+
             let menmonicString = mnemonic.reduce("") { (result, content) in
                 var spaceString = " "
                 if result.isEmpty == true {

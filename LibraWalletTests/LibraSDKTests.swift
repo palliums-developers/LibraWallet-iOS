@@ -10,6 +10,7 @@ import XCTest
 import SwiftEd25519
 import CryptoSwift
 import BigInt
+import SwiftGRPC
 @testable import LibraWallet
 class LibraSDKTests: XCTestCase {
 
@@ -75,13 +76,13 @@ class LibraSDKTests: XCTestCase {
         //有钱助词
         let mnemonic = ["net", "dice", "divide", "amount", "stamp", "flock", "brave", "nuclear", "fox", "aim", "father", "apology"]
         let seed = try! LibraMnemonic.seed(mnemonic: mnemonic)
-        let wallet = LibraWallet.init(seed: seed)
+        let wallet = try! LibraWallet.init(seed: seed)
         _ = try! wallet.privateKey.signTransaction(transaction: raw, wallet: wallet)
 
     }
     
     func testDeserialize() {
-        let testData = Data.init(hex: "010000002100000001217da6c6b3e19f1825cfb2676daecce3bf3de03cf26647c78df00b371b25cc978d00000020000000b8c39fc6910816ad21bc2be4f7e804539e7529b7b7d188c80f093e1e61f192cf00a8e6cf00000000000700000000000000200000003b07b78954be13a5bc5cb2e0eaf48312a85d864091d5cb5faee296d5248d89df0400000000000000200000003f486909a2abd12a387797d9d1f78496c95b7d3878767a56dafe8f2260e5144d0400000000000000")
+        let testData = Data.init(hex: "010000002100000001217da6c6b3e19f1825cfb2676daecce3bf3de03cf26647c78df00b371b25cc978e00000020000000b8c39fc6910816ad21bc2be4f7e804539e7529b7b7d188c80f093e1e61f192cf00a8e6cf0000000000000700000000000000200000003b07b78954be13a5bc5cb2e0eaf48312a85d864091d5cb5faee296d5248d89df0400000000000000200000003f486909a2abd12a387797d9d1f78496c95b7d3878767a56dafe8f2260e5144d0400000000000000")
         let account = LibraAccount.init(accountData: testData)
         XCTAssertEqual(account.address, "b8c39fc6910816ad21bc2be4f7e804539e7529b7b7d188c80f093e1e61f192cf")
         XCTAssertEqual(account.sequenceNumber, 4)
@@ -92,28 +93,105 @@ class LibraSDKTests: XCTestCase {
         //有钱助词
         let mnemonic = ["net", "dice", "divide", "amount", "stamp", "flock", "brave", "nuclear", "fox", "aim", "father", "apology"]
         let seed = try! LibraMnemonic.seed(mnemonic: mnemonic)
-        let wallet = LibraWallet.init(seed: seed)
+        let wallet = try! LibraWallet.init(seed: seed)
+
+//
+//        let string3 = TransactionArgument.init(code: .Address, value:  "4fddcee027aa66e4e144d44dd218a345fb5af505284cb03368b7739e92dd6b3c")
+//        let string4 = TransactionArgument.init(code: .U64, value: "\(9 * 1000000)")
+//        let program2 = TransactionProgram.init(code: getProgramCode(), argruments: [string3, string4], modules: []).serialize()
+//        print(string4.serialize().toHexString())
+//        let raw = RawTransaction.init(senderAddres: wallet.publicKey.toAddress(),
+//                                      sequenceNumber: 0,
+//                                      maxGasAmount: 140000,
+//                                      gasUnitPrice: 0,
+//                                      expirationTime: 0,
+//                                      programOrWrite: program2)
+//
+//
+//        let signResult = try! wallet.privateKey.signTransaction(transaction: raw, wallet: wallet).serializedData()
+//        print(signResult.toHexString())
+//        d3686886094923eace9e502f8198a185de5435ac974bffa6f155bdece325acbc
         
         
-        let string3 = TransactionArgument.init(code: .Address, value: "4fddcee027aa66e4e144d44dd218a345fb5af505284cb03368b7739e92dd6b3c")
-        let string4 = TransactionArgument.init(code: .U64, value: "\(9 * 1000000)")
-        let program2 = TransactionProgram.init(code: getProgramCode(), argruments: [string3, string4], modules: []).serialize()
-        print(string4.serialize().toHexString())
-        let raw = RawTransaction.init(senderAddres: wallet.publicKey.toAddress(),
-                                      sequenceNumber: 0,
-                                      maxGasAmount: 140000,
-                                      gasUnitPrice: 0,
-                                      expirationTime: 0,
-                                      programOrWrite: program2)
+//        f3895db4abc90322afcc4e7dea8eed40a506507b6f100caed41fac95aa58f64517ff6731a1a1b35e278db4cc5ccd13f792003306fbd803fafcfecadeed7a070a
         
+        let testSign = try! KeyPair.init(publicKey: Data.init(hex: "f7972ae8140338b76702cc35431e7a79386f8b2ded1a5d71a0cdb2ba83dcfe7b").bytes, privateKey: Data.init(hex: "f591d756e9e522d24e22d83f0f777c90ba8d3fe9052155bb29873cb7d38ad8c8").bytes)
+        let testResult = testSign.sign(Data.init(hex: "d3686886094923eace9e502f8198a185de5435ac974bffa6f155bdece325acbc").bytes)
+        XCTAssertEqual(testResult.toHexString(), "f3895db4abc90322afcc4e7dea8eed40a506507b6f100caed41fac95aa58f64517ff6731a1a1b35e278db4cc5ccd13f792003306fbd803fafcfecadeed7a070a")
+
         
-        let signResult = try! wallet.privateKey.signTransaction(transaction: raw, wallet: wallet).serializedData()
-        print(signResult.toHexString())
     }
     func testPrint() {
-        let mnemonic = try! LibraMnemonic.generate(language: LibraMnemonic.Language.french)
-        print(mnemonic)
-//        let data = getLengthData(length: 9 * 1000000, appendBytesCount: 8)
-//        print(data.toHexString())
+//        let mnemonic = try! LibraMnemonic.generate(language: LibraMnemonic.Language.english)
+//        print(mnemonic)
+        
+        //02081eb1573be35048677d6540a7690f03e9269aa36f2ddfb9da9228fbb7f761
+        
+        
+        let mnemonic = ["legal","winner","thank","year","wave","sausage","worth","useful","legal","winner","thank","year","wave","sausage","worth","useful","legal","will"]
+        let seed = try! LibraMnemonic.seed(mnemonic: mnemonic)
+        let masterKey = try! HMAC.init(key: "LIBRA WALLET: master key salt$", variant: .sha3_256).authenticate(seed)
+        XCTAssertEqual(masterKey.toHexString(), "16274c9618ed59177ca948529c1884ba65c57984d562ec2b4e5aa1ee3e3903be")
+
+
+        
+//        let salt: Array<UInt8> = Array("LIBRA WALLET: derived key$".utf8)
+        let tempInfo = Data() + Array("LIBRA WALLET: derived key$".utf8) + Data.init(hex: "0000000000000000")
+        do {
+            //Data.init(hex: "16274c9618ed59177ca948529c1884ba65c57984d562ec2b4e5aa1ee3e3903be").bytes
+            
+            
+            let temp = try HKDF.init(password: seed,
+                                       salt:Array("LIBRA WALLET: master key salt$".utf8),
+                                       info: tempInfo.bytes,
+                                       keyLength: 32,
+                                       variant: .sha3_256).calculate()
+            
+            
+            
+            
+            
+            XCTAssertEqual(temp.toHexString(), "358a375f36d74c30b7f3299b62d712b307725938f8cc931100fbd10a434fc8b9")
+            
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    func testNewWalletKit() {
+        let mnemonic = ["legal","winner","thank","year","wave","sausage","worth","useful","legal","winner","thank","year","wave","sausage","worth","useful","legal","will"]
+        do {
+            let seed = try LibraMnemonic.seed(mnemonic: mnemonic)
+            
+            let testWallet = try LibraWallet.init(seed: seed, depth: 0)
+            let testMasterKey = try testWallet.getMasterKey()
+            XCTAssertEqual(testMasterKey.toHexString(), "16274c9618ed59177ca948529c1884ba65c57984d562ec2b4e5aa1ee3e3903be")
+            
+            
+            XCTAssertEqual(testWallet.privateKey.raw.toHexString(), "358a375f36d74c30b7f3299b62d712b307725938f8cc931100fbd10a434fc8b9")
+            let testWallet2 = try LibraWallet.init(seed: seed, depth: 1)
+            
+            XCTAssertEqual(testWallet2.privateKey.raw.toHexString(), "a325fe7d27b1b49f191cc03525951fec41b6ffa2d4b3007bb1d9dd353b7e56a6")
+
+
+        } catch {
+            print(error.localizedDescription)
+        }
+        
+        
+
+    }
+    func testED25519() {
+        let mnemonic = ["net", "dice", "divide", "amount", "stamp", "flock", "brave", "nuclear", "fox", "aim", "father", "apology"]
+        do {
+            let salt: Array<UInt8> = Array("LIBRA WALLET: mnemonic salt prefix$LIBRA".utf8)
+            let mnemonicTemp = mnemonic.joined(separator: " ")
+            let dk = try PKCS5.PBKDF2(password: Array(mnemonicTemp.utf8), salt: salt, iterations: 2048, keyLength: 32, variant: .sha3_256).calculate()
+            let keyPairManager = Ed25519.calcPublicKey(secretKey: dk)
+            
+            print(keyPairManager.sha3(SHA3.Variant.sha256).toHexString())
+            
+        } catch {
+            print(error)
+        }
     }
 }

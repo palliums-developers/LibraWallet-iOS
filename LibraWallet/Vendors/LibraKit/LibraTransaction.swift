@@ -8,7 +8,6 @@
 
 import Foundation
 import CryptoSwift
-import SwiftEd25519
 struct LibraTransaction {
 
     let request: RawTransaction

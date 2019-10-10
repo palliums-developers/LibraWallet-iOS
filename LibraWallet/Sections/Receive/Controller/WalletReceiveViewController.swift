@@ -14,6 +14,7 @@ class WalletReceiveViewController: UIViewController {
         // 加载子View
         self.view.addSubview(detailView)
         self.detailView.model = LibraWalletManager.wallet
+        
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()

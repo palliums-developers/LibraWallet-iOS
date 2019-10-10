@@ -61,6 +61,53 @@ enum AdmissionControl_AdmissionControlStatusCode: SwiftProtobuf.Enum {
 
 }
 
+/// The request for submitting a transaction to an upstream validator or full node.
+struct AdmissionControl_AdmissionControlMsg {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var message: OneOf_Message? {
+    get {return _storage._message}
+    set {_uniqueStorage()._message = newValue}
+  }
+
+  var submitTransactionRequest: AdmissionControl_SubmitTransactionRequest {
+    get {
+      if case .submitTransactionRequest(let v)? = _storage._message {return v}
+      return AdmissionControl_SubmitTransactionRequest()
+    }
+    set {_uniqueStorage()._message = .submitTransactionRequest(newValue)}
+  }
+
+  var submitTransactionResponse: AdmissionControl_SubmitTransactionResponse {
+    get {
+      if case .submitTransactionResponse(let v)? = _storage._message {return v}
+      return AdmissionControl_SubmitTransactionResponse()
+    }
+    set {_uniqueStorage()._message = .submitTransactionResponse(newValue)}
+  }
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  enum OneOf_Message: Equatable {
+    case submitTransactionRequest(AdmissionControl_SubmitTransactionRequest)
+    case submitTransactionResponse(AdmissionControl_SubmitTransactionResponse)
+
+    static func ==(lhs: AdmissionControl_AdmissionControlMsg.OneOf_Message, rhs: AdmissionControl_AdmissionControlMsg.OneOf_Message) -> Bool {
+      switch (lhs, rhs) {
+      case (.submitTransactionRequest(let l), .submitTransactionRequest(let r)): return l == r
+      case (.submitTransactionResponse(let l), .submitTransactionResponse(let r)): return l == r
+      default: return false
+      }
+    }
+  }
+
+  init() {}
+
+  fileprivate var _storage = _StorageClass.defaultInstance
+}
+
 /// -----------------------------------------------------------------------------
 /// ---------------- Submit transaction
 /// -----------------------------------------------------------------------------
@@ -145,10 +192,10 @@ struct AdmissionControl_SubmitTransactionResponse {
     set {_uniqueStorage()._status = .acStatus(newValue)}
   }
 
-  var mempoolStatus: Mempool_MempoolAddTransactionStatus {
+  var mempoolStatus: MempoolStatus_MempoolAddTransactionStatus {
     get {
       if case .mempoolStatus(let v)? = _storage._status {return v}
-      return Mempool_MempoolAddTransactionStatus()
+      return MempoolStatus_MempoolAddTransactionStatus()
     }
     set {_uniqueStorage()._status = .mempoolStatus(newValue)}
   }
@@ -166,7 +213,7 @@ struct AdmissionControl_SubmitTransactionResponse {
   enum OneOf_Status: Equatable {
     case vmStatus(Types_VMStatus)
     case acStatus(AdmissionControl_AdmissionControlStatus)
-    case mempoolStatus(Mempool_MempoolAddTransactionStatus)
+    case mempoolStatus(MempoolStatus_MempoolAddTransactionStatus)
 
     static func ==(lhs: AdmissionControl_SubmitTransactionResponse.OneOf_Status, rhs: AdmissionControl_SubmitTransactionResponse.OneOf_Status) -> Bool {
       switch (lhs, rhs) {
@@ -193,6 +240,87 @@ extension AdmissionControl_AdmissionControlStatusCode: SwiftProtobuf._ProtoNameP
     1: .same(proto: "Blacklisted"),
     2: .same(proto: "Rejected"),
   ]
+}
+
+extension AdmissionControl_AdmissionControlMsg: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".AdmissionControlMsg"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "submit_transaction_request"),
+    2: .standard(proto: "submit_transaction_response"),
+  ]
+
+  fileprivate class _StorageClass {
+    var _message: AdmissionControl_AdmissionControlMsg.OneOf_Message?
+
+    static let defaultInstance = _StorageClass()
+
+    private init() {}
+
+    init(copying source: _StorageClass) {
+      _message = source._message
+    }
+  }
+
+  fileprivate mutating func _uniqueStorage() -> _StorageClass {
+    if !isKnownUniquelyReferenced(&_storage) {
+      _storage = _StorageClass(copying: _storage)
+    }
+    return _storage
+  }
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    _ = _uniqueStorage()
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      while let fieldNumber = try decoder.nextFieldNumber() {
+        switch fieldNumber {
+        case 1:
+          var v: AdmissionControl_SubmitTransactionRequest?
+          if let current = _storage._message {
+            try decoder.handleConflictingOneOf()
+            if case .submitTransactionRequest(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {_storage._message = .submitTransactionRequest(v)}
+        case 2:
+          var v: AdmissionControl_SubmitTransactionResponse?
+          if let current = _storage._message {
+            try decoder.handleConflictingOneOf()
+            if case .submitTransactionResponse(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {_storage._message = .submitTransactionResponse(v)}
+        default: break
+        }
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      switch _storage._message {
+      case .submitTransactionRequest(let v)?:
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+      case .submitTransactionResponse(let v)?:
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+      case nil: break
+      }
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  func _protobuf_generated_isEqualTo(other: AdmissionControl_AdmissionControlMsg) -> Bool {
+    if _storage !== other._storage {
+      let storagesAreEqual: Bool = withExtendedLifetime((_storage, other._storage)) { (_args: (_StorageClass, _StorageClass)) in
+        let _storage = _args.0
+        let other_storage = _args.1
+        if _storage._message != other_storage._message {return false}
+        return true
+      }
+      if !storagesAreEqual {return false}
+    }
+    if unknownFields != other.unknownFields {return false}
+    return true
+  }
 }
 
 extension AdmissionControl_SubmitTransactionRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
@@ -343,7 +471,7 @@ extension AdmissionControl_SubmitTransactionResponse: SwiftProtobuf.Message, Swi
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._status = .acStatus(v)}
         case 3:
-          var v: Mempool_MempoolAddTransactionStatus?
+          var v: MempoolStatus_MempoolAddTransactionStatus?
           if let current = _storage._status {
             try decoder.handleConflictingOneOf()
             if case .mempoolStatus(let m) = current {v = m}

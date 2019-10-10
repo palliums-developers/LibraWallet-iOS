@@ -26,11 +26,34 @@
 		9D712441232F621B009DED52 /* LibraWalletTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D712440232F621B009DED52 /* LibraWalletTool.swift */; };
 		9D712443232F7662009DED52 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D712442232F7662009DED52 /* Assets.xcassets */; };
 		9D712445232F7C36009DED52 /* TransferModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D712444232F7C36009DED52 /* TransferModel.swift */; };
-		9D96755923347EFD00710B21 /* transaction.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D96755823347EFD00710B21 /* transaction.pb.swift */; };
+		9D84C2E8234DBA6C00034839 /* access_path.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D84C2D6234DBA6A00034839 /* access_path.pb.swift */; };
+		9D84C2E9234DBA6C00034839 /* ledger_info.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D84C2D7234DBA6A00034839 /* ledger_info.pb.swift */; };
+		9D84C2EA234DBA6D00034839 /* vm_errors.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D84C2D8234DBA6A00034839 /* vm_errors.pb.swift */; };
+		9D84C2EB234DBA6D00034839 /* events.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D84C2D9234DBA6B00034839 /* events.pb.swift */; };
+		9D84C2EC234DBA6D00034839 /* mempool.grpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D84C2DA234DBA6B00034839 /* mempool.grpc.swift */; };
+		9D84C2ED234DBA6D00034839 /* admission_control.grpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D84C2DB234DBA6B00034839 /* admission_control.grpc.swift */; };
+		9D84C2EE234DBA6D00034839 /* get_with_proof.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D84C2DC234DBA6B00034839 /* get_with_proof.pb.swift */; };
+		9D84C2EF234DBA6D00034839 /* validator_set.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D84C2DD234DBA6B00034839 /* validator_set.pb.swift */; };
+		9D84C2F0234DBA6D00034839 /* mempool.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D84C2DE234DBA6B00034839 /* mempool.pb.swift */; };
+		9D84C2F1234DBA6D00034839 /* transaction_info.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D84C2DF234DBA6B00034839 /* transaction_info.pb.swift */; };
+		9D84C2F2234DBA6D00034839 /* transaction.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D84C2E0234DBA6B00034839 /* transaction.pb.swift */; };
+		9D84C2F3234DBA6D00034839 /* validator_public_keys.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D84C2E1234DBA6C00034839 /* validator_public_keys.pb.swift */; };
+		9D84C2F4234DBA6D00034839 /* language_storage.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D84C2E2234DBA6C00034839 /* language_storage.pb.swift */; };
+		9D84C2F5234DBA6D00034839 /* mempool_status.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D84C2E3234DBA6C00034839 /* mempool_status.pb.swift */; };
+		9D84C2F6234DBA6D00034839 /* admission_control.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D84C2E4234DBA6C00034839 /* admission_control.pb.swift */; };
+		9D84C2F7234DBA6D00034839 /* account_state_blob.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D84C2E5234DBA6C00034839 /* account_state_blob.pb.swift */; };
+		9D84C2F8234DBA6D00034839 /* validator_change.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D84C2E6234DBA6C00034839 /* validator_change.pb.swift */; };
+		9D84C2F9234DBA6D00034839 /* proof.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D84C2E7234DBA6C00034839 /* proof.pb.swift */; };
 		9DA8E2A22317ABC400E28D07 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA8E2A12317ABC400E28D07 /* AppDelegate.swift */; };
 		9DA8E2AC2317ABC600E28D07 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9DA8E2AA2317ABC600E28D07 /* LaunchScreen.storyboard */; };
 		9DA8E2B72317ABC600E28D07 /* LibraWalletTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA8E2B62317ABC600E28D07 /* LibraWalletTests.swift */; };
 		9DA8E2C22317ABC600E28D07 /* LibraWalletUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA8E2C12317ABC600E28D07 /* LibraWalletUITests.swift */; };
+		9DBC267623408D55009650EA /* ed25519_sc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DBC267023408D54009650EA /* ed25519_sc.swift */; };
+		9DBC267723408D55009650EA /* ed25519_utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DBC267123408D54009650EA /* ed25519_utility.swift */; };
+		9DBC267823408D55009650EA /* ed25519_ge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DBC267223408D54009650EA /* ed25519_ge.swift */; };
+		9DBC267923408D55009650EA /* ed25519_sign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DBC267323408D55009650EA /* ed25519_sign.swift */; };
+		9DBC267A23408D55009650EA /* ed25519_verify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DBC267423408D55009650EA /* ed25519_verify.swift */; };
+		9DBC267B23408D55009650EA /* ed25519_fe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DBC267523408D55009650EA /* ed25519_fe.swift */; };
 		9DC487FD2320AF4E005FF254 /* LibraWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC487FC2320AF4E005FF254 /* LibraWallet.swift */; };
 		9DC487FF2320AFB8005FF254 /* LibraError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC487FE2320AFB8005FF254 /* LibraError.swift */; };
 		9DC488012320BE88005FF254 /* LibraNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488002320BE88005FF254 /* LibraNetwork.swift */; };
@@ -62,32 +85,6 @@
 		9DC901EF23274E510097FD85 /* TransactionProgram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC901EE23274E510097FD85 /* TransactionProgram.swift */; };
 		9DC901F2232788C30097FD85 /* TransactionAccessPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC901F1232788C30097FD85 /* TransactionAccessPath.swift */; };
 		9DC901F82327A3B70097FD85 /* TransactionWriteSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC901F72327A3B60097FD85 /* TransactionWriteSet.swift */; };
-		9DC902162328989E0097FD85 /* consensus.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC901FB2328989C0097FD85 /* consensus.pb.swift */; };
-		9DC902172328989E0097FD85 /* storage.grpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC901FC2328989C0097FD85 /* storage.grpc.swift */; };
-		9DC902182328989E0097FD85 /* transaction_info.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC901FD2328989C0097FD85 /* transaction_info.pb.swift */; };
-		9DC902192328989E0097FD85 /* validator_set.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC901FE2328989D0097FD85 /* validator_set.pb.swift */; };
-		9DC9021A2328989E0097FD85 /* storage.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC901FF2328989D0097FD85 /* storage.pb.swift */; };
-		9DC9021B2328989E0097FD85 /* mempool_status.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC902002328989D0097FD85 /* mempool_status.pb.swift */; };
-		9DC9021C2328989E0097FD85 /* execution.grpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC902012328989D0097FD85 /* execution.grpc.swift */; };
-		9DC9021D2328989E0097FD85 /* secret_service.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC902022328989D0097FD85 /* secret_service.pb.swift */; };
-		9DC9021E2328989E0097FD85 /* validator_change.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC902032328989D0097FD85 /* validator_change.pb.swift */; };
-		9DC9021F2328989E0097FD85 /* get_with_proof.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC902042328989D0097FD85 /* get_with_proof.pb.swift */; };
-		9DC902202328989E0097FD85 /* network.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC902052328989D0097FD85 /* network.pb.swift */; };
-		9DC902212328989E0097FD85 /* admission_control.grpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC902062328989D0097FD85 /* admission_control.grpc.swift */; };
-		9DC902222328989E0097FD85 /* language_storage.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC902072328989D0097FD85 /* language_storage.pb.swift */; };
-		9DC902232328989E0097FD85 /* access_path.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC902082328989D0097FD85 /* access_path.pb.swift */; };
-		9DC902242328989E0097FD85 /* admission_control.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC902092328989D0097FD85 /* admission_control.pb.swift */; };
-		9DC902252328989E0097FD85 /* proof.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC9020A2328989D0097FD85 /* proof.pb.swift */; };
-		9DC902262328989E0097FD85 /* mempool.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC9020B2328989D0097FD85 /* mempool.pb.swift */; };
-		9DC902272328989E0097FD85 /* account_state_blob.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC9020C2328989D0097FD85 /* account_state_blob.pb.swift */; };
-		9DC902282328989E0097FD85 /* events.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC9020D2328989D0097FD85 /* events.pb.swift */; };
-		9DC9022A2328989E0097FD85 /* state_synchronizer.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC9020F2328989D0097FD85 /* state_synchronizer.pb.swift */; };
-		9DC9022B2328989E0097FD85 /* secret_service.grpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC902102328989D0097FD85 /* secret_service.grpc.swift */; };
-		9DC9022C2328989E0097FD85 /* validator_public_keys.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC902112328989D0097FD85 /* validator_public_keys.pb.swift */; };
-		9DC9022D2328989E0097FD85 /* ledger_info.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC902122328989E0097FD85 /* ledger_info.pb.swift */; };
-		9DC9022E2328989E0097FD85 /* execution.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC902132328989E0097FD85 /* execution.pb.swift */; };
-		9DC9022F2328989E0097FD85 /* mempool.grpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC902142328989E0097FD85 /* mempool.grpc.swift */; };
-		9DC902302328989E0097FD85 /* vm_errors.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC902152328989E0097FD85 /* vm_errors.pb.swift */; };
 		9DC902322328C6CC0097FD85 /* LibraAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC902312328C6CC0097FD85 /* LibraAccount.swift */; };
 		9DC902352328E2E80097FD85 /* LibraRequestResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC902342328E2E80097FD85 /* LibraRequestResponse.swift */; };
 		9DC9023D2328E8290097FD85 /* CommonData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC9023C2328E8290097FD85 /* CommonData.swift */; };
@@ -137,7 +134,24 @@
 		9D712440232F621B009DED52 /* LibraWalletTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraWalletTool.swift; sourceTree = "<group>"; };
 		9D712442232F7662009DED52 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9D712444232F7C36009DED52 /* TransferModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferModel.swift; sourceTree = "<group>"; };
-		9D96755823347EFD00710B21 /* transaction.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = transaction.pb.swift; sourceTree = "<group>"; };
+		9D84C2D6234DBA6A00034839 /* access_path.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = access_path.pb.swift; sourceTree = "<group>"; };
+		9D84C2D7234DBA6A00034839 /* ledger_info.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ledger_info.pb.swift; sourceTree = "<group>"; };
+		9D84C2D8234DBA6A00034839 /* vm_errors.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = vm_errors.pb.swift; sourceTree = "<group>"; };
+		9D84C2D9234DBA6B00034839 /* events.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = events.pb.swift; sourceTree = "<group>"; };
+		9D84C2DA234DBA6B00034839 /* mempool.grpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = mempool.grpc.swift; sourceTree = "<group>"; };
+		9D84C2DB234DBA6B00034839 /* admission_control.grpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = admission_control.grpc.swift; sourceTree = "<group>"; };
+		9D84C2DC234DBA6B00034839 /* get_with_proof.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = get_with_proof.pb.swift; sourceTree = "<group>"; };
+		9D84C2DD234DBA6B00034839 /* validator_set.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = validator_set.pb.swift; sourceTree = "<group>"; };
+		9D84C2DE234DBA6B00034839 /* mempool.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = mempool.pb.swift; sourceTree = "<group>"; };
+		9D84C2DF234DBA6B00034839 /* transaction_info.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = transaction_info.pb.swift; sourceTree = "<group>"; };
+		9D84C2E0234DBA6B00034839 /* transaction.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = transaction.pb.swift; sourceTree = "<group>"; };
+		9D84C2E1234DBA6C00034839 /* validator_public_keys.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = validator_public_keys.pb.swift; sourceTree = "<group>"; };
+		9D84C2E2234DBA6C00034839 /* language_storage.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = language_storage.pb.swift; sourceTree = "<group>"; };
+		9D84C2E3234DBA6C00034839 /* mempool_status.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = mempool_status.pb.swift; sourceTree = "<group>"; };
+		9D84C2E4234DBA6C00034839 /* admission_control.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = admission_control.pb.swift; sourceTree = "<group>"; };
+		9D84C2E5234DBA6C00034839 /* account_state_blob.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = account_state_blob.pb.swift; sourceTree = "<group>"; };
+		9D84C2E6234DBA6C00034839 /* validator_change.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = validator_change.pb.swift; sourceTree = "<group>"; };
+		9D84C2E7234DBA6C00034839 /* proof.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = proof.pb.swift; sourceTree = "<group>"; };
 		9DA8E29E2317ABC400E28D07 /* LibraWallet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LibraWallet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DA8E2A12317ABC400E28D07 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9DA8E2AB2317ABC600E28D07 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -148,6 +162,13 @@
 		9DA8E2BD2317ABC600E28D07 /* LibraWalletUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LibraWalletUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DA8E2C12317ABC600E28D07 /* LibraWalletUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraWalletUITests.swift; sourceTree = "<group>"; };
 		9DA8E2C32317ABC600E28D07 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9DBC266E23405B41009650EA /* LibraWallet.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LibraWallet.entitlements; sourceTree = "<group>"; };
+		9DBC267023408D54009650EA /* ed25519_sc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ed25519_sc.swift; sourceTree = "<group>"; };
+		9DBC267123408D54009650EA /* ed25519_utility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ed25519_utility.swift; sourceTree = "<group>"; };
+		9DBC267223408D54009650EA /* ed25519_ge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ed25519_ge.swift; sourceTree = "<group>"; };
+		9DBC267323408D55009650EA /* ed25519_sign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ed25519_sign.swift; sourceTree = "<group>"; };
+		9DBC267423408D55009650EA /* ed25519_verify.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ed25519_verify.swift; sourceTree = "<group>"; };
+		9DBC267523408D55009650EA /* ed25519_fe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ed25519_fe.swift; sourceTree = "<group>"; };
 		9DC487FC2320AF4E005FF254 /* LibraWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraWallet.swift; sourceTree = "<group>"; };
 		9DC487FE2320AFB8005FF254 /* LibraError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraError.swift; sourceTree = "<group>"; };
 		9DC488002320BE88005FF254 /* LibraNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraNetwork.swift; sourceTree = "<group>"; };
@@ -179,32 +200,6 @@
 		9DC901EE23274E510097FD85 /* TransactionProgram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionProgram.swift; sourceTree = "<group>"; };
 		9DC901F1232788C30097FD85 /* TransactionAccessPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionAccessPath.swift; sourceTree = "<group>"; };
 		9DC901F72327A3B60097FD85 /* TransactionWriteSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionWriteSet.swift; sourceTree = "<group>"; };
-		9DC901FB2328989C0097FD85 /* consensus.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = consensus.pb.swift; sourceTree = "<group>"; };
-		9DC901FC2328989C0097FD85 /* storage.grpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = storage.grpc.swift; sourceTree = "<group>"; };
-		9DC901FD2328989C0097FD85 /* transaction_info.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = transaction_info.pb.swift; sourceTree = "<group>"; };
-		9DC901FE2328989D0097FD85 /* validator_set.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = validator_set.pb.swift; sourceTree = "<group>"; };
-		9DC901FF2328989D0097FD85 /* storage.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = storage.pb.swift; sourceTree = "<group>"; };
-		9DC902002328989D0097FD85 /* mempool_status.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = mempool_status.pb.swift; sourceTree = "<group>"; };
-		9DC902012328989D0097FD85 /* execution.grpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = execution.grpc.swift; sourceTree = "<group>"; };
-		9DC902022328989D0097FD85 /* secret_service.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = secret_service.pb.swift; sourceTree = "<group>"; };
-		9DC902032328989D0097FD85 /* validator_change.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = validator_change.pb.swift; sourceTree = "<group>"; };
-		9DC902042328989D0097FD85 /* get_with_proof.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = get_with_proof.pb.swift; sourceTree = "<group>"; };
-		9DC902052328989D0097FD85 /* network.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = network.pb.swift; sourceTree = "<group>"; };
-		9DC902062328989D0097FD85 /* admission_control.grpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = admission_control.grpc.swift; sourceTree = "<group>"; };
-		9DC902072328989D0097FD85 /* language_storage.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = language_storage.pb.swift; sourceTree = "<group>"; };
-		9DC902082328989D0097FD85 /* access_path.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = access_path.pb.swift; sourceTree = "<group>"; };
-		9DC902092328989D0097FD85 /* admission_control.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = admission_control.pb.swift; sourceTree = "<group>"; };
-		9DC9020A2328989D0097FD85 /* proof.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = proof.pb.swift; sourceTree = "<group>"; };
-		9DC9020B2328989D0097FD85 /* mempool.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = mempool.pb.swift; sourceTree = "<group>"; };
-		9DC9020C2328989D0097FD85 /* account_state_blob.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = account_state_blob.pb.swift; sourceTree = "<group>"; };
-		9DC9020D2328989D0097FD85 /* events.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = events.pb.swift; sourceTree = "<group>"; };
-		9DC9020F2328989D0097FD85 /* state_synchronizer.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = state_synchronizer.pb.swift; sourceTree = "<group>"; };
-		9DC902102328989D0097FD85 /* secret_service.grpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = secret_service.grpc.swift; sourceTree = "<group>"; };
-		9DC902112328989D0097FD85 /* validator_public_keys.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = validator_public_keys.pb.swift; sourceTree = "<group>"; };
-		9DC902122328989E0097FD85 /* ledger_info.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ledger_info.pb.swift; sourceTree = "<group>"; };
-		9DC902132328989E0097FD85 /* execution.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = execution.pb.swift; sourceTree = "<group>"; };
-		9DC902142328989E0097FD85 /* mempool.grpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = mempool.grpc.swift; sourceTree = "<group>"; };
-		9DC902152328989E0097FD85 /* vm_errors.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = vm_errors.pb.swift; sourceTree = "<group>"; };
 		9DC902312328C6CC0097FD85 /* LibraAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraAccount.swift; sourceTree = "<group>"; };
 		9DC902342328E2E80097FD85 /* LibraRequestResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraRequestResponse.swift; sourceTree = "<group>"; };
 		9DC9023C2328E8290097FD85 /* CommonData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonData.swift; sourceTree = "<group>"; };
@@ -445,6 +440,7 @@
 		9DA8E2A02317ABC400E28D07 /* LibraWallet */ = {
 			isa = PBXGroup;
 			children = (
+				9DBC266E23405B41009650EA /* LibraWallet.entitlements */,
 				9DA8E2A12317ABC400E28D07 /* AppDelegate.swift */,
 				9DC902362328E7820097FD85 /* Sections */,
 				9DC4885B23220E30005FF254 /* Vendors */,
@@ -474,6 +470,19 @@
 				9DA8E2C32317ABC600E28D07 /* Info.plist */,
 			);
 			path = LibraWalletUITests;
+			sourceTree = "<group>";
+		};
+		9DBC266F23408D3A009650EA /* ED25519 */ = {
+			isa = PBXGroup;
+			children = (
+				9DBC267523408D55009650EA /* ed25519_fe.swift */,
+				9DBC267223408D54009650EA /* ed25519_ge.swift */,
+				9DBC267023408D54009650EA /* ed25519_sc.swift */,
+				9DBC267323408D55009650EA /* ed25519_sign.swift */,
+				9DBC267123408D54009650EA /* ed25519_utility.swift */,
+				9DBC267423408D55009650EA /* ed25519_verify.swift */,
+			);
+			path = ED25519;
 			sourceTree = "<group>";
 		};
 		9DC487F9231FA0C6005FF254 /* LibraKit */ = {
@@ -522,6 +531,7 @@
 		9DC4885B23220E30005FF254 /* Vendors */ = {
 			isa = PBXGroup;
 			children = (
+				9DBC266F23408D3A009650EA /* ED25519 */,
 				9DC487F9231FA0C6005FF254 /* LibraKit */,
 				9DC57A18231CECFE00989173 /* Protobuf */,
 				9DC48861232222CE005FF254 /* SwiftScan */,
@@ -615,33 +625,24 @@
 		9DC57A18231CECFE00989173 /* Protobuf */ = {
 			isa = PBXGroup;
 			children = (
-				9DC902082328989D0097FD85 /* access_path.pb.swift */,
-				9DC9020C2328989D0097FD85 /* account_state_blob.pb.swift */,
-				9DC902062328989D0097FD85 /* admission_control.grpc.swift */,
-				9DC902092328989D0097FD85 /* admission_control.pb.swift */,
-				9DC901FB2328989C0097FD85 /* consensus.pb.swift */,
-				9DC9020D2328989D0097FD85 /* events.pb.swift */,
-				9DC902012328989D0097FD85 /* execution.grpc.swift */,
-				9DC902132328989E0097FD85 /* execution.pb.swift */,
-				9DC902042328989D0097FD85 /* get_with_proof.pb.swift */,
-				9DC902072328989D0097FD85 /* language_storage.pb.swift */,
-				9DC902122328989E0097FD85 /* ledger_info.pb.swift */,
-				9DC902002328989D0097FD85 /* mempool_status.pb.swift */,
-				9DC902142328989E0097FD85 /* mempool.grpc.swift */,
-				9DC9020B2328989D0097FD85 /* mempool.pb.swift */,
-				9DC902052328989D0097FD85 /* network.pb.swift */,
-				9DC9020A2328989D0097FD85 /* proof.pb.swift */,
-				9DC902102328989D0097FD85 /* secret_service.grpc.swift */,
-				9DC902022328989D0097FD85 /* secret_service.pb.swift */,
-				9DC9020F2328989D0097FD85 /* state_synchronizer.pb.swift */,
-				9DC901FC2328989C0097FD85 /* storage.grpc.swift */,
-				9DC901FF2328989D0097FD85 /* storage.pb.swift */,
-				9DC901FD2328989C0097FD85 /* transaction_info.pb.swift */,
-				9D96755823347EFD00710B21 /* transaction.pb.swift */,
-				9DC902032328989D0097FD85 /* validator_change.pb.swift */,
-				9DC902112328989D0097FD85 /* validator_public_keys.pb.swift */,
-				9DC901FE2328989D0097FD85 /* validator_set.pb.swift */,
-				9DC902152328989E0097FD85 /* vm_errors.pb.swift */,
+				9D84C2D6234DBA6A00034839 /* access_path.pb.swift */,
+				9D84C2E5234DBA6C00034839 /* account_state_blob.pb.swift */,
+				9D84C2DB234DBA6B00034839 /* admission_control.grpc.swift */,
+				9D84C2E4234DBA6C00034839 /* admission_control.pb.swift */,
+				9D84C2D9234DBA6B00034839 /* events.pb.swift */,
+				9D84C2DC234DBA6B00034839 /* get_with_proof.pb.swift */,
+				9D84C2E2234DBA6C00034839 /* language_storage.pb.swift */,
+				9D84C2D7234DBA6A00034839 /* ledger_info.pb.swift */,
+				9D84C2E3234DBA6C00034839 /* mempool_status.pb.swift */,
+				9D84C2DA234DBA6B00034839 /* mempool.grpc.swift */,
+				9D84C2DE234DBA6B00034839 /* mempool.pb.swift */,
+				9D84C2E7234DBA6C00034839 /* proof.pb.swift */,
+				9D84C2DF234DBA6B00034839 /* transaction_info.pb.swift */,
+				9D84C2E0234DBA6B00034839 /* transaction.pb.swift */,
+				9D84C2E6234DBA6C00034839 /* validator_change.pb.swift */,
+				9D84C2E1234DBA6C00034839 /* validator_public_keys.pb.swift */,
+				9D84C2DD234DBA6B00034839 /* validator_set.pb.swift */,
+				9D84C2D8234DBA6A00034839 /* vm_errors.pb.swift */,
 			);
 			path = Protobuf;
 			sourceTree = "<group>";
@@ -962,86 +963,83 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9DC9021D2328989E0097FD85 /* secret_service.pb.swift in Sources */,
+				9DBC267923408D55009650EA /* ed25519_sign.swift in Sources */,
 				9D1A614F23320926009DDA07 /* TransactionsViewModel.swift in Sources */,
-				9DC9021F2328989E0097FD85 /* get_with_proof.pb.swift in Sources */,
 				9DC488012320BE88005FF254 /* LibraNetwork.swift in Sources */,
-				9DC902172328989E0097FD85 /* storage.grpc.swift in Sources */,
-				9DC902302328989E0097FD85 /* vm_errors.pb.swift in Sources */,
-				9DC902252328989E0097FD85 /* proof.pb.swift in Sources */,
 				9D08AD3D2330CE21004687E8 /* TransactionsViewController.swift in Sources */,
 				9DC4885A23220DA6005FF254 /* WalletReceiveView.swift in Sources */,
 				9DC4886E232222CF005FF254 /* LBXPermissions.swift in Sources */,
 				9DC901F82327A3B70097FD85 /* TransactionWriteSet.swift in Sources */,
 				9DC9023F2328EA480097FD85 /* MainView.swift in Sources */,
+				9D84C2ED234DBA6D00034839 /* admission_control.grpc.swift in Sources */,
+				9D84C2F7234DBA6D00034839 /* account_state_blob.pb.swift in Sources */,
 				9D08AD4D2330D8F5004687E8 /* TransactionDetailWebView.swift in Sources */,
-				9DC9022C2328989E0097FD85 /* validator_public_keys.pb.swift in Sources */,
-				9DC902182328989E0097FD85 /* transaction_info.pb.swift in Sources */,
 				9DC4886A232222CF005FF254 /* LBXScanView.swift in Sources */,
 				9DC901E7232628A40097FD85 /* RawTransaction.swift in Sources */,
 				9DC902412328EA640097FD85 /* MainViewController.swift in Sources */,
 				9DC4885F23220E47005FF254 /* QRCodeConvertible.swift in Sources */,
+				9D84C2EC234DBA6D00034839 /* mempool.grpc.swift in Sources */,
 				9DC4885523220D6D005FF254 /* WalletReceiveViewController.swift in Sources */,
-				9DC902272328989E0097FD85 /* account_state_blob.pb.swift in Sources */,
 				9D08AD432330D03C004687E8 /* TransactionsViewTableViewManager.swift in Sources */,
-				9DC902242328989E0097FD85 /* admission_control.pb.swift in Sources */,
 				9DC4880F2320EE4C005FF254 /* LibraTransaction.swift in Sources */,
 				9D08AD3F2330CE2F004687E8 /* TransactionsModel.swift in Sources */,
+				9DBC267623408D55009650EA /* ed25519_sc.swift in Sources */,
 				9DC902472328FDB90097FD85 /* DataBaseManager.swift in Sources */,
-				9DC9022A2328989E0097FD85 /* state_synchronizer.pb.swift in Sources */,
 				9DC4880D2320EDF8005FF254 /* LibraUtils.swift in Sources */,
 				9DC4886D232222CF005FF254 /* LBXScanViewStyle.swift in Sources */,
-				9DC9022F2328989E0097FD85 /* mempool.grpc.swift in Sources */,
-				9DC902162328989E0097FD85 /* consensus.pb.swift in Sources */,
 				9D71243D2329F183009DED52 /* WalletCreateViewController.swift in Sources */,
 				9DC4887E2322320B005FF254 /* ScanView.swift in Sources */,
 				9DC901EF23274E510097FD85 /* TransactionProgram.swift in Sources */,
+				9D84C2EF234DBA6D00034839 /* validator_set.pb.swift in Sources */,
 				9DC901F2232788C30097FD85 /* TransactionAccessPath.swift in Sources */,
+				9DBC267823408D55009650EA /* ed25519_ge.swift in Sources */,
 				9DC4886023220E47005FF254 /* QRCodeGenerator.swift in Sources */,
-				9DC902192328989E0097FD85 /* validator_set.pb.swift in Sources */,
-				9DC9021B2328989E0097FD85 /* mempool_status.pb.swift in Sources */,
 				9DC4880B2320E6C1005FF254 /* LibraPrivateKey.swift in Sources */,
 				9DA8E2A22317ABC400E28D07 /* AppDelegate.swift in Sources */,
+				9D84C2F3234DBA6D00034839 /* validator_public_keys.pb.swift in Sources */,
 				9DC4886B232222CF005FF254 /* LBXScanViewController.swift in Sources */,
 				9DC902352328E2E80097FD85 /* LibraRequestResponse.swift in Sources */,
 				9DC4886F232222CF005FF254 /* LBXScanWrapper.swift in Sources */,
+				9D84C2F4234DBA6D00034839 /* language_storage.pb.swift in Sources */,
 				9DC48869232222CF005FF254 /* LBXScanNetAnimation.swift in Sources */,
 				9D1A614C233204E2009DDA07 /* BaseViewController.swift in Sources */,
+				9D84C2F0234DBA6D00034839 /* mempool.pb.swift in Sources */,
 				9DC4884F2321F051005FF254 /* WordList.swift in Sources */,
-				9DC902232328989E0097FD85 /* access_path.pb.swift in Sources */,
-				9DC9021E2328989E0097FD85 /* validator_change.pb.swift in Sources */,
-				9DC902282328989E0097FD85 /* events.pb.swift in Sources */,
 				9DC901E923262CB80097FD85 /* TransactionArgument.swift in Sources */,
+				9D84C2F8234DBA6D00034839 /* validator_change.pb.swift in Sources */,
 				9D71243F2329F190009DED52 /* WalletCreateView.swift in Sources */,
+				9D84C2EE234DBA6D00034839 /* get_with_proof.pb.swift in Sources */,
 				9D08AD4B2330D8E6004687E8 /* TransactionDetailWebViewController.swift in Sources */,
-				9DC9021C2328989E0097FD85 /* execution.grpc.swift in Sources */,
-				9DC9022B2328989E0097FD85 /* secret_service.grpc.swift in Sources */,
-				9DC902262328989E0097FD85 /* mempool.pb.swift in Sources */,
-				9DC9021A2328989E0097FD85 /* storage.pb.swift in Sources */,
+				9D84C2E8234DBA6C00034839 /* access_path.pb.swift in Sources */,
+				9DBC267A23408D55009650EA /* ed25519_verify.swift in Sources */,
+				9DBC267B23408D55009650EA /* ed25519_fe.swift in Sources */,
 				9D08AD412330CE3E004687E8 /* TransactionsView.swift in Sources */,
 				9DC487FD2320AF4E005FF254 /* LibraWallet.swift in Sources */,
 				9DC902432328FC4A0097FD85 /* MainModel.swift in Sources */,
 				9DC488032320D6A1005FF254 /* LibraMnemonic.swift in Sources */,
 				9DC488052320DBCB005FF254 /* LibraPublicKey.swift in Sources */,
+				9DBC267723408D55009650EA /* ed25519_utility.swift in Sources */,
+				9D84C2F6234DBA6D00034839 /* admission_control.pb.swift in Sources */,
 				9DC9023D2328E8290097FD85 /* CommonData.swift in Sources */,
-				9DC9022D2328989E0097FD85 /* ledger_info.pb.swift in Sources */,
+				9D84C2F1234DBA6D00034839 /* transaction_info.pb.swift in Sources */,
+				9D84C2F5234DBA6D00034839 /* mempool_status.pb.swift in Sources */,
 				9DC4886C232222CF005FF254 /* LBXScanLineAnimation.swift in Sources */,
+				9D84C2E9234DBA6C00034839 /* ledger_info.pb.swift in Sources */,
 				9DC902322328C6CC0097FD85 /* LibraAccount.swift in Sources */,
+				9D84C2F2234DBA6D00034839 /* transaction.pb.swift in Sources */,
 				9DC902452328FCD00097FD85 /* LibraWalletError.swift in Sources */,
 				9D08AD372330BA75004687E8 /* NetworkManager.swift in Sources */,
 				9DC4884B232111E9005FF254 /* TransferViewController.swift in Sources */,
 				9D712441232F621B009DED52 /* LibraWalletTool.swift in Sources */,
-				9D96755923347EFD00710B21 /* transaction.pb.swift in Sources */,
 				9DC4884923211180005FF254 /* LibraWalletManager.swift in Sources */,
 				9DC487FF2320AFB8005FF254 /* LibraError.swift in Sources */,
-				9DC902212328989E0097FD85 /* admission_control.grpc.swift in Sources */,
-				9DC902202328989E0097FD85 /* network.pb.swift in Sources */,
 				9DC488752322249E005FF254 /* TransferView.swift in Sources */,
 				9D712445232F7C36009DED52 /* TransferModel.swift in Sources */,
-				9DC9022E2328989E0097FD85 /* execution.pb.swift in Sources */,
-				9DC902222328989E0097FD85 /* language_storage.pb.swift in Sources */,
 				9DC4887C23223204005FF254 /* ScanViewController.swift in Sources */,
+				9D84C2EA234DBA6D00034839 /* vm_errors.pb.swift in Sources */,
 				9D08AD452330D07E004687E8 /* TransactionsTableViewCell.swift in Sources */,
+				9D84C2EB234DBA6D00034839 /* events.pb.swift in Sources */,
+				9D84C2F9234DBA6D00034839 /* proof.pb.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1150,7 +1148,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1206,7 +1204,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -1222,11 +1220,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = LibraWallet/LibraWallet.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development: Jay Zou (JR6LZNW9NA)";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = ND49YBN8B3;
 				INFOPLIST_FILE = LibraWallet/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1247,11 +1246,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = LibraWallet/LibraWallet.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Jay Zou (ND49YBN8B3)";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = ND49YBN8B3;
 				INFOPLIST_FILE = LibraWallet/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

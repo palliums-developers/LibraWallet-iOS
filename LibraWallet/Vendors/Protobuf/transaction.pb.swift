@@ -203,6 +203,12 @@ struct Types_TransactionToCommit {
     set {_uniqueStorage()._gasUsed = newValue}
   }
 
+  /// The major status of executing the transaction.
+  var majorStatus: UInt64 {
+    get {return _storage._majorStatus}
+    set {_uniqueStorage()._majorStatus = newValue}
+  }
+
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   init() {}
@@ -512,6 +518,7 @@ extension Types_TransactionToCommit: SwiftProtobuf.Message, SwiftProtobuf._Messa
     2: .standard(proto: "account_states"),
     3: .same(proto: "events"),
     4: .standard(proto: "gas_used"),
+    5: .standard(proto: "major_status"),
   ]
 
   fileprivate class _StorageClass {
@@ -519,6 +526,7 @@ extension Types_TransactionToCommit: SwiftProtobuf.Message, SwiftProtobuf._Messa
     var _accountStates: [Types_AccountState] = []
     var _events: [Types_Event] = []
     var _gasUsed: UInt64 = 0
+    var _majorStatus: UInt64 = 0
 
     static let defaultInstance = _StorageClass()
 
@@ -529,6 +537,7 @@ extension Types_TransactionToCommit: SwiftProtobuf.Message, SwiftProtobuf._Messa
       _accountStates = source._accountStates
       _events = source._events
       _gasUsed = source._gasUsed
+      _majorStatus = source._majorStatus
     }
   }
 
@@ -548,6 +557,7 @@ extension Types_TransactionToCommit: SwiftProtobuf.Message, SwiftProtobuf._Messa
         case 2: try decoder.decodeRepeatedMessageField(value: &_storage._accountStates)
         case 3: try decoder.decodeRepeatedMessageField(value: &_storage._events)
         case 4: try decoder.decodeSingularUInt64Field(value: &_storage._gasUsed)
+        case 5: try decoder.decodeSingularUInt64Field(value: &_storage._majorStatus)
         default: break
         }
       }
@@ -568,6 +578,9 @@ extension Types_TransactionToCommit: SwiftProtobuf.Message, SwiftProtobuf._Messa
       if _storage._gasUsed != 0 {
         try visitor.visitSingularUInt64Field(value: _storage._gasUsed, fieldNumber: 4)
       }
+      if _storage._majorStatus != 0 {
+        try visitor.visitSingularUInt64Field(value: _storage._majorStatus, fieldNumber: 5)
+      }
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -581,6 +594,7 @@ extension Types_TransactionToCommit: SwiftProtobuf.Message, SwiftProtobuf._Messa
         if _storage._accountStates != other_storage._accountStates {return false}
         if _storage._events != other_storage._events {return false}
         if _storage._gasUsed != other_storage._gasUsed {return false}
+        if _storage._majorStatus != other_storage._majorStatus {return false}
         return true
       }
       if !storagesAreEqual {return false}

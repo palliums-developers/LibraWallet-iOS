@@ -80,8 +80,8 @@ struct Mempool_AddTransactionWithValidationResponse {
   }
 
   /// The result of the transaction submission
-  var status: Mempool_MempoolAddTransactionStatus {
-    get {return _storage._status ?? Mempool_MempoolAddTransactionStatus()}
+  var status: MempoolStatus_MempoolAddTransactionStatus {
+    get {return _storage._status ?? MempoolStatus_MempoolAddTransactionStatus()}
     set {_uniqueStorage()._status = newValue}
   }
   /// Returns true if `status` has been explicitly set.
@@ -317,7 +317,7 @@ extension Mempool_AddTransactionWithValidationResponse: SwiftProtobuf.Message, S
 
   fileprivate class _StorageClass {
     var _currentVersion: UInt64 = 0
-    var _status: Mempool_MempoolAddTransactionStatus? = nil
+    var _status: MempoolStatus_MempoolAddTransactionStatus? = nil
 
     static let defaultInstance = _StorageClass()
 

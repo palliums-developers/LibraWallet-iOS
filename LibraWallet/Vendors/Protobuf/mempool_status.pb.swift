@@ -22,7 +22,7 @@ fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAP
   typealias Version = _2
 }
 
-enum Mempool_MempoolAddTransactionStatusCode: SwiftProtobuf.Enum {
+enum MempoolStatus_MempoolAddTransactionStatusCode: SwiftProtobuf.Enum {
   typealias RawValue = Int
 
   /// Transaction was sent to Mempool
@@ -74,12 +74,12 @@ enum Mempool_MempoolAddTransactionStatusCode: SwiftProtobuf.Enum {
 
 }
 
-struct Mempool_MempoolAddTransactionStatus {
+struct MempoolStatus_MempoolAddTransactionStatus {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  var code: Mempool_MempoolAddTransactionStatusCode = .valid
+  var code: MempoolStatus_MempoolAddTransactionStatusCode = .valid
 
   var message: String = String()
 
@@ -90,9 +90,9 @@ struct Mempool_MempoolAddTransactionStatus {
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
-fileprivate let _protobuf_package = "mempool"
+fileprivate let _protobuf_package = "mempool_status"
 
-extension Mempool_MempoolAddTransactionStatusCode: SwiftProtobuf._ProtoNameProviding {
+extension MempoolStatus_MempoolAddTransactionStatusCode: SwiftProtobuf._ProtoNameProviding {
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     0: .same(proto: "Valid"),
     1: .same(proto: "InsufficientBalance"),
@@ -103,7 +103,7 @@ extension Mempool_MempoolAddTransactionStatusCode: SwiftProtobuf._ProtoNameProvi
   ]
 }
 
-extension Mempool_MempoolAddTransactionStatus: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+extension MempoolStatus_MempoolAddTransactionStatus: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".MempoolAddTransactionStatus"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "code"),
@@ -130,7 +130,7 @@ extension Mempool_MempoolAddTransactionStatus: SwiftProtobuf.Message, SwiftProto
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  func _protobuf_generated_isEqualTo(other: Mempool_MempoolAddTransactionStatus) -> Bool {
+  func _protobuf_generated_isEqualTo(other: MempoolStatus_MempoolAddTransactionStatus) -> Bool {
     if self.code != other.code {return false}
     if self.message != other.message {return false}
     if unknownFields != other.unknownFields {return false}

@@ -255,6 +255,17 @@ struct Types_UpdateToLatestLedgerResponse {
     set {_uniqueStorage()._validatorChangeEvents = newValue}
   }
 
+  /// A proof that shows the latest ledger accumulator is consistent with the
+  /// old accumulator at "client_known_version".
+  var ledgerConsistencyProof: Types_AccumulatorConsistencyProof {
+    get {return _storage._ledgerConsistencyProof ?? Types_AccumulatorConsistencyProof()}
+    set {_uniqueStorage()._ledgerConsistencyProof = newValue}
+  }
+  /// Returns true if `ledgerConsistencyProof` has been explicitly set.
+  var hasLedgerConsistencyProof: Bool {return _storage._ledgerConsistencyProof != nil}
+  /// Clears the value of `ledgerConsistencyProof`. Subsequent reads from it will return its default value.
+  mutating func clearLedgerConsistencyProof() {_storage._ledgerConsistencyProof = nil}
+
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   init() {}
@@ -719,12 +730,14 @@ extension Types_UpdateToLatestLedgerResponse: SwiftProtobuf.Message, SwiftProtob
     1: .standard(proto: "response_items"),
     2: .standard(proto: "ledger_info_with_sigs"),
     3: .standard(proto: "validator_change_events"),
+    4: .standard(proto: "ledger_consistency_proof"),
   ]
 
   fileprivate class _StorageClass {
     var _responseItems: [Types_ResponseItem] = []
     var _ledgerInfoWithSigs: Types_LedgerInfoWithSignatures? = nil
     var _validatorChangeEvents: [Types_ValidatorChangeEventWithProof] = []
+    var _ledgerConsistencyProof: Types_AccumulatorConsistencyProof? = nil
 
     static let defaultInstance = _StorageClass()
 
@@ -734,6 +747,7 @@ extension Types_UpdateToLatestLedgerResponse: SwiftProtobuf.Message, SwiftProtob
       _responseItems = source._responseItems
       _ledgerInfoWithSigs = source._ledgerInfoWithSigs
       _validatorChangeEvents = source._validatorChangeEvents
+      _ledgerConsistencyProof = source._ledgerConsistencyProof
     }
   }
 
@@ -752,6 +766,7 @@ extension Types_UpdateToLatestLedgerResponse: SwiftProtobuf.Message, SwiftProtob
         case 1: try decoder.decodeRepeatedMessageField(value: &_storage._responseItems)
         case 2: try decoder.decodeSingularMessageField(value: &_storage._ledgerInfoWithSigs)
         case 3: try decoder.decodeRepeatedMessageField(value: &_storage._validatorChangeEvents)
+        case 4: try decoder.decodeSingularMessageField(value: &_storage._ledgerConsistencyProof)
         default: break
         }
       }
@@ -769,6 +784,9 @@ extension Types_UpdateToLatestLedgerResponse: SwiftProtobuf.Message, SwiftProtob
       if !_storage._validatorChangeEvents.isEmpty {
         try visitor.visitRepeatedMessageField(value: _storage._validatorChangeEvents, fieldNumber: 3)
       }
+      if let v = _storage._ledgerConsistencyProof {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
+      }
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -781,6 +799,7 @@ extension Types_UpdateToLatestLedgerResponse: SwiftProtobuf.Message, SwiftProtob
         if _storage._responseItems != other_storage._responseItems {return false}
         if _storage._ledgerInfoWithSigs != other_storage._ledgerInfoWithSigs {return false}
         if _storage._validatorChangeEvents != other_storage._validatorChangeEvents {return false}
+        if _storage._ledgerConsistencyProof != other_storage._ledgerConsistencyProof {return false}
         return true
       }
       if !storagesAreEqual {return false}
