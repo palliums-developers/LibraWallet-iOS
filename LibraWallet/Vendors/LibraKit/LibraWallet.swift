@@ -7,23 +7,8 @@
 //
 
 import Foundation
-//import SwiftEd25519
 import CryptoSwift
 public final class LibraWallet {
-//    let seed: Seed
-//
-//    let publicKey: LibraPublicKey
-//
-//    let privateKey: LibraPrivateKey
-//
-//    let keyPairManager: KeyPair
-//
-//    public init (seed: Seed) {
-//        self.keyPairManager = KeyPair.init(seed: seed)
-//        self.seed = seed
-//        self.publicKey = LibraPublicKey.init(publicKey: self.keyPairManager.publicKey)
-//        self.privateKey = LibraPrivateKey.init(privateKey: self.keyPairManager.privateKey)
-//    }
     
     let seed: [UInt8]
     
@@ -50,7 +35,6 @@ public final class LibraWallet {
         
         let tempInfo = Data() + Array("LIBRA WALLET: derived key$".utf8) + depthData.bytes
         do {
-            
             let privateKey = try HKDF.init(password: seed,
                                      salt:Array("LIBRA WALLET: master key salt$".utf8),
                                      info: tempInfo.bytes,
