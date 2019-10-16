@@ -21,6 +21,8 @@
 		9D1A614C233204E2009DDA07 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D1A614B233204E2009DDA07 /* BaseViewController.swift */; };
 		9D1A614F23320926009DDA07 /* TransactionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D1A614E23320926009DDA07 /* TransactionsViewModel.swift */; };
 		9D56EA4823516C3C00A55F02 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D56EA4723516C3C00A55F02 /* KeychainManager.swift */; };
+		9D62646C2355A0E300A79B3D /* PasswordCrypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D62646B2355A0E300A79B3D /* PasswordCrypto.swift */; };
+		9D62646E2355C79600A79B3D /* LibraWalletCoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D62646D2355C79600A79B3D /* LibraWalletCoreTests.swift */; };
 		9D7124342329EA1C009DED52 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9D7124362329EA1C009DED52 /* Localizable.strings */; };
 		9D71243D2329F183009DED52 /* WalletCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D71243C2329F183009DED52 /* WalletCreateViewController.swift */; };
 		9D71243F2329F190009DED52 /* WalletCreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D71243E2329F190009DED52 /* WalletCreateView.swift */; };
@@ -129,6 +131,8 @@
 		9D1A614B233204E2009DDA07 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		9D1A614E23320926009DDA07 /* TransactionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsViewModel.swift; sourceTree = "<group>"; };
 		9D56EA4723516C3C00A55F02 /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
+		9D62646B2355A0E300A79B3D /* PasswordCrypto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordCrypto.swift; sourceTree = "<group>"; };
+		9D62646D2355C79600A79B3D /* LibraWalletCoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraWalletCoreTests.swift; sourceTree = "<group>"; };
 		9D7124352329EA1C009DED52 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		9D7124372329EA3E009DED52 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		9D71243C2329F183009DED52 /* WalletCreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletCreateViewController.swift; sourceTree = "<group>"; };
@@ -460,6 +464,7 @@
 			children = (
 				9DA8E2B62317ABC600E28D07 /* LibraWalletTests.swift */,
 				9DC488062320E419005FF254 /* LibraSDKTests.swift */,
+				9D62646D2355C79600A79B3D /* LibraWalletCoreTests.swift */,
 				9DA8E2B82317ABC600E28D07 /* Info.plist */,
 			);
 			path = LibraWalletTests;
@@ -729,6 +734,7 @@
 				9DC902462328FDB90097FD85 /* DataBaseManager.swift */,
 				9D08AD362330BA75004687E8 /* NetworkManager.swift */,
 				9D56EA4723516C3C00A55F02 /* KeychainManager.swift */,
+				9D62646B2355A0E300A79B3D /* PasswordCrypto.swift */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -1008,6 +1014,7 @@
 				9DC48869232222CF005FF254 /* LBXScanNetAnimation.swift in Sources */,
 				9D1A614C233204E2009DDA07 /* BaseViewController.swift in Sources */,
 				9D84C2F0234DBA6D00034839 /* mempool.pb.swift in Sources */,
+				9D62646C2355A0E300A79B3D /* PasswordCrypto.swift in Sources */,
 				9DC4884F2321F051005FF254 /* WordList.swift in Sources */,
 				9DC901E923262CB80097FD85 /* TransactionArgument.swift in Sources */,
 				9D84C2F8234DBA6D00034839 /* validator_change.pb.swift in Sources */,
@@ -1051,6 +1058,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9D62646E2355C79600A79B3D /* LibraWalletCoreTests.swift in Sources */,
 				9DA8E2B72317ABC600E28D07 /* LibraWalletTests.swift in Sources */,
 				9DC488072320E419005FF254 /* LibraSDKTests.swift in Sources */,
 			);

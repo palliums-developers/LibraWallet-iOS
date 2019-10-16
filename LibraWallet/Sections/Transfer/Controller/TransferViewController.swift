@@ -60,22 +60,22 @@ extension TransferViewController {
             return
         }
         if let error = jsonData.value(forKey: "error") as? LibraWalletError {
-            if error.localizedDescription == LibraWalletError.WalletRequestError(reason: .networkInvalid).localizedDescription {
+            if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
                 // 网络无法访问
                 print(error.localizedDescription)
-            } else if error.localizedDescription == LibraWalletError.WalletRequestError(reason: .walletNotExist).localizedDescription {
+            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletNotExist).localizedDescription {
                 // 钱包不存在
                 print(error.localizedDescription)
                 let vc = WalletCreateViewController()
                 let navi = UINavigationController.init(rootViewController: vc)
                 self.present(navi, animated: true, completion: nil)
-            } else if error.localizedDescription == LibraWalletError.WalletRequestError(reason: .walletVersionTooOld).localizedDescription {
+            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionTooOld).localizedDescription {
                 // 版本太久
                 print(error.localizedDescription)
-            } else if error.localizedDescription == LibraWalletError.WalletRequestError(reason: .parseJsonError).localizedDescription {
+            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
                 // 解析失败
                 print(error.localizedDescription)
-            } else if error.localizedDescription == LibraWalletError.WalletRequestError(reason: .dataEmpty).localizedDescription {
+            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
                 print(error.localizedDescription)
                 // 数据为空
             }
@@ -110,6 +110,6 @@ extension TransferViewController: TransferViewDelegate {
     
     func confirmWithdraw() {
         self.view.makeToastActivity(.center)
-        self.dataModel.transfer(address: self.detailView.addressTextField.text!, amount: Double(self.detailView.amountTextField.text!)!, wallet: LibraWalletManager.wallet.wallet!)
+        self.dataModel.transfer(address: self.detailView.addressTextField.text!, amount: Double(self.detailView.amountTextField.text!)!, wallet: LibraWalletManager.shared.coreWallet!)
     }
 }

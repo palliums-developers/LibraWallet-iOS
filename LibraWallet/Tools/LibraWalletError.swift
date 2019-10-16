@@ -26,14 +26,61 @@ public enum LibraWalletError: Error {
         /// 网络无法访问
         case networkInvalid
     }
-    case WalletRequestError(reason: RequestError)
+    case WalletRequest(reason: RequestError)
+    
+    public enum KeychainError {
+        /// 保存失败
+        case savePaymentPasswordFailedError
+        /// 保存助记词失败
+        case saveMnemonicFailedError
+        /// 获取支付密码失败
+        case getPaymentPasswordFailedError
+        /// 获取的支付密码为空
+        case getPaymentPasswordEmptyError
+        /// 获取助记词失败
+        case getMnemonicFailedError
+        /// 获取助记词为空
+        case getMnemonicEmptyError
+        /// 删除支付密码失败
+        case deletePaymentPasswordFailedError
+        /// 删除助记词失败
+        case deleteMnemonicFailedError
+        
+    }
+    case WalletKeychain(reason: KeychainError)
+    
+    public enum CryptoError {
+        /// 密码为空
+        case passwordEmptyError
+        /// 助记词为空
+        case mnemonicEmptyError
+        /// 加密结果为空
+        case encryptResultEmptyError
+        /// 加密结果转Base64失败
+        case encryptToBase64FailedError
+        /// 加密结果转Base64为空
+        case encryptToBase64EmptyError
+        /// 待解密字符串为空
+        case decryptStringEmptyError
+        /// 解密结果为空
+        case decryptResultEmptyError
+        /// 解密结果转字符串失败
+        case decryptToStringFailedError
+        
+    }
+    case WalletCrypto(reason: CryptoError)
+
 }
 extension LibraWalletError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .error(let string):
             return "\(string)"
-        case .WalletRequestError(let reason):
+        case .WalletRequest(let reason):
+            return reason.localizedDescription
+        case .WalletKeychain(let reason):
+            return reason.localizedDescription
+        case .WalletCrypto(let reason):
             return reason.localizedDescription
         }
     }
@@ -55,6 +102,66 @@ extension LibraWalletError.RequestError {
             return localLanguage(keyString: "wallet_request_wallet_version_invalid_error")
         case .networkInvalid:
             return localLanguage(keyString: "wallet_request_network_invalid_error")
+        }
+    }
+}
+extension LibraWalletError.KeychainError {
+    var localizedDescription: String {
+        switch self {
+        /// 保存失败
+        case .savePaymentPasswordFailedError:
+            return localLanguage(keyString: "")
+        /// 保存助记词失败
+        case .saveMnemonicFailedError:
+            return localLanguage(keyString: "")
+        /// 获取支付密码失败
+        case .getPaymentPasswordFailedError:
+            return localLanguage(keyString: "")
+        /// 获取的支付密码为空
+        case .getPaymentPasswordEmptyError:
+            return localLanguage(keyString: "")
+        /// 获取助记词失败
+        case .getMnemonicFailedError:
+            return localLanguage(keyString: "")
+        /// 获取助记词为空
+        case .getMnemonicEmptyError:
+            return localLanguage(keyString: "")
+        /// 删除支付密码失败
+        case .deletePaymentPasswordFailedError:
+            return localLanguage(keyString: "")
+        /// 删除助记词失败
+        case .deleteMnemonicFailedError:
+            return localLanguage(keyString: "")
+        }
+    }
+}
+extension LibraWalletError.CryptoError {
+    var localizedDescription: String {
+        switch self {
+        /// 密码为空
+        case .passwordEmptyError:
+            return localLanguage(keyString: "")
+        /// 助记词为空
+        case .mnemonicEmptyError:
+            return localLanguage(keyString: "")
+        /// 加密结果为空
+        case .encryptResultEmptyError:
+            return localLanguage(keyString: "")
+        /// 加密结果转Base64失败
+        case .encryptToBase64FailedError:
+            return localLanguage(keyString: "")
+        /// 加密结果转Base64为空
+        case .encryptToBase64EmptyError:
+            return localLanguage(keyString: "")
+        /// 待解密字符串为空
+        case .decryptStringEmptyError:
+            return localLanguage(keyString: "")
+        /// 解密结果为空
+        case .decryptResultEmptyError:
+            return localLanguage(keyString: "")
+        /// 解密结果转字符串失败
+        case .decryptToStringFailedError:
+            return localLanguage(keyString: "")
         }
     }
 }

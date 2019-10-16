@@ -64,7 +64,7 @@ extension WalletCreateViewController: WalletCreateViewDelegate {
                 return result + spaceString + content
             }
             
-            LibraWalletManager.wallet.initWallet(walletID: 999,
+            LibraWalletManager.shared.initWallet(walletID: 999,
                                                  walletBalance: 0,
                                                  walletAddress: wallet.publicKey.toAddress(),
                                                  walletCreateTime: Int(Date().timeIntervalSince1970),
@@ -74,7 +74,7 @@ extension WalletCreateViewController: WalletCreateViewDelegate {
                                                  walletBiometricLock: false,
                                                  wallet: wallet)
             
-            let result = DataBaseManager.DBManager.insertWallet(model: LibraWalletManager.wallet)
+            let result = DataBaseManager.DBManager.insertWallet(model: LibraWalletManager.shared)
             if result == true {
                 self.dismiss(animated: true, completion: nil)
             }

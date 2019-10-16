@@ -13,7 +13,7 @@ class WalletReceiveViewController: UIViewController {
         super.viewDidLoad()
         // 加载子View
         self.view.addSubview(detailView)
-        self.detailView.model = LibraWalletManager.wallet
+        self.detailView.model = LibraWalletManager.shared
         
     }
     override func viewWillLayoutSubviews() {

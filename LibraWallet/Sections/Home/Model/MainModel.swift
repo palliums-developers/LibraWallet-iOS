@@ -16,13 +16,13 @@ class MainModel: NSObject {
         let result = DataBaseManager.DBManager.loadCurrentUseWallet()
         if result == false {
             // 需要创建钱包
-            let data = setKVOData(error: LibraWalletError.WalletRequestError(reason: .walletNotExist), type: "LoadLocalWallet")
+            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .walletNotExist), type: "LoadLocalWallet")
             self.setValue(data, forKey: "dataDic")
         } else {
             let data = setKVOData(type: "LoadLocalWallet")
             self.setValue(data, forKey: "dataDic")
             // 更新本地数据
-            updateLocalInfo(walletAddress: LibraWalletManager.wallet.walletAddress!)
+            updateLocalInfo(walletAddress: LibraWalletManager.shared.walletAddress!)
         }
     }
     func updateLocalInfo(walletAddress: String) {
@@ -48,7 +48,7 @@ class MainModel: NSObject {
             let streamData = response.getAccountStateResponse.accountStateWithProof.blob.blob
             
             let balance = LibraAccount.init(accountData: streamData).balance
-            updateLocalWalletData(walletID: LibraWalletManager.wallet.walletID!, model: LibraAccount.init(accountData: streamData))
+            updateLocalWalletData(walletID: LibraWalletManager.shared.walletID!, model: LibraAccount.init(accountData: streamData))
             let data = setKVOData(type: "UpdateLocalWallet", data: balance)
             self.setValue(data, forKey: "dataDic")
             
@@ -58,7 +58,7 @@ class MainModel: NSObject {
     }
     func updateLocalWalletData(walletID: Int64,model: LibraAccount) {
         // 更新内存中数据
-        LibraWalletManager.wallet.changeWalletBalance(banlance: model.balance ?? 0)
+        LibraWalletManager.shared.changeWalletBalance(banlance: model.balance ?? 0)
         
         // 刷新本地缓存数据
         _ = DataBaseManager.DBManager.updateWalletBalance(walletID: walletID, balance: model.balance ?? 0)

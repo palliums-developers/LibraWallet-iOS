@@ -194,4 +194,34 @@ class LibraSDKTests: XCTestCase {
             print(error)
         }
     }
+        func testKeychainReinstallGetPasswordAndMnemonic() {
+        let mnemonic = ["legal","winner","thank","year","wave","sausage","worth","useful","legal","winner","thank","year","wave","sausage","worth","useful","legal","will"]
+        do {
+            let seed = try LibraMnemonic.seed(mnemonic: mnemonic)
+            
+            let testWallet = try LibraWallet.init(seed: seed, depth: 0)
+            let walletAddress = testWallet.publicKey.toAddress()
+//            try KeychainManager.KeyManager.savePayPasswordToKeychain(walletAddress: walletAddress, password: "123456")
+            let paymentPassword = try KeychainManager.KeyManager.getPayPasswordFromKeychain(walletAddress: walletAddress)
+            XCTAssertEqual(paymentPassword, "123456")
+            
+            let result = KeychainManager.KeyManager.checkPayPasswordInvalid(walletAddress: walletAddress, password: "1234567")
+            XCTAssertEqual(result, false)
+            let result2 = KeychainManager.KeyManager.checkPayPasswordInvalid(walletAddress: walletAddress, password: "123456")
+            XCTAssertEqual(result2, true)
+            
+//            try KeychainManager.KeyManager.saveMnemonicStringToKeychain(walletAddress: walletAddress, mnemonic: mnemonic.joined(separator: " "))
+            
+            let menmonicString = try KeychainManager.KeyManager.getMnemonicStringFromKeychain(walletAddress: walletAddress)
+            let mnemonicArray = menmonicString.split(separator: " ").compactMap { (item) -> String in
+                return "\(item)"
+            }
+            XCTAssertEqual(mnemonic, mnemonicArray)
+
+        } catch {
+            print(error.localizedDescription)
+        }
+
+    }
+    
 }

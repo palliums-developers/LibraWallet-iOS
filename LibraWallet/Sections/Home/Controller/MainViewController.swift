@@ -170,22 +170,22 @@ extension MainViewController {
             return
         }
         if let error = jsonData.value(forKey: "error") as? LibraWalletError {
-            if error.localizedDescription == LibraWalletError.WalletRequestError(reason: .networkInvalid).localizedDescription {
+            if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
                 // 网络无法访问
                 print(error.localizedDescription)
-            } else if error.localizedDescription == LibraWalletError.WalletRequestError(reason: .walletNotExist).localizedDescription {
+            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletNotExist).localizedDescription {
                 // 钱包不存在
                 print(error.localizedDescription)
                 let vc = WalletCreateViewController()
                 let navi = UINavigationController.init(rootViewController: vc)
                 self.present(navi, animated: true, completion: nil)
-            } else if error.localizedDescription == LibraWalletError.WalletRequestError(reason: .walletVersionTooOld).localizedDescription {
+            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionTooOld).localizedDescription {
                 // 版本太久
                 print(error.localizedDescription)
-            } else if error.localizedDescription == LibraWalletError.WalletRequestError(reason: .parseJsonError).localizedDescription {
+            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
                 // 解析失败
                 print(error.localizedDescription)
-            } else if error.localizedDescription == LibraWalletError.WalletRequestError(reason: .dataEmpty).localizedDescription {
+            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
                 print(error.localizedDescription)
                 // 数据为空
             }
@@ -199,7 +199,7 @@ extension MainViewController {
 //            self.detailView.model = WalletData.wallet
         } else if type == "UpdateLocalWallet" {
             // 刷新本地数据
-            self.detailView.model = LibraWalletManager.wallet
+            self.detailView.model = LibraWalletManager.shared
             self.view.hideToastActivity()
             self.view.makeToast("刷新成功", position: .center)
 
@@ -216,11 +216,11 @@ extension MainViewController {
 extension MainViewController: MainViewDelegate {
     func getTestCoin() {
         self.view.makeToastActivity(.center)
-        self.dataModel.getTestCoin(address: LibraWalletManager.wallet.walletAddress!, amount: 1000000000)
+        self.dataModel.getTestCoin(address: LibraWalletManager.shared.walletAddress!, amount: 1000000000)
     }
     
     func refreshBalance() {
-        guard let address = LibraWalletManager.wallet.walletAddress else { return }
+        guard let address = LibraWalletManager.shared.walletAddress else { return }
         self.view.makeToastActivity(.center)
         self.dataModel.updateLocalInfo(walletAddress: address)
     }

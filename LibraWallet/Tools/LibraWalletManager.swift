@@ -7,9 +7,8 @@
 //
 
 import Foundation
-
 struct LibraWalletManager {
-    static var wallet = LibraWalletManager()
+    static var shared = LibraWalletManager()
     
     private let semaphore = DispatchSemaphore.init(value: 1)
     
@@ -18,6 +17,8 @@ struct LibraWalletManager {
     private(set) var walletBalance: Int64?
     
     private(set) var walletAddress: String?
+    
+//    private(set) var walletRootAddress: String?
     
     private(set) var walletCreateTime: Int?
     
@@ -29,7 +30,9 @@ struct LibraWalletManager {
     
     private(set) var walletBiometricLock: Bool?
     
-    private(set) var wallet: LibraWallet?
+    
+    
+    private(set) var coreWallet: LibraWallet?
     
 }
 extension LibraWalletManager {
@@ -44,7 +47,7 @@ extension LibraWalletManager {
         self.walletMnemonic = walletMnemonic
         self.walletCurrentUse = walletCurrentUse
         self.walletBiometricLock = walletBiometricLock
-        self.wallet = wallet
+        self.coreWallet = wallet
         
         self.semaphore.signal()
     }
@@ -67,5 +70,56 @@ extension LibraWalletManager {
         self.semaphore.wait()
         self.walletBiometricLock = state
         self.semaphore.signal()
+    }
+    func savePaymentPasswordToKeychain(password: String, walletRootAddress: String) throws {
+        guard password.isEmpty == false else {
+            throw LibraWalletError.error("empty")
+        }
+        do {
+            // 加密密码
+            let encryptString = try PasswordCrypto().encryptPassword(password: password)
+            // 保存加密字符串到KeyChain
+            try KeychainManager.KeyManager.savePayPasswordToKeychain(walletAddress: walletRootAddress,
+                                                                     password: encryptString)
+        } catch {
+            throw error
+        }
+    }
+    
+    func saveMnemonicToKeychain(mnemonic: [String], walletRootAddress: String) throws {
+        guard mnemonic.isEmpty == false else {
+            throw LibraWalletError.error("empty")
+        }
+        do {
+            let mnemonicString = mnemonic.joined(separator: " ")
+            // 加密密码
+            let encryptMnemonicString = try PasswordCrypto().encryptPassword(password: mnemonicString)
+            // 保存加密字符串到KeyChain
+            try KeychainManager.KeyManager.saveMnemonicStringToKeychain(walletAddress: walletRootAddress, mnemonic: encryptMnemonicString)
+        } catch {
+            throw error
+        }
+    }
+    func getMnemonicFromKeychain(walletRootAddress: String) throws -> [String]{
+//        guard mnemonic.isEmpty == false else {
+//            throw LibraWalletError.error("empty")
+//        }
+        do {
+            // 取出加密后助记词字符串
+            let menmonicString = try KeychainManager.KeyManager.getMnemonicStringFromKeychain(walletAddress: walletRootAddress)
+
+            // 解密密文
+            let decryptMnemonicString = try PasswordCrypto().decryptPassword(cryptoString: menmonicString)
+            
+            let mnemonicArray = decryptMnemonicString.split(separator: " ").compactMap { (item) -> String in
+                return "\(item)"
+            }
+            guard mnemonicArray.isEmpty == false else {
+                throw LibraWalletError.error("empty")
+            }
+            return mnemonicArray
+        } catch {
+            throw error
+        }
     }
 }

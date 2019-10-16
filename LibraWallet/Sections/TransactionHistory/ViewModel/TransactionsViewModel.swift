@@ -15,7 +15,7 @@ class TransactionsViewModel: NSObject {
     func initKVO() {
         dataModel.addObserver(self, forKeyPath: "dataDic", options: NSKeyValueObservingOptions.new, context: &myContext)
         self.detailView.makeToastActivity(.center)
-        self.dataModel.getTransactionHistory(address: LibraWalletManager.wallet.walletAddress!, offset: 0, requestStatus: 0)
+        self.dataModel.getTransactionHistory(address: LibraWalletManager.shared.walletAddress!, offset: 0, requestStatus: 0)
     }
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?)  {
         guard context == &myContext else {
@@ -30,22 +30,22 @@ class TransactionsViewModel: NSObject {
         }
         let type = jsonData.value(forKey: "type") as! String
         if let error = jsonData.value(forKey: "error") as? LibraWalletError {
-            if error.localizedDescription == LibraWalletError.WalletRequestError(reason: .networkInvalid).localizedDescription {
+            if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
                 // 网络无法访问
                 print(error.localizedDescription)
-            } else if error.localizedDescription == LibraWalletError.WalletRequestError(reason: .walletNotExist).localizedDescription {
+            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletNotExist).localizedDescription {
                 // 钱包不存在
                 print(error.localizedDescription)
 //                let vc = WalletCreateViewController()
 //                let navi = UINavigationController.init(rootViewController: vc)
 //                self.present(navi, animated: true, completion: nil)
-            } else if error.localizedDescription == LibraWalletError.WalletRequestError(reason: .walletVersionTooOld).localizedDescription {
+            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionTooOld).localizedDescription {
                 // 版本太久
                 print(error.localizedDescription)
-            } else if error.localizedDescription == LibraWalletError.WalletRequestError(reason: .parseJsonError).localizedDescription {
+            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
                 // 解析失败
                 print(error.localizedDescription)
-            } else if error.localizedDescription == LibraWalletError.WalletRequestError(reason: .dataEmpty).localizedDescription {
+            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
                 print(error.localizedDescription)
                 // 没有更多数据
                 if type == "BalanceMore" {
@@ -113,11 +113,11 @@ class TransactionsViewModel: NSObject {
         dataOffset = 0
         self.detailView.tableView.mj_footer.resetNoMoreData()
         self.detailView.tableView.mj_header.beginRefreshing()
-        self.dataModel.getTransactionHistory(address: LibraWalletManager.wallet.walletAddress!, offset: 0, requestStatus: 0)
+        self.dataModel.getTransactionHistory(address: LibraWalletManager.shared.walletAddress!, offset: 0, requestStatus: 0)
     }
     @objc func getMoreReceive() {
         dataOffset += 10
         self.detailView.tableView.mj_footer.beginRefreshing()
-        self.dataModel.getTransactionHistory(address: LibraWalletManager.wallet.walletAddress!, offset: dataOffset, requestStatus: 1)
+        self.dataModel.getTransactionHistory(address: LibraWalletManager.shared.walletAddress!, offset: dataOffset, requestStatus: 1)
     }
 }

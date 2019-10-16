@@ -39,7 +39,7 @@ func stringValueDic(_ str: String) -> [String : Any]? {
 let defaultBackgroundColor = UIColor.white
 let DefaultSpaceColor = UIColor.init(hex: "F2F2F2")
 let DefaultGreenColor = UIColor.init(hex: "15C794")
-/***************************************/
+///******************* 全局设置语言 *******************/
 /// 全局设置语言
 ///
 /// - Parameter keyString: 标示
@@ -234,3 +234,11 @@ enum ControllerAction {
 //    }
 //    return state
 //}
+protocol LoadLocalLanguageProtocol {
+    func loadLocalLanguage(keyString: String) -> String
+}
+extension LoadLocalLanguageProtocol {
+    func loadLocalLanguage(keyString: String) -> String {
+        return keyString.localized()
+    }
+}

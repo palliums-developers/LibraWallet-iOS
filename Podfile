@@ -18,6 +18,7 @@ target 'LibraWallet' do
   pod 'Alamofire'
   pod 'Moya'
   pod 'MJRefresh'
+  pod 'KeychainAccess'
   # Pods for LibraWallet
 
   target 'LibraWalletTests' do
