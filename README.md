@@ -1,6 +1,7 @@
 #<Center>Libra
 
 ##APP密码、助记词加密解密模块
+
 方案: AES-256-CBC + PKCS7填充,结果Base64输出
 
 >密钥key的32字节HEX:
