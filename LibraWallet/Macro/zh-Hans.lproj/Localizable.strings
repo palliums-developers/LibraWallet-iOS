@@ -13,8 +13,8 @@ wallet_home_receive_button_title = "收款";
 
 wallet_create_button_title = "创建钱包";
 wallet_home_right_bar_title = "交易历史";
-/************* 接收 *******************/
 
+/************* 接收 *******************/
 wallet_receive_title = "扫一扫，向我付款";
 wallet_receive_set_qrcode_amout_button_title = "设置金额";
 wallet_receive_clear_qrcode_amout_button_title = "清除金额";

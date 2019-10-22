@@ -36,7 +36,7 @@ class TransferModel: NSObject {
             throw error
         }
     }
-    func transfer(address: String, amount: Double, wallet: LibraWallet)  {
+    func transfer(address: String, amount: Double, rootAddress: String)  {
         // 创建通道
         let channel = Channel.init(address: libraMainURL, secure: false)
         // 创建请求端
@@ -45,6 +45,11 @@ class TransferModel: NSObject {
         let queue = DispatchQueue.init(label: "TransferQueue")
         queue.async {
             do {
+                #warning("密码校验待")
+                let menmonic = try LibraWalletManager.shared.getMnemonicFromKeychain(walletRootAddress: rootAddress)
+                let seed = try LibraMnemonic.seed(mnemonic: menmonic)
+                let wallet = try LibraWallet.init(seed: seed)
+                
                 // 获取SequenceNumber
                 let sequenceNumber = try self.getSequenceNumber(client: client, wallet: wallet)
                 // 拼接交易

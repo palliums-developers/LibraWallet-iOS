@@ -12,9 +12,9 @@ struct DataBaseManager {
     static var DBManager = DataBaseManager()
     var db: Connection?
     mutating func creatLibraDB() {
-        // 获取沙盒地址
+        /// 获取沙盒地址
         let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
-        // 拼接路径
+        /// 拼接路径
         let filePath = "\(path[0])" + "/" + "LibraWallet.sqlite3"
         print(filePath)
         do {
@@ -24,6 +24,10 @@ struct DataBaseManager {
         }
     }
     func createWalletTable() {
+        /// 判断是否存在表
+        guard isExistTable(name: "Wallet") == false else {
+            return
+        }
         do {
             let walletTable = Table("Wallet")
             // 设置字段
@@ -32,27 +36,35 @@ struct DataBaseManager {
             let walletBalance = Expression<Int64>("wallet_balance")
             // 钱包地址
             let walletAddress = Expression<String>("wallet_address")
+            // Libra_、Violas_或BTC_ 前缀 + 钱包0层地址
+            let walletRootAddress = Expression<String>("wallet_root_address")
             // 钱包创建时间
             let walletCreateTime = Expression<Int>("wallet_creat_time")
             // 钱包名字
             let walletName = Expression<String>("wallet_name")
             // 钱包助记词
-            let walletMnemonic = Expression<String>("wallet_mnemonic")
+//            let walletMnemonic = Expression<String>("wallet_mnemonic")
             // 当前使用钱包
             let walletCurrentUse = Expression<Bool>("wallet_current_use")
             // 是否使用生物解锁
             let walletBiometricLock = Expression<Bool>("wallet_biometric_lock")
+            // 账户类型身份钱包、其他钱包(0=身份钱包、1=其它导入钱包)
+            let walletIdentity = Expression<Int>("wallet_identity")
+            // 钱包类型(0=Libra、1=Violas、2=BTC)
+            let walletType = Expression<Int>("wallet_type")
             
-            //建表
+            // 建表
             try db!.run(walletTable.create { t in
                 t.column(walletID, primaryKey: true)
-                t.column(walletMnemonic)
-                t.column(walletAddress, unique: true)
+                t.column(walletAddress)
+                t.column(walletRootAddress, unique: true)
                 t.column(walletBalance)
                 t.column(walletCreateTime)
                 t.column(walletName)
                 t.column(walletCurrentUse)
                 t.column(walletBiometricLock)
+                t.column(walletIdentity)
+                t.column(walletType)
             })
         } catch {
             let errorString = error.localizedDescription
@@ -63,6 +75,16 @@ struct DataBaseManager {
             }
         }
     }
+    func isExistTable(name: String) -> Bool {
+        do {
+            let walletTable = Table(name)
+            _ = try db!.scalar(walletTable.count)
+            return true
+        } catch {
+            print(error.localizedDescription)
+            return false
+        }
+    }
     func insertWallet(model: LibraWalletManager) -> Bool {
         let homeTable = Table("Wallet")
         do {
@@ -70,11 +92,14 @@ struct DataBaseManager {
                 let insert = homeTable.insert(
                     Expression<Int64>("wallet_balance") <- model.walletBalance ?? 0,
                     Expression<String>("wallet_address") <- model.walletAddress ?? "",
+                    Expression<String>("wallet_root_address") <- model.walletRootAddress ?? "",
+
                     Expression<Int>("wallet_creat_time") <- model.walletCreateTime ?? 0,
-                    Expression<String>("wallet_mnemonic") <- model.walletMnemonic ?? "",
                     Expression<String>("wallet_name") <- model.walletName ?? "",
                     Expression<Bool>("wallet_current_use") <- model.walletCurrentUse ?? true,
-                    Expression<Bool>("wallet_biometric_lock") <- model.walletBiometricLock ?? false)
+                    Expression<Bool>("wallet_biometric_lock") <- model.walletBiometricLock ?? false,
+                    Expression<Int>("wallet_identity") <- model.walletIdentity ?? 999,
+                    Expression<Int>("wallet_type") <- model.walletType ?? 999)
                 
                 let rowid = try tempDB.run(insert)
                 print(rowid)
@@ -98,36 +123,53 @@ struct DataBaseManager {
                     let walletBalance = wallet[Expression<Int64>("wallet_balance")]
                     // 钱包地址
                     let walletAddress = wallet[Expression<String>("wallet_address")]
+                    // Libra_、Violas_或BTC_ 前缀 + 钱包0层地址
+                    let walletRootAddress = wallet[Expression<String>("wallet_root_address")]
                     // 钱包创建时间
                     let walletCreateTime = wallet[Expression<Int>("wallet_creat_time")]
                     // 钱包名字
                     let walletName = wallet[Expression<String>("wallet_name")]
                     // 钱包助记词
-                    let walletMnemonic = wallet[Expression<String>("wallet_mnemonic")]
+//                    let walletMnemonic = wallet[Expression<String>("wallet_mnemonic")]
                     // 当前使用用户
                     let walletCurrentUse = wallet[Expression<Bool>("wallet_current_use")]
                     // 账户是否开启生物锁定
                     let walletBiometricLock = wallet[Expression<Bool>("wallet_biometric_lock")]
-                    
-                    
-                    let mnemonicArray = walletMnemonic.split(separator: " ").compactMap { (item) -> String in
-                        return "\(item)"
-                    }
-                    let seed = try LibraMnemonic.seed(mnemonic: mnemonicArray)
-//                    let tempWallet = LibraWallet.init(seed: seed)
-                    let tempWallet = try LibraWallet.init(seed: seed)
+                    // 账户类型身份钱包、其他钱包(0=身份钱包、1=其它导入钱包)
+                    let walletIdentity = wallet[Expression<Int>("wallet_identity")]
+                    // 钱包类型(0=Libra、1=Violas、2=BTC)
+                    let walletType = wallet[Expression<Int>("wallet_type")]
+
                     LibraWalletManager.shared.initWallet(walletID: walletID,
                                                          walletBalance: walletBalance,
                                                          walletAddress: walletAddress,
+                                                         walletRootAddress: walletRootAddress,
                                                          walletCreateTime: walletCreateTime,
                                                          walletName: walletName,
-                                                         walletMnemonic: walletMnemonic,
+//                                                         walletMnemonic: walletMnemonic,
                                                          walletCurrentUse: walletCurrentUse,
                                                          walletBiometricLock: walletBiometricLock,
-                                                         wallet: tempWallet)
+                                                         walletIdentity: walletIdentity,
+                                                         walletType: walletType)
                     return true
                 }
                 return false
+            } else {
+                return false
+            }
+        } catch {
+            print(error.localizedDescription)
+            return false
+        }
+    }
+    func deleteWalletFromTable(model: LibraWalletManager) -> Bool {
+        let transectionAddressHistoryTable = Table("Wallet")
+        do {
+            if let tempDB = self.db {
+                let contract = transectionAddressHistoryTable.filter(Expression<Int64>("wallet_id") == model.walletID!)
+                let rowid = try tempDB.run(contract.delete())
+                print(rowid)
+                return true
             } else {
                 return false
             }
@@ -213,6 +255,127 @@ struct DataBaseManager {
         } catch {
             print(error.localizedDescription)
             return true
+        }
+    }
+    func createTransferAddressListTable() {
+        /// 判断是否存在表
+        guard isExistTable(name: "TransferAddress") == false else {
+            return
+        }
+        do {
+            let addressTable = Table("TransferAddress")
+            // 设置字段
+            let addressID = Expression<Int64>("address_id")
+            // 地址名字
+            let addressName = Expression<String>("address_name")
+            // 地址
+            let address = Expression<String>("address")
+            // 地址类型(0=Libra、1=Violas、2=BTC)
+            let addressType = Expression<String>("address_type")
+            
+            // 建表
+            try db!.run(addressTable.create { t in
+                t.column(addressID, primaryKey: true)
+                t.column(addressName)
+                t.column(address, unique: true)
+                t.column(addressType)
+            })
+        } catch {
+            let errorString = error.localizedDescription
+            if errorString.hasSuffix("already exists") == true {
+                return
+            } else {
+                print(errorString)
+            }
+        }
+    }
+    func insertTransferAddress(model: AddressModel) -> Bool {
+        let addressTable = Table("TransferAddress")
+        do {
+            if let tempDB = self.db {
+                let insert = addressTable.insert(
+                    
+                    Expression<String>("address_name") <- model.addressName ?? "",
+                    Expression<String>("address") <- "\(model.addressType!)_" + (model.address ?? ""),
+                    Expression<String>("address_type") <- model.addressType ?? "")
+                
+                let rowid = try tempDB.run(insert)
+                print(rowid)
+                return true
+            } else {
+                return false
+            }
+        } catch {
+            print(error.localizedDescription)
+            return false
+        }
+    }
+    func getTransferAddress(type: String) -> NSMutableArray {
+        let addressTable = Table("TransferAddress").filter(Expression<String>("address_type") == type)
+        do {
+            if let tempDB = self.db {
+                let addressArray = NSMutableArray()
+                for wallet in try tempDB.prepare(addressTable) {
+                    // 地址ID
+                    let addressID = wallet[Expression<Int64>("address_id")]
+                    // 地址名字
+                    let addressName = wallet[Expression<String>("address_name")]
+                    // 地址
+                    let address = wallet[Expression<String>("address")]
+                    // 地址类型(0=Libra、1=Violas、2=BTC)
+                    let addressType = wallet[Expression<String>("address_type")]
+
+                    let contentArray = address.split(separator: "_").compactMap { (item) -> String in
+                        return "\(item)"
+                    }
+                    guard contentArray.count == 2 else {
+                        continue
+                    }
+                    let model = AddressModel.init(addressID: addressID,
+                                                  address: contentArray.last,
+                                                  addressName: addressName,
+                                                  addressType: addressType)
+
+                    addressArray.add(model)
+                }
+                return addressArray
+            } else {
+                return NSMutableArray()
+            }
+        } catch {
+            print(error.localizedDescription)
+            return NSMutableArray()
+        }
+    }
+    func updateTransferAddressName(model: AddressModel, name: String) -> Bool {
+        let addressTable = Table("TransferAddress")
+        do {
+            if let tempDB = self.db {
+                let item = addressTable.filter(Expression<String>("address") == model.address!)
+                try tempDB.run(item.update(Expression<String>("address_name") <- name))
+                return true
+            } else {
+                return false
+            }
+        } catch {
+            print(error.localizedDescription)
+            return false
+        }
+    }
+    func deleteTransferAddressFromTable(model: AddressModel) -> Bool {
+        let transectionAddressHistoryTable = Table("Wallet")
+        do {
+            if let tempDB = self.db {
+                let contract = transectionAddressHistoryTable.filter(Expression<Int64>("address_id") == model.addressID!)
+                let rowid = try tempDB.run(contract.delete())
+                print(rowid)
+                return true
+            } else {
+                return false
+            }
+        } catch {
+            print(error.localizedDescription)
+            return false
         }
     }
 }

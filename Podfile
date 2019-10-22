@@ -6,7 +6,6 @@ target 'LibraWallet' do
   use_frameworks!
   
   pod 'CryptoSwift'
-  pod 'SwiftEd25519'
   pod 'SwiftProtobuf'
   pod 'BigInt'
   pod 'SwiftGRPC'
@@ -19,6 +18,10 @@ target 'LibraWallet' do
   pod 'Moya'
   pod 'MJRefresh'
   pod 'KeychainAccess'
+  pod 'StatefulViewController'
+  pod 'IQKeyboardManagerSwift'
+  pod 'BiometricAuthentication'
+#  pod 'BitcoinKit'
   # Pods for LibraWallet
 
   target 'LibraWalletTests' do

@@ -10,6 +10,7 @@ import Foundation
 import KeychainAccess
 struct KeychainManager {
     static let KeyManager = KeychainManager()
+    //MARK: - 保存密码
     /// 保存密码
     /// - Parameter walletAddress: 该钱包0层地址
     /// - Parameter password: 支付密码
@@ -24,6 +25,7 @@ struct KeychainManager {
             throw error
         }
     }
+    //MARK: - 保存助记词
     /// 保存助记词
     /// - Parameter walletAddress: 该钱包0层地址
     /// - Parameter mnemonic: 助记词
@@ -38,6 +40,7 @@ struct KeychainManager {
             throw error
         }
     }
+    //MARK: - 获取密码
     /// 获取密码
     /// - Parameter walletAddress: 该钱包0层地址
     func getPayPasswordFromKeychain(walletAddress: String) throws -> String {
@@ -58,6 +61,7 @@ struct KeychainManager {
             throw error
         }
     }
+    //MARK: - 获取助记词
     /// 获取助记词
     /// - Parameter walletAddress: 该钱包0层地址
     func getMnemonicStringFromKeychain(walletAddress: String) throws -> String {
@@ -78,6 +82,7 @@ struct KeychainManager {
             throw error
         }
     }
+    //MARK: - 检查密码是否有效
     /// 检查密码是否有效
     /// - Parameter walletAddress: 该钱包0层地址
     /// - Parameter password: 密码
@@ -95,6 +100,7 @@ struct KeychainManager {
             return false
         }
     }
+    //MARK: - 删除支付密码
     /// 删除支付密码(删除钱时包掉用)
     /// - Parameter walletAddress: 该钱包0层地址
     func deletePayPasswordFromKeychain(walletAddress: String) throws {
@@ -107,6 +113,7 @@ struct KeychainManager {
             throw error
         }
     }
+    //MARK: - 删除助记词
     /// 删除助记词(删除钱时包掉用)
     /// - Parameter walletAddress: 该钱包0层地址
     func deleteMnemonicStringFromKeychain(walletAddress: String) throws {

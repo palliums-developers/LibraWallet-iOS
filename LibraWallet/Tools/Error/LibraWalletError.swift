@@ -45,6 +45,8 @@ public enum LibraWalletError: Error {
         case deletePaymentPasswordFailedError
         /// 删除助记词失败
         case deleteMnemonicFailedError
+        /// 搜寻标示为空
+        case searchStringEmptyError
         
     }
     case WalletKeychain(reason: KeychainError)
@@ -66,6 +68,8 @@ public enum LibraWalletError: Error {
         case decryptResultEmptyError
         /// 解密结果转字符串失败
         case decryptToStringFailedError
+        /// 解密结果转数组失败
+        case decryptStringSplitError
         
     }
     case WalletCrypto(reason: CryptoError)
@@ -110,28 +114,31 @@ extension LibraWalletError.KeychainError {
         switch self {
         /// 保存失败
         case .savePaymentPasswordFailedError:
-            return localLanguage(keyString: "")
+            return localLanguage(keyString: "保存失败")
         /// 保存助记词失败
         case .saveMnemonicFailedError:
-            return localLanguage(keyString: "")
+            return localLanguage(keyString: "保存助记词失败")
         /// 获取支付密码失败
         case .getPaymentPasswordFailedError:
-            return localLanguage(keyString: "")
+            return localLanguage(keyString: "获取支付密码失败")
         /// 获取的支付密码为空
         case .getPaymentPasswordEmptyError:
-            return localLanguage(keyString: "")
+            return localLanguage(keyString: "获取的支付密码为空")
         /// 获取助记词失败
         case .getMnemonicFailedError:
-            return localLanguage(keyString: "")
+            return localLanguage(keyString: "获取助记词失败")
         /// 获取助记词为空
         case .getMnemonicEmptyError:
-            return localLanguage(keyString: "")
+            return localLanguage(keyString: "获取助记词为空")
         /// 删除支付密码失败
         case .deletePaymentPasswordFailedError:
-            return localLanguage(keyString: "")
+            return localLanguage(keyString: "删除支付密码失败")
         /// 删除助记词失败
         case .deleteMnemonicFailedError:
-            return localLanguage(keyString: "")
+            return localLanguage(keyString: "删除助记词失败")
+        /// 搜寻标示为空
+        case .searchStringEmptyError:
+            return localLanguage(keyString: "搜寻标示为空")
         }
     }
 }
@@ -140,28 +147,31 @@ extension LibraWalletError.CryptoError {
         switch self {
         /// 密码为空
         case .passwordEmptyError:
-            return localLanguage(keyString: "")
+            return localLanguage(keyString: "密码为空")
         /// 助记词为空
         case .mnemonicEmptyError:
-            return localLanguage(keyString: "")
+            return localLanguage(keyString: "助记词为空")
         /// 加密结果为空
         case .encryptResultEmptyError:
-            return localLanguage(keyString: "")
+            return localLanguage(keyString: "加密结果为空")
         /// 加密结果转Base64失败
         case .encryptToBase64FailedError:
-            return localLanguage(keyString: "")
+            return localLanguage(keyString: "加密结果转Base64失败")
         /// 加密结果转Base64为空
         case .encryptToBase64EmptyError:
-            return localLanguage(keyString: "")
+            return localLanguage(keyString: "加密结果转Base64为空")
         /// 待解密字符串为空
         case .decryptStringEmptyError:
-            return localLanguage(keyString: "")
+            return localLanguage(keyString: "待解密字符串为空")
         /// 解密结果为空
         case .decryptResultEmptyError:
-            return localLanguage(keyString: "")
+            return localLanguage(keyString: "解密结果为空")
         /// 解密结果转字符串失败
         case .decryptToStringFailedError:
-            return localLanguage(keyString: "")
+            return localLanguage(keyString: "解密结果转字符串失败")
+        /// 解密结果转数组失败
+        case .decryptStringSplitError:
+            return localLanguage(keyString: "解密结果转数组失败")
         }
     }
 }

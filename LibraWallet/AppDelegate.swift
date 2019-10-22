@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import IQKeyboardManagerSwift
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         window = UIWindow.init(frame: UIScreen.main.bounds)
         
-        let home = MainViewController()
+        let home = HomeViewController()
 //        home.needShowBiometricCheck = true
         let navi = UINavigationController.init(rootViewController: home)
         window?.rootViewController = navi
@@ -26,6 +26,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         DataBaseManager.DBManager.creatLibraDB()
         DataBaseManager.DBManager.createWalletTable()
+        DataBaseManager.DBManager.createTransferAddressListTable()
+        IQKeyboardManager.shared.enable = true
+
         return true
     }
 

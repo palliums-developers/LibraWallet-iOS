@@ -110,6 +110,8 @@ extension TransferViewController: TransferViewDelegate {
     
     func confirmWithdraw() {
         self.view.makeToastActivity(.center)
-        self.dataModel.transfer(address: self.detailView.addressTextField.text!, amount: Double(self.detailView.amountTextField.text!)!, wallet: LibraWalletManager.shared.coreWallet!)
+        self.dataModel.transfer(address: self.detailView.addressTextField.text!,
+                                amount: Double(self.detailView.amountTextField.text!)!,
+                                rootAddress: LibraWalletManager.shared.walletRootAddress!)
     }
 }

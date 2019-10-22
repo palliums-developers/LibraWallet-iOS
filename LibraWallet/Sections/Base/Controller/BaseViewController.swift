@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import StatefulViewController
 class BaseViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -16,7 +16,6 @@ class BaseViewController: UIViewController {
         self.setChildControllerConfig()
         self.setNavigationBarTitleColorWhite()
         self.navigationController?.navigationBar.barStyle = .black
-        
     }
     func setBaseControlllerConfig() {
         self.setNavigationWithoutShadowImage()
@@ -66,7 +65,7 @@ class BaseViewController: UIViewController {
     }
     func setNavigationBarTitleColorWhite() {
         self.navigationController?.navigationBar.titleTextAttributes=[NSAttributedString.Key.foregroundColor:UIColor.white,
-                                                                      NSAttributedString.Key.font:UIFont.systemFont(ofSize: 20, weight: UIFont.Weight.medium)]
+                                                                  NSAttributedString.Key.font:UIFont.systemFont(ofSize: 20, weight: UIFont.Weight.medium)]
     }
     func hasContent() -> Bool {
         return true
@@ -79,12 +78,13 @@ class BaseViewController: UIViewController {
     }
 }
 extension BaseViewController: UIGestureRecognizerDelegate {
+    
 }
-//extension BaseViewController: StatefulViewController {
-//    func setEmptyView() {
-//        //空数据
-//        emptyView = EmptyDataPlaceholderView.init()
-//        //        emptyView = EmptyDataPlaceholderView.init(frame: CGRect.init(x: 0, y: navigationBarHeight, width: self.view.bounds.width, height: self.view.bounds.height - navigationBarHeight))
-//        
-//    }
-//}
+extension BaseViewController: StatefulViewController {
+    func setEmptyView() {
+        //空数据
+        emptyView = EmptyDataPlaceholderView.init()
+        //        emptyView = EmptyDataPlaceholderView.init(frame: CGRect.init(x: 0, y: navigationBarHeight, width: self.view.bounds.width, height: self.view.bounds.height - navigationBarHeight))
+        
+    }
+}

@@ -7,7 +7,6 @@
 //
 
 import XCTest
-import SwiftEd25519
 import CryptoSwift
 import BigInt
 import SwiftGRPC
@@ -115,11 +114,6 @@ class LibraSDKTests: XCTestCase {
         
 //        f3895db4abc90322afcc4e7dea8eed40a506507b6f100caed41fac95aa58f64517ff6731a1a1b35e278db4cc5ccd13f792003306fbd803fafcfecadeed7a070a
         
-        let testSign = try! KeyPair.init(publicKey: Data.init(hex: "f7972ae8140338b76702cc35431e7a79386f8b2ded1a5d71a0cdb2ba83dcfe7b").bytes, privateKey: Data.init(hex: "f591d756e9e522d24e22d83f0f777c90ba8d3fe9052155bb29873cb7d38ad8c8").bytes)
-        let testResult = testSign.sign(Data.init(hex: "d3686886094923eace9e502f8198a185de5435ac974bffa6f155bdece325acbc").bytes)
-        XCTAssertEqual(testResult.toHexString(), "f3895db4abc90322afcc4e7dea8eed40a506507b6f100caed41fac95aa58f64517ff6731a1a1b35e278db4cc5ccd13f792003306fbd803fafcfecadeed7a070a")
-
-        
     }
     func testPrint() {
 //        let mnemonic = try! LibraMnemonic.generate(language: LibraMnemonic.Language.english)
@@ -223,5 +217,18 @@ class LibraSDKTests: XCTestCase {
         }
 
     }
-    
+    func testCommonData() {
+        //测试welcome
+//        let state = getWelcomeState()
+//        XCTAssertEqual(state, true)
+//        setWelcomeState(show: false)
+//        let state2 = getWelcomeState()
+//        XCTAssertEqual(state2, true)
+//        setWelcomeState(show: true)
+        // 测试数据库
+        let state = DataBaseManager.DBManager.isExistTable(name: "Wallet")
+        XCTAssertEqual(state, true)
+        let state2 = DataBaseManager.DBManager.isExistTable(name: "Walet")
+        XCTAssertEqual(state2, false)
+    }
 }

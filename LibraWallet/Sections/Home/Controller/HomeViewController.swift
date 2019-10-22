@@ -1,5 +1,5 @@
 //
-//  MainViewController.swift
+//  HomeViewController.swift
 //  LibraWallet
 //
 //  Created by palliums on 2019/9/11.
@@ -8,7 +8,7 @@
 
 import UIKit
 import Localize_Swift
-class MainViewController: UIViewController {
+class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // 设置背景色
@@ -64,8 +64,8 @@ class MainViewController: UIViewController {
         }
     }
     //子View
-    private lazy var detailView : MainView = {
-        let view = MainView.init()
+    private lazy var detailView : HomeView = {
+        let view = HomeView.init()
         view.delegate = self
         return view
     }()
@@ -126,7 +126,10 @@ class MainViewController: UIViewController {
 //        self.navigationController?.pushViewController(vc, animated: true)
     }
     @objc func recharge() {
-        let vc = TransactionsViewController()
+//        let vc = TransactionsViewController()
+//        self.navigationController?.pushViewController(vc, animated: true)
+        
+        let vc = AddressManagerViewController()
         self.navigationController?.pushViewController(vc, animated: true)
         
     }
@@ -149,7 +152,7 @@ class MainViewController: UIViewController {
     }
     var myContext = 0
 }
-extension MainViewController {
+extension HomeViewController {
     //MARK: - KVO
     func initKVO() {
         dataModel.addObserver(self, forKeyPath: "dataDic", options: NSKeyValueObservingOptions.new, context: &myContext)
@@ -176,9 +179,9 @@ extension MainViewController {
             } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletNotExist).localizedDescription {
                 // 钱包不存在
                 print(error.localizedDescription)
-                let vc = WalletCreateViewController()
-                let navi = UINavigationController.init(rootViewController: vc)
-                self.present(navi, animated: true, completion: nil)
+//                let vc = WalletCreateViewController()
+//                let navi = UINavigationController.init(rootViewController: vc)
+//                self.present(navi, animated: true, completion: nil)
             } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionTooOld).localizedDescription {
                 // 版本太久
                 print(error.localizedDescription)
@@ -213,7 +216,7 @@ extension MainViewController {
         self.view.hideToastActivity()
     }
 }
-extension MainViewController: MainViewDelegate {
+extension HomeViewController: HomeViewDelegate {
     func getTestCoin() {
         self.view.makeToastActivity(.center)
         self.dataModel.getTestCoin(address: LibraWalletManager.shared.walletAddress!, amount: 1000000000)

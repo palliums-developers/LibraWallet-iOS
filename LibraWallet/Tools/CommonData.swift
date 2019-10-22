@@ -159,39 +159,15 @@ enum ControllerAction {
 //}
 
 /***************************************/
-/// 设置汇率
-///
-/// - Parameter rate: 汇率
-//func setBTCToHKDExchangeRate(rate: String) {
-//    UserDefaults.standard.set(rate, forKey: "BTCToHKDRate")
-//}
-//func getBTCToHKDExchangeRate() -> String {
-//    //判断UserDefaults中是否已经存在
-//    guard let rate = UserDefaults.standard.string(forKey: "BTCToHKDRate") else {
-//        return "0"
-//    }
-//    guard rate.isEmpty == false else {
-//        return "0"
-//    }
-//    return rate
-//}
-/***************************************/
 /// 设置欢迎页面
 ///
-/// - Parameter show: <#show description#>
-//func setWelcomeState(show: String) {
-//    UserDefaults.standard.set(show, forKey: "Welcome")
-//}
-//func getWelcomeState() -> String {
-//    //判断UserDefaults中是否已经存在
-//    guard let state = UserDefaults.standard.string(forKey: "Welcome") else {
-//        return "0"
-//    }
-//    guard state.isEmpty == false else {
-//        return "0"
-//    }
-//    return state
-//}
+/// - Parameter show: 展示状态
+func setWelcomeState(show: Bool) {
+    UserDefaults.standard.set(show, forKey: "Welcome")
+}
+func getWelcomeState() -> Bool {
+    return UserDefaults.standard.bool(forKey: "Welcome")
+}
 
 /***************************************/
 //func helpCenterURL() -> String {

@@ -87,7 +87,7 @@ class LibraWalletCoreTests: XCTestCase {
             let seed = try LibraMnemonic.seed(mnemonic: mnemonic)
 
             let libraWallet = try LibraWallet.init(seed: seed)
-            LibraWalletManager.shared.initWallet(walletID: 0, walletBalance: 0, walletAddress: "", walletCreateTime: 0, walletName: "", walletMnemonic: "", walletCurrentUse: true, walletBiometricLock: false, wallet: libraWallet)
+            LibraWalletManager.shared.initWallet(walletID: 0, walletBalance: 0, walletAddress: "", walletRootAddress: "", walletCreateTime: 0, walletName: "", walletCurrentUse: true, walletBiometricLock: false, walletIdentity: 0, walletType: 0)
             
             try LibraWalletManager.shared.saveMnemonicToKeychain(mnemonic: mnemonic, walletRootAddress: libraWallet.publicKey.toAddress())
 
@@ -98,5 +98,17 @@ class LibraWalletCoreTests: XCTestCase {
             XCTFail(error.localizedDescription)
         }
         
+    }
+    func testAddressManager() {
+//        DataBaseManager.DBManager.createTransferAddressListTable()
+//        let model = AddressModel.init(addressID: 0, address: "test", addressName: "test", addressType: "Libra")
+//        _ = DataBaseManager.DBManager.insertTransferAddress(model: model)
+        
+        let data = DataBaseManager.DBManager.getTransferAddress(type: "Libra")
+        print(data)
+        let updateResult = DataBaseManager.DBManager.updateTransferAddressName(model: data.firstObject as! AddressModel, name: "haha")
+        print(updateResult)
+        let data2 = DataBaseManager.DBManager.getTransferAddress(type: "Libra")
+        print(data2)        
     }
 }

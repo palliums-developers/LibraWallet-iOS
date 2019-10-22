@@ -1,5 +1,5 @@
 //
-//  MainView.swift
+//  HomeView.swift
 //  LibraWallet
 //
 //  Created by palliums on 2019/9/11.
@@ -8,7 +8,7 @@
 
 import UIKit
 import Localize_Swift
-protocol MainViewDelegate: NSObjectProtocol {
+protocol HomeViewDelegate: NSObjectProtocol {
     func walletSend()
     func walletReceive()
     
@@ -16,8 +16,8 @@ protocol MainViewDelegate: NSObjectProtocol {
     
     func getTestCoin()
 }
-class MainView: UIView {
-    weak var delegate: MainViewDelegate?
+class HomeView: UIView {
+    weak var delegate: HomeViewDelegate?
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(walletTitleLabel)

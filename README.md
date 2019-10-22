@@ -1,4 +1,4 @@
-#<Center>Libra
+#LibraWallet
 
 ##APP密码、助记词加密解密模块
 
