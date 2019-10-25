@@ -112,9 +112,13 @@ struct DataBaseManager {
             return false
         }
     }
-    func loadCurrentUseWallet() -> Bool {
-        let walletTable = Table("Wallet").filter(Expression<Bool>("wallet_current_use") == true)
+    func getLocalWallets() -> [[LibraWalletManager]] {
+        let walletTable = Table("Wallet")
         do {
+            // 身份钱包
+            var allWallets = [[LibraWalletManager]]()
+            var originWallets = [LibraWalletManager]()
+            var importWallets = [LibraWalletManager]()
             if let tempDB = self.db {
                 for wallet in try tempDB.prepare(walletTable) {
                     // 钱包ID
@@ -139,27 +143,32 @@ struct DataBaseManager {
                     let walletIdentity = wallet[Expression<Int>("wallet_identity")]
                     // 钱包类型(0=Libra、1=Violas、2=BTC)
                     let walletType = wallet[Expression<Int>("wallet_type")]
-
-                    LibraWalletManager.shared.initWallet(walletID: walletID,
+                    
+                    let wallet = LibraWalletManager.init(walletID: walletID,
                                                          walletBalance: walletBalance,
                                                          walletAddress: walletAddress,
                                                          walletRootAddress: walletRootAddress,
                                                          walletCreateTime: walletCreateTime,
                                                          walletName: walletName,
-//                                                         walletMnemonic: walletMnemonic,
                                                          walletCurrentUse: walletCurrentUse,
                                                          walletBiometricLock: walletBiometricLock,
                                                          walletIdentity: walletIdentity,
                                                          walletType: walletType)
-                    return true
+                    if walletIdentity == 0 {
+                        originWallets.append(wallet)
+                    } else {
+                        importWallets.append(wallet)
+                    }
                 }
-                return false
+                allWallets.append(originWallets)
+                allWallets.append(importWallets)
+                return allWallets
             } else {
-                return false
+                return allWallets
             }
         } catch {
             print(error.localizedDescription)
-            return false
+            return [[LibraWalletManager]]()
         }
     }
     func deleteWalletFromTable(model: LibraWalletManager) -> Bool {

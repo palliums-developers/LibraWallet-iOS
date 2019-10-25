@@ -14,8 +14,8 @@ class BaseViewController: UIViewController {
         // 设置默认背景色
         self.view.backgroundColor = defaultBackgroundColor
         self.setChildControllerConfig()
-        self.setNavigationBarTitleColorWhite()
-        self.navigationController?.navigationBar.barStyle = .black
+        self.setNavigationBarTitleColorDefault()
+//        self.navigationController?.navigationBar.barStyle = .black
     }
     func setBaseControlllerConfig() {
         self.setNavigationWithoutShadowImage()
@@ -60,8 +60,8 @@ class BaseViewController: UIViewController {
         self.navigationController?.navigationBar.isTranslucent = true
     }
     func setNavigationBarTitleColorDefault() {
-        self.navigationController?.navigationBar.titleTextAttributes=[NSAttributedString.Key.foregroundColor:UIColor.init(hex: "263C4E"),
-                                                                      NSAttributedString.Key.font:UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)]
+        self.navigationController?.navigationBar.titleTextAttributes=[NSAttributedString.Key.foregroundColor:UIColor.init(hex: "3C3848"),
+                                                                      NSAttributedString.Key.font:UIFont.systemFont(ofSize: 20, weight: UIFont.Weight.medium)]
     }
     func setNavigationBarTitleColorWhite() {
         self.navigationController?.navigationBar.titleTextAttributes=[NSAttributedString.Key.foregroundColor:UIColor.white,

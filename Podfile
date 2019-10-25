@@ -21,6 +21,7 @@ target 'LibraWallet' do
   pod 'StatefulViewController'
   pod 'IQKeyboardManagerSwift'
   pod 'BiometricAuthentication'
+  pod 'RSKPlaceholderTextView'
 #  pod 'BitcoinKit'
   # Pods for LibraWallet
 

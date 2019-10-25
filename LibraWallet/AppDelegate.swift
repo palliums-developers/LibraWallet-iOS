@@ -17,11 +17,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         window = UIWindow.init(frame: UIScreen.main.bounds)
         
-        let home = HomeViewController()
-//        home.needShowBiometricCheck = true
-        let navi = UINavigationController.init(rootViewController: home)
-        window?.rootViewController = navi
+//        let home = HomeViewController()
+////        home.needShowBiometricCheck = true
+//        let navi = UINavigationController.init(rootViewController: home)
+//        window?.rootViewController = navi
 //        window?.backgroundColor = UIColor.white
+        let tabbar = BaseTabBarViewController.init()
+        window?.rootViewController = tabbar
         window?.makeKeyAndVisible()
         
         DataBaseManager.DBManager.creatLibraDB()

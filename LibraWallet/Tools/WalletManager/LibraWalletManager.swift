@@ -23,17 +23,13 @@ struct LibraWalletManager {
     private(set) var walletCreateTime: Int?
     /// 钱包名字
     private(set) var walletName: String?
-    /// 钱包加密后助记词
-//    private(set) var walletMnemonic: String?
     /// 钱包当前使用状态
     private(set) var walletCurrentUse: Bool?
     /// 钱包生物锁开启状态
     private(set) var walletBiometricLock: Bool?
-//    /// 钱包钱包实例
-//    private(set) var coreWallet: LibraWallet?
     /// 账户类型身份钱包、其他钱包(0=身份钱包、1=其它导入钱包)
     private(set) var walletIdentity: Int?
-    // 钱包类型(0=Libra、1=Violas、2=BTC)
+    /// 钱包类型(0=Libra、1=Violas、2=BTC)
     private(set) var walletType: Int?
 }
 extension LibraWalletManager {

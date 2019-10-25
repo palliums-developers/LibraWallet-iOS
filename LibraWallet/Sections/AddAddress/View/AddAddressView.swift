@@ -22,6 +22,7 @@ class AddAddressView: UIView {
         walletWhiteBackgroundView.addSubview(walletIconImageView)
         walletWhiteBackgroundView.addSubview(addressTitleLabel)
         walletWhiteBackgroundView.addSubview(addressTextField)
+        walletWhiteBackgroundView.addSubview(scanAddressButton)
         walletWhiteBackgroundView.addSubview(addressSpaceLabel)
         
         walletWhiteBackgroundView.addSubview(remarksTitleLabel)
@@ -61,8 +62,14 @@ class AddAddressView: UIView {
         }
         addressTextField.snp.makeConstraints { (make) in
             make.bottom.equalTo(addressSpaceLabel.snp.top)
-            make.left.right.equalTo(self.addressSpaceLabel)
+            make.left.equalTo(self.addressSpaceLabel)
+            make.right.equalTo(self.scanAddressButton.snp.left).offset(-5)
             make.height.equalTo(40)
+        }
+        scanAddressButton.snp.makeConstraints { (make) in
+            make.bottom.equalTo(addressSpaceLabel.snp.top)
+            make.right.equalTo(self.addressSpaceLabel)
+            make.size.equalTo(CGSize.init(width: 40, height: 40))
         }
         addressSpaceLabel.snp.makeConstraints { (make) in
             make.top.equalTo(walletWhiteBackgroundView).offset(118)
@@ -132,6 +139,18 @@ class AddAddressView: UIView {
                                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "B5B5B5"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: adaptFont(fontSize: 16))])
         textField.tintColor = DefaultGreenColor
         return textField
+    }()
+    lazy var scanAddressButton: UIButton = {
+        let button = UIButton.init(type: UIButton.ButtonType.custom)
+        button.setTitle(localLanguage(keyString: "wallet_create_button_title"), for: UIControl.State.normal)
+        button.setTitleColor(UIColor.white, for: UIControl.State.normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 15), weight: UIFont.Weight.regular)
+        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
+        button.backgroundColor = UIColor.init(hex: "15C794")
+        button.layer.cornerRadius = 7
+        button.layer.masksToBounds = true
+        button.tag = 20
+        return button
     }()
     lazy var addressSpaceLabel: UILabel = {
         let label = UILabel.init()
