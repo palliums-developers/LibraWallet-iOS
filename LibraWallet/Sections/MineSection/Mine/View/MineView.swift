@@ -11,7 +11,7 @@ import UIKit
 class MineView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        addSubview(topBackgroundImageView)
+        addSubview(mineHeaderView)
         
         self.addSubview(self.tableView)
     }
@@ -24,12 +24,12 @@ class MineView: UIView {
     //MARK: - 布局
     override func layoutSubviews() {
         super.layoutSubviews()
-        topBackgroundImageView.snp.makeConstraints { (make) in
-            make.top.left.right.equalTo(0)
-            make.height.equalTo(202)
+        mineHeaderView.snp.makeConstraints { (make) in
+            make.top.left.right.equalTo(self)
+            make.height.equalTo(208)
         }
         self.tableView.snp.makeConstraints { (make) in
-            make.top.equalTo(self).offset(navigationBarHeight)
+            make.top.equalTo(mineHeaderView.snp.bottom)
             make.left.right.bottom.equalTo(self)
         }
     }
@@ -47,11 +47,10 @@ class MineView: UIView {
         tableView.backgroundColor = defaultBackgroundColor
         return tableView
     }()
-    private lazy var topBackgroundImageView : UIImageView = {
-        let imageView = UIImageView.init()
-        imageView.image = UIImage.init(named: "navigation_background")
-        imageView.isUserInteractionEnabled = true
-        return imageView
+    private lazy var mineHeaderView : MineHeaderView = {
+        let view = MineHeaderView.init()
+//        view.model = WalletData.wallet
+        return view
     }()
 }
 

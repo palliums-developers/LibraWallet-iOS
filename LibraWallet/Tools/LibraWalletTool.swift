@@ -37,3 +37,12 @@ extension UIImage {
         return image!
     }
 }
+func colorGradualChange(size: CGSize) -> CAGradientLayer {
+    let gradientLayer = CAGradientLayer.init()
+    gradientLayer.frame = CGRect.init(x: 0, y: 0, width: size.width, height: size.height)
+    gradientLayer.startPoint = CGPoint.init(x: 0, y: 0)
+    gradientLayer.endPoint = CGPoint.init(x: 1, y: 0)
+    gradientLayer.locations = [0.5,1.0]
+    gradientLayer.colors = [UIColor.init(hex: "9339F3").cgColor, UIColor.init(hex: "7038FD").cgColor]
+    return gradientLayer
+}

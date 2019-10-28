@@ -25,7 +25,7 @@ class BaseTabBarViewController: UITabBarController {
         
         let mine = MineViewController.init()
                 
-        addChildViewController(childViewController: home, imageName: "tabbar_home_normal", selectedImageName: "tabbar_home_highlight", title: "资产")
+        addChildViewController(childViewController: home, imageName: "tabbar_wallet_normal", selectedImageName: "tabbar_wallet_highlight", title: "钱包")
         addChildViewController(childViewController: market, imageName: "tabbar_market_normal", selectedImageName: "tabbar_market_highlight", title: "市场")
         addChildViewController(childViewController: mine, imageName: "tabbar_mine_normal", selectedImageName: "tabbar_mine_highlight", title: "我的")
         
@@ -35,8 +35,8 @@ class BaseTabBarViewController: UITabBarController {
         childViewController.tabBarItem.title = title
         childViewController.tabBarItem.image = UIImage(named: imageName)
         childViewController.tabBarItem.selectedImage = UIImage(named: selectedImageName)?.withRenderingMode(UIImage.RenderingMode.alwaysOriginal)
-        childViewController.tabBarItem.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.init(hex: "586090"),NSAttributedString.Key.font:UIFont.systemFont(ofSize: 11)], for: UIControl.State.normal)
-        childViewController.tabBarItem.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.init(hex: "738EFD"),NSAttributedString.Key.font:UIFont.systemFont(ofSize: 11)], for:UIControl.State.selected)
+        childViewController.tabBarItem.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.init(hex: "3D3949"),NSAttributedString.Key.font:UIFont.systemFont(ofSize: 11)], for: UIControl.State.normal)
+        childViewController.tabBarItem.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.init(hex: "4421AB"),NSAttributedString.Key.font:UIFont.systemFont(ofSize: 11)], for:UIControl.State.selected)
         // 设置导航控制器
         let childNaviagation = BaseNavigationViewController(rootViewController: childViewController)
         addChild(childNaviagation)

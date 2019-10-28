@@ -109,6 +109,10 @@
 		9D9B4A3A23619ABB00354EF0 /* SupportCoinViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9B4A3923619ABB00354EF0 /* SupportCoinViewModel.swift */; };
 		9D9B4A3C23619AD400354EF0 /* SupportCoinTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9B4A3B23619AD400354EF0 /* SupportCoinTableViewManager.swift */; };
 		9D9B4A3E23619F2E00354EF0 /* SupportCoinTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9B4A3D23619F2E00354EF0 /* SupportCoinTableViewCell.swift */; };
+		9D9B4A442362966100354EF0 /* AddWalletView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9B4A432362966100354EF0 /* AddWalletView.swift */; };
+		9D9B4A462362967200354EF0 /* AddWalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9B4A452362967200354EF0 /* AddWalletViewController.swift */; };
+		9D9B4A482362968700354EF0 /* AddWalletModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9B4A472362968700354EF0 /* AddWalletModel.swift */; };
+		9D9B4A4A2362F4DC00354EF0 /* MineHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9B4A492362F4DB00354EF0 /* MineHeaderView.swift */; };
 		9DA8E2A22317ABC400E28D07 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA8E2A12317ABC400E28D07 /* AppDelegate.swift */; };
 		9DA8E2AC2317ABC600E28D07 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9DA8E2AA2317ABC600E28D07 /* LaunchScreen.storyboard */; };
 		9DA8E2B72317ABC600E28D07 /* LibraWalletTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA8E2B62317ABC600E28D07 /* LibraWalletTests.swift */; };
@@ -282,6 +286,10 @@
 		9D9B4A3923619ABB00354EF0 /* SupportCoinViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportCoinViewModel.swift; sourceTree = "<group>"; };
 		9D9B4A3B23619AD400354EF0 /* SupportCoinTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportCoinTableViewManager.swift; sourceTree = "<group>"; };
 		9D9B4A3D23619F2E00354EF0 /* SupportCoinTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportCoinTableViewCell.swift; sourceTree = "<group>"; };
+		9D9B4A432362966100354EF0 /* AddWalletView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddWalletView.swift; sourceTree = "<group>"; };
+		9D9B4A452362967200354EF0 /* AddWalletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddWalletViewController.swift; sourceTree = "<group>"; };
+		9D9B4A472362968700354EF0 /* AddWalletModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddWalletModel.swift; sourceTree = "<group>"; };
+		9D9B4A492362F4DB00354EF0 /* MineHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MineHeaderView.swift; sourceTree = "<group>"; };
 		9DA8E29E2317ABC400E28D07 /* LibraWallet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LibraWallet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DA8E2A12317ABC400E28D07 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9DA8E2AB2317ABC600E28D07 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -843,6 +851,7 @@
 			isa = PBXGroup;
 			children = (
 				9D9B49CC235FFAAB00354EF0 /* MineView.swift */,
+				9D9B4A492362F4DB00354EF0 /* MineHeaderView.swift */,
 				9D9B49D02360036000354EF0 /* MineTableViewCell.swift */,
 			);
 			path = View;
@@ -895,6 +904,7 @@
 		9D9B49D723602E6000354EF0 /* MineSection */ = {
 			isa = PBXGroup;
 			children = (
+				9D9B4A3F2362947100354EF0 /* AddWallet */,
 				9D9B4A2D2361997B00354EF0 /* SupportCoin */,
 				9D9B4A1823605C0100354EF0 /* WalletManager */,
 				9D9B4A0A2360490700354EF0 /* HelpCenter */,
@@ -1175,6 +1185,40 @@
 				9D9B4A3B23619AD400354EF0 /* SupportCoinTableViewManager.swift */,
 			);
 			path = TableViewManager;
+			sourceTree = "<group>";
+		};
+		9D9B4A3F2362947100354EF0 /* AddWallet */ = {
+			isa = PBXGroup;
+			children = (
+				9D9B4A422362963B00354EF0 /* Controller */,
+				9D9B4A412362963400354EF0 /* Model */,
+				9D9B4A402362962E00354EF0 /* View */,
+			);
+			path = AddWallet;
+			sourceTree = "<group>";
+		};
+		9D9B4A402362962E00354EF0 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				9D9B4A432362966100354EF0 /* AddWalletView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		9D9B4A412362963400354EF0 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				9D9B4A472362968700354EF0 /* AddWalletModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		9D9B4A422362963B00354EF0 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				9D9B4A452362967200354EF0 /* AddWalletViewController.swift */,
+			);
+			path = Controller;
 			sourceTree = "<group>";
 		};
 		9DA8E2952317ABC400E28D07 = {
@@ -1743,6 +1787,7 @@
 				9DC488012320BE88005FF254 /* LibraNetwork.swift in Sources */,
 				9D626481235719A400A79B3D /* WelcomeView.swift in Sources */,
 				9D08AD3D2330CE21004687E8 /* TransactionsViewController.swift in Sources */,
+				9D9B4A4A2362F4DC00354EF0 /* MineHeaderView.swift in Sources */,
 				9DC4885A23220DA6005FF254 /* WalletReceiveView.swift in Sources */,
 				9DC4886E232222CF005FF254 /* LBXPermissions.swift in Sources */,
 				9D9B49E6236030A700354EF0 /* SettingViewModel.swift in Sources */,
@@ -1768,6 +1813,7 @@
 				9D9B49DF23602ED300354EF0 /* SettingViewController.swift in Sources */,
 				9D84C2EC234DBA6D00034839 /* mempool.grpc.swift in Sources */,
 				9DC4885523220D6D005FF254 /* WalletReceiveViewController.swift in Sources */,
+				9D9B4A482362968700354EF0 /* AddWalletModel.swift in Sources */,
 				9D9B49FA236046C100354EF0 /* ServiceLegalViewController.swift in Sources */,
 				9D9B49AD235DA76100354EF0 /* AddressManagerView.swift in Sources */,
 				9D08AD432330D03C004687E8 /* TransactionsViewTableViewManager.swift in Sources */,
@@ -1825,6 +1871,7 @@
 				9D9B49AF235DA76100354EF0 /* AddAddressViewController.swift in Sources */,
 				9D9B4A2523613B8D00354EF0 /* WalletManagerTableViewManager.swift in Sources */,
 				9D08AD412330CE3E004687E8 /* TransactionsView.swift in Sources */,
+				9D9B4A442362966100354EF0 /* AddWalletView.swift in Sources */,
 				9D9B4A3823619AAC00354EF0 /* SupportCoinModel.swift in Sources */,
 				9DC487FD2320AF4E005FF254 /* LibraWallet.swift in Sources */,
 				9DC902432328FC4A0097FD85 /* MainModel.swift in Sources */,
@@ -1868,6 +1915,7 @@
 				9D9B49D32360268E00354EF0 /* BaseTabBarViewController.swift in Sources */,
 				9D9B4A3423619A8E00354EF0 /* SupportCoinViewController.swift in Sources */,
 				9D9B49DD23602EB900354EF0 /* SettingTableViewManager.swift in Sources */,
+				9D9B4A462362967200354EF0 /* AddWalletViewController.swift in Sources */,
 				9D08AD452330D07E004687E8 /* TransactionsTableViewCell.swift in Sources */,
 				9D9B49CD235FFAAB00354EF0 /* MineView.swift in Sources */,
 				9D62648B2359A61000A79B3D /* CreateWalletView.swift in Sources */,

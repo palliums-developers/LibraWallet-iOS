@@ -8,7 +8,7 @@
 
 import UIKit
 protocol SupportCoinTableViewManagerDelegate: NSObjectProtocol {
-    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath)
+    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, name: String)
 }
 class SupportCoinTableViewManager: NSObject {
     weak var delegate: SupportCoinTableViewManagerDelegate?
@@ -24,8 +24,12 @@ extension SupportCoinTableViewManager: UITableViewDelegate {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
-                
-        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath)
+        
+        guard let data = self.dataModel?[indexPath.row] else {
+            
+            return
+        }
+        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, name: data["name"] ?? "BTC")
     }
 }
 extension SupportCoinTableViewManager: UITableViewDataSource {

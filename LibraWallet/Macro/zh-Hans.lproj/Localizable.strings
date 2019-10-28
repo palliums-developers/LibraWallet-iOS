@@ -36,3 +36,12 @@ wallet_withdraw_confirm_button_title = "转账";
 /************* 交易历史 *******************/
 wallet_transactions_receive_title = "收款";
 wallet_transactions_transfer_title = "转账";
+
+/************* 已存在身份钱包创建钱包 *******************/
+wallet_add_wallet_btc_title = "创建Bitcoin钱包";
+wallet_add_wallet_libra_title = "创建Libra钱包";
+wallet_add_wallet_violas_title = "创建Violas钱包";
+wallet_add_wallet_nickname_textfield_placeholder = "请输入钱包名字";
+wallet_add_wallet_password_textfield_placeholder = "设置钱包密码";
+wallet_add_wallet_password_confirm_textfield_placeholder = "再次确认密码";
+wallet_add_wallet_confirm_button_title = "创建";

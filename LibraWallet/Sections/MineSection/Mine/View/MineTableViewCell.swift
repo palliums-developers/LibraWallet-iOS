@@ -11,6 +11,7 @@ import UIKit
 class MineTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        contentView.addSubview(iconImageView)
         contentView.addSubview(nameLabel)
         contentView.addSubview(dateLabel)
         contentView.addSubview(detailIndicatorImageView)
@@ -25,28 +26,31 @@ class MineTableViewCell: UITableViewCell {
     //pragma MARK: 布局
     override func layoutSubviews() {
         super.layoutSubviews()
-        self.nameLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(self.contentView).offset(14)
-            make.left.equalTo(self.contentView).offset(21)
+        iconImageView.snp.makeConstraints { (make) in
+            make.centerY.equalTo(contentView)
+            make.left.equalTo(contentView).offset(13)
         }
-        self.dateLabel.snp.makeConstraints { (make) in
-            make.bottom.equalTo(self.contentView).offset(-10)
-            make.left.equalTo(self.contentView).offset(21)
+        nameLabel.snp.makeConstraints { (make) in
+            make.centerY.equalTo(contentView)
+            make.left.equalTo(contentView).offset(39)
         }
-
-        self.detailIndicatorImageView.snp.makeConstraints { (make) in
-            make.right.equalTo(self.contentView).offset(-21)
-            make.size.equalTo(CGSize.init(width: 2, height: 14))
-            make.bottom.equalTo(self.contentView).offset(-17)
+        detailIndicatorImageView.snp.makeConstraints { (make) in
+            make.right.equalTo(contentView.snp.right).offset(-14)
+            make.size.equalTo(CGSize.init(width: 15, height: 15))
+            make.centerY.equalTo(contentView)
         }
-        self.cellSpaceLabel.snp.makeConstraints { (make) in
-            make.left.equalTo(self.contentView).offset(21)
-            make.right.equalTo(self.contentView).offset(-24)
+        cellSpaceLabel.snp.makeConstraints { (make) in
+            make.left.equalTo(contentView).offset(39)
+            make.right.equalTo(contentView).offset(-15)
             make.bottom.equalTo(self.contentView).offset(0)
             make.height.equalTo(1)
         }
     }
     //MARK: - 懒加载对象
+    private lazy var iconImageView : UIImageView = {
+       let imageView = UIImageView.init()
+       return imageView
+   }()
     lazy var nameLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
@@ -95,9 +99,10 @@ class MineTableViewCell: UITableViewCell {
 //            dateLabel.text = tempModel.date
 //        }
 //    }
-    var model: String? {
+    var model: [String: String]? {
         didSet {
-            self.nameLabel.text = model
+            self.nameLabel.text = model!["name"]
+            iconImageView.image = UIImage.init(named: model!["icon"]!)
         }
     }
 }

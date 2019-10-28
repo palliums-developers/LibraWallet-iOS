@@ -12,7 +12,7 @@ protocol MineTableViewManagerDelegate: NSObjectProtocol {
 }
 class MineTableViewManager: NSObject {
     weak var delegate: MineTableViewManagerDelegate?
-    var dataModel: [String]?
+    var dataModel: [[String: String]]?
     var selectRow: Int?
     deinit {
         print("MineTableViewManager销毁了")
