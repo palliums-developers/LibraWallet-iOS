@@ -45,6 +45,9 @@ extension SupportCoinViewController: SupportCoinTableViewManagerDelegate {
         let alert = UIAlertController.init(title: "", message: "选择", preferredStyle: UIAlertController.Style.actionSheet)
         let importAction = UIAlertAction.init(title: "导入", style: UIAlertAction.Style.default) { (UIAlertAction) in
                        
+            let vc = ImportWalletViewController()
+            vc.type = name
+            self.navigationController?.pushViewController(vc, animated: true)
         }
         let createAction = UIAlertAction.init(title: "创建", style: UIAlertAction.Style.default) { (UIAlertAction) in
             let vc = AddWalletViewController()

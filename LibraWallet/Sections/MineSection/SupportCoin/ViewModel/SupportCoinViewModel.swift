@@ -9,14 +9,10 @@
 import UIKit
 
 class SupportCoinViewModel: NSObject {
-    var myContext = 0
     func loadLocalData() {
-        
         self.tableViewManager.dataModel = dataModel.getSupportCoinData()
         self.detailView.tableView.reloadData()
     }
-    
-    var dataOffset: Int = 0
     //网络请求、数据模型
     lazy var dataModel: SupportCoinModel = {
         let model = SupportCoinModel.init()

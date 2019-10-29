@@ -42,7 +42,20 @@ func colorGradualChange(size: CGSize) -> CAGradientLayer {
     gradientLayer.frame = CGRect.init(x: 0, y: 0, width: size.width, height: size.height)
     gradientLayer.startPoint = CGPoint.init(x: 0, y: 0)
     gradientLayer.endPoint = CGPoint.init(x: 1, y: 0)
-    gradientLayer.locations = [0.5,1.0]
+    gradientLayer.locations = [0,1.0]
     gradientLayer.colors = [UIColor.init(hex: "9339F3").cgColor, UIColor.init(hex: "7038FD").cgColor]
     return gradientLayer
+}
+func checkMnenoicInvalid(mnemonicArray: [String]) -> Bool {
+    guard mnemonicArray.count != 0 else {
+        return false
+    }
+    let wordList: [String.SubSequence] =  WordList.english
+    for i in 0...mnemonicArray.count - 1 {
+        let status = wordList.contains(Substring.init(mnemonicArray[i]))
+        if status == false {
+            return false
+        }
+    }
+    return true
 }

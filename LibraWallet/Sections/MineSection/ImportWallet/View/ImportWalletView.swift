@@ -1,21 +1,23 @@
 //
-//  AddWalletView.swift
+//  ImportWalletView.swift
 //  LibraWallet
 //
-//  Created by palliums on 2019/10/25.
+//  Created by palliums on 2019/10/28.
 //  Copyright © 2019 palliums. All rights reserved.
 //
 
 import UIKit
-protocol AddWalletViewDelegate: NSObjectProtocol {
-    func confirmAddWallet(name: String, password: String)
+import RSKPlaceholderTextView
+protocol ImportWalletViewDelegate: NSObjectProtocol {
+    func confirmAddWallet(name: String, password: String, mnemonicArray: [String])
 }
-class AddWalletView: UIView {
-    weak var delegate: AddWalletViewDelegate?
+class ImportWalletView: UIView {
+    weak var delegate: ImportWalletViewDelegate?
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(coinTypeIcon)
         addSubview(nameLabel)
+        addSubview(mnemonicTextView)
         addSubview(nameTextField)
         addSubview(nameSpaceLabel)
         addSubview(passwordTextField)
@@ -42,6 +44,13 @@ class AddWalletView: UIView {
             make.centerX.equalTo(self)
             make.top.equalTo(coinTypeIcon.snp.bottom).offset(18)
         }
+        mnemonicTextView.snp.makeConstraints { (make) in
+            make.centerX.equalTo(self)
+            make.top.equalTo(coinTypeIcon.snp.bottom).offset(86)
+            make.left.equalTo(self).offset(19)
+            make.right.equalTo(self).offset(-19)
+            make.height.equalTo(165)
+        }
         nameTextField.snp.makeConstraints { (make) in
             make.centerX.equalTo(self)
             make.height.equalTo(51)
@@ -49,7 +58,7 @@ class AddWalletView: UIView {
             make.left.right.equalTo(nameSpaceLabel)
         }
         nameSpaceLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(nameLabel.snp.bottom).offset(82)
+            make.top.equalTo(mnemonicTextView.snp.bottom).offset(76)
             make.left.equalTo(self).offset(35)
             make.right.equalTo(self).offset(-35)
             make.height.equalTo(1)
@@ -95,6 +104,19 @@ class AddWalletView: UIView {
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: UIFont.Weight.semibold)
         label.text = "---"
         return label
+    }()
+    lazy var mnemonicTextView: RSKPlaceholderTextView = {
+        //#263C4E
+        let textView = RSKPlaceholderTextView.init()
+        textView.textAlignment = NSTextAlignment.left
+        textView.textColor = UIColor.init(hex: "62606B")
+        textView.font = UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.medium)
+        textView.backgroundColor = UIColor.init(hex: "F8F7FA")
+        textView.tintColor = DefaultGreenColor
+        textView.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_import_mnemonic_textview_placeholder"),
+                                                            attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C5C8DB"),
+                                                                         NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)])
+        return textView
     }()
     lazy var nameTextField: UITextField = {
         let textField = UITextField.init()
@@ -151,7 +173,7 @@ class AddWalletView: UIView {
     }()
     lazy var confirmButton: UIButton = {
         let button = UIButton.init(type: UIButton.ButtonType.custom)
-        button.setTitle(localLanguage(keyString: "wallet_add_wallet_confirm_button_title"), for: UIControl.State.normal)
+        button.setTitle(localLanguage(keyString: "wallet_import_wallet_confirm_button_title"), for: UIControl.State.normal)
         button.setTitleColor(UIColor.white, for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: UIFont.Weight.medium)
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
@@ -162,6 +184,39 @@ class AddWalletView: UIView {
         return button
     }()
     @objc func buttonClick(button: UIButton) {
+        guard let mnemonic = mnemonicTextView.text else {
+            //助记词拆包异常
+            self.makeToast(localLanguage(keyString: "wallet_import_mnemonic_invalid"), position: .center)
+            return
+        }
+        guard mnemonic.isEmpty == false else {
+            //助记词为空
+            self.makeToast(localLanguage(keyString: "wallet_import_mnemonic_without_insert"), position: .center)
+            return
+        }
+        let tempArray = mnemonic.split(separator: " ").map {
+            $0.description
+        }
+        guard tempArray.isEmpty == false else {
+            //请输入助记词
+            self.makeToast(localLanguage(keyString: "wallet_import_mnemonic_without_insert"), position: .center)
+            return
+        }
+//        24 21 18 15 12
+        if tempArray.count == 24 || tempArray.count == 21 || tempArray.count == 18 || tempArray.count == 15 || tempArray.count == 12 {
+            guard checkMnenoicInvalid(mnemonicArray: tempArray) == true else {
+                // 助记词不正确
+                self.makeToast(localLanguage(keyString: "助记词不正确"),
+                               position: .center)
+                return
+            }
+        } else {
+            // 助记词数量不对
+            self.makeToast(localLanguage(keyString: "助记词数量不对"),
+                           position: .center)
+            return
+        }
+
         guard let name = nameTextField.text else {
             // 名字拆包失败
             self.makeToast(localLanguage(keyString: "名字拆包失败"),
@@ -204,19 +259,19 @@ class AddWalletView: UIView {
                            position: .center)
             return
         }
-        self.delegate?.confirmAddWallet(name: name, password: password)
+        self.delegate?.confirmAddWallet(name: name, password: password, mnemonicArray: tempArray)
     }
     var type: String? {
         didSet {
             if type == "BTC" {
                 coinTypeIcon.image = UIImage.init(named: "btc_icon")
-                nameLabel.text = localLanguage(keyString: "wallet_add_wallet_btc_title")
+                nameLabel.text = localLanguage(keyString: "wallet_import_wallet_btc_title")
             } else if type == "Lib" {
                 coinTypeIcon.image = UIImage.init(named: "libra_icon")
-                nameLabel.text = localLanguage(keyString: "wallet_add_wallet_libra_title")
+                nameLabel.text = localLanguage(keyString: "wallet_import_wallet_libra_title")
             } else {
                 coinTypeIcon.image = UIImage.init(named: "violas_icon")
-                nameLabel.text = localLanguage(keyString: "wallet_add_wallet_violas_title")
+                nameLabel.text = localLanguage(keyString: "wallet_import_wallet_violas_title")
             }
         }
     }

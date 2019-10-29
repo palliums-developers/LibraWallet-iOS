@@ -13,7 +13,8 @@ struct LibraMnemonic {
         case `default` = 128
         case low = 160
         case medium = 192
-        case high = 256
+        case high = 224
+        case veryHigh = 256
     }
     
     public enum Language {

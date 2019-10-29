@@ -1,15 +1,15 @@
 //
-//  AddWalletViewController.swift
+//  ImportWalletViewController.swift
 //  LibraWallet
 //
-//  Created by palliums on 2019/10/25.
+//  Created by palliums on 2019/10/28.
 //  Copyright © 2019 palliums. All rights reserved.
 //
 
 import UIKit
 import Toast_Swift
-class AddWalletViewController: BaseViewController {
-   override func viewDidLoad() {
+class ImportWalletViewController: BaseViewController {
+    override func viewDidLoad() {
         super.viewDidLoad()
         // 初始化本地配置
         self.setBaseControlllerConfig()
@@ -28,31 +28,29 @@ class AddWalletViewController: BaseViewController {
         }
     }
     //子View
-    private lazy var detailView : AddWalletView = {
-        let view = AddWalletView.init()
+    private lazy var detailView : ImportWalletView = {
+        let view = ImportWalletView.init()
         view.type = self.type
         view.delegate = self
         return view
     }()
     deinit {
-        print("AddWalletViewController销毁了")
+        print("ImportWalletViewController销毁了")
     }
     var type: String?
 }
-extension AddWalletViewController: AddWalletViewDelegate {
-    func confirmAddWallet(name: String, password: String) {
-        print(name, password)
+extension ImportWalletViewController: ImportWalletViewDelegate {
+    func confirmAddWallet(name: String, password: String, mnemonicArray: [String]) {
         self.view.makeToastActivity(.center)
         do {
-            let mnemonic = try LibraMnemonic.generate(strength: .veryHigh, language: .english)
             #warning("主线程阻塞,待处理")
-            let seed = try LibraMnemonic.seed(mnemonic: mnemonic)
+            let seed = try LibraMnemonic.seed(mnemonic: mnemonicArray)
             let wallet = try LibraWallet.init(seed: seed, depth: 0)
             var walletType = 0
             if type == "BTC" {
                 walletType = 2
                 self.view.hideToastActivity()
-                self.view.makeToast("不能创建BTC")
+                self.view.makeToast("不能创建BTC", position: .center)
                 return
             } else if type == "Lib" {
                 walletType = 0
@@ -69,6 +67,11 @@ extension AddWalletViewController: AddWalletViewDelegate {
                                                       walletBiometricLock: false,
                                                       walletIdentity: 1,
                                                       walletType: walletType)
+            guard DataBaseManager.DBManager.isExistAddressInWallet(address: wallet.publicKey.toAddress()) == false else {
+                self.view.hideToastActivity()
+                self.view.makeToast("已存在", position: .center)
+                return
+            }
             let result = DataBaseManager.DBManager.insertWallet(model: walletModel)
             self.view.hideToastActivity()
             if result == true {
@@ -88,6 +91,5 @@ extension AddWalletViewController: AddWalletViewDelegate {
         } catch {
             
         }
-        
     }
 }

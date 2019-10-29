@@ -112,6 +112,24 @@ struct DataBaseManager {
             return false
         }
     }
+    func isExistAddressInWallet(address: String) -> Bool {
+        let walletTable = Table("Wallet")
+        do {
+            if let tempDB = self.db {
+                let transection = walletTable.filter(Expression<String>("wallet_root_address") == address)
+                let count = try tempDB.scalar(transection.count)
+                guard count != 0 else {
+                    return false
+                }
+                return true
+            } else {
+                return false
+            }
+        } catch {
+            print(error.localizedDescription)
+            return false
+        }
+    }
     func getLocalWallets() -> [[LibraWalletManager]] {
         let walletTable = Table("Wallet")
         do {
@@ -259,11 +277,11 @@ struct DataBaseManager {
                     return true
                 }
             } else {
-                return true
+                return false
             }
         } catch {
             print(error.localizedDescription)
-            return true
+            return false
         }
     }
     func createTransferAddressListTable() {

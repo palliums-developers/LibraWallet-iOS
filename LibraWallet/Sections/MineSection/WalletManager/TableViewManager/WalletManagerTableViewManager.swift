@@ -7,9 +7,11 @@
 //
 
 import UIKit
-
+protocol WalletManagerTableViewManagerDelegate: NSObjectProtocol {
+    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: LibraWalletManager)
+}
 class WalletManagerTableViewManager: NSObject {
-    weak var delegate: SettingTableViewManagerDelegate?
+    weak var delegate: WalletManagerTableViewManagerDelegate?
     var dataModel: [[LibraWalletManager]]?
     var selectRow: Int?
     let headerTitleArray = ["身份钱包","创建/导入"]
@@ -23,8 +25,10 @@ extension WalletManagerTableViewManager: UITableViewDelegate {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
-                
-        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath)
+        guard let data = dataModel else {
+            return
+        }
+        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, model: data[indexPath.section][indexPath.row])
     }
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let identifier = "Header"

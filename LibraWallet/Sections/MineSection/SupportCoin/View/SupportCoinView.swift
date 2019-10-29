@@ -38,7 +38,7 @@ class SupportCoinView: UIView {
         } else {
             // Fallback on earlier versions
         }
-        tableView.backgroundColor = defaultBackgroundColor
+        tableView.backgroundColor = UIColor.white
         return tableView
     }()
 }

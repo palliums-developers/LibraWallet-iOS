@@ -37,7 +37,7 @@ class WalletManagerViewController: BaseViewController {
     }
     lazy var viewModel: WalletManagerViewModel = {
         let viewModel = WalletManagerViewModel.init()
-//        viewModel.tableViewManager.delegate = self
+        viewModel.tableViewManager.delegate = self
         return viewModel
     }()
     func addRightNavigationBar() {
@@ -62,8 +62,11 @@ class WalletManagerViewController: BaseViewController {
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }
-extension WalletManagerViewController: MineTableViewManagerDelegate {
-    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath) {
-        
+extension WalletManagerViewController: WalletManagerTableViewManagerDelegate {
+    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: LibraWalletManager) {
+        let vc = WalletDetailViewController()
+        vc.walletModel = model
+        vc.canDelete = indexPath.section == 0 ? false:true
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }

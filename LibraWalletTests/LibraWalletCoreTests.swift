@@ -111,4 +111,16 @@ class LibraWalletCoreTests: XCTestCase {
         let data2 = DataBaseManager.DBManager.getTransferAddress(type: "Libra")
         print(data2)        
     }
+    func testMnemonicCount() {
+        let mnemonic = try? LibraMnemonic.generate(strength: .veryHigh, language: .english)
+        print(mnemonic!.count)
+        let mnemonic2 = try? LibraMnemonic.generate(strength: .high, language: .english)
+        print(mnemonic2!.count)
+        let mnemonic3 = try? LibraMnemonic.generate(strength: .medium, language: .english)
+        print(mnemonic3!.count)
+        let mnemonic4 = try? LibraMnemonic.generate(strength: .low, language: .english)
+        print(mnemonic4!.count)
+        let mnemonic5 = try? LibraMnemonic.generate(strength: .default, language: .english)
+        print(mnemonic5!.count)
+    }
 }
