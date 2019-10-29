@@ -59,6 +59,8 @@ extension AddWalletViewController: AddWalletViewDelegate {
             } else {
                 walletType = 1
             }
+            try LibraWalletManager.shared.savePaymentPasswordToKeychain(password: password, walletRootAddress: wallet.publicKey.toAddress())
+            try LibraWalletManager.shared.saveMnemonicToKeychain(mnemonic: mnemonic, walletRootAddress: wallet.publicKey.toAddress())
             let walletModel = LibraWalletManager.init(walletID: 999,
                                                       walletBalance: 0,
                                                       walletAddress: wallet.publicKey.toAddress(),
@@ -86,7 +88,7 @@ extension AddWalletViewController: AddWalletViewDelegate {
                 })
             }
         } catch {
-            
+            print(error.localizedDescription)
         }
         
     }

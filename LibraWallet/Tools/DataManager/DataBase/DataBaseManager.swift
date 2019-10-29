@@ -209,7 +209,7 @@ struct DataBaseManager {
         let walletTable = Table("Wallet")
         do {
             if let tempDB = self.db {
-                let contract = walletTable.filter(Expression<Int64>("wallet_uid") == walletID)
+                let contract = walletTable.filter(Expression<Int64>("wallet_id") == walletID)
                 try tempDB.run(contract.update(Expression<Int64>("wallet_balance") <- balance))
                 return true
             } else {
@@ -224,7 +224,7 @@ struct DataBaseManager {
         let walletTable = Table("Wallet")
         do {
             if let tempDB = self.db {
-                let contract = walletTable.filter(Expression<Int64>("wallet_uid") == walletID)
+                let contract = walletTable.filter(Expression<Int64>("wallet_id") == walletID)
                 try tempDB.run(contract.update(Expression<String>("wallet_name") <- name))
                 return true
             } else {
@@ -338,7 +338,7 @@ struct DataBaseManager {
         }
     }
     func getTransferAddress(type: String) -> NSMutableArray {
-        let addressTable = Table("TransferAddress").filter(Expression<String>("address_type") == type)
+        let addressTable = type.isEmpty == true ? Table("TransferAddress") : Table("TransferAddress").filter(Expression<String>("address_type") == type)
         do {
             if let tempDB = self.db {
                 let addressArray = NSMutableArray()

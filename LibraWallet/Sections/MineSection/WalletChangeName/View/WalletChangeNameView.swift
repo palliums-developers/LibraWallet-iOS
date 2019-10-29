@@ -8,7 +8,7 @@
 
 import UIKit
 protocol WalletChangeNameViewDelegate: NSObjectProtocol {
-    func changeNameButtonClickMethod(button: UIButton, name: String)
+    func changeNameButtonClickMethod(button: UIButton)
 }
 class WalletChangeNameView: UIView {
     weak var delegate: WalletChangeNameViewDelegate?
@@ -19,7 +19,7 @@ class WalletChangeNameView: UIView {
         textFieldBackgroundView.addSubview(walletNameTextField)
         textFieldBackgroundView.addSubview(nameLabel)
         self.addSubview(confirmButton)
-        self.addSubview(cancelChangeButton)
+//        self.addSubview(cancelChangeButton)
         self.addGestureRecognizer(tapTohide)
     }
     required init?(coder aDecoder: NSCoder) {
@@ -51,12 +51,12 @@ class WalletChangeNameView: UIView {
             make.right.equalTo(self).offset(-49)
             make.height.equalTo(44)
         }
-        cancelChangeButton.snp.makeConstraints { (make) in
-            make.top.equalTo(confirmButton.snp.bottom).offset(10)
-            make.left.equalTo(self).offset(49)
-            make.right.equalTo(self).offset(-49)
-            make.height.equalTo(44)
-        }
+//        cancelChangeButton.snp.makeConstraints { (make) in
+//            make.top.equalTo(confirmButton.snp.bottom).offset(10)
+//            make.left.equalTo(self).offset(49)
+//            make.right.equalTo(self).offset(-49)
+//            make.height.equalTo(44)
+//        }
     }
     //MARK: - 懒加载对象
     private lazy var textFieldBackgroundView: UIView = {
@@ -71,21 +71,21 @@ class WalletChangeNameView: UIView {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "0E0051")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: UIFont.Weight.semibold)
-        label.text = "更换钱包名"
+        label.text = localLanguage(keyString: "wallet_manager_detail_change_wallet_name_title")
         return label
     }()
     lazy var walletNameTextField: UITextField = {
         let textField = UITextField.init()
         textField.textAlignment = NSTextAlignment.right
         textField.textColor = UIColor.init(hex: "263C4E")
-        textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_manager_change_wallet_name_textfield_placeholder"),
+        textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_manager_detail_change_wallet_name_textfield_placeholder"),
                                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C5C8DB"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)])
         return textField
     }()
 
     lazy var confirmButton: UIButton = {
         let button = UIButton.init()
-        button.setTitle(localLanguage(keyString: "wallet_manager_change_wallet_name_button_title"), for: UIControl.State.normal)
+        button.setTitle(localLanguage(keyString: "wallet_manager_detail_change_wallet_name_button_title"), for: UIControl.State.normal)
         button.setTitleColor(UIColor.white, for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)
         let width = UIScreen.main.bounds.width - 49 - 49
@@ -96,17 +96,17 @@ class WalletChangeNameView: UIView {
         button.tag = 10
         return button
     }()
-    lazy var cancelChangeButton: UIButton = {
-        let button = UIButton.init()
-        button.setTitle(localLanguage(keyString: "wallet_manager_change_wallet_name_cancel_title"), for: UIControl.State.normal)
-        button.setTitleColor(UIColor.init(hex: "D3D7E7"), for: UIControl.State.normal)
-        
-        button.addTarget(self, action: #selector(changeNameButtonClick(button:)), for: UIControl.Event.touchUpInside)
-        //        button.backgroundColor = UIColor.white
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)
-        button.tag = 20
-        return button
-    }()
+//    lazy var cancelChangeButton: UIButton = {
+//        let button = UIButton.init()
+//        button.setTitle(localLanguage(keyString: "wallet_manager_detail_change_wallet_name_cancel_button_title"), for: UIControl.State.normal)
+//        button.setTitleColor(UIColor.init(hex: "D3D7E7"), for: UIControl.State.normal)
+//
+//        button.addTarget(self, action: #selector(changeNameButtonClick(button:)), for: UIControl.Event.touchUpInside)
+//        //        button.backgroundColor = UIColor.white
+//        button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)
+//        button.tag = 20
+//        return button
+//    }()
     lazy var tapTohide: UITapGestureRecognizer = {
         let tap = UITapGestureRecognizer.init(target: self, action: #selector(tapToHideKeyboard))
         return tap
@@ -116,19 +116,8 @@ class WalletChangeNameView: UIView {
     }    
     @objc func changeNameButtonClick(button: UIButton) {
         if button.tag == 10 {
-            // 拆包检测
-            guard let walletName = walletNameTextField.text else {
-                self.makeToast(localLanguage(keyString: "wallet_manager_change_wallet_name_invalid_title"),
-                                    position: .center)
-                return
-            }
-            //没输入
-            guard walletName.isEmpty == false else {
-                self.makeToast(localLanguage(keyString: "wallet_manager_change_wallet_name_without_insert_error"),
-                                    position: .center)
-                return
-            }
-            self.delegate?.changeNameButtonClickMethod(button: button, name: walletName)
+            self.walletNameTextField.resignFirstResponder()
+            self.delegate?.changeNameButtonClickMethod(button: button)
         }
     }
 }

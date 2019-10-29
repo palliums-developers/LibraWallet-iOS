@@ -150,7 +150,7 @@ class FeedbackAlert: UIView {
     
     lazy var cancelButton: UIButton = {
         let button = UIButton.init()
-        button.setImage(UIImage.init(named: "feedback_close"), for: UIControl.State.normal)
+        button.setImage(UIImage.init(named: "close"), for: UIControl.State.normal)
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
         button.tag = 10
         return button

@@ -46,10 +46,10 @@ extension LanguageTabViewManager: UITableViewDelegate {
         return view
     }
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 5
+        return 0.01
     }
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 0.01
+        return 8
     }
 }
 extension LanguageTabViewManager: UITableViewDataSource {

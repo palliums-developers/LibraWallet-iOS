@@ -12,7 +12,6 @@ class SettingTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(nameLabel)
-        contentView.addSubview(dateLabel)
         contentView.addSubview(detailIndicatorImageView)
         contentView.addSubview(cellSpaceLabel)
     }
@@ -26,22 +25,17 @@ class SettingTableViewCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         self.nameLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(self.contentView).offset(14)
-            make.left.equalTo(self.contentView).offset(21)
+            make.centerY.equalTo(contentView)
+            make.left.equalTo(contentView).offset(14)
         }
-        self.dateLabel.snp.makeConstraints { (make) in
-            make.bottom.equalTo(self.contentView).offset(-10)
-            make.left.equalTo(self.contentView).offset(21)
-        }
-
         self.detailIndicatorImageView.snp.makeConstraints { (make) in
             make.right.equalTo(self.contentView).offset(-21)
             make.size.equalTo(CGSize.init(width: 2, height: 14))
             make.bottom.equalTo(self.contentView).offset(-17)
         }
         self.cellSpaceLabel.snp.makeConstraints { (make) in
-            make.left.equalTo(self.contentView).offset(21)
-            make.right.equalTo(self.contentView).offset(-24)
+            make.left.equalTo(self.contentView).offset(14)
+            make.right.equalTo(self.contentView).offset(-14)
             make.bottom.equalTo(self.contentView).offset(0)
             make.height.equalTo(1)
         }
@@ -51,14 +45,6 @@ class SettingTableViewCell: UITableViewCell {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "7F7F7F")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
-        label.text = "---"
-        return label
-    }()
-    lazy var dateLabel: UILabel = {
-        let label = UILabel.init()
-        label.textAlignment = NSTextAlignment.left
-        label.textColor = UIColor.black
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
         label.text = "---"
         return label

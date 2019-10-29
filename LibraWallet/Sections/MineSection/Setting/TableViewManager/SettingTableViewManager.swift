@@ -29,14 +29,11 @@ extension SettingTableViewManager: UITableViewDelegate {
     }
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = UIView.init()
-        view.backgroundColor = DefaultSpaceColor
+        view.backgroundColor = UIColor.init(hex: "F7F7F9")//DefaultSpaceColor
         return view
     }
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 {
-            return 0.01
-        }
-        return 20
+        return 10
     }
 }
 extension SettingTableViewManager: UITableViewDataSource {

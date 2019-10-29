@@ -13,9 +13,8 @@ class LanguageViewController: BaseViewController {
         super.viewDidLoad()
         // 初始化本地配置
         self.setNavigationWithoutShadowImage()
-        self.view.backgroundColor = UIColor.init(hex: "F8F8F8")
         // 设置标题
-        self.title = localLanguage(keyString: "wallet_setting_language_navigationbar_title")
+//        self.title = localLanguage(keyString: "wallet_setting_language_navigationbar_title")
         // 加载子View
         self.view.addSubview(detailView)
         // 添加语言变换通知
@@ -25,11 +24,11 @@ class LanguageViewController: BaseViewController {
         super.viewWillLayoutSubviews()
         detailView.snp.makeConstraints { (make) in
             if #available(iOS 11.0, *) {
-                make.bottom.equalTo(self.view.safeAreaLayoutGuide)
+                make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
             } else {
-                make.bottom.equalTo(self.view)
+                make.top.bottom.equalTo(self.view)
             }
-            make.top.left.right.equalTo(self.view)
+            make.left.right.equalTo(self.view)
         }
     }
     //tableView管理类

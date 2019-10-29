@@ -14,7 +14,7 @@ class AddAddressViewController: BaseViewController {
         // 初始化本地配置
         self.setNavigationWithoutShadowImage()
         // 设置标题
-        self.title = localLanguage(keyString: "wallet_withdraw_address_add_navigationbar_title")
+//        self.title = localLanguage(keyString: "wallet_withdraw_address_add_navigationbar_title")
         // 加载子View
         self.view.addSubview(detailView)
         // 初始化KVO
@@ -24,11 +24,11 @@ class AddAddressViewController: BaseViewController {
         super.viewWillLayoutSubviews()
         detailView.snp.makeConstraints { (make) in
             if #available(iOS 11.0, *) {
-                make.bottom.equalTo(self.view.safeAreaLayoutGuide)
+                make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
             } else {
-                make.bottom.equalTo(self.view)
+                make.top.bottom.equalTo(self.view)
             }
-            make.top.left.right.equalTo(self.view)
+            make.left.right.equalTo(self.view)
         }
     }
     //网络请求、数据模型
@@ -98,6 +98,41 @@ extension AddAddressViewController {
 //    }
 }
 extension AddAddressViewController: AddAddressViewDelegate {
+    func confirmAddAddress(address: String, remarks: String, type: String) {
+        self.dataModel.addWithdrawAddress(address: address, remarks: remarks, type: type)
+    }
+    
+    func showTypeSelecter() {
+        let alert = UIAlertController.init(title: "类型", message: "请选择地址类型", preferredStyle: .actionSheet)
+        let violasAction = UIAlertAction.init(title: "Violas", style: .default) { (UIAlertAction) in
+            self.detailView.typeButton.setTitle("Violas", for: UIControl.State.normal)
+        }
+        let libraAction = UIAlertAction.init(title: "Libra", style: .default) { (UIAlertAction) in
+            self.detailView.typeButton.setTitle("Libra", for: UIControl.State.normal)
+
+        }
+        let btcAction = UIAlertAction.init(title: "BTC", style: .default) { (UIAlertAction) in
+            self.detailView.typeButton.setTitle("BTC", for: UIControl.State.normal)
+
+        }
+        let cancelAction = UIAlertAction.init(title: "取消", style: .cancel) { (UIAlertAction) in
+            
+        }
+        alert.addAction(violasAction)
+        alert.addAction(libraAction)
+        alert.addAction(btcAction)
+        alert.addAction(cancelAction)
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func scanAddress() {
+        let vc = ScanViewController()
+        vc.actionClosure = { address in
+           self.detailView.addressTextField.text = address
+       }
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
     func confirmAddress() {
         guard let address = self.detailView.addressTextField.text else {
 //            self.view.makeToast(HKWalletError.WalletWithdrawError(reason: .addressInvalid).localizedDescription,

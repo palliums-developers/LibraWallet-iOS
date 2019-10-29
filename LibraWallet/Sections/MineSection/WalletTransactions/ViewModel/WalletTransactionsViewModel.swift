@@ -1,18 +1,17 @@
 //
-//  AddressManagerViewModel.swift
+//  WalletTransactionsViewModel.swift
 //  LibraWallet
 //
-//  Created by palliums on 2019/10/22.
+//  Created by palliums on 2019/10/29.
 //  Copyright © 2019 palliums. All rights reserved.
 //
 
 import UIKit
 import MJRefresh
-class AddressManagerViewModel: NSObject {
+class WalletTransactionsViewModel: NSObject {
     var myContext = 0
     func initKVO() {
         dataModel.addObserver(self, forKeyPath: "dataDic", options: NSKeyValueObservingOptions.new, context: &myContext)
-        dataModel.getWithdrawAddressHistory(type: "Libra", requestStatus: 0)
     }
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?)  {
         guard context == &myContext else {
@@ -61,19 +60,19 @@ class AddressManagerViewModel: NSObject {
     }
     var dataOffset: Int = 0
     //网络请求、数据模型
-    lazy var dataModel: AddressManagerModel = {
-        let model = AddressManagerModel.init()
+    lazy var dataModel: WalletTransactionsModel = {
+        let model = WalletTransactionsModel.init()
         return model
     }()
     //tableView管理类
-    lazy var tableViewManager: AddressManagerTableViewManager = {
-        let manager = AddressManagerTableViewManager.init()
+    lazy var tableViewManager: WalletTransactionsTableViewManager = {
+        let manager = WalletTransactionsTableViewManager.init()
 //        manager.delegate = self
         return manager
     }()
     //子View
-    lazy var detailView : AddressManagerView = {
-        let view = AddressManagerView.init()
+    lazy var detailView : WalletTransactionsView = {
+        let view = WalletTransactionsView.init()
         view.tableView.delegate = self.tableViewManager
         view.tableView.dataSource = self.tableViewManager
         view.tableView.mj_header = MJRefreshNormalHeader.init(refreshingTarget: self, refreshingAction:  #selector(refreshReceive))
@@ -85,7 +84,7 @@ class AddressManagerViewModel: NSObject {
         detailView.tableView.mj_footer.resetNoMoreData()
         detailView.tableView.mj_header.beginRefreshing()
 //        self.dataModel.getWithdrawAddressHistory(uid: WalletData.wallet.walletUID!, offset: 0, requestStatus: 0)
-        self.dataModel.getWithdrawAddressHistory(type: "Libra", requestStatus: 0)
+        self.dataModel.getData(requestStatus: 0)
     }
     @objc func getMoreReceive() {
         dataOffset += 10

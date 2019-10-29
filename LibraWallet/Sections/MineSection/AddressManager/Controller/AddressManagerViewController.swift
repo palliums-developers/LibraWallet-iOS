@@ -11,10 +11,9 @@ class AddressManagerViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // 初始化本地配置
-//        self.setNavigationWithoutShadowImage()
-        self.view.backgroundColor = UIColor.init(hex: "F8F8F8")
+        self.setNavigationWithoutShadowImage()
         // 设置标题
-        self.title = localLanguage(keyString: "wallet_withdraw_address_list_navigationbar_title")
+//        self.title = localLanguage(keyString: "wallet_withdraw_address_list_navigationbar_title")
         // 加载子View
         self.view.addSubview(self.viewModel.detailView)
         // 添加NavigationRightBar
@@ -41,17 +40,17 @@ class AddressManagerViewController: BaseViewController {
         super.viewWillLayoutSubviews()
         viewModel.detailView.snp.makeConstraints { (make) in
             if #available(iOS 11.0, *) {
-                make.bottom.equalTo(self.view.safeAreaLayoutGuide)
+                make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
             } else {
-                make.bottom.equalTo(self.view)
+                make.top.bottom.equalTo(self.view)
             }
-            make.top.left.right.equalTo(self.view)
+            make.left.right.equalTo(self.view)
         }
     }
     
     lazy var addAddressButton: UIButton = {
         let button = UIButton(type: .custom)
-        button.setImage(UIImage.init(named: "withdraw_address_add"), for: UIControl.State.normal)
+        button.setImage(UIImage.init(named: "add"), for: UIControl.State.normal)
         button.addTarget(self, action: #selector(rechargeHistory), for: .touchUpInside)
         return button
     }()
@@ -87,7 +86,7 @@ class AddressManagerViewController: BaseViewController {
         if (lastState == .Loading) {return}
         startLoading ()
         self.viewModel.detailView.makeToastActivity(.center)
-        viewModel.dataModel.getWithdrawAddressHistory(type: "Libra", requestStatus: 0)
+        viewModel.dataModel.getWithdrawAddressHistory(type: "", requestStatus: 0)
     }
     override func hasContent() -> Bool {
         if let addresses = self.viewModel.tableViewManager.dataModel, addresses.isEmpty == false {

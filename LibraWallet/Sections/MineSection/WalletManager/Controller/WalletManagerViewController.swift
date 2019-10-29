@@ -11,11 +11,13 @@ import UIKit
 class WalletManagerViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.addRightNavigationBar()
+        if managerWallet == true {
+            self.addRightNavigationBar()
+        }
         // 初始化本地配置
         self.setBaseControlllerConfig()
         // 设置标题
-        self.title = localLanguage(keyString: "wallet_home_right_bar_title")
+//        self.title = localLanguage(keyString: "wallet_home_right_bar_title")
         // 加载子View
         self.view.addSubview(self.viewModel.detailView)
         // 加载数据
@@ -61,12 +63,19 @@ class WalletManagerViewController: BaseViewController {
         let vc = SupportCoinViewController()
         self.navigationController?.pushViewController(vc, animated: true)
     }
+    var managerWallet: Bool?
 }
 extension WalletManagerViewController: WalletManagerTableViewManagerDelegate {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: LibraWalletManager) {
-        let vc = WalletDetailViewController()
-        vc.walletModel = model
-        vc.canDelete = indexPath.section == 0 ? false:true
-        self.navigationController?.pushViewController(vc, animated: true)
+        if managerWallet == true {
+            let vc = WalletDetailViewController()
+            vc.walletModel = model
+            vc.canDelete = indexPath.section == 0 ? false:true
+            self.navigationController?.pushViewController(vc, animated: true)
+        } else {
+            let vc = WalletTransactionsViewController()
+
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
     }
 }

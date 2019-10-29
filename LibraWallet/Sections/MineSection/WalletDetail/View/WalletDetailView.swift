@@ -7,8 +7,12 @@
 //
 
 import UIKit
-
+protocol WalletDetailViewDelegate: NSObjectProtocol {
+    func deleteButtonClick()
+}
 class WalletDetailView: UIView {
+    weak var delegate: WalletDetailViewDelegate?
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.init(hex: "F7F7F9")
@@ -20,7 +24,7 @@ class WalletDetailView: UIView {
         guard canDelete == true else {
             return
         }
-        addSubview(confirmButton)
+        addSubview(deleteButton)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -35,10 +39,10 @@ class WalletDetailView: UIView {
             make.top.left.right.equalTo(self)
             make.height.equalTo((60+10) * 2)
         }
-        guard self.subviews.contains(confirmButton) == true else {
+        guard self.subviews.contains(deleteButton) == true else {
             return
         }
-        confirmButton.snp.makeConstraints { (make) in
+        deleteButton.snp.makeConstraints { (make) in
             make.top.equalTo(tableView.snp.bottom).offset(51)
             make.left.equalTo(self).offset(69)
             make.right.equalTo(self.snp.right).offset(-69)
@@ -60,7 +64,7 @@ class WalletDetailView: UIView {
         tableView.backgroundColor = UIColor.init(hex:"F7F7F9")
         return tableView
     }()
-    lazy var confirmButton: UIButton = {
+    lazy var deleteButton: UIButton = {
         let button = UIButton.init(type: UIButton.ButtonType.custom)
         button.setTitle(localLanguage(keyString: "wallet_manager_detail_delete_button_title"), for: UIControl.State.normal)
         button.setTitleColor(UIColor.white, for: UIControl.State.normal)
@@ -73,5 +77,6 @@ class WalletDetailView: UIView {
         return button
     }()
     @objc func buttonClick(button: UIButton) {
+        self.delegate?.deleteButtonClick()
     }
 }

@@ -44,7 +44,7 @@ extension SupportCoinViewController: SupportCoinTableViewManagerDelegate {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, name: String) {
         let alert = UIAlertController.init(title: "", message: "选择", preferredStyle: UIAlertController.Style.actionSheet)
         let importAction = UIAlertAction.init(title: "导入", style: UIAlertAction.Style.default) { (UIAlertAction) in
-                       
+
             let vc = ImportWalletViewController()
             vc.type = name
             self.navigationController?.pushViewController(vc, animated: true)
@@ -55,12 +55,12 @@ extension SupportCoinViewController: SupportCoinTableViewManagerDelegate {
             self.navigationController?.pushViewController(vc, animated: true)
         }
         let cancelAction = UIAlertAction.init(title: "取消", style: UIAlertAction.Style.cancel) { (UIAlertAction) in
-                       
+
         }
         alert.addAction(importAction)
         alert.addAction(createAction)
         alert.addAction(cancelAction)
         self.present(alert, animated: true, completion: nil)
-
+        
     }
 }

@@ -14,7 +14,7 @@ class HelpCenterViewController: BaseViewController {
         // 初始化本地配置
         self.setBaseControlllerConfig()
         // 设置标题
-        self.title = localLanguage(keyString: "wallet_setting_help_center_navigationbar_title")
+//        self.title = localLanguage(keyString: "wallet_setting_help_center_navigationbar_title")
         // 加载子View
         self.view.addSubview(detailView)
         // 添加NavigationRightBar
@@ -50,7 +50,7 @@ class HelpCenterViewController: BaseViewController {
     }()
     lazy var feedbackButton: UIButton = {
         let button = UIButton(type: .custom)
-        button.setImage(UIImage.init(named: "feedback"), for: UIControl.State.normal)
+        button.setTitle(localLanguage(keyString: "问题反馈"), for: .normal)
         button.addTarget(self, action: #selector(feedback), for: .touchUpInside)
         return button
     }()

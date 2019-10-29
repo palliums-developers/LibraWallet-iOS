@@ -45,11 +45,28 @@ wallet_add_wallet_nickname_textfield_placeholder = "请输入钱包名字";
 wallet_add_wallet_password_textfield_placeholder = "设置钱包密码";
 wallet_add_wallet_password_confirm_textfield_placeholder = "再次确认密码";
 wallet_add_wallet_confirm_button_title = "创建";
+
 /************* 已存在身份钱包导入钱包 *******************/
 wallet_import_wallet_btc_title = "导入Bitcoin钱包";
 wallet_import_wallet_libra_title = "导入Libra钱包";
 wallet_import_wallet_violas_title = "导入Violas钱包";
 wallet_import_mnemonic_textview_placeholder = "请输入助记词,并用空格分割";
 wallet_import_wallet_confirm_button_title = "开始导入";
+
 /************* 钱包管理 *******************/
 wallet_manager_detail_delete_button_title = "删除";
+
+/************* 钱包管理修改名称 *******************/
+wallet_manager_detail_change_wallet_name_title = "更换钱包名";
+wallet_manager_detail_change_wallet_name_textfield_placeholder = "请输入钱包名";
+wallet_manager_detail_change_wallet_name_button_title = "确定修改";
+wallet_manager_detail_change_wallet_name_cancel_button_title = "取消";
+
+/************* 地址簿 *******************/
+wallet_address_add_remarks_title = "备注";
+wallet_address_add_remarks_textfield_placeholder = "备注信息少于20个字";
+wallet_address_add_address_title = "地址";
+wallet_address_add_address_textfield_placeholder = "输入地址";
+wallet_address_add_confirm_button_title = "确认添加";
+wallet_address_add_type_title = "类型";
+wallet_address_add_type_button_title = "请选择";

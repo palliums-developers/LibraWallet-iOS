@@ -11,9 +11,8 @@ import UIKit
 class SettingView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        addSubview(topBackgroundImageView)
-        
-        self.addSubview(self.tableView)
+        addSubview(header)
+        addSubview(self.tableView)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -24,12 +23,12 @@ class SettingView: UIView {
     //MARK: - 布局
     override func layoutSubviews() {
         super.layoutSubviews()
-        topBackgroundImageView.snp.makeConstraints { (make) in
+        header.snp.makeConstraints { (make) in
             make.top.left.right.equalTo(0)
-            make.height.equalTo(202)
+            make.height.equalTo(171)
         }
         self.tableView.snp.makeConstraints { (make) in
-            make.top.equalTo(self).offset(navigationBarHeight)
+            make.top.equalTo(header.snp.bottom)
             make.left.right.bottom.equalTo(self)
         }
     }
@@ -47,10 +46,8 @@ class SettingView: UIView {
         tableView.backgroundColor = defaultBackgroundColor
         return tableView
     }()
-    private lazy var topBackgroundImageView : UIImageView = {
-        let imageView = UIImageView.init()
-        imageView.image = UIImage.init(named: "navigation_background")
-        imageView.isUserInteractionEnabled = true
-        return imageView
+    private lazy var header : SettingViewHeader = {
+        let view = SettingViewHeader.init()
+        return view
     }()
 }

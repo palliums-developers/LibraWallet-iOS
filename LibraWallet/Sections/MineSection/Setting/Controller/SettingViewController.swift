@@ -8,13 +8,13 @@
 
 import UIKit
 
-class SettingViewController: UIViewController {
+class SettingViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // 初始化本地配置
-//        self.setBaseControlllerConfig()
+        self.setBaseControlllerConfig()
         // 设置标题
-        self.title = localLanguage(keyString: "wallet_home_right_bar_title")
+//        self.title = localLanguage(keyString: "wallet_home_right_bar_title")
         // 加载子View
         self.view.addSubview(self.viewModel.detailView)
         // 加载数据
@@ -24,11 +24,11 @@ class SettingViewController: UIViewController {
         super.viewWillLayoutSubviews()
         self.viewModel.detailView.snp.makeConstraints { (make) in
             if #available(iOS 11.0, *) {
-                make.bottom.equalTo(self.view.safeAreaLayoutGuide)
+                make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
             } else {
-                make.bottom.equalTo(self.view)
+                make.top.bottom.equalTo(self.view)
             }
-            make.top.left.right.equalTo(self.view)
+            make.left.right.equalTo(self.view)
         }
     }
     deinit {

@@ -133,6 +133,23 @@ extension LibraWalletManager {
             throw error
         }
     }
+    func isValidPaymentPassword(walletRootAddress: String, password: String) throws -> Bool {
+        guard password.isEmpty == false else {
+            throw LibraWalletError.WalletKeychain(reason: .searchStringEmptyError)
+        }
+        do {
+            // 加密密码
+            let encryptPasswordString = try PasswordCrypto().encryptPassword(password: password)
+            // 验证结果
+            let state = KeychainManager().checkPayPasswordInvalid(walletAddress: walletRootAddress, password: encryptPasswordString)
+            guard state == true else {
+                return false
+            }
+            return true
+        } catch {
+            return false
+        }
+    }
     func createLibraWallet() throws -> Bool {
         do {
             let mnemonic = try LibraMnemonic.generate()
