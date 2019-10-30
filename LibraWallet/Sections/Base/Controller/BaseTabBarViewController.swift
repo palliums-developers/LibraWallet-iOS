@@ -16,7 +16,7 @@ class BaseTabBarViewController: UITabBarController {
         UITabBar.appearance().isTranslucent = false
         // Do any additional setup after loading the view.
         addAllChildViewController()
-        self.selectedIndex = 2
+        self.selectedIndex = 0
     }
     private func addAllChildViewController(){
         let home = HomeViewController.init()

@@ -39,6 +39,9 @@ func stringValueDic(_ str: String) -> [String : Any]? {
 let defaultBackgroundColor = UIColor.white
 let DefaultSpaceColor = UIColor.init(hex: "F7F7F9")
 let DefaultGreenColor = UIColor.init(hex: "7038FD")
+let DefaultFontColor = UIColor.init(hex: "3D3949")
+// 主色50%
+let DefaultFontMiddleColor = UIColor.init(hex: "9D9CA3")
 ///******************* 全局设置语言 *******************/
 /// 全局设置语言
 ///

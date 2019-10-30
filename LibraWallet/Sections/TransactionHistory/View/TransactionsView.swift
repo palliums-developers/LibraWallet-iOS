@@ -28,7 +28,7 @@ class TransactionsView: UIView {
             make.top.left.right.equalTo(0)
             make.height.equalTo(202)
         }
-        self.tableView.snp.makeConstraints { (make) in
+        tableView.snp.makeConstraints { (make) in
             make.top.equalTo(self).offset(navigationBarHeight)
             make.left.right.bottom.equalTo(self)
         }

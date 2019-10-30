@@ -49,9 +49,9 @@ class ScanView: UIView {
         style.photoframeAngleW = 30
         style.photoframeAngleH = 30
         // 扫描区域四个角颜色
-        style.colorAngle = UIColor.init(hex: "17C996")
+        style.colorAngle = UIColor.init(hex: "504ACB")
         // 扫描区域四边颜色
-        style.colorRetangleLine = UIColor.init(hex: "17C996")
+        style.colorRetangleLine = UIColor.init(hex: "504ACB")
         // 扫描区域动画类型
         style.anmiationStyle = LBXScanViewAnimationStyle.NetGrid
         // 扫描区域动画图片

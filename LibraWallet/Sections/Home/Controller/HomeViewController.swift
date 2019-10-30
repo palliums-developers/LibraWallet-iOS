@@ -14,11 +14,11 @@ class HomeViewController: UIViewController {
         // 设置背景色
         self.view.backgroundColor = UIColor.init(hex: "F9F9FB")
         // 加载子View
-        self.view.addSubview(detailView)
+        self.view.addSubview(viewModel.detailView)
         // 添加导航栏按钮
         self.addNavigationBar()
         // 初始化KVO
-        self.initKVO()
+//        self.initKVO()
         // 添加语言变换通知
         NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
     }
@@ -34,13 +34,13 @@ class HomeViewController: UIViewController {
 //        self.navigationItem.leftBarButtonItems = [barButtonItem, backView]
 //        
         // 自定义导航栏的UIBarButtonItem类型的按钮
-        rechargeButtonView.addSubview(rechargeButton)
-        let recharView = UIBarButtonItem(customView: rechargeButtonView)
+        
+        let scanView = UIBarButtonItem(customView: scanButton)
         // 重要方法，用来调整自定义返回view距离左边的距离
         let rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
-        rightBarButtonItem.width = 5
+        rightBarButtonItem.width = 15
         // 返回按钮设置成功
-        self.navigationItem.rightBarButtonItems = [rightBarButtonItem, recharView]
+        self.navigationItem.rightBarButtonItems = [rightBarButtonItem, scanView]
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -50,28 +50,27 @@ class HomeViewController: UIViewController {
         if needRefresh == true {
 //            dataModel.getLocalUserInfo()
         }
+        self.navigationController?.navigationBar.barStyle = .black
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         self.navigationController?.navigationBar.barStyle = .default
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        detailView.snp.makeConstraints { (make) in
+        viewModel.detailView.snp.makeConstraints { (make) in
             if #available(iOS 11.0, *) {
-                make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
+                make.bottom.equalTo(self.view.safeAreaLayoutGuide)
             } else {
-                make.top.bottom.equalTo(self.view)
+                make.bottom.equalTo(self.view)
             }
-            make.left.right.equalTo(self.view)
+            make.top.left.right.equalTo(self.view)
         }
     }
-    //子View
-    private lazy var detailView : HomeView = {
-        let view = HomeView.init()
-        view.delegate = self
-        return view
-    }()
-    lazy var dataModel: MainModel = {
-        let model = MainModel.init()
-        return model
+    lazy var viewModel: HomeViewModel = {
+        let viewModel = HomeViewModel.init()
+        viewModel.detailView.headerView.delegate = self
+        return viewModel
     }()
     lazy var mineButton: UIButton = {
         let button = UIButton(type: .custom)
@@ -90,23 +89,11 @@ class HomeViewController: UIViewController {
         view.layer.masksToBounds = true
         return view
     }()
-    lazy var rechargeButton: UIButton = {
+    lazy var scanButton: UIButton = {
         let button = UIButton(type: .custom)
-        if Localize.currentLanguage() == "en" {
-            button.frame = CGRect(x: 0, y: 0, width: 100, height: 37)
-        } else {
-            button.frame = CGRect(x: 0, y: 0, width: 70, height: 37)
-        }
-        // 给按钮设置返回箭头图片
-        button.setTitle(localLanguage(keyString: "wallet_home_right_bar_title"), for: UIControl.State.normal)
-        button.setTitleColor(UIColor.black, for: UIControl.State.normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.regular)
-        button.setTitleColor(UIColor.init(hex: "707071"), for: UIControl.State.normal)
-//        button.setImage(UIImage.init(named: "home_deposit_icon"), for: UIControl.State.normal)
-//        button.titleEdgeInsets = UIEdgeInsets(top: 0, left: 4, bottom: 0, right: -4)
-//        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -4, bottom: 0, right: 4)
+        button.setImage(UIImage.init(named: "home_scan"), for: UIControl.State.normal)
         button.tag = 20
-        button.addTarget(self, action: #selector(recharge), for: .touchUpInside)
+        button.addTarget(self, action: #selector(scanToTransfer), for: .touchUpInside)
         return button
     }()
     lazy var rechargeButtonView: UIView = {
@@ -125,117 +112,51 @@ class HomeViewController: UIViewController {
 //        let vc = MineViewController()
 //        self.navigationController?.pushViewController(vc, animated: true)
     }
-    @objc func recharge() {
-//        let vc = TransactionsViewController()
-//        self.navigationController?.pushViewController(vc, animated: true)
-        
-        let vc = AddressManagerViewController()
+    @objc func scanToTransfer() {
+        let vc = ScanViewController()
+        vc.actionClosure = { address in
+            
+        }
+        vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
-        
     }
     @objc func setText(){
-        rechargeButton.setTitle(localLanguage(keyString: "wallet_balance_recharge_title"), for: UIControl.State.normal)
-        UIView.animate(withDuration: 0.3) { [weak self] in
-            var width = 70
-            if Localize.currentLanguage() == "en" {
-                width = 100
-            } else {
-                width = 70
-            }
-            self?.rechargeButton.frame = CGRect.init(x: 0, y: 0, width: width, height: 37)
-            self?.rechargeButtonView.frame = CGRect.init(x: 0, y: 0, width: width, height: 37)
-        }
     }
     deinit {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
         print("HomeViewController销毁了")
     }
-    var myContext = 0
 }
-extension HomeViewController {
-    //MARK: - KVO
-    func initKVO() {
-        dataModel.addObserver(self, forKeyPath: "dataDic", options: NSKeyValueObservingOptions.new, context: &myContext)
-        self.view.makeToastActivity(.center)
-        
-        self.dataModel.getLocalUserInfo()
-    }
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?)  {
-        
-        guard context == &myContext else {
-            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
-            return
-        }
-        guard (change?[NSKeyValueChangeKey.newKey]) != nil else {
-            return
-        }
-        guard let jsonData = (object! as AnyObject).value(forKey: "dataDic") as? NSDictionary else {
-            return
-        }
-        if let error = jsonData.value(forKey: "error") as? LibraWalletError {
-            if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
-                // 网络无法访问
-                print(error.localizedDescription)
-            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletNotExist).localizedDescription {
-                // 钱包不存在
-                print(error.localizedDescription)
-//                let vc = WalletCreateViewController()
-//                let navi = UINavigationController.init(rootViewController: vc)
-//                self.present(navi, animated: true, completion: nil)
-            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionTooOld).localizedDescription {
-                // 版本太久
-                print(error.localizedDescription)
-            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
-                // 解析失败
-                print(error.localizedDescription)
-            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
-                print(error.localizedDescription)
-                // 数据为空
-            }
-            self.view.hideToastActivity()
-            return
-        }
-        let type = jsonData.value(forKey: "type") as! String
-        
-        if type == "LoadLocalWallet" {
-            // 加载本地数据
-//            self.detailView.model = WalletData.wallet
-        } else if type == "UpdateLocalWallet" {
-            // 刷新本地数据
-            self.detailView.model = LibraWalletManager.shared
-            self.view.hideToastActivity()
-            self.view.makeToast("刷新成功", position: .center)
 
-        } else {
-            // 获取测试Coin
-//            self.detailView.model = WalletData.wallet
-            self.view.hideToastActivity()
-            self.view.makeToast("获取测试币成功", position: .center)
-            self.dataModel.getLocalUserInfo()
-        }
-        self.view.hideToastActivity()
-    }
-}
-extension HomeViewController: HomeViewDelegate {
-    func getTestCoin() {
-        self.view.makeToastActivity(.center)
-        self.dataModel.getTestCoin(address: LibraWalletManager.shared.walletAddress!, amount: 1000000000)
+extension HomeViewController: HomeHeaderViewDelegate {
+    func checkWalletDetail() {
+//        let vc = WalletDetailViewController()
+////        vc.walletModel = model
+//        vc.canDelete = false
+//        vc.hidesBottomBarWhenPushed = true
+//        self.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func refreshBalance() {
-        guard let address = LibraWalletManager.shared.walletAddress else { return }
-        self.view.makeToastActivity(.center)
-        self.dataModel.updateLocalInfo(walletAddress: address)
+    func checkWalletTransactionList() {
+        let vc = WalletTransactionsViewController()
+        vc.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func addCoinToWallet() {
+        
     }
     func walletSend() {
         let vc = TransferViewController()
         vc.actionClosure = {
-            self.dataModel.getLocalUserInfo()
+//            self.dataModel.getLocalUserInfo()
         }
+        vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
     func walletReceive() {
         let vc = WalletReceiveViewController()
+        vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
     

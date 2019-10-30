@@ -8,29 +8,30 @@
 
 import UIKit
 
-class WalletReceiveViewController: UIViewController {
+class WalletReceiveViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        // 初始化本地配置
+        self.setBaseControlllerConfig()
         // 加载子View
         self.view.addSubview(detailView)
-        self.detailView.model = LibraWalletManager.shared
+//        self.detailView.model = LibraWalletManager.shared
         
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         detailView.snp.makeConstraints { (make) in
             if #available(iOS 11.0, *) {
-                make.bottom.equalTo(self.view.safeAreaLayoutGuide)
+                make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
             } else {
-                make.bottom.equalTo(self.view)
+                make.top.bottom.equalTo(self.view)
             }
-            make.top.left.right.equalTo(self.view)
+            make.left.right.equalTo(self.view)
         }
     }
     var wallet: LibraWallet? 
     private lazy var detailView : WalletReceiveView = {
         let view = WalletReceiveView.init()
-        view.delegate = self
         return view
     }()
     deinit {
@@ -42,16 +43,6 @@ class WalletReceiveViewController: UIViewController {
 //                                position: .center)
         } else {
             self.view.makeToast(localLanguage(keyString: "wallet_receive_save_qrcode_success_title"), position: .center)
-        }
-    }
-}
-extension WalletReceiveViewController: WalletReceiveViewDelegate {
-    func saveQrcode() {
-        if let resultImage = screenSnapshot() {
-            UIImageWriteToSavedPhotosAlbum(resultImage, self, #selector(saveImage(image:didFinishSavingWithError:contextInfo:)), nil)
-        } else {
-//            self.view.makeToast(HKWalletError.WalletSaveScreenError(reason: .saveScreenFailed).localizedDescription,
-//                                position: .center)
         }
     }
 }

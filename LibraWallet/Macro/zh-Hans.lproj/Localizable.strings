@@ -70,3 +70,10 @@ wallet_address_add_address_textfield_placeholder = "输入地址";
 wallet_address_add_confirm_button_title = "确认添加";
 wallet_address_add_type_title = "类型";
 wallet_address_add_type_button_title = "请选择";
+
+/************* 首页 *******************/
+
+
+/************* 收款 *******************/
+wallet_receive_qrcode_title = "收款地址";
+wallet_receive_copy_button_title = "复制地址";
