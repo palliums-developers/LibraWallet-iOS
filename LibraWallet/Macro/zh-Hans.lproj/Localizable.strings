@@ -77,3 +77,16 @@ wallet_address_add_type_button_title = "请选择";
 /************* 收款 *******************/
 wallet_receive_qrcode_title = "收款地址";
 wallet_receive_copy_button_title = "复制地址";
+
+/************* 转账 *******************/
+wallet_transfer_balance_title = "余额";
+wallet_transfer_amount_textfield_placeholder = "输入金额";
+wallet_transfer_address_title = "收款地址";
+wallet_transfer_address_contact_title = "地址簿";
+wallet_transfer_address_btc_textfield_placeholder = "输入BTC收款地址";
+wallet_transfer_address_libra_textfield_placeholder = "输入Libra收款地址";
+wallet_transfer_address_violas_textfield_placeholder = "输入Violas收款地址";
+wallet_transfer_transaction_fee_title = "手续费";
+wallet_transfer_transaction_fee_least_title = "慢";
+wallet_transfer_transaction_fee_max_title = "快";
+wallet_transfer_confirm_button_title = "确认转账";

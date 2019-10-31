@@ -14,9 +14,7 @@ class WalletReceiveViewController: BaseViewController {
         // 初始化本地配置
         self.setBaseControlllerConfig()
         // 加载子View
-        self.view.addSubview(detailView)
-//        self.detailView.model = LibraWalletManager.shared
-        
+        self.view.addSubview(detailView)        
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()

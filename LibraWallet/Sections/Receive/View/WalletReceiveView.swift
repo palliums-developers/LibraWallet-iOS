@@ -10,7 +10,7 @@ import UIKit
 class WalletReceiveView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.backgroundColor = UIColor.init(hex: "F7F7F9")
+//        self.backgroundColor = UIColor.init(hex: "F7F7F9")
         addSubview(backgroundImageView)
         addSubview(qrcodeTitleLabel)
         addSubview(qrcodeImageView)
@@ -72,7 +72,7 @@ class WalletReceiveView: UIView {
         // 阴影的偏移量
         imageView.layer.shadowOffset = CGSize(width: 0, height: 0)
         // 阴影的透明度，默认为0，不设置则不会显示阴影****
-        imageView.layer.shadowOpacity = 0.05
+        imageView.layer.shadowOpacity = 0.1
         return imageView
     }()
     lazy var qrcodeTitleLabel: UILabel = {

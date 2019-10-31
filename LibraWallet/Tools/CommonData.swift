@@ -221,3 +221,5 @@ extension LoadLocalLanguageProtocol {
         return keyString.localized()
     }
 }
+let transferFeeMax = 0.001
+let transferFeeMin = 0.0001

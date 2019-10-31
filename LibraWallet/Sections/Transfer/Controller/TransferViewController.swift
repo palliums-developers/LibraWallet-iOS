@@ -9,11 +9,13 @@
 import UIKit
 import SwiftGRPC
 import SwiftProtobuf
-class TransferViewController: UIViewController {
+class TransferViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        // 初始化本地配置
+        self.setBaseControlllerConfig()
+        
         self.view.addSubview(detailView)
         self.initKVO()
     }
@@ -21,11 +23,11 @@ class TransferViewController: UIViewController {
         super.viewWillLayoutSubviews()
         detailView.snp.makeConstraints { (make) in
             if #available(iOS 11.0, *) {
-                make.bottom.equalTo(self.view.safeAreaLayoutGuide)
+                make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
             } else {
-                make.bottom.equalTo(self.view)
+                make.top.bottom.equalTo(self.view)
             }
-            make.top.left.right.equalTo(self.view)
+            make.left.right.equalTo(self.view)
         }
     }
     //子View
@@ -105,7 +107,10 @@ extension TransferViewController: TransferViewDelegate {
     }
     
     func chooseAddress() {
+        let vc = AddressManagerViewController()
+        vc.hidesBottomBarWhenPushed = true
         
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     func confirmWithdraw() {
