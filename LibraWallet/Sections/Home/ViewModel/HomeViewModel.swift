@@ -13,8 +13,7 @@ class HomeViewModel: NSObject {
     var myContext = 0
     func initKVO() {
         dataModel.addObserver(self, forKeyPath: "dataDic", options: NSKeyValueObservingOptions.new, context: &myContext)
-//        self.view.makeToastActivity(.center)
-        
+        self.detailView.makeToastActivity(.center)
         self.dataModel.getLocalUserInfo()
     }
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?)  {
@@ -56,10 +55,15 @@ class HomeViewModel: NSObject {
         
         if type == "LoadLocalWallet" {
             // 加载本地数据
-//            self.detailView.model = WalletData.wallet
+            if let tempData = jsonData.value(forKey: "data") as? LibraWalletManager {
+                self.detailView.hideToastActivity()
+                self.detailView.model = tempData
+                self.detailView.tableView.reloadData()
+            }
+            
         } else if type == "UpdateLocalWallet" {
             // 刷新本地数据
-            self.detailView.model = LibraWalletManager.shared
+//            self.detailView.model = LibraWalletManager.shared
 //            self.view.hideToastActivity()
 //            self.view.makeToast("刷新成功", position: .center)
 

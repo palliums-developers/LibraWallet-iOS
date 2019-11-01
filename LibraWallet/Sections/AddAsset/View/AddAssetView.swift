@@ -1,36 +1,29 @@
 //
-//  MineView.swift
+//  AddAssetView.swift
 //  LibraWallet
 //
-//  Created by palliums on 2019/10/23.
+//  Created by palliums on 2019/11/1.
 //  Copyright © 2019 palliums. All rights reserved.
 //
 
 import UIKit
 
-class MineView: UIView {
+class AddAssetView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        addSubview(mineHeaderView)
-        
-        self.addSubview(self.tableView)
+        addSubview(self.tableView)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
-        print("TransactionsView销毁了")
+        print("AddAssetView销毁了")
     }
     //MARK: - 布局
     override func layoutSubviews() {
         super.layoutSubviews()
-        mineHeaderView.snp.makeConstraints { (make) in
-            make.top.left.right.equalTo(self)
-            make.height.equalTo(208)
-        }
         self.tableView.snp.makeConstraints { (make) in
-            make.top.equalTo(mineHeaderView.snp.bottom)
-            make.left.right.bottom.equalTo(self)
+            make.top.left.right.bottom.equalTo(self)
         }
     }
     //MARK: - 懒加载对象
@@ -46,10 +39,5 @@ class MineView: UIView {
         }
         tableView.backgroundColor = defaultBackgroundColor
         return tableView
-    }()
-    private lazy var mineHeaderView : MineHeaderView = {
-        let view = MineHeaderView.init()
-//        view.model = WalletData.wallet
-        return view
     }()
 }

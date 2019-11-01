@@ -12,7 +12,7 @@ class HomeView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.init(hex: "F7F7F9")
-        addSubview(walletTitleLabel)
+//        addSubview(walletTitleLabel)
         addSubview(topBackgroundImageView)
         addSubview(headerView)
         addSubview(tableView)
@@ -29,10 +29,10 @@ class HomeView: UIView {
     //MARK: - 布局
     override func layoutSubviews() {
         super.layoutSubviews()
-        walletTitleLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(18)
-            make.left.equalTo(20)
-        }
+//        walletTitleLabel.snp.makeConstraints { (make) in
+//            make.top.equalTo(18)
+//            make.left.equalTo(20)
+//        }
         topBackgroundImageView.snp.makeConstraints { (make) in
             make.top.left.right.equalTo(self)
             make.height.equalTo((196 * ratio))
@@ -87,6 +87,7 @@ class HomeView: UIView {
     var clickCount: Int = 0
     var model: LibraWalletManager? {
         didSet {
+            headerView.model = model
         }
     }
     @objc func setText(){

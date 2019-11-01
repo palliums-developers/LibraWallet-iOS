@@ -13,17 +13,15 @@ class MainModel: NSObject {
     private var requests: [Cancellable] = []
     @objc var dataDic: NSMutableDictionary = [:]
     func getLocalUserInfo() {
-//        let result = DataBaseManager.DBManager.loadCurrentUseWallet()
-//        if result == false {
-//            // 需要创建钱包
-//            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .walletNotExist), type: "LoadLocalWallet")
-//            self.setValue(data, forKey: "dataDic")
-//        } else {
-//            let data = setKVOData(type: "LoadLocalWallet")
-//            self.setValue(data, forKey: "dataDic")
-//            // 更新本地数据
+        do {
+            let wallet = try DataBaseManager.DBManager.getCurrentUseWallet()
+            let data = setKVOData(type: "LoadLocalWallet", data: wallet)
+            self.setValue(data, forKey: "dataDic")
+            // 更新本地数据
 //            updateLocalInfo(walletAddress: LibraWalletManager.shared.walletAddress!)
-//        }
+        } catch {
+            
+        }
     }
     func updateLocalInfo(walletAddress: String) {
         

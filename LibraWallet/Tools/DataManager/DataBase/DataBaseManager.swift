@@ -189,6 +189,55 @@ struct DataBaseManager {
             return [[LibraWalletManager]]()
         }
     }
+    func getCurrentUseWallet() throws -> LibraWalletManager {
+        let walletTable = Table("Wallet").filter(Expression<Bool>("wallet_current_use") == true)
+        do {
+            if let tempDB = self.db {
+                for wallet in try tempDB.prepare(walletTable) {
+                    // 钱包ID
+                    let walletID = wallet[Expression<Int64>("wallet_id")]
+                    // 钱包金额
+                    let walletBalance = wallet[Expression<Int64>("wallet_balance")]
+                    // 钱包地址
+                    let walletAddress = wallet[Expression<String>("wallet_address")]
+                    // Libra_、Violas_或BTC_ 前缀 + 钱包0层地址
+                    let walletRootAddress = wallet[Expression<String>("wallet_root_address")]
+                    // 钱包创建时间
+                    let walletCreateTime = wallet[Expression<Int>("wallet_creat_time")]
+                    // 钱包名字
+                    let walletName = wallet[Expression<String>("wallet_name")]
+                    // 钱包助记词
+//                    let walletMnemonic = wallet[Expression<String>("wallet_mnemonic")]
+                    // 当前使用用户
+                    let walletCurrentUse = wallet[Expression<Bool>("wallet_current_use")]
+                    // 账户是否开启生物锁定
+                    let walletBiometricLock = wallet[Expression<Bool>("wallet_biometric_lock")]
+                    // 账户类型身份钱包、其他钱包(0=身份钱包、1=其它导入钱包)
+                    let walletIdentity = wallet[Expression<Int>("wallet_identity")]
+                    // 钱包类型(0=Libra、1=Violas、2=BTC)
+                    let walletType = wallet[Expression<Int>("wallet_type")]
+                    
+                    let wallet = LibraWalletManager.init(walletID: walletID,
+                                                         walletBalance: walletBalance,
+                                                         walletAddress: walletAddress,
+                                                         walletRootAddress: walletRootAddress,
+                                                         walletCreateTime: walletCreateTime,
+                                                         walletName: walletName,
+                                                         walletCurrentUse: walletCurrentUse,
+                                                         walletBiometricLock: walletBiometricLock,
+                                                         walletIdentity: walletIdentity,
+                                                         walletType: walletType)
+                    return wallet
+                }
+                throw LibraWalletError.error("获取当前使用钱包检索失败")
+            } else {
+                throw LibraWalletError.error("读取数据库失败")
+            }
+        } catch {
+            print(error.localizedDescription)
+            throw error
+        }
+    }
     func deleteWalletFromTable(model: LibraWalletManager) -> Bool {
         let transectionAddressHistoryTable = Table("Wallet")
         do {

@@ -80,6 +80,11 @@ extension LibraWalletManager {
         self.walletBiometricLock = state
         self.semaphore.signal()
     }
+    mutating func changeWalletCurrentUse(state: Bool) {
+        self.semaphore.wait()
+        self.walletCurrentUse = state
+        self.semaphore.signal()
+    }
 }
 extension LibraWalletManager {
     func savePaymentPasswordToKeychain(password: String, walletRootAddress: String) throws {

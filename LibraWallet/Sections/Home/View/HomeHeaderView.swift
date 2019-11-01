@@ -170,7 +170,7 @@ class HomeHeaderView: UIView {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "3C3848")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 27), weight: .semibold)
-        label.text = "9.123123"
+        label.text = "0.00"
         return label
     }()
     lazy var assetUnitLabel: UILabel = {
@@ -186,7 +186,7 @@ class HomeHeaderView: UIView {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "9D9CA3")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: .regular)
-        label.text = localLanguage(keyString: "adfasdfasdfasdfasdfasdfasdfasdf")
+        label.text = "---"
         label.lineBreakMode = .byTruncatingMiddle
         label.numberOfLines = 2
         return label
@@ -196,7 +196,7 @@ class HomeHeaderView: UIView {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "3C3848")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: .semibold)
-        label.text = "b8c39fc6910816ad21bc2be4f7e804539e7529b7b7d188c80f093e1e61f192cf"
+        label.text = "---"
         label.lineBreakMode = .byTruncatingMiddle
         label.numberOfLines = 2
         return label
@@ -344,6 +344,13 @@ class HomeHeaderView: UIView {
         } else if button.tag == 60 {
             // 添加资产
             self.delegate?.addCoinToWallet()
+        }
+    }
+    var model: LibraWalletManager? {
+        didSet {
+            assetLabel.text = "\(model?.walletBalance ?? 0)"
+            walletNameLabel.text = model?.walletName
+            walletAddressLabel.text = model?.walletAddress
         }
     }
 }

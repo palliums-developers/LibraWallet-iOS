@@ -18,22 +18,20 @@ class HomeViewController: UIViewController {
         // 添加导航栏按钮
         self.addNavigationBar()
         // 初始化KVO
-//        self.initKVO()
+        self.viewModel.initKVO()
         // 添加语言变换通知
         NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
     }
     func addNavigationBar() {
         // 自定义导航栏的UIBarButtonItem类型的按钮
-//        mineView.addSubview(mineButton)
-//        let backView = UIBarButtonItem(customView: mineView)
-//        
-//        // 重要方法，用来调整自定义返回view距离左边的距离
-//        let barButtonItem = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
-//        barButtonItem.width = -5
-//        // 返回按钮设置成功
-//        self.navigationItem.leftBarButtonItems = [barButtonItem, backView]
-//        
-        // 自定义导航栏的UIBarButtonItem类型的按钮
+//        changeWalletButtonView.addSubview(changeWalletButton)
+        let backView = UIBarButtonItem(customView: changeWalletButton)
+        
+        // 重要方法，用来调整自定义返回view距离左边的距离
+        let barButtonItem = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        barButtonItem.width = -10
+        // 返回按钮设置成功
+        self.navigationItem.leftBarButtonItems = [barButtonItem, backView]
         
         let scanView = UIBarButtonItem(customView: scanButton)
         // 重要方法，用来调整自定义返回view距离左边的距离
@@ -72,22 +70,21 @@ class HomeViewController: UIViewController {
         viewModel.detailView.headerView.delegate = self
         return viewModel
     }()
-    lazy var mineButton: UIButton = {
+    lazy var changeWalletButton: UIButton = {
         let button = UIButton(type: .custom)
-        // 给按钮设置返回箭头图片
-//        let url = URL(string: WalletData.wallet.walletAvatarURL ?? "")
-//        button.kf.setImage(with: url, for: UIControl.State.normal, placeholder: UIImage.init(named: "default_avatar"))
-        button.setImage(UIImage.init(named: "default_avatar"), for: UIControl.State.normal)
+        // 设置字体
+        button.setTitle(localLanguage(keyString: "Violas 钱包"), for: UIControl.State.normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.regular)
+        button.setTitleColor(UIColor.white, for: UIControl.State.normal)
+        // 设置图片
+        button.setImage(UIImage.init(named: "home_show_detail"), for: UIControl.State.normal)
+        // 调整位置
+        button.titleEdgeInsets = UIEdgeInsets(top: 0, left: -15, bottom: 0, right: 15)
+        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 80, bottom: 0, right: -80)
         // 设置frame
         button.frame = CGRect(x: 0, y: 0, width: 37, height: 37)
-        button.addTarget(self, action: #selector(back), for: .touchUpInside)
+        button.addTarget(self, action: #selector(changeWallet), for: .touchUpInside)
         return button
-    }()
-    lazy var mineView: UIView = {
-        let view = UIView.init(frame: CGRect.init(x: 0, y: 0, width: 37, height: 37))
-        view.layer.cornerRadius = 18.5
-        view.layer.masksToBounds = true
-        return view
     }()
     lazy var scanButton: UIButton = {
         let button = UIButton(type: .custom)
@@ -96,7 +93,7 @@ class HomeViewController: UIViewController {
         button.addTarget(self, action: #selector(scanToTransfer), for: .touchUpInside)
         return button
     }()
-    lazy var rechargeButtonView: UIView = {
+    lazy var changeWalletButtonView: UIView = {
         var width = 70
         if Localize.currentLanguage() == "en" {
             width = 100
@@ -108,9 +105,20 @@ class HomeViewController: UIViewController {
     }()
     var needRefresh: Bool?
     var needShowBiometricCheck: Bool?
-    @objc func back() {
-//        let vc = MineViewController()
-//        self.navigationController?.pushViewController(vc, animated: true)
+    @objc func changeWallet() {
+        let vc = WalletListController()
+        vc.hidesBottomBarWhenPushed = true
+        vc.actionClosure = { (action, wallet) in
+            if action == .update {
+                //更新管理页面
+                self.viewModel.detailView.tableView.reloadData()
+                //更新钱包列表页面
+//                    if let action = self.actionClosure {
+//                        action(.update, wallet)
+//                    }
+            }
+        }
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     @objc func scanToTransfer() {
         let vc = ScanViewController()
@@ -140,11 +148,15 @@ extension HomeViewController: HomeHeaderViewDelegate {
     func checkWalletTransactionList() {
         let vc = WalletTransactionsViewController()
         vc.hidesBottomBarWhenPushed = true
+        
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
     func addCoinToWallet() {
         
+        let vc = AddAssetViewController()
+        vc.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     func walletSend() {
         let vc = TransferViewController()
