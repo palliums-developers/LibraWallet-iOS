@@ -27,7 +27,11 @@ class WalletReceiveViewController: BaseViewController {
             make.left.right.equalTo(self.view)
         }
     }
-    var wallet: LibraWallet? 
+    var wallet: LibraWalletManager? {
+        didSet {
+            self.detailView.wallet = wallet
+        }
+    }
     private lazy var detailView : WalletReceiveView = {
         let view = WalletReceiveView.init()
         return view

@@ -16,7 +16,6 @@ class ScanViewController: UIViewController {
         self.view.backgroundColor = UIColor.black
         // 加载子View
         self.view.addSubview(detailView)
-
         // 延时启动相机
         perform(#selector(ScanViewController.startScan), with: nil, afterDelay: 0.3)
     }

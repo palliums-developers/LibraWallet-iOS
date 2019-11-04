@@ -87,7 +87,6 @@ class WalletReceiveView: UIView {
         let imageView = UIImageView.init()
         imageView.image = UIImage.init(named: "default_qrcode")
         imageView.isUserInteractionEnabled = true
-        imageView.image = QRCodeGenerator.generate(from: "b8c39fc6910816ad21bc2be4f7e804539e7529b7b7d188c80f093e1e61f192cf")
 
         return imageView
     }()
@@ -96,7 +95,7 @@ class WalletReceiveView: UIView {
         label.textAlignment = NSTextAlignment.center
         label.textColor = UIColor.init(hex: "9D9CA3")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: .medium)
-        label.text = "123123123123123"
+        label.text = "---"
         label.numberOfLines = 0
         return label
     }()
@@ -106,7 +105,7 @@ class WalletReceiveView: UIView {
         label.textColor = UIColor.init(hex: "3C3848")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: .regular)
         label.numberOfLines = 0
-        label.text = "b8c39fc6910816ad21bc2be4f7e804539e7529b7b7d188c80f093e1e61f192cf"
+        label.text = "---"
         return label
     }()
     lazy var saveQRCodeButton: UIButton = {
@@ -136,5 +135,15 @@ class WalletReceiveView: UIView {
         self.layer.shadowOffset = CGSize(width: 0, height: 2)
         // 阴影的透明度，默认为0，不设置则不会显示阴影****
         self.layer.shadowOpacity = 0.3
+    }
+    var wallet: LibraWalletManager? {
+        didSet {
+            guard let walletModel = wallet else {
+                return
+            }
+            qrcodeImageView.image = QRCodeGenerator.generate(from: walletModel.walletAddress ?? "")
+            addressRemarksLabel.text = walletModel.walletName
+            addressLabel.text = walletModel.walletAddress ?? ""
+        }
     }
 }

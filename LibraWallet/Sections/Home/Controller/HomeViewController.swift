@@ -111,20 +111,33 @@ class HomeViewController: UIViewController {
         vc.actionClosure = { (action, wallet) in
             if action == .update {
                 //更新管理页面
-                self.viewModel.detailView.tableView.reloadData()
-                //更新钱包列表页面
-//                    if let action = self.actionClosure {
-//                        action(.update, wallet)
-//                    }
+                self.viewModel.detailView.headerView.model = wallet
+                // 需要更新
+                #warning("需要添加获取地址最后交易、余额")
+                if wallet.walletType == 0 {
+                    self.changeWalletButton.setTitle(localLanguage(keyString: "Libra 钱包"), for: UIControl.State.normal)
+                } else if wallet.walletType == 1 {
+                    self.changeWalletButton.setTitle(localLanguage(keyString: "Violas 钱包"), for: UIControl.State.normal)
+                } else {
+                    self.changeWalletButton.setTitle(localLanguage(keyString: "BTC 钱包"), for: UIControl.State.normal)
+                }
             }
         }
         self.navigationController?.pushViewController(vc, animated: true)
     }
     @objc func scanToTransfer() {
-        let vc = ScanViewController()
-        vc.actionClosure = { address in
-            
-        }
+//        let vc = ScanViewController()
+//        vc.actionClosure = { address in
+//
+//        }
+//        vc.hidesBottomBarWhenPushed = true
+//        self.navigationController?.pushViewController(vc, animated: true)
+        
+//        let vc = BackupMnemonicController()
+//        vc.hidesBottomBarWhenPushed = true
+//        self.navigationController?.pushViewController(vc, animated: true)
+        
+        let vc = BackupWarningViewController()
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
@@ -168,6 +181,7 @@ extension HomeViewController: HomeHeaderViewDelegate {
     }
     func walletReceive() {
         let vc = WalletReceiveViewController()
+        vc.wallet = self.viewModel.detailView.headerView.model
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }

@@ -55,7 +55,7 @@ class ScanView: UIView {
         // 扫描区域动画类型
         style.anmiationStyle = LBXScanViewAnimationStyle.NetGrid
         // 扫描区域动画图片
-        style.animationImage = UIImage(named: "CodeScan.bundle/qrcode_scan_full_net")
+        style.animationImage = UIImage(named: "scan_full_net")
         return style
     }()    
     func stopScan() {

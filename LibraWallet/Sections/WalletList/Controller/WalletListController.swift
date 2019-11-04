@@ -59,51 +59,26 @@ extension WalletListController: WalletListTableViewManagerDelegate {
         }
         // 去除旧的选中
         let oldIndex = viewModel.tableViewManager.dataModelLocation!
-//        let tempArray = viewModel.tableViewManager.originModel.map { (groupArray) in
-//            groupArray.map { (items) in
-//                items.map { (item) in
-//
-//                }
-//            }
-//        }
-//        for groupArray in viewModel.tableViewManager.originModel! {
-//            for var item in groupArray {
-//                var state: Bool = false
-//                if item.walletCurrentUse == true {
-//                    state = false
-//                }
-//                if item.walletID == model.walletID {
-//                    state = true
-//                }
-//                item.changeWalletCurrentUse(state: state)
-////                LibraWalletManager.init(walletID: item.walletID,
-////                                        walletBalance: item.walletBalance,
-////                                        walletAddress: item.walletAddress,
-////                                        walletRootAddress: item.walletRootAddress,
-////                                        walletCreateTime: item.walletCreateTime,
-////                                        walletName: item.walletName,
-////                                        walletCurrentUse: state,
-////                                        walletBiometricLock: item.walletBiometricLock,
-////                                        walletIdentity: item.walletIdentity,
-////                                        walletType: item.walletType)
-//            }
-//        }
-
-        viewModel.tableViewManager.dataModel![oldIndex.section][oldIndex.row].changeWalletCurrentUse(state: false)
-        viewModel.tableViewManager.dataModel![indexPath.section][indexPath.row].changeWalletCurrentUse(state: true)
-
-        viewModel.tableViewManager.originModel![oldIndex.section][oldIndex.row].changeWalletCurrentUse(state: false)
-        
-        viewModel.tableViewManager.dataModel![indexPath.section][indexPath.row].changeWalletCurrentUse(state: true)
-        
+        var oldModel = viewModel.tableViewManager.dataModel![oldIndex.section][oldIndex.row]
+        oldModel.changeWalletCurrentUse(state: false)
+        let oldChangeResult = DataBaseManager.DBManager.updateWalletCurrentUseState(walletID: oldModel.walletID!, state: false)
+        guard oldChangeResult == true else {
+            self.view.makeToast("撤销旧的选中失败",
+                                position: .center)
+            return
+        }
         // 添加新的选中
-//        let result = DataBaseManager.DBManager.updateWalletCurrentUseState(walletID: model.walletID!, state: true)
-//        if result == true {
-            viewModel.tableViewManager.dataModelLocation = indexPath
-//        }
+        let result = DataBaseManager.DBManager.updateWalletCurrentUseState(walletID: model.walletID!, state: true)
+        guard result == true else {
+            self.view.makeToast("选择新的失败",
+                                position: .center)
+            return
+        }
+        viewModel.tableViewManager.dataModelLocation = indexPath
+
         self.viewModel.detailView.tableView.beginUpdates()
         self.viewModel.detailView.tableView.reloadRows(at: [oldIndex, indexPath], with: .none)
         self.viewModel.detailView.tableView.endUpdates()
-//        self.navigationController?.popViewController(animated: true)
+        self.navigationController?.popViewController(animated: true)
     }
 }
