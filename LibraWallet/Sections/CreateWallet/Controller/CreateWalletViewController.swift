@@ -8,10 +8,12 @@
 
 import UIKit
 
-class CreateWalletViewController: UIViewController {
+class CreateWalletViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        // 初始化本地配置
+        self.setBaseControlllerConfig()
         // 设置背景色
         self.view.addSubview(detailView)
     }

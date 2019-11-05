@@ -1,14 +1,14 @@
 //
-//  BackupMnemonicController.swift
+//  CheckBackupViewController.swift
 //  LibraWallet
 //
-//  Created by palliums on 2019/11/4.
+//  Created by palliums on 2019/11/5.
 //  Copyright © 2019 palliums. All rights reserved.
 //
 
 import UIKit
 
-class BackupMnemonicController: BaseViewController {
+class CheckBackupViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // 初始化本地配置
@@ -34,9 +34,9 @@ class BackupMnemonicController: BaseViewController {
     }
     typealias nextActionClosure = (ControllerAction, LibraWalletManager) -> Void
     var actionClosure: nextActionClosure?
-    lazy var viewModel: BackupMnemonicViewModel = {
-        let viewModel = BackupMnemonicViewModel.init()
-        viewModel.detailView.delegate = self
+    lazy var viewModel: CheckBackupViewModel = {
+        let viewModel = CheckBackupViewModel.init()
+//        viewModel.detailView.delegate = self
         return viewModel
     }()
     var mnemonicArray: [String]? {
@@ -45,10 +45,4 @@ class BackupMnemonicController: BaseViewController {
         }
     }
     
-}
-extension BackupMnemonicController: BackupMnemonicViewDelegate {
-    func checkBackupMnemonic() {
-        let vc = CheckBackupViewController()
-        self.navigationController?.pushViewController(vc, animated: true)
-    }
 }

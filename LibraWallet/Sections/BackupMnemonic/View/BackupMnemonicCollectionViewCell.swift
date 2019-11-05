@@ -32,7 +32,7 @@ class BackupMnemonicCollectionViewCell: UICollectionViewCell {
         label.textAlignment = NSTextAlignment.center
         label.textColor = UIColor.init(hex: "3C3848")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 15), weight: UIFont.Weight.regular)
-        label.text = "---"
+        label.text = ""
         label.layer.cornerRadius = 3
         label.layer.borderWidth = 0.5
         label.layer.masksToBounds = true
@@ -42,6 +42,18 @@ class BackupMnemonicCollectionViewCell: UICollectionViewCell {
     var model: String? {
         didSet {
             mnemonicLabel.text = model
+        }
+    }
+    var checkBackupModel: String? {
+        didSet {
+            if reuseIdentifier == "CheckMnemonicCell" {
+                mnemonicLabel.layer.borderColor = UIColor.white.cgColor
+                mnemonicLabel.textColor = UIColor.white
+                mnemonicLabel.backgroundColor = UIColor.init(hex: "504ACB")
+                mnemonicLabel.text = checkBackupModel
+            } else {
+                mnemonicLabel.text = checkBackupModel
+            }
         }
     }
 }

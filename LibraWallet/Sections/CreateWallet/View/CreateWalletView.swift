@@ -14,11 +14,15 @@ class CreateWalletView: UIView {
     weak var delegate: CreateWalletViewDelegate?
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.backgroundColor = UIColor.init(hex: "191F3A")
-        addSubview(walletNameTextField)
-        addSubview(paymentPasswordTextField)
-        addSubview(paymentPasswordConfirmTextField)
-        addSubview(confirmButton)
+        self.layer.insertSublayer(backgroundLayer, at: 0)
+        addSubview(whiteBackgroundView)
+        whiteBackgroundView.addSubview(walletNameTextField)
+        whiteBackgroundView.addSubview(walletNameSpaceLabel)
+        whiteBackgroundView.addSubview(paymentPasswordTextField)
+        whiteBackgroundView.addSubview(paymentPasswordSpaceLabel)
+        whiteBackgroundView.addSubview(paymentPasswordConfirmTextField)
+        whiteBackgroundView.addSubview(paymentPasswordConfirmSpaceLabel)
+        whiteBackgroundView.addSubview(confirmButton)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -29,77 +33,137 @@ class CreateWalletView: UIView {
     //MARK: - 布局
     override func layoutSubviews() {
         super.layoutSubviews()
+        whiteBackgroundView.snp.makeConstraints { (make) in
+            make.centerY.equalTo(self).offset(-65)
+            make.left.equalTo(self).offset(47)
+            make.right.equalTo(self.snp.right).offset(-47)
+            make.height.equalTo(357)
+        }
         walletNameTextField.snp.makeConstraints { (make) in
-            make.top.equalTo(self).offset(100)
-            make.centerX.equalTo(self)
-            make.size.equalTo(CGSize.init(width: 200, height: 44))
+            make.bottom.equalTo(walletNameSpaceLabel.snp.top)
+            make.left.right.equalTo(walletNameSpaceLabel)
+            make.height.equalTo(51)
+        }
+        walletNameSpaceLabel.snp.makeConstraints { (make) in
+            make.top.equalTo(whiteBackgroundView).offset(77)
+            make.left.equalTo(whiteBackgroundView).offset(17)
+            make.right.equalTo(whiteBackgroundView.snp.right).offset(-17)
+            make.height.equalTo(1)
         }
         paymentPasswordTextField.snp.makeConstraints { (make) in
-            make.top.equalTo(walletNameTextField.snp.bottom).offset(20)
-            make.centerX.equalTo(self)
-            make.size.equalTo(CGSize.init(width: 200, height: 44))
+            make.bottom.equalTo(paymentPasswordSpaceLabel.snp.top)
+            make.left.right.equalTo(walletNameSpaceLabel)
+            make.top.equalTo(walletNameSpaceLabel.snp.bottom)
+        }
+        paymentPasswordSpaceLabel.snp.makeConstraints { (make) in
+            make.top.equalTo(walletNameSpaceLabel.snp.bottom).offset(51)
+            make.left.equalTo(whiteBackgroundView).offset(17)
+            make.right.equalTo(whiteBackgroundView.snp.right).offset(-17)
+            make.height.equalTo(1)
         }
         paymentPasswordConfirmTextField.snp.makeConstraints { (make) in
-            make.top.equalTo(paymentPasswordTextField.snp.bottom).offset(20)
-            make.centerX.equalTo(self)
-            make.size.equalTo(CGSize.init(width: 200, height: 44))
+            make.bottom.equalTo(paymentPasswordConfirmSpaceLabel.snp.top)
+            make.left.right.equalTo(walletNameSpaceLabel)
+            make.top.equalTo(paymentPasswordSpaceLabel.snp.bottom)
+        }
+        paymentPasswordConfirmSpaceLabel.snp.makeConstraints { (make) in
+            make.top.equalTo(paymentPasswordSpaceLabel.snp.bottom).offset(51)
+            make.left.equalTo(whiteBackgroundView).offset(17)
+            make.right.equalTo(whiteBackgroundView.snp.right).offset(-17)
+            make.height.equalTo(1)
         }
         confirmButton.snp.makeConstraints { (make) in
-            make.bottom.equalTo(self).offset(-50)
-            make.centerX.equalTo(self)
-            make.size.equalTo(CGSize.init(width: 200, height: 44))
+            make.bottom.equalTo(whiteBackgroundView.snp.bottom).offset(-56)
+            make.left.equalTo(whiteBackgroundView).offset(21)
+            make.right.equalTo(whiteBackgroundView.snp.right).offset(-21)
+            make.height.equalTo(40)
         }
     }
+    private lazy var whiteBackgroundView: UIView = {
+        let view = UIView.init()
+        view.layer.backgroundColor = UIColor.white.cgColor
+        return view
+    }()
     lazy var walletNameTextField: UITextField = {
         let textField = UITextField.init()
         textField.textAlignment = NSTextAlignment.left
-        textField.textColor = UIColor.init(hex: "D4D4D4")
+        textField.textColor = UIColor.init(hex: "3C3848")
         textField.delegate = self
-        textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_login_uid_password_textfield_placeholder"),
-                                                     attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "A0A3AF"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: adaptFont(fontSize: 15))])
+        textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_create_name_textfield_placeholder"),
+                                                     attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "9D9BA2"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: adaptFont(fontSize: 16))])
         textField.tintColor = DefaultGreenColor
         textField.tag = 10
-        textField.backgroundColor = UIColor.gray
         return textField
+    }()
+    lazy var walletNameSpaceLabel: UILabel = {
+        //#263C4E
+        let label = UILabel.init()
+        label.backgroundColor = UIColor.init(hex: "DEDFE0")
+        return label
     }()
     lazy var paymentPasswordTextField: UITextField = {
         let textField = UITextField.init()
         textField.textAlignment = NSTextAlignment.left
-        textField.textColor = UIColor.init(hex: "D4D4D4")
+        textField.textColor = UIColor.init(hex: "3C3848")
         textField.delegate = self
-        textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_login_uid_password_textfield_placeholder"),
-                                                     attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "A0A3AF"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: adaptFont(fontSize: 15))])
+        textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_create_password_textfield_placeholder"),
+                                                     attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "9D9BA2"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: adaptFont(fontSize: 16))])
         textField.isSecureTextEntry = true
         textField.tintColor = DefaultGreenColor
         textField.tag = 20
-        textField.backgroundColor = UIColor.gray
 
         return textField
+    }()
+    lazy var paymentPasswordSpaceLabel: UILabel = {
+        //#263C4E
+        let label = UILabel.init()
+        label.backgroundColor = UIColor.init(hex: "DEDFE0")
+        return label
     }()
     lazy var paymentPasswordConfirmTextField: UITextField = {
         let textField = UITextField.init()
         textField.textAlignment = NSTextAlignment.left
-        textField.textColor = UIColor.init(hex: "D4D4D4")
+        textField.textColor = UIColor.init(hex: "3C3848")
         textField.delegate = self
-        textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_login_uid_password_textfield_placeholder"),
-                                                     attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "A0A3AF"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: adaptFont(fontSize: 15))])
+        textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_create_password_confirm_textfield_placeholder"),
+                                                     attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "9D9BA2"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: adaptFont(fontSize: 16))])
         textField.isSecureTextEntry = true
         textField.tintColor = DefaultGreenColor
         textField.tag = 30
-        textField.backgroundColor = UIColor.gray
         return textField
+    }()
+    lazy var paymentPasswordConfirmSpaceLabel: UILabel = {
+        //#263C4E
+        let label = UILabel.init()
+        label.backgroundColor = UIColor.init(hex: "DEDFE0")
+        return label
     }()
     lazy var confirmButton: UIButton = {
         let button = UIButton.init(type: UIButton.ButtonType.custom)
-        button.setTitle(localLanguage(keyString: "wallet_create_button_title"), for: UIControl.State.normal)
+        button.setTitle(localLanguage(keyString: "wallet_create_confirm_button_title"), for: UIControl.State.normal)
         button.setTitleColor(UIColor.white, for: UIControl.State.normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 15), weight: UIFont.Weight.regular)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: UIFont.Weight.medium)
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
-        button.backgroundColor = UIColor.init(hex: "15C794")
-        button.layer.cornerRadius = 7
-        button.layer.masksToBounds = true
-
+        button.layer.cornerRadius = 3
+        button.layer.insertSublayer(colorGradualChange(size: CGSize.init(width: UIScreen.main.bounds.size.width - 136, height: 40)), at: 0)
+        // 定义阴影颜色
+        button.layer.shadowColor = UIColor.init(hex: "7038FD").cgColor
+        // 阴影的模糊半径
+        button.layer.shadowRadius = 3
+        // 阴影的偏移量
+        button.layer.shadowOffset = CGSize(width: 0, height: 3)
+        // 阴影的透明度，默认为0，不设置则不会显示阴影****
+        button.layer.shadowOpacity = 0.3
         return button
+    }()
+    lazy var backgroundLayer: CAGradientLayer = {
+        let gradientLayer = CAGradientLayer.init()
+        gradientLayer.frame = CGRect.init(x: 0, y: 0, width: mainWidth, height: mainHeight)
+        gradientLayer.startPoint = CGPoint.init(x: 0, y: 0)
+        gradientLayer.endPoint = CGPoint.init(x: 0, y: 1)
+        gradientLayer.locations = [0.3,1.0]
+        gradientLayer.colors = [UIColor.init(hex: "4B199F").cgColor, UIColor.init(hex: "21126B").cgColor]
+        return gradientLayer
     }()
     @objc func buttonClick(button: UIButton) {
         guard let name = walletNameTextField.text else {

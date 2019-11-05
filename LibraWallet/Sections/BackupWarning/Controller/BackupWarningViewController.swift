@@ -30,11 +30,16 @@ class BackupWarningViewController: BaseViewController {
     //子View
     private lazy var detailView : BackupWarningView = {
         let view = BackupWarningView.init()
-//        view.delegate = self
+        view.delegate = self
         return view
     }()
     deinit {
         print("BackupWarningViewController销毁了")
     }
-
+}
+extension BackupWarningViewController: BackupWarningViewDelegate {
+    func checkBackupMnemonic() {
+        let vc = BackupMnemonicController()
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
 }

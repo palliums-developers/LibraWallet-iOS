@@ -137,9 +137,23 @@ class HomeViewController: UIViewController {
 //        vc.hidesBottomBarWhenPushed = true
 //        self.navigationController?.pushViewController(vc, animated: true)
         
-        let vc = BackupWarningViewController()
-        vc.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(vc, animated: true)
+//        let vc = BackupWarningViewController()
+//        vc.hidesBottomBarWhenPushed = true
+//        self.navigationController?.pushViewController(vc, animated: true)
+//        let alert = WelcomeAlert()
+//        alert.show()
+        
+        
+//        let vc = WalletCreateViewController()
+//        vc.hidesBottomBarWhenPushed = true
+//        self.navigationController?.pushViewController(vc, animated: true)
+        let alert = BackupWarningAlert.init {
+            let vc = BackupWarningViewController()
+            vc.hidesBottomBarWhenPushed = true
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
+        alert.show()
+        
     }
     @objc func setText(){
     }

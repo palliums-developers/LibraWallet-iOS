@@ -85,7 +85,6 @@ class BackupWarningView: UIView {
             make.right.equalTo(self).offset(-69)
             make.height.equalTo(40)
         }
-        
     }
     //MARK: - 懒加载对象
     lazy var alertTitleLabel: UILabel = {

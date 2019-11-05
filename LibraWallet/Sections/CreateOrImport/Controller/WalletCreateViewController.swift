@@ -87,5 +87,7 @@ extension WalletCreateViewController: WalletCreateViewDelegate {
     }
     func importWallet() {
         
+        let vc = ImportWalletViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }

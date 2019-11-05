@@ -99,7 +99,29 @@ wallet_backup_mnemonic_warning_item_one_detail = "使用纸和笔正确抄写助
 wallet_backup_mnemonic_warning_item_two_title = "离线保管";
 wallet_backup_mnemonic_warning_item_two_detail = "请妥善保管至隔离网络的安全地方\n请勿将助记词在联网环境下分享和存储，比如邮件、相册、社交应用等";
 wallet_backup_mnemonic_warning_confirm_button_title = "开始备份";
+
 /************* 备份助记词 *******************/
 wallet_backup_mnemonic_title = "请将这些词按顺序写在纸上";
 wallet_backup_mnemonic_alert_detail = "不要截屏或复制到剪切板\n这将可能被第三方恶意软件收集\n造成资产损失";
 wallet_backup_mnemonic_confirm_button_title = "下一步";
+
+
+/************* 欢迎来到Violas弹出View *******************/
+wallet_alert_welcome_title = "欢迎来到";
+wallet_alert_welcome_detail_title = "Violas";
+wallet_alert_welcome_confirm_button_title = "马上进入";
+
+/************* 选择钱包创建方式页面 *******************/
+wallet_create_choose_type_create_button_title = "创建钱包";
+wallet_create_choose_type_import_button_title = "导入钱包";
+
+/************* 创建钱包页面 *******************/
+wallet_create_name_textfield_placeholder = "输入昵称";
+wallet_create_password_textfield_placeholder = "设置钱包密码";
+wallet_create_password_confirm_textfield_placeholder = "再次确认密码";
+wallet_create_confirm_button_title = "创建";
+
+/************* 备份提醒弹出啊页面 *******************/
+wallet_alert_backup_warning_title = "安全提醒";
+wallet_alert_backup_warning_detail_title = "您的身份助记词未备份，请务必备份助记词\n助记词可用于恢复身份下钱包资产，防止忘记密码、应用删除、手机丢失等情况导致资产损失";
+wallet_alert_backup_warning_button_title = "立即备份";

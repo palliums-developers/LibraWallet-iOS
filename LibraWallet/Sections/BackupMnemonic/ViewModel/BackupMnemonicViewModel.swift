@@ -31,6 +31,8 @@ class BackupMnemonicViewModel: NSObject {
         didSet {
             self.collectionViewManager.dataArray = dataArray
             collectionViewHeight = getCollectionViewHeight(itemsCount: dataArray?.count ?? 0)
+            self.detailView.collectionViewHeight = collectionViewHeight
+            self.detailView.collectionView.reloadData()
         }
     }
     func getCollectionViewHeight(itemsCount: Int) -> Int {
