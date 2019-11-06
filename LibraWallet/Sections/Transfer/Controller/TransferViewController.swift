@@ -43,6 +43,7 @@ class TransferViewController: BaseViewController {
     typealias successClosure = () -> Void
     var actionClosure: successClosure?
     var myContext = 0
+    var wallet: LibraWalletManager?
 }
 extension TransferViewController {
     //MARK: - KVO
@@ -117,6 +118,6 @@ extension TransferViewController: TransferViewDelegate {
         self.view.makeToastActivity(.center)
         self.dataModel.transfer(address: self.detailView.addressTextField.text!,
                                 amount: Double(self.detailView.amountTextField.text!)!,
-                                rootAddress: LibraWalletManager.shared.walletRootAddress!)
+                                rootAddress: (self.wallet?.walletRootAddress)!)
     }
 }

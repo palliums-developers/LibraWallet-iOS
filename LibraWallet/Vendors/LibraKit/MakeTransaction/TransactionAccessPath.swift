@@ -40,7 +40,7 @@ struct TransactionAccessPath {
         var result = Data()
         // 添加地址
         let addressData = Data.init(hex: self.address)
-        result += getLengthData(length: addressData.bytes.count, appendBytesCount: 4)
+//        result += getLengthData(length: addressData.bytes.count, appendBytesCount: 4)
 
         result += addressData
         // 添加路径

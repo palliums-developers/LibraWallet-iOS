@@ -7,9 +7,11 @@
 //
 
 import UIKit
-
+protocol CheckBackupViewDelegate: NSObjectProtocol {
+    func confirmBackup()
+}
 class CheckBackupView: UIView {
-    weak var delegate: BackupMnemonicViewDelegate?
+    weak var delegate: CheckBackupViewDelegate?
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.init(hex: "F7F7F9")
@@ -47,12 +49,12 @@ class CheckBackupView: UIView {
             make.right.equalTo(self.snp.right).offset(-15)
             make.height.equalTo(self.collectionViewHeight ?? 238).priority(250)
         }
-//        confirmButton.snp.makeConstraints { (make) in
-//            make.top.equalTo(selectCollectionView.snp.bottom).offset(20)
-//            make.left.equalTo(self).offset(69)
-//            make.right.equalTo(self).offset(-69)
-//            make.height.equalTo(40)
-//        }
+        confirmButton.snp.makeConstraints { (make) in
+            make.top.equalTo(selectCollectionView.snp.bottom).offset(20)
+            make.left.equalTo(self).offset(69)
+            make.right.equalTo(self).offset(-69)
+            make.height.equalTo(40)
+        }
         
     }
     //MARK: - 懒加载对象
@@ -61,7 +63,7 @@ class CheckBackupView: UIView {
         label.textAlignment = NSTextAlignment.center
         label.textColor = UIColor.init(hex: "3B3847")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "wallet_backup_mnemonic_title")
+        label.text = localLanguage(keyString: "wallet_backup_check_mnemonic_title")
         return label
     }()
     //
@@ -87,7 +89,7 @@ class CheckBackupView: UIView {
     }()
     lazy var confirmButton: UIButton = {
         let button = UIButton.init(type: UIButton.ButtonType.custom)
-        button.setTitle(localLanguage(keyString: "wallet_backup_mnemonic_confirm_button_title"), for: UIControl.State.normal)
+        button.setTitle(localLanguage(keyString: "wallet_backup_check_mnemonic_confirm_button_title"), for: UIControl.State.normal)
         button.setTitleColor(UIColor.white, for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
@@ -116,6 +118,6 @@ class CheckBackupView: UIView {
         }
     }
     @objc func buttonClick(button: UIButton) {
-        self.delegate?.checkBackupMnemonic()
+        self.delegate?.confirmBackup()
     }
 }

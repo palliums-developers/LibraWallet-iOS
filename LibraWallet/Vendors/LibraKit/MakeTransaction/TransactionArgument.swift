@@ -48,7 +48,7 @@ struct TransactionArgument {
         case .Address:
             let data = Data.init(hex: self.value)
             
-            result += getLengthData(length: data.bytes.count, appendBytesCount: 4)
+//            result += getLengthData(length: data.bytes.count, appendBytesCount: 4)
 
             result += data
         case .String:

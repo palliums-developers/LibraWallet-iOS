@@ -319,17 +319,6 @@ class TransferView: UIView {
         button.layer.insertSublayer(colorGradualChange(size: CGSize.init(width: width, height: 40)), at: 0)
         button.layer.cornerRadius = 5
         button.layer.masksToBounds = true
-//        button.layer.cornerRadius = 7
-//        //        button.layer.masksToBounds = true
-//        button.tag = 30
-//        // 定义阴影颜色
-//        button.layer.shadowColor = DefaultGreenColor.cgColor
-//        // 阴影的模糊半径
-//        button.layer.shadowRadius = 8
-//        // 阴影的偏移量
-//        button.layer.shadowOffset = CGSize(width: 0, height: 8)
-//        // 阴影的透明度，默认为0，不设置则不会显示阴影****
-//        button.layer.shadowOpacity = 0.2
         return button
     }()
     @objc func buttonClick(button: UIButton) {

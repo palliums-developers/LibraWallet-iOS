@@ -105,6 +105,9 @@ wallet_backup_mnemonic_title = "请将这些词按顺序写在纸上";
 wallet_backup_mnemonic_alert_detail = "不要截屏或复制到剪切板\n这将可能被第三方恶意软件收集\n造成资产损失";
 wallet_backup_mnemonic_confirm_button_title = "下一步";
 
+/************* 校验助记词 *******************/
+wallet_backup_check_mnemonic_title = "请将这些词按顺序写在纸上";
+wallet_backup_check_mnemonic_confirm_button_title = "完成";
 
 /************* 欢迎来到Violas弹出View *******************/
 wallet_alert_welcome_title = "欢迎来到";
@@ -125,3 +128,12 @@ wallet_create_confirm_button_title = "创建";
 wallet_alert_backup_warning_title = "安全提醒";
 wallet_alert_backup_warning_detail_title = "您的身份助记词未备份，请务必备份助记词\n助记词可用于恢复身份下钱包资产，防止忘记密码、应用删除、手机丢失等情况导致资产损失";
 wallet_alert_backup_warning_button_title = "立即备份";
+
+/************* 市场 *******************/
+wallet_market_transfer_amount_textfield_placeholder = "转出数量";
+wallet_market_receive_amount_textfield_placeholder = "收到数量";
+wallet_market_receive_address_title = "收款地址";
+wallet_market_receive_address_textfield_placeholder = "请输入收款账户";
+wallet_market_exchange_fee_title = "汇率";
+wallet_market_exchange_fee_describe_title = "1BTC = 1Violas";
+wallet_market_exchange_confirm_title = "闪电兑换";

@@ -16,12 +16,12 @@ class BaseTabBarViewController: UITabBarController {
         UITabBar.appearance().isTranslucent = false
         // Do any additional setup after loading the view.
         addAllChildViewController()
-        self.selectedIndex = 0
+        self.selectedIndex = 1
     }
     private func addAllChildViewController(){
         let home = HomeViewController.init()
         
-        let market = HomeViewController.init()
+        let market = MarketViewController.init()
         
         let mine = MineViewController.init()
                 

@@ -48,7 +48,7 @@ struct LibraPrivateKey {
         // 追加签名
         signData += Data.init(bytes: sign, count: sign.count)
         
-        signedTransation.signedTxn = transactionRaw + publicKeyData + signData
+        signedTransation.txnBytes = transactionRaw + publicKeyData + signData
 
         return signedTransation
     }

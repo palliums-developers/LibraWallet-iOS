@@ -58,8 +58,8 @@ class TransferModel: NSObject {
                 let aaa = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
                 // 组装请求
                 var mission = AdmissionControl_SubmitTransactionRequest.init()
-                mission.signedTxn = aaa
-                print(aaa.signedTxn.toHexString())
+                mission.transaction = aaa
+                print(aaa.txnBytes.toHexString())
                 // 发送请求
                 let response = try client.submitTransaction(mission)
                 if response.acStatus.code == AdmissionControl_AdmissionControlStatusCode.accepted {

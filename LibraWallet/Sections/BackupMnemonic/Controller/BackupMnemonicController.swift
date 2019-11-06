@@ -14,7 +14,7 @@ class BackupMnemonicController: BaseViewController {
         // 初始化本地配置
         self.setBaseControlllerConfig()
         // 加载数据
-        self.mnemonicArray = ["legal","winner","thank","year","wave","sausage","worth","useful","legal","winner","thank","year","wave","sausage","worth","useful","legal","will"]
+        self.mnemonicArray = ["net", "dice", "divide", "amount", "stamp", "flock", "brave", "nuclear", "fox", "aim", "father", "apology"]
         // 加载子View
         self.view.addSubview(self.viewModel.detailView)
     }
@@ -49,6 +49,7 @@ class BackupMnemonicController: BaseViewController {
 extension BackupMnemonicController: BackupMnemonicViewDelegate {
     func checkBackupMnemonic() {
         let vc = CheckBackupViewController()
+        vc.mnemonicArray = ["net", "dice", "divide", "amount", "stamp", "flock", "brave", "nuclear", "fox", "aim", "father", "apology"]
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }

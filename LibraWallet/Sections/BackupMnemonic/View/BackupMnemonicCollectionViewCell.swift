@@ -27,7 +27,7 @@ class BackupMnemonicCollectionViewCell: UICollectionViewCell {
         }
     }
     //MARK: - 懒加载对象
-    private lazy var mnemonicLabel: UILabel = {
+    lazy var mnemonicLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.center
         label.textColor = UIColor.init(hex: "3C3848")
@@ -56,4 +56,10 @@ class BackupMnemonicCollectionViewCell: UICollectionViewCell {
             }
         }
     }
+    func setNormalCell() {
+        mnemonicLabel.text = ""
+        mnemonicLabel.backgroundColor = UIColor.clear
+        mnemonicLabel.layer.borderColor = UIColor.init(hex: "9B9DA2").cgColor
+    }
+    var fromClickCellIndexPath: IndexPath?
 }

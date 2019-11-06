@@ -40,7 +40,7 @@ struct RawTransaction {
         var result = Data()
         // senderAddressCount
         let senderAddressData = Data.init(hex: self.senderAddress)
-        result += getLengthData(length: senderAddressData.bytes.count, appendBytesCount: 4)
+//        result += getLengthData(length: senderAddressData.bytes.count, appendBytesCount: 4)
         // senderAddress
         result += senderAddressData
         // sequenceNumber

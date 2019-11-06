@@ -13,8 +13,6 @@ class CheckBackupViewController: BaseViewController {
         super.viewDidLoad()
         // 初始化本地配置
         self.setBaseControlllerConfig()
-        // 加载数据
-        self.mnemonicArray = ["legal","winner","thank","year","wave","sausage","worth","useful","legal","winner","thank","year","wave","sausage","worth","useful","legal","will"]
         // 加载子View
         self.view.addSubview(self.viewModel.detailView)
     }
@@ -36,7 +34,7 @@ class CheckBackupViewController: BaseViewController {
     var actionClosure: nextActionClosure?
     lazy var viewModel: CheckBackupViewModel = {
         let viewModel = CheckBackupViewModel.init()
-//        viewModel.detailView.delegate = self
+        viewModel.detailView.delegate = self
         return viewModel
     }()
     var mnemonicArray: [String]? {
@@ -44,5 +42,14 @@ class CheckBackupViewController: BaseViewController {
             self.viewModel.dataArray = mnemonicArray
         }
     }
-    
+}
+extension CheckBackupViewController: CheckBackupViewDelegate {
+    func confirmBackup() {
+        do {
+            try self.viewModel.checkIsAllValid()
+        } catch {
+            self.view.makeToast(error.localizedDescription,
+                                position: .center)
+        }
+    }
 }

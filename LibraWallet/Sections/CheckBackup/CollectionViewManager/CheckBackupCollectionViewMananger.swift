@@ -18,7 +18,7 @@ class CheckBackupCollectionViewMananger: NSObject {
 extension CheckBackupCollectionViewMananger: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-//        self.delegate?.collectionViewDidSelectRowAtIndexPath(collectionView: collectionView, indexPath: indexPath)
+        self.delegate?.collectionViewDidSelectRowAtIndexPath(collectionView: collectionView, indexPath: indexPath)
     }
 }
 extension CheckBackupCollectionViewMananger: UICollectionViewDataSource {
@@ -28,7 +28,7 @@ extension CheckBackupCollectionViewMananger: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView.tag == 10 {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CheckMnemonicCell", for: indexPath) as! BackupMnemonicCollectionViewCell
-            if let data = dataArray, data.isEmpty == false {
+            if let data = checkDataArray, data.isEmpty == false {
                 cell.checkBackupModel = data[indexPath.row]
             }
             return cell

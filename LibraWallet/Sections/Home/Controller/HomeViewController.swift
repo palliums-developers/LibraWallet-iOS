@@ -126,12 +126,12 @@ class HomeViewController: UIViewController {
         self.navigationController?.pushViewController(vc, animated: true)
     }
     @objc func scanToTransfer() {
-//        let vc = ScanViewController()
-//        vc.actionClosure = { address in
-//
-//        }
-//        vc.hidesBottomBarWhenPushed = true
-//        self.navigationController?.pushViewController(vc, animated: true)
+        let vc = ScanViewController()
+        vc.actionClosure = { address in
+
+        }
+        vc.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(vc, animated: true)
         
 //        let vc = BackupMnemonicController()
 //        vc.hidesBottomBarWhenPushed = true
@@ -147,13 +147,16 @@ class HomeViewController: UIViewController {
 //        let vc = WalletCreateViewController()
 //        vc.hidesBottomBarWhenPushed = true
 //        self.navigationController?.pushViewController(vc, animated: true)
-        let alert = BackupWarningAlert.init {
-            let vc = BackupWarningViewController()
-            vc.hidesBottomBarWhenPushed = true
-            self.navigationController?.pushViewController(vc, animated: true)
-        }
-        alert.show()
-        
+//        let alert = BackupWarningAlert.init {
+//            let vc = BackupWarningViewController()
+//            vc.hidesBottomBarWhenPushed = true
+//            self.navigationController?.pushViewController(vc, animated: true)
+//        }
+//        alert.show()
+//
+//        let vc = CheckBackupViewController()
+//        vc.hidesBottomBarWhenPushed = true
+//        self.navigationController?.pushViewController(vc, animated: true)
     }
     @objc func setText(){
     }
@@ -190,6 +193,7 @@ extension HomeViewController: HomeHeaderViewDelegate {
         vc.actionClosure = {
 //            self.dataModel.getLocalUserInfo()
         }
+        vc.wallet = self.viewModel.detailView.headerView.model
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
