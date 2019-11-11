@@ -72,7 +72,12 @@ wallet_address_add_type_title = "类型";
 wallet_address_add_type_button_title = "请选择";
 
 /************* 首页 *******************/
-
+wallet_home_wallet_type_last_title = " 钱包";
+wallet_home_current_balance_title = "当前资产";
+wallet_home_transfer_button_title = "转账";
+wallet_home_receive_button_title = "收款";
+wallet_home_last_transaction_date_title = "交易记录";
+wallet_home_wallet_asset_title = "资产";
 
 /************* 收款 *******************/
 wallet_receive_qrcode_title = "收款地址";
@@ -137,3 +142,10 @@ wallet_market_receive_address_textfield_placeholder = "请输入收款账户";
 wallet_market_exchange_fee_title = "汇率";
 wallet_market_exchange_fee_describe_title = "1BTC = 1Violas";
 wallet_market_exchange_confirm_title = "闪电兑换";
+
+/************* 交易记录 *******************/
+wallet_transaction_date_title = "日期";
+wallet_transaction_amount_title = "数量";
+wallet_transaction_transfer_title = "转账";
+wallet_transaction_receive_title = "收款";
+wallet_transaction_check_detail_on_chain = "浏览器查询";

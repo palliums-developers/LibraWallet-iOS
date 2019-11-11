@@ -22,7 +22,7 @@ target 'LibraWallet' do
   pod 'IQKeyboardManagerSwift'
   pod 'BiometricAuthentication'
   pod 'RSKPlaceholderTextView'
-#  pod 'BitcoinKit'
+  pod 'BitcoinKit'
   # Pods for LibraWallet
 
   target 'LibraWalletTests' do

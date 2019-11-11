@@ -25,7 +25,9 @@ struct LibraPrivateKey {
         // 待签名交易
         let transactionRaw = transaction.serialize()
         // 交易第一部分(盐sha3计算结果)
-        var sha3Data = Data.init(hex: signTransactionSalt)
+//        var sha3Data = Data.init(hex: signTransactionSalt)
+        var sha3Data = Data.init(Array<UInt8>(hex: signTransactionSalt))
+        
         // 交易第二部分(追加带签名交易)
         sha3Data.append(transactionRaw.bytes, count: transactionRaw.bytes.count)
         

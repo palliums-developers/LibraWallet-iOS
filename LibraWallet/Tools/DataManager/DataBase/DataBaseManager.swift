@@ -99,8 +99,7 @@ struct DataBaseManager {
                     Expression<Bool>("wallet_current_use") <- model.walletCurrentUse ?? true,
                     Expression<Bool>("wallet_biometric_lock") <- model.walletBiometricLock ?? false,
                     Expression<Int>("wallet_identity") <- model.walletIdentity ?? 999,
-                    Expression<Int>("wallet_type") <- model.walletType ?? 999)
-                
+                    Expression<Int>("wallet_type") <- model.walletType!.value)
                 let rowid = try tempDB.run(insert)
                 print(rowid)
                 return true
@@ -161,6 +160,14 @@ struct DataBaseManager {
                     let walletIdentity = wallet[Expression<Int>("wallet_identity")]
                     // 钱包类型(0=Libra、1=Violas、2=BTC)
                     let walletType = wallet[Expression<Int>("wallet_type")]
+                    let type: WalletType
+                    if walletType == 0 {
+                        type = .Libra
+                    } else if walletType == 1 {
+                        type = .Violas
+                    } else {
+                        type = .BTC
+                    }
                     
                     let wallet = LibraWalletManager.init(walletID: walletID,
                                                          walletBalance: walletBalance,
@@ -171,7 +178,7 @@ struct DataBaseManager {
                                                          walletCurrentUse: walletCurrentUse,
                                                          walletBiometricLock: walletBiometricLock,
                                                          walletIdentity: walletIdentity,
-                                                         walletType: walletType)
+                                                         walletType: type)
                     if walletIdentity == 0 {
                         originWallets.append(wallet)
                     } else {
@@ -217,6 +224,13 @@ struct DataBaseManager {
                     // 钱包类型(0=Libra、1=Violas、2=BTC)
                     let walletType = wallet[Expression<Int>("wallet_type")]
                     
+                    var tempWalletType = WalletType.Libra
+                    if walletType == 1 {
+                        tempWalletType = WalletType.Violas
+                    } else if walletType == 2 {
+                        tempWalletType = WalletType.BTC
+                    }
+                    
                     let wallet = LibraWalletManager.init(walletID: walletID,
                                                          walletBalance: walletBalance,
                                                          walletAddress: walletAddress,
@@ -226,7 +240,7 @@ struct DataBaseManager {
                                                          walletCurrentUse: walletCurrentUse,
                                                          walletBiometricLock: walletBiometricLock,
                                                          walletIdentity: walletIdentity,
-                                                         walletType: walletType)
+                                                         walletType: tempWalletType)
                     return wallet
                 }
                 throw LibraWalletError.error("获取当前使用钱包检索失败")

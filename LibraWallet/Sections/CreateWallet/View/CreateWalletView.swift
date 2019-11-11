@@ -165,6 +165,10 @@ class CreateWalletView: UIView {
         gradientLayer.colors = [UIColor.init(hex: "4B199F").cgColor, UIColor.init(hex: "21126B").cgColor]
         return gradientLayer
     }()
+    var toastView: ToastView? {
+        let toast = ToastView.init()
+        return toast
+    }
     @objc func buttonClick(button: UIButton) {
         guard let name = walletNameTextField.text else {
             // 拆包失败
@@ -209,6 +213,9 @@ class CreateWalletView: UIView {
             return
         }
         #warning("密码规则检查")
+        self.walletNameTextField.resignFirstResponder()
+        self.paymentPasswordTextField.resignFirstResponder()
+        self.paymentPasswordConfirmTextField.resignFirstResponder()
         self.delegate?.comfirmCreateWallet(walletName: name, password: password)
     }
 }

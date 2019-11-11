@@ -1,26 +1,27 @@
 //
-//  WalletManagerTableViewCell.swift
+//  WalletListTableViewCell.swift
 //  LibraWallet
 //
-//  Created by palliums on 2019/10/24.
+//  Created by palliums on 2019/11/1.
 //  Copyright © 2019 palliums. All rights reserved.
 //
 
 import UIKit
 
-class WalletManagerTableViewCell: UITableViewCell {
+class WalletListTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        contentView.backgroundColor = UIColor.init(hex: "F7F7F9")
         contentView.addSubview(itemBackgroundImageView)
         itemBackgroundImageView.addSubview(nameLabel)
         itemBackgroundImageView.addSubview(addressLabel)
-        itemBackgroundImageView.addSubview(detailIndicatorImageView)
+        itemBackgroundImageView.addSubview(selectIndicatorImageView)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
-        print("SettingTableViewCell销毁了")
+        print("WalletListTableViewCell销毁了")
     }
     //pragma MARK: 布局
     override func layoutSubviews() {
@@ -32,21 +33,19 @@ class WalletManagerTableViewCell: UITableViewCell {
             make.bottom.equalTo(contentView.snp.bottom).offset(-4)
         }
         nameLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(itemBackgroundImageView).offset(15)
-            make.left.equalTo(itemBackgroundImageView).offset(14)
+            make.top.equalTo(itemBackgroundImageView).offset(12)
+            make.left.equalTo(itemBackgroundImageView).offset(10)
         }
         addressLabel.snp.makeConstraints { (make) in
-            make.bottom.equalTo(itemBackgroundImageView).offset(-18)
-            make.left.equalTo(itemBackgroundImageView).offset(14)
-            make.right.equalTo(itemBackgroundImageView.snp.right).offset(-9)
-
+            make.bottom.equalTo(itemBackgroundImageView).offset(-11)
+            make.left.equalTo(itemBackgroundImageView).offset(10)
+            make.right.equalTo(itemBackgroundImageView.snp.right).offset(-7)
         }
-        detailIndicatorImageView.snp.makeConstraints { (make) in
-            make.right.equalTo(itemBackgroundImageView).offset(-11)
-            make.size.equalTo(CGSize.init(width: 17, height: 3))
+        selectIndicatorImageView.snp.makeConstraints { (make) in
             make.top.equalTo(itemBackgroundImageView).offset(15)
+            make.right.equalTo(itemBackgroundImageView.snp.right).offset(-8)
+            make.size.equalTo(CGSize.init(width: 10, height: 10))
         }
-
     }
     //MARK: - 懒加载对象
     lazy var itemBackgroundImageView: UIImageView = {
@@ -58,7 +57,7 @@ class WalletManagerTableViewCell: UITableViewCell {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.white
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 20), weight: UIFont.Weight.semibold)
+        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: UIFont.Weight.semibold)
         label.text = "---"
         return label
     }()
@@ -66,37 +65,22 @@ class WalletManagerTableViewCell: UITableViewCell {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.center
         label.textColor = UIColor.white
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 15), weight: UIFont.Weight.regular)
+        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
         label.text = "---"
         label.lineBreakMode = .byTruncatingMiddle
         return label
     }()
-    private lazy var detailIndicatorImageView : UIImageView = {
+    private lazy var selectIndicatorImageView : UIImageView = {
         let imageView = UIImageView.init()
-        imageView.image = UIImage.init(named: "wallet_detail_indicator")
-        imageView.isUserInteractionEnabled = true
+        imageView.layer.backgroundColor = UIColor.init(hex: "F74E4E").cgColor
+        imageView.layer.cornerRadius = 5
+        imageView.layer.borderColor = UIColor.white.cgColor
+        imageView.layer.borderWidth = 1
+        imageView.layer.masksToBounds = true
+        imageView.alpha = 0
         return imageView
     }()
     //MARK: - 设置数据
-//    var model: Transaction? {
-//        didSet {
-//            guard let tempModel = model else {
-//                return
-//            }
-//            var amountState = ""
-//            var amountColor = DefaultGreenColor
-//            if tempModel.event == "received" {
-//                nameLabel.text = localLanguage(keyString: "wallet_transactions_receive_title")
-//                amountState = "+"
-//            } else {
-//                amountState = "-"
-//                amountColor = UIColor.init(hex: "FF4C4C")
-//                nameLabel.text = localLanguage(keyString: "wallet_transactions_transfer_title")
-//
-//            }
-//            dateLabel.text = tempModel.date
-//        }
-//    }
     var model: LibraWalletManager? {
         didSet {
             if model?.walletType == .Libra {
@@ -108,8 +92,7 @@ class WalletManagerTableViewCell: UITableViewCell {
             }
             nameLabel.text = model?.walletName
             addressLabel.text = model?.walletAddress
-            
-            
+            selectIndicatorImageView.alpha = model?.walletCurrentUse == true ? 1:0
         }
     }
 }

@@ -12,7 +12,13 @@ protocol WalletTransactionsTableViewManagerDelegate: NSObjectProtocol {
 }
 class WalletTransactionsTableViewManager: NSObject {
     weak var delegate: WalletTransactionsTableViewManagerDelegate?
-    var dataModel: [AddressModel]?
+    /// BTC
+    var btcTransactions: [BTCTransaction]?
+    /// Violas
+    var violasTransactions: [transaction]?
+    /// Libra
+    var libraTransactions: [transaction]?
+    var transactionType: WalletType?
     deinit {
         print("WalletTransactionsTableViewManager销毁了")
     }
@@ -24,8 +30,8 @@ extension WalletTransactionsTableViewManager: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
         
-        let data = self.dataModel![indexPath.row]
-        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, address: data.address ?? "")
+//        let data = self.dataModel![indexPath.row]
+//        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, address: data.address ?? "")
     }
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let view = UIView.init()
@@ -49,19 +55,54 @@ extension WalletTransactionsTableViewManager: UITableViewDataSource {
         return 1
     }
     func numberOfSections(in tableView: UITableView) -> Int {
-        return dataModel?.count ?? 10
+        switch transactionType {
+        case .Libra:
+            return libraTransactions?.count ?? 0
+        case .Violas:
+            return violasTransactions?.count ?? 0
+        case .BTC:
+            return btcTransactions?.count ?? 0
+        default:
+            return 0
+        }
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let identifier = "CellNormal"
         if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) {
-            if let data = dataModel, data.isEmpty == false {
-//                (cell as! WalletTransactionsTableViewCell).dataModel = data[indexPath.row]
+            switch transactionType {
+            case .Libra:
+                if let data = libraTransactions, data.isEmpty == false {
+                    (cell as! WalletTransactionsTableViewCell).libraModel = data[indexPath.section]
+                }
+            case .Violas:
+                if let data = violasTransactions, data.isEmpty == false {
+                    (cell as! WalletTransactionsTableViewCell).violasModel = data[indexPath.section]
+                }
+            case .BTC:
+                if let data = btcTransactions, data.isEmpty == false {
+                    (cell as! WalletTransactionsTableViewCell).btcModel = data[indexPath.section]
+                }
+            default:
+                break
             }
             return cell
         } else {
             let cell = WalletTransactionsTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
-            if let data = dataModel, data.isEmpty == false {
-//                cell.dataModel = data[indexPath.row]
+            switch transactionType {
+            case .Libra:
+                if let data = libraTransactions, data.isEmpty == false {
+                    cell.libraModel = data[indexPath.section]
+                }
+            case .Violas:
+                if let data = violasTransactions, data.isEmpty == false {
+                    cell.violasModel = data[indexPath.section]
+                }
+            case .BTC:
+                if let data = btcTransactions, data.isEmpty == false {
+                    cell.btcModel = data[indexPath.section]
+                }
+            default:
+                break
             }
             return cell
         }

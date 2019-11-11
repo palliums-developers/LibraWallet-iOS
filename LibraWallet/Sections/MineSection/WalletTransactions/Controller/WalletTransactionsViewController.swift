@@ -18,7 +18,7 @@ class WalletTransactionsViewController: BaseViewController {
         // 加载子View
         self.view.addSubview(self.viewModel.detailView)
         //设置空数据页面
-//        setEmptyView()
+        setEmptyView()
         // 初始化KVO
         self.viewModel.initKVO()
         //设置默认页面（无数据、无网络）
@@ -49,12 +49,39 @@ class WalletTransactionsViewController: BaseViewController {
         if (lastState == .Loading) {return}
         startLoading ()
         self.viewModel.detailView.makeToastActivity(.center)
-//        viewModel.dataModel.getWithdrawAddressHistory(type: "", requestStatus: 0)
+        switch transactionType {
+        case .Libra:
+            viewModel.dataModel.getLibraTransactionHistory(address: "", page: 0, pageSize: 10, requestStatus: 0)
+        case .Violas:
+            viewModel.dataModel.getViolasTransactionHistory(address: "", page: 0, pageSize: 10, requestStatus: 0)
+        case .BTC:
+            viewModel.dataModel.getBTCTransactionHistory(address: "mvgsVUUG62L5KMsFx9TCQuMkC2tRb38fFX", page: 1, pageSize: 10, requestStatus: 0)
+        default:
+            break
+        }
+        
     }
     override func hasContent() -> Bool {
-        if let addresses = self.viewModel.tableViewManager.dataModel, addresses.isEmpty == false {
-            return true
-        } else {
+        switch transactionType {
+        case .Libra:
+            if let addresses = self.viewModel.tableViewManager.libraTransactions, addresses.isEmpty == false {
+                return true
+            } else {
+                return false
+            }
+        case .Violas:
+            if let addresses = self.viewModel.tableViewManager.violasTransactions, addresses.isEmpty == false {
+                return true
+            } else {
+                return false
+            }
+        case .BTC:
+            if let addresses = self.viewModel.tableViewManager.btcTransactions, addresses.isEmpty == false {
+                return true
+            } else {
+                return false
+            }
+        default:
             return false
         }
     }
@@ -68,6 +95,11 @@ class WalletTransactionsViewController: BaseViewController {
         viewModel.tableViewManager.delegate = self
         return viewModel
     }()
+    var transactionType: WalletType? {
+        didSet {
+            self.viewModel.tableViewManager.transactionType = transactionType
+        }
+    }
 }
 extension WalletTransactionsViewController: WalletTransactionsTableViewManagerDelegate {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, address: String) {

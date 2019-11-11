@@ -22,10 +22,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        let navi = UINavigationController.init(rootViewController: home)
 //        window?.rootViewController = navi
 //        window?.backgroundColor = UIColor.white
-        let tabbar = BaseTabBarViewController.init()
-        window?.rootViewController = tabbar
-        window?.makeKeyAndVisible()
-        
+        if getIdentityWalletState() == true {
+            let tabbar = BaseTabBarViewController.init()
+            window?.rootViewController = tabbar
+            window?.makeKeyAndVisible()
+        } else {
+            let vc = WalletCreateViewController()
+            let navi = UINavigationController.init(rootViewController: vc)
+
+            window?.rootViewController = navi
+            window?.makeKeyAndVisible()
+        }
         DataBaseManager.DBManager.creatLibraDB()
         DataBaseManager.DBManager.createWalletTable()
         DataBaseManager.DBManager.createTransferAddressListTable()

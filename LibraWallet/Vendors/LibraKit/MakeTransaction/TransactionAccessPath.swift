@@ -39,12 +39,15 @@ struct TransactionAccessPath {
     func serialize() -> Data {
         var result = Data()
         // 添加地址
-        let addressData = Data.init(hex: self.address)
+//        let addressData = Data.init(hex: )
+        let addressData = Data.init(Array<UInt8>(hex: self.address))
+        
 //        result += getLengthData(length: addressData.bytes.count, appendBytesCount: 4)
 
         result += addressData
         // 添加路径
-        let pathData = Data.init(hex: self.path)
+//        let pathData = Data.init(hex: self.path)
+        let pathData =  Data.init(Array<UInt8>(hex: self.path))
         result += getLengthData(length: pathData.bytes.count, appendBytesCount: 4)
 
         result += pathData

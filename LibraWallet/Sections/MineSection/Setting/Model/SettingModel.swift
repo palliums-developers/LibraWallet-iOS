@@ -15,8 +15,6 @@ class SettingModel: NSObject {
                 ["name":localLanguage(keyString: "服务协议"),
                  "icon":""]],
                 [["name":localLanguage(keyString: "关于我们"),
-                 "icon":""],
-                ["name":localLanguage(keyString: "加入我们"),
                  "icon":""]],
                 [["name":localLanguage(keyString: "帮助与反馈"),
                  "icon":""]]]

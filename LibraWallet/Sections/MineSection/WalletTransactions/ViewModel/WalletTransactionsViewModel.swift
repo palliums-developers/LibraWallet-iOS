@@ -48,17 +48,59 @@ class WalletTransactionsViewModel: NSObject {
             return
         }
         let type = jsonData.value(forKey: "type") as! String
-        if type == "TransferAddressOrigin" {
-            if let tempData = jsonData.value(forKey: "data") as? [AddressModel] {
-                self.tableViewManager.dataModel = tempData
+        if type == "BTCTransactionHistoryOrigin" {
+            guard let tempData = jsonData.value(forKey: "data") as? [BTCTransaction] else {
+                return
+            }
+            self.tableViewManager.btcTransactions = tempData
+            self.detailView.tableView.reloadData()
+        } else if type == "BTCTransactionHistoryMore" {
+            guard let tempData = jsonData.value(forKey: "data") as? [BTCTransaction] else {
+                return
+            }
+            if let oldData = self.tableViewManager.btcTransactions, oldData.isEmpty == false {
+                let tempArray = NSMutableArray.init(array: oldData)
+                var insertIndexPath = [IndexPath]()
+
+                for index in 0..<tempData.count {
+                    let indexPath = IndexPath.init(row: 0, section: oldData.count + index)
+                    insertIndexPath.append(indexPath)
+                    
+                }
+                tempArray.addObjects(from: tempData)
+                self.tableViewManager.btcTransactions = tempArray as? [BTCTransaction]
+                self.detailView.tableView.beginUpdates()
+                for index in 0..<tempData.count {
+                    self.detailView.tableView.insertSections(IndexSet.init(integer: oldData.count + index), with: UITableView.RowAnimation.bottom)
+                }
+                self.detailView.tableView.endUpdates()
+            } else {
+                self.tableViewManager.btcTransactions = tempData
                 self.detailView.tableView.reloadData()
             }
+            self.detailView.tableView.mj_footer.endRefreshing()
+        } else if type == "ViolasTransactionHistoryOrigin" {
+            guard let tempData = jsonData.value(forKey: "data") as? [transaction] else {
+                return
+            }
+            self.tableViewManager.violasTransactions = tempData
+            self.detailView.tableView.reloadData()
+        } else if type == "ViolasTransactionHistoryMore" {
+                   
+        } else if type == "LibraTransactionHistoryOrigin" {
+            guard let tempData = jsonData.value(forKey: "data") as? [transaction] else {
+               return
+            }
+            self.tableViewManager.libraTransactions = tempData
+            self.detailView.tableView.reloadData()
+        } else if type == "LibraTransactionHistoryMore" {
+                   
         }
         self.detailView.hideToastActivity()
         self.detailView.tableView.mj_header.endRefreshing()
 //        self.endLoading()
     }
-    var dataOffset: Int = 0
+    var dataOffset: Int = 1
     //网络请求、数据模型
     lazy var dataModel: WalletTransactionsModel = {
         let model = WalletTransactionsModel.init()
@@ -80,15 +122,37 @@ class WalletTransactionsViewModel: NSObject {
         return view
     }()
     @objc func refreshReceive() {
-        dataOffset = 0
+        dataOffset = 1
         detailView.tableView.mj_footer.resetNoMoreData()
         detailView.tableView.mj_header.beginRefreshing()
-//        self.dataModel.getWithdrawAddressHistory(uid: WalletData.wallet.walletUID!, offset: 0, requestStatus: 0)
-        self.dataModel.getData(requestStatus: 0)
+        switch self.tableViewManager.transactionType {
+        case .Libra:
+//            dataModel.getBTCTransactionHistory(address: "mvgsVUUG62L5KMsFx9TCQuMkC2tRb38fFX", page: 1, pageSize: 10, requestStatus: 0)
+            break
+        case .Violas:
+//            dataModel.getBTCTransactionHistory(address: "mvgsVUUG62L5KMsFx9TCQuMkC2tRb38fFX", page: 1, pageSize: 10, requestStatus: 0)
+            break
+        case .BTC:
+            dataModel.getBTCTransactionHistory(address: "mvgsVUUG62L5KMsFx9TCQuMkC2tRb38fFX", page: 1, pageSize: 10, requestStatus: 0)
+        default:
+            break
+        }
     }
     @objc func getMoreReceive() {
-        dataOffset += 10
-//        detailView.tableView.mj_footer.beginRefreshing()
-//        self.dataModel.getWithdrawAddressHistory(uid: WalletData.wallet.walletUID!, offset: dataOffset, requestStatus: 1)
+        dataOffset += 1
+        detailView.tableView.mj_footer.beginRefreshing()
+        switch self.tableViewManager.transactionType {
+        case .Libra:
+//            dataModel.getBTCTransactionHistory(address: "mvgsVUUG62L5KMsFx9TCQuMkC2tRb38fFX", page: 1, pageSize: 10, requestStatus: 0)
+            break
+        case .Violas:
+//            dataModel.getBTCTransactionHistory(address: "mvgsVUUG62L5KMsFx9TCQuMkC2tRb38fFX", page: 1, pageSize: 10, requestStatus: 0)
+            break
+        case .BTC:
+            dataModel.getBTCTransactionHistory(address: "mvgsVUUG62L5KMsFx9TCQuMkC2tRb38fFX", page: dataOffset, pageSize: 10, requestStatus: 1)
+        default:
+            break
+        }
+        
     }
 }

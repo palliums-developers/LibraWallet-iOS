@@ -122,6 +122,7 @@ enum ControllerAction {
     case delete
     case add
 }
+
 /***************************************/
 /// 获取登录状态
 ///
@@ -161,7 +162,7 @@ enum ControllerAction {
 //    return token
 //}
 
-/***************************************/
+///************* 设置欢迎页面 *******************/
 /// 设置欢迎页面
 ///
 /// - Parameter show: 展示状态
@@ -171,7 +172,13 @@ func setWelcomeState(show: Bool) {
 func getWelcomeState() -> Bool {
     return UserDefaults.standard.bool(forKey: "Welcome")
 }
-
+///************* 获取身份钱包 *******************/
+func setIdentityWalletState(show: Bool) {
+    UserDefaults.standard.set(show, forKey: "IdentityWallet")
+}
+func getIdentityWalletState() -> Bool {
+    return UserDefaults.standard.bool(forKey: "IdentityWallet")
+}
 /***************************************/
 //func helpCenterURL() -> String {
 //    let current = Localize.currentLanguage()

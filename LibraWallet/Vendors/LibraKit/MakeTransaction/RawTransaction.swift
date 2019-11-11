@@ -39,7 +39,8 @@ struct RawTransaction {
     func serialize() -> Data {
         var result = Data()
         // senderAddressCount
-        let senderAddressData = Data.init(hex: self.senderAddress)
+//        let senderAddressData = Data.init(hex: self.senderAddress)
+        let senderAddressData = Data.init(Array<UInt8>(hex: self.senderAddress))
 //        result += getLengthData(length: senderAddressData.bytes.count, appendBytesCount: 4)
         // senderAddress
         result += senderAddressData

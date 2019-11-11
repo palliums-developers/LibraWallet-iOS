@@ -59,3 +59,12 @@ func checkMnenoicInvalid(mnemonicArray: [String]) -> Bool {
     }
     return true
 }
+func timestampToDateString(timestamp: Int, dateFormat: String) -> String {
+    
+    let format = DateFormatter.init()
+    //"yyyy-MM-dd"
+    format.dateFormat = dateFormat
+    let date = Date.init(timeIntervalSince1970: Double(timestamp))
+    let str = format.string(from: date)
+    return str
+}

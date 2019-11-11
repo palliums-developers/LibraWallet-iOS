@@ -87,7 +87,7 @@ class LibraWalletCoreTests: XCTestCase {
             let seed = try LibraMnemonic.seed(mnemonic: mnemonic)
 
             let libraWallet = try LibraWallet.init(seed: seed)
-            LibraWalletManager.shared.initWallet(walletID: 0, walletBalance: 0, walletAddress: "", walletRootAddress: "", walletCreateTime: 0, walletName: "", walletCurrentUse: true, walletBiometricLock: false, walletIdentity: 0, walletType: 0)
+            LibraWalletManager.shared.initWallet(walletID: 0, walletBalance: 0, walletAddress: "", walletRootAddress: "", walletCreateTime: 0, walletName: "", walletCurrentUse: true, walletBiometricLock: false, walletIdentity: 0, walletType: .Libra)
             
             try LibraWalletManager.shared.saveMnemonicToKeychain(mnemonic: mnemonic, walletRootAddress: libraWallet.publicKey.toAddress())
 

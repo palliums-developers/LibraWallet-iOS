@@ -78,7 +78,7 @@ class WalletTransactionsTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "808080")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.semibold)
-        label.text = "日期"
+        label.text = localLanguage(keyString: "wallet_transaction_date_title")
         return label
     }()
     lazy var dateLabel: UILabel = {
@@ -86,7 +86,7 @@ class WalletTransactionsTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "000000")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
-        label.text = "18.05.23 15:42"
+        label.text = "---"
         return label
     }()
     lazy var amountTitleLabel: UILabel = {
@@ -94,7 +94,7 @@ class WalletTransactionsTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "808080")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.semibold)
-        label.text = "数量"
+        label.text = localLanguage(keyString: "wallet_transaction_amount_title")
         return label
     }()
     lazy var amountLabel: UILabel = {
@@ -102,7 +102,7 @@ class WalletTransactionsTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "000000")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
-        label.text = "1.906321 BTC"
+        label.text = "---"
         return label
     }()
     lazy var typeLabel: UILabel = {
@@ -118,7 +118,7 @@ class WalletTransactionsTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "000000")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
-        label.text = "BTC"
+        label.text = "---"
         return label
     }()
     lazy var addressLabel: UILabel = {
@@ -127,7 +127,7 @@ class WalletTransactionsTableViewCell: UITableViewCell {
         label.textColor = UIColor.init(hex: "808080")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
         label.lineBreakMode = .byTruncatingMiddle
-        label.text = "mkYUsJ8N1AidNUySQGCpwswQUaoyL2Mu8L"
+        label.text = "---"
         return label
     }()
     lazy var searchOnChainLabel: UILabel = {
@@ -135,12 +135,47 @@ class WalletTransactionsTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.center
         label.textColor = UIColor.init(hex: "7A7AEE")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = "浏览器查询"
+        label.text = localLanguage(keyString: "wallet_transaction_check_detail_on_chain")
         return label
     }()
     //MARK: - 设置数据
-    var model: [String: String]? {
+    var btcModel: BTCTransaction? {
         didSet {
+            guard let model = btcModel else {
+                return
+            }
+            coinLabel.text = "BTC"
+            dateLabel.text = timestampToDateString(timestamp: model.block_time ?? 0, dateFormat: "yyyy-MM-dd HH:mm:ss")
+            amountLabel.text = "\(model.transaction_value ?? 0)"
+            addressLabel.text = model.inputs?.first?.prev_addresses?.first
+            typeLabel.text = "\(model.transaction_type ?? 0)"
+        }
+    }
+    var violasModel: transaction? {
+        didSet {
+            guard let model = violasModel else {
+                return
+            }
+            coinLabel.text = "Violas"
+            dateLabel.text = timestampToDateString(timestamp: model.expiration_time ?? 0, dateFormat: "yyyy-MM-dd HH:mm:ss")
+            amountLabel.text = "\(model.value ?? 0)"
+            addressLabel.text = model.address
+//            typeLabel.text = "\(model.transaction_type ?? 0)"
+        }
+    }
+    var libraModel: transaction? {
+        didSet {
+            guard let model = libraModel else {
+                return
+            }
+            coinLabel.text = "Libra"
+            dateLabel.text = timestampToDateString(timestamp: model.expiration_time ?? 0, dateFormat: "yyyy-MM-dd HH:mm:ss")
+            amountLabel.text = "\(model.value ?? 0)"
+            addressLabel.text = model.address
+            
+            typeLabel.text = localLanguage(keyString: "wallet_transaction_transfer_title")//"\(model.transaction_type ?? 0)"
         }
     }
 }
+//wallet_transaction_transfer_title = "转账";
+//wallet_transaction_receive_title = "收款";

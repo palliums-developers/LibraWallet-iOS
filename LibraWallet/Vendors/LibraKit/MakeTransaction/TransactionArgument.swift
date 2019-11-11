@@ -46,7 +46,8 @@ struct TransactionArgument {
             result += getLengthData(length: Int(self.value)!, appendBytesCount: 8)
 
         case .Address:
-            let data = Data.init(hex: self.value)
+//            let data = Data.init(hex: )
+            let data = Data.init(Array<UInt8>(hex: self.value))
             
 //            result += getLengthData(length: data.bytes.count, appendBytesCount: 4)
 
@@ -58,8 +59,9 @@ struct TransactionArgument {
 
             result += data
         case .Bytes:
-            let data = Data.init(hex: self.value)
-
+//            let data = Data.init(hex: self.value)
+            let data = Data.init(Array<UInt8>(hex: self.value))
+            
             result += getLengthData(length: data.bytes.count, appendBytesCount: 4)
             
             result += data
