@@ -82,12 +82,12 @@ extension WalletCreateViewController: WalletCreateViewDelegate {
 //            print(error)
 //        }
 //        self.dismiss(animated: true, completion: nil)
-        let vc = CreateWalletViewController.init()
+        let vc = CreateIdentityWalletViewController.init()
         self.navigationController?.pushViewController(vc, animated: true)
     }
     func importWallet() {
         
-        let vc = ImportWalletViewController()
+        let vc = ImportIdentityWalletViewController()
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }

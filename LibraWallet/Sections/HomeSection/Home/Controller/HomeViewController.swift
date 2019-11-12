@@ -111,15 +111,20 @@ class HomeViewController: UIViewController {
         vc.actionClosure = { (action, wallet) in
             if action == .update {
                 //更新管理页面
-                self.viewModel.detailView.headerView.model = wallet
+                if self.viewModel.detailView.headerView.model?.walletRootAddress != wallet.walletRootAddress {
+                    self.viewModel.detailView.headerView.model = wallet
+                }
                 // 需要更新
-                #warning("需要添加获取地址最后交易、余额")
+                self.viewModel.detailView.makeToastActivity(.center)
                 if wallet.walletType == .Libra {
                     self.changeWalletButton.setTitle(localLanguage(keyString: "Libra 钱包"), for: UIControl.State.normal)
+                    self.viewModel.dataModel.tempGetLibraBalance(walletID: wallet.walletID!, address: wallet.walletAddress ?? "")
                 } else if wallet.walletType == .Violas {
                     self.changeWalletButton.setTitle(localLanguage(keyString: "Violas 钱包"), for: UIControl.State.normal)
+                    self.viewModel.dataModel.getViolasBalance(walletID: wallet.walletID ?? 0, address: wallet.walletAddress ?? "")
                 } else {
                     self.changeWalletButton.setTitle(localLanguage(keyString: "BTC 钱包"), for: UIControl.State.normal)
+                    self.viewModel.dataModel.getBTCBalance(walletID: wallet.walletID ?? 0, address: wallet.walletAddress ?? "")
                 }
             }
         }
@@ -132,33 +137,6 @@ class HomeViewController: UIViewController {
         }
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
-        
-//        let vc = BackupMnemonicController()
-//        vc.hidesBottomBarWhenPushed = true
-//        self.navigationController?.pushViewController(vc, animated: true)
-        
-//        let vc = BackupWarningViewController()
-//        vc.hidesBottomBarWhenPushed = true
-//        self.navigationController?.pushViewController(vc, animated: true)
-//        let alert = WelcomeAlert()
-//        alert.show()
-        
-        
-//        let vc = WalletCreateViewController()
-//        vc.hidesBottomBarWhenPushed = true
-//        self.navigationController?.pushViewController(vc, animated: true)
-//        let alert = BackupWarningAlert.init {
-//            let vc = BackupWarningViewController()
-//            vc.hidesBottomBarWhenPushed = true
-//            self.navigationController?.pushViewController(vc, animated: true)
-//        }
-//        alert.show()
-//
-//        let vc = CheckBackupViewController()
-//        vc.hidesBottomBarWhenPushed = true
-//        self.navigationController?.pushViewController(vc, animated: true)
-//        self.viewModel.dataModel.getBTCBalance(address: "mvgsVUUG62L5KMsFx9TCQuMkC2tRb38fFX")
-
     }
     @objc func setText(){
     }
@@ -184,7 +162,6 @@ extension HomeViewController: HomeHeaderViewDelegate {
     }
     
     func addCoinToWallet() {
-        
         let vc = AddAssetViewController()
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
@@ -204,5 +181,4 @@ extension HomeViewController: HomeHeaderViewDelegate {
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
-    
 }

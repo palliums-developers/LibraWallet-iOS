@@ -1,5 +1,5 @@
 //
-//  CreateWalletModel.swift
+//  CreateIdentityWalletModel.swift
 //  LibraWallet
 //
 //  Created by palliums on 2019/10/18.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CreateWalletModel: NSObject {
+class CreateIdentityWalletModel: NSObject {
     @objc var dataDic: NSMutableDictionary = [:]
     
     func createWallet(walletName: String, password: String){
@@ -120,6 +120,6 @@ class CreateWalletModel: NSObject {
         }
     }
     deinit {
-        print("CreateWalletModel销毁了")
+        print("CreateIdentityWalletModel销毁了")
     }
 }

@@ -43,17 +43,17 @@ extension mainRequest:TargetType {
         case .GetTransactionHistory(_, _):
             return URL(string:"https://libraservice2.kulap.io")!
         case .GetBTCBalance(_), .GetBTCTransactionHistory(_, _, _):
-            return URL(string:"https://testnet-chain.api.btc.com/v3")!
+            return URL(string:"https://tchain.api.btc.com/v3")!
         case .GetLibraAccountBalance(_),
              .GetLibraAccountSequenceNumber(_),
              .GetLibraAccountTransactionList(_),
              .SendLibraTransaction(_):
-            return URL(string:"/1.0")!
+            return URL(string:"http://52.27.228.84:4000/1.0")!
         case .GetViolasAccountBalance(_),
              .GetViolasAccountSequenceNumber(_),
              .GetViolasAccountTransactionList(_),
              .SendViolasTransaction(_):
-        return URL(string:"/1.0")!
+        return URL(string:"http://52.27.228.84:4000/1.0")!
         default:
             return URL(string:"http://faucet.testnet.libra.org/")!
         }
@@ -84,7 +84,7 @@ extension mainRequest:TargetType {
         case .GetViolasAccountTransactionList(_):
             return "/violas/transaction"
         case .SendViolasTransaction(_):
-            return "violas/transaction"
+            return "/violas/transaction"
         }
     }
     var method: Moya.Method {

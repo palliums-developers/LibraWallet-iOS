@@ -48,38 +48,41 @@ class HomeViewModel: NSObject {
                 print(error.localizedDescription)
                 // 数据为空
             }
-//            self.view.hideToastActivity()
+            self.detailView.hideToastActivity()
             return
         }
         let type = jsonData.value(forKey: "type") as! String
         
-        if type == "LoadLocalWallet" {
+        if type == "LoadCurrentUseWallet" {
             // 加载本地数据
             if let tempData = jsonData.value(forKey: "data") as? LibraWalletManager {
-                self.detailView.hideToastActivity()
                 self.detailView.model = tempData
                 self.detailView.tableView.reloadData()
             }
-            
-        } else if type == "UpdateLocalWallet" {
-            // 刷新本地数据
-//            self.detailView.model = LibraWalletManager.shared
-//            self.view.hideToastActivity()
-//            self.view.makeToast("刷新成功", position: .center)
-
+        } else if type == "UpdateBTCBalance" {
+            if let tempData = jsonData.value(forKey: "data") as? BalanceBTCModel {
+                self.detailView.headerView.updateBTCBalanceModel = tempData
+                self.detailView.tableView.reloadData()
+            }
+        } else if type == "UpdateLibraBalance" {
+            if let tempData = jsonData.value(forKey: "data") as? BalanceLibraModel {
+                self.detailView.headerView.updateBalanceModel = tempData
+                self.detailView.tableView.reloadData()
+            }
+        } else if type == "UpdateViolasBalance" {
+            if let tempData = jsonData.value(forKey: "data") as? BalanceLibraModel {
+                self.detailView.headerView.updateBalanceModel = tempData
+                self.detailView.tableView.reloadData()
+            }
         } else {
-            // 获取测试Coin
-//            self.detailView.model = WalletData.wallet
-//            self.view.hideToastActivity()
-//            self.view.makeToast("获取测试币成功", position: .center)
-//            self.dataModel.getLocalUserInfo()
+            
         }
-//        self.view.hideToastActivity()
+        self.detailView.hideToastActivity()
     }
     var dataOffset: Int = 0
     //网络请求、数据模型
-    lazy var dataModel: MainModel = {
-        let model = MainModel.init()
+    lazy var dataModel: HomeModel = {
+        let model = HomeModel.init()
         return model
     }()
     //tableView管理类

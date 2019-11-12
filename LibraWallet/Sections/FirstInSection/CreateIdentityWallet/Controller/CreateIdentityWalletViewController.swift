@@ -1,5 +1,5 @@
 //
-//  CreateWalletViewController.swift
+//  CreateIdentityWalletViewController.swift
 //  LibraWallet
 //
 //  Created by palliums on 2019/10/18.
@@ -8,8 +8,7 @@
 
 import UIKit
 import Toast_Swift
-class CreateWalletViewController: BaseViewController {
-
+class CreateIdentityWalletViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // 初始化本地配置
@@ -24,26 +23,27 @@ class CreateWalletViewController: BaseViewController {
             make.top.left.right.bottom.equalTo(self.view)
         }
     }
-    private lazy var detailView : CreateWalletView = {
-        let view = CreateWalletView.init()
+    private lazy var detailView : CreateIdentityWalletView = {
+        let view = CreateIdentityWalletView.init()
         view.delegate = self
         return view
     }()
-    private lazy var dataModel: CreateWalletModel = {
-        let model = CreateWalletModel.init()
+    private lazy var dataModel: CreateIdentityWalletModel = {
+        let model = CreateIdentityWalletModel.init()
         return model
     }()
     var myContext = 0
-
+    deinit {
+        print("CreateIdentityWalletViewController销毁了")
+    }
 }
-extension CreateWalletViewController: CreateWalletViewDelegate {
+extension CreateIdentityWalletViewController: CreateIdentityWalletViewDelegate {
     func comfirmCreateWallet(walletName: String, password: String) {
         self.detailView.toastView?.show()
         dataModel.createWallet(walletName: walletName, password: password)
     }
 }
-extension CreateWalletViewController {
-    //MARK: - KVO
+extension CreateIdentityWalletViewController {
     func initKVO() {
         dataModel.addObserver(self, forKeyPath: "dataDic", options: NSKeyValueObservingOptions.new, context: &myContext)
     }

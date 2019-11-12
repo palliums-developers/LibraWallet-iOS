@@ -178,7 +178,7 @@ class HomeHeaderView: UIView {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "9D9CA3")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: .regular)
-        label.text = "Vtoken"
+        label.text = "---"
         return label
     }()
     lazy var walletNameLabel: UILabel = {
@@ -351,6 +351,50 @@ class HomeHeaderView: UIView {
             assetLabel.text = "\(model?.walletBalance ?? 0)"
             walletNameLabel.text = model?.walletName
             walletAddressLabel.text = model?.walletAddress
+            // 更新本地数据
+            switch model?.walletType {
+            case .Libra:
+                assetUnitLabel.text = "libra"
+                break
+            case .Violas:
+                assetUnitLabel.text = "VToken"
+                break
+            case .BTC:
+                assetUnitLabel.text = "BTC"
+                break
+            default:
+                break
+            }
+        }
+    }
+    var updateBalanceModel: BalanceLibraModel? {
+        didSet {
+            if updateBalanceModel?.address == self.walletAddressLabel.text {
+                assetLabel.text = "\(updateBalanceModel?.balance ?? 0)"
+                self.model?.changeWalletBalance(banlance: updateBalanceModel?.balance ?? 0)
+                switch model?.walletType {
+                case .Libra:
+                    assetUnitLabel.text = "libra"
+                    break
+                case .Violas:
+                    assetUnitLabel.text = "VToken"
+                    break
+                case .BTC:
+                    assetUnitLabel.text = "BTC"
+                    break
+                default:
+                    break
+                }
+            }
+        }
+    }
+    var updateBTCBalanceModel: BalanceBTCModel? {
+        didSet {
+            if updateBTCBalanceModel?.address == self.walletAddressLabel.text {
+                assetLabel.text = "\(Double((updateBTCBalanceModel?.balance ?? 0) / 100000000)))"
+                self.model?.changeWalletBalance(banlance: updateBTCBalanceModel?.balance ?? 0)
+                assetUnitLabel.text = "BTC"
+            }
         }
     }
 }

@@ -7,11 +7,11 @@
 //
 
 import UIKit
-protocol CreateWalletViewDelegate: NSObjectProtocol {
+protocol CreateIdentityWalletViewDelegate: NSObjectProtocol {
     func comfirmCreateWallet(walletName: String, password: String)
 }
-class CreateWalletView: UIView {
-    weak var delegate: CreateWalletViewDelegate?
+class CreateIdentityWalletView: UIView {
+    weak var delegate: CreateIdentityWalletViewDelegate?
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.layer.insertSublayer(backgroundLayer, at: 0)
@@ -28,7 +28,7 @@ class CreateWalletView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
-        print("CreateWalletView销毁了")
+        print("CreateIdentityWalletView销毁了")
     }
     //MARK: - 布局
     override func layoutSubviews() {
@@ -96,7 +96,6 @@ class CreateWalletView: UIView {
         return textField
     }()
     lazy var walletNameSpaceLabel: UILabel = {
-        //#263C4E
         let label = UILabel.init()
         label.backgroundColor = UIColor.init(hex: "DEDFE0")
         return label
@@ -115,7 +114,6 @@ class CreateWalletView: UIView {
         return textField
     }()
     lazy var paymentPasswordSpaceLabel: UILabel = {
-        //#263C4E
         let label = UILabel.init()
         label.backgroundColor = UIColor.init(hex: "DEDFE0")
         return label
@@ -133,7 +131,6 @@ class CreateWalletView: UIView {
         return textField
     }()
     lazy var paymentPasswordConfirmSpaceLabel: UILabel = {
-        //#263C4E
         let label = UILabel.init()
         label.backgroundColor = UIColor.init(hex: "DEDFE0")
         return label
@@ -219,7 +216,7 @@ class CreateWalletView: UIView {
         self.delegate?.comfirmCreateWallet(walletName: name, password: password)
     }
 }
-extension CreateWalletView: UITextFieldDelegate {
+extension CreateIdentityWalletView: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         #warning("规则待定")
         guard textField.tag == 10 else {
