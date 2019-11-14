@@ -7,11 +7,13 @@
 //
 
 import UIKit
-
+protocol AddAssetTableViewManagerDelegate: NSObjectProtocol {
+    func switchButtonChange(model: ViolasTokenModel, state: Bool)
+}
 class AddAssetTableViewManager: NSObject {
-    weak var delegate: MineTableViewManagerDelegate?
-    var dataModel: [[String: String]]?
-    var selectRow: Int?
+    weak var delegate: AddAssetTableViewManagerDelegate?
+    var dataModel: [ViolasTokenModel]?
+    var headerData: LibraWalletManager?
     deinit {
         print("AddAssetTableViewManager销毁了")
     }
@@ -23,7 +25,7 @@ extension AddAssetTableViewManager: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
                 
-        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath)
+//        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath)
     }
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let identifier = "Header"
@@ -42,23 +44,30 @@ extension AddAssetTableViewManager: UITableViewDelegate {
 }
 extension AddAssetTableViewManager: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return dataModel?.count ?? 10
+        return dataModel?.count ?? 0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let identifier = "CellNormal"
-        if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? AddAssetViewTableViewCell {
             if let data = dataModel, data.isEmpty == false {
-//                (cell as! AddAssetViewTableViewCell).model = data[indexPath.row]
+                (cell ).model = data[indexPath.row]
             }
             cell.selectionStyle = .none
+            cell.delegate = self
             return cell
         } else {
             let cell = AddAssetViewTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
             if let data = dataModel, data.isEmpty == false {
-//                cell.model = data[indexPath.row]
+                cell.model = data[indexPath.row]
             }
             cell.selectionStyle = .none
+            cell.delegate = self
             return cell
         }
+    }
+}
+extension AddAssetTableViewManager: AddAssetViewTableViewCellDelegate {
+    func switchButtonChange(model: ViolasTokenModel, state: Bool) {
+        self.delegate?.switchButtonChange(model: model, state: state)
     }
 }

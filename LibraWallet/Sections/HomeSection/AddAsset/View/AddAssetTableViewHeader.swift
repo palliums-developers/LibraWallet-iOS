@@ -76,4 +76,10 @@ class AddAssetTableViewHeader: UITableViewHeaderFooterView {
         label.text = "---"
         return label
     }()
+    var model: LibraWalletManager? {
+        didSet {
+            nameLabel.text = model?.walletName
+            detailLabel.text = "---"
+        }
+    }
 }

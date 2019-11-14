@@ -23,6 +23,7 @@ target 'LibraWallet' do
   pod 'BiometricAuthentication'
   pod 'RSKPlaceholderTextView'
   pod 'BitcoinKit'
+  pod 'Kingfisher'
   # Pods for LibraWallet
 
   target 'LibraWalletTests' do

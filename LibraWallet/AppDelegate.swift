@@ -36,6 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         DataBaseManager.DBManager.creatLibraDB()
         DataBaseManager.DBManager.createWalletTable()
         DataBaseManager.DBManager.createTransferAddressListTable()
+        DataBaseManager.DBManager.createViolasTokenTable()
         IQKeyboardManager.shared.enable = true
 
         return true

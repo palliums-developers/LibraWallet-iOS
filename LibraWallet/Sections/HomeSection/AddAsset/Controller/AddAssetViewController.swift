@@ -17,8 +17,7 @@ class AddAssetViewController: BaseViewController {
         // 加载子View
         self.view.addSubview(self.viewModel.detailView)
         // 加载数据
-//        self.viewModel.getLocalData()
-        
+        self.viewModel.initKVO(walletID: (model?.walletID)!)
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -40,11 +39,13 @@ class AddAssetViewController: BaseViewController {
         }
     }
     deinit {
-        print("MineViewController销毁了")
+        print("AddAssetViewController销毁了")
     }
     lazy var viewModel: AddAssetViewModel = {
         let viewModel = AddAssetViewModel.init()
 //        viewModel.tableViewManager.delegate = self
+        viewModel.tableViewManager.headerData = self.model
         return viewModel
     }()
+    var model: LibraWalletManager?
 }

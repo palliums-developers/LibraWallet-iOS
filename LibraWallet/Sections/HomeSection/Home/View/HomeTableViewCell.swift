@@ -65,9 +65,9 @@ class HomeTableViewCell: UITableViewCell {
         return label
     }()
     //MARK: - 设置数据
-    var model: String? {
+    var model: ViolasTokenModel? {
         didSet {
-            
+            coinNameLabel.text = model?.name
         }
     }
 }

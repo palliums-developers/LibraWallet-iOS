@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>item1</key>
+	<dict>
+		<key>name</key>
+		<string>XToken</string>
+		<key>describe</key>
+		<string>x</string>
+		<key>icon</key>
+		<string>https://timgsa.baidu.com/timg?image&amp;quality=80&amp;size=b9999_10000&amp;sec=1573584953780&amp;di=24ced41d04b8f843f9b481282560324c&amp;imgtype=0&amp;src=http%3A%2F%2Fbbsimg8.cnmo-img.com.cn%2Fthumb%2F11_700x0%2F10491%2F10490318_201702_20_140938qek5kazh01x75ltn.png</string>
+		<key>contact</key>
+		<string>f053480d94d09a00f77fec9975463bfd109ebeb0915d62822702f453cc87c809</string>
+		<key>enable</key>
+		<false/>
+	</dict>
+	<key>item1 - 2</key>
+	<dict>
+		<key>name</key>
+		<string>ZToken</string>
+		<key>describe</key>
+		<string>z</string>
+		<key>icon</key>
+		<string>https://timgsa.baidu.com/timg?image&amp;quality=80&amp;size=b9999_10000&amp;sec=1573584953780&amp;di=24ced41d04b8f843f9b481282560324c&amp;imgtype=0&amp;src=http%3A%2F%2Fbbsimg8.cnmo-img.com.cn%2Fthumb%2F11_700x0%2F10491%2F10490318_201702_20_140938qek5kazh01x75ltn.png</string>
+		<key>contact</key>
+		<string>f053480d94d09a00f77fec9975463bfd109ebeb0915d62822702f453cc87c809</string>
+		<key>enable</key>
+		<false/>
+	</dict>
+	<key>item1 - 3</key>
+	<dict>
+		<key>name</key>
+		<string>YToken</string>
+		<key>describe</key>
+		<string>y</string>
+		<key>icon</key>
+		<string>https://timgsa.baidu.com/timg?image&amp;quality=80&amp;size=b9999_10000&amp;sec=1573584953780&amp;di=24ced41d04b8f843f9b481282560324c&amp;imgtype=0&amp;src=http%3A%2F%2Fbbsimg8.cnmo-img.com.cn%2Fthumb%2F11_700x0%2F10491%2F10490318_201702_20_140938qek5kazh01x75ltn.png</string>
+		<key>contact</key>
+		<string>f053480d94d09a00f77fec9975463bfd109ebeb0915d62822702f453cc87c809</string>
+		<key>enable</key>
+		<false/>
+	</dict>
+</dict>
+</plist>

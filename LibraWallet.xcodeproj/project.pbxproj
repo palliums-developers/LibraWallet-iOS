@@ -193,6 +193,7 @@
 		9DC8778D237958EB006378C3 /* LibraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC8778C237958EB006378C3 /* LibraManager.swift */; };
 		9DC8778F23796884006378C3 /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC8778E23796884006378C3 /* ToastView.swift */; };
 		9DC87791237A49A9006378C3 /* ImportIdentityWalletModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC87790237A49A9006378C3 /* ImportIdentityWalletModel.swift */; };
+		9DC87794237B0F16006378C3 /* ViolasToken.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9DC87793237B0F16006378C3 /* ViolasToken.plist */; };
 		9DC901E7232628A40097FD85 /* RawTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC901E6232628A40097FD85 /* RawTransaction.swift */; };
 		9DC901E923262CB80097FD85 /* TransactionArgument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC901E823262CB80097FD85 /* TransactionArgument.swift */; };
 		9DC901EF23274E510097FD85 /* TransactionProgram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC901EE23274E510097FD85 /* TransactionProgram.swift */; };
@@ -437,6 +438,7 @@
 		9DC8778C237958EB006378C3 /* LibraManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraManager.swift; sourceTree = "<group>"; };
 		9DC8778E23796884006378C3 /* ToastView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
 		9DC87790237A49A9006378C3 /* ImportIdentityWalletModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportIdentityWalletModel.swift; sourceTree = "<group>"; };
+		9DC87793237B0F16006378C3 /* ViolasToken.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ViolasToken.plist; sourceTree = "<group>"; };
 		9DC901E6232628A40097FD85 /* RawTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawTransaction.swift; sourceTree = "<group>"; };
 		9DC901E823262CB80097FD85 /* TransactionArgument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionArgument.swift; sourceTree = "<group>"; };
 		9DC901EE23274E510097FD85 /* TransactionProgram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionProgram.swift; sourceTree = "<group>"; };
@@ -600,9 +602,9 @@
 		9D5B4E66236BCB4000F4D99C /* AddAsset */ = {
 			isa = PBXGroup;
 			children = (
+				9D5B4E69236BCB8200F4D99C /* Controller */,
 				9D5B4E6B236BCB9700F4D99C /* TableViewManager */,
 				9D5B4E6A236BCB8F00F4D99C /* ViewModel */,
-				9D5B4E69236BCB8200F4D99C /* Controller */,
 				9D5B4E68236BCB7B00F4D99C /* Model */,
 				9D5B4E67236BCB7600F4D99C /* View */,
 			);
@@ -746,6 +748,7 @@
 			children = (
 				9DA8E2AA2317ABC600E28D07 /* LaunchScreen.storyboard */,
 				9D712442232F7662009DED52 /* Assets.xcassets */,
+				9DC87793237B0F16006378C3 /* ViolasToken.plist */,
 			);
 			path = Resource;
 			sourceTree = "<group>";
@@ -2295,6 +2298,7 @@
 			files = (
 				9DA8E2AC2317ABC600E28D07 /* LaunchScreen.storyboard in Resources */,
 				9D7124342329EA1C009DED52 /* Localizable.strings in Resources */,
+				9DC87794237B0F16006378C3 /* ViolasToken.plist in Resources */,
 				9D712443232F7662009DED52 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

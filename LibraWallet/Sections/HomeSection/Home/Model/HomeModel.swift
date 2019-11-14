@@ -78,6 +78,7 @@ class HomeModel: NSObject {
                 tempGetLibraBalance(walletID: walletID, address: address)
                 break
             case .Violas:
+                getEnableViolasToken(walletID: walletID)
                 getViolasBalance(walletID: walletID, address: address)
                 break
             case .BTC:
@@ -222,6 +223,15 @@ class HomeModel: NSObject {
             }
         }
         self.requests.append(request)
+    }
+    func getEnableViolasToken(walletID: Int64) {
+        do {
+            let wallet = try DataBaseManager.DBManager.getViolasTokens(walletID: walletID)
+            let data = setKVOData(type: "LoadEnableViolasTokenList", data: wallet)
+            self.setValue(data, forKey: "dataDic")
+        } catch {
+            
+        }
     }
     deinit {
         requests.forEach { cancellable in

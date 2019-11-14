@@ -7,8 +7,12 @@
 //
 
 import UIKit
-
+import Kingfisher
+protocol AddAssetViewTableViewCellDelegate: NSObjectProtocol {
+    func switchButtonChange(model: ViolasTokenModel, state: Bool)
+}
 class AddAssetViewTableViewCell: UITableViewCell {
+    weak var delegate: AddAssetViewTableViewCellDelegate?
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(contentBackgroundView)
@@ -61,7 +65,6 @@ class AddAssetViewTableViewCell: UITableViewCell {
         let imageView = UIImageView.init()
         imageView.layer.cornerRadius = 19
         imageView.layer.masksToBounds = true
-        imageView.backgroundColor = UIColor.red
        return imageView
    }()
     lazy var nameLabel: UILabel = {
@@ -81,100 +84,27 @@ class AddAssetViewTableViewCell: UITableViewCell {
         return label
     }()
     lazy var switchButton: UISwitch = {
-        //#263C4E
         let button = UISwitch.init()
         button.onTintColor = UIColor.init(hex: "4730A7")
-        
-//        if WalletData.wallet.walletBiometricLock == true {
-//            button.setOn(true, animated: true)
-//        } else {
-//            button.setOn(false, animated: true)
-//        }
         button.addTarget(self, action: #selector(valueChange(button:)), for: UIControl.Event.valueChanged)
         return button
     }()
     @objc func valueChange(button: UISwitch) {
-            print(button.state)
-//            var str = localLanguage(keyString: "wallet_biometric_alert_face_id_describe")
-//            if BioMetricAuthenticator.shared.touchIDAvailable() {
-//                str = localLanguage(keyString: "wallet_biometric_alert_fingerprint_describe")
-//            }
-//            BioMetricAuthenticator.authenticateWithBioMetrics(reason: str) { (result) in
-//                switch result {
-//                case .success( _):
-//    //                button.setOn(button.isOn, animated: true)
-//    //                let str = button.isOn == true ? "1":"0"
-//    //                setBiometricCheckState(state: str)
-//                    let result = DataBaseManager.BDManager.updateWalletBiometricLockState(uid: WalletData.wallet.walletUID!, state: button.isOn)
-//
-//                    guard result == true else {
-//                        button.setOn(!button.isOn, animated: true)
-//                        return
-//                    }
-//                    WalletData.wallet.changeWalletBiometricLock(state: button.isOn)
-//                    print("success")
-//                case .failure(let error):
-//                    //还原状态
-//                    button.setOn(!button.isOn, animated: true)
-//
-//    //                let str = button.isOn == true ? "1":"0"
-//    //                setBiometricCheckState(state: str)
-//                    switch error {
-//
-//                    // device does not support biometric (face id or touch id) authentication
-//                    case .biometryNotAvailable:
-//                        print("biometryNotAvailable")
-//                    // No biometry enrolled in this device, ask user to register fingerprint or face
-//                    case .biometryNotEnrolled:
-//                        //                    self.showGotoSettingsAlert(message: error.message())
-//                        print("biometryNotEnrolled")
-//
-//                    // show alternatives on fallback button clicked
-//                    case .fallback:
-//                        //                    self.txtUsername.becomeFirstResponder() // enter username password manually
-//                        print("fallback")
-//                        // Biometry is locked out now, because there were too many failed attempts.
-//                    // Need to enter device passcode to unlock.
-//                    case .biometryLockedout:
-//                        //                    self.showPasscodeAuthentication(message: error.message())
-//                        print("biometryLockedout")
-//                    // do nothing on canceled by system or user
-//                    case .canceledBySystem, .canceledByUser:
-//                        print("cancel")
-//                        break
-//
-//                    // show error for any other reason
-//                    default:
-//                        print(error.localizedDescription)
-//                    }
-//                }
-//
-//            }
+        print(button.isOn)
+        guard let tempModel = self.model else {
+            return
         }
+        self.delegate?.switchButtonChange(model: tempModel, state: button.isOn)
+    }
     //MARK: - 设置数据
-//    var model: Transaction? {
-//        didSet {
-//            guard let tempModel = model else {
-//                return
-//            }
-//            var amountState = ""
-//            var amountColor = DefaultGreenColor
-//            if tempModel.event == "received" {
-//                nameLabel.text = localLanguage(keyString: "wallet_transactions_receive_title")
-//                amountState = "+"
-//            } else {
-//                amountState = "-"
-//                amountColor = UIColor.init(hex: "FF4C4C")
-//                nameLabel.text = localLanguage(keyString: "wallet_transactions_transfer_title")
-//
-//            }
-//            dateLabel.text = tempModel.date
-//        }
-//    }
-    var model: [String: String]? {
+    var model: ViolasTokenModel? {
         didSet {
-            self.nameLabel.text = model!["name"]
-            iconImageView.image = UIImage.init(named: model!["icon"]!)
+            nameLabel.text = model?.name
+            detailLabel.text = model?.description
+            
+            let url = URL(string: model?.icon ?? "")
+            iconImageView.kf.setImage(with: url, placeholder: UIImage.init(named: "default_placeholder"))
+            switchButton.setOn(model?.enable ?? false, animated: false)
         }
     }
 }

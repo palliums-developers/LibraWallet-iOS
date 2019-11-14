@@ -36,6 +36,8 @@ enum mainRequest {
     case GetViolasAccountTransactionList(String, Int, Int)
     /// 发送Violas交易
     case SendViolasTransaction(String)
+    /// 获取代币
+    case GetViolasTokenList
 }
 extension mainRequest:TargetType {
     var baseURL: URL {
@@ -52,9 +54,10 @@ extension mainRequest:TargetType {
         case .GetViolasAccountBalance(_),
              .GetViolasAccountSequenceNumber(_),
              .GetViolasAccountTransactionList(_),
-             .SendViolasTransaction(_):
+             .SendViolasTransaction(_),
+             .GetViolasTokenList:
         return URL(string:"http://52.27.228.84:4000/1.0")!
-        default:
+        case .GetTestCoin(_, _):
             return URL(string:"http://faucet.testnet.libra.org/")!
         }
     }
@@ -85,6 +88,8 @@ extension mainRequest:TargetType {
             return "/violas/transaction"
         case .SendViolasTransaction(_):
             return "/violas/transaction"
+        case .GetViolasTokenList:
+            return "/violas/currency"
         }
     }
     var method: Moya.Method {
@@ -101,7 +106,8 @@ extension mainRequest:TargetType {
              .GetLibraAccountTransactionList(_),
              .GetViolasAccountBalance(_),
              .GetViolasAccountSequenceNumber(_),
-             .GetViolasAccountTransactionList(_):
+             .GetViolasAccountTransactionList(_),
+             .GetViolasTokenList:
             return .get
         
         }
@@ -166,6 +172,8 @@ extension mainRequest:TargetType {
         case .SendViolasTransaction(let signature):
             return .requestParameters(parameters: ["signedtxn": signature],
                                       encoding: URLEncoding.queryString)
+        case .GetViolasTokenList:
+            return .requestPlain
         }
     }
     var headers: [String : String]? {

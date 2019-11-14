@@ -74,8 +74,11 @@ class HomeViewModel: NSObject {
                 self.detailView.headerView.updateBalanceModel = tempData
                 self.detailView.tableView.reloadData()
             }
-        } else {
-            
+        } else if type == "LoadEnableViolasTokenList" {
+            if let tempData = jsonData.value(forKey: "data") as? [ViolasTokenModel] {
+                self.tableViewManager.dataModel = tempData
+                self.detailView.tableView.reloadData()
+            }
         }
         self.detailView.hideToastActivity()
     }

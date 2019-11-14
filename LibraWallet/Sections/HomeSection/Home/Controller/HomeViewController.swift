@@ -119,12 +119,17 @@ class HomeViewController: UIViewController {
                 if wallet.walletType == .Libra {
                     self.changeWalletButton.setTitle(localLanguage(keyString: "Libra 钱包"), for: UIControl.State.normal)
                     self.viewModel.dataModel.tempGetLibraBalance(walletID: wallet.walletID!, address: wallet.walletAddress ?? "")
+                    self.viewModel.tableViewManager.dataModel?.removeAll()
+                    self.viewModel.detailView.tableView.reloadData()
                 } else if wallet.walletType == .Violas {
                     self.changeWalletButton.setTitle(localLanguage(keyString: "Violas 钱包"), for: UIControl.State.normal)
                     self.viewModel.dataModel.getViolasBalance(walletID: wallet.walletID ?? 0, address: wallet.walletAddress ?? "")
+                    self.viewModel.dataModel.getEnableViolasToken(walletID: wallet.walletID ?? 0)
                 } else {
                     self.changeWalletButton.setTitle(localLanguage(keyString: "BTC 钱包"), for: UIControl.State.normal)
                     self.viewModel.dataModel.getBTCBalance(walletID: wallet.walletID ?? 0, address: wallet.walletAddress ?? "")
+                    self.viewModel.tableViewManager.dataModel?.removeAll()
+                    self.viewModel.detailView.tableView.reloadData()
                 }
             }
         }
@@ -164,6 +169,7 @@ extension HomeViewController: HomeHeaderViewDelegate {
     func addCoinToWallet() {
         let vc = AddAssetViewController()
         vc.hidesBottomBarWhenPushed = true
+        vc.model = self.viewModel.detailView.headerView.model
         self.navigationController?.pushViewController(vc, animated: true)
     }
     func walletSend() {
