@@ -12,8 +12,6 @@ class MineModel: NSObject {
     func getLocalData() -> [[String: String]] {
         return [["name":"钱包管理",
                  "icon":"mine_wallet"],
-                ["name":"转账记录",
-                 "icon":"mine_transfer_list"],
                 ["name":"地址簿",
                  "icon":"mine_address_list"],
                 ["name":"设置",

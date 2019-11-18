@@ -57,7 +57,7 @@ class AddAssetTableViewHeader: UITableViewHeaderFooterView {
         let imageView = UIImageView.init()
         imageView.layer.cornerRadius = 19
         imageView.layer.masksToBounds = true
-        imageView.backgroundColor = UIColor.red
+        imageView.layer.backgroundColor = UIColor.red.cgColor
        return imageView
    }()
     lazy var nameLabel: UILabel = {
@@ -80,6 +80,8 @@ class AddAssetTableViewHeader: UITableViewHeaderFooterView {
         didSet {
             nameLabel.text = model?.walletName
             detailLabel.text = "---"
+//            let url = URL(string: model?.icon ?? "")
+//            iconImageView.kf.setImage(with: url, placeholder: UIImage.init(named: "default_placeholder"))
         }
     }
 }

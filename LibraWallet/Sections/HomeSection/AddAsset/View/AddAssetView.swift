@@ -40,4 +40,8 @@ class AddAssetView: UIView {
         tableView.backgroundColor = defaultBackgroundColor
         return tableView
     }()
+    var toastView: ToastView? {
+        let toast = ToastView.init()
+        return toast
+    }
 }

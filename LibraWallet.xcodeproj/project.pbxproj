@@ -38,6 +38,13 @@
 		9D6264892359A5B900A79B3D /* CreateIdentityWalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6264882359A5B900A79B3D /* CreateIdentityWalletViewController.swift */; };
 		9D62648B2359A61000A79B3D /* CreateIdentityWalletView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D62648A2359A61000A79B3D /* CreateIdentityWalletView.swift */; };
 		9D62648D2359C00E00A79B3D /* CreateIdentityWalletModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D62648C2359C00E00A79B3D /* CreateIdentityWalletModel.swift */; };
+		9D68D2F5237D24DD005B7593 /* BTCTransferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D68D2F4237D24DD005B7593 /* BTCTransferView.swift */; };
+		9D68D2F9237D24FF005B7593 /* BTCTransferViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D68D2F8237D24FF005B7593 /* BTCTransferViewController.swift */; };
+		9D68D2FF237D25FD005B7593 /* ViolasTransferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D68D2FE237D25FD005B7593 /* ViolasTransferView.swift */; };
+		9D68D301237D260E005B7593 /* ViolasTransferModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D68D300237D260E005B7593 /* ViolasTransferModel.swift */; };
+		9D68D303237D261B005B7593 /* ViolasTransferViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D68D302237D261B005B7593 /* ViolasTransferViewController.swift */; };
+		9D68D305237D49E5005B7593 /* TransactionScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D68D304237D49E5005B7593 /* TransactionScript.swift */; };
+		9D68D307238039D7005B7593 /* BTCTransferModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D68D306238039D6005B7593 /* BTCTransferModel.swift */; };
 		9D7124342329EA1C009DED52 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9D7124362329EA1C009DED52 /* Localizable.strings */; };
 		9D71243D2329F183009DED52 /* WalletCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D71243C2329F183009DED52 /* WalletCreateViewController.swift */; };
 		9D71243F2329F190009DED52 /* WalletCreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D71243E2329F190009DED52 /* WalletCreateView.swift */; };
@@ -275,6 +282,13 @@
 		9D6264882359A5B900A79B3D /* CreateIdentityWalletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateIdentityWalletViewController.swift; sourceTree = "<group>"; };
 		9D62648A2359A61000A79B3D /* CreateIdentityWalletView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateIdentityWalletView.swift; sourceTree = "<group>"; };
 		9D62648C2359C00E00A79B3D /* CreateIdentityWalletModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateIdentityWalletModel.swift; sourceTree = "<group>"; };
+		9D68D2F4237D24DD005B7593 /* BTCTransferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTCTransferView.swift; sourceTree = "<group>"; };
+		9D68D2F8237D24FF005B7593 /* BTCTransferViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTCTransferViewController.swift; sourceTree = "<group>"; };
+		9D68D2FE237D25FD005B7593 /* ViolasTransferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasTransferView.swift; sourceTree = "<group>"; };
+		9D68D300237D260E005B7593 /* ViolasTransferModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasTransferModel.swift; sourceTree = "<group>"; };
+		9D68D302237D261B005B7593 /* ViolasTransferViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasTransferViewController.swift; sourceTree = "<group>"; };
+		9D68D304237D49E5005B7593 /* TransactionScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionScript.swift; sourceTree = "<group>"; };
+		9D68D306238039D6005B7593 /* BTCTransferModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BTCTransferModel.swift; sourceTree = "<group>"; };
 		9D7124352329EA1C009DED52 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		9D7124372329EA3E009DED52 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		9D71243C2329F183009DED52 /* WalletCreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletCreateViewController.swift; sourceTree = "<group>"; };
@@ -851,6 +865,74 @@
 			isa = PBXGroup;
 			children = (
 				9D6264882359A5B900A79B3D /* CreateIdentityWalletViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		9D68D2EC237CF019005B7593 /* BTCTransfer */ = {
+			isa = PBXGroup;
+			children = (
+				9D68D2EF237CF04F005B7593 /* Controller */,
+				9D68D2EE237CF049005B7593 /* Model */,
+				9D68D2ED237CF043005B7593 /* View */,
+			);
+			path = BTCTransfer;
+			sourceTree = "<group>";
+		};
+		9D68D2ED237CF043005B7593 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				9D68D2F4237D24DD005B7593 /* BTCTransferView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		9D68D2EE237CF049005B7593 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				9D68D306238039D6005B7593 /* BTCTransferModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		9D68D2EF237CF04F005B7593 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				9D68D2F8237D24FF005B7593 /* BTCTransferViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		9D68D2FA237D25CA005B7593 /* ViolasTransfer */ = {
+			isa = PBXGroup;
+			children = (
+				9D68D2FD237D25E5005B7593 /* Controller */,
+				9D68D2FC237D25E0005B7593 /* Model */,
+				9D68D2FB237D25DB005B7593 /* View */,
+			);
+			path = ViolasTransfer;
+			sourceTree = "<group>";
+		};
+		9D68D2FB237D25DB005B7593 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				9D68D2FE237D25FD005B7593 /* ViolasTransferView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		9D68D2FC237D25E0005B7593 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				9D68D300237D260E005B7593 /* ViolasTransferModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		9D68D2FD237D25E5005B7593 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				9D68D302237D261B005B7593 /* ViolasTransferViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1758,7 +1840,9 @@
 				9DC902372328E78A0097FD85 /* Home */,
 				9DC48878232231DA005FF254 /* Scan */,
 				9DC4885623220D73005FF254 /* Receive */,
-				9DC488702322246E005FF254 /* Transfer */,
+				9DC488702322246E005FF254 /* LibraTransfer */,
+				9D68D2FA237D25CA005B7593 /* ViolasTransfer */,
+				9D68D2EC237CF019005B7593 /* BTCTransfer */,
 				9DF49C01236BDF6A00C77880 /* WalletList */,
 				9D5B4E66236BCB4000F4D99C /* AddAsset */,
 			);
@@ -1843,14 +1927,14 @@
 			path = SwiftScan;
 			sourceTree = "<group>";
 		};
-		9DC488702322246E005FF254 /* Transfer */ = {
+		9DC488702322246E005FF254 /* LibraTransfer */ = {
 			isa = PBXGroup;
 			children = (
 				9DC488732322248C005FF254 /* Controller */,
 				9DC4887223222487005FF254 /* Model */,
 				9DC4887123222482005FF254 /* View */,
 			);
-			path = Transfer;
+			path = LibraTransfer;
 			sourceTree = "<group>";
 		};
 		9DC4887123222482005FF254 /* View */ = {
@@ -1954,6 +2038,7 @@
 				9DC901EE23274E510097FD85 /* TransactionProgram.swift */,
 				9DC901F1232788C30097FD85 /* TransactionAccessPath.swift */,
 				9DC901F72327A3B60097FD85 /* TransactionWriteSet.swift */,
+				9D68D304237D49E5005B7593 /* TransactionScript.swift */,
 			);
 			path = MakeTransaction;
 			sourceTree = "<group>";
@@ -2417,6 +2502,7 @@
 				9DA02644236FFCE00084905B /* BackupMnemonicView.swift in Sources */,
 				9D9B49D52360270800354EF0 /* BaseNavigationViewController.swift in Sources */,
 				9D626480235719A400A79B3D /* WelcomeViewController.swift in Sources */,
+				9D68D2FF237D25FD005B7593 /* ViolasTransferView.swift in Sources */,
 				9DC06A2523715ADB00BCE1FE /* BackupWarningAlert.swift in Sources */,
 				9D9B49BF235EE03C00354EF0 /* EmptyDataPlaceholderView.swift in Sources */,
 				9DFFA88723683E1C00EA74F9 /* WalletTransactionsTableViewCell.swift in Sources */,
@@ -2431,6 +2517,7 @@
 				9DA0265923702AFE0084905B /* BackupWarningView.swift in Sources */,
 				9D9B4A4A2362F4DC00354EF0 /* MineHeaderView.swift in Sources */,
 				9DFFA87F23683C3400EA74F9 /* WalletTransactionsModel.swift in Sources */,
+				9D68D305237D49E5005B7593 /* TransactionScript.swift in Sources */,
 				9DC4885A23220DA6005FF254 /* WalletReceiveView.swift in Sources */,
 				9DC06A672372D47F00BCE1FE /* admission_control.pb.swift in Sources */,
 				9DC4886E232222CF005FF254 /* LBXPermissions.swift in Sources */,
@@ -2459,6 +2546,7 @@
 				9D9B4A07236048A000354EF0 /* AboutUsTableViewHeader.swift in Sources */,
 				9DFFA88123683C4400EA74F9 /* WalletTransactionsViewController.swift in Sources */,
 				9D5B4E632369848600F4D99C /* HomeViewModel.swift in Sources */,
+				9D68D307238039D7005B7593 /* BTCTransferModel.swift in Sources */,
 				9D9B4A132360491C00354EF0 /* HelpCenterView.swift in Sources */,
 				9DA0265B23710FDB0084905B /* WelcomeAlert.swift in Sources */,
 				9D56EA4823516C3C00A55F02 /* KeychainManager.swift in Sources */,
@@ -2528,6 +2616,7 @@
 				9DC87791237A49A9006378C3 /* ImportIdentityWalletModel.swift in Sources */,
 				9DFFA87D23683C1D00EA74F9 /* WalletTransactionsView.swift in Sources */,
 				9D9B4A5A2366D1C400354EF0 /* WalletDetailView.swift in Sources */,
+				9D68D2F5237D24DD005B7593 /* BTCTransferView.swift in Sources */,
 				9D9B49AC235DA76100354EF0 /* AddressManagerModel.swift in Sources */,
 				9DC901E923262CB80097FD85 /* TransactionArgument.swift in Sources */,
 				9D9B4A542366955B00354EF0 /* ImportWalletViewController.swift in Sources */,
@@ -2547,6 +2636,7 @@
 				9D9B4A442362966100354EF0 /* AddWalletView.swift in Sources */,
 				9D9B4A3823619AAC00354EF0 /* SupportCoinModel.swift in Sources */,
 				9DC487FD2320AF4E005FF254 /* LibraWallet.swift in Sources */,
+				9D68D301237D260E005B7593 /* ViolasTransferModel.swift in Sources */,
 				9DC902432328FC4A0097FD85 /* HomeModel.swift in Sources */,
 				9DC06A5B2372D47F00BCE1FE /* mempool.grpc.swift in Sources */,
 				9D9B49F52360389200354EF0 /* LanguageTableViewCell.swift in Sources */,
@@ -2584,6 +2674,7 @@
 				9DC4884B232111E9005FF254 /* TransferViewController.swift in Sources */,
 				9DF49C12236BE3F700C77880 /* WalletListController.swift in Sources */,
 				9D5B4E7A236BD22600F4D99C /* AddAssetTableViewHeader.swift in Sources */,
+				9D68D2F9237D24FF005B7593 /* BTCTransferViewController.swift in Sources */,
 				9D712441232F621B009DED52 /* LibraWalletTool.swift in Sources */,
 				9D626482235719A400A79B3D /* WelcomePageView.swift in Sources */,
 				9DFFA88523683C6300EA74F9 /* WalletTransactionsViewModel.swift in Sources */,
@@ -2602,6 +2693,7 @@
 				9D9B4A08236048A000354EF0 /* AboutUsView.swift in Sources */,
 				9DC487FF2320AFB8005FF254 /* LibraError.swift in Sources */,
 				9D60189E236810FD00922237 /* WalletMnemonicView.swift in Sources */,
+				9D68D303237D261B005B7593 /* ViolasTransferViewController.swift in Sources */,
 				9DC488752322249E005FF254 /* TransferView.swift in Sources */,
 				9D712445232F7C36009DED52 /* TransferModel.swift in Sources */,
 				9DC4887C23223204005FF254 /* ScanViewController.swift in Sources */,

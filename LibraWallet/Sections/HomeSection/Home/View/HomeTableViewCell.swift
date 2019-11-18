@@ -61,13 +61,14 @@ class HomeTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "3D3949")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: UIFont.Weight.regular)
-        label.text = "0"
+        label.text = "---"
         return label
     }()
     //MARK: - 设置数据
     var model: ViolasTokenModel? {
         didSet {
             coinNameLabel.text = model?.name
+            coinAmountLabel.text = "\(Double((model?.balance ?? 0) / 1000000))"
         }
     }
 }

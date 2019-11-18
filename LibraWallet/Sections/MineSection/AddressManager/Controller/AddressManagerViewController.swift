@@ -102,7 +102,7 @@ class AddressManagerViewController: BaseViewController {
     }
     lazy var viewModel: AddressManagerViewModel = {
         let viewModel = AddressManagerViewModel.init()
-//        viewModel.tableViewManager.delegate = self
+        viewModel.tableViewManager.delegate = self
         return viewModel
     }()
 }

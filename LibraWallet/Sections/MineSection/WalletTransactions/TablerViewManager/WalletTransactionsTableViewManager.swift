@@ -15,9 +15,9 @@ class WalletTransactionsTableViewManager: NSObject {
     /// BTC
     var btcTransactions: [BTCTransaction]?
     /// Violas
-    var violasTransactions: [transaction]?
+    var violasTransactions: [ViolasDataModel]?
     /// Libra
-    var libraTransactions: [transaction]?
+    var libraTransactions: [LibraDataModel]?
     var transactionType: WalletType?
     deinit {
         print("WalletTransactionsTableViewManager销毁了")

@@ -143,7 +143,7 @@ extension LibraWalletManager {
             throw error
         }
     }
-    func getMnemonicFromKeychain(walletRootAddress: String) throws -> [String]{
+    func getMnemonicFromKeychain(walletRootAddress: String) throws -> [String] {
         guard walletRootAddress.isEmpty == false else {
             throw LibraWalletError.WalletKeychain(reason: .searchStringEmptyError)
         }

@@ -8,8 +8,26 @@
 
 import UIKit
 import SwiftGRPC
+import Moya
+struct ViolaSequenceNumberMainModel: Codable {
+    /// 错误代码
+    var code: Int?
+    /// 错误信息
+    var message: String?
+    /// 数据体
+    var data: Int?
+}
+struct ViolaSendTransactionMainModel: Codable {
+    /// 错误代码
+    var code: Int?
+    /// 错误信息
+    var message: String?
+
+}
 class TransferModel: NSObject {
     @objc var dataDic: NSMutableDictionary = [:]
+    private var requests: [Cancellable] = []
+    
     fileprivate func getSequenceNumber(client: AdmissionControl_AdmissionControlServiceClient, wallet: LibraWallet) throws -> UInt64 {
         do {
             var stateRequest = Types_GetAccountStateRequest()
@@ -56,10 +74,13 @@ class TransferModel: NSObject {
                 let request = LibraTransaction.init(receiveAddress: address, amount: amount, sendAddress: wallet.publicKey.toAddress(), sequenceNumber: sequenceNumber)
                 // 签名交易
                 let aaa = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
+                print(aaa.toHexString())
+                // 拼接签名请求
+                var signedTransation = Types_SignedTransaction.init()
+                signedTransation.txnBytes = aaa
                 // 组装请求
                 var mission = AdmissionControl_SubmitTransactionRequest.init()
-                mission.transaction = aaa
-                print(aaa.txnBytes.toHexString())
+                mission.transaction = signedTransation
                 // 发送请求
                 let response = try client.submitTransaction(mission)
                 if response.acStatus.code == AdmissionControl_AdmissionControlStatusCode.accepted {

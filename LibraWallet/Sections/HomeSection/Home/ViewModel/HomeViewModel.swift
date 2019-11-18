@@ -9,7 +9,6 @@
 import UIKit
 
 class HomeViewModel: NSObject {
-    //MARK: - KVO
     var myContext = 0
     func initKVO() {
         dataModel.addObserver(self, forKeyPath: "dataDic", options: NSKeyValueObservingOptions.new, context: &myContext)
@@ -54,24 +53,27 @@ class HomeViewModel: NSObject {
         let type = jsonData.value(forKey: "type") as! String
         
         if type == "LoadCurrentUseWallet" {
-            // 加载本地数据
+            // 加载本地默认钱包
             if let tempData = jsonData.value(forKey: "data") as? LibraWalletManager {
                 self.detailView.model = tempData
                 self.detailView.tableView.reloadData()
             }
         } else if type == "UpdateBTCBalance" {
             if let tempData = jsonData.value(forKey: "data") as? BalanceBTCModel {
-                self.detailView.headerView.updateBTCBalanceModel = tempData
+                self.detailView.headerView.btcModel = tempData
                 self.detailView.tableView.reloadData()
             }
         } else if type == "UpdateLibraBalance" {
             if let tempData = jsonData.value(forKey: "data") as? BalanceLibraModel {
-                self.detailView.headerView.updateBalanceModel = tempData
+                self.detailView.headerView.libraModel = tempData
                 self.detailView.tableView.reloadData()
             }
         } else if type == "UpdateViolasBalance" {
             if let tempData = jsonData.value(forKey: "data") as? BalanceLibraModel {
-                self.detailView.headerView.updateBalanceModel = tempData
+                self.detailView.headerView.violasModel = tempData
+                if let modules = tempData.modules, let dataModel = self.tableViewManager.dataModel, modules.isEmpty == false, dataModel.isEmpty == false {
+                    self.tableViewManager.dataModel = self.dataModel.dealBalanceWithContract(modules: modules, violasTokens: dataModel)
+                }
                 self.detailView.tableView.reloadData()
             }
         } else if type == "LoadEnableViolasTokenList" {

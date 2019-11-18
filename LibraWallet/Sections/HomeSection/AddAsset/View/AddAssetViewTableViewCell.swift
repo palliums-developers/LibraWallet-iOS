@@ -9,7 +9,7 @@
 import UIKit
 import Kingfisher
 protocol AddAssetViewTableViewCellDelegate: NSObjectProtocol {
-    func switchButtonChange(model: ViolasTokenModel, state: Bool)
+    func switchButtonChange(model: ViolasTokenModel, state: Bool, indexPath: IndexPath)
 }
 class AddAssetViewTableViewCell: UITableViewCell {
     weak var delegate: AddAssetViewTableViewCellDelegate?
@@ -94,7 +94,10 @@ class AddAssetViewTableViewCell: UITableViewCell {
         guard let tempModel = self.model else {
             return
         }
-        self.delegate?.switchButtonChange(model: tempModel, state: button.isOn)
+        guard let tempIndexPath = self.indexPath else {
+            return
+        }
+        self.delegate?.switchButtonChange(model: tempModel, state: button.isOn, indexPath: tempIndexPath)
     }
     //MARK: - 设置数据
     var model: ViolasTokenModel? {
@@ -107,4 +110,5 @@ class AddAssetViewTableViewCell: UITableViewCell {
             switchButton.setOn(model?.enable ?? false, animated: false)
         }
     }
+    var indexPath: IndexPath?
 }

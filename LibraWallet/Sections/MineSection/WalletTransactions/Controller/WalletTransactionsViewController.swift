@@ -51,11 +51,11 @@ class WalletTransactionsViewController: BaseViewController {
         self.viewModel.detailView.makeToastActivity(.center)
         switch transactionType {
         case .Libra:
-            viewModel.dataModel.getLibraTransactionHistory(address: "", page: 0, pageSize: 10, requestStatus: 0)
+            viewModel.dataModel.getLibraTransactionHistory(address: (wallet?.walletAddress)!, page: 0, pageSize: 10, requestStatus: 0)
         case .Violas:
-            viewModel.dataModel.getViolasTransactionHistory(address: "", page: 0, pageSize: 10, requestStatus: 0)
+            viewModel.dataModel.getViolasTransactionHistory(address: (wallet?.walletAddress)!, page: 0, pageSize: 10, requestStatus: 0)
         case .BTC:
-            viewModel.dataModel.getBTCTransactionHistory(address: "mvgsVUUG62L5KMsFx9TCQuMkC2tRb38fFX", page: 1, pageSize: 10, requestStatus: 0)
+            viewModel.dataModel.getBTCTransactionHistory(address: (wallet?.walletAddress)!, page: 1, pageSize: 10, requestStatus: 0)
         default:
             break
         }
@@ -98,6 +98,11 @@ class WalletTransactionsViewController: BaseViewController {
     var transactionType: WalletType? {
         didSet {
             self.viewModel.tableViewManager.transactionType = transactionType
+        }
+    }
+    var wallet: LibraWalletManager? {
+        didSet {
+            self.viewModel.wallet = wallet
         }
     }
 }

@@ -7,9 +7,12 @@
 //
 
 import UIKit
+protocol HomeTableViewManagerDelegate: NSObjectProtocol {
+        func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: ViolasTokenModel)
 
+}
 class HomeTableViewManager: NSObject {
-//    weak var delegate: TransactionsViewTableViewManagerDelegate?
+    weak var delegate: HomeTableViewManagerDelegate?
     var dataModel: [ViolasTokenModel]?
     var selectRow: Int?
     deinit {
@@ -22,12 +25,16 @@ extension HomeTableViewManager: UITableViewDelegate {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
+        guard let model = self.dataModel else {
+            return
+        }
         
 //        let data = self.dataModel![indexPath.row]
 //        guard let linkURL = data.explorerLink else {
 //            return
 //        }
-//        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, url: linkURL)
+        
+        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, model: model[indexPath.row])
     }
 }
 extension HomeTableViewManager: UITableViewDataSource {

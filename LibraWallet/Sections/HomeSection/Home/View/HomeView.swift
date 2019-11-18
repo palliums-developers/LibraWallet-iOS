@@ -87,7 +87,7 @@ class HomeView: UIView {
     var clickCount: Int = 0
     var model: LibraWalletManager? {
         didSet {
-            headerView.model = model
+            headerView.walletModel = model
         }
     }
     @objc func setText(){

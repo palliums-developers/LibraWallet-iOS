@@ -80,7 +80,7 @@ class WalletTransactionsViewModel: NSObject {
             }
             self.detailView.tableView.mj_footer.endRefreshing()
         } else if type == "ViolasTransactionHistoryOrigin" {
-            guard let tempData = jsonData.value(forKey: "data") as? [transaction] else {
+            guard let tempData = jsonData.value(forKey: "data") as? [ViolasDataModel] else {
                 return
             }
             self.tableViewManager.violasTransactions = tempData
@@ -88,7 +88,7 @@ class WalletTransactionsViewModel: NSObject {
         } else if type == "ViolasTransactionHistoryMore" {
                    
         } else if type == "LibraTransactionHistoryOrigin" {
-            guard let tempData = jsonData.value(forKey: "data") as? [transaction] else {
+            guard let tempData = jsonData.value(forKey: "data") as? [LibraDataModel] else {
                return
             }
             self.tableViewManager.libraTransactions = tempData
@@ -127,13 +127,13 @@ class WalletTransactionsViewModel: NSObject {
         detailView.tableView.mj_header.beginRefreshing()
         switch self.tableViewManager.transactionType {
         case .Libra:
-//            dataModel.getBTCTransactionHistory(address: "mvgsVUUG62L5KMsFx9TCQuMkC2tRb38fFX", page: 1, pageSize: 10, requestStatus: 0)
+            dataModel.getLibraTransactionHistory(address: (wallet?.walletAddress)!, page: 1, pageSize: 10, requestStatus: 0)
             break
         case .Violas:
-//            dataModel.getBTCTransactionHistory(address: "mvgsVUUG62L5KMsFx9TCQuMkC2tRb38fFX", page: 1, pageSize: 10, requestStatus: 0)
+            dataModel.getViolasTransactionHistory(address: (wallet?.walletAddress)!, page: 1, pageSize: 10, requestStatus: 0)
             break
         case .BTC:
-            dataModel.getBTCTransactionHistory(address: "mvgsVUUG62L5KMsFx9TCQuMkC2tRb38fFX", page: 1, pageSize: 10, requestStatus: 0)
+            dataModel.getBTCTransactionHistory(address: (wallet?.walletAddress)!, page: 1, pageSize: 10, requestStatus: 0)
         default:
             break
         }
@@ -143,16 +143,16 @@ class WalletTransactionsViewModel: NSObject {
         detailView.tableView.mj_footer.beginRefreshing()
         switch self.tableViewManager.transactionType {
         case .Libra:
-//            dataModel.getBTCTransactionHistory(address: "mvgsVUUG62L5KMsFx9TCQuMkC2tRb38fFX", page: 1, pageSize: 10, requestStatus: 0)
+            dataModel.getLibraTransactionHistory(address: (wallet?.walletAddress)!, page: 1, pageSize: 10, requestStatus: 0)
             break
         case .Violas:
-//            dataModel.getBTCTransactionHistory(address: "mvgsVUUG62L5KMsFx9TCQuMkC2tRb38fFX", page: 1, pageSize: 10, requestStatus: 0)
+            dataModel.getViolasTransactionHistory(address: (wallet?.walletAddress)!, page: 1, pageSize: 10, requestStatus: 0)
             break
         case .BTC:
-            dataModel.getBTCTransactionHistory(address: "mvgsVUUG62L5KMsFx9TCQuMkC2tRb38fFX", page: dataOffset, pageSize: 10, requestStatus: 1)
+            dataModel.getBTCTransactionHistory(address: (wallet?.walletAddress)!, page: dataOffset, pageSize: 10, requestStatus: 1)
         default:
             break
         }
-        
     }
+    var wallet: LibraWalletManager?
 }

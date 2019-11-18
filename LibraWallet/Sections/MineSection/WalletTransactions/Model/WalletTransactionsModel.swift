@@ -64,17 +64,47 @@ struct BTCResponseModel: Codable {
     var err_no: Int?
     var err_msg: String?
 }
-struct transaction: Codable {
-    var version: Int?
-    var address: String?
-    var value: Int?
-    var sequence_number: Int?
-    var expiration_time: Int?
+//struct transaction: Codable {
+//    var version: Int?
+//    var address: String?
+//    var value: Int?
+//    var sequence_number: Int?
+//    var expiration_time: Int?
+//}
+//struct LibraModel: Codable {
+//    var code: Int?
+//    var message: String?
+//    var data: [transaction]?
+//}
+struct LibraDataModel: Codable {
+    var amount: String?
+    var fromAddress: String?
+    var toAddress: String?
+    var date: String?
+    var transactionVersion: Int?
+    var explorerLink: String?
+    var event: String?
+    var type: String?
 }
-struct LibraModel: Codable {
+struct LibraResponseModel: Codable {
+    var transactions: [LibraDataModel]?
+}
+struct ViolasDataModel: Codable {
+    var amount: Int?
+    var expiration_time: Int?
+    var gas: Int?
+    var receiver: String?
+    var receiver_module: String?
+    var sender: String?
+    var sender_module: String?
+    var sequence_number: Int?
+    var type: Int?
+    var version: Int?
+}
+struct ViolasResponseModel: Codable {
     var code: Int?
     var message: String?
-    var data: [transaction]?
+    var data: [ViolasDataModel]?
 }
 
 class WalletTransactionsModel: NSObject {
@@ -115,7 +145,7 @@ class WalletTransactionsModel: NSObject {
             }
             self.requests.append(request)
     }
-    /// 获取Libra交易记录
+    /// 获取Violas交易记录
     /// - Parameters:
     ///   - address: 地址
     ///   - page: 页数
@@ -126,7 +156,13 @@ class WalletTransactionsModel: NSObject {
                 switch  result {
                 case let .success(response):
                     do {
-                        let json = try response.map(LibraModel.self)
+                        let json = try response.map(ViolasResponseModel.self)
+                        print(try response.mapString())
+                        guard json.code == 2000 else {
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: type)
+                            self?.setValue(data, forKey: "dataDic")
+                            return
+                        }
                         let data = setKVOData(type: type, data: json.data)
                         self?.setValue(data, forKey: "dataDic")
                     } catch {
@@ -153,13 +189,17 @@ class WalletTransactionsModel: NSObject {
     ///   - pageSize: 数量
     func getLibraTransactionHistory(address: String, page: Int, pageSize: Int, requestStatus: Int) {
         let type = requestStatus == 0 ? "LibraTransactionHistoryOrigin":"LibraTransactionHistoryMore"
-        let request = mainProvide.request(.GetLibraAccountTransactionList(address, page, pageSize)) {[weak self](result) in
+        let request = mainProvide.request(.GetTransactionHistory(address, 0)) {[weak self](result) in
                 switch  result {
                 case let .success(response):
                     do {
-                        let json = try response.map(LibraModel.self)
-                        print(json)
-                        let data = setKVOData(type: type, data: json.data)
+                        let json = try response.map(LibraResponseModel.self)
+//                        guard json.code == 2000 else {
+//                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: type)
+//                            self?.setValue(data, forKey: "dataDic")
+//                            return
+//                        }
+                        let data = setKVOData(type: type, data: json.transactions)
                         self?.setValue(data, forKey: "dataDic")
                     } catch {
                         print("解析异常\(error.localizedDescription)")

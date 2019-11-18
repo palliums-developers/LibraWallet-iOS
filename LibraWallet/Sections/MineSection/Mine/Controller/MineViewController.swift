@@ -18,7 +18,6 @@ class MineViewController: UIViewController {
         self.view.addSubview(self.viewModel.detailView)
         // 加载数据
         self.viewModel.getLocalData()
-        
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -50,11 +49,11 @@ class MineViewController: UIViewController {
 }
 extension MineViewController: MineTableViewManagerDelegate {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath) {
-        if indexPath.row == 2 {
+        if indexPath.row == 1 {
             let vc = AddressManagerViewController()
             vc.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController(vc, animated: true)
-        } else if indexPath.row == 3 {
+        } else if indexPath.row == 2 {
             let vc = SettingViewController()
             vc.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController(vc, animated: true)
@@ -62,11 +61,6 @@ extension MineViewController: MineTableViewManagerDelegate {
             let vc = WalletManagerViewController()
             vc.hidesBottomBarWhenPushed = true
             vc.managerWallet = true
-            self.navigationController?.pushViewController(vc, animated: true)
-        } else if indexPath.row == 1 {
-            let vc = WalletManagerViewController()
-            vc.hidesBottomBarWhenPushed = true
-            vc.managerWallet = false
             self.navigationController?.pushViewController(vc, animated: true)
         }
     }

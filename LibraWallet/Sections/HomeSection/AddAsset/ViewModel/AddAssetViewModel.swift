@@ -7,8 +7,11 @@
 //
 
 import UIKit
-
+protocol AddAssetViewModelDelegate: NSObjectProtocol {
+    func switchButtonChange(model: ViolasTokenModel, state: Bool, indexPath: IndexPath)
+}
 class AddAssetViewModel: NSObject {
+    weak var delegate: AddAssetViewModelDelegate?
     var myContext = 0
     func initKVO(walletID: Int64) {
         dataModel.addObserver(self, forKeyPath: "dataDic", options: NSKeyValueObservingOptions.new, context: &myContext)
@@ -32,11 +35,7 @@ class AddAssetViewModel: NSObject {
                 // 网络无法访问
                 print(error.localizedDescription)
             } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletNotExist).localizedDescription {
-                // 钱包不存在
                 print(error.localizedDescription)
-//                let vc = WalletCreateViewController()
-//                let navi = UINavigationController.init(rootViewController: vc)
-//                self.present(navi, animated: true, completion: nil)
             } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionTooOld).localizedDescription {
                 // 版本太久
                 print(error.localizedDescription)
@@ -47,23 +46,37 @@ class AddAssetViewModel: NSObject {
                 print(error.localizedDescription)
                 // 数据为空
             }
-            self.detailView.hideToastActivity()
+            self.detailView.toastView?.hide()
+            if let action = self.actionClosure {
+                action(false)
+            }
+            self.detailView.makeToast("开启失败",
+            position: .center)
             return
         }
         let type = jsonData.value(forKey: "type") as! String
         
         if type == "LoadLocalViolasToken" {
-            if let tempData = jsonData.value(forKey: "data") as? [ViolasTokenModel] {
-                self.tableViewManager.dataModel = tempData
-                self.detailView.tableView.reloadData()
-            }
+//            if let tempData = jsonData.value(forKey: "data") as? [ViolasTokenModel] {
+//                self.tableViewManager.dataModel = tempData
+//                self.detailView.tableView.reloadData()
+//                self.detailView.hideToastActivity()
+//            }
         } else if type == "UpdateViolasTokenList" {
             if let tempData = jsonData.value(forKey: "data") as? [ViolasTokenModel] {
                 self.tableViewManager.dataModel = tempData
                 self.detailView.tableView.reloadData()
+                self.detailView.hideToastActivity()
             }
+        } else if type == "SendViolasTransaction" {
+            self.detailView.toastView?.hide()
+            if let action = self.actionClosure {
+                action(true)
+            }
+            self.detailView.makeToast("开启成功",
+                                position: .center)
+            
         }
-        self.detailView.hideToastActivity()
     }
     //网络请求、数据模型
     lazy var dataModel: AddAssetModel = {
@@ -83,17 +96,26 @@ class AddAssetViewModel: NSObject {
         view.tableView.dataSource = self.tableViewManager
         return view
     }()
+    typealias successClosure = (Bool) -> Void
+    var actionClosure: successClosure?
 }
 extension AddAssetViewModel: AddAssetTableViewManagerDelegate {
-    func switchButtonChange(model: ViolasTokenModel, state: Bool) {
-        if state == true {
-            let result = DataBaseManager.DBManager.insertViolasToken(walletID: (tableViewManager.headerData?.walletID)!, model: model)
-            print("插入:\(result)")
-        } else {
-            let result = DataBaseManager.DBManager.deleteViolasToken(walletID: (tableViewManager.headerData?.walletID)!,
-            address: model.address!)
-            print("删除:\(result)")
-
+    func switchButtonChange(model: ViolasTokenModel, state: Bool, indexPath: IndexPath) {
+        guard state == true else {
+            _ = DataBaseManager.DBManager.deleteViolasToken(walletID: (self.tableViewManager.headerData?.walletID)!, address: model.address!)
+            return
+        }
+        self.delegate?.switchButtonChange(model: model, state: state, indexPath: indexPath)
+        self.actionClosure = { result in
+            if result == true {
+                let cell = self.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
+                cell.switchButton.setOn(result, animated: true)
+                _ = DataBaseManager.DBManager.insertViolasToken(walletID: (self.tableViewManager.headerData?.walletID)!, model: model)
+            } else {
+                let cell = self.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
+                cell.switchButton.setOn(result, animated: true)
+                _ = DataBaseManager.DBManager.deleteViolasToken(walletID: (self.tableViewManager.headerData?.walletID)!, address: model.address!)
+            }
         }
     }
 }

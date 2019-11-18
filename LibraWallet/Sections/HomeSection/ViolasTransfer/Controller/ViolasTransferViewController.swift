@@ -1,16 +1,14 @@
 //
-//  TransferViewController.swift
+//  ViolasTransferViewController.swift
 //  LibraWallet
 //
-//  Created by palliums on 2019/9/5.
+//  Created by palliums on 2019/11/14.
 //  Copyright © 2019 palliums. All rights reserved.
 //
 
 import UIKit
-import SwiftGRPC
-import SwiftProtobuf
-class TransferViewController: BaseViewController {
 
+class ViolasTransferViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // 初始化本地配置
@@ -30,22 +28,22 @@ class TransferViewController: BaseViewController {
             make.left.right.equalTo(self.view)
         }
     }
-    //子View
-    private lazy var detailView : TransferView = {
-        let view = TransferView.init()
+    private lazy var detailView : ViolasTransferView = {
+        let view = ViolasTransferView.init()
         view.delegate = self
         return view
     }()
-    lazy var dataModel: TransferModel = {
-        let model = TransferModel.init()
+    lazy var dataModel: ViolasTransferModel = {
+        let model = ViolasTransferModel.init()
         return model
     }()
     typealias successClosure = () -> Void
     var actionClosure: successClosure?
     var myContext = 0
     var wallet: LibraWalletManager?
+    var sendViolasTokenState: Bool?
 }
-extension TransferViewController {
+extension ViolasTransferViewController {
     //MARK: - KVO
     func initKVO() {
         dataModel.addObserver(self, forKeyPath: "dataDic", options: NSKeyValueObservingOptions.new, context: &myContext)
@@ -87,18 +85,33 @@ extension TransferViewController {
         }
         let type = jsonData.value(forKey: "type") as! String
         
-        if type == "Transfer" {
-            // 转账成功
-            print("Success")
+        if type == "GetViolasSequenceNumber" {
+            if let tempData = jsonData.value(forKey: "data") as? Int {
+                let menmonic = try! LibraWalletManager.shared.getMnemonicFromKeychain(walletRootAddress: (wallet?.walletRootAddress)!)
+                if sendViolasTokenState == false {
+                    self.dataModel.sendViolasTransaction(sendAddress: wallet?.walletAddress ?? "",
+                                                         receiveAddress: self.detailView.addressTextField.text ?? "",
+                                                         amount: Double(self.detailView.amountTextField.text ?? "0")!,
+                                                         mnemonic: menmonic,
+                                                         sequenceNumber: tempData)
+                } else {
+                    self.dataModel.sendViolasTokenTransaction(sendAddress: wallet?.walletAddress ?? "",
+                                                              receiveAddress: self.detailView.addressTextField.text ?? "",
+                                                              amount: Double(self.detailView.amountTextField.text ?? "0")!, mnemonic: menmonic, sequenceNumber: tempData)
+                }
+            }
+        } else if type == "SendViolasTransaction" {
+            self.view.makeToast("转账成功",
+                                position: .center)
             if let action = self.actionClosure {
                 action()
                 self.navigationController?.popViewController(animated: true)
             }
-        }
+       }
         self.view.hideToastActivity()
     }
 }
-extension TransferViewController: TransferViewDelegate {
+extension ViolasTransferViewController: ViolasTransferViewDelegate {
     func scanAddressQRcode() {
         let vc = ScanViewController()
         vc.actionClosure = { address in
@@ -109,15 +122,15 @@ extension TransferViewController: TransferViewDelegate {
     
     func chooseAddress() {
         let vc = AddressManagerViewController()
+        vc.actionClosure = { address in
+            self.detailView.addressTextField.text = address
+        }
         vc.hidesBottomBarWhenPushed = true
-        
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
     func confirmWithdraw() {
         self.view.makeToastActivity(.center)
-        self.dataModel.transfer(address: self.detailView.addressTextField.text!,
-                                amount: Double(self.detailView.amountTextField.text!)!,
-                                rootAddress: (self.wallet?.walletRootAddress)!)
+        self.dataModel.getViolasSequenceNumber(address: (self.wallet?.walletAddress)!)
     }
 }

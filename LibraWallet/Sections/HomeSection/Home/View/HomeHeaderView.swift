@@ -43,7 +43,7 @@ class HomeHeaderView: UIView {
         addSubview(addCoinButton)
         
         lastTransactionBackgroundButton.addSubview(transactionTitleLabel)
-        lastTransactionBackgroundButton.addSubview(lastTransactionDateLabel)
+//        lastTransactionBackgroundButton.addSubview(lastTransactionDateLabel)
         lastTransactionBackgroundButton.addSubview(lastTransactionDetailImageView)
 
         // 添加语言变换通知
@@ -127,10 +127,10 @@ class HomeHeaderView: UIView {
             make.centerY.equalTo(lastTransactionBackgroundButton)
             make.left.equalTo(lastTransactionBackgroundButton).offset(14)
         }
-        lastTransactionDateLabel.snp.makeConstraints { (make) in
-            make.centerY.equalTo(lastTransactionBackgroundButton)
-            make.right.equalTo(lastTransactionDetailImageView.snp.left).offset(-4)
-        }
+//        lastTransactionDateLabel.snp.makeConstraints { (make) in
+//            make.centerY.equalTo(lastTransactionBackgroundButton)
+//            make.right.equalTo(lastTransactionDetailImageView.snp.left).offset(-4)
+//        }
         lastTransactionDetailImageView.snp.makeConstraints { (make) in
             make.centerY.equalTo(lastTransactionBackgroundButton)
             make.right.equalTo(lastTransactionBackgroundButton.snp.right).offset(-15)
@@ -293,7 +293,7 @@ class HomeHeaderView: UIView {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "9D9CA3")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: .regular)
-        label.text = localLanguage(keyString: "2019-10-30")
+//        label.text = localLanguage(keyString: "2019-10-30")
         return label
     }()
     private lazy var lastTransactionDetailImageView : UIImageView = {
@@ -346,54 +346,62 @@ class HomeHeaderView: UIView {
             self.delegate?.addCoinToWallet()
         }
     }
-    var model: LibraWalletManager? {
+    var walletModel: LibraWalletManager? {
         didSet {
-            assetLabel.text = "\(model?.walletBalance ?? 0)"
-            walletNameLabel.text = model?.walletName
-            walletAddressLabel.text = model?.walletAddress
+            walletNameLabel.text = walletModel?.walletName
+            walletAddressLabel.text = walletModel?.walletAddress
             // 更新本地数据
-            switch model?.walletType {
+            switch walletModel?.walletType {
             case .Libra:
                 assetUnitLabel.text = "libra"
+                assetLabel.text = "\(walletModel?.walletBalance ?? 0)"
                 break
             case .Violas:
                 assetUnitLabel.text = "VToken"
+                assetLabel.text = "\(Double((walletModel?.walletBalance ?? 0) / 1000000))"
                 break
             case .BTC:
                 assetUnitLabel.text = "BTC"
+                assetLabel.text = String.init(format: "%.8f", (Double(walletModel?.walletBalance ?? 0) / 100000000.0))
                 break
             default:
                 break
             }
         }
     }
-    var updateBalanceModel: BalanceLibraModel? {
+    var libraModel: BalanceLibraModel? {
         didSet {
-            if updateBalanceModel?.address == self.walletAddressLabel.text {
-                assetLabel.text = "\(updateBalanceModel?.balance ?? 0)"
-                self.model?.changeWalletBalance(banlance: updateBalanceModel?.balance ?? 0)
-                switch model?.walletType {
-                case .Libra:
-                    assetUnitLabel.text = "libra"
-                    break
-                case .Violas:
-                    assetUnitLabel.text = "VToken"
-                    break
-                case .BTC:
-                    assetUnitLabel.text = "BTC"
-                    break
-                default:
-                    break
-                }
+            if libraModel?.address == self.walletAddressLabel.text {
+                assetLabel.text = "\(libraModel?.balance ?? 0)"
+                self.walletModel?.changeWalletBalance(banlance: libraModel?.balance ?? 0)
+                assetUnitLabel.text = "libra"
             }
         }
     }
-    var updateBTCBalanceModel: BalanceBTCModel? {
+    var violasModel: BalanceLibraModel? {
         didSet {
-            if updateBTCBalanceModel?.address == self.walletAddressLabel.text {
-                assetLabel.text = "\(Double((updateBTCBalanceModel?.balance ?? 0) / 100000000)))"
-                self.model?.changeWalletBalance(banlance: updateBTCBalanceModel?.balance ?? 0)
+            if btcModel?.address == self.walletAddressLabel.text {
+                assetLabel.text = "\(Double((btcModel?.balance ?? 0) / 1000000))"
+                self.walletModel?.changeWalletBalance(banlance: btcModel?.balance ?? 0)
+                assetUnitLabel.text = "Vtoken"
+            }
+        }
+    }
+    var btcModel: BalanceBTCModel? {
+        didSet {
+            if btcModel?.address == self.walletAddressLabel.text {
+                assetLabel.text = String.init(format: "%.8f", (Double(btcModel?.balance ?? 0) / 100000000.0))
+                self.walletModel?.changeWalletBalance(banlance: btcModel?.balance ?? 0)
                 assetUnitLabel.text = "BTC"
+            }
+        }
+    }
+    var hideAddTokenButtonState: Bool? {
+        didSet {
+            if hideAddTokenButtonState == true {
+                self.addCoinButton.alpha = 0
+            } else {
+                self.addCoinButton.alpha = 1
             }
         }
     }

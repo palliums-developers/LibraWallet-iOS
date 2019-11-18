@@ -151,27 +151,27 @@ class WalletTransactionsTableViewCell: UITableViewCell {
             typeLabel.text = "\(model.transaction_type ?? 0)"
         }
     }
-    var violasModel: transaction? {
+    var violasModel: ViolasDataModel? {
         didSet {
             guard let model = violasModel else {
                 return
             }
             coinLabel.text = "Violas"
             dateLabel.text = timestampToDateString(timestamp: model.expiration_time ?? 0, dateFormat: "yyyy-MM-dd HH:mm:ss")
-            amountLabel.text = "\(model.value ?? 0)"
-            addressLabel.text = model.address
+            amountLabel.text = "\(model.amount ?? 0)"
+            addressLabel.text = model.receiver
 //            typeLabel.text = "\(model.transaction_type ?? 0)"
         }
     }
-    var libraModel: transaction? {
+    var libraModel: LibraDataModel? {
         didSet {
             guard let model = libraModel else {
                 return
             }
             coinLabel.text = "Libra"
-            dateLabel.text = timestampToDateString(timestamp: model.expiration_time ?? 0, dateFormat: "yyyy-MM-dd HH:mm:ss")
-            amountLabel.text = "\(model.value ?? 0)"
-            addressLabel.text = model.address
+            dateLabel.text = model.date
+            amountLabel.text = model.amount
+            addressLabel.text = model.toAddress
             
             typeLabel.text = localLanguage(keyString: "wallet_transaction_transfer_title")//"\(model.transaction_type ?? 0)"
         }

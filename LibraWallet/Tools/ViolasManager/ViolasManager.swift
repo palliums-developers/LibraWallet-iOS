@@ -34,4 +34,18 @@ struct ViolasManager {
             throw error
         }
     }
+    func getViolasPublishCode(content: String) -> String {
+        let replaceData = Data.init(Array<UInt8>(hex: content))
+        var code = getProgramCode(content: ViolasPublishProgramCode)
+        let range = code.index(after: 148)..<( code.endIndex - (code.endIndex - 149 - 32))
+        code.replaceSubrange(range, with: replaceData)
+        return code.toHexString()
+    }
+    func getViolasTransactionCode(content: String) -> String {
+        let replaceData = Data.init(Array<UInt8>(hex: content))
+        var code = getProgramCode(content: ViolasTransactionProgramCode)
+        let range = code.index(after: 155)..<( code.endIndex - (code.endIndex - 156 - 32))
+        code.replaceSubrange(range, with: replaceData)
+        return code.toHexString()
+    }
 }

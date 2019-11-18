@@ -8,7 +8,8 @@
 
 import UIKit
 protocol AddAssetTableViewManagerDelegate: NSObjectProtocol {
-    func switchButtonChange(model: ViolasTokenModel, state: Bool)
+    func switchButtonChange(model: ViolasTokenModel, state: Bool, indexPath: IndexPath)
+//    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: ViolasTokenModel)
 }
 class AddAssetTableViewManager: NSObject {
     weak var delegate: AddAssetTableViewManagerDelegate?
@@ -24,17 +25,19 @@ extension AddAssetTableViewManager: UITableViewDelegate {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
-                
-//        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath)
+//        guard let model = self.dataModel else {
+//            return
+//        }
+//        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, model: model[indexPath.row])
     }
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let identifier = "Header"
         if let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier) {
-//            (header as! AddAssetTableViewHeader).model = self.headerTitleArray[section]
+            (header as! AddAssetTableViewHeader).model = self.headerData
             return header
         } else {
             let header = AddAssetTableViewHeader.init(reuseIdentifier: identifier)
-//            header.model = self.headerTitleArray[section]
+            header.model = self.headerData
             return header
         }
     }
@@ -54,6 +57,7 @@ extension AddAssetTableViewManager: UITableViewDataSource {
             }
             cell.selectionStyle = .none
             cell.delegate = self
+            cell.indexPath = indexPath
             return cell
         } else {
             let cell = AddAssetViewTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
@@ -62,12 +66,13 @@ extension AddAssetTableViewManager: UITableViewDataSource {
             }
             cell.selectionStyle = .none
             cell.delegate = self
+            cell.indexPath = indexPath
             return cell
         }
     }
 }
 extension AddAssetTableViewManager: AddAssetViewTableViewCellDelegate {
-    func switchButtonChange(model: ViolasTokenModel, state: Bool) {
-        self.delegate?.switchButtonChange(model: model, state: state)
+    func switchButtonChange(model: ViolasTokenModel, state: Bool, indexPath: IndexPath) {
+        self.delegate?.switchButtonChange(model: model, state: state, indexPath: indexPath)
     }
 }

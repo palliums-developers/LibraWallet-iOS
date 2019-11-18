@@ -21,7 +21,7 @@ struct LibraPrivateKey {
         let publicKeyData = Data.init(bytes: publicKey, count: publicKey.count)
         return LibraPublicKey.init(data: publicKeyData)
     }
-    func signTransaction(transaction: RawTransaction, wallet: LibraWallet) throws -> Types_SignedTransaction {
+    func signTransaction(transaction: RawTransaction, wallet: LibraWallet) throws -> Data {
         // 待签名交易
         let transactionRaw = transaction.serialize()
         // 交易第一部分(盐sha3计算结果)
@@ -32,7 +32,6 @@ struct LibraPrivateKey {
         sha3Data.append(transactionRaw.bytes, count: transactionRaw.bytes.count)
         
         let sign = Ed25519.sign(message: sha3Data.sha3(.sha256).bytes, secretKey: raw.bytes)
-        var signedTransation = Types_SignedTransaction.init()
         
         // 公钥数据
         var publicKeyData = Data()
@@ -50,8 +49,8 @@ struct LibraPrivateKey {
         // 追加签名
         signData += Data.init(bytes: sign, count: sign.count)
         
-        signedTransation.txnBytes = transactionRaw + publicKeyData + signData
+        let result = transactionRaw + publicKeyData + signData
 
-        return signedTransation
+        return result
     }
 }

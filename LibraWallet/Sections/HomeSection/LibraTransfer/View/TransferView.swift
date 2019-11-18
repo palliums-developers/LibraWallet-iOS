@@ -224,7 +224,7 @@ class TransferView: UIView {
         let textField = UITextField.init()
         textField.textAlignment = NSTextAlignment.left
         textField.textColor = UIColor.init(hex: "333333")
-        textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_transfer_address_btc_textfield_placeholder"),
+        textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_transfer_address_libra_textfield_placeholder"),
                                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C4C3C7"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16)])
         //        textField.delegate = self
         textField.keyboardType = .default
@@ -342,10 +342,10 @@ class TransferView: UIView {
         gradientLayer.colors = [UIColor.init(hex: "363E57").cgColor, UIColor.init(hex: "101633").cgColor]
         return gradientLayer
     }()
-//    var toastView: ToastView? {
-//        let toast = ToastView.init()
-//        return toast
-//    }
+    var toastView: ToastView? {
+        let toast = ToastView.init()
+        return toast
+    }
     var originFee: Int64?
     var model: LibraWalletManager? {
         didSet {
