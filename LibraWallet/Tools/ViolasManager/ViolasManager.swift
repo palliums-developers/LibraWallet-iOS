@@ -34,6 +34,19 @@ struct ViolasManager {
             throw error
         }
     }
+    func isValidViolasAddress(address: String) -> Bool {
+        guard address.count == 64 else {
+            // 位数异常
+            return false
+        }
+        let email = "^[A-Za-z0-9]+$"
+        let regextestmobile = NSPredicate(format: "SELF MATCHES %@",email)
+        if (regextestmobile.evaluate(with: address) == true) {
+            return true
+        } else {
+            return false
+        }
+    }
     func getViolasPublishCode(content: String) -> String {
         let replaceData = Data.init(Array<UInt8>(hex: content))
         var code = getProgramCode(content: ViolasPublishProgramCode)

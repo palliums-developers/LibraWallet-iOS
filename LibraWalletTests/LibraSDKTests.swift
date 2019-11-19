@@ -10,7 +10,7 @@ import XCTest
 import CryptoSwift
 import BigInt
 import SwiftGRPC
-@testable import LibraWallet
+@testable import Violas
 class LibraSDKTests: XCTestCase {
 
     override func setUp() {

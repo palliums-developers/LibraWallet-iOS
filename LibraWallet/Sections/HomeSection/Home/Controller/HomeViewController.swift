@@ -227,7 +227,11 @@ extension HomeViewController: HomeTableViewManagerDelegate {
         }
         vc.wallet = self.viewModel.detailView.headerView.walletModel
         vc.sendViolasTokenState = true
+        vc.contract = model.address
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
+//        let vc = VTokenMainViewController()
+//        vc.hidesBottomBarWhenPushed = true
+//        self.navigationController?.pushViewController(vc, animated: true)
     }
 }

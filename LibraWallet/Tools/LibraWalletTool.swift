@@ -68,3 +68,12 @@ func timestampToDateString(timestamp: Int, dateFormat: String) -> String {
     let str = format.string(from: date)
     return str
 }
+func isPurnDouble(string: String) -> Bool {
+    
+    let scan: Scanner = Scanner(string: string)
+    
+    var val:Double = 0.0
+    
+    return scan.scanDouble(&val) && scan.isAtEnd
+    
+}

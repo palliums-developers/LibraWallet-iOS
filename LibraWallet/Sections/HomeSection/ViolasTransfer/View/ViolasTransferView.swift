@@ -10,7 +10,7 @@ import UIKit
 protocol ViolasTransferViewDelegate: NSObjectProtocol {
     func scanAddressQRcode()
     func chooseAddress()
-    func confirmWithdraw()
+    func confirmTransfer(amount: Double, address: String, fee: Double)
 }
 class ViolasTransferView: UIView {
     weak var delegate: ViolasTransferViewDelegate?
@@ -148,7 +148,7 @@ class ViolasTransferView: UIView {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "3C3848")
         label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
-        label.text = localLanguage(keyString: "wallet_withdraw_amount_title")
+        label.text = localLanguage(keyString: "wallet_transfer_amount_title")
         return label
     }()
     lazy var amountTextField: UITextField = {
@@ -292,8 +292,54 @@ class ViolasTransferView: UIView {
             // 常用地址
             self.delegate?.chooseAddress()
         } else {
+            // 拆包金额
+            guard let amountString = self.amountTextField.text else {
+                #warning("错误待处理")
+                self.makeToast(LibraWalletError.error("拆包金额异常").localizedDescription, position: .center)
+                return
+            }
+            // 金额不为空检查
+            guard amountString.isEmpty == false else {
+                self.makeToast(LibraWalletError.error("金额不为空检查").localizedDescription, position: .center)
+
+                return
+            }
+            // 金额是否纯数字检查
+            guard isPurnDouble(string: amountString) == true else {
+                self.makeToast(LibraWalletError.error("金额是否纯数字检查").localizedDescription, position: .center)
+                return
+            }
+            // 转换数字
+            let amount = (amountString as NSString).doubleValue
+            // 金额大于我的金额
+            guard amount <= Double((wallet?.walletBalance ?? 0) / 1000000) else {
+               self.makeToast(LibraWalletError.error("金额大于我的金额").localizedDescription, position: .center)
+               return
+            }
+            guard let address = self.addressTextField.text else {
+               self.makeToast(LibraWalletError.error("地址拆包异常").localizedDescription, position: .center)
+               return
+            }
+            guard address.isEmpty == false else {
+                self.makeToast(LibraWalletError.error("地址为空").localizedDescription, position: .center)
+                return
+            }
+            guard ViolasManager().isValidViolasAddress(address: address) else {
+                self.makeToast(LibraWalletError.error("地址无效").localizedDescription, position: .center)
+                return
+            }
+            guard address != self.wallet?.walletAddress else {
+                self.makeToast(LibraWalletError.error("不能向自己转账").localizedDescription, position: .center)
+                return
+            }
+            let feeString = self.transferFeeLabel.text
+            let fee = Double(feeString!.replacingOccurrences(of: " VToken", with: ""))!
+            
+            self.amountTextField.resignFirstResponder()
+            self.addressTextField.resignFirstResponder()
+            self.transferFeeSlider.resignFirstResponder()
             // 确认提交
-            self.delegate?.confirmWithdraw()
+            self.delegate?.confirmTransfer(amount: amount, address: address, fee: fee)
         }
     }
     lazy var backgroundLayer: CAGradientLayer = {
@@ -310,15 +356,19 @@ class ViolasTransferView: UIView {
         return toast
     }
     var originFee: Int64?
-    var model: LibraWalletManager? {
-        didSet {
-            guard let balance = model?.walletBalance else { return }
-            walletBalanceLabel.text = "\(balance)" + "Libra"
-        }
-    }
+    
     @objc func slideValueDidChange(slide: UISlider) {
         let fee = Float(transferFeeMax - transferFeeMin) * slide.value + Float(transferFeeMin)
         let fee8 = NSString.init(format: "%.8f", fee)
-        self.transferFeeLabel.text = "\(fee8) BTC"
+        self.transferFeeLabel.text = "\(fee8) VToken"
+    }
+    var wallet: LibraWalletManager? {
+        didSet {
+            guard let model = wallet else {
+                return
+            }
+            let balance = "\(Double((model.walletBalance ?? 0) / 1000000))"
+            walletBalanceLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + balance + " VToken"
+        }
     }
 }

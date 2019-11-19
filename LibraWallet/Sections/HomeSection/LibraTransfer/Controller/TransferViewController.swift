@@ -15,7 +15,10 @@ class TransferViewController: BaseViewController {
         // 初始化本地配置
         self.setBaseControlllerConfig()
         
+        self.title = (self.wallet?.walletType?.description ?? "") + localLanguage(keyString: "wallet_transfer_navigation_title")
+        
         self.view.addSubview(detailView)
+        self.detailView.wallet = self.wallet
         self.initKVO()
     }
     override func viewWillLayoutSubviews() {
@@ -35,16 +38,6 @@ class TransferViewController: BaseViewController {
         view.delegate = self
         return view
     }()
-//    private lazy var btcDetailView : BTCTransferView = {
-//        let view = BTCTransferView.init()
-////        view.delegate = self
-//        return view
-//    }()
-//    private lazy var violasDetailView : ViolasTransferView = {
-//        let view = ViolasTransferView.init()
-////        view.delegate = self
-//        return view
-//    }()
     lazy var dataModel: TransferModel = {
         let model = TransferModel.init()
         return model
@@ -53,7 +46,6 @@ class TransferViewController: BaseViewController {
     var actionClosure: successClosure?
     var myContext = 0
     var wallet: LibraWalletManager?
-    var transferType: WalletType?
 }
 extension TransferViewController {
     //MARK: - KVO
@@ -91,13 +83,18 @@ extension TransferViewController {
             } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
                 print(error.localizedDescription)
                 // 数据为空
+            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
+                print(error.localizedDescription)
+                // 数据返回状态异常
             }
-            self.view.hideToastActivity()
+            self.detailView.toastView?.hide()
+            self.view.makeToast(error.localizedDescription, position: .center)
             return
         }
         let type = jsonData.value(forKey: "type") as! String
         
         if type == "Transfer" {
+            self.detailView.toastView?.hide()
             // 转账成功
             self.view.makeToast("转账成功",
                                 position: .center)
@@ -106,10 +103,12 @@ extension TransferViewController {
                 self.navigationController?.popViewController(animated: true)
             }
         }
-        self.view.hideToastActivity()
+        
     }
 }
 extension TransferViewController: TransferViewDelegate {
+
+    
     func scanAddressQRcode() {
         let vc = ScanViewController()
         vc.actionClosure = { address in
@@ -121,16 +120,12 @@ extension TransferViewController: TransferViewDelegate {
     func chooseAddress() {
         let vc = AddressManagerViewController()
         vc.hidesBottomBarWhenPushed = true
-        
         self.navigationController?.pushViewController(vc, animated: true)
     }
-    
-    func confirmWithdraw() {
-        self.view.makeToastActivity(.center)
-        self.dataModel.transfer(address: self.detailView.addressTextField.text!,
-                                amount: Double(self.detailView.amountTextField.text!)!,
+    func confirmTransfer(amount: Double, address: String, fee: Double) {
+        self.detailView.toastView?.show()
+        self.dataModel.transfer(address: address,
+                                amount: amount,
                                 rootAddress: (self.wallet?.walletRootAddress)!)
-//        self.dataModel.getViolasSequenceNumber(address: (self.wallet?.walletAddress)!)
-        
     }
 }

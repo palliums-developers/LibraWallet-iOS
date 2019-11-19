@@ -14,7 +14,9 @@ class ViolasTransferViewController: BaseViewController {
         // 初始化本地配置
         self.setBaseControlllerConfig()
         
+        self.title = (self.wallet?.walletType?.description ?? "") + localLanguage(keyString: "wallet_transfer_navigation_title")
         self.view.addSubview(detailView)
+        self.detailView.wallet = self.wallet
         self.initKVO()
     }
     override func viewWillLayoutSubviews() {
@@ -42,9 +44,9 @@ class ViolasTransferViewController: BaseViewController {
     var myContext = 0
     var wallet: LibraWalletManager?
     var sendViolasTokenState: Bool?
+    var contract: String?
 }
 extension ViolasTransferViewController {
-    //MARK: - KVO
     func initKVO() {
         dataModel.addObserver(self, forKeyPath: "dataDic", options: NSKeyValueObservingOptions.new, context: &myContext)
     }
@@ -79,36 +81,23 @@ extension ViolasTransferViewController {
             } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
                 print(error.localizedDescription)
                 // 数据为空
+            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
+                print(error.localizedDescription)
+                // 数据返回状态异常
             }
-            self.view.hideToastActivity()
+            self.detailView.toastView?.hide()
+            self.view.makeToast(error.localizedDescription, position: .center)
             return
         }
         let type = jsonData.value(forKey: "type") as! String
-        
-        if type == "GetViolasSequenceNumber" {
-            if let tempData = jsonData.value(forKey: "data") as? Int {
-                let menmonic = try! LibraWalletManager.shared.getMnemonicFromKeychain(walletRootAddress: (wallet?.walletRootAddress)!)
-                if sendViolasTokenState == false {
-                    self.dataModel.sendViolasTransaction(sendAddress: wallet?.walletAddress ?? "",
-                                                         receiveAddress: self.detailView.addressTextField.text ?? "",
-                                                         amount: Double(self.detailView.amountTextField.text ?? "0")!,
-                                                         mnemonic: menmonic,
-                                                         sequenceNumber: tempData)
-                } else {
-                    self.dataModel.sendViolasTokenTransaction(sendAddress: wallet?.walletAddress ?? "",
-                                                              receiveAddress: self.detailView.addressTextField.text ?? "",
-                                                              amount: Double(self.detailView.amountTextField.text ?? "0")!, mnemonic: menmonic, sequenceNumber: tempData)
-                }
-            }
-        } else if type == "SendViolasTransaction" {
-            self.view.makeToast("转账成功",
-                                position: .center)
+        if type == "SendViolasTransaction" {
+            self.detailView.toastView?.hide()
+            self.view.makeToast(localLanguage(keyString: "wallet_transfer_success_alert"), position: .center)
             if let action = self.actionClosure {
                 action()
                 self.navigationController?.popViewController(animated: true)
             }
-       }
-        self.view.hideToastActivity()
+        }
     }
 }
 extension ViolasTransferViewController: ViolasTransferViewDelegate {
@@ -128,9 +117,41 @@ extension ViolasTransferViewController: ViolasTransferViewDelegate {
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
-    
-    func confirmWithdraw() {
-        self.view.makeToastActivity(.center)
-        self.dataModel.getViolasSequenceNumber(address: (self.wallet?.walletAddress)!)
+    func confirmTransfer(amount: Double, address: String, fee: Double) {
+        let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: localLanguage(keyString: "wallet_type_in_password_content"), preferredStyle: .alert)
+        alertContr.addTextField {
+            (textField: UITextField!) -> Void in
+            textField.placeholder = localLanguage(keyString: "wallet_type_in_password_textfield_placeholder")
+            textField.tintColor = DefaultGreenColor
+            textField.isSecureTextEntry = true
+        }
+        alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_confirm_button_title"), style: .default) { [weak self]
+            clickHandler in
+            let password = alertContr.textFields!.first! as UITextField
+            NSLog("password:\(password.text!)")
+            do {
+                let state = try LibraWalletManager.shared.isValidPaymentPassword(walletRootAddress: (self?.wallet?.walletRootAddress)!, password: password.text!)
+                guard state == true else {
+                    self?.view.makeToast("密码不正确", position: .center)
+                    return
+                }
+                self?.detailView.toastView?.show()
+                let menmonic = try LibraWalletManager.shared.getMnemonicFromKeychain(walletRootAddress: (self?.wallet?.walletRootAddress)!)
+                
+                if self?.sendViolasTokenState == false {
+                    self?.dataModel.sendViolasTransaction(sendAddress: (self?.wallet?.walletAddress)!, receiveAddress: address, amount: amount, fee: fee, mnemonic: menmonic)
+                } else {
+                    self?.dataModel.sendViolasTokenTransaction(sendAddress: (self?.wallet?.walletAddress)!, receiveAddress: address, amount: amount, fee: fee, mnemonic: menmonic, contact: self?.contract ?? "")
+                }
+            } catch {
+                self?.detailView.toastView?.hide()
+            }
+        })
+        alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_cancel_button_title"), style: .cancel){
+            clickHandler in
+            NSLog("点击了取消")
+            })
+        self.present(alertContr, animated: true, completion: nil)
     }
+    
 }

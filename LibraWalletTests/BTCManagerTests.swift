@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import LibraWallet
+@testable import Violas
 class BTCManagerTests: XCTestCase {
 
     override func setUp() {
@@ -45,5 +45,19 @@ class BTCManagerTests: XCTestCase {
         XCTAssertEqual("4c49425241564d0a010007014a00000004000000034e000000060000000d54000000040000000e5800000002000000055a0000001b00000004750000004000000008b50000000b00000000000101000200010300020000000300063c53454c463e0644546f6b656e046d61696e077075626c697368000000000000000000000000000000000000000000000000000000000000000005599ef248e215849cc599f563b4883fc8aff31f1e43dff1e3ebe4de1370e0540001000100020013010002", result)
         let result2 = ViolasManager().getViolasTransactionCode(content: "05599ef248e215849cc599f563b4883fc8aff31f1e43dff1e3ebe4de1370e054")
         XCTAssertEqual("4c49425241564d0a010007014a00000004000000034e000000060000000d54000000060000000e5a0000000600000005600000002300000004830000004000000008c30000000f00000000000101000200010300020002040200030204020300063c53454c463e0644546f6b656e046d61696e0f7061795f66726f6d5f73656e646572000000000000000000000000000000000000000000000000000000000000000005599ef248e215849cc599f563b4883fc8aff31f1e43dff1e3ebe4de1370e054000100020004000c000c0113010102", result2)
+    }
+    func testIsValidViolasAddress() {
+        let str = "["
+        let result = ViolasManager().isValidViolasAddress(address: str)
+        XCTAssertEqual(result, false)
+        let str2 = "9db71b006cb300c1682e3a1ab3755,52344fa808b2acd4f53340470a5267bf082"
+        let result2 = ViolasManager().isValidViolasAddress(address: str2)
+        XCTAssertEqual(result2, false)
+        let str3 = "9db71b006cb300c1682e3a1ab375552344fa808b2acd4f53340470a5267bf082"
+        let result3 = ViolasManager().isValidViolasAddress(address: str3)
+        XCTAssertEqual(result3, true)
+        let str4 = "9db71b006cb300c1682e3a1ab375552344fa808b2acd4f53340470a5267bf082😊"
+        let result4 = ViolasManager().isValidViolasAddress(address: str4)
+        XCTAssertEqual(result4, false)
     }
 }

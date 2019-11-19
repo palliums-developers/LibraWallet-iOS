@@ -380,9 +380,9 @@ class HomeHeaderView: UIView {
     }
     var violasModel: BalanceLibraModel? {
         didSet {
-            if btcModel?.address == self.walletAddressLabel.text {
-                assetLabel.text = "\(Double((btcModel?.balance ?? 0) / 1000000))"
-                self.walletModel?.changeWalletBalance(banlance: btcModel?.balance ?? 0)
+            if violasModel?.address == self.walletAddressLabel.text {
+                assetLabel.text = "\(Double((violasModel?.balance ?? 0) / 1000000))"
+                self.walletModel?.changeWalletBalance(banlance: violasModel?.balance ?? 0)
                 assetUnitLabel.text = "Vtoken"
             }
         }

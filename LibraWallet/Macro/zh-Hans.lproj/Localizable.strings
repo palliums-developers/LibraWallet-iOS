@@ -5,33 +5,32 @@
   Created by palliums on 2019/9/12.
   Copyright © 2019 palliums. All rights reserved.
 */
+
 /************* 首页 *******************/
-wallet_home_title = "我的钱包";
-wallet_home_total_amount_title = "总金额";
-wallet_home_send_button_title = "扫码付款";
+wallet_home_wallet_type_last_title = " 钱包";
+wallet_home_current_balance_title = "当前资产";
+wallet_home_transfer_button_title = "转账";
 wallet_home_receive_button_title = "收款";
+wallet_home_last_transaction_date_title = "交易记录";
+wallet_home_wallet_asset_title = "资产";
 
-wallet_create_button_title = "创建钱包";
-wallet_home_right_bar_title = "交易历史";
-
-/************* 接收 *******************/
-wallet_receive_title = "扫一扫，向我付款";
-wallet_receive_set_qrcode_amout_button_title = "设置金额";
-wallet_receive_clear_qrcode_amout_button_title = "清除金额";
-wallet_receive_save_qrcode_button_title = "保存图片";
-wallet_receive_get_receive_history_title = "查看收款记录";
-wallet_receive_save_qrcode_success_title = "保存成功";
-wallet_receive_save_qrcode_failed_title = "保存失败";
+/************* 收款 *******************/
+wallet_receive_qrcode_title = "收款地址";
+wallet_receive_copy_button_title = "复制地址";
 
 /************* 转账 *******************/
-wallet_withdraw_address_title = "转账地址";
-wallet_withdraw_address_textfield_placeholder = "输入或长按粘贴地址";
-wallet_withdraw_amount_title = "数量";
-wallet_withdraw_amount_textfield_placeholder = "最小转账数量0.001 Libra";
-wallet_withdraw_wallet_balance_prefix_title = "账户余额";
-wallet_withdraw_select_total_coin_title = "全部";
-wallet_withdraw_transaction_fee_title = "手续费";
-wallet_withdraw_confirm_button_title = "转账";
+wallet_transfer_amount_title = "数量";
+wallet_transfer_balance_title = "余额";
+wallet_transfer_amount_textfield_placeholder = "输入金额";
+wallet_transfer_address_title = "收款地址";
+wallet_transfer_address_contact_title = "地址簿";
+wallet_transfer_address_btc_textfield_placeholder = "输入BTC收款地址";
+wallet_transfer_address_libra_textfield_placeholder = "输入Libra收款地址";
+wallet_transfer_address_violas_textfield_placeholder = "输入Violas收款地址";
+wallet_transfer_transaction_fee_title = "手续费";
+wallet_transfer_transaction_fee_least_title = "慢";
+wallet_transfer_transaction_fee_max_title = "快";
+wallet_transfer_confirm_button_title = "确认转账";
 
 /************* 交易历史 *******************/
 wallet_transactions_receive_title = "收款";
@@ -70,31 +69,6 @@ wallet_address_add_address_textfield_placeholder = "输入地址";
 wallet_address_add_confirm_button_title = "确认添加";
 wallet_address_add_type_title = "类型";
 wallet_address_add_type_button_title = "请选择";
-
-/************* 首页 *******************/
-wallet_home_wallet_type_last_title = " 钱包";
-wallet_home_current_balance_title = "当前资产";
-wallet_home_transfer_button_title = "转账";
-wallet_home_receive_button_title = "收款";
-wallet_home_last_transaction_date_title = "交易记录";
-wallet_home_wallet_asset_title = "资产";
-
-/************* 收款 *******************/
-wallet_receive_qrcode_title = "收款地址";
-wallet_receive_copy_button_title = "复制地址";
-
-/************* 转账 *******************/
-wallet_transfer_balance_title = "余额";
-wallet_transfer_amount_textfield_placeholder = "输入金额";
-wallet_transfer_address_title = "收款地址";
-wallet_transfer_address_contact_title = "地址簿";
-wallet_transfer_address_btc_textfield_placeholder = "输入BTC收款地址";
-wallet_transfer_address_libra_textfield_placeholder = "输入Libra收款地址";
-wallet_transfer_address_violas_textfield_placeholder = "输入Violas收款地址";
-wallet_transfer_transaction_fee_title = "手续费";
-wallet_transfer_transaction_fee_least_title = "慢";
-wallet_transfer_transaction_fee_max_title = "快";
-wallet_transfer_confirm_button_title = "确认转账";
 
 /************* 备份助记词警告 *******************/
 wallet_backup_mnemonic_warning_title = "获取助记词";
@@ -149,3 +123,18 @@ wallet_transaction_amount_title = "数量";
 wallet_transaction_transfer_title = "转账";
 wallet_transaction_receive_title = "收款";
 wallet_transaction_check_detail_on_chain = "浏览器查询";
+
+/************* 弹出提示 *******************/
+wallet_transfer_success_alert = "转账成功";
+
+wallet_type_in_password_title = "提示";
+wallet_type_in_password_content = "请输入钱包密码";
+wallet_type_in_password_textfield_placeholder = "密码";
+wallet_type_in_password_cancel_button_title = "取消";
+wallet_type_in_password_confirm_button_title = "确定";
+
+/************* 页面标题 *******************/
+wallet_transfer_navigation_title = "转账";
+
+/************* App错误 *******************/
+

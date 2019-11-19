@@ -14,7 +14,11 @@ class BTCTransferViewController: BaseViewController {
         // 初始化本地配置
         self.setBaseControlllerConfig()
         
+        self.title = (self.wallet?.walletType?.description ?? "") + localLanguage(keyString: "wallet_transfer_navigation_title")
+        
         self.view.addSubview(detailView)
+        self.detailView.wallet = self.wallet
+
         self.initKVO()
     }
     override func viewWillLayoutSubviews() {
@@ -79,26 +83,21 @@ extension BTCTransferViewController {
                 print(error.localizedDescription)
                 // 数据状态异常
             }
-            self.view.hideToastActivity()
+            self.detailView.toastView?.hide()
+            self.view.makeToast(error.localizedDescription, position: .center)
             return
         }
         let type = jsonData.value(forKey: "type") as! String
         
-        if type == "GetUnspentUTXO" {
-            if let tempData = jsonData.value(forKey: "data") as? [BTCUnspentUTXOListModel] {
-                // 转账成功
-                print("Success,\(tempData.count)")
-                let menmonic = try! LibraWalletManager.shared.getMnemonicFromKeychain(walletRootAddress: (wallet?.walletRootAddress)!)
-                let walletttt = BTCManager().getWallet(mnemonic: menmonic)
-                self.dataModel.selectUTXOMakeSignature(utxos: tempData, wallet: walletttt, balance: UInt64((wallet?.walletBalance)!), amount: 0.001, fee: 0.0001, toAddress: "2NGZrVvZG92qGYqzTLjCAewvPZ7JE8S8VxE")
-            }
-        } else if type == "SendBTCTransaction" {
+        if type == "SendBTCTransaction" {
             print("SendBTCsuccess")
         }
         self.view.hideToastActivity()
     }
 }
 extension BTCTransferViewController: BTCTransferViewDelegate {
+    
+    
     func scanAddressQRcode() {
         let vc = ScanViewController()
         vc.actionClosure = { address in
@@ -109,8 +108,9 @@ extension BTCTransferViewController: BTCTransferViewDelegate {
     
     func chooseAddress() {
         let vc = AddressManagerViewController()
-        vc.hidesBottomBarWhenPushed = true
-        
+        vc.actionClosure = { address in
+            self.detailView.addressTextField.text = address
+        }
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -120,6 +120,39 @@ extension BTCTransferViewController: BTCTransferViewDelegate {
 //                                amount: Double(self.detailView.amountTextField.text!)!,
 //                                rootAddress: (self.wallet?.walletRootAddress)!)
 //        self.dataModel.getViolasSequenceNumber(address: (self.wallet?.walletAddress)!)
-        self.dataModel.getUnspentUTXO(address: (wallet?.walletAddress)!)
+
+    }
+    func confirmTransfer(amount: Double, address: String, fee: Double) {
+        let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: localLanguage(keyString: "wallet_type_in_password_content"), preferredStyle: .alert)
+        alertContr.addTextField {
+            (textField: UITextField!) -> Void in
+            textField.placeholder = localLanguage(keyString: "wallet_type_in_password_textfield_placeholder")
+            textField.tintColor = DefaultGreenColor
+            textField.isSecureTextEntry = true
+        }
+        alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_confirm_button_title"), style: .default) { [weak self]
+            clickHandler in
+            let password = alertContr.textFields!.first! as UITextField
+            NSLog("password:\(password.text!)")
+            do {
+                let state = try LibraWalletManager.shared.isValidPaymentPassword(walletRootAddress: (self?.wallet?.walletRootAddress)!, password: password.text!)
+                guard state == true else {
+                    self?.view.makeToast("密码不正确", position: .center)
+                    return
+                }
+                self?.detailView.toastView?.show()
+                let menmonic = try LibraWalletManager.shared.getMnemonicFromKeychain(walletRootAddress: (self?.wallet?.walletRootAddress)!)
+                
+                let walletttt = BTCManager().getWallet(mnemonic: menmonic)
+                self?.dataModel.makeTransaction(wallet: walletttt, amount: amount, fee: fee, toAddress: address)
+            } catch {
+                self?.detailView.toastView?.hide()
+            }
+        })
+        alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_cancel_button_title"), style: .cancel){
+            clickHandler in
+            NSLog("点击了取消")
+            })
+        self.present(alertContr, animated: true, completion: nil)
     }
 }

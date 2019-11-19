@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import LibraWallet
+@testable import Violas
 class LibraWalletCoreTests: XCTestCase {
 
     override func setUp() {
