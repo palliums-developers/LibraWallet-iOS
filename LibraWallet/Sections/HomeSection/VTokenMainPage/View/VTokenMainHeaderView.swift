@@ -1,97 +1,60 @@
 //
-//  HomeHeaderView.swift
+//  VTokenMainHeaderView.swift
 //  LibraWallet
 //
-//  Created by palliums on 2019/10/30.
+//  Created by palliums on 2019/11/18.
 //  Copyright © 2019 palliums. All rights reserved.
 //
 
 import UIKit
-import Localize_Swift
-protocol HomeHeaderViewDelegate: NSObjectProtocol {
-    
-    func checkWalletDetail()
-    
+protocol VTokenMainHeaderViewDelegate: NSObjectProtocol {
     func walletSend()
-    
     func walletReceive()
-    
-    func checkWalletTransactionList()
-    
-    func addCoinToWallet()
 }
-class HomeHeaderView: UIView {
-    weak var delegate: HomeHeaderViewDelegate?
+class VTokenMainHeaderView: UIView {
+    weak var delegate: VTokenMainHeaderViewDelegate?
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(whiteBackgroundView)
-        addSubview(assetTitleLabel)
-        addSubview(assetLabel)
-        addSubview(assetUnitLabel)
-        addSubview(walletDetailButton)
-        addSubview(walletNameLabel)
-        addSubview(walletAddressLabel)
-        addSubview(copyAddressButton)
+        whiteBackgroundView.addSubview(assetLabel)
+        whiteBackgroundView.addSubview(assetUnitLabel)
+        whiteBackgroundView.addSubview(walletAddressLabel)
+        whiteBackgroundView.addSubview(copyAddressButton)
         
-        addSubview(lastTransactionBackgroundButton)
-        addSubview(transferButton)
-        addSubview(buttonSpaceLabel)
-        addSubview(receiveButton)
+        whiteBackgroundView.addSubview(transferButton)
+        whiteBackgroundView.addSubview(buttonSpaceLabel)
+        whiteBackgroundView.addSubview(receiveButton)
         
-        addSubview(coinBackgroundView)
-        addSubview(coinTitleLabel)
-        addSubview(addCoinButton)
-        
-        lastTransactionBackgroundButton.addSubview(transactionTitleLabel)
-//        lastTransactionBackgroundButton.addSubview(lastTransactionDateLabel)
-        lastTransactionBackgroundButton.addSubview(lastTransactionDetailImageView)
-
-        // 添加语言变换通知
-//        NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
+        addSubview(transactionTitleLabel)
+        addSubview(transactionIndicatorLabel)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
-//        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
-        print("HomeHeaderView销毁了")
+        print("VTokenMainHeaderView销毁了")
     }
     //MARK: - 布局
     override func layoutSubviews() {
         super.layoutSubviews()
         whiteBackgroundView.snp.makeConstraints { (make) in
-            make.top.equalTo(self)
+            make.top.equalTo(self).offset(20)
             make.left.equalTo(self).offset(15)
             make.right.equalTo(self).offset(-15)
             make.height.equalTo(183)
         }
-        assetTitleLabel.snp.makeConstraints { (make) in
-            make.left.equalTo(whiteBackgroundView).offset(14)
-            make.centerY.equalTo(walletDetailButton)
-        }
         assetLabel.snp.makeConstraints { (make) in
             make.left.equalTo(whiteBackgroundView).offset(14)
-            make.top.equalTo(assetTitleLabel.snp.bottom).offset(5)
+            make.top.equalTo(whiteBackgroundView).offset(26)
         }
         assetUnitLabel.snp.makeConstraints { (make) in
             make.left.equalTo(assetLabel.snp.right).offset(5)
             make.centerY.equalTo(assetLabel).offset(4)
         }
-        walletDetailButton.snp.makeConstraints { (make) in
-            make.top.equalTo(whiteBackgroundView).offset(12)
-            make.right.equalTo(whiteBackgroundView.snp.right).offset(-5)
-            make.size.equalTo(CGSize.init(width: 36, height: 27))
-        }
-        
-        walletNameLabel.snp.makeConstraints { (make) in
-            make.left.equalTo(whiteBackgroundView).offset(14)
-            make.right.equalTo(walletAddressLabel.snp.left).offset(-10)
-            make.top.equalTo(walletAddressLabel)
-            make.height.equalTo(42)
-            make.width.equalTo(42)
-        }
         walletAddressLabel.snp.makeConstraints { (make) in
             make.right.equalTo(copyAddressButton.snp.left).offset(-4)
+            make.left.equalTo(whiteBackgroundView).offset(14)
+
             make.height.equalTo(42)
             make.centerY.equalTo(copyAddressButton)
         }
@@ -116,45 +79,20 @@ class HomeHeaderView: UIView {
             make.right.bottom.equalTo(whiteBackgroundView)
             make.height.equalTo(54)
         }
-        
-        lastTransactionBackgroundButton.snp.makeConstraints { (make) in
-            make.top.equalTo(whiteBackgroundView.snp.bottom).offset(13)
-            make.left.equalTo(self).offset(15)
-            make.right.equalTo(self).offset(-15)
-            make.height.equalTo(42)
-        }
         transactionTitleLabel.snp.makeConstraints { (make) in
-            make.centerY.equalTo(lastTransactionBackgroundButton)
-            make.left.equalTo(lastTransactionBackgroundButton).offset(14)
+            make.top.equalTo(whiteBackgroundView.snp.bottom).offset(17)
+            make.left.equalTo(self).offset(19)
         }
-//        lastTransactionDateLabel.snp.makeConstraints { (make) in
-//            make.centerY.equalTo(lastTransactionBackgroundButton)
-//            make.right.equalTo(lastTransactionDetailImageView.snp.left).offset(-4)
-//        }
-        lastTransactionDetailImageView.snp.makeConstraints { (make) in
-            make.centerY.equalTo(lastTransactionBackgroundButton)
-            make.right.equalTo(lastTransactionBackgroundButton.snp.right).offset(-15)
-        }
-        // 第三部分
-        coinBackgroundView.snp.makeConstraints { (make) in
-            make.top.equalTo(lastTransactionBackgroundButton.snp.bottom).offset(13)
-            make.left.equalTo(self).offset(15)
-            make.right.equalTo(self.snp.right).offset(-15)
-            make.height.equalTo(50)
-        }
-        coinTitleLabel.snp.makeConstraints { (make) in
-            make.centerY.equalTo(coinBackgroundView)
-            make.left.equalTo(coinBackgroundView).offset(14)
-        }
-        addCoinButton.snp.makeConstraints { (make) in
-            make.centerY.equalTo(coinBackgroundView)
-            make.right.equalTo(coinBackgroundView.snp.right).offset(-14)
+        transactionIndicatorLabel.snp.makeConstraints { (make) in
+            make.left.equalTo(self).offset(20)
+            make.bottom.equalTo(self)
+            make.size.equalTo(CGSize.init(width: 12, height: 3))
         }
     }
     private lazy var whiteBackgroundView: UIView = {
         let view = UIView.init()
-        view.layer.cornerRadius = 7
-        view.layer.backgroundColor = UIColor.white.cgColor
+        view.layer.cornerRadius = 4
+        view.layer.backgroundColor = UIColor.init(hex: "F2F2F9").cgColor
         return view
     }()
     lazy var assetTitleLabel: UILabel = {
@@ -230,7 +168,7 @@ class HomeHeaderView: UIView {
         button.titleEdgeInsets = UIEdgeInsets(top: 0, left: 4, bottom: 0, right: -4)
         button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -4, bottom: 0, right: 4)
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
-        button.backgroundColor = UIColor.white
+        button.backgroundColor = UIColor.init(hex: "F2F2F9")
         button.tag = 30
         // 定义阴影颜色
         button.layer.shadowColor = UIColor.init(hex: "3D3949").cgColor
@@ -260,7 +198,7 @@ class HomeHeaderView: UIView {
         button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -4, bottom: 0, right: 4)
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
         button.tag = 40
-        button.backgroundColor = UIColor.white
+        button.backgroundColor = UIColor.init(hex: "F2F2F9")
         // 定义阴影颜色
         button.layer.shadowColor = UIColor.init(hex: "3D3949").cgColor
         // 阴影的模糊半径
@@ -287,46 +225,15 @@ class HomeHeaderView: UIView {
         label.text = localLanguage(keyString: "wallet_home_last_transaction_date_title")
         return label
     }()
-    lazy var lastTransactionDateLabel: UILabel = {
+   
+    lazy var transactionIndicatorLabel: UILabel = {
         let label = UILabel.init()
-        label.textAlignment = NSTextAlignment.left
-        label.textColor = UIColor.init(hex: "9D9CA3")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: .regular)
-//        label.text = localLanguage(keyString: "2019-10-30")
+        label.backgroundColor = UIColor.init(hex: "3D3949")
         return label
     }()
-    private lazy var lastTransactionDetailImageView : UIImageView = {
-        let imageView = UIImageView.init()
-        imageView.image = UIImage.init(named: "cell_detail")
-        imageView.isUserInteractionEnabled = true
-        return imageView
-    }()
-    private lazy var coinBackgroundView: UIView = {
-        let view = UIView.init()
-        view.layer.backgroundColor = UIColor.white.cgColor
-        return view
-    }()
-    lazy var coinTitleLabel: UILabel = {
-        let label = UILabel.init()
-        label.textAlignment = NSTextAlignment.left
-        label.textColor = UIColor.init(hex: "3D3949")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: .regular)
-        label.text = localLanguage(keyString: "wallet_home_wallet_asset_title")
-        return label
-    }()
-     private lazy var addCoinButton : UIButton = {
-        let button = UIButton.init()
-        button.setImage(UIImage.init(named: "home_add_asset"), for: UIControl.State.normal)
-        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
-        button.tag = 60
-        button.backgroundColor = UIColor.white
-        return button
-    }()
+
     @objc func buttonClick(button: UIButton) {
-        if button.tag == 10 {
-            // 查看钱包详情
-            self.delegate?.checkWalletDetail()
-        } else if button.tag == 20 {
+        if button.tag == 20 {
             // 拷贝地址
             UIPasteboard.general.string = walletAddressLabel.text
             self.makeToast(localLanguage(keyString: "wallet_address_copy_success_title"),
@@ -337,71 +244,6 @@ class HomeHeaderView: UIView {
         } else if button.tag == 40 {
             // 收款
             self.delegate?.walletReceive()
-        } else if button.tag == 50 {
-            // 查看交易记录
-            self.delegate?.checkWalletTransactionList()
-        } else if button.tag == 60 {
-            // 添加资产
-            self.delegate?.addCoinToWallet()
-        }
-    }
-    var walletModel: LibraWalletManager? {
-        didSet {
-            walletNameLabel.text = walletModel?.walletName
-            walletAddressLabel.text = walletModel?.walletAddress
-            // 更新本地数据
-            switch walletModel?.walletType {
-            case .Libra:
-                assetUnitLabel.text = "libra"
-                assetLabel.text = "\(walletModel?.walletBalance ?? 0)"
-                break
-            case .Violas:
-                assetUnitLabel.text = "VToken"
-                assetLabel.text = "\(Double((walletModel?.walletBalance ?? 0) / 1000000))"
-                break
-            case .BTC:
-                assetUnitLabel.text = "BTC"
-                assetLabel.text = String.init(format: "%.8f", (Double(walletModel?.walletBalance ?? 0) / 100000000.0))
-                break
-            default:
-                break
-            }
-        }
-    }
-    var libraModel: BalanceLibraModel? {
-        didSet {
-            if libraModel?.address == self.walletAddressLabel.text {
-                assetLabel.text = "\(libraModel?.balance ?? 0)"
-                self.walletModel?.changeWalletBalance(banlance: libraModel?.balance ?? 0)
-                assetUnitLabel.text = "libra"
-            }
-        }
-    }
-    var violasModel: BalanceLibraModel? {
-        didSet {
-            if violasModel?.address == self.walletAddressLabel.text {
-                assetLabel.text = "\(Double((violasModel?.balance ?? 0) / 1000000))"
-                self.walletModel?.changeWalletBalance(banlance: violasModel?.balance ?? 0)
-                assetUnitLabel.text = "Vtoken"
-            }
-        }
-    }
-    var btcModel: BalanceBTCModel? {
-        didSet {
-            if btcModel?.address == self.walletAddressLabel.text {
-                assetLabel.text = String.init(format: "%.8f", (Double(btcModel?.balance ?? 0) / 100000000.0))
-                self.walletModel?.changeWalletBalance(banlance: btcModel?.balance ?? 0)
-                assetUnitLabel.text = "BTC"
-            }
-        }
-    }
-    var hideAddTokenButtonState: Bool? {
-        didSet {
-            if hideAddTokenButtonState == true {
-                self.addCoinButton.alpha = 0
-            } else {
-                self.addCoinButton.alpha = 1
-            }
         }
     }
 }

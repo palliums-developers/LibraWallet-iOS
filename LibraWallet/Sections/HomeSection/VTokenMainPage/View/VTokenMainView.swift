@@ -1,30 +1,26 @@
 //
-//  HomeView.swift
+//  VTokenMainView.swift
 //  LibraWallet
 //
-//  Created by palliums on 2019/9/11.
+//  Created by palliums on 2019/11/18.
 //  Copyright © 2019 palliums. All rights reserved.
 //
 
 import UIKit
-import Localize_Swift
-class HomeView: UIView {
+
+class VTokenMainView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.backgroundColor = UIColor.init(hex: "F7F7F9")
-//        addSubview(walletTitleLabel)
+        self.backgroundColor = UIColor.white
         addSubview(topBackgroundImageView)
         addSubview(headerView)
         addSubview(tableView)
-        // 添加语言变换通知
-        NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
-        print("MainView销毁了")
+        print("VTokenMainView销毁了")
     }
     //MARK: - 布局
     override func layoutSubviews() {
@@ -35,12 +31,12 @@ class HomeView: UIView {
 //        }
         topBackgroundImageView.snp.makeConstraints { (make) in
             make.top.left.right.equalTo(self)
-            make.height.equalTo((196 * ratio))
+            make.height.equalTo(navigationBarHeight)
         }
         headerView.snp.makeConstraints { (make) in
-            make.top.equalTo(topBackgroundImageView.snp.bottom).offset(-100)
+            make.top.equalTo(topBackgroundImageView.snp.bottom)
             make.left.right.equalTo(self)
-            make.height.equalTo(301)
+            make.height.equalTo(248)
         }
         tableView.snp.makeConstraints { (make) in
             make.top.equalTo(headerView.snp.bottom)
@@ -62,8 +58,8 @@ class HomeView: UIView {
         imageView.isUserInteractionEnabled = true
         return imageView
     }()
-    lazy var headerView: HomeHeaderView = {
-        let view = HomeHeaderView.init()
+    lazy var headerView: VTokenMainHeaderView = {
+        let view = VTokenMainHeaderView.init()
         return view
     }()
     //MARK: - 懒加载对象
@@ -77,22 +73,18 @@ class HomeView: UIView {
         } else {
             // Fallback on earlier versions
         }
-        tableView.backgroundColor = UIColor.init(hex: "F7F7F9")//defaultBackgroundColor
+        tableView.backgroundColor = defaultBackgroundColor
         return tableView
     }()
     //
     @objc func buttonClick(button: UIButton) {
-//        
+//
     }
     var clickCount: Int = 0
     var model: LibraWalletManager? {
         didSet {
-            headerView.walletModel = model
+//            headerView.walletModel = model
         }
-    }
-    var toastView: ToastView? {
-        let toast = ToastView.init()
-        return toast
     }
     @objc func setText(){
         walletTitleLabel.text = localLanguage(keyString: "wallet_home_title")

@@ -14,7 +14,7 @@ class ViolasTransferViewController: BaseViewController {
         // 初始化本地配置
         self.setBaseControlllerConfig()
         
-        self.title = (self.wallet?.walletType?.description ?? "") + localLanguage(keyString: "wallet_transfer_navigation_title")
+//        self.title = (self.wallet?.walletType?.description ?? "") + localLanguage(keyString: "wallet_transfer_navigation_title")
         self.view.addSubview(detailView)
         self.detailView.wallet = self.wallet
         self.initKVO()
@@ -45,6 +45,11 @@ class ViolasTransferViewController: BaseViewController {
     var wallet: LibraWalletManager?
     var sendViolasTokenState: Bool?
     var contract: String?
+    var address: String? {
+        didSet {
+           self.detailView.addressTextField.text = address
+        }
+    }
 }
 extension ViolasTransferViewController {
     func initKVO() {
@@ -104,7 +109,16 @@ extension ViolasTransferViewController: ViolasTransferViewDelegate {
     func scanAddressQRcode() {
         let vc = ScanViewController()
         vc.actionClosure = { address in
-            self.detailView.addressTextField.text = address
+            if address.hasPrefix("violas:") {
+                let tempAddress = address.replacingOccurrences(of: "violas:", with: "")
+                guard ViolasManager().isValidViolasAddress(address: tempAddress) else {
+                    self.view.makeToast("不是有效的Violas地址", position: .center)
+                    return
+                }
+                self.detailView.addressTextField.text = tempAddress
+            } else {
+                self.view.makeToast("不是有效的Violas地址", position: .center)
+            }
         }
         self.navigationController?.pushViewController(vc, animated: true)
     }

@@ -1,20 +1,20 @@
 //
-//  WalletReceiveViewController.swift
+//  ScanResultInvalidViewController.swift
 //  LibraWallet
 //
-//  Created by palliums on 2019/9/6.
+//  Created by palliums on 2019/11/19.
 //  Copyright © 2019 palliums. All rights reserved.
 //
 
 import UIKit
 
-class WalletReceiveViewController: BaseViewController {
+class ScanResultInvalidViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // 初始化本地配置
         self.setBaseControlllerConfig()
         // 加载子View
-        self.view.addSubview(detailView)        
+        self.view.addSubview(detailView)
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -27,21 +27,17 @@ class WalletReceiveViewController: BaseViewController {
             make.left.right.equalTo(self.view)
         }
     }
-    var wallet: LibraWalletManager? {
-        didSet {
-            self.detailView.wallet = wallet
-        }
-    }
-    var tokenName: String? {
-        didSet {
-            self.detailView.violasTokenName = self.tokenName
-        }
-    }
-    private lazy var detailView : WalletReceiveView = {
-        let view = WalletReceiveView.init()
+    //子View
+    private lazy var detailView : ScanResultInvalidView = {
+        let view = ScanResultInvalidView.init()
         return view
     }()
+    var content: String? {
+        didSet {
+            self.detailView.contentTextView.text = content
+        }
+    }
     deinit {
-        print("WalletReceiveViewController销毁了")
+        print("ScanResultInvalidViewController销毁了")
     }
 }

@@ -46,6 +46,12 @@ class TransferViewController: BaseViewController {
     var actionClosure: successClosure?
     var myContext = 0
     var wallet: LibraWalletManager?
+    
+    var address: String? {
+        didSet {
+           self.detailView.addressTextField.text = address
+        }
+    }
 }
 extension TransferViewController {
     //MARK: - KVO
@@ -106,13 +112,21 @@ extension TransferViewController {
         
     }
 }
-extension TransferViewController: TransferViewDelegate {
-
-    
+extension TransferViewController: TransferViewDelegate {    
     func scanAddressQRcode() {
         let vc = ScanViewController()
         vc.actionClosure = { address in
-            self.detailView.addressTextField.text = address
+            if address.hasPrefix("libra:") {
+                let tempAddress = address.replacingOccurrences(of: "libra:", with: "")
+                
+                guard LibraManager().isValidLibraAddress(address: tempAddress) else {
+                    self.view.makeToast("不是有效的Libra地址", position: .center)
+                    return
+                }
+                self.detailView.addressTextField.text = tempAddress
+            } else {
+                self.view.makeToast("不是有效的Libra地址", position: .center)
+            }
         }
         self.navigationController?.pushViewController(vc, animated: true)
     }

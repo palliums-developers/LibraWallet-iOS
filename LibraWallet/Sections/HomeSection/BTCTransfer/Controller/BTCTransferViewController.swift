@@ -46,6 +46,11 @@ class BTCTransferViewController: BaseViewController {
     var actionClosure: successClosure?
     var myContext = 0
     var wallet: LibraWalletManager?
+    var address: String? {
+        didSet {
+           self.detailView.addressTextField.text = address
+        }
+    }
 }
 extension BTCTransferViewController {
     //MARK: - KVO
@@ -101,7 +106,16 @@ extension BTCTransferViewController: BTCTransferViewDelegate {
     func scanAddressQRcode() {
         let vc = ScanViewController()
         vc.actionClosure = { address in
-            self.detailView.addressTextField.text = address
+            if address.hasPrefix("bitcoin:") {
+                let tempAddress = address.replacingOccurrences(of: "bitcoin:", with: "")
+                guard BTCManager().isValidBTCAddress(address: tempAddress) else {
+                    self.view.makeToast("不是有效的Bitcoin地址", position: .center)
+                    return
+                }
+                self.detailView.addressTextField.text = tempAddress
+            } else {
+                self.view.makeToast("不是有效的Bitcoin地址", position: .center)
+            }
         }
         self.navigationController?.pushViewController(vc, animated: true)
     }

@@ -17,6 +17,8 @@
 		9D1A42CF23829EB5008978A7 /* VTokenMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D1A42CE23829EB5008978A7 /* VTokenMainViewController.swift */; };
 		9D1A42D123829EC6008978A7 /* VTokenMainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D1A42D023829EC6008978A7 /* VTokenMainModel.swift */; };
 		9D1A42D32382A1FE008978A7 /* VTokenMainHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D1A42D22382A1FE008978A7 /* VTokenMainHeaderView.swift */; };
+		9D1A42D62383C43A008978A7 /* VTokenTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D1A42D52383C43A008978A7 /* VTokenTableViewManager.swift */; };
+		9D1A42D92383C45C008978A7 /* VTokenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D1A42D82383C45C008978A7 /* VTokenViewModel.swift */; };
 		9D1A614C233204E2009DDA07 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D1A614B233204E2009DDA07 /* BaseViewController.swift */; };
 		9D3954FE235D4C0F0068019F /* BTCManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3954FD235D4C0F0068019F /* BTCManager.swift */; };
 		9D56EA4823516C3C00A55F02 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D56EA4723516C3C00A55F02 /* KeychainManager.swift */; };
@@ -227,6 +229,8 @@
 		9DF49C10236BE3EA00C77880 /* WalletListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF49C0F236BE3EA00C77880 /* WalletListModel.swift */; };
 		9DF49C12236BE3F700C77880 /* WalletListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF49C11236BE3F700C77880 /* WalletListController.swift */; };
 		9DF49C14236BE40500C77880 /* WalletListTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF49C13236BE40500C77880 /* WalletListTableViewManager.swift */; };
+		9DF9BB542383E5EF00FA800D /* ScanResultInvalidViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF9BB532383E5EF00FA800D /* ScanResultInvalidViewController.swift */; };
+		9DF9BB562383E5FD00FA800D /* ScanResultInvalidView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF9BB552383E5FD00FA800D /* ScanResultInvalidView.swift */; };
 		9DFFA8752368316900EA74F9 /* SettingViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DFFA8742368316900EA74F9 /* SettingViewHeader.swift */; };
 		9DFFA87D23683C1D00EA74F9 /* WalletTransactionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DFFA87C23683C1D00EA74F9 /* WalletTransactionsView.swift */; };
 		9DFFA87F23683C3400EA74F9 /* WalletTransactionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DFFA87E23683C3400EA74F9 /* WalletTransactionsModel.swift */; };
@@ -265,6 +269,8 @@
 		9D1A42CE23829EB5008978A7 /* VTokenMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VTokenMainViewController.swift; sourceTree = "<group>"; };
 		9D1A42D023829EC6008978A7 /* VTokenMainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VTokenMainModel.swift; sourceTree = "<group>"; };
 		9D1A42D22382A1FE008978A7 /* VTokenMainHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VTokenMainHeaderView.swift; sourceTree = "<group>"; };
+		9D1A42D52383C43A008978A7 /* VTokenTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VTokenTableViewManager.swift; sourceTree = "<group>"; };
+		9D1A42D82383C45C008978A7 /* VTokenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VTokenViewModel.swift; sourceTree = "<group>"; };
 		9D1A614B233204E2009DDA07 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		9D3954FD235D4C0F0068019F /* BTCManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BTCManager.swift; sourceTree = "<group>"; };
 		9D56EA4723516C3C00A55F02 /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
@@ -483,6 +489,8 @@
 		9DF49C0F236BE3EA00C77880 /* WalletListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletListModel.swift; sourceTree = "<group>"; };
 		9DF49C11236BE3F700C77880 /* WalletListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletListController.swift; sourceTree = "<group>"; };
 		9DF49C13236BE40500C77880 /* WalletListTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletListTableViewManager.swift; sourceTree = "<group>"; };
+		9DF9BB532383E5EF00FA800D /* ScanResultInvalidViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanResultInvalidViewController.swift; sourceTree = "<group>"; };
+		9DF9BB552383E5FD00FA800D /* ScanResultInvalidView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanResultInvalidView.swift; sourceTree = "<group>"; };
 		9DFFA8742368316900EA74F9 /* SettingViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewHeader.swift; sourceTree = "<group>"; };
 		9DFFA87C23683C1D00EA74F9 /* WalletTransactionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletTransactionsView.swift; sourceTree = "<group>"; };
 		9DFFA87E23683C3400EA74F9 /* WalletTransactionsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletTransactionsModel.swift; sourceTree = "<group>"; };
@@ -575,6 +583,8 @@
 			isa = PBXGroup;
 			children = (
 				9D1A42CB23829E84008978A7 /* Controller */,
+				9D1A42D72383C43D008978A7 /* ViewModel */,
+				9D1A42D42383C413008978A7 /* TableViewManager */,
 				9D1A42CA23829E79008978A7 /* Model */,
 				9D1A42C823829DA2008978A7 /* View */,
 			);
@@ -604,6 +614,22 @@
 				9D1A42CE23829EB5008978A7 /* VTokenMainViewController.swift */,
 			);
 			path = Controller;
+			sourceTree = "<group>";
+		};
+		9D1A42D42383C413008978A7 /* TableViewManager */ = {
+			isa = PBXGroup;
+			children = (
+				9D1A42D52383C43A008978A7 /* VTokenTableViewManager.swift */,
+			);
+			path = TableViewManager;
+			sourceTree = "<group>";
+		};
+		9D1A42D72383C43D008978A7 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				9D1A42D82383C45C008978A7 /* VTokenViewModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		9D1A6147233204B1009DDA07 /* Base */ = {
@@ -1880,6 +1906,7 @@
 		9DC06A6F2374059100BCE1FE /* HomeSection */ = {
 			isa = PBXGroup;
 			children = (
+				9DF9BB502383E5AF00FA800D /* ScanResultInvalid */,
 				9D1A42C723829D93008978A7 /* VTokenMainPage */,
 				9DC902372328E78A0097FD85 /* Home */,
 				9DC48878232231DA005FF254 /* Scan */,
@@ -2252,6 +2279,31 @@
 			path = TableViewManager;
 			sourceTree = "<group>";
 		};
+		9DF9BB502383E5AF00FA800D /* ScanResultInvalid */ = {
+			isa = PBXGroup;
+			children = (
+				9DF9BB522383E5C600FA800D /* Model */,
+				9DF9BB512383E5C200FA800D /* View */,
+			);
+			path = ScanResultInvalid;
+			sourceTree = "<group>";
+		};
+		9DF9BB512383E5C200FA800D /* View */ = {
+			isa = PBXGroup;
+			children = (
+				9DF9BB552383E5FD00FA800D /* ScanResultInvalidView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		9DF9BB522383E5C600FA800D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				9DF9BB532383E5EF00FA800D /* ScanResultInvalidViewController.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		9DFFA87623683BBC00EA74F9 /* WalletTransactions */ = {
 			isa = PBXGroup;
 			children = (
@@ -2595,6 +2647,7 @@
 				9DA0265B23710FDB0084905B /* WelcomeAlert.swift in Sources */,
 				9D56EA4823516C3C00A55F02 /* KeychainManager.swift in Sources */,
 				9D9B4A5F2366D51200354EF0 /* WalletDetailTableViewManager.swift in Sources */,
+				9DF9BB562383E5FD00FA800D /* ScanResultInvalidView.swift in Sources */,
 				9D9B4A122360491C00354EF0 /* HelpCenterModel.swift in Sources */,
 				9DC902412328EA640097FD85 /* HomeViewController.swift in Sources */,
 				9DC06A412372A9CC00BCE1FE /* MarketView.swift in Sources */,
@@ -2639,6 +2692,7 @@
 				9DC4886023220E47005FF254 /* QRCodeGenerator.swift in Sources */,
 				9DA02646236FFCF60084905B /* BackupMnemonicModel.swift in Sources */,
 				9DC4880B2320E6C1005FF254 /* LibraPrivateKey.swift in Sources */,
+				9D1A42D92383C45C008978A7 /* VTokenViewModel.swift in Sources */,
 				9DC06A592372D47F00BCE1FE /* admission_control.grpc.swift in Sources */,
 				9D9B49B1235DA76100354EF0 /* AddAddressView.swift in Sources */,
 				9DC06A602372D47F00BCE1FE /* vm_errors.pb.swift in Sources */,
@@ -2750,7 +2804,9 @@
 				9D9B49DD23602EB900354EF0 /* SettingTableViewManager.swift in Sources */,
 				9D9B4A462362967200354EF0 /* AddWalletViewController.swift in Sources */,
 				9D9B49CD235FFAAB00354EF0 /* MineView.swift in Sources */,
+				9DF9BB542383E5EF00FA800D /* ScanResultInvalidViewController.swift in Sources */,
 				9D62648B2359A61000A79B3D /* CreateIdentityWalletView.swift in Sources */,
+				9D1A42D62383C43A008978A7 /* VTokenTableViewManager.swift in Sources */,
 				9D9B4A5D2366D1E000354EF0 /* WalletDetailViewController.swift in Sources */,
 				9D9B49B8235DBE8100354EF0 /* ImportIdentityWalletViewController.swift in Sources */,
 				9D9B4A09236048A000354EF0 /* AboutUsTableViewCell.swift in Sources */,

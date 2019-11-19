@@ -141,9 +141,28 @@ class WalletReceiveView: UIView {
             guard let walletModel = wallet else {
                 return
             }
-            qrcodeImageView.image = QRCodeGenerator.generate(from: walletModel.walletAddress ?? "")
+            var tempAddress = walletModel.walletAddress ?? ""
+            switch wallet?.walletType {
+            case .BTC:
+                tempAddress = "bitcoin:" + tempAddress
+                break
+            case .Libra:
+                tempAddress = "libra:" + tempAddress
+                break
+            case .Violas:
+                if let name = violasTokenName, name.isEmpty == false {
+                    tempAddress = "violas-\(name.lowercased()):" + tempAddress
+                } else {
+                    tempAddress = "violas:" + tempAddress
+                }
+                break
+            default:
+                break
+            }
+            qrcodeImageView.image = QRCodeGenerator.generate(from: tempAddress)
             addressRemarksLabel.text = walletModel.walletName
             addressLabel.text = walletModel.walletAddress ?? ""
         }
     }
+    var violasTokenName: String?
 }

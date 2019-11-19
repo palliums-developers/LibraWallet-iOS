@@ -68,7 +68,7 @@ class HomeTableViewCell: UITableViewCell {
     var model: ViolasTokenModel? {
         didSet {
             coinNameLabel.text = model?.name
-            coinAmountLabel.text = "\(Double((model?.balance ?? 0) / 1000000))"
+            coinAmountLabel.text =  "\(Double(model?.balance ?? 0) / 1000000.0)"
         }
     }
 }

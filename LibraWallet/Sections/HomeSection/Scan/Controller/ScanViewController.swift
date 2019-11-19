@@ -57,8 +57,8 @@ class ScanViewController: UIViewController {
             return
         }
         if let action = self.actionClosure {
+            self.navigationController?.popViewController(animated: false)
             action(address)
-            self.navigationController?.popViewController(animated: true)
         }
     }
     open func openPhotoAlbum() {
