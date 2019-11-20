@@ -564,14 +564,15 @@ struct DataBaseManager {
                     let tokenDescription = wallet[Expression<String>("token_description")]
                     // 代币地址
                     let tokenAddress = wallet[Expression<String>("token_address")]
-                    // 代币绑定钱包
-//                    let tokenBindingWalletID = wallet[Expression<Int64>("token_binding_wallet_id")]
+                    // 余额
+                    let balance = wallet[Expression<Int64>("token_amount")]
                     
                     let wallet = ViolasTokenModel.init(name: tokenName,
                                                        description: tokenDescription,
                                                        address: tokenAddress,
                                                        icon: tokenIcon,
-                                                       enable: true)
+                                                       enable: true,
+                                                       balance: balance)
                     models.append(wallet)
                 }
                 return models
@@ -599,43 +600,19 @@ struct DataBaseManager {
             return false
         }
     }
-    // MARK: 创建ViolasToken表
-//    func createEnableTokenTable() {
-//        /// 判断是否存在表
-//        guard isExistTable(name: "ViolasToken") == false else {
-//            return
-//        }
-//        do {
-//            let addressTable = Table("ViolasToken")
-//            // 设置字段
-//            let tokenID = Expression<Int64>("token_id")
-//            // 代币图片
-//            let tokenIcon = Expression<String>("token_icon")
-//            // 代币名字
-//            let tokenName = Expression<String>("token_name")
-//            // 代币描述
-//            let tokenDescription = Expression<String>("token_description")
-//            // 代币地址
-//            let tokenAddress = Expression<String>("token_address")
-//            // 代币绑定钱包
-//            let tokenBindingWalletID = Expression<String>("token_binding_wallet_id")
-//
-//            // 建表
-//            try db!.run(addressTable.create { t in
-//                t.column(tokenID, primaryKey: true)
-//                t.column(tokenIcon)
-//                t.column(tokenName)
-//                t.column(tokenDescription)
-//                t.column(tokenAddress, unique: true)
-//                t.column(tokenBindingWalletID)
-//            })
-//        } catch {
-//            let errorString = error.localizedDescription
-//            if errorString.hasSuffix("already exists") == true {
-//                return
-//            } else {
-//                print(errorString)
-//            }
-//        }
-//    }
+    func updateViolasToken(walletID: Int64, model: BalanceViolasModulesModel) -> Bool {
+        let violasTokenTable = Table("ViolasToken")
+        do {
+            if let tempDB = self.db {
+                let item = violasTokenTable.filter(Expression<Int64>("token_binding_wallet_id") == walletID && Expression<String>("token_address") == model.address ?? "")
+                try tempDB.run(item.update(Expression<Int64>("token_amount") <- model.balance ?? 0))
+                return true
+            } else {
+                return false
+            }
+        } catch {
+            print(error.localizedDescription)
+            return false
+        }
+    }
 }

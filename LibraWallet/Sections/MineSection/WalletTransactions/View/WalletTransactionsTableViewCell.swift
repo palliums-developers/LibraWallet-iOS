@@ -93,7 +93,7 @@ class WalletTransactionsTableViewCell: UITableViewCell {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "808080")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.semibold)
+        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
         label.text = localLanguage(keyString: "wallet_transaction_amount_title")
         return label
     }()
@@ -109,7 +109,7 @@ class WalletTransactionsTableViewCell: UITableViewCell {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "3C3848")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: UIFont.Weight.semibold)
+        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
         label.text = "---"
         return label
     }()
@@ -146,9 +146,17 @@ class WalletTransactionsTableViewCell: UITableViewCell {
             }
             coinLabel.text = "BTC"
             dateLabel.text = timestampToDateString(timestamp: model.block_time ?? 0, dateFormat: "yyyy-MM-dd HH:mm:ss")
-            amountLabel.text = "\(model.transaction_value ?? 0)"
+            amountLabel.text = "\(Double(model.transaction_value ?? 0) / 100000000.0)"
             addressLabel.text = model.inputs?.first?.prev_addresses?.first
-            typeLabel.text = "\(model.transaction_type ?? 0)"
+            if model.transaction_type == 0 {
+                // 转账
+                typeLabel.textColor = UIColor.init(hex: "E54040")
+                typeLabel.text = localLanguage(keyString: "wallet_transaction_transfer_title")
+            } else {
+                // 收款
+                typeLabel.textColor = UIColor.init(hex: "13B788")
+                typeLabel.text = localLanguage(keyString: "wallet_transaction_receive_title")
+            }
         }
     }
     var violasModel: ViolasDataModel? {
@@ -156,10 +164,27 @@ class WalletTransactionsTableViewCell: UITableViewCell {
             guard let model = violasModel else {
                 return
             }
-            coinLabel.text = "Violas"
             dateLabel.text = timestampToDateString(timestamp: model.expiration_time ?? 0, dateFormat: "yyyy-MM-dd HH:mm:ss")
-            amountLabel.text = "\(model.amount ?? 0)"
+            amountLabel.text = "\(Double((model.amount ?? 0) / 1000000))"
             addressLabel.text = model.receiver
+            if model.type == 1 {
+                // publish
+                typeLabel.textColor = UIColor.init(hex: "FB8F0B")
+                typeLabel.text = "开启"
+                coinLabel.text = "VToken"
+            } else if model.type == 2 {
+                // 交易
+                if model.transaction_type == 0 {
+                    // 转账
+                    typeLabel.textColor = UIColor.init(hex: "E54040")
+                    typeLabel.text = localLanguage(keyString: "wallet_transaction_transfer_title")
+                } else {
+                    // 收款
+                    typeLabel.textColor = UIColor.init(hex: "13B788")
+                    typeLabel.text = localLanguage(keyString: "wallet_transaction_receive_title")
+                }
+                coinLabel.text = "Violas"
+            }
 //            typeLabel.text = "\(model.transaction_type ?? 0)"
         }
     }
@@ -171,11 +196,17 @@ class WalletTransactionsTableViewCell: UITableViewCell {
             coinLabel.text = "Libra"
             dateLabel.text = model.date
             amountLabel.text = model.amount
-            addressLabel.text = model.toAddress
-            
-            typeLabel.text = localLanguage(keyString: "wallet_transaction_transfer_title")//"\(model.transaction_type ?? 0)"
+            if model.event == "sent" {
+                // 转账
+                typeLabel.textColor = UIColor.init(hex: "E54040")
+                typeLabel.text = localLanguage(keyString: "wallet_transaction_transfer_title")
+                addressLabel.text = model.toAddress
+            } else {
+                // 收款
+                typeLabel.textColor = UIColor.init(hex: "13B788")
+                typeLabel.text = localLanguage(keyString: "wallet_transaction_receive_title")
+                addressLabel.text = model.fromAddress
+            }
         }
     }
 }
-//wallet_transaction_transfer_title = "转账";
-//wallet_transaction_receive_title = "收款";

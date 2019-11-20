@@ -49,7 +49,6 @@ class BackupWarningViewController: BaseViewController {
         print("BackupWarningViewController销毁了")
     }
     var FirstInApp: Bool?
-    var mnemonicArray: [String]?
     func addRightNavigationBar() {
         let scanView = UIBarButtonItem(customView: backupLater)
         // 重要方法，用来调整自定义返回view距离左边的距离
@@ -72,12 +71,13 @@ class BackupWarningViewController: BaseViewController {
         UIApplication.shared.keyWindow?.rootViewController = tabbar
         UIApplication.shared.keyWindow?.makeKeyAndVisible()
     }
+    var tempWallet: CreateWalletModel?
 }
 extension BackupWarningViewController: BackupWarningViewDelegate {
     func checkBackupMnemonic() {
         let vc = BackupMnemonicController()
-        vc.mnemonicArray = self.mnemonicArray
         vc.FirstInApp = self.FirstInApp
+        vc.tempWallet = self.tempWallet
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }

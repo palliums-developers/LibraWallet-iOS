@@ -51,7 +51,7 @@ class AboutUsTableViewCell: UITableViewCell {
     lazy var detailLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.right
-        label.textColor = UIColor.init(hex: "15C794")
+        label.textColor = UIColor.init(hex: "6161D2")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 15), weight: UIFont.Weight.regular)
         return label
     }()

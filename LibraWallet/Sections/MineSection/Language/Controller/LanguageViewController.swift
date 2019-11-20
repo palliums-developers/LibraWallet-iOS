@@ -14,7 +14,7 @@ class LanguageViewController: BaseViewController {
         // 初始化本地配置
         self.setNavigationWithoutShadowImage()
         // 设置标题
-//        self.title = localLanguage(keyString: "wallet_setting_language_navigationbar_title")
+        self.title = localLanguage(keyString: "wallet_language_navigation_title")
         // 加载子View
         self.view.addSubview(detailView)
         // 添加语言变换通知

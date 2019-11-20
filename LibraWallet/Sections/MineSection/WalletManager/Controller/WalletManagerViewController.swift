@@ -17,7 +17,7 @@ class WalletManagerViewController: BaseViewController {
         // 初始化本地配置
         self.setBaseControlllerConfig()
         // 设置标题
-//        self.title = localLanguage(keyString: "wallet_home_right_bar_title")
+        self.title = localLanguage(keyString: "wallet_wallet_manager_navigation_title")
         // 加载子View
         self.view.addSubview(self.viewModel.detailView)
         // 加载数据
@@ -64,6 +64,11 @@ class WalletManagerViewController: BaseViewController {
         self.navigationController?.pushViewController(vc, animated: true)
     }
     var managerWallet: Bool?
+    var needRefresh: Bool? {
+        didSet {
+            self.viewModel.dataModel.loadLocalWallet()
+        }
+    }
 }
 extension WalletManagerViewController: WalletManagerTableViewManagerDelegate {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: LibraWalletManager) {

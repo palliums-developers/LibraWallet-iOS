@@ -20,9 +20,12 @@ class CreateIdentityWalletModel: NSObject {
                 try self.createLibraWallet(name: walletName, password: password, mnemonics: mnemonic)
                 try self.createViolasWallet(name: walletName, password: password, mnemonics: mnemonic)
                 setIdentityWalletState(show: true)
+                let tempWallet = CreateWalletModel.init(password: nil,
+                                                        mnemonic: mnemonic,
+                                                        wallet: nil)
                 DispatchQueue.main.async(execute: {
                     //需更新
-                    let data = setKVOData(type: "CreateWallet", data: mnemonic)
+                    let data = setKVOData(type: "CreateWallet", data: tempWallet)
                     self.setValue(data, forKey: "dataDic")
                 })
             } catch {

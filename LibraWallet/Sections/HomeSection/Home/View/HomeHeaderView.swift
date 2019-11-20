@@ -329,7 +329,7 @@ class HomeHeaderView: UIView {
         } else if button.tag == 20 {
             // 拷贝地址
             UIPasteboard.general.string = walletAddressLabel.text
-            self.makeToast(localLanguage(keyString: "wallet_address_copy_success_title"),
+            self.makeToast(localLanguage(keyString: "wallet_copy_address_success_title"),
                            position: .center)
         } else if button.tag == 30 {
             // 转账
@@ -354,14 +354,17 @@ class HomeHeaderView: UIView {
             case .Libra:
                 assetUnitLabel.text = "libra"
                 assetLabel.text = "\(walletModel?.walletBalance ?? 0)"
+                hideAddTokenButtonState = true
                 break
             case .Violas:
                 assetUnitLabel.text = "VToken"
                 assetLabel.text = "\(Double((walletModel?.walletBalance ?? 0) / 1000000))"
+                hideAddTokenButtonState = false
                 break
             case .BTC:
                 assetUnitLabel.text = "BTC"
                 assetLabel.text = String.init(format: "%.8f", (Double(walletModel?.walletBalance ?? 0) / 100000000.0))
+                hideAddTokenButtonState = true
                 break
             default:
                 break
@@ -382,7 +385,7 @@ class HomeHeaderView: UIView {
             if violasModel?.address == self.walletAddressLabel.text {
                 assetLabel.text = "\(Double((violasModel?.balance ?? 0) / 1000000))"
                 self.walletModel?.changeWalletBalance(banlance: violasModel?.balance ?? 0)
-                assetUnitLabel.text = "Vtoken"
+                assetUnitLabel.text = "VToken"
             }
         }
     }

@@ -14,7 +14,7 @@ class ServiceLegalViewController: BaseViewController {
         // 初始化本地配置
         self.setBaseControlllerConfig()
         // 设置标题
-        self.title = localLanguage(keyString: "wallet_login_legal_navigationbar_title")
+        self.title = localLanguage(keyString: "wallet_service_navigation_title")
         // 加载子View
         self.view.addSubview(detailView)
     }

@@ -236,7 +236,7 @@ class VTokenMainHeaderView: UIView {
         if button.tag == 20 {
             // 拷贝地址
             UIPasteboard.general.string = walletAddressLabel.text
-            self.makeToast(localLanguage(keyString: "wallet_address_copy_success_title"),
+            self.makeToast(localLanguage(keyString: "wallet_copy_address_success_title"),
                            position: .center)
         } else if button.tag == 30 {
             // 转账

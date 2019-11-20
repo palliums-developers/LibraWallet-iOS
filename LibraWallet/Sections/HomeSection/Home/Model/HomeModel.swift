@@ -91,11 +91,7 @@ class HomeModel: NSObject {
             
         }
     }
-    func updateLocalWalletData(walletID: Int64, balance: Int64) {
-        // 刷新本地缓存数据
-        let result = DataBaseManager.DBManager.updateWalletBalance(walletID: walletID, balance: balance)
-        print("刷新本地钱包数据状态: \(result),walletID = \(walletID)")
-    }
+
     func tempGetLibraBalance(walletID: Int64, address: String) {
         let quene = DispatchQueue.init(label: "createWalletQuene")
         quene.async {
@@ -223,6 +219,10 @@ class HomeModel: NSObject {
                     self?.setValue(data, forKey: "dataDic")
                     // 刷新本地数据
                     self?.updateLocalWalletData(walletID: walletID, balance: json.data?.balance ?? 0)
+                    guard let tokenModel = json.data?.modules else {
+                        return
+                    }
+                    self?.updateLocalWalletTokenData(walletID: walletID, modules: tokenModel)
                 } catch {
                     print("UpdateViolasBalance_解析异常\(error.localizedDescription)")
                     let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "UpdateViolasBalance")
@@ -250,6 +250,18 @@ class HomeModel: NSObject {
             }
         }
         return tempArray
+    }
+    func updateLocalWalletData(walletID: Int64, balance: Int64) {
+        // 刷新本地缓存数据
+        let result = DataBaseManager.DBManager.updateWalletBalance(walletID: walletID, balance: balance)
+        print("刷新本地钱包数据状态: \(result),walletID = \(walletID)")
+    }
+    func updateLocalWalletTokenData(walletID: Int64, modules: [BalanceViolasModulesModel]) {
+        // 刷新本地缓存数据
+        for item in modules {
+            let result = DataBaseManager.DBManager.updateViolasToken(walletID: walletID, model: item)
+            print("刷新本地钱包Token数据状态: \(result),walletID = \(walletID)")
+        }
     }
     deinit {
         requests.forEach { cancellable in

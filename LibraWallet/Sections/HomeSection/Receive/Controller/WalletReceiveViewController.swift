@@ -13,6 +13,10 @@ class WalletReceiveViewController: BaseViewController {
         super.viewDidLoad()
         // 初始化本地配置
         self.setBaseControlllerConfig()
+        // 页面标题
+        self.title = localLanguage(keyString: "wallet_receive_navigation_title")
+
+        
         // 加载子View
         self.view.addSubview(detailView)        
     }

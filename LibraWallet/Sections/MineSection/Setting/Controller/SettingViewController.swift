@@ -14,7 +14,7 @@ class SettingViewController: BaseViewController {
         // 初始化本地配置
         self.setBaseControlllerConfig()
         // 设置标题
-//        self.title = localLanguage(keyString: "wallet_home_right_bar_title")
+        self.title = localLanguage(keyString: "wallet_setting_navigation_title")
         // 加载子View
         self.view.addSubview(self.viewModel.detailView)
         // 加载数据
@@ -32,7 +32,7 @@ class SettingViewController: BaseViewController {
         }
     }
     deinit {
-        print("MineViewController销毁了")
+        print("SettingViewController销毁了")
     }
     lazy var viewModel: SettingViewModel = {
         let viewModel = SettingViewModel.init()
@@ -54,7 +54,6 @@ extension SettingViewController: SettingTableViewManagerDelegate {
             let vc = AboutUsViewController()
             self.navigationController?.pushViewController(vc, animated: true)
         } else {
-            
             let vc = HelpCenterViewController()
             self.navigationController?.pushViewController(vc, animated: true)
         }

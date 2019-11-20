@@ -11,7 +11,9 @@ import UIKit
 class AboutUsViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.setNavigationWithoutShadowImage()
+        self.setBaseControlllerConfig()
+        
+        self.title = localLanguage(keyString: "wallet_about_us_navigation_title")
         
         self.view.addSubview(detailView)
     }

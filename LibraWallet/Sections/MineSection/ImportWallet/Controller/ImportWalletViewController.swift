@@ -96,6 +96,10 @@ extension ImportWalletViewController: ImportWalletViewDelegate {
         }
     }
     func importViolasWallet(name: String, password: String, mnemonicArray: [String]) {
+        let quene = DispatchQueue.init(label: "createWalletQuene")
+        quene.async {
+            
+        }
         do {
             #warning("主线程阻塞,待处理")
             let seed = try LibraMnemonic.seed(mnemonic: mnemonicArray)

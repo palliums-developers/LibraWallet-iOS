@@ -12,12 +12,18 @@ import AVFoundation
 class ScanViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        // 添加返回按钮
+        self.addNavigationBar()
         // 设置背景色为黑色
         self.view.backgroundColor = UIColor.black
         // 加载子View
         self.view.addSubview(detailView)
         // 延时启动相机
         perform(#selector(ScanViewController.startScan), with: nil, afterDelay: 0.3)
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.barStyle = .black
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -32,6 +38,8 @@ class ScanViewController: UIViewController {
         detailView.stopScan()
         // 停止扫描解析
         scanManager.stop()
+        
+        self.navigationController?.navigationBar.barStyle = .default
     }
     @objc open func startScan() {
         // 开始扫描动画
@@ -75,6 +83,28 @@ class ScanViewController: UIViewController {
             self?.present(picker, animated: true, completion: nil)
         }
     }
+    func addNavigationBar() {
+        // 自定义导航栏的UIBarButtonItem类型的按钮
+        let backView = UIBarButtonItem(customView: backButton)
+        // 重要方法，用来调整自定义返回view距离左边的距离
+        let barButtonItem = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        barButtonItem.width = -5
+        // 返回按钮设置成功
+        self.navigationItem.leftBarButtonItems = [barButtonItem, backView]
+    }
+    @objc func back() {
+        self.navigationController?.popViewController(animated: true)
+    }
+    lazy var backButton: UIButton = {
+        
+        let backButton = UIButton(type: .custom)
+        // 给按钮设置返回箭头图片
+        backButton.setImage(UIImage.init(named: "navigation_back_white"), for: UIControl.State.normal)
+        // 设置frame
+        backButton.frame = CGRect(x: 200, y: 13, width: 22, height: 44)
+        backButton.addTarget(self, action: #selector(back), for: .touchUpInside)
+        return backButton
+    }()
     //是否需要识别后的当前图像
     public  var isNeedCodeImage = false
     typealias successClosure = (String) -> Void

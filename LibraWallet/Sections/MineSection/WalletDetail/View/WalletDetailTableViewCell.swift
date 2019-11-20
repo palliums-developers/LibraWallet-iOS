@@ -54,7 +54,7 @@ class WalletDetailTableViewCell: UITableViewCell {
     }()
     lazy var detailLabel: UILabel = {
         let label = UILabel.init()
-        label.textAlignment = NSTextAlignment.center
+        label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "9F9DA4")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
         label.lineBreakMode = .byTruncatingMiddle

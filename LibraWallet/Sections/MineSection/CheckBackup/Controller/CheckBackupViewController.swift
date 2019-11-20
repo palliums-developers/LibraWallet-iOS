@@ -37,12 +37,12 @@ class CheckBackupViewController: BaseViewController {
         viewModel.detailView.delegate = self
         return viewModel
     }()
-    var mnemonicArray: [String]? {
+    var FirstInApp: Bool?
+    var tempWallet: CreateWalletModel? {
         didSet {
-            self.viewModel.dataArray = mnemonicArray
+            self.viewModel.dataArray = tempWallet?.mnemonic
         }
     }
-    var FirstInApp: Bool?
 }
 extension CheckBackupViewController: CheckBackupViewDelegate {
     func confirmBackup() {
@@ -55,9 +55,32 @@ extension CheckBackupViewController: CheckBackupViewDelegate {
                     UIApplication.shared.keyWindow?.makeKeyAndVisible()
                 })
             } else {
-                
+                let result = DataBaseManager.DBManager.insertWallet(model: tempWallet!.wallet!)
+                self.view.hideToastActivity()
+                if result == true {
+                    do {
+                        try LibraWalletManager().saveMnemonicToKeychain(mnemonic: tempWallet!.mnemonic!, walletRootAddress: tempWallet?.wallet?.walletRootAddress ?? "")
+                        try LibraWalletManager().savePaymentPasswordToKeychain(password: tempWallet!.password!, walletRootAddress: tempWallet?.wallet?.walletRootAddress ?? "")
+                        self.view.makeToast(localLanguage(keyString: "创建成功"), duration: 1, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { [weak self](bool) in
+
+                            if let vc = UIApplication.shared.keyWindow?.rootViewController {
+                                guard vc.children.isEmpty == false else {
+                                    return
+                                }
+                                #warning("有问题待修改")
+                                if let tempHome = vc.children.last?.children[1], tempHome.isKind(of: WalletManagerViewController.classForCoder()) {
+                                    (tempHome as! WalletManagerViewController).needRefresh = true
+                                    self?.navigationController?.popToViewController(tempHome, animated: true)
+                                }
+                            }
+                        })
+                    } catch {
+                        print(error.localizedDescription)
+                        //删除从数据库创建好钱包
+                        _ = DataBaseManager.DBManager.deleteWalletFromTable(model: tempWallet!.wallet!)
+                    }
+                }
             }
-            
         } catch {
             self.view.makeToast(error.localizedDescription,
                                 position: .center)

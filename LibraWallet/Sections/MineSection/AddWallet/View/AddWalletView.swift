@@ -161,6 +161,10 @@ class AddWalletView: UIView {
         button.tag = 10
         return button
     }()
+    var toastView: ToastView {
+        let toast = ToastView.init()
+        return toast
+    }
     @objc func buttonClick(button: UIButton) {
         guard let name = nameTextField.text else {
             // 名字拆包失败
@@ -204,6 +208,9 @@ class AddWalletView: UIView {
                            position: .center)
             return
         }
+        self.nameTextField.resignFirstResponder()
+        self.passwordTextField.resignFirstResponder()
+        self.passwordConfirmTextField.resignFirstResponder()
         self.delegate?.confirmAddWallet(name: name, password: password)
     }
     var type: String? {

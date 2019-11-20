@@ -137,9 +137,38 @@ extension TransferViewController: TransferViewDelegate {
         self.navigationController?.pushViewController(vc, animated: true)
     }
     func confirmTransfer(amount: Double, address: String, fee: Double) {
-        self.detailView.toastView?.show()
-        self.dataModel.transfer(address: address,
-                                amount: amount,
-                                rootAddress: (self.wallet?.walletRootAddress)!)
+        let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: localLanguage(keyString: "wallet_type_in_password_content"), preferredStyle: .alert)
+            alertContr.addTextField {
+                (textField: UITextField!) -> Void in
+                textField.placeholder = localLanguage(keyString: "wallet_type_in_password_textfield_placeholder")
+                textField.tintColor = DefaultGreenColor
+                textField.isSecureTextEntry = true
+            }
+            alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_confirm_button_title"), style: .default) { [weak self]
+                clickHandler in
+                let password = alertContr.textFields!.first! as UITextField
+                NSLog("password:\(password.text!)")
+                do {
+                    let state = try LibraWalletManager.shared.isValidPaymentPassword(walletRootAddress: (self?.wallet?.walletRootAddress)!, password: password.text!)
+                    guard state == true else {
+                        self?.view.makeToast("密码不正确", position: .center)
+                        return
+                    }
+                    self?.detailView.toastView?.show()
+
+                    let menmonic = try LibraWalletManager.shared.getMnemonicFromKeychain(walletRootAddress: (self?.wallet?.walletRootAddress)!)
+                    
+                    self?.dataModel.transfer(address: address,
+                                            amount: amount,
+                                            mnemonic: menmonic)
+                } catch {
+                    self?.detailView.toastView?.hide()
+                }
+            })
+            alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_cancel_button_title"), style: .cancel){
+                clickHandler in
+                NSLog("点击了取消")
+                })
+            self.present(alertContr, animated: true, completion: nil)
     }
 }

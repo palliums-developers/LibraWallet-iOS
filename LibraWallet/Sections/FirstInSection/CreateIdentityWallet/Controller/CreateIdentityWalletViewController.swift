@@ -68,11 +68,11 @@ extension CreateIdentityWalletViewController {
         let type = jsonData.value(forKey: "type") as! String
         self.detailView.toastView?.hide()
         if type == "CreateWallet" {
-            if let tempData = jsonData.value(forKey: "data") as? [String] {
+            if let tempData = jsonData.value(forKey: "data") as? CreateWalletModel {
                 self.view.makeToast("创建成功", duration: 0.5, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
                     let vc = BackupWarningViewController()
                     vc.FirstInApp = true
-                    vc.mnemonicArray = tempData
+                    vc.tempWallet = tempData
                     self.navigationController?.pushViewController(vc, animated: true)
                 })
             }

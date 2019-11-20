@@ -124,6 +124,9 @@ wallet_transaction_transfer_title = "转账";
 wallet_transaction_receive_title = "收款";
 wallet_transaction_check_detail_on_chain = "浏览器查询";
 
+/************* 关于我们 *******************/
+wallet_about_us_navigation_right_bar_title = "问题反馈";
+
 /************* 弹出提示 *******************/
 wallet_transfer_success_alert = "转账成功";
 
@@ -133,8 +136,29 @@ wallet_type_in_password_textfield_placeholder = "密码";
 wallet_type_in_password_cancel_button_title = "取消";
 wallet_type_in_password_confirm_button_title = "确定";
 
+wallet_copy_address_success_title = "确定";
+
+wallet_alert_feedback_title = "问题反馈";
+wallet_alert_feedback_textview_placeholder = "请输入内容";
+wallet_alert_feedback_textfield_placeholder = "请输入您的联系方式";
+wallet_alert_feedback_confirm_button_title = "确认";
+wallet_alert_feedback_content_empty = "请输入反馈内容";
+wallet_alert_feedback_contact_empty = "请输入联系方式";
+
 /************* 页面标题 *******************/
 wallet_transfer_navigation_title = "转账";
+wallet_transactions_navigation_title = "交易记录";
+wallet_receive_navigation_title = "收款";
+wallet_wallet_list_navigation_title = "选择钱包体系";
+wallet_manager_navigation_title = "管理";
 
+wallet_setting_navigation_title = "设置";
+wallet_language_navigation_title = "多语言";
+wallet_service_navigation_title = "服务协议";
+wallet_about_us_navigation_title = "关于我们";
+wallet_feedback_navigation_title = "服务与反馈";
+wallet_address_navigation_title = "地址簿";
+wallet_address_add_navigation_title = "添加地址";
+wallet_wallet_manager_navigation_title = "钱包管理";
+wallet_wallet_add_navigation_title = "添加钱包";
 /************* App错误 *******************/
-

@@ -8,19 +8,45 @@
 
 import UIKit
 import Localize_Swift
+import MJRefresh
 class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // 设置背景色
         self.view.backgroundColor = UIColor.init(hex: "F9F9FB")
-        // 加载子View
-        self.view.addSubview(viewModel.detailView)
         // 添加导航栏按钮
         self.addNavigationBar()
+        // 加载子View
+        self.view.addSubview(detailView)
         // 初始化KVO
-        self.viewModel.initKVO()
+        self.initKVO()
         // 添加语言变换通知
         NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.isTranslucent = true
+        if needRefresh == true {
+//            dataModel.getLocalUserInfo()
+        }
+        self.navigationController?.navigationBar.barStyle = .black
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.navigationController?.navigationBar.barStyle = .default
+    }
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        detailView.snp.makeConstraints { (make) in
+            if #available(iOS 11.0, *) {
+                make.bottom.equalTo(self.view.safeAreaLayoutGuide)
+            } else {
+                make.bottom.equalTo(self.view)
+            }
+            make.top.left.right.equalTo(self.view)
+        }
     }
     func addNavigationBar() {
         // 自定义导航栏的UIBarButtonItem类型的按钮
@@ -40,41 +66,30 @@ class HomeViewController: UIViewController {
         // 返回按钮设置成功
         self.navigationItem.rightBarButtonItems = [rightBarButtonItem, scanView]
     }
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.navigationBar.isTranslucent = true
-        if needRefresh == true {
-//            dataModel.getLocalUserInfo()
-        }
-        self.navigationController?.navigationBar.barStyle = .black
-    }
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        self.navigationController?.navigationBar.barStyle = .default
-    }
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        viewModel.detailView.snp.makeConstraints { (make) in
-            if #available(iOS 11.0, *) {
-                make.bottom.equalTo(self.view.safeAreaLayoutGuide)
-            } else {
-                make.bottom.equalTo(self.view)
-            }
-            make.top.left.right.equalTo(self.view)
-        }
-    }
-    lazy var viewModel: HomeViewModel = {
-        let viewModel = HomeViewModel.init()
-        viewModel.detailView.headerView.delegate = self
-        viewModel.tableViewManager.delegate = self
-        return viewModel
+   //网络请求、数据模型
+    lazy var dataModel: HomeModel = {
+        let model = HomeModel.init()
+        return model
+    }()
+    //tableView管理类
+    lazy var tableViewManager: HomeTableViewManager = {
+        let manager = HomeTableViewManager.init()
+//        manager.delegate = self
+        return manager
+    }()
+    //子View
+    lazy var detailView : HomeView = {
+        let view = HomeView.init()
+        view.tableView.delegate = self.tableViewManager
+        view.tableView.dataSource = self.tableViewManager
+        view.headerView.delegate = self
+        view.tableView.mj_header = MJRefreshNormalHeader.init(refreshingTarget: self, refreshingAction:  #selector(refreshData))
+        return view
     }()
     lazy var changeWalletButton: UIButton = {
         let button = UIButton(type: .custom)
         // 设置字体
-        button.setTitle(localLanguage(keyString: "wallet_home_wallet_type_last_title"), for: UIControl.State.normal)
+        button.setTitle("---" + localLanguage(keyString: "wallet_home_wallet_type_last_title"), for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.regular)
         button.setTitleColor(UIColor.white, for: UIControl.State.normal)
         // 设置图片
@@ -112,27 +127,28 @@ class HomeViewController: UIViewController {
         vc.actionClosure = { (action, wallet) in
             if action == .update {
                 //更新管理页面
-                if self.viewModel.detailView.headerView.walletModel?.walletRootAddress != wallet.walletRootAddress {
-                    self.viewModel.detailView.headerView.walletModel = wallet
+                if self.detailView.headerView.walletModel?.walletRootAddress != wallet.walletRootAddress {
+                    self.detailView.headerView.walletModel = wallet
                 }
                 // 需要更新
-                self.viewModel.detailView.makeToastActivity(.center)
+                self.detailView.makeToastActivity(.center)
                 if wallet.walletType == .Libra {
                     self.changeWalletButton.setTitle("Libra " + localLanguage(keyString: "wallet_home_wallet_type_last_title"), for: UIControl.State.normal)
-                    self.viewModel.dataModel.tempGetLibraBalance(walletID: wallet.walletID!, address: wallet.walletAddress ?? "")
-                    self.viewModel.tableViewManager.dataModel?.removeAll()
-                    self.viewModel.detailView.tableView.reloadData()
-                    self.viewModel.detailView.headerView.hideAddTokenButtonState = true
+                    self.dataModel.tempGetLibraBalance(walletID: wallet.walletID!, address: wallet.walletAddress ?? "")
+                    self.tableViewManager.dataModel?.removeAll()
+                    self.detailView.tableView.reloadData()
+                    self.detailView.headerView.hideAddTokenButtonState = true
                 } else if wallet.walletType == .Violas {
                     self.changeWalletButton.setTitle("Violas " + localLanguage(keyString: "wallet_home_wallet_type_last_title"), for: UIControl.State.normal)
-                    self.viewModel.dataModel.getEnableViolasToken(walletID: wallet.walletID ?? 0, address: wallet.walletAddress ?? "")
-                    self.viewModel.detailView.headerView.hideAddTokenButtonState = false
+                    self.dataModel.getEnableViolasToken(walletID: wallet.walletID ?? 0, address: wallet.walletAddress ?? "")
+                    self.detailView.headerView.hideAddTokenButtonState = false
+
                 } else {
                     self.changeWalletButton.setTitle("BTC " + localLanguage(keyString: "wallet_home_wallet_type_last_title"), for: UIControl.State.normal)
-                    self.viewModel.dataModel.getBTCBalance(walletID: wallet.walletID ?? 0, address: wallet.walletAddress ?? "")
-                    self.viewModel.tableViewManager.dataModel?.removeAll()
-                    self.viewModel.detailView.tableView.reloadData()
-                    self.viewModel.detailView.headerView.hideAddTokenButtonState = true
+                    self.dataModel.getBTCBalance(walletID: wallet.walletID ?? 0, address: wallet.walletAddress ?? "")
+                    self.tableViewManager.dataModel?.removeAll()
+                    self.detailView.tableView.reloadData()
+                    self.detailView.headerView.hideAddTokenButtonState = true
                 }
             }
         }
@@ -159,8 +175,24 @@ class HomeViewController: UIViewController {
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
-    @objc func setText(){
+    @objc func setText() {
     }
+    @objc func refreshData() {
+        if self.detailView.headerView.walletModel?.walletType == .Libra {
+            self.dataModel.tempGetLibraBalance(walletID: self.detailView.headerView.walletModel?.walletID ?? 0, address: self.detailView.headerView.walletModel?.walletAddress ?? "")
+        } else if self.detailView.headerView.walletModel?.walletType == .Violas {
+            self.dataModel.getEnableViolasToken(walletID: self.detailView.headerView.walletModel?.walletID ?? 0, address: self.detailView.headerView.walletModel?.walletAddress ?? "")
+        } else {
+            self.dataModel.getBTCBalance(walletID: self.detailView.headerView.walletModel?.walletID ?? 0, address: self.detailView.headerView.walletModel?.walletAddress ?? "")
+        }
+    }
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
+        print("HomeViewController销毁了")
+    }
+    var myContext = 0
+}
+extension HomeViewController {
     func showBTCTransferViewController(address: String) {
         let tempAddress = address.replacingOccurrences(of: "bitcoin:", with: "")
         guard BTCManager().isValidBTCAddress(address: tempAddress) else {
@@ -171,7 +203,7 @@ class HomeViewController: UIViewController {
         vc.actionClosure = {
         //            self.dataModel.getLocalUserInfo()
         }
-        vc.wallet = self.viewModel.detailView.headerView.walletModel
+        vc.wallet = self.detailView.headerView.walletModel
         vc.address = tempAddress
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
@@ -186,7 +218,7 @@ class HomeViewController: UIViewController {
         vc.actionClosure = {
 //            self.dataModel.getLocalUserInfo()
         }
-        vc.wallet = self.viewModel.detailView.headerView.walletModel
+        vc.wallet = self.detailView.headerView.walletModel
         vc.address = tempAddress
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
@@ -201,7 +233,7 @@ class HomeViewController: UIViewController {
         vc.actionClosure = {
         //            self.dataModel.getLocalUserInfo()
         }
-        vc.wallet = self.viewModel.detailView.headerView.walletModel
+        vc.wallet = self.detailView.headerView.walletModel
         vc.sendViolasTokenState = false
         vc.address = tempAddress
         vc.hidesBottomBarWhenPushed = true
@@ -218,7 +250,7 @@ class HomeViewController: UIViewController {
             self.view.makeToast("Token名称为空", position: .center)
             return
         }
-        let contract = self.viewModel.tableViewManager.dataModel?.filter({ item in
+        let contract = self.tableViewManager.dataModel?.filter({ item in
             item.name?.lowercased() == coinName?.last?.description
         })
         guard (contract?.count ?? 0) > 0 else {
@@ -231,48 +263,132 @@ class HomeViewController: UIViewController {
         vc.actionClosure = {
         //            self.dataModel.getLocalUserInfo()
         }
-        vc.wallet = self.viewModel.detailView.headerView.walletModel
+        vc.wallet = self.detailView.headerView.walletModel
         vc.sendViolasTokenState = true
         vc.contract = contract?.first?.address
         vc.address = coinAddress
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
-        print("HomeViewController销毁了")
+}
+
+extension HomeViewController {
+    func initKVO() {
+        dataModel.addObserver(self, forKeyPath: "dataDic", options: NSKeyValueObservingOptions.new, context: &myContext)
+        self.detailView.makeToastActivity(.center)
+        self.dataModel.getLocalUserInfo()
+    }
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?)  {
+        
+        guard context == &myContext else {
+            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+            return
+        }
+        guard (change?[NSKeyValueChangeKey.newKey]) != nil else {
+            return
+        }
+        guard let jsonData = (object! as AnyObject).value(forKey: "dataDic") as? NSDictionary else {
+            return
+        }
+        if let error = jsonData.value(forKey: "error") as? LibraWalletError {
+            if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
+                // 网络无法访问
+                print(error.localizedDescription)
+            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletNotExist).localizedDescription {
+                // 钱包不存在
+                print(error.localizedDescription)
+//                let vc = WalletCreateViewController()
+//                let navi = UINavigationController.init(rootViewController: vc)
+//                self.present(navi, animated: true, completion: nil)
+            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionTooOld).localizedDescription {
+                // 版本太久
+                print(error.localizedDescription)
+            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
+                // 解析失败
+                print(error.localizedDescription)
+            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
+                print(error.localizedDescription)
+                // 数据为空
+            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
+                print(error.localizedDescription)
+                // 数据返回状态异常
+            }
+            self.detailView.hideToastActivity()
+            self.detailView.tableView.mj_header.endRefreshing()
+            return
+        }
+        let type = jsonData.value(forKey: "type") as! String
+        
+        if type == "LoadCurrentUseWallet" {
+            // 加载本地默认钱包
+            if let tempData = jsonData.value(forKey: "data") as? LibraWalletManager {
+                self.detailView.model = tempData
+                self.detailView.tableView.reloadData()
+                if tempData.walletType == .Libra {
+                    self.changeWalletButton.setTitle("Libra " + localLanguage(keyString: "wallet_home_wallet_type_last_title"), for: UIControl.State.normal)
+                } else if tempData.walletType == .Violas {
+                    self.changeWalletButton.setTitle("Violas " + localLanguage(keyString: "wallet_home_wallet_type_last_title"), for: UIControl.State.normal)
+                } else {
+                    self.changeWalletButton.setTitle("BTC " + localLanguage(keyString: "wallet_home_wallet_type_last_title"), for: UIControl.State.normal)
+                }
+            }
+        } else if type == "UpdateBTCBalance" {
+            if let tempData = jsonData.value(forKey: "data") as? BalanceBTCModel {
+                self.detailView.headerView.btcModel = tempData
+                self.detailView.tableView.reloadData()
+            }
+        } else if type == "UpdateLibraBalance" {
+            if let tempData = jsonData.value(forKey: "data") as? BalanceLibraModel {
+                self.detailView.headerView.libraModel = tempData
+                self.detailView.tableView.reloadData()
+            }
+        } else if type == "UpdateViolasBalance" {
+            if let tempData = jsonData.value(forKey: "data") as? BalanceLibraModel {
+                self.detailView.headerView.violasModel = tempData
+                if let modules = tempData.modules, let dataModel = self.tableViewManager.dataModel, modules.isEmpty == false, dataModel.isEmpty == false {
+                    self.tableViewManager.dataModel = self.dataModel.dealBalanceWithContract(modules: modules, violasTokens: dataModel)
+                }
+                self.detailView.tableView.reloadData()
+            }
+        } else if type == "LoadEnableViolasTokenList" {
+            if let tempData = jsonData.value(forKey: "data") as? [ViolasTokenModel] {
+                self.tableViewManager.dataModel = tempData
+                self.detailView.tableView.reloadData()
+            }
+        }
+        self.detailView.hideToastActivity()
+        self.detailView.tableView.mj_header.endRefreshing()
     }
 }
 extension HomeViewController: HomeHeaderViewDelegate {
     func checkWalletDetail() {
         let vc = WalletDetailViewController()
-        vc.walletModel = self.viewModel.detailView.headerView.walletModel
+        vc.walletModel = self.detailView.headerView.walletModel
         vc.canDelete = false
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
     func checkWalletTransactionList() {
         let vc = WalletTransactionsViewController()
-        vc.wallet = self.viewModel.detailView.headerView.walletModel
+        vc.wallet = self.detailView.headerView.walletModel
         vc.hidesBottomBarWhenPushed = true
-        vc.transactionType = self.viewModel.detailView.headerView.walletModel?.walletType
         self.navigationController?.pushViewController(vc, animated: true)
     }
     func addCoinToWallet() {
         let vc = AddAssetViewController()
         vc.hidesBottomBarWhenPushed = true
-        vc.model = self.viewModel.detailView.headerView.walletModel
+        vc.model = self.detailView.headerView.walletModel
         self.navigationController?.pushViewController(vc, animated: true)
     }
     func walletSend() {
         // 更新本地数据
-        switch self.viewModel.detailView.headerView.walletModel?.walletType {
+        switch self.detailView.headerView.walletModel?.walletType {
         case .Libra:
             let vc = TransferViewController()
             vc.actionClosure = {
     //            self.dataModel.getLocalUserInfo()
             }
-            vc.wallet = self.viewModel.detailView.headerView.walletModel
+            vc.wallet = self.detailView.headerView.walletModel
             vc.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController(vc, animated: true)
             break
@@ -281,7 +397,7 @@ extension HomeViewController: HomeHeaderViewDelegate {
            vc.actionClosure = {
     //            self.dataModel.getLocalUserInfo()
            }
-           vc.wallet = self.viewModel.detailView.headerView.walletModel
+           vc.wallet = self.detailView.headerView.walletModel
            vc.sendViolasTokenState = false
            vc.hidesBottomBarWhenPushed = true
            self.navigationController?.pushViewController(vc, animated: true)
@@ -291,7 +407,7 @@ extension HomeViewController: HomeHeaderViewDelegate {
            vc.actionClosure = {
     //            self.dataModel.getLocalUserInfo()
            }
-           vc.wallet = self.viewModel.detailView.headerView.walletModel
+           vc.wallet = self.detailView.headerView.walletModel
            vc.hidesBottomBarWhenPushed = true
            self.navigationController?.pushViewController(vc, animated: true)
             break
@@ -301,16 +417,17 @@ extension HomeViewController: HomeHeaderViewDelegate {
     }
     func walletReceive() {
         let vc = WalletReceiveViewController()
-        vc.wallet = self.viewModel.detailView.headerView.walletModel
+        vc.wallet = self.detailView.headerView.walletModel
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }
+
 extension HomeViewController: HomeTableViewManagerDelegate {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: ViolasTokenModel) {
         let vc = VTokenMainViewController()
         vc.hidesBottomBarWhenPushed = true
-        vc.wallet = self.viewModel.detailView.headerView.walletModel
+        vc.wallet = self.detailView.headerView.walletModel
         vc.vtokenModel = model
         self.navigationController?.pushViewController(vc, animated: true)
     }

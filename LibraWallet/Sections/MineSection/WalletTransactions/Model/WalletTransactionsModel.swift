@@ -100,6 +100,8 @@ struct ViolasDataModel: Codable {
     var sequence_number: Int?
     var type: Int?
     var version: Int?
+    // 判断接收发送(自行添加0:转账,1收款)
+    var transaction_type: Int?
 }
 struct ViolasResponseModel: Codable {
     var code: Int?
@@ -163,7 +165,13 @@ class WalletTransactionsModel: NSObject {
                             self?.setValue(data, forKey: "dataDic")
                             return
                         }
-                        let data = setKVOData(type: type, data: json.data)
+                        guard json.data?.isEmpty == false else {
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: type)
+                            self?.setValue(data, forKey: "dataDic")
+                            return
+                        }
+                        let result = self?.dealViolasTransactions(models: json.data!, walletAddress: address)
+                        let data = setKVOData(type: type, data: result)
                         self?.setValue(data, forKey: "dataDic")
                     } catch {
                         print("解析异常\(error.localizedDescription)")
@@ -189,6 +197,11 @@ class WalletTransactionsModel: NSObject {
     ///   - pageSize: 数量
     func getLibraTransactionHistory(address: String, page: Int, pageSize: Int, requestStatus: Int) {
         let type = requestStatus == 0 ? "LibraTransactionHistoryOrigin":"LibraTransactionHistoryMore"
+        guard requestStatus == 0 else {
+            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: type)
+            self.setValue(data, forKey: "dataDic")
+            return
+        }
         let request = mainProvide.request(.GetTransactionHistory(address, 0)) {[weak self](result) in
                 switch  result {
                 case let .success(response):
@@ -199,6 +212,11 @@ class WalletTransactionsModel: NSObject {
 //                            self?.setValue(data, forKey: "dataDic")
 //                            return
 //                        }
+                        guard json.transactions?.isEmpty == false else {
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: type)
+                            self?.setValue(data, forKey: "dataDic")
+                            return
+                        }
                         let data = setKVOData(type: type, data: json.transactions)
                         self?.setValue(data, forKey: "dataDic")
                     } catch {
@@ -272,5 +290,17 @@ class WalletTransactionsModel: NSObject {
             resultModels.append(tempModel)
         }
         return resultModels
+    }
+    func dealViolasTransactions(models: [ViolasDataModel], walletAddress: String) -> [ViolasDataModel] {
+        var tempModels = [ViolasDataModel]()
+        for var item in models {
+            if item.receiver == walletAddress {
+                item.transaction_type = 0
+            } else {
+                item.transaction_type = 1
+            }
+            tempModels.append(item)
+        }
+        return tempModels
     }
 }

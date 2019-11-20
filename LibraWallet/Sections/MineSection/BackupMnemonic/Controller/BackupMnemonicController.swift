@@ -39,18 +39,18 @@ class BackupMnemonicController: BaseViewController {
         viewModel.detailView.delegate = self
         return viewModel
     }()
-    var mnemonicArray: [String]? {
+    var FirstInApp: Bool?
+    var tempWallet: CreateWalletModel? {
         didSet {
-            self.viewModel.dataArray = mnemonicArray
+            self.viewModel.dataArray = tempWallet?.mnemonic
         }
     }
-    var FirstInApp: Bool?
 }
 extension BackupMnemonicController: BackupMnemonicViewDelegate {
     func checkBackupMnemonic() {
         let vc = CheckBackupViewController()
-        vc.mnemonicArray = self.mnemonicArray
         vc.FirstInApp = self.FirstInApp
+        vc.tempWallet = self.tempWallet
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }
