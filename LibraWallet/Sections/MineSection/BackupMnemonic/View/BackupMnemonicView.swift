@@ -30,7 +30,7 @@ class BackupMnemonicView: UIView {
         self.collectionViewHeight = collectionViewHeight
     }
     deinit {
-        print("WalletListView销毁了")
+        print("BackupMnemonicView销毁了")
     }
     //MARK: - 布局
     override func layoutSubviews() {

@@ -17,7 +17,7 @@ class BackupMnemonicCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
-        print("WalletListCollectionViewCell销毁了")
+        print("BackupMnemonicCollectionViewCell销毁了")
     }
     //pragma MARK: 布局
     override func layoutSubviews() {

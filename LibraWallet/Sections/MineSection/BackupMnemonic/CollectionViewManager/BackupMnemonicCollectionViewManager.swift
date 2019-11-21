@@ -10,6 +10,9 @@ import UIKit
 
 class BackupMnemonicCollectionViewManager: NSObject {
     var dataArray: [String]?
+    deinit {
+        print("BackupMnemonicCollectionViewManager销毁了")
+    }
 //    weak var delegate: WalletListCollectionViewCellDelegate?
 }
 extension BackupMnemonicCollectionViewManager: UICollectionViewDelegate {

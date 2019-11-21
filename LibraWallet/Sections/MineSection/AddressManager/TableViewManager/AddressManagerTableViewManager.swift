@@ -9,6 +9,7 @@
 import UIKit
 protocol AddressManagerTableViewManagerDelegate: NSObjectProtocol {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, address: String)
+    func tableViewDeleteRowAtIndexPath(indexPath: IndexPath, model: AddressModel)
 }
 class AddressManagerTableViewManager: NSObject {
     weak var delegate: AddressManagerTableViewManagerDelegate?
@@ -27,6 +28,17 @@ extension AddressManagerTableViewManager: UITableViewDelegate {
         
         let data = self.dataModel![indexPath.row]
         self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, address: data.address ?? "")
+    }
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            guard let model = dataModel else {
+                return
+            }
+            self.delegate?.tableViewDeleteRowAtIndexPath(indexPath: indexPath, model: model[indexPath.row])
+        }
     }
 }
 extension AddressManagerTableViewManager: UITableViewDataSource {

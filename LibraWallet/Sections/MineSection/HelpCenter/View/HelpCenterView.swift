@@ -47,7 +47,7 @@ class HelpCenterView: UIView {
         return webView
     }()
     lazy var webRequest: URLRequest = {
-        let request = URLRequest.init(url: URL(string: "https://www.baidu.com")!)
+        let request = URLRequest.init(url: URL(string: helpCenterURL())!)
         return request
     }()
 }

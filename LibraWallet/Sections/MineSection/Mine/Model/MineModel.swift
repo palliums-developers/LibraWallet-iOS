@@ -10,11 +10,11 @@ import UIKit
 
 class MineModel: NSObject {
     func getLocalData() -> [[String: String]] {
-        return [["name":"钱包管理",
+        return [["name":localLanguage(keyString: "wallet_mine_manager_wallet_title"),
                  "icon":"mine_wallet"],
-                ["name":"地址簿",
+                ["name":localLanguage(keyString: "wallet_home_address_manager_title"),
                  "icon":"mine_address_list"],
-                ["name":"设置",
+                ["name":localLanguage(keyString: "wallet_home_setting_title"),
                  "icon":"mine_setting"]]
     }
 }

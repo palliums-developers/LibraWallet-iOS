@@ -16,7 +16,7 @@ class WalletListTableViewManager: NSObject {
     var originModel: [[LibraWalletManager]]?
     var originModelLocation: IndexPath?
     var dataModelLocation: IndexPath?
-    let headerTitleArray = ["身份钱包","创建/导入"]
+    let headerTitleArray = [localLanguage(keyString: "wallet_manager_identity_wallet_header_title"), localLanguage(keyString: "wallet_manager_import_or_create_wallet_header_title")]
     deinit {
         print("WalletListTableViewManager销毁了")
     }

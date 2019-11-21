@@ -9,11 +9,11 @@
 import UIKit
 
 class CheckBackupViewModel: NSObject {
-    //网络请求、数据模型
-    lazy var dataModel: CheckBackupModel = {
-        let model = CheckBackupModel.init()
-        return model
-    }()
+//    //网络请求、数据模型
+//    lazy var dataModel: CheckBackupModel = {
+//        let model = CheckBackupModel.init()
+//        return model
+//    }()
     //collectionView管理类
     lazy var collectionViewManager: CheckBackupCollectionViewMananger = {
         let manager = CheckBackupCollectionViewMananger.init()
@@ -129,13 +129,13 @@ extension CheckBackupViewModel: CheckBackupCollectionViewManangerDelegate {
             result.isEmpty == true
         }
         guard filterEmptyArray.isEmpty == true else {
-            throw LibraWalletError.error("请继续选择")
+            throw LibraWalletError.WalletCheckMnemonic(reason: .checkArrayNotEnough)
         }
         let realMnemonicString = self.dataArray?.joined(separator: " ")
         let checkMnemonicString = self.dataValidArray.joined(separator: " ")
         guard realMnemonicString == checkMnemonicString else {
             print("failed")
-            throw LibraWalletError.error("顺序不对")
+            throw LibraWalletError.WalletCheckMnemonic(reason: .orderInvalid)
         }
         print("success")
     }

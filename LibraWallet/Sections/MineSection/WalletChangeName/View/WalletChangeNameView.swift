@@ -96,17 +96,6 @@ class WalletChangeNameView: UIView {
         button.tag = 10
         return button
     }()
-//    lazy var cancelChangeButton: UIButton = {
-//        let button = UIButton.init()
-//        button.setTitle(localLanguage(keyString: "wallet_manager_detail_change_wallet_name_cancel_button_title"), for: UIControl.State.normal)
-//        button.setTitleColor(UIColor.init(hex: "D3D7E7"), for: UIControl.State.normal)
-//
-//        button.addTarget(self, action: #selector(changeNameButtonClick(button:)), for: UIControl.Event.touchUpInside)
-//        //        button.backgroundColor = UIColor.white
-//        button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)
-//        button.tag = 20
-//        return button
-//    }()
     lazy var tapTohide: UITapGestureRecognizer = {
         let tap = UITapGestureRecognizer.init(target: self, action: #selector(tapToHideKeyboard))
         return tap

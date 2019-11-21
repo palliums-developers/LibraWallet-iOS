@@ -28,7 +28,7 @@ class CheckBackupView: UIView {
         self.collectionViewHeight = collectionViewHeight
     }
     deinit {
-        print("WalletListView销毁了")
+        print("CheckBackupView销毁了")
     }
     //MARK: - 布局
     override func layoutSubviews() {

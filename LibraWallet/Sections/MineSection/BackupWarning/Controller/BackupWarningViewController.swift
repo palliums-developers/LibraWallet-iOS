@@ -30,6 +30,9 @@ class BackupWarningViewController: BaseViewController {
             make.left.right.equalTo(self.view)
         }
     }
+    deinit {
+        print("BackupWarningViewController销毁了")
+    }
     override func back() {
         if FirstInApp == true {
             let tabbar = BaseTabBarViewController.init()
@@ -45,9 +48,6 @@ class BackupWarningViewController: BaseViewController {
         view.delegate = self
         return view
     }()
-    deinit {
-        print("BackupWarningViewController销毁了")
-    }
     var FirstInApp: Bool?
     func addRightNavigationBar() {
         let scanView = UIBarButtonItem(customView: backupLater)
@@ -59,7 +59,7 @@ class BackupWarningViewController: BaseViewController {
     }
     lazy var backupLater: UIButton = {
         let button = UIButton(type: .custom)
-        button.setTitle(localLanguage(keyString: "稍后备份"), for: UIControl.State.normal)
+        button.setTitle(localLanguage(keyString: "wallet_backup_mnemonic_warning_navigation_right_bar_title"), for: UIControl.State.normal)
         button.setTitleColor(UIColor.init(hex: "3B3847"), for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: UIFont.Weight.regular)
         button.tag = 20

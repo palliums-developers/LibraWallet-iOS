@@ -34,7 +34,6 @@ class WalletManagerHeaderView: UITableViewHeaderFooterView {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "292929")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "wallet_balance_balance_title")
         return label
     }()
     

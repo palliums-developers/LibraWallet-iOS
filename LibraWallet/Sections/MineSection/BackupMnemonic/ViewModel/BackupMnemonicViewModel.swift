@@ -41,4 +41,7 @@ class BackupMnemonicViewModel: NSObject {
         let result = 32 + allHeight + remainderHeight + 16
         return result
     }
+    deinit {
+        print("BackupMnemonicViewModel销毁了")
+    }
 }

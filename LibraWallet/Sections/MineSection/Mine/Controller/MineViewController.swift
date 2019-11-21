@@ -15,9 +15,9 @@ class MineViewController: UIViewController {
         // 初始化本地配置
 //        self.setBaseControlllerConfig()
         // 加载子View
-        self.view.addSubview(self.viewModel.detailView)
+        self.view.addSubview(self.detailView)
         // 加载数据
-        self.viewModel.getLocalData()
+        self.getLocalData()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -29,7 +29,7 @@ class MineViewController: UIViewController {
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        self.viewModel.detailView.snp.makeConstraints { (make) in
+        detailView.snp.makeConstraints { (make) in
             if #available(iOS 11.0, *) {
                 make.bottom.equalTo(self.view.safeAreaLayoutGuide)
             } else {
@@ -41,10 +41,32 @@ class MineViewController: UIViewController {
     deinit {
         print("MineViewController销毁了")
     }
-    lazy var viewModel: MineViewModel = {
-        let viewModel = MineViewModel.init()
-        viewModel.tableViewManager.delegate = self
-        return viewModel
+//    lazy var viewModel: MineViewModel = {
+//        let viewModel = MineViewModel.init()
+//        viewModel.tableViewManager.delegate = self
+//        return viewModel
+//    }()
+    func getLocalData() {
+        self.tableViewManager.dataModel = self.dataModel.getLocalData()
+        self.detailView.tableView.reloadData()
+    }
+    //网络请求、数据模型
+    lazy var dataModel: MineModel = {
+        let model = MineModel.init()
+        return model
+    }()
+    //tableView管理类
+    lazy var tableViewManager: MineTableViewManager = {
+        let manager = MineTableViewManager.init()
+        manager.delegate = self
+        return manager
+    }()
+    //子View
+    lazy var detailView : MineView = {
+        let view = MineView.init()
+        view.tableView.delegate = self.tableViewManager
+        view.tableView.dataSource = self.tableViewManager
+        return view
     }()
 }
 extension MineViewController: MineTableViewManagerDelegate {

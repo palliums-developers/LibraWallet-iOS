@@ -15,7 +15,7 @@ class SupportCoinTableViewManager: NSObject {
     var dataModel: [[String: String]]?
     var selectRow: Int?
     deinit {
-        print("WalletManagerTableViewManager销毁了")
+        print("SupportCoinTableViewManager销毁了")
     }
 }
 extension SupportCoinTableViewManager: UITableViewDelegate {

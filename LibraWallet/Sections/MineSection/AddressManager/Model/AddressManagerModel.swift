@@ -8,18 +8,6 @@
 
 import UIKit
 import Moya
-struct AddressManagerModelAddress: Codable {
-    let address: String?
-    let remark: String?
-}
-struct AddressManagerModelData: Codable {
-    let addresses: [AddressManagerModelAddress]?
-}
-struct AddressManagerModelDataModel: Codable {
-    let code: Int?
-    let message: String?
-    let data: AddressManagerModelData?
-}
 class AddressManagerModel: NSObject {
     @objc var dataDic: NSMutableDictionary = [:]
     func getWithdrawAddressHistory(type: String, requestStatus: Int) {
@@ -35,6 +23,6 @@ class AddressManagerModel: NSObject {
         self.setValue(data, forKey: "dataDic")
     }
     deinit {
-        
+        print("AddressManagerModel销毁了")
     }
 }

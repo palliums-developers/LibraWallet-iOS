@@ -40,7 +40,6 @@ class AddAddressView: UIView {
     //MARK: - 布局
     override func layoutSubviews() {
         super.layoutSubviews()
-        
         remarksTitleLabel.snp.makeConstraints { (make) in
             make.centerY.equalTo(remarksTextField)
             make.left.equalTo(self)
@@ -72,7 +71,6 @@ class AddAddressView: UIView {
         scanAddressButton.snp.makeConstraints { (make) in
             make.centerY.equalTo(addressTextField)
             make.right.equalTo(self.addressSpaceLabel)
-//            make.size.equalTo(CGSize.init(width: 40, height: 40))
         }
         addressSpaceLabel.snp.makeConstraints { (make) in
             make.top.equalTo(remarksSpaceLabel.snp.bottom).offset(50)
@@ -173,7 +171,6 @@ class AddAddressView: UIView {
         label.backgroundColor = DefaultSpaceColor
         return label
     }()
-    
     lazy var confirmButton: UIButton = {
         let button = UIButton.init(type: UIButton.ButtonType.custom)
         button.setTitle(localLanguage(keyString: "wallet_address_add_confirm_button_title"), for: UIControl.State.normal)
@@ -190,33 +187,56 @@ class AddAddressView: UIView {
     @objc func buttonClick(button: UIButton) {
         if button.tag == 10 {
             guard let remarks = remarksTextField.text else {
-                self.makeToast(LibraWalletError.error("").localizedDescription,
+                self.makeToast(LibraWalletError.WalletAddAddress(reason: .remarksInvalidError).localizedDescription,
                                position: .center)
                 return
             }
-
             guard remarks.isEmpty == false else {
-                self.makeToast(LibraWalletError.error("").localizedDescription,
+                self.makeToast(LibraWalletError.WalletAddAddress(reason: .remarksEmptyError).localizedDescription,
                                position: .center)
                 return
             }
             guard let address = addressTextField.text else {
-                self.makeToast(LibraWalletError.error("").localizedDescription,
+                self.makeToast(LibraWalletError.WalletAddAddress(reason: .addressInvalidError).localizedDescription,
                                position: .center)
                 return
             }
-
             guard address.isEmpty == false else {
-                self.makeToast(LibraWalletError.error("").localizedDescription,
+                self.makeToast(LibraWalletError.WalletAddAddress(reason: .addressEmptyError).localizedDescription,
                                position: .center)
                 return
             }
             guard self.typeButton.titleLabel?.text != localLanguage(keyString: "wallet_address_add_type_button_title") else {
-                self.makeToast(LibraWalletError.error("请选择类型").localizedDescription,
+                self.makeToast(LibraWalletError.WalletAddAddress(reason: .addressTypeInvalidError).localizedDescription,
                                position: .center)
                 return
             }
-            #warning("缺少地址有效性检查")
+            switch self.typeButton.titleLabel?.text {
+            case "BTC":
+                guard BTCManager().isValidBTCAddress(address: address) == true else {
+                    self.makeToast(LibraWalletError.WalletAddAddress(reason: .btcAddressInvalidError).localizedDescription,
+                                   position: .center)
+                    return
+                }
+                break
+            case "Violas":
+                guard ViolasManager().isValidViolasAddress(address: address) == true else {
+                    self.makeToast(LibraWalletError.WalletAddAddress(reason: .violasAddressInvalidError).localizedDescription,
+                                   position: .center)
+                    return
+                }
+                break
+            case "Libra":
+                guard LibraManager().isValidLibraAddress(address: address) == true else {
+                    self.makeToast(LibraWalletError.WalletAddAddress(reason: .libraAddressInvalidError).localizedDescription,
+                                   position: .center)
+                    return
+                }
+                break
+            default:
+                self.makeToast(LibraWalletError.WalletAddAddress(reason: .addressTypeInvalidError).localizedDescription,
+                               position: .center)
+            }
             //添加地址
             self.delegate?.confirmAddAddress(address: address, remarks: remarks, type: (self.typeButton.titleLabel?.text)!)
         } else if button.tag == 20 {
@@ -234,7 +254,4 @@ class AddAddressView: UIView {
         gradientLayer.colors = [UIColor.init(hex: "363E57").cgColor, UIColor.init(hex: "101633").cgColor]
         return gradientLayer
     }()
-    func showPickerView() {
-        
-    }
 }

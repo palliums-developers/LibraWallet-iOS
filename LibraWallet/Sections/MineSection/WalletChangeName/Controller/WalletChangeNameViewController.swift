@@ -34,11 +34,11 @@ class WalletChangeNameViewController: BaseViewController {
             self.navigationController?.popViewController(animated: true)
             return
         }
-        let alert = UIAlertController.init(title: "提示", message: "已修改钱包名称,是否立即保存", preferredStyle: .alert)
-        let confirmAction = UIAlertAction.init(title: "保存", style: UIAlertAction.Style.default) { (UIAlertAction) in
+        let alert = UIAlertController.init(title: localLanguage(keyString: "wallet_manager_change_wallet_name_alert_title"), message: localLanguage(keyString: "wallet_manager_change_wallet_name_alert_content"), preferredStyle: .alert)
+        let confirmAction = UIAlertAction.init(title: localLanguage(keyString: "wallet_manager_change_wallet_name_alert_confirm_button_title"), style: UIAlertAction.Style.default) { (UIAlertAction) in
             self.changeWalletName()
         }
-        let cancelAction = UIAlertAction.init(title: "取消", style: UIAlertAction.Style.destructive) { (UIAlertAction) in
+        let cancelAction = UIAlertAction.init(title: localLanguage(keyString: "wallet_manager_change_wallet_name_alert_cancel_button_title"), style: UIAlertAction.Style.destructive) { (UIAlertAction) in
             self.navigationController?.popViewController(animated: true)
         }
         alert.addAction(cancelAction)
@@ -65,26 +65,29 @@ class WalletChangeNameViewController: BaseViewController {
     func changeWalletName() {
         // 拆包检测
         guard let walletName = detailView.walletNameTextField.text else {
-            self.view.makeToast(localLanguage(keyString: "wallet_manager_change_wallet_name_invalid_title"),
+            self.view.makeToast(LibraWalletError.WalletChangeWalletName(reason: .walletNameInvalidError).localizedDescription,
                                 position: .center)
             return
         }
         //没输入
         guard walletName.isEmpty == false else {
-            self.view.makeToast(localLanguage(keyString: "wallet_manager_change_wallet_name_without_insert_error"),
+            self.view.makeToast(LibraWalletError.WalletChangeWalletName(reason: .walletNameEmptyError).localizedDescription,
                                 position: .center)
             return
         }
-        //名称相同
+        // 名称相同
         guard walletName != account?.walletName else {
-            self.view.makeToast(localLanguage(keyString: "wallet_manager_change_wallet_name_same_error"), position: .center)
+            self.view.makeToast(LibraWalletError.WalletChangeWalletName(reason: .walletNameSameAsOld).localizedDescription,
+                                position: .center)
             return
         }
         var tempAccount = account
         tempAccount?.changeWalletName(name: walletName)
         let status = DataBaseManager.DBManager.updateWalletName(walletID: (account?.walletID)!, name: walletName)
         guard status == true else {
-            self.view.makeToast(localLanguage(keyString: "wallet_manager_change_wallet_name_failed_title"), position: .center)
+            // 改名失败
+            self.view.makeToast(LibraWalletError.WalletChangeWalletName(reason: .changeWalletNameFailed).localizedDescription,
+                                position: .center)
             return
         }
         self.view.makeToast(localLanguage(keyString: "wallet_manager_change_wallet_name_success_title"), duration: ToastManager.shared.duration, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { [weak self](bool) in

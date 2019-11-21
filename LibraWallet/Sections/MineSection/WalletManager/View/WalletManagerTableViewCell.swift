@@ -20,7 +20,7 @@ class WalletManagerTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
-        print("SettingTableViewCell销毁了")
+        print("WalletManagerTableViewCell销毁了")
     }
     //pragma MARK: 布局
     override func layoutSubviews() {
@@ -78,25 +78,6 @@ class WalletManagerTableViewCell: UITableViewCell {
         return imageView
     }()
     //MARK: - 设置数据
-//    var model: Transaction? {
-//        didSet {
-//            guard let tempModel = model else {
-//                return
-//            }
-//            var amountState = ""
-//            var amountColor = DefaultGreenColor
-//            if tempModel.event == "received" {
-//                nameLabel.text = localLanguage(keyString: "wallet_transactions_receive_title")
-//                amountState = "+"
-//            } else {
-//                amountState = "-"
-//                amountColor = UIColor.init(hex: "FF4C4C")
-//                nameLabel.text = localLanguage(keyString: "wallet_transactions_transfer_title")
-//
-//            }
-//            dateLabel.text = tempModel.date
-//        }
-//    }
     var model: LibraWalletManager? {
         didSet {
             if model?.walletType == .Libra {
@@ -108,8 +89,6 @@ class WalletManagerTableViewCell: UITableViewCell {
             }
             nameLabel.text = model?.walletName
             addressLabel.text = model?.walletAddress
-            
-            
         }
     }
 }

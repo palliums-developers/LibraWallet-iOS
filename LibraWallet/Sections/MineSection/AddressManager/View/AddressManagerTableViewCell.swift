@@ -23,7 +23,7 @@ class AddressManagerTableViewCell: UITableViewCell {
     deinit {
         print("AddressManagerTableViewCell销毁了")
     }
-    //pragma MARK: 布局
+    //MARK: - 布局
     override func layoutSubviews() {
         super.layoutSubviews()
         

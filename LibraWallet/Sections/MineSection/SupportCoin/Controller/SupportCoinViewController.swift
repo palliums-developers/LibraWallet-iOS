@@ -16,13 +16,13 @@ class SupportCoinViewController: BaseViewController {
         // 设置标题
         self.title = localLanguage(keyString: "wallet_wallet_add_navigation_title")
         // 加载子View
-        self.view.addSubview(self.viewModel.detailView)
+        self.view.addSubview(self.detailView)
         // 加载数据
-        self.viewModel.loadLocalData()
+        self.loadLocalData()
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        self.viewModel.detailView.snp.makeConstraints { (make) in
+        self.detailView.snp.makeConstraints { (make) in
             if #available(iOS 11.0, *) {
                 make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
             } else {
@@ -32,29 +32,46 @@ class SupportCoinViewController: BaseViewController {
         }
     }
     deinit {
-        print("WalletManagerViewController销毁了")
+        print("SupportCoinViewController销毁了")
     }
-    lazy var viewModel: SupportCoinViewModel = {
-        let viewModel = SupportCoinViewModel.init()
-        viewModel.tableViewManager.delegate = self
-        return viewModel
+    func loadLocalData() {
+        self.tableViewManager.dataModel = dataModel.getSupportCoinData()
+        self.detailView.tableView.reloadData()
+    }
+    //网络请求、数据模型
+    lazy var dataModel: SupportCoinModel = {
+        let model = SupportCoinModel.init()
+        return model
+    }()
+    //tableView管理类
+    lazy var tableViewManager: SupportCoinTableViewManager = {
+        let manager = SupportCoinTableViewManager.init()
+        manager.delegate = self
+        return manager
+    }()
+    //子View
+    lazy var detailView : SupportCoinView = {
+        let view = SupportCoinView.init()
+        view.tableView.delegate = self.tableViewManager
+        view.tableView.dataSource = self.tableViewManager
+        return view
     }()
 }
 extension SupportCoinViewController: SupportCoinTableViewManagerDelegate {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, name: String) {
-        let alert = UIAlertController.init(title: "", message: "选择", preferredStyle: UIAlertController.Style.actionSheet)
-        let importAction = UIAlertAction.init(title: "导入", style: UIAlertAction.Style.default) { (UIAlertAction) in
+        let alert = UIAlertController.init(title: localLanguage(keyString: "wallet_add_wallet_alert_choose_import_or_create_title"), message: nil, preferredStyle: UIAlertController.Style.actionSheet)
+        let importAction = UIAlertAction.init(title: localLanguage(keyString: "wallet_add_wallet_alert_import_action_title"), style: UIAlertAction.Style.default) { (UIAlertAction) in
 
             let vc = ImportWalletViewController()
             vc.type = name
             self.navigationController?.pushViewController(vc, animated: true)
         }
-        let createAction = UIAlertAction.init(title: "创建", style: UIAlertAction.Style.default) { (UIAlertAction) in
+        let createAction = UIAlertAction.init(title: localLanguage(keyString: "wallet_add_wallet_alert_create_action_title"), style: UIAlertAction.Style.default) { (UIAlertAction) in
             let vc = AddWalletViewController()
             vc.type = name
             self.navigationController?.pushViewController(vc, animated: true)
         }
-        let cancelAction = UIAlertAction.init(title: "取消", style: UIAlertAction.Style.cancel) { (UIAlertAction) in
+        let cancelAction = UIAlertAction.init(title: localLanguage(keyString: "wallet_add_wallet_alert_cancel_action_title"), style: UIAlertAction.Style.cancel) { (UIAlertAction) in
 
         }
         alert.addAction(importAction)

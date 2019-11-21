@@ -20,4 +20,7 @@ class SupportCoinModel: NSObject {
                  "detail":"Violas",
                  "icon":"violas_icon"]]
     }
+    deinit {
+        print("SupportCoinModel销毁了")
+    }
 }

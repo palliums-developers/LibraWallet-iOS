@@ -22,7 +22,6 @@ class AddressManagerView: UIView {
     //MARK: - 布局
     override func layoutSubviews() {
         super.layoutSubviews()
-
         self.tableView.snp.makeConstraints { (make) in
             make.top.equalTo(self)
             make.left.right.bottom.equalTo(self)

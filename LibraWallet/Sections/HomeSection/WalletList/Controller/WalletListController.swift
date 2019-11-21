@@ -64,22 +64,22 @@ extension WalletListController: WalletListTableViewManagerDelegate {
         oldModel.changeWalletCurrentUse(state: false)
         let oldChangeResult = DataBaseManager.DBManager.updateWalletCurrentUseState(walletID: oldModel.walletID!, state: false)
         guard oldChangeResult == true else {
-            self.view.makeToast("撤销旧的选中失败",
-                                position: .center)
+//            self.view.makeToast("撤销旧的选中失败",
+//                                position: .center)
             return
         }
         // 添加新的选中
         let result = DataBaseManager.DBManager.updateWalletCurrentUseState(walletID: model.walletID!, state: true)
         guard result == true else {
-            self.view.makeToast("选择新的失败",
-                                position: .center)
+//            self.view.makeToast("选择新的失败",
+//                                position: .center)
             return
         }
         viewModel.tableViewManager.dataModelLocation = indexPath
 
-        self.viewModel.detailView.tableView.beginUpdates()
-        self.viewModel.detailView.tableView.reloadRows(at: [oldIndex, indexPath], with: .none)
-        self.viewModel.detailView.tableView.endUpdates()
+//        self.viewModel.detailView.tableView.beginUpdates()
+//        self.viewModel.detailView.tableView.reloadRows(at: [oldIndex, indexPath], with: .none)
+//        self.viewModel.detailView.tableView.endUpdates()
         self.navigationController?.popViewController(animated: true)
     }
 }

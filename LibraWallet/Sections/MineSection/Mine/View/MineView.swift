@@ -19,7 +19,7 @@ class MineView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
-        print("TransactionsView销毁了")
+        print("MineView销毁了")
     }
     //MARK: - 布局
     override func layoutSubviews() {

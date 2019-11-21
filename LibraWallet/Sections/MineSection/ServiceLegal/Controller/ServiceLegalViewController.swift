@@ -31,7 +31,7 @@ class ServiceLegalViewController: BaseViewController {
         return view
     }()
     deinit {
-        print("LegalViewController销毁了")
+        print("ServiceLegalViewController销毁了")
     }
 }
 
@@ -56,10 +56,10 @@ extension ServiceLegalViewController :WKNavigationDelegate{
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         /// 弹出提示框点击确定返回
         self.view.hideToastActivity()
-        let alertView = UIAlertController.init(title: localLanguage(keyString: "wallet_withdraw_address_alert_title"),
-                                               message: "HKWalletError.WalletLoadURLError(reason: .loadFailed).localizedDescription",
+        let alertView = UIAlertController.init(title: localLanguage(keyString: "wallet_service_legal_loaded_error_title"),
+                                               message: nil,
                                                preferredStyle: .alert)
-        let okAction = UIAlertAction.init(title:localLanguage(keyString: "wallet_withdraw_address_alert_confirm_button_title"),
+        let okAction = UIAlertAction.init(title:localLanguage(keyString: "wallet_service_legal_loaded_error_cancel_button_title"),
                                           style: .default) { okAction in
                                             _=self.navigationController?.popViewController(animated: true)
         }

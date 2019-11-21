@@ -279,54 +279,66 @@ class BTCTransferView: UIView {
             // 常用地址
             self.delegate?.chooseAddress()
         } else {
-            // 确认提交
             // 拆包金额
             guard let amountString = self.amountTextField.text else {
-                #warning("错误待处理")
-                self.makeToast(LibraWalletError.error("拆包金额异常").localizedDescription, position: .center)
+                self.makeToast(LibraWalletError.WalletTransfer(reason: .amountInvalid).localizedDescription,
+                               position: .center)
                 return
             }
             // 金额不为空检查
             guard amountString.isEmpty == false else {
-                self.makeToast(LibraWalletError.error("金额不为空检查").localizedDescription, position: .center)
-
+                self.makeToast(LibraWalletError.WalletTransfer(reason: .amountEmpty).localizedDescription,
+                               position: .center)
                 return
             }
             // 金额是否纯数字检查
             guard isPurnDouble(string: amountString) == true else {
-                self.makeToast(LibraWalletError.error("金额是否纯数字检查").localizedDescription, position: .center)
+                self.makeToast(LibraWalletError.WalletTransfer(reason: .amountInvalid).localizedDescription,
+                               position: .center)
                 return
             }
             // 转换数字
             let amount = (amountString as NSString).doubleValue
+            // 手续费转换
+            let feeString = self.transferFeeLabel.text
+            let fee = Double(feeString!.replacingOccurrences(of: " BTC", with: ""))!
             // 最少0.0001
             guard amount >= 0.0001 else {
-               self.makeToast(LibraWalletError.error("最小转账金额为0.0001").localizedDescription, position: .center)
+               self.makeToast(LibraWalletError.WalletTransfer(reason: .amountTooSmall).localizedDescription,
+                              position: .center)
                return
             }
             // 金额大于我的金额
-            guard amount <= (Double(wallet?.walletBalance ?? 0) / 100000000.0) else {
-               self.makeToast(LibraWalletError.error("金额大于我的金额").localizedDescription, position: .center)
+            guard (amount + fee) <= (Double(wallet?.walletBalance ?? 0) / 100000000.0) else {
+               self.makeToast(LibraWalletError.WalletTransfer(reason: .amountOverload).localizedDescription,
+                              position: .center)
                return
             }
+            // 地址拆包检查
             guard let address = self.addressTextField.text else {
-               self.makeToast(LibraWalletError.error("地址拆包异常").localizedDescription, position: .center)
+               self.makeToast(LibraWalletError.WalletTransfer(reason: .addressInvalid).localizedDescription,
+                              position: .center)
                return
             }
+            // 地址是否为空
             guard address.isEmpty == false else {
-                self.makeToast(LibraWalletError.error("地址为空").localizedDescription, position: .center)
+                self.makeToast(LibraWalletError.WalletTransfer(reason: .addressEmpty).localizedDescription,
+                               position: .center)
                 return
             }
-            guard BTCManager().isValidBTCAddress(address: address) else {
-                self.makeToast(LibraWalletError.error("地址无效").localizedDescription, position: .center)
+            // 是否有效地址
+            guard LibraManager().isValidLibraAddress(address: address) else {
+                self.makeToast(LibraWalletError.WalletTransfer(reason: .addressInvalid).localizedDescription,
+                               position: .center)
                 return
             }
+            // 检查是否向自己转账
             guard address != self.wallet?.walletAddress else {
-                self.makeToast(LibraWalletError.error("不能向自己转账").localizedDescription, position: .center)
+                self.makeToast(LibraWalletError.WalletTransfer(reason: .transferToSelf).localizedDescription,
+                               position: .center)
                 return
             }
-            let feeString = self.transferFeeLabel.text
-            let fee = Double(feeString!.replacingOccurrences(of: " BTC", with: ""))!
+            
             
             self.amountTextField.resignFirstResponder()
             self.addressTextField.resignFirstResponder()

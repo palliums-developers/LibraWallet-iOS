@@ -13,8 +13,6 @@ class BackupMnemonicController: BaseViewController {
         super.viewDidLoad()
         // 初始化本地配置
         self.setBaseControlllerConfig()
-        // 加载数据
-//        self.mnemonicArray = ["net", "dice", "divide", "amount", "stamp", "flock", "brave", "nuclear", "fox", "aim", "father", "apology"]
         // 加载子View
         self.view.addSubview(self.viewModel.detailView)
     }
@@ -30,7 +28,7 @@ class BackupMnemonicController: BaseViewController {
         }
     }
     deinit {
-        print("WalletListController销毁了")
+        print("BackupMnemonicController销毁了")
     }
     typealias nextActionClosure = (ControllerAction, LibraWalletManager) -> Void
     var actionClosure: nextActionClosure?

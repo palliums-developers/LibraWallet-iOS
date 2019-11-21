@@ -16,13 +16,13 @@ class WalletDetailViewController: BaseViewController {
         // 设置标题
         self.title = localLanguage(keyString: "wallet_manager_navigation_title")
         // 加载子View
-        self.view.addSubview(self.viewModel.detailView)
+        self.view.addSubview(detailView)
         // 加载数据
-        self.viewModel.loadLocalData(model: self.walletModel!)
+        self.loadLocalData(model: self.walletModel!)
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        self.viewModel.detailView.snp.makeConstraints { (make) in
+        detailView.snp.makeConstraints { (make) in
             if #available(iOS 11.0, *) {
                 make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
             } else {
@@ -34,14 +34,30 @@ class WalletDetailViewController: BaseViewController {
     deinit {
         print("WalletDetailViewController销毁了")
     }
-//    typealias nextActionClosure = (ControllerAction, LibraWalletManager) -> Void
-//    var actionClosure: nextActionClosure?
-    lazy var viewModel: WalletDetailViewModel = {
-        let viewModel = WalletDetailViewModel.init()
-        viewModel.tableViewManager.delegate = self
-        viewModel.canDelete = self.canDelete
-        viewModel.detailView.delegate = self
-        return viewModel
+    func loadLocalData(model: LibraWalletManager) {
+        self.tableViewManager.dataModel = dataModel.loadLocalConfig(model: model)
+        self.detailView.tableView.reloadData()
+    }
+    typealias nextActionClosure = (ControllerAction, LibraWalletManager?) -> Void
+    var actionClosure: nextActionClosure?
+    //网络请求、数据模型
+    lazy var dataModel: WalletDetailModel = {
+        let model = WalletDetailModel.init()
+        return model
+    }()
+    //tableView管理类
+    lazy var tableViewManager: WalletDetailTableViewManager = {
+        let manager = WalletDetailTableViewManager.init()
+        manager.delegate = self
+        return manager
+    }()
+    //子View
+    lazy var detailView : WalletDetailView = {
+        let view = WalletDetailView.init(canDelete: self.canDelete!)
+        view.tableView.delegate = self.tableViewManager
+        view.tableView.dataSource = self.tableViewManager
+        view.delegate = self
+        return view
     }()
     var walletModel: LibraWalletManager?
     var canDelete: Bool?
@@ -54,37 +70,48 @@ extension WalletDetailViewController: WalletDetailTableViewManagerDelegate {
             vc.actionClosure = { (action, wallet) in
                 if action == .update {
                     //更新管理页面
-                    self.viewModel.loadLocalData(model: wallet)
-                    self.viewModel.detailView.tableView.reloadData()
+                    self.loadLocalData(model: wallet)
+                    self.detailView.tableView.reloadData()
                     //更新钱包列表页面
-//                    if let action = self.actionClosure {
-//                        action(.update, wallet)
-//                    }
+                    if let action = self.actionClosure {
+                        action(.update, wallet)
+                    }
                 }
             }
             self.navigationController?.pushViewController(vc, animated: true)
         } else {
-            let alertContr = UIAlertController(title: "", message: "请输入密码", preferredStyle: .alert)
+            let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: localLanguage(keyString: "wallet_type_in_password_content"), preferredStyle: .alert)
             alertContr.addTextField {
                 (textField: UITextField!) -> Void in
-                textField.placeholder = "密码"
+                textField.placeholder = localLanguage(keyString: "wallet_type_in_password_textfield_placeholder")
                 textField.tintColor = DefaultGreenColor
                 textField.isSecureTextEntry = true
             }
-            alertContr.addAction(UIAlertAction(title: "确定", style: .default){
-                clickHandler in
-                let loginName = alertContr.textFields!.first! as UITextField
-                NSLog("LoginName:\(loginName.text!)")
-                let state = try? LibraWalletManager.shared.isValidPaymentPassword(walletRootAddress: (self.walletModel?.walletRootAddress)!, password: loginName.text!)
+            alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_confirm_button_title"), style: .default){ [weak self] clickHandler in
+                let passwordTextField = alertContr.textFields!.first! as UITextField
+
+                guard let password = passwordTextField.text else {
+                    self?.view.makeToast(LibraWalletError.WalletCheckPassword(reason: .passwordInvalidError).localizedDescription,
+                                        position: .center)
+                    return
+                }
+                guard password.isEmpty == false else {
+                    self?.view.makeToast(LibraWalletError.WalletCheckPassword(reason: .passwordEmptyError).localizedDescription,
+                                        position: .center)
+                    return
+                }
+                NSLog("Password:\(password)")
+                let state = try? LibraWalletManager.shared.isValidPaymentPassword(walletRootAddress: (self?.walletModel?.walletRootAddress)!, password: password)
                 guard state == true else {
-                    self.view.makeToast("密码不正确", position: .center)
+                    self?.view.makeToast(LibraWalletError.WalletCheckPassword(reason: .passwordCheckFailed).localizedDescription,
+                                        position: .center)
                     return
                 }
                 let vc = WalletMnemonicViewController()
-                vc.rootAddress = self.walletModel?.walletRootAddress
-                self.navigationController?.pushViewController(vc, animated: true)
+                vc.rootAddress = self?.walletModel?.walletRootAddress
+                self?.navigationController?.pushViewController(vc, animated: true)
                 })
-            alertContr.addAction(UIAlertAction(title: "取消", style: .cancel){
+            alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_cancel_button_title"), style: .cancel){
                 clickHandler in
                 NSLog("点击了取消")
                 })
@@ -94,22 +121,22 @@ extension WalletDetailViewController: WalletDetailTableViewManagerDelegate {
 }
 extension WalletDetailViewController: WalletDetailViewDelegate {
     func deleteButtonClick() {
-        let alert = UIAlertController.init(title: "", message: "确定要删除钱包吗", preferredStyle: UIAlertController.Style.alert)
-        let confirmAction = UIAlertAction.init(title: "确定", style: UIAlertAction.Style.destructive) { (UIAlertAction) in
+        let alert = UIAlertController.init(title: localLanguage(keyString: "wallet_alert_delete_wallet_title"), message: localLanguage(keyString: "wallet_alert_delete_wallet_content"), preferredStyle: UIAlertController.Style.alert)
+        let confirmAction = UIAlertAction.init(title: localLanguage(keyString: "wallet_alert_delete_wallet_confirm_button_title"), style: UIAlertAction.Style.destructive) { (UIAlertAction) in
             #warning("缺少删除keychain")
             let state = DataBaseManager.DBManager.deleteWalletFromTable(model: self.walletModel!)
             
             guard state == true else {
                 return
             }
-            self.view.makeToast(localLanguage(keyString: "wallet_manager_change_wallet_name_success_title"), duration: ToastManager.shared.duration, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { [weak self](bool) in
-//                if let action = self?.actionClosure {
-//                    action(.update, tempAccount!)
-//                }
+            self.view.makeToast(localLanguage(keyString: "wallet_delete_wallet_success_title"), duration: 1, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { [weak self](bool) in
+                if let action = self?.actionClosure {
+                    action(.delete, self?.walletModel)
+                }
                 self?.navigationController?.popViewController(animated: true)
             })
         }
-        let cancelAction = UIAlertAction.init(title: "取消", style: UIAlertAction.Style.cancel) { (UIAlertAction) in
+        let cancelAction = UIAlertAction.init(title: localLanguage(keyString: "wallet_alert_delete_wallet_cancel_button_title"), style: UIAlertAction.Style.cancel) { (UIAlertAction) in
 
         }
         alert.addAction(cancelAction)

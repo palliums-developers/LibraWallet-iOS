@@ -125,6 +125,7 @@ extension BTCTransferViewController: BTCTransferViewDelegate {
         vc.actionClosure = { address in
             self.detailView.addressTextField.text = address
         }
+        vc.addressType = "BTC"
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -144,14 +145,24 @@ extension BTCTransferViewController: BTCTransferViewDelegate {
             textField.tintColor = DefaultGreenColor
             textField.isSecureTextEntry = true
         }
-        alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_confirm_button_title"), style: .default) { [weak self]
-            clickHandler in
-            let password = alertContr.textFields!.first! as UITextField
-            NSLog("password:\(password.text!)")
+        alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_confirm_button_title"), style: .default) { [weak self] clickHandler in
+            let passwordTextField = alertContr.textFields!.first! as UITextField
+            guard let password = passwordTextField.text else {
+                self?.view.makeToast(LibraWalletError.WalletCheckPassword(reason: .passwordInvalidError).localizedDescription,
+                                    position: .center)
+                return
+            }
+            guard password.isEmpty == false else {
+                self?.view.makeToast(LibraWalletError.WalletCheckPassword(reason: .passwordEmptyError).localizedDescription,
+                                    position: .center)
+                return
+            }
+            NSLog("Password:\(password)")
             do {
-                let state = try LibraWalletManager.shared.isValidPaymentPassword(walletRootAddress: (self?.wallet?.walletRootAddress)!, password: password.text!)
+                let state = try LibraWalletManager.shared.isValidPaymentPassword(walletRootAddress: (self?.wallet?.walletRootAddress)!, password: password)
                 guard state == true else {
-                    self?.view.makeToast("密码不正确", position: .center)
+                    self?.view.makeToast(LibraWalletError.WalletCheckPassword(reason: .passwordCheckFailed).localizedDescription,
+                                        position: .center)
                     return
                 }
                 self?.detailView.toastView?.show()

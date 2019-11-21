@@ -182,18 +182,15 @@ func getIdentityWalletState() -> Bool {
     return UserDefaults.standard.bool(forKey: "IdentityWallet")
 }
 /***************************************/
-//func helpCenterURL() -> String {
-//    let current = Localize.currentLanguage()
-//    if current == "zh-Hans" {
-//        return "https://help.sealpay.io/cn/help.html"
-//    } else if current == "zh-HK" {
-//        return "https://help.sealpay.io/tw/help.html"
-//    } else {
-//        return "https://help.sealpay.io/en/help.html"
-//    }
-//}
+func helpCenterURL() -> String {
+    let current = Localize.currentLanguage()
+    if current == "zh-Hans" {
+        return "https://help.sealpay.io/cn/help.html"
+    } else {
+        return "https://help.sealpay.io/en/help.html"
+    }
+}
 //    "https://hobawallet.io/Sealpay_HTML/help.html"
-//let helpCenterURL: String = "https://www.sealpay.io"
 //let PrivateLegalURL: String = "https://www.baidu.com"
 
 
@@ -232,3 +229,4 @@ extension LoadLocalLanguageProtocol {
 }
 let transferFeeMax = 0.001
 let transferFeeMin = 0.0001
+let transferBTCLeast = 0.0001

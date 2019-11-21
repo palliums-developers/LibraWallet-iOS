@@ -33,7 +33,7 @@ class BackupWarningView: UIView {
         self.collectionViewHeight = collectionViewHeight
     }
     deinit {
-        print("WalletListView销毁了")
+        print("BackupWarningView销毁了")
     }
     //MARK: - 布局
     override func layoutSubviews() {

@@ -14,6 +14,11 @@ wallet_home_receive_button_title = "收款";
 wallet_home_last_transaction_date_title = "交易记录";
 wallet_home_wallet_asset_title = "资产";
 
+/************* 个人中心 *******************/
+wallet_mine_manager_wallet_title = " 钱包管理";
+wallet_home_address_manager_title = "地址簿";
+wallet_home_setting_title = "设置";
+
 /************* 收款 *******************/
 wallet_receive_qrcode_title = "收款地址";
 wallet_receive_copy_button_title = "复制地址";
@@ -35,6 +40,7 @@ wallet_transfer_confirm_button_title = "确认转账";
 /************* 交易历史 *******************/
 wallet_transactions_receive_title = "收款";
 wallet_transactions_transfer_title = "转账";
+wallet_transactions_publish_title = "开启";
 
 /************* 已存在身份钱包创建钱包 *******************/
 wallet_add_wallet_btc_title = "创建Bitcoin钱包";
@@ -53,6 +59,10 @@ wallet_import_mnemonic_textview_placeholder = "请输入助记词,并用空格�
 wallet_import_wallet_confirm_button_title = "开始导入";
 
 /************* 钱包管理 *******************/
+wallet_manager_identity_wallet_header_title = "身份钱包";
+wallet_manager_import_or_create_wallet_header_title = "创建/导入";
+
+/************* 钱包详情 *******************/
 wallet_manager_detail_delete_button_title = "删除";
 
 /************* 钱包管理修改名称 *******************/
@@ -60,6 +70,7 @@ wallet_manager_detail_change_wallet_name_title = "更换钱包名";
 wallet_manager_detail_change_wallet_name_textfield_placeholder = "请输入钱包名";
 wallet_manager_detail_change_wallet_name_button_title = "确定修改";
 wallet_manager_detail_change_wallet_name_cancel_button_title = "取消";
+
 
 /************* 地址簿 *******************/
 wallet_address_add_remarks_title = "备注";
@@ -70,8 +81,10 @@ wallet_address_add_confirm_button_title = "确认添加";
 wallet_address_add_type_title = "类型";
 wallet_address_add_type_button_title = "请选择";
 
+
 /************* 备份助记词警告 *******************/
 wallet_backup_mnemonic_warning_title = "获取助记词";
+wallet_backup_mnemonic_warning_navigation_right_bar_title = "稍后备份";
 wallet_backup_mnemonic_warning_title_detail = "等于拥有钱包资产所有权";
 wallet_backup_mnemonic_warning_item_one_title = "备份助记词";
 wallet_backup_mnemonic_warning_item_one_detail = "使用纸和笔正确抄写助记词\n如果你的手机丢失、被盗、损坏，助记词将可以回复你的资产";
@@ -103,11 +116,6 @@ wallet_create_password_textfield_placeholder = "设置钱包密码";
 wallet_create_password_confirm_textfield_placeholder = "再次确认密码";
 wallet_create_confirm_button_title = "创建";
 
-/************* 备份提醒弹出啊页面 *******************/
-wallet_alert_backup_warning_title = "安全提醒";
-wallet_alert_backup_warning_detail_title = "您的身份助记词未备份，请务必备份助记词\n助记词可用于恢复身份下钱包资产，防止忘记密码、应用删除、手机丢失等情况导致资产损失";
-wallet_alert_backup_warning_button_title = "立即备份";
-
 /************* 市场 *******************/
 wallet_market_transfer_amount_textfield_placeholder = "转出数量";
 wallet_market_receive_amount_textfield_placeholder = "收到数量";
@@ -127,23 +135,74 @@ wallet_transaction_check_detail_on_chain = "浏览器查询";
 /************* 关于我们 *******************/
 wallet_about_us_navigation_right_bar_title = "问题反馈";
 
-/************* 弹出提示 *******************/
-wallet_transfer_success_alert = "转账成功";
+/************* 设置页面 *******************/
+wallet_setting_language_title = "多语言";
+wallet_setting_service_legal_title = "服务协议";
+wallet_setting_about_us_title = "关于我们";
+wallet_setting_help_center_title = "帮助与反馈";
 
+/************* 地址页面 *******************/
+wallet_address_manager_empty_data_title = "暂时没有地址";
+
+/************* 弹出提示 *******************/
+// 转账
+wallet_transfer_success_alert = "转账成功";
+// 解锁钱包
 wallet_type_in_password_title = "提示";
 wallet_type_in_password_content = "请输入钱包密码";
 wallet_type_in_password_textfield_placeholder = "密码";
 wallet_type_in_password_cancel_button_title = "取消";
 wallet_type_in_password_confirm_button_title = "确定";
-
+// 复制地址
 wallet_copy_address_success_title = "确定";
-
+// 问题反馈
 wallet_alert_feedback_title = "问题反馈";
 wallet_alert_feedback_textview_placeholder = "请输入内容";
 wallet_alert_feedback_textfield_placeholder = "请输入您的联系方式";
 wallet_alert_feedback_confirm_button_title = "确认";
 wallet_alert_feedback_content_empty = "请输入反馈内容";
 wallet_alert_feedback_contact_empty = "请输入联系方式";
+// 导入钱包
+wallet_import_wallet_success_title = "导入钱包成功";
+// 导入钱包
+wallet_create_wallet_success_title = "创建钱包成功";
+// 删除钱包
+wallet_delete_wallet_success_title = "删除钱包成功";
+wallet_alert_delete_wallet_title = "警告";
+wallet_alert_delete_wallet_content = "确定要删除钱包吗";
+wallet_alert_delete_wallet_cancel_button_title = "取消";
+wallet_alert_delete_wallet_confirm_button_title = "确定";
+// 助记词检查
+wallet_check_mnemonic_success_title = "备份成功";
+// 添加地址选择类型
+wallet_address_add_type_action_alert_content = "请选择类型";
+wallet_address_add_type_action_alert_cancel_button_title = "取消";
+// 服务协议
+wallet_service_legal_loaded_error_title = "加载失败";
+wallet_service_legal_loaded_error_cancel_button_title = "确定";
+// 选择创建还是导入
+wallet_add_wallet_alert_choose_import_or_create_title = "选择";
+wallet_add_wallet_alert_import_action_title = "导入";
+wallet_add_wallet_alert_create_action_title = "创建";
+wallet_add_wallet_alert_cancel_action_title = "取消";
+// 修改钱包名字
+wallet_manager_change_wallet_name_alert_title = "提示";
+wallet_manager_change_wallet_name_alert_content = "已修改钱包名称,是否立即保存";
+wallet_manager_change_wallet_name_alert_cancel_button_title = "取消";
+wallet_manager_change_wallet_name_alert_confirm_button_title = "保存";
+wallet_manager_change_wallet_name_success_title = "修改成功";
+
+// publish代币
+wallet_add_asset_alert_title = "提醒";
+wallet_add_asset_alert_content = "开启需要消耗Gas费,是否立即开启";
+wallet_add_asset_alert_cancel_button_title = "取消";
+wallet_add_asset_alert_confirm_button_title = "确定";
+wallet_add_asset_alert_success_title = "开启成功";
+
+/************* 备份提醒弹出页面 *******************/
+wallet_alert_backup_warning_title = "安全提醒";
+wallet_alert_backup_warning_detail_title = "您的身份助记词未备份，请务必备份助记词\n助记词可用于恢复身份下钱包资产，防止忘记密码、应用删除、手机丢失等情况导致资产损失";
+wallet_alert_backup_warning_button_title = "立即备份";
 
 /************* 页面标题 *******************/
 wallet_transfer_navigation_title = "转账";

@@ -50,8 +50,7 @@ class AddAssetViewModel: NSObject {
             if let action = self.actionClosure {
                 action(false)
             }
-            self.detailView.makeToast("开启失败",
-            position: .center)
+            self.detailView.makeToast("开启失败", position: .center)
             return
         }
         let type = jsonData.value(forKey: "type") as! String
@@ -73,7 +72,7 @@ class AddAssetViewModel: NSObject {
             if let action = self.actionClosure {
                 action(true)
             }
-            self.detailView.makeToast("开启成功",
+            self.detailView.makeToast(localLanguage(keyString: "wallet_add_asset_alert_success_title"),
                                 position: .center)
             
         }

@@ -294,47 +294,58 @@ class ViolasTransferView: UIView {
         } else {
             // 拆包金额
             guard let amountString = self.amountTextField.text else {
-                #warning("错误待处理")
-                self.makeToast(LibraWalletError.error("拆包金额异常").localizedDescription, position: .center)
+                self.makeToast(LibraWalletError.WalletTransfer(reason: .amountInvalid).localizedDescription,
+                               position: .center)
                 return
             }
             // 金额不为空检查
             guard amountString.isEmpty == false else {
-                self.makeToast(LibraWalletError.error("金额不为空检查").localizedDescription, position: .center)
-
+                self.makeToast(LibraWalletError.WalletTransfer(reason: .amountEmpty).localizedDescription,
+                               position: .center)
                 return
             }
             // 金额是否纯数字检查
             guard isPurnDouble(string: amountString) == true else {
-                self.makeToast(LibraWalletError.error("金额是否纯数字检查").localizedDescription, position: .center)
+                self.makeToast(LibraWalletError.WalletTransfer(reason: .amountInvalid).localizedDescription,
+                               position: .center)
                 return
             }
             // 转换数字
             let amount = (amountString as NSString).doubleValue
-            // 金额大于我的金额
-            guard amount <= Double((wallet?.walletBalance ?? 0) / 1000000) else {
-               self.makeToast(LibraWalletError.error("金额大于我的金额").localizedDescription, position: .center)
-               return
-            }
-            guard let address = self.addressTextField.text else {
-               self.makeToast(LibraWalletError.error("地址拆包异常").localizedDescription, position: .center)
-               return
-            }
-            guard address.isEmpty == false else {
-                self.makeToast(LibraWalletError.error("地址为空").localizedDescription, position: .center)
-                return
-            }
-            guard ViolasManager().isValidViolasAddress(address: address) else {
-                self.makeToast(LibraWalletError.error("地址无效").localizedDescription, position: .center)
-                return
-            }
-            guard address != self.wallet?.walletAddress else {
-                self.makeToast(LibraWalletError.error("不能向自己转账").localizedDescription, position: .center)
-                return
-            }
+            // 手续费转换
             let feeString = self.transferFeeLabel.text
             let fee = Double(feeString!.replacingOccurrences(of: " VToken", with: ""))!
-            
+            #warning("暂时不用手续费")
+            // 金额大于我的金额
+            guard (amount) <= Double((wallet?.walletBalance ?? 0) / 1000000) else {
+               self.makeToast(LibraWalletError.WalletTransfer(reason: .amountOverload).localizedDescription,
+                              position: .center)
+               return
+            }
+            // 地址拆包检查
+            guard let address = self.addressTextField.text else {
+               self.makeToast(LibraWalletError.WalletTransfer(reason: .addressInvalid).localizedDescription,
+                              position: .center)
+               return
+            }
+            // 地址是否为空
+            guard address.isEmpty == false else {
+                self.makeToast(LibraWalletError.WalletTransfer(reason: .addressEmpty).localizedDescription,
+                               position: .center)
+                return
+            }
+            // 是否有效地址
+            guard LibraManager().isValidLibraAddress(address: address) else {
+                self.makeToast(LibraWalletError.WalletTransfer(reason: .addressInvalid).localizedDescription,
+                               position: .center)
+                return
+            }
+            // 检查是否向自己转账
+            guard address != self.wallet?.walletAddress else {
+                self.makeToast(LibraWalletError.WalletTransfer(reason: .transferToSelf).localizedDescription,
+                               position: .center)
+                return
+            }
             self.amountTextField.resignFirstResponder()
             self.addressTextField.resignFirstResponder()
             self.transferFeeSlider.resignFirstResponder()

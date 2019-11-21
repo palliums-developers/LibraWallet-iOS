@@ -170,7 +170,7 @@ class WalletTransactionsTableViewCell: UITableViewCell {
             if model.type == 1 {
                 // publish
                 typeLabel.textColor = UIColor.init(hex: "FB8F0B")
-                typeLabel.text = "开启"
+                typeLabel.text = localLanguage(keyString: "wallet_transactions_publish_title")
                 coinLabel.text = "VToken"
             } else if model.type == 2 {
                 // 交易
@@ -185,7 +185,6 @@ class WalletTransactionsTableViewCell: UITableViewCell {
                 }
                 coinLabel.text = "Violas"
             }
-//            typeLabel.text = "\(model.transaction_type ?? 0)"
         }
     }
     var libraModel: LibraDataModel? {

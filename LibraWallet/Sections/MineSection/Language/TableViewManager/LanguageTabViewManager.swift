@@ -62,18 +62,14 @@ extension LanguageTabViewManager: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let identifier = "CellNormal"
         if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) {
-            //            if let data = dataModel, data.isEmpty == false {
             (cell as! LanguageTableViewCell).dataModel = dataModel[indexPath.section]
-            //            }
             if indexPath.section == self.selectRow! {
                 (cell as! LanguageTableViewCell).setCellSelected(status: true)
             }
             return cell
         } else {
             let cell = LanguageTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
-            //            if let data = dataModel, data.isEmpty == false {
             cell.dataModel = dataModel[indexPath.section]
-            //            }
             if indexPath.section == self.selectRow! {
                 cell.setCellSelected(status: true)
             }

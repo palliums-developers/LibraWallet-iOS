@@ -17,8 +17,6 @@ struct AddressModel: Codable {
 }
 class AddAddressModel: NSObject {
     @objc var dataDic: NSMutableDictionary = [:]
-    //requestStatus: 0:第一页，1:更多
-    
     func addWithdrawAddress(address: String, remarks: String, type: String) {
         let model = AddressModel.init(addressID: 999,
                                       address: address,
@@ -26,12 +24,15 @@ class AddAddressModel: NSObject {
                                       addressType: type)
         let result = DataBaseManager.DBManager.insertTransferAddress(model: model)
         print(result)
+        guard result == true else {
+            let data = setKVOData(error: LibraWalletError.WalletAddAddress(reason: .addressInsertError), type: "AddAddress")
+            self.setValue(data, forKey: "dataDic")
+            return
+        }
+        let data = setKVOData(type: "AddAddress", data: model)
+        self.setValue(data, forKey: "dataDic")
     }
-//    deinit {
-//        requests.forEach { cancellable in
-//            cancellable.cancel()
-//        }
-//        requests.removeAll()
-//        print("WalletReceiveHistoryModel销毁了")
-//    }
+    deinit {
+        print("AddAddressModel销毁了")
+    }
 }

@@ -453,12 +453,15 @@ struct DataBaseManager {
         }
     }
     func deleteTransferAddressFromTable(model: AddressModel) -> Bool {
-        let transectionAddressHistoryTable = Table("Wallet")
+        let transectionAddressHistoryTable = Table("TransferAddress")
         do {
             if let tempDB = self.db {
-                let contract = transectionAddressHistoryTable.filter(Expression<Int64>("address_id") == model.addressID!)
+                let contract = transectionAddressHistoryTable.filter(Expression<String>("address") == "\(model.addressType!)_" + model.address!)
                 let rowid = try tempDB.run(contract.delete())
                 print(rowid)
+                if rowid == 0 {
+                    return false
+                }
                 return true
             } else {
                 return false

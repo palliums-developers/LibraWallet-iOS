@@ -51,14 +51,14 @@ class AddAssetViewController: BaseViewController {
 }
 extension AddAssetViewController: AddAssetViewModelDelegate {
     func switchButtonChange(model: ViolasTokenModel, state: Bool, indexPath: IndexPath) {
-        let alertView = UIAlertController.init(title: localLanguage(keyString: "提醒"),
-                                               message: localLanguage(keyString: "开启需要消耗Gas费,是否立即开启"),
+        let alertView = UIAlertController.init(title: localLanguage(keyString: "wallet_add_asset_alert_title"),
+                                               message: localLanguage(keyString: "wallet_add_asset_alert_content"),
                                                preferredStyle: .alert)
-        let cancelAction = UIAlertAction.init(title:localLanguage(keyString: "取消"), style: .default) { okAction in
+        let cancelAction = UIAlertAction.init(title:localLanguage(keyString: "wallet_add_asset_alert_cancel_button_title"), style: .default) { okAction in
             let cell = self.viewModel.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
             cell.switchButton.setOn(!state, animated: true)
         }
-        let confirmAction = UIAlertAction.init(title:localLanguage(keyString: "确定"), style: .default) { okAction in
+        let confirmAction = UIAlertAction.init(title:localLanguage(keyString: "wallet_add_asset_alert_confirm_button_title"), style: .default) { okAction in
             self.showPasswordAlert(model: model)
         }
         alertView.addAction(cancelAction)
@@ -66,31 +66,41 @@ extension AddAssetViewController: AddAssetViewModelDelegate {
         self.present(alertView, animated: true, completion: nil)
     }
     func showPasswordAlert(model: ViolasTokenModel) {
-        let alertContr = UIAlertController(title: "", message: "请输入密码", preferredStyle: .alert)
+        let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: localLanguage(keyString: "wallet_type_in_password_content"), preferredStyle: .alert)
         alertContr.addTextField {
             (textField: UITextField!) -> Void in
-            textField.placeholder = "密码"
+            textField.placeholder = localLanguage(keyString: "wallet_type_in_password_textfield_placeholder")
             textField.tintColor = DefaultGreenColor
             textField.isSecureTextEntry = true
         }
-        alertContr.addAction(UIAlertAction(title: "确定", style: .default) {
-            clickHandler in
-            let password = alertContr.textFields!.first! as UITextField
-            NSLog("password:\(password.text!)")
+        alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_confirm_button_title"), style: .default) { [weak self] clickHandler in
+            let passwordTextField = alertContr.textFields!.first! as UITextField
+            guard let password = passwordTextField.text else {
+                self?.view.makeToast(LibraWalletError.WalletCheckPassword(reason: .passwordInvalidError).localizedDescription,
+                                    position: .center)
+                return
+            }
+            guard password.isEmpty == false else {
+                self?.view.makeToast(LibraWalletError.WalletCheckPassword(reason: .passwordEmptyError).localizedDescription,
+                                    position: .center)
+                return
+            }
+            NSLog("Password:\(password)")
             do {
-                let state = try LibraWalletManager.shared.isValidPaymentPassword(walletRootAddress: (self.model?.walletRootAddress)!, password: password.text!)
+                let state = try LibraWalletManager.shared.isValidPaymentPassword(walletRootAddress: (self?.model?.walletRootAddress)!, password: password)
                 guard state == true else {
-                    self.view.makeToast("密码不正确", position: .center)
+                    self?.view.makeToast(LibraWalletError.WalletCheckPassword(reason: .passwordEmptyError).localizedDescription,
+                                         position: .center)
                     return
                 }
-                self.viewModel.detailView.toastView?.show()
-                let menmonic = try LibraWalletManager.shared.getMnemonicFromKeychain(walletRootAddress: (self.model?.walletRootAddress)!)
-                self.viewModel.dataModel.publishViolasToken(sendAddress: (self.model?.walletAddress)!, mnemonic: menmonic, contact: model.address ?? "")
+                self?.viewModel.detailView.toastView?.show()
+                let menmonic = try LibraWalletManager.shared.getMnemonicFromKeychain(walletRootAddress: (self?.model?.walletRootAddress)!)
+                self?.viewModel.dataModel.publishViolasToken(sendAddress: (self?.model?.walletAddress)!, mnemonic: menmonic, contact: model.address ?? "")
             } catch {
-                self.viewModel.detailView.toastView?.hide()
+                self?.viewModel.detailView.toastView?.hide()
             }
         })
-        alertContr.addAction(UIAlertAction(title: "取消", style: .cancel){
+        alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_cancel_button_title"), style: .cancel){
             clickHandler in
             NSLog("点击了取消")
             })

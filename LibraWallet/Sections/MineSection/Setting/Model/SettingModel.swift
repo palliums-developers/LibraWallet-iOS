@@ -10,13 +10,13 @@ import UIKit
 
 class SettingModel: NSObject {
     func getSettingLocalData() -> [[[String: String]]] {
-        return [[["name":localLanguage(keyString: "多语言"),
+        return [[["name":localLanguage(keyString: "wallet_setting_language_title"),
                  "icon":""],
-                ["name":localLanguage(keyString: "服务协议"),
+                ["name":localLanguage(keyString: "wallet_setting_service_legal_title"),
                  "icon":""]],
-                [["name":localLanguage(keyString: "关于我们"),
+                [["name":localLanguage(keyString: "wallet_setting_about_us_title"),
                  "icon":""]],
-                [["name":localLanguage(keyString: "帮助与反馈"),
+                [["name":localLanguage(keyString: "wallet_setting_help_center_title"),
                  "icon":""]]]
     }
 }

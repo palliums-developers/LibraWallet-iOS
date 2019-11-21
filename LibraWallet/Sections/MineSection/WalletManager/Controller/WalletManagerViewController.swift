@@ -76,10 +76,18 @@ extension WalletManagerViewController: WalletManagerTableViewManagerDelegate {
             let vc = WalletDetailViewController()
             vc.walletModel = model
             vc.canDelete = indexPath.section == 0 ? false:true
+            vc.actionClosure = { (action, model) in
+//                let tempModel = self.viewModel.tableViewManager.dataModel?.last?.filter({ item in
+//                    item.walletRootAddress != model?.walletRootAddress
+//                })
+//                self.viewModel.tableViewManager.dataModel?.removeLast()
+//                self.viewModel.tableViewManager.dataModel?.append(tempModel)
+//                self
+                self.viewModel.dataModel.loadLocalWallet()
+            }
             self.navigationController?.pushViewController(vc, animated: true)
         } else {
             let vc = WalletTransactionsViewController()
-
             self.navigationController?.pushViewController(vc, animated: true)
         }
     }

@@ -16,13 +16,13 @@ class SettingViewController: BaseViewController {
         // 设置标题
         self.title = localLanguage(keyString: "wallet_setting_navigation_title")
         // 加载子View
-        self.view.addSubview(self.viewModel.detailView)
+        self.view.addSubview(self.detailView)
         // 加载数据
-        self.viewModel.getLocalData()
+        self.getLocalData()
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        self.viewModel.detailView.snp.makeConstraints { (make) in
+        detailView.snp.makeConstraints { (make) in
             if #available(iOS 11.0, *) {
                 make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
             } else {
@@ -34,10 +34,27 @@ class SettingViewController: BaseViewController {
     deinit {
         print("SettingViewController销毁了")
     }
-    lazy var viewModel: SettingViewModel = {
-        let viewModel = SettingViewModel.init()
-        viewModel.tableViewManager.delegate = self
-        return viewModel
+    func getLocalData() {
+        self.tableViewManager.dataModel = self.dataModel.getSettingLocalData()
+        self.detailView.tableView.reloadData()
+    }
+    //网络请求、数据模型
+    lazy var dataModel: SettingModel = {
+        let model = SettingModel.init()
+        return model
+    }()
+    //tableView管理类
+    lazy var tableViewManager: SettingTableViewManager = {
+        let manager = SettingTableViewManager.init()
+        manager.delegate = self
+        return manager
+    }()
+    //子View
+    lazy var detailView : SettingView = {
+        let view = SettingView.init()
+        view.tableView.delegate = self.tableViewManager
+        view.tableView.dataSource = self.tableViewManager
+        return view
     }()
 }
 extension SettingViewController: SettingTableViewManagerDelegate {
