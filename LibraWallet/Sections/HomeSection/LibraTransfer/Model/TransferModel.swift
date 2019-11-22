@@ -63,9 +63,7 @@ class TransferModel: NSObject {
         let queue = DispatchQueue.init(label: "TransferQueue")
         queue.async {
             do {
-//                let menmonic = try LibraWalletManager.shared.getMnemonicFromKeychain(walletRootAddress: rootAddress)
-                let seed = try LibraMnemonic.seed(mnemonic: mnemonic)
-                let wallet = try LibraWallet.init(seed: seed)
+                let wallet = try LibraManager.getWallet(mnemonic: mnemonic)
                 
                 // 获取SequenceNumber
                 let sequenceNumber = try self.getSequenceNumber(client: client, wallet: wallet)

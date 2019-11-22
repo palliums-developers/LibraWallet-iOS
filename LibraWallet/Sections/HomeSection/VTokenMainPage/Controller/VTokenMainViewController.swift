@@ -10,15 +10,11 @@ import UIKit
 import MJRefresh
 class VTokenMainViewController: BaseViewController {
     override func viewDidLoad() {
-        super.viewDidLoad()
-        // 初始化本地配置
-        self.setBaseControlllerConfig()
-        
-        self.title = (self.wallet?.walletType?.description ?? "") + localLanguage(keyString: "wallet_transfer_navigation_title")
-        
+        super.viewDidLoad()        
         self.view.addSubview(viewModel.detailView)
 //        self.detailView.wallet = self.wallet
         self.viewModel.initKVO()
+        
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -30,6 +26,11 @@ class VTokenMainViewController: BaseViewController {
             }
             make.top.left.right.equalTo(self.view)
         }
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationWhiteMode()
+        self.navigationController?.navigationBar.barStyle = .black
     }
     lazy var viewModel: VTokenViewModel = {
         let viewModel = VTokenViewModel.init()
@@ -62,6 +63,7 @@ extension VTokenMainViewController: VTokenMainHeaderViewDelegate {
         vc.wallet = self.wallet
         vc.sendViolasTokenState = true
         vc.contract = self.vtokenModel?.address
+        vc.title = (vtokenModel?.name ?? "") + localLanguage(keyString: "wallet_transfer_navigation_title")
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }

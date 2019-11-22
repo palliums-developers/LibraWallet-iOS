@@ -335,7 +335,7 @@ class ViolasTransferView: UIView {
                 return
             }
             // 是否有效地址
-            guard LibraManager().isValidLibraAddress(address: address) else {
+            guard LibraManager.isValidLibraAddress(address: address) else {
                 self.makeToast(LibraWalletError.WalletTransfer(reason: .addressInvalid).localizedDescription,
                                position: .center)
                 return

@@ -11,8 +11,6 @@ import UIKit
 class ScanResultInvalidViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        // 初始化本地配置
-        self.setBaseControlllerConfig()
         // 加载子View
         self.view.addSubview(detailView)
     }

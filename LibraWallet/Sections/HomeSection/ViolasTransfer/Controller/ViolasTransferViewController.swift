@@ -11,9 +11,6 @@ import UIKit
 class ViolasTransferViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        // 初始化本地配置
-        self.setBaseControlllerConfig()
-        
 //        self.title = (self.wallet?.walletType?.description ?? "") + localLanguage(keyString: "wallet_transfer_navigation_title")
         self.view.addSubview(detailView)
         self.detailView.wallet = self.wallet
@@ -29,6 +26,10 @@ class ViolasTransferViewController: BaseViewController {
             }
             make.left.right.equalTo(self.view)
         }
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.barStyle = .default
     }
     private lazy var detailView : ViolasTransferView = {
         let view = ViolasTransferView.init()
@@ -111,7 +112,7 @@ extension ViolasTransferViewController: ViolasTransferViewDelegate {
         vc.actionClosure = { address in
             if address.hasPrefix("violas:") {
                 let tempAddress = address.replacingOccurrences(of: "violas:", with: "")
-                guard ViolasManager().isValidViolasAddress(address: tempAddress) else {
+                guard ViolasManager.isValidViolasAddress(address: tempAddress) else {
                     self.view.makeToast("不是有效的Violas地址", position: .center)
                     return
                 }

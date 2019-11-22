@@ -22,6 +22,8 @@ class HomeViewController: UIViewController {
         self.initKVO()
         // 添加语言变换通知
         NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
+        //检查是否第一次打开app
+        checkIsFisrtOpenApp()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -47,6 +49,13 @@ class HomeViewController: UIViewController {
             }
             make.top.left.right.equalTo(self.view)
         }
+    }
+    func checkIsFisrtOpenApp() {
+        guard getWelcomeState() == false else {
+            return
+        }
+        let alert = WelcomeAlert.init()
+        alert.show()
     }
     func addNavigationBar() {
         // 自定义导航栏的UIBarButtonItem类型的按钮
@@ -74,7 +83,7 @@ class HomeViewController: UIViewController {
     //tableView管理类
     lazy var tableViewManager: HomeTableViewManager = {
         let manager = HomeTableViewManager.init()
-//        manager.delegate = self
+        manager.delegate = self
         return manager
     }()
     //子View
@@ -98,7 +107,7 @@ class HomeViewController: UIViewController {
         button.titleEdgeInsets = UIEdgeInsets(top: 0, left: -15, bottom: 0, right: 15)
         button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 80, bottom: 0, right: -80)
         // 设置frame
-        button.frame = CGRect(x: 0, y: 0, width: 37, height: 37)
+        button.frame = CGRect(x: 0, y: 0, width: 80, height: 37)
         button.addTarget(self, action: #selector(changeWallet), for: .touchUpInside)
         return button
     }()
@@ -176,6 +185,23 @@ class HomeViewController: UIViewController {
         self.navigationController?.pushViewController(vc, animated: true)
     }
     @objc func setText() {
+        if self.detailView.headerView.walletModel?.walletType == .Libra {
+            self.changeWalletButton.setTitle("Libra " + localLanguage(keyString: "wallet_home_wallet_type_last_title"), for: UIControl.State.normal)
+        } else if self.detailView.headerView.walletModel?.walletType == .Violas {
+            self.changeWalletButton.setTitle("Violas " + localLanguage(keyString: "wallet_home_wallet_type_last_title"), for: UIControl.State.normal)
+        } else {
+            self.changeWalletButton.setTitle("BTC " + localLanguage(keyString: "wallet_home_wallet_type_last_title"), for: UIControl.State.normal)
+        }
+//        UIView.animate(withDuration: 0.3) { [weak self] in
+//            var width = 80
+//            if Localize.currentLanguage() == "en" {
+//                width = 120
+//            } else {
+//                width = 80
+//            }
+//            self?.changeWalletButton.frame = CGRect.init(x: 0, y: 0, width: width, height: 37)
+//            self?.changeWalletButtonView.frame = CGRect.init(x: 0, y: 0, width: width, height: 37)
+//        }
     }
     @objc func refreshData() {
         if self.detailView.headerView.walletModel?.walletType == .Libra {
@@ -195,7 +221,7 @@ class HomeViewController: UIViewController {
 extension HomeViewController {
     func showBTCTransferViewController(address: String) {
         let tempAddress = address.replacingOccurrences(of: "bitcoin:", with: "")
-        guard BTCManager().isValidBTCAddress(address: tempAddress) else {
+        guard BTCManager.isValidBTCAddress(address: tempAddress) else {
             self.view.makeToast("不是有效的Bitcoin地址", position: .center)
             return
         }
@@ -210,7 +236,7 @@ extension HomeViewController {
     }
     func showLibraTransferViewController(address: String) {
         let tempAddress = address.replacingOccurrences(of: "libra:", with: "")
-        guard LibraManager().isValidLibraAddress(address: tempAddress) else {
+        guard LibraManager.isValidLibraAddress(address: tempAddress) else {
            self.view.makeToast("不是有效的Libra地址", position: .center)
            return
         }
@@ -225,7 +251,7 @@ extension HomeViewController {
     }
     func showViolasTransferViewController(address: String) {
         let tempAddress = address.replacingOccurrences(of: "violas:", with: "")
-        guard ViolasManager().isValidViolasAddress(address: tempAddress) else {
+        guard ViolasManager.isValidViolasAddress(address: tempAddress) else {
             self.view.makeToast("不是有效的Violas地址", position: .center)
             return
         }
@@ -236,6 +262,7 @@ extension HomeViewController {
         vc.wallet = self.detailView.headerView.walletModel
         vc.sendViolasTokenState = false
         vc.address = tempAddress
+        vc.title = (self.detailView.headerView.walletModel?.walletType?.description ?? "") + localLanguage(keyString: "wallet_transfer_navigation_title")
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
@@ -399,6 +426,8 @@ extension HomeViewController: HomeHeaderViewDelegate {
            }
            vc.wallet = self.detailView.headerView.walletModel
            vc.sendViolasTokenState = false
+           vc.title = (self.detailView.headerView.walletModel?.walletType?.description ?? "") + localLanguage(keyString: "wallet_transfer_navigation_title")
+
            vc.hidesBottomBarWhenPushed = true
            self.navigationController?.pushViewController(vc, animated: true)
             break
@@ -429,6 +458,8 @@ extension HomeViewController: HomeTableViewManagerDelegate {
         vc.hidesBottomBarWhenPushed = true
         vc.wallet = self.detailView.headerView.walletModel
         vc.vtokenModel = model
+        vc.title = model.name ?? ""
+
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }

@@ -73,7 +73,7 @@ extension ImportIdentityWalletViewController {
         let type = jsonData.value(forKey: "type") as! String
         self.detailView.toastView.hide()
         if type == "ImportWallet" {
-            self.view.makeToast("导入成功", duration: 0.5, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
+            self.view.makeToast(localLanguage(keyString: "wallet_import_wallet_success_title"), duration: 0.5, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
                 let tabbar = BaseTabBarViewController.init()
                 UIApplication.shared.keyWindow?.rootViewController = tabbar
                 UIApplication.shared.keyWindow?.makeKeyAndVisible()

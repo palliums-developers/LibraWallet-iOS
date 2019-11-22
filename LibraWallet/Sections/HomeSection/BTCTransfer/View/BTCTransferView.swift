@@ -255,8 +255,6 @@ class BTCTransferView: UIView {
         label.text = "\(fee8) BTC"
         return label
     }()
-
-
     lazy var confirmButton: UIButton = {
         let button = UIButton.init(type: UIButton.ButtonType.custom)
         button.setTitle(localLanguage(keyString: "wallet_transfer_confirm_button_title"), for: UIControl.State.normal)
@@ -327,7 +325,7 @@ class BTCTransferView: UIView {
                 return
             }
             // 是否有效地址
-            guard LibraManager().isValidLibraAddress(address: address) else {
+            guard BTCManager.isValidBTCAddress(address: address) else {
                 self.makeToast(LibraWalletError.WalletTransfer(reason: .addressInvalid).localizedDescription,
                                position: .center)
                 return
@@ -338,8 +336,6 @@ class BTCTransferView: UIView {
                                position: .center)
                 return
             }
-            
-            
             self.amountTextField.resignFirstResponder()
             self.addressTextField.resignFirstResponder()
             self.transferFeeSlider.resignFirstResponder()

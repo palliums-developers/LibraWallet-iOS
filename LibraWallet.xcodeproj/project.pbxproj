@@ -1183,25 +1183,11 @@
 			isa = PBXGroup;
 			children = (
 				9D6264832358405000A79B3D /* Mine */,
-				9D9B49D623602E4400354EF0 /* Setting */,
+				9DF9BB572386D6C100FA800D /* WalletManagerModule */,
+				9DF9BB582386D73000FA800D /* AddressManagerModule */,
+				9DF9BB592386D74900FA800D /* SettingModule */,
 				9D08AD462330D873004687E8 /* TransactionDetailWebView */,
 				9DFFA87623683BBC00EA74F9 /* WalletTransactions */,
-				9D9B4A1823605C0100354EF0 /* WalletManager */,
-				9D9B4A552366D19200354EF0 /* WalletDetail */,
-				9D60189723680F8900922237 /* WalletMnemonic */,
-				9DE5CE372366F1F40084608F /* WalletChangeName */,
-				9D9B4A4B236694F500354EF0 /* ImportWallet */,
-				9D9B4A3F2362947100354EF0 /* AddWallet */,
-				9D9B4A2D2361997B00354EF0 /* SupportCoin */,
-				9D9B4A0A2360490700354EF0 /* HelpCenter */,
-				9D9B49FD2360487900354EF0 /* AboutUs */,
-				9D9B49F62360466500354EF0 /* ServiceLegal */,
-				9D9B49E92360383000354EF0 /* Language */,
-				9D9B49A3235DA76100354EF0 /* AddAddress */,
-				9D9B499A235DA76100354EF0 /* AddressManager */,
-				9DA0265323702A960084905B /* BackupWarning */,
-				9DA0263F236FFC4D0084905B /* BackupMnemonic */,
-				9DC06A262371781300BCE1FE /* CheckBackup */,
 			);
 			path = MineSection;
 			sourceTree = "<group>";
@@ -1243,8 +1229,8 @@
 		9D9B49E92360383000354EF0 /* Language */ = {
 			isa = PBXGroup;
 			children = (
-				9D9B49ED2360386800354EF0 /* TableViewManager */,
 				9D9B49EC2360384C00354EF0 /* Controller */,
+				9D9B49ED2360386800354EF0 /* TableViewManager */,
 				9D9B49EA2360383B00354EF0 /* View */,
 			);
 			path = Language;
@@ -1828,15 +1814,15 @@
 		9DC06A6F2374059100BCE1FE /* HomeSection */ = {
 			isa = PBXGroup;
 			children = (
-				9DF9BB502383E5AF00FA800D /* ScanResultInvalid */,
-				9D1A42C723829D93008978A7 /* VTokenMainPage */,
 				9DC902372328E78A0097FD85 /* Home */,
+				9DF49C01236BDF6A00C77880 /* WalletList */,
 				9DC48878232231DA005FF254 /* Scan */,
+				9DF9BB502383E5AF00FA800D /* ScanResultInvalid */,
 				9DC4885623220D73005FF254 /* Receive */,
 				9DC488702322246E005FF254 /* LibraTransfer */,
 				9D68D2FA237D25CA005B7593 /* ViolasTransfer */,
 				9D68D2EC237CF019005B7593 /* BTCTransfer */,
-				9DF49C01236BDF6A00C77880 /* WalletList */,
+				9D1A42C723829D93008978A7 /* VTokenMainPage */,
 				9D5B4E66236BCB4000F4D99C /* AddAsset */,
 			);
 			path = HomeSection;
@@ -1888,6 +1874,7 @@
 		9DC4885B23220E30005FF254 /* Vendors */ = {
 			isa = PBXGroup;
 			children = (
+				9DF9BB5B2387CBCD00FA800D /* ViolasKit */,
 				9DBC266F23408D3A009650EA /* ED25519 */,
 				9DC487F9231FA0C6005FF254 /* LibraKit */,
 				9DC57A18231CECFE00989173 /* Protobuf */,
@@ -2223,6 +2210,51 @@
 				9DF9BB532383E5EF00FA800D /* ScanResultInvalidViewController.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		9DF9BB572386D6C100FA800D /* WalletManagerModule */ = {
+			isa = PBXGroup;
+			children = (
+				9D9B4A1823605C0100354EF0 /* WalletManager */,
+				9D9B4A552366D19200354EF0 /* WalletDetail */,
+				9DE5CE372366F1F40084608F /* WalletChangeName */,
+				9D9B4A4B236694F500354EF0 /* ImportWallet */,
+				9D9B4A3F2362947100354EF0 /* AddWallet */,
+				9D9B4A2D2361997B00354EF0 /* SupportCoin */,
+				9D60189723680F8900922237 /* WalletMnemonic */,
+				9DA0265323702A960084905B /* BackupWarning */,
+				9DA0263F236FFC4D0084905B /* BackupMnemonic */,
+				9DC06A262371781300BCE1FE /* CheckBackup */,
+			);
+			path = WalletManagerModule;
+			sourceTree = "<group>";
+		};
+		9DF9BB582386D73000FA800D /* AddressManagerModule */ = {
+			isa = PBXGroup;
+			children = (
+				9D9B499A235DA76100354EF0 /* AddressManager */,
+				9D9B49A3235DA76100354EF0 /* AddAddress */,
+			);
+			path = AddressManagerModule;
+			sourceTree = "<group>";
+		};
+		9DF9BB592386D74900FA800D /* SettingModule */ = {
+			isa = PBXGroup;
+			children = (
+				9D9B49D623602E4400354EF0 /* Setting */,
+				9D9B4A0A2360490700354EF0 /* HelpCenter */,
+				9D9B49FD2360487900354EF0 /* AboutUs */,
+				9D9B49F62360466500354EF0 /* ServiceLegal */,
+				9D9B49E92360383000354EF0 /* Language */,
+			);
+			path = SettingModule;
+			sourceTree = "<group>";
+		};
+		9DF9BB5B2387CBCD00FA800D /* ViolasKit */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViolasKit;
 			sourceTree = "<group>";
 		};
 		9DFFA87623683BBC00EA74F9 /* WalletTransactions */ = {
@@ -2899,7 +2931,7 @@
 				CODE_SIGN_ENTITLEMENTS = LibraWallet/LibraWallet.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development: Jay Zou (JR6LZNW9NA)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_TEAM = ND49YBN8B3;
 				INFOPLIST_FILE = LibraWallet/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -2926,7 +2958,7 @@
 				CODE_SIGN_ENTITLEMENTS = LibraWallet/LibraWallet.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Jay Zou (ND49YBN8B3)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_TEAM = ND49YBN8B3;
 				INFOPLIST_FILE = LibraWallet/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;

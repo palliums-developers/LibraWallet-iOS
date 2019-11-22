@@ -24,7 +24,9 @@ class BaseViewController: UIViewController {
         // 自定义NavigationBar返回按钮
         self.addNavigationBar()
         // 添加分割条
-        self.setNavigationWithShadowImage()
+//        self.setNavigationWithShadowImage()
+        // 删除分割条
+        self.setNavigationWithoutShadowImage()
         // 自定义NavigationBar返回按钮后，添加滑动返回手势
         self.navigationController?.interactivePopGestureRecognizer?.delegate = self;
     }
@@ -66,6 +68,10 @@ class BaseViewController: UIViewController {
     func setNavigationBarTitleColorWhite() {
         self.navigationController?.navigationBar.titleTextAttributes=[NSAttributedString.Key.foregroundColor:UIColor.white,
                                                                   NSAttributedString.Key.font:UIFont.systemFont(ofSize: 20, weight: UIFont.Weight.medium)]
+    }
+    func navigationWhiteMode() {
+        backButton.setImage(UIImage.init(named: "navigation_back_white"), for: UIControl.State.normal)
+        setNavigationBarTitleColorWhite()
     }
     func hasContent() -> Bool {
         return true

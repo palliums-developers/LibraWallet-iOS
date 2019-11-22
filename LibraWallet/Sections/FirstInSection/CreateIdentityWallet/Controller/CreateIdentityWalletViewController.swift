@@ -11,8 +11,6 @@ import Toast_Swift
 class CreateIdentityWalletViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        // 初始化本地配置
-        self.setBaseControlllerConfig()
         // 设置背景色
         self.view.addSubview(detailView)
         self.initKVO()
@@ -69,7 +67,7 @@ extension CreateIdentityWalletViewController {
         self.detailView.toastView?.hide()
         if type == "CreateWallet" {
             if let tempData = jsonData.value(forKey: "data") as? CreateWalletModel {
-                self.view.makeToast("创建成功", duration: 0.5, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
+                self.view.makeToast(localLanguage(keyString: "wallet_create_wallet_success_title"), duration: 0.5, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
                     let vc = BackupWarningViewController()
                     vc.FirstInApp = true
                     vc.tempWallet = tempData

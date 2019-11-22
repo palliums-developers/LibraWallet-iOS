@@ -11,12 +11,8 @@ import UIKit
 class WalletReceiveViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        // 初始化本地配置
-        self.setBaseControlllerConfig()
         // 页面标题
         self.title = localLanguage(keyString: "wallet_receive_navigation_title")
-
-        
         // 加载子View
         self.view.addSubview(detailView)        
     }
@@ -30,6 +26,10 @@ class WalletReceiveViewController: BaseViewController {
             }
             make.left.right.equalTo(self.view)
         }
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.barStyle = .default
     }
     var wallet: LibraWalletManager? {
         didSet {

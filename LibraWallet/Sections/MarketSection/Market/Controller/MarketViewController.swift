@@ -26,6 +26,14 @@ class MarketViewController: UIViewController {
             make.top.left.right.equalTo(self.view)
         }
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.barStyle = .black
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.navigationController?.navigationBar.barStyle = .default
+    }
     //子View
     private lazy var detailView : MarketView = {
         let view = MarketView.init()

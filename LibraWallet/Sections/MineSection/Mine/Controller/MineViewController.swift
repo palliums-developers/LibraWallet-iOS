@@ -7,17 +7,17 @@
 //
 
 import UIKit
-
+import Localize_Swift
 class MineViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.white
-        // 初始化本地配置
-//        self.setBaseControlllerConfig()
         // 加载子View
         self.view.addSubview(self.detailView)
         // 加载数据
         self.getLocalData()
+        // 添加语言变换通知
+        NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -39,13 +39,12 @@ class MineViewController: UIViewController {
         }
     }
     deinit {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
         print("MineViewController销毁了")
     }
-//    lazy var viewModel: MineViewModel = {
-//        let viewModel = MineViewModel.init()
-//        viewModel.tableViewManager.delegate = self
-//        return viewModel
-//    }()
+    @objc func setText() {
+        self.getLocalData()
+    }
     func getLocalData() {
         self.tableViewManager.dataModel = self.dataModel.getLocalData()
         self.detailView.tableView.reloadData()

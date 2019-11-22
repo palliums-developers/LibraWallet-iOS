@@ -64,8 +64,7 @@ class CreateIdentityWalletModel: NSObject {
     }
     func createViolasWallet(name: String, password: String, mnemonics: [String]) throws {
         do {
-            let seed = try LibraMnemonic.seed(mnemonic: mnemonics)
-            let wallet = try LibraWallet.init(seed: seed, depth: 0)
+            let wallet = try ViolasManager.getWallet(mnemonic: mnemonics)
             let walletModel = LibraWalletManager.init(walletID: 999,
                                                       walletBalance: 0,
                                                       walletAddress: wallet.publicKey.toAddress(),
@@ -94,8 +93,8 @@ class CreateIdentityWalletModel: NSObject {
     }
     func createLibraWallet(name: String, password: String, mnemonics: [String]) throws {
         do {
-            let seed = try LibraMnemonic.seed(mnemonic: mnemonics)
-            let wallet = try LibraWallet.init(seed: seed, depth: 0)
+
+            let wallet = try LibraManager.getWallet(mnemonic: mnemonics)
             let walletModel = LibraWalletManager.init(walletID: 999,
                                                       walletBalance: 0,
                                                       walletAddress: wallet.publicKey.toAddress(),

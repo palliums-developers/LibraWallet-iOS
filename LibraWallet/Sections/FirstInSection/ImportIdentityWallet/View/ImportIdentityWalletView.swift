@@ -175,12 +175,14 @@ class ImportIdentityWalletView: UIView {
     @objc func buttonClick(button: UIButton) {
         guard let mnemonic = mnemonicTextView.text else {
             //助记词拆包异常
-            self.makeToast(localLanguage(keyString: "wallet_import_mnemonic_invalid"), position: .center)
+            self.makeToast(LibraWalletError.WalletImportWallet(reason: .mnemonicInvalidError).localizedDescription,
+                           position: .center)
             return
         }
         guard mnemonic.isEmpty == false else {
             //助记词为空
-            self.makeToast(localLanguage(keyString: "wallet_import_mnemonic_without_insert"), position: .center)
+            self.makeToast(LibraWalletError.WalletImportWallet(reason: .mnemonicEmptyError).localizedDescription,
+                           position: .center)
             return
         }
         let tempArray = mnemonic.split(separator: " ").map {
@@ -188,63 +190,64 @@ class ImportIdentityWalletView: UIView {
         }
         guard tempArray.isEmpty == false else {
             //请输入助记词
-            self.makeToast(localLanguage(keyString: "wallet_import_mnemonic_without_insert"), position: .center)
+            self.makeToast(LibraWalletError.WalletImportWallet(reason: .mnemonicSplitFailedError).localizedDescription,
+                           position: .center)
             return
         }
 //        24 21 18 15 12
         if tempArray.count == 24 || tempArray.count == 21 || tempArray.count == 18 || tempArray.count == 15 || tempArray.count == 12 {
             guard checkMnenoicInvalid(mnemonicArray: tempArray) == true else {
                 // 助记词不正确
-                self.makeToast(localLanguage(keyString: "助记词不正确"),
+                self.makeToast(LibraWalletError.WalletImportWallet(reason: .mnemonicCheckFailed).localizedDescription,
                                position: .center)
                 return
             }
         } else {
             // 助记词数量不对
-            self.makeToast(localLanguage(keyString: "助记词数量不对"),
+            self.makeToast(LibraWalletError.WalletImportWallet(reason: .mnemonicCountUnsupportError).localizedDescription,
                            position: .center)
             return
         }
 
         guard let name = nameTextField.text else {
             // 名字拆包失败
-            self.makeToast(localLanguage(keyString: "名字拆包失败"),
+            self.makeToast(LibraWalletError.WalletAddWallet(reason: .walletNameInvalidError).localizedDescription,
                            position: .center)
             return
         }
         guard name.isEmpty == false else {
             // 名字为空
-            self.makeToast(localLanguage(keyString: "名字为空"),
+            self.makeToast(LibraWalletError.WalletAddWallet(reason: .walletNameEmptyError).localizedDescription,
                            position: .center)
             return
         }
         guard let password = passwordTextField.text else {
             // 密码拆包失败
-            self.makeToast(localLanguage(keyString: "密码拆包失败"),
+            self.makeToast(LibraWalletError.WalletAddWallet(reason: .passwordInvalidError).localizedDescription,
                            position: .center)
             return
         }
         guard password.isEmpty == false else {
             // 密码为空
-            self.makeToast(localLanguage(keyString: "密码为空"),
+            self.makeToast(LibraWalletError.WalletAddWallet(reason: .passwordEmptyError).localizedDescription,
                            position: .center)
             return
         }
         guard let passwordConfirm = passwordConfirmTextField.text else {
             // 确认密码拆包失败
-            self.makeToast(localLanguage(keyString: "确认密码拆包失败"),
+            self.makeToast(LibraWalletError.WalletAddWallet(reason: .passwordCofirmInvalidError).localizedDescription,
                            position: .center)
             return
         }
         guard passwordConfirm.isEmpty == false else {
             // 确认密码为空
-            self.makeToast(localLanguage(keyString: "密码为空"),
+            self.makeToast(LibraWalletError.WalletAddWallet(reason: .passwordConfirmEmptyError).localizedDescription,
                            position: .center)
             return
         }
         guard password == passwordConfirm else {
             // 密码不一致
-            self.makeToast(localLanguage(keyString: "密码不一致"),
+            self.makeToast(LibraWalletError.WalletAddWallet(reason: .passwordCheckFailed).localizedDescription,
                            position: .center)
             return
         }

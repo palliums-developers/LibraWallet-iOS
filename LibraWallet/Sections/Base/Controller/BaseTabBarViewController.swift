@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import Localize_Swift
 class BaseTabBarViewController: UITabBarController {
 
     override func viewDidLoad() {
@@ -17,6 +17,8 @@ class BaseTabBarViewController: UITabBarController {
         // Do any additional setup after loading the view.
         addAllChildViewController()
         self.selectedIndex = 0
+        // 添加语言变换通知
+         NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
     }
     private func addAllChildViewController(){
         let home = HomeViewController.init()
@@ -24,10 +26,10 @@ class BaseTabBarViewController: UITabBarController {
         let market = MarketViewController.init()
         
         let mine = MineViewController.init()
-                
-        addChildViewController(childViewController: home, imageName: "tabbar_wallet_normal", selectedImageName: "tabbar_wallet_highlight", title: "钱包")
-        addChildViewController(childViewController: market, imageName: "tabbar_market_normal", selectedImageName: "tabbar_market_highlight", title: "市场")
-        addChildViewController(childViewController: mine, imageName: "tabbar_mine_normal", selectedImageName: "tabbar_mine_highlight", title: "我的")
+        
+        addChildViewController(childViewController: home, imageName: "tabbar_wallet_normal", selectedImageName: "tabbar_wallet_highlight", title: localLanguage(keyString: "wallet_tabbar_wallet_title"))
+        addChildViewController(childViewController: market, imageName: "tabbar_market_normal", selectedImageName: "tabbar_market_highlight", title: localLanguage(keyString: "wallet_tabbar_market_title"))
+        addChildViewController(childViewController: mine, imageName: "tabbar_mine_normal", selectedImageName: "tabbar_mine_highlight", title: localLanguage(keyString: "wallet_tabbar_mine_title"))
         
         
     }
@@ -40,6 +42,28 @@ class BaseTabBarViewController: UITabBarController {
         // 设置导航控制器
         let childNaviagation = BaseNavigationViewController(rootViewController: childViewController)
         addChild(childNaviagation)
+        subViewControllers.append(childViewController)
     }
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
 
+        print("BaseTabBarViewController销毁了")
+    }
+    lazy var subViewControllers: [UIViewController] = {
+        let con = [UIViewController]()
+        return con
+    }()
+    @objc func setText() {
+        for item in subViewControllers {
+            if item.isKind(of: HomeViewController.classForCoder()) {
+                item.tabBarItem.title = localLanguage(keyString: "wallet_tabbar_wallet_title")
+            }
+            if item.isKind(of: MarketViewController.classForCoder()) {
+                item.tabBarItem.title = localLanguage(keyString: "wallet_tabbar_market_title")
+            }
+            if item.isKind(of: MineViewController.classForCoder()) {
+                item.tabBarItem.title = localLanguage(keyString: "wallet_tabbar_mine_title")
+            }
+        }
+    }
 }

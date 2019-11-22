@@ -24,7 +24,7 @@ class HomeView: UIView {
     }
     deinit {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
-        print("MainView销毁了")
+        print("HomeView销毁了")
     }
     //MARK: - 布局
     override func layoutSubviews() {

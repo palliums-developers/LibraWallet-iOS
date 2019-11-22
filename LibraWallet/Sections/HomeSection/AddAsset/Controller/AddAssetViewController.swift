@@ -12,8 +12,6 @@ class AddAssetViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.white
-        // 初始化本地配置
-        self.setBaseControlllerConfig()
         // 加载子View
         self.view.addSubview(self.viewModel.detailView)
         // 加载数据

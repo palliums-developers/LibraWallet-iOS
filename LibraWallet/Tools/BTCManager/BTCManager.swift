@@ -76,7 +76,7 @@ class BTCManager: NSObject {
     ///
     /// - Parameter address: 地址
     /// - Returns: 有效性
-    func isValidBTCAddress(address: String?) -> Bool {
+    public static func isValidBTCAddress(address: String?) -> Bool {
         guard let str = address else {
             return false
         }

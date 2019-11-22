@@ -94,6 +94,7 @@ class WelcomeAlert: UIView {
     }()
     @objc func buttonClick(button: UIButton) {
         self.hide()
+        setWelcomeState(show: true)
     }
 }
 extension WelcomeAlert: actionViewProtocol {

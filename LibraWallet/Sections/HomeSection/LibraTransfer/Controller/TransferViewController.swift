@@ -12,9 +12,6 @@ import SwiftProtobuf
 class TransferViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        // 初始化本地配置
-        self.setBaseControlllerConfig()
-        
         self.title = (self.wallet?.walletType?.description ?? "") + localLanguage(keyString: "wallet_transfer_navigation_title")
         
         self.view.addSubview(detailView)
@@ -31,6 +28,10 @@ class TransferViewController: BaseViewController {
             }
             make.left.right.equalTo(self.view)
         }
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.barStyle = .default
     }
     //子View
     private lazy var detailView : TransferView = {
@@ -119,7 +120,7 @@ extension TransferViewController: TransferViewDelegate {
             if address.hasPrefix("libra:") {
                 let tempAddress = address.replacingOccurrences(of: "libra:", with: "")
                 
-                guard LibraManager().isValidLibraAddress(address: tempAddress) else {
+                guard LibraManager.isValidLibraAddress(address: tempAddress) else {
                     self.view.makeToast("不是有效的Libra地址", position: .center)
                     return
                 }

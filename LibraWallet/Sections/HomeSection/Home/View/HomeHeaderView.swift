@@ -47,13 +47,13 @@ class HomeHeaderView: UIView {
         lastTransactionBackgroundButton.addSubview(lastTransactionDetailImageView)
 
         // 添加语言变换通知
-//        NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
-//        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
         print("HomeHeaderView销毁了")
     }
     //MARK: - 布局
@@ -406,5 +406,13 @@ class HomeHeaderView: UIView {
                 self.addCoinButton.alpha = 1
             }
         }
+    }
+    @objc func setText() {
+        assetTitleLabel.text = localLanguage(keyString: "wallet_home_current_balance_title")
+        transferButton.setTitle(localLanguage(keyString: "wallet_home_transfer_button_title"), for: UIControl.State.normal)
+        receiveButton.setTitle(localLanguage(keyString: "wallet_home_receive_button_title"), for: UIControl.State.normal)
+        transactionTitleLabel.text = localLanguage(keyString: "wallet_home_last_transaction_date_title")
+        coinTitleLabel.text = localLanguage(keyString: "wallet_home_wallet_asset_title")
+
     }
 }

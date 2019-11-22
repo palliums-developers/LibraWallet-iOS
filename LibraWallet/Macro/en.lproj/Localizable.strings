@@ -5,34 +5,300 @@
   Created by palliums on 2019/9/12.
   Copyright © 2019 palliums. All rights reserved.
 */
+/************* 底部导航栏 *******************/
+wallet_tabbar_wallet_title = "Wallet";
+wallet_tabbar_market_title = "Market";
+wallet_tabbar_mine_title = "Mine";
+
 /************* 首页 *******************/
-wallet_home_title = "My wallet";
-wallet_home_total_amount_title = "Total amount";
-wallet_home_send_button_title = "Scan to pay";
-wallet_home_receive_button_title = "Paid for";
+wallet_home_wallet_type_last_title = " Wallet";
+wallet_home_current_balance_title = "Amount";
+wallet_home_transfer_button_title = "Transfer";
+wallet_home_receive_button_title = "Receive";
+wallet_home_last_transaction_date_title = "Transactions list";
+wallet_home_wallet_asset_title = "Property";
 
-wallet_create_button_title = "Create";
-wallet_home_right_bar_title = "Transactions";
-/************* 接收 *******************/
+/************* 个人中心 *******************/
+wallet_mine_manager_wallet_title = "Wallet manager";
+wallet_home_address_manager_title = "Address";
+wallet_home_setting_title = "Setting";
 
-wallet_receive_title = "Scan to pay me";
-wallet_receive_set_qrcode_amout_button_title = "Set Amount";
-wallet_receive_clear_qrcode_amout_button_title = "Clear amount";
-wallet_receive_save_qrcode_button_title = "Save Image";
-wallet_receive_get_receive_history_title = "Check receipt records";
-wallet_receive_save_qrcode_success_title = "Save success";
-wallet_receive_save_qrcode_failed_title = "Save failed";
+/************* 收款 *******************/
+wallet_receive_qrcode_title = "Receive address";
+wallet_receive_copy_button_title = "Copy";
 
 /************* 转账 *******************/
-wallet_withdraw_address_title = "Receive address";
-wallet_withdraw_address_textfield_placeholder = "Fill in or long press to paste";
-wallet_withdraw_amount_title = "Amount";
-wallet_withdraw_amount_textfield_placeholder = "least 0.001 Libra";
-wallet_withdraw_wallet_balance_prefix_title = "Available";
-wallet_withdraw_select_total_coin_title = "Total";
-wallet_withdraw_transaction_fee_title = "Fee";
-wallet_withdraw_confirm_button_title = "Transfer";
+wallet_transfer_amount_title = "Amount";
+wallet_transfer_balance_title = "Balance";
+wallet_transfer_amount_textfield_placeholder = "Type in amount";
+wallet_transfer_address_title = "Receive address";
+wallet_transfer_address_contact_title = "Address book";
+wallet_transfer_address_btc_textfield_placeholder = "Type in BTC address";
+wallet_transfer_address_libra_textfield_placeholder = "Type in Libra address";
+wallet_transfer_address_violas_textfield_placeholder = "Type in Violas address";
+wallet_transfer_transaction_fee_title = "Fee";
+wallet_transfer_transaction_fee_least_title = "Slow";
+wallet_transfer_transaction_fee_max_title = "Fast";
+wallet_transfer_confirm_button_title = "Confirm";
+
 
 /************* 交易历史 *******************/
-wallet_transactions_receive_title = "Receive";
-wallet_transactions_transfer_title = "Transfer";
+wallet_transactions_receive_title = "Received";
+wallet_transactions_transfer_title = "Sent";
+wallet_transactions_publish_title = "Published";
+
+/************* 已存在身份钱包创建钱包 *******************/
+wallet_add_wallet_btc_title = "Create Bitcoin wallet";
+wallet_add_wallet_libra_title = "Create Libra wallet";
+wallet_add_wallet_violas_title = "Create Violas walllet";
+wallet_add_wallet_nickname_textfield_placeholder = "Type in wallet name";
+wallet_add_wallet_password_textfield_placeholder = "Type in password";
+wallet_add_wallet_password_confirm_textfield_placeholder = "Confirm password";
+wallet_add_wallet_confirm_button_title = "Create";
+
+/************* 已存在身份钱包导入钱包 *******************/
+wallet_import_wallet_btc_title = "Import Bitcoin wallet";
+wallet_import_wallet_libra_title = "Import Libra wallet";
+wallet_import_wallet_violas_title = "Import Violas wallet";
+wallet_import_mnemonic_textview_placeholder = "Type in mnemonic and split with space";
+wallet_import_wallet_confirm_button_title = "Start";
+
+/************* 钱包管理 *******************/
+wallet_manager_identity_wallet_header_title = "Identity wallet";
+wallet_manager_import_or_create_wallet_header_title = "Create/Import";
+
+/************* 钱包详情 *******************/
+wallet_manager_detail_delete_button_title = "Delete";
+
+/************* 钱包管理修改名称 *******************/
+wallet_manager_detail_change_wallet_name_title = "Change wallet name";
+wallet_manager_detail_change_wallet_name_textfield_placeholder = "Type in wallet name";
+wallet_manager_detail_change_wallet_name_button_title = "Confirm";
+wallet_manager_detail_change_wallet_name_cancel_button_title = "Cancel";
+
+/************* 地址簿 *******************/
+wallet_address_add_remarks_title = "Remarks";
+wallet_address_add_remarks_textfield_placeholder = "Remarks limit in 20 word";
+wallet_address_add_address_title = "Address";
+wallet_address_add_address_textfield_placeholder = "Type in address";
+wallet_address_add_confirm_button_title = "Confrim";
+wallet_address_add_type_title = "Type";
+wallet_address_add_type_button_title = "Please choose";
+
+/************* 备份助记词警告 *******************/
+wallet_backup_mnemonic_warning_title = "Mnemonic";
+wallet_backup_mnemonic_warning_navigation_right_bar_title = "Later";
+wallet_backup_mnemonic_warning_title_detail = "等于拥有钱包资产所有权";
+wallet_backup_mnemonic_warning_item_one_title = "备份助记词";
+wallet_backup_mnemonic_warning_item_one_detail = "使用纸和笔正确抄写助记词\n如果你的手机丢失、被盗、损坏，助记词将可以回复你的资产";
+wallet_backup_mnemonic_warning_item_two_title = "离线保管";
+wallet_backup_mnemonic_warning_item_two_detail = "请妥善保管至隔离网络的安全地方\n请勿将助记词在联网环境下分享和存储，比如邮件、相册、社交应用等";
+wallet_backup_mnemonic_warning_confirm_button_title = "开始备份";
+
+/************* 备份助记词 *******************/
+wallet_backup_mnemonic_title = "请将这些词按顺序写在纸上";
+wallet_backup_mnemonic_alert_detail = "不要截屏或复制到剪切板\n这将可能被第三方恶意软件收集\n造成资产损失";
+wallet_backup_mnemonic_confirm_button_title = "Next";
+
+/************* 校验助记词 *******************/
+wallet_backup_check_mnemonic_title = "请将这些词按顺序写在纸上";
+wallet_backup_check_mnemonic_confirm_button_title = "Confirm";
+
+/************* 欢迎来到Violas弹出View *******************/
+wallet_alert_welcome_title = "Welcome";
+wallet_alert_welcome_detail_title = "Violas";
+wallet_alert_welcome_confirm_button_title = "Enter";
+
+/************* 选择钱包创建方式页面 *******************/
+wallet_create_choose_type_create_button_title = "Create wallet";
+wallet_create_choose_type_import_button_title = "Import wallet";
+
+/************* 创建钱包页面 *******************/
+wallet_create_name_textfield_placeholder = "Type in wallet name";
+wallet_create_password_textfield_placeholder = "Type in password";
+wallet_create_password_confirm_textfield_placeholder = "Confirm password";
+wallet_create_confirm_button_title = "Create";
+
+/************* 市场 *******************/
+wallet_market_transfer_amount_textfield_placeholder = "Transfer amount";
+wallet_market_receive_amount_textfield_placeholder = "Received amount";
+wallet_market_receive_address_title = "Receive address";
+wallet_market_receive_address_textfield_placeholder = "请输入收款账户";
+wallet_market_exchange_fee_title = "Exchange";
+wallet_market_exchange_fee_describe_title = "1BTC = 1Violas";
+wallet_market_exchange_confirm_title = "闪电兑换";
+
+/************* 交易记录 *******************/
+wallet_transaction_date_title = "Date";
+wallet_transaction_amount_title = "Amount";
+wallet_transaction_transfer_title = "Transfer";
+wallet_transaction_receive_title = "Received";
+wallet_transaction_check_detail_on_chain = "Explorer";
+
+/************* 关于我们 *******************/
+wallet_about_us_navigation_right_bar_title = "Feedback";
+
+/************* 设置页面 *******************/
+wallet_setting_language_title = "Language";
+wallet_setting_service_legal_title = "Service legal";
+wallet_setting_about_us_title = "About us";
+wallet_setting_help_center_title = "Help&Feedback";
+
+/************* 地址页面 *******************/
+wallet_address_manager_empty_data_title = "No address";
+
+/************* 弹出提示 *******************/
+// 转账弹出提示
+wallet_transfer_success_alert = "Succeed";
+// 解锁钱包
+wallet_type_in_password_title = "Alert";
+wallet_type_in_password_content = "请输入钱包密码";
+wallet_type_in_password_textfield_placeholder = "密码";
+wallet_type_in_password_cancel_button_title = "取消";
+wallet_type_in_password_confirm_button_title = "确定";
+// 复制地址
+wallet_copy_address_success_title = "复制成功";
+// 问题反馈
+wallet_alert_feedback_title = "问题反馈";
+wallet_alert_feedback_textview_placeholder = "请输入内容";
+wallet_alert_feedback_textfield_placeholder = "请输入您的联系方式";
+wallet_alert_feedback_confirm_button_title = "确认";
+wallet_alert_feedback_content_empty = "请输入反馈内容";
+wallet_alert_feedback_contact_empty = "请输入联系方式";
+// 导入钱包
+wallet_import_wallet_success_title = "导入钱包成功";
+// 创建钱包
+wallet_create_wallet_success_title = "创建钱包成功";
+// 删除钱包
+wallet_delete_wallet_success_title = "删除钱包成功";
+wallet_alert_delete_wallet_title = "警告";
+wallet_alert_delete_wallet_content = "确定要删除钱包吗";
+wallet_alert_delete_wallet_cancel_button_title = "取消";
+wallet_alert_delete_wallet_confirm_button_title = "确定";
+// 助记词检查
+wallet_check_mnemonic_success_title = "备份成功";
+// 添加地址选择类型
+wallet_address_add_type_action_alert_content = "请选择类型";
+wallet_address_add_type_action_alert_cancel_button_title = "取消";
+// 服务协议
+wallet_service_legal_loaded_error_title = "加载失败";
+wallet_service_legal_loaded_error_cancel_button_title = "确定";
+// 选择创建还是导入Action
+wallet_add_wallet_alert_choose_import_or_create_title = "选择";
+wallet_add_wallet_alert_import_action_title = "导入";
+wallet_add_wallet_alert_create_action_title = "创建";
+wallet_add_wallet_alert_cancel_action_title = "取消";
+// 修改钱包名字
+wallet_manager_change_wallet_name_alert_title = "提示";
+wallet_manager_change_wallet_name_alert_content = "已修改钱包名称,是否立即保存";
+wallet_manager_change_wallet_name_alert_cancel_button_title = "取消";
+wallet_manager_change_wallet_name_alert_confirm_button_title = "保存";
+wallet_manager_change_wallet_name_success_title = "修改成功";
+// 注册代币
+wallet_add_asset_alert_title = "提醒";
+wallet_add_asset_alert_content = "开启需要消耗Gas费,是否立即开启";
+wallet_add_asset_alert_cancel_button_title = "取消";
+wallet_add_asset_alert_confirm_button_title = "确定";
+wallet_add_asset_alert_success_title = "开启成功";
+/************* 备份提醒弹出页面 *******************/
+wallet_alert_backup_warning_title = "安全提醒";
+wallet_alert_backup_warning_detail_title = "您的身份助记词未备份，请务必备份助记词\n助记词可用于恢复身份下钱包资产，防止忘记密码、应用删除、手机丢失等情况导致资产损失";
+wallet_alert_backup_warning_button_title = "立即备份";
+
+/************* 页面标题 *******************/
+wallet_transfer_navigation_title = "Transfer";
+wallet_transactions_navigation_title = "Transaction List";
+wallet_receive_navigation_title = "Receive";
+wallet_wallet_list_navigation_title = "选择钱包体系";
+wallet_manager_navigation_title = "Manager";
+
+wallet_setting_navigation_title = "Setting";
+wallet_language_navigation_title = "Language";
+wallet_service_navigation_title = "Service legal";
+wallet_about_us_navigation_title = "About us";
+wallet_feedback_navigation_title = "Service&Feedback";
+wallet_address_navigation_title = "Address book";
+wallet_address_add_navigation_title = "Add address";
+wallet_wallet_manager_navigation_title = "Wallet manager";
+wallet_wallet_add_navigation_title = "Add wallet";
+
+/************* App错误 *******************/
+// 请求遇到错误
+wallet_request_parse_json_error = "数据解析失败";
+wallet_request_data_code_error = "数据状态异常";
+wallet_request_data_empty_error = "数据返回为空";
+wallet_request_data_no_more_error = "没有更多数据";
+wallet_request_version_invalid_error = "App版本太旧";
+wallet_request_network_invalid_error = "网络异常";
+// 钥匙串相关错误
+wallet_keychain_set_password_failed_error = "保存密码失败";
+wallet_keychain_set_mnemonic_failed_error = "保存助记词失败";
+wallet_keychain_get_password_failed_error = "获取密码失败";
+wallet_keychain_get_password_empty_error = "获取密码为空";
+wallet_keychain_get_mnemonic_failed_error = "获取助记词失败";
+wallet_keychain_get_mnemonic_empty_error ="获取助记词为空";
+wallet_keychain_delete_password_failed_error ="删除密码失败";
+wallet_keychain_delete_mnemonic_failed_error ="删除助记词失败";
+wallet_keychain_search_sign_empty_error ="查询标示为空";
+// 加密相关
+wallet_crypto_password_empty_error = "待加密密码为空";
+wallet_crypto_mnemonic_empty_error = "待加密助记词为空";
+wallet_crypto_result_empty_error = "加密结果为空";
+wallet_crypto_result_to_base64_failed_error = "加密结果转Base64失败";
+wallet_crypto_result_to_base64_empty_error = "加密结果转Base64为空";
+wallet_crypto_decrypt_content_empty_error = "待解密密文为空";
+wallet_crypto_decrypt_result_empty_error = "解密结果为空";
+wallet_crypto_decrypt_result_failed_error = "解密失败";
+wallet_crypto_decrypt_result_to_mnemonic_array_failed_error = "解密结果转助记词数组失败";
+// 创建钱包相关
+wallet_create_wallet_exist_error = "钱包已存在";
+wallet_create_wallet_failed_error = "钱包创建失败";
+wallet_import_wallet_failed_error = "钱包导入失败";
+// 助记词排查相关(备份校对)
+wallet_mnemonic_check_array_not_enough_error = "未选择全部";
+wallet_mnemonic_order_invalid_error = "顺序不对";
+// 添加地址相关
+wallet_add_address_insert_error = "地址保存失败";
+wallet_add_address_invalid_error = "地址无效";
+wallet_add_address_empty_error = "地址为空";
+wallet_add_address_btc_address_invalid_error = "BTC地址无效";
+wallet_add_address_violas_address_invalid_error = "Violas地址无效";
+wallet_add_address_libra_address_invalid_error = "Libra地址无效";
+wallet_add_address_remarks_invalid_error = "备注名无效";
+wallet_add_address_remarks_empty_error = "备注名为空";
+wallet_add_address_remarks_length_invalid_error = "备注名超长";
+wallet_add_address_type_invalid_error = "类型未选择";
+// 添加钱包相关
+wallet_add_wallet_name_invalid_error = "钱包名字无效";
+wallet_add_wallet_name_empty_error = "钱包名字为空";
+wallet_add_wallet_name_too_long_error = "钱包名字长度超限";
+wallet_add_wallet_password_invalid_error = "密码无效";
+wallet_add_wallet_password_empty_error = "密码为空";
+wallet_add_wallet_password_cofirm_invalid_error = "确认密码无效";
+wallet_add_wallet_password_cofirm_empty_error = "确认密码为空";
+wallet_add_wallet_password_check_failed_error = "密码不一致";
+wallet_add_wallet_password_length_limit_long_error = "密码长度超限";
+wallet_add_wallet_password_length_limit_short_error = "密码长度太短";
+// 助记词排查相关(导入钱包)
+wallet_mnemonic_invalid_error = "助记词无效";
+wallet_mnemonic_empty_error = "助记词为空";
+wallet_mnemonic_split_failed_error = "助记词分隔失败";
+wallet_mnemonic_count_unsupport_error = "助记词数量不支持";
+wallet_mnemonic_check_failed_error = "助记词无效(包含无效词)";
+// 钱包改名相关
+wallet_change_name_invalid_error = "钱包名称无效";
+wallet_change_name_empty_error = "钱包名称为空";
+wallet_change_name_same_as_old_error = "钱包名称和以前相同";
+wallet_change_name_failed_error = "修改钱包名称失败";
+// 校验密码相关
+wallet_check_password_invalid_error = "密码无效";
+wallet_check_password_empty_error = "密码为空";
+wallet_check_password_failed_error = "密码不正确";
+// 转账相关
+wallet_transfer_amount_invalid_error = "转账数量无效";
+wallet_transfer_amount_empty_error = "转账数量为空";
+wallet_transfer_amount_overload_error = "数量超过自己余额";
+wallet_transfer_amount_limit_error = "最少转账金额为";
+wallet_transfer_address_invalid_error = "转账地址无效";
+wallet_transfer_address_empty_error = "转账地址为空";
+wallet_transfer_to_self_error = "向自己转账无效";

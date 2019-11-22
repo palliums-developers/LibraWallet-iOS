@@ -11,9 +11,6 @@ import UIKit
 class BTCTransferViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        // 初始化本地配置
-        self.setBaseControlllerConfig()
-        
         self.title = (self.wallet?.walletType?.description ?? "") + localLanguage(keyString: "wallet_transfer_navigation_title")
         
         self.view.addSubview(detailView)
@@ -31,6 +28,10 @@ class BTCTransferViewController: BaseViewController {
             }
             make.left.right.equalTo(self.view)
         }
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.barStyle = .default
     }
     //子View
     private lazy var detailView : BTCTransferView = {
@@ -108,7 +109,7 @@ extension BTCTransferViewController: BTCTransferViewDelegate {
         vc.actionClosure = { address in
             if address.hasPrefix("bitcoin:") {
                 let tempAddress = address.replacingOccurrences(of: "bitcoin:", with: "")
-                guard BTCManager().isValidBTCAddress(address: tempAddress) else {
+                guard BTCManager.isValidBTCAddress(address: tempAddress) else {
                     self.view.makeToast("不是有效的Bitcoin地址", position: .center)
                     return
                 }

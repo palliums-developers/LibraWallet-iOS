@@ -78,10 +78,10 @@ class AddAssetTableViewHeader: UITableViewHeaderFooterView {
     }()
     var model: LibraWalletManager? {
         didSet {
-            nameLabel.text = model?.walletName
-            detailLabel.text = "---"
-//            let url = URL(string: model?.icon ?? "")
-//            iconImageView.kf.setImage(with: url, placeholder: UIImage.init(named: "default_placeholder"))
+            nameLabel.text = "VToken"
+            detailLabel.text = model?.walletType?.description
+            let url = URL(string: "")
+            iconImageView.kf.setImage(with: url, placeholder: UIImage.init(named: "violas_icon"))
         }
     }
 }
