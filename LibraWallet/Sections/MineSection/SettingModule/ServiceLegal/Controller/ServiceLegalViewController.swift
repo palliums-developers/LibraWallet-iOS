@@ -11,8 +11,6 @@ import WebKit
 class ServiceLegalViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        // 初始化本地配置
-//        self.setBaseControlllerConfig()
         // 设置标题
         self.title = localLanguage(keyString: "wallet_service_navigation_title")
         // 加载子View
@@ -21,7 +19,19 @@ class ServiceLegalViewController: BaseViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         detailView.snp.makeConstraints { (make) in
-            make.top.left.right.bottom.equalTo(self.view)
+            if #available(iOS 11.0, *) {
+                make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
+            } else {
+                make.top.bottom.equalTo(self.view)
+            }
+            make.left.right.equalTo(self.view)
+        }
+    }
+    override func back() {
+        if needDismissViewController == true {
+            self.dismiss(animated: true, completion: nil)
+        } else {
+            self.navigationController?.popViewController(animated: true)
         }
     }
     //子View
@@ -30,11 +40,11 @@ class ServiceLegalViewController: BaseViewController {
         view.webView.navigationDelegate = self
         return view
     }()
+    var needDismissViewController: Bool?
     deinit {
         print("ServiceLegalViewController销毁了")
     }
 }
-
 extension ServiceLegalViewController :WKNavigationDelegate{
     // 页面开始加载时调用
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!){

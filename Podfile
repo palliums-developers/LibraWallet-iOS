@@ -24,6 +24,8 @@ target 'LibraWallet' do
   pod 'RSKPlaceholderTextView'
   pod 'BitcoinKit'
   pod 'Kingfisher'
+  pod 'AttributedTextView'
+  pod 'Socket.IO-Client-Swift'
   # Pods for LibraWallet
 
   target 'LibraWalletTests' do

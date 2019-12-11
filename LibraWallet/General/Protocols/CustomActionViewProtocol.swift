@@ -47,31 +47,31 @@ protocol actionViewAnimationProtocol {
     func showAnimation()
     func hideAnimation()
 }
-//extension actionViewAnimationProtocol where Self: AlertToGetPhoneEmailCode {
-//    func showAnimation() {
-//        DispatchQueue.main.asyncAfter(deadline: .now()+0.001) {
-//            UIView.animate(withDuration: 0.3, animations: {
-//                self.whiteBackgroundView.snp.remakeConstraints { (make) in
-//                    make.bottom.equalTo(self.snp.bottom).offset(0);
-//                    make.left.right.equalTo(self)
-//                    make.height.equalTo(358)
-//                }
-//                self.layoutIfNeeded()
-//            })
-//        }
-//    }
-//    func hideAnimation() {
-//        DispatchQueue.main.asyncAfter(deadline: .now()+0.001) {
-//            UIView.animate(withDuration: 0.3, animations: {
-//                self.whiteBackgroundView.snp.remakeConstraints { (make) in
-//                    make.bottom.equalTo(self.snp.bottom).offset(358);
-//                    make.left.right.equalTo(self)
-//                    make.height.equalTo(358)
-//                }
-//                self.layoutIfNeeded()
-//            }, completion: { (status) in
-//                self.hide()
-//            })
-//        }
-//    }
-//}
+extension actionViewAnimationProtocol where Self: TokenPickerViewAlert {
+    func showAnimation() {
+        DispatchQueue.main.asyncAfter(deadline: .now()+0.001) {
+            UIView.animate(withDuration: 0.3, animations: {
+                self.whiteBackgroundView.snp.remakeConstraints { (make) in
+                    make.bottom.equalTo(self.snp.bottom).offset(0);
+                    make.left.right.equalTo(self)
+                    make.height.equalTo(358)
+                }
+                self.layoutIfNeeded()
+            })
+        }
+    }
+    func hideAnimation() {
+        DispatchQueue.main.asyncAfter(deadline: .now()+0.001) {
+            UIView.animate(withDuration: 0.3, animations: {
+                self.whiteBackgroundView.snp.remakeConstraints { (make) in
+                    make.bottom.equalTo(self.snp.bottom).offset(358);
+                    make.left.right.equalTo(self)
+                    make.height.equalTo(358)
+                }
+                self.layoutIfNeeded()
+            }, completion: { (status) in
+                self.hide()
+            })
+        }
+    }
+}

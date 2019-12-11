@@ -8,7 +8,6 @@
 
 import UIKit
 class WalletMnemonicView: UIView {
-    weak var delegate: ImportWalletViewDelegate?
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(mnemonicTextView)

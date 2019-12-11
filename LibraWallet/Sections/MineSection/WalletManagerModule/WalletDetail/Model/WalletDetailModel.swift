@@ -12,7 +12,7 @@ class WalletDetailModel: NSObject {
     func loadLocalConfig(model: LibraWalletManager) -> [[String: String]]{
         return [["Title": model.walletName ?? "",
                  "Content": model.walletAddress ?? ""],
-                ["Title": "导出助记词",
+                ["Title": localLanguage(keyString: "wallet_manager_detail_export_mnemonic_title"),
                  "Content": ""]]
         
     }

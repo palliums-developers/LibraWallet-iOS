@@ -41,7 +41,7 @@ class MineHeaderView: UIView {
     //MARK: - 懒加载对象
     private lazy var headerBackground : UIImageView = {
         let imageView = UIImageView.init()
-        imageView.image = UIImage.init(named: "mine_header_background")
+        imageView.image = UIImage.init(named: "home_top_background")
         return imageView
     }()
     private lazy var avatarImageView : UIImageView = {

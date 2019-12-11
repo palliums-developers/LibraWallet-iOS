@@ -43,6 +43,11 @@ wallet_transfer_confirm_button_title = "确认转账";
 
 
 /************* 交易历史 *******************/
+wallet_transaction_date_title = "日期";
+wallet_transaction_amount_title = "数量";
+wallet_transaction_transfer_title = "转账";
+wallet_transaction_receive_title = "收款";
+wallet_transaction_check_detail_on_chain = "浏览器查询";
 wallet_transactions_receive_title = "收款";
 wallet_transactions_transfer_title = "转账";
 wallet_transactions_publish_title = "开启";
@@ -69,6 +74,9 @@ wallet_manager_import_or_create_wallet_header_title = "创建/导入";
 
 /************* 钱包详情 *******************/
 wallet_manager_detail_delete_button_title = "删除";
+wallet_manager_detail_export_mnemonic_title = "导出助记词";
+
+
 
 /************* 钱包管理修改名称 *******************/
 wallet_manager_detail_change_wallet_name_title = "更换钱包名";
@@ -128,19 +136,13 @@ wallet_market_exchange_fee_title = "汇率";
 wallet_market_exchange_fee_describe_title = "1BTC = 1Violas";
 wallet_market_exchange_confirm_title = "闪电兑换";
 
-/************* 交易记录 *******************/
-wallet_transaction_date_title = "日期";
-wallet_transaction_amount_title = "数量";
-wallet_transaction_transfer_title = "转账";
-wallet_transaction_receive_title = "收款";
-wallet_transaction_check_detail_on_chain = "浏览器查询";
-
 /************* 关于我们 *******************/
 wallet_about_us_navigation_right_bar_title = "问题反馈";
 
 /************* 设置页面 *******************/
 wallet_setting_language_title = "多语言";
 wallet_setting_service_legal_title = "服务协议";
+wallet_private_service_legal_title = "隐私协议";
 wallet_setting_about_us_title = "关于我们";
 wallet_setting_help_center_title = "帮助与反馈";
 
@@ -200,6 +202,14 @@ wallet_add_asset_alert_content = "开启需要消耗Gas费,是否立即开启";
 wallet_add_asset_alert_cancel_button_title = "取消";
 wallet_add_asset_alert_confirm_button_title = "确定";
 wallet_add_asset_alert_success_title = "开启成功";
+// 用户协议与隐私保护
+wallet_private_and_use_legal_title = "用户协议与隐私保护";
+wallet_private_and_use_legal_cancel_button_title = "不同意";
+wallet_private_and_use_legal_confirm_button_title = "同意";
+// 欢迎页面
+wallet_welcome_alert_title = "欢迎来到";
+wallet_welcome_alert_describe = "钱包";
+wallet_welcome_alert_confirm_button_title = "马上进入";
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "安全提醒";
 wallet_alert_backup_warning_detail_title = "您的身份助记词未备份，请务必备份助记词\n助记词可用于恢复身份下钱包资产，防止忘记密码、应用删除、手机丢失等情况导致资产损失";
@@ -215,6 +225,7 @@ wallet_manager_navigation_title = "管理";
 wallet_setting_navigation_title = "设置";
 wallet_language_navigation_title = "多语言";
 wallet_service_navigation_title = "服务协议";
+wallet_private_navigation_title = "隐私协议";
 wallet_about_us_navigation_title = "关于我们";
 wallet_feedback_navigation_title = "服务与反馈";
 wallet_address_navigation_title = "地址簿";

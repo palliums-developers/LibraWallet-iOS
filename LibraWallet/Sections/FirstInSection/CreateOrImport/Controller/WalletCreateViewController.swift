@@ -13,6 +13,7 @@ class WalletCreateViewController: UIViewController {
         super.viewDidLoad()
         // 设置背景色
         self.view.addSubview(detailView)
+        
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -33,6 +34,30 @@ class WalletCreateViewController: UIViewController {
         view.delegate = self
         return view
     }()
+    func checkConfirmLegal() {
+        guard getConfirmPrivateAndUseLegalState() == false else {
+            return
+        }
+        let alert = PrivateAlertView.init(openPrivateLegal: {
+            let vc = ServiceLegalViewController()
+            vc.needDismissViewController = true
+            let navi = UINavigationController.init(rootViewController: vc)
+            self.present(navi, animated: true, completion: nil)
+        }) {
+            let vc = PrivateLegalViewController()
+            vc.needDismissViewController = true
+            let navi = UINavigationController.init(rootViewController: vc)
+            self.present(navi, animated: true, completion: nil)
+        }
+
+        alert.show()
+        guard getWelcomeState() == false else {
+            return
+        }
+//        let alert = WelcomeAlert.init()
+//        alert.show()
+    }
+
     deinit {
         print("WalletCreateViewController销毁了")
     }

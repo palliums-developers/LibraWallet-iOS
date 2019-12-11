@@ -9,21 +9,6 @@
 import UIKit
 import SwiftGRPC
 import Moya
-struct ViolaSequenceNumberMainModel: Codable {
-    /// 错误代码
-    var code: Int?
-    /// 错误信息
-    var message: String?
-    /// 数据体
-    var data: Int?
-}
-struct ViolaSendTransactionMainModel: Codable {
-    /// 错误代码
-    var code: Int?
-    /// 错误信息
-    var message: String?
-
-}
 class TransferModel: NSObject {
     @objc var dataDic: NSMutableDictionary = [:]
     private var requests: [Cancellable] = []

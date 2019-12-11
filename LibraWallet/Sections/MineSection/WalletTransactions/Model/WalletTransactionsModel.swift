@@ -125,11 +125,24 @@ class WalletTransactionsModel: NSObject {
                     do {
                         let json = try response.map(BTCResponseModel.self)
                         print(json)
-                        let resultModel = self!.dealTransactionAmount(models: (json.data?.list)!, requestAddress: address)
-                        
+                        guard json.err_no == 0 else {
+                            DispatchQueue.main.async(execute: {
+                                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: type)
+                                self?.setValue(data, forKey: "dataDic")
+                            })
+                            return
+                        }
+                        guard let models = json.data?.list, models.isEmpty == false else {
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: type)
+                            self?.setValue(data, forKey: "dataDic")
+                            return
+                        }
+                        let resultModel = self!.dealTransactionAmount(models: models, requestAddress: address)
+                                                                           
 //                        let data = setKVOData(type: type, data: (json.data?.list)!)
-                        let data = setKVOData(type: type, data: resultModel)
-                        self?.setValue(data, forKey: "dataDic")
+                       let data = setKVOData(type: type, data: resultModel)
+                       self?.setValue(data, forKey: "dataDic")
+                        
                     } catch {
                         print("解析异常\(error.localizedDescription)")
                         let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: type)

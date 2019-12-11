@@ -63,7 +63,7 @@ extension mainRequest:TargetType {
              .GetViolasAccountTransactionList(_, _, _),
              .SendViolasTransaction(_),
              .GetViolasTokenList:
-        return URL(string:"http://52.27.228.84:4000/1.0")!
+            return URL(string:"http://52.27.228.84:4000/1.0")!
         case .GetTestCoin(_, _):
             return URL(string:"http://faucet.testnet.libra.org/")!
         }

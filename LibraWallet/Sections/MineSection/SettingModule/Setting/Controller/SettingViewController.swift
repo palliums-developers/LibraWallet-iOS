@@ -72,8 +72,11 @@ extension SettingViewController: SettingTableViewManagerDelegate {
             if indexPath.row == 0 {
                 let vc = LanguageViewController()
                 self.navigationController?.pushViewController(vc, animated: true)
-            } else {
+            } else if indexPath.row == 1 {
                 let vc = ServiceLegalViewController()
+                self.navigationController?.pushViewController(vc, animated: true)
+            } else {
+                let vc = PrivateLegalViewController()
                 self.navigationController?.pushViewController(vc, animated: true)
             }
         } else if indexPath.section == 1 {

@@ -43,6 +43,28 @@
 		9D6264892359A5B900A79B3D /* CreateIdentityWalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6264882359A5B900A79B3D /* CreateIdentityWalletViewController.swift */; };
 		9D62648B2359A61000A79B3D /* CreateIdentityWalletView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D62648A2359A61000A79B3D /* CreateIdentityWalletView.swift */; };
 		9D62648D2359C00E00A79B3D /* CreateIdentityWalletModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D62648C2359C00E00A79B3D /* CreateIdentityWalletModel.swift */; };
+		9D628A86239A495500E222FB /* PrivateAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628A85239A495500E222FB /* PrivateAlertView.swift */; };
+		9D628A8C239A4A2B00E222FB /* PrivateLegalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628A89239A4A2B00E222FB /* PrivateLegalViewController.swift */; };
+		9D628A8D239A4A2B00E222FB /* PrivateLegalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628A8B239A4A2B00E222FB /* PrivateLegalView.swift */; };
+		9D628A8F239DE9B300E222FB /* MarketExchangeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628A8E239DE9B300E222FB /* MarketExchangeHeaderView.swift */; };
+		9D628A91239DEA5300E222FB /* MarketMyOrderHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628A90239DEA5300E222FB /* MarketMyOrderHeaderView.swift */; };
+		9D628A93239DEA7200E222FB /* MarketOthersOrderHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628A92239DEA7200E222FB /* MarketOthersOrderHeaderView.swift */; };
+		9D628A96239DEC0500E222FB /* MarketTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628A95239DEC0500E222FB /* MarketTableViewManager.swift */; };
+		9D628A98239E363800E222FB /* MarketMyOrderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628A97239E363800E222FB /* MarketMyOrderTableViewCell.swift */; };
+		9D628A9A239E3B3100E222FB /* MarketOthersOrderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628A99239E3B3000E222FB /* MarketOthersOrderTableViewCell.swift */; };
+		9D628A9C239E48A200E222FB /* TokenPickerViewAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628A9B239E48A200E222FB /* TokenPickerViewAlert.swift */; };
+		9D628AA8239F3A0200E222FB /* OrderProcessingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628AA7239F3A0200E222FB /* OrderProcessingViewController.swift */; };
+		9D628AAA239F3A1400E222FB /* OrderProcessingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628AA9239F3A1400E222FB /* OrderProcessingModel.swift */; };
+		9D628AAC239F3A2100E222FB /* OrderProcessingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628AAB239F3A2100E222FB /* OrderProcessingView.swift */; };
+		9D628AAF239F3A4400E222FB /* OrderDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628AAE239F3A4400E222FB /* OrderDetailTableViewCell.swift */; };
+		9D628AB2239F3AAC00E222FB /* OrderProcessingTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628AB1239F3AAC00E222FB /* OrderProcessingTableViewManager.swift */; };
+		9D628AB6239F722E00E222FB /* OrderCenterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628AB5239F722E00E222FB /* OrderCenterTableViewCell.swift */; };
+		9D628AB8239F729300E222FB /* OrderDetailHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628AB7239F729300E222FB /* OrderDetailHeaderView.swift */; };
+		9D628ABA239F72A800E222FB /* OrderDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628AB9239F72A800E222FB /* OrderDetailView.swift */; };
+		9D628ABE239F72CE00E222FB /* OrderDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628ABD239F72CE00E222FB /* OrderDetailViewController.swift */; };
+		9D628AC0239F72E100E222FB /* OrderDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628ABF239F72E100E222FB /* OrderDetailModel.swift */; };
+		9D628AC3239F731100E222FB /* OrderDetailTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628AC2239F731100E222FB /* OrderDetailTableViewManager.swift */; };
+		9D628AC7239F9F6D00E222FB /* ViolasSocketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628AC6239F9F6D00E222FB /* ViolasSocketManager.swift */; };
 		9D68D2F5237D24DD005B7593 /* BTCTransferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D68D2F4237D24DD005B7593 /* BTCTransferView.swift */; };
 		9D68D2F9237D24FF005B7593 /* BTCTransferViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D68D2F8237D24FF005B7593 /* BTCTransferViewController.swift */; };
 		9D68D2FF237D25FD005B7593 /* ViolasTransferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D68D2FE237D25FD005B7593 /* ViolasTransferView.swift */; };
@@ -287,6 +309,28 @@
 		9D6264882359A5B900A79B3D /* CreateIdentityWalletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateIdentityWalletViewController.swift; sourceTree = "<group>"; };
 		9D62648A2359A61000A79B3D /* CreateIdentityWalletView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateIdentityWalletView.swift; sourceTree = "<group>"; };
 		9D62648C2359C00E00A79B3D /* CreateIdentityWalletModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateIdentityWalletModel.swift; sourceTree = "<group>"; };
+		9D628A85239A495500E222FB /* PrivateAlertView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrivateAlertView.swift; sourceTree = "<group>"; };
+		9D628A89239A4A2B00E222FB /* PrivateLegalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrivateLegalViewController.swift; sourceTree = "<group>"; };
+		9D628A8B239A4A2B00E222FB /* PrivateLegalView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrivateLegalView.swift; sourceTree = "<group>"; };
+		9D628A8E239DE9B300E222FB /* MarketExchangeHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketExchangeHeaderView.swift; sourceTree = "<group>"; };
+		9D628A90239DEA5300E222FB /* MarketMyOrderHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketMyOrderHeaderView.swift; sourceTree = "<group>"; };
+		9D628A92239DEA7200E222FB /* MarketOthersOrderHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketOthersOrderHeaderView.swift; sourceTree = "<group>"; };
+		9D628A95239DEC0500E222FB /* MarketTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketTableViewManager.swift; sourceTree = "<group>"; };
+		9D628A97239E363800E222FB /* MarketMyOrderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketMyOrderTableViewCell.swift; sourceTree = "<group>"; };
+		9D628A99239E3B3000E222FB /* MarketOthersOrderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketOthersOrderTableViewCell.swift; sourceTree = "<group>"; };
+		9D628A9B239E48A200E222FB /* TokenPickerViewAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenPickerViewAlert.swift; sourceTree = "<group>"; };
+		9D628AA7239F3A0200E222FB /* OrderProcessingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderProcessingViewController.swift; sourceTree = "<group>"; };
+		9D628AA9239F3A1400E222FB /* OrderProcessingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderProcessingModel.swift; sourceTree = "<group>"; };
+		9D628AAB239F3A2100E222FB /* OrderProcessingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderProcessingView.swift; sourceTree = "<group>"; };
+		9D628AAE239F3A4400E222FB /* OrderDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderDetailTableViewCell.swift; sourceTree = "<group>"; };
+		9D628AB1239F3AAC00E222FB /* OrderProcessingTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderProcessingTableViewManager.swift; sourceTree = "<group>"; };
+		9D628AB5239F722E00E222FB /* OrderCenterTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderCenterTableViewCell.swift; sourceTree = "<group>"; };
+		9D628AB7239F729300E222FB /* OrderDetailHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderDetailHeaderView.swift; sourceTree = "<group>"; };
+		9D628AB9239F72A800E222FB /* OrderDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderDetailView.swift; sourceTree = "<group>"; };
+		9D628ABD239F72CE00E222FB /* OrderDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderDetailViewController.swift; sourceTree = "<group>"; };
+		9D628ABF239F72E100E222FB /* OrderDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderDetailModel.swift; sourceTree = "<group>"; };
+		9D628AC2239F731100E222FB /* OrderDetailTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderDetailTableViewManager.swift; sourceTree = "<group>"; };
+		9D628AC6239F9F6D00E222FB /* ViolasSocketManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasSocketManager.swift; sourceTree = "<group>"; };
 		9D68D2F4237D24DD005B7593 /* BTCTransferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTCTransferView.swift; sourceTree = "<group>"; };
 		9D68D2F8237D24FF005B7593 /* BTCTransferViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTCTransferViewController.swift; sourceTree = "<group>"; };
 		9D68D2FE237D25FD005B7593 /* ViolasTransferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasTransferView.swift; sourceTree = "<group>"; };
@@ -830,6 +874,8 @@
 				9DA0265A23710FDB0084905B /* WelcomeAlert.swift */,
 				9DC06A2423715ADB00BCE1FE /* BackupWarningAlert.swift */,
 				9DC8778E23796884006378C3 /* ToastView.swift */,
+				9D628A85239A495500E222FB /* PrivateAlertView.swift */,
+				9D628A9B239E48A200E222FB /* TokenPickerViewAlert.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -911,6 +957,182 @@
 				9D6264882359A5B900A79B3D /* CreateIdentityWalletViewController.swift */,
 			);
 			path = Controller;
+			sourceTree = "<group>";
+		};
+		9D628A87239A4A2B00E222FB /* PrivateLegal */ = {
+			isa = PBXGroup;
+			children = (
+				9D628A88239A4A2B00E222FB /* Controller */,
+				9D628A8A239A4A2B00E222FB /* View */,
+			);
+			path = PrivateLegal;
+			sourceTree = "<group>";
+		};
+		9D628A88239A4A2B00E222FB /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				9D628A89239A4A2B00E222FB /* PrivateLegalViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		9D628A8A239A4A2B00E222FB /* View */ = {
+			isa = PBXGroup;
+			children = (
+				9D628A8B239A4A2B00E222FB /* PrivateLegalView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		9D628A94239DEBDD00E222FB /* TableViewManager */ = {
+			isa = PBXGroup;
+			children = (
+				9D628A95239DEC0500E222FB /* MarketTableViewManager.swift */,
+			);
+			path = TableViewManager;
+			sourceTree = "<group>";
+		};
+		9D628A9D239F318C00E222FB /* OrderCenter */ = {
+			isa = PBXGroup;
+			children = (
+				9D628AB3239F720400E222FB /* View */,
+			);
+			path = OrderCenter;
+			sourceTree = "<group>";
+		};
+		9D628A9E239F319800E222FB /* OrderDetail */ = {
+			isa = PBXGroup;
+			children = (
+				9D628AC1239F72EA00E222FB /* TableViewManager */,
+				9D628ABC239F72B400E222FB /* Controller */,
+				9D628ABB239F72AC00E222FB /* Model */,
+				9D628AAD239F3A2900E222FB /* View */,
+			);
+			path = OrderDetail;
+			sourceTree = "<group>";
+		};
+		9D628A9F239F31A900E222FB /* OrderProcessing */ = {
+			isa = PBXGroup;
+			children = (
+				9D628AB0239F3A8800E222FB /* TableViewManager */,
+				9D628AA6239F344E00E222FB /* Controller */,
+				9D628AA5239F344A00E222FB /* Model */,
+				9D628AA4239F344500E222FB /* View */,
+			);
+			path = OrderProcessing;
+			sourceTree = "<group>";
+		};
+		9D628AA0239F341C00E222FB /* OrderFinished */ = {
+			isa = PBXGroup;
+			children = (
+				9D628AA3239F343F00E222FB /* Controller */,
+				9D628AA2239F343500E222FB /* Model */,
+				9D628AA1239F343000E222FB /* View */,
+			);
+			path = OrderFinished;
+			sourceTree = "<group>";
+		};
+		9D628AA1239F343000E222FB /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		9D628AA2239F343500E222FB /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		9D628AA3239F343F00E222FB /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		9D628AA4239F344500E222FB /* View */ = {
+			isa = PBXGroup;
+			children = (
+				9D628AAB239F3A2100E222FB /* OrderProcessingView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		9D628AA5239F344A00E222FB /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				9D628AA9239F3A1400E222FB /* OrderProcessingModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		9D628AA6239F344E00E222FB /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				9D628AA7239F3A0200E222FB /* OrderProcessingViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		9D628AAD239F3A2900E222FB /* View */ = {
+			isa = PBXGroup;
+			children = (
+				9D628AAE239F3A4400E222FB /* OrderDetailTableViewCell.swift */,
+				9D628AB7239F729300E222FB /* OrderDetailHeaderView.swift */,
+				9D628AB9239F72A800E222FB /* OrderDetailView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		9D628AB0239F3A8800E222FB /* TableViewManager */ = {
+			isa = PBXGroup;
+			children = (
+				9D628AB1239F3AAC00E222FB /* OrderProcessingTableViewManager.swift */,
+			);
+			path = TableViewManager;
+			sourceTree = "<group>";
+		};
+		9D628AB3239F720400E222FB /* View */ = {
+			isa = PBXGroup;
+			children = (
+				9D628AB5239F722E00E222FB /* OrderCenterTableViewCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		9D628ABB239F72AC00E222FB /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				9D628ABF239F72E100E222FB /* OrderDetailModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		9D628ABC239F72B400E222FB /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				9D628ABD239F72CE00E222FB /* OrderDetailViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		9D628AC1239F72EA00E222FB /* TableViewManager */ = {
+			isa = PBXGroup;
+			children = (
+				9D628AC2239F731100E222FB /* OrderDetailTableViewManager.swift */,
+			);
+			path = TableViewManager;
+			sourceTree = "<group>";
+		};
+		9D628AC5239F9F5800E222FB /* SocketManager */ = {
+			isa = PBXGroup;
+			children = (
+				9D628AC6239F9F6D00E222FB /* ViolasSocketManager.swift */,
+			);
+			path = SocketManager;
 			sourceTree = "<group>";
 		};
 		9D68D2EC237CF019005B7593 /* BTCTransfer */ = {
@@ -1752,17 +1974,22 @@
 			path = CollectionViewManager;
 			sourceTree = "<group>";
 		};
-		9DC06A382372A92100BCE1FE /* MarketSection */ = {
+		9DC06A382372A92100BCE1FE /* MarketModule */ = {
 			isa = PBXGroup;
 			children = (
+				9D628AA0239F341C00E222FB /* OrderFinished */,
+				9D628A9F239F31A900E222FB /* OrderProcessing */,
+				9D628A9E239F319800E222FB /* OrderDetail */,
+				9D628A9D239F318C00E222FB /* OrderCenter */,
 				9DC06A392372A92C00BCE1FE /* Market */,
 			);
-			path = MarketSection;
+			path = MarketModule;
 			sourceTree = "<group>";
 		};
 		9DC06A392372A92C00BCE1FE /* Market */ = {
 			isa = PBXGroup;
 			children = (
+				9D628A94239DEBDD00E222FB /* TableViewManager */,
 				9DC06A3D2372A94600BCE1FE /* Controller */,
 				9DC06A3C2372A93B00BCE1FE /* ViewModel */,
 				9DC06A3B2372A93700BCE1FE /* Model */,
@@ -1775,6 +2002,11 @@
 			isa = PBXGroup;
 			children = (
 				9DC06A402372A9CC00BCE1FE /* MarketView.swift */,
+				9D628A8E239DE9B300E222FB /* MarketExchangeHeaderView.swift */,
+				9D628A90239DEA5300E222FB /* MarketMyOrderHeaderView.swift */,
+				9D628A97239E363800E222FB /* MarketMyOrderTableViewCell.swift */,
+				9D628A92239DEA7200E222FB /* MarketOthersOrderHeaderView.swift */,
+				9D628A99239E3B3000E222FB /* MarketOthersOrderTableViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -2039,7 +2271,7 @@
 				9DC87792237A529D006378C3 /* FirstInSection */,
 				9DC06A6F2374059100BCE1FE /* HomeSection */,
 				9D9B49D723602E6000354EF0 /* MineSection */,
-				9DC06A382372A92100BCE1FE /* MarketSection */,
+				9DC06A382372A92100BCE1FE /* MarketModule */,
 			);
 			path = Sections;
 			sourceTree = "<group>";
@@ -2084,6 +2316,7 @@
 		9DC9023B2328E7E60097FD85 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				9D628AC5239F9F5800E222FB /* SocketManager */,
 				9DC8778B237958D2006378C3 /* LibraManager */,
 				9DC06A6C2373FEA300BCE1FE /* ViolasManager */,
 				9D3954FC235D4ABB0068019F /* BTCManager */,
@@ -2245,6 +2478,7 @@
 				9D9B4A0A2360490700354EF0 /* HelpCenter */,
 				9D9B49FD2360487900354EF0 /* AboutUs */,
 				9D9B49F62360466500354EF0 /* ServiceLegal */,
+				9D628A87239A4A2B00E222FB /* PrivateLegal */,
 				9D9B49E92360383000354EF0 /* Language */,
 			);
 			path = SettingModule;
@@ -2558,11 +2792,13 @@
 				9D9B4A4A2362F4DC00354EF0 /* MineHeaderView.swift in Sources */,
 				9DFFA87F23683C3400EA74F9 /* WalletTransactionsModel.swift in Sources */,
 				9D68D305237D49E5005B7593 /* TransactionScript.swift in Sources */,
+				9D628AB2239F3AAC00E222FB /* OrderProcessingTableViewManager.swift in Sources */,
 				9DC4885A23220DA6005FF254 /* WalletReceiveView.swift in Sources */,
 				9DC06A672372D47F00BCE1FE /* admission_control.pb.swift in Sources */,
 				9DC4886E232222CF005FF254 /* LBXPermissions.swift in Sources */,
 				9DC06A662372D47F00BCE1FE /* proof.pb.swift in Sources */,
 				9D9B4A652366D65800354EF0 /* WalletDetailModel.swift in Sources */,
+				9D628A8C239A4A2B00E222FB /* PrivateLegalViewController.swift in Sources */,
 				9D62648D2359C00E00A79B3D /* CreateIdentityWalletModel.swift in Sources */,
 				9DC8778D237958EB006378C3 /* LibraManager.swift in Sources */,
 				9D9B4A502366953600354EF0 /* ImportWalletView.swift in Sources */,
@@ -2574,6 +2810,7 @@
 				9DC06A5D2372D47F00BCE1FE /* language_storage.pb.swift in Sources */,
 				9DC06A5E2372D47F00BCE1FE /* events.pb.swift in Sources */,
 				9D5B4E74236BCC0300F4D99C /* AddAssetViewModel.swift in Sources */,
+				9D628AB6239F722E00E222FB /* OrderCenterTableViewCell.swift in Sources */,
 				9DC06A3F2372A9B100BCE1FE /* MarketViewController.swift in Sources */,
 				9D9B49AA235DA76100354EF0 /* AddressManagerViewController.swift in Sources */,
 				9D08AD4D2330D8F5004687E8 /* TransactionDetailWebView.swift in Sources */,
@@ -2608,21 +2845,28 @@
 				9D9B4A3C23619AD400354EF0 /* SupportCoinTableViewManager.swift in Sources */,
 				9DBC267623408D55009650EA /* ed25519_sc.swift in Sources */,
 				9D9B49F12360388200354EF0 /* LanguageTabViewManager.swift in Sources */,
+				9D628A93239DEA7200E222FB /* MarketOthersOrderHeaderView.swift in Sources */,
 				9DC902472328FDB90097FD85 /* DataBaseManager.swift in Sources */,
 				9D5B4E70236BCBDB00F4D99C /* AddAssetModel.swift in Sources */,
 				9DC06A632372D47F00BCE1FE /* account_state_blob.pb.swift in Sources */,
 				9D5B4E5E236976D500F4D99C /* HomeTableViewCell.swift in Sources */,
+				9D628A96239DEC0500E222FB /* MarketTableViewManager.swift in Sources */,
 				9D9B4A3E23619F2E00354EF0 /* SupportCoinTableViewCell.swift in Sources */,
+				9D628ABA239F72A800E222FB /* OrderDetailView.swift in Sources */,
 				9DC4880D2320EDF8005FF254 /* LibraUtils.swift in Sources */,
 				9D1A42D123829EC6008978A7 /* VTokenMainModel.swift in Sources */,
 				9DC4886D232222CF005FF254 /* LBXScanViewStyle.swift in Sources */,
 				9DC8778F23796884006378C3 /* ToastView.swift in Sources */,
 				9DC06A692372D47F00BCE1FE /* access_path.pb.swift in Sources */,
+				9D628A86239A495500E222FB /* PrivateAlertView.swift in Sources */,
+				9D628AB8239F729300E222FB /* OrderDetailHeaderView.swift in Sources */,
 				9D71243D2329F183009DED52 /* WalletCreateViewController.swift in Sources */,
 				9D9B4A06236048A000354EF0 /* AboutUsViewController.swift in Sources */,
 				9DC4887E2322320B005FF254 /* ScanView.swift in Sources */,
 				9D5B4E78236BCE1700F4D99C /* AddAssetViewTableViewCell.swift in Sources */,
 				9DC901EF23274E510097FD85 /* TransactionProgram.swift in Sources */,
+				9D628A91239DEA5300E222FB /* MarketMyOrderHeaderView.swift in Sources */,
+				9D628A98239E363800E222FB /* MarketMyOrderTableViewCell.swift in Sources */,
 				9DC901F2232788C30097FD85 /* TransactionAccessPath.swift in Sources */,
 				9DBC267823408D55009650EA /* ed25519_ge.swift in Sources */,
 				9DFFA88323683C5700EA74F9 /* WalletTransactionsTableViewManager.swift in Sources */,
@@ -2653,12 +2897,14 @@
 				9D9B49EF2360387B00354EF0 /* LanguageViewController.swift in Sources */,
 				9D60189C236810EE00922237 /* WalletMnemonicViewController.swift in Sources */,
 				9DC4884F2321F051005FF254 /* WordList.swift in Sources */,
+				9D628AA8239F3A0200E222FB /* OrderProcessingViewController.swift in Sources */,
 				9DC87791237A49A9006378C3 /* ImportIdentityWalletModel.swift in Sources */,
 				9DFFA87D23683C1D00EA74F9 /* WalletTransactionsView.swift in Sources */,
 				9D9B4A5A2366D1C400354EF0 /* WalletDetailView.swift in Sources */,
 				9D68D2F5237D24DD005B7593 /* BTCTransferView.swift in Sources */,
 				9D9B49AC235DA76100354EF0 /* AddressManagerModel.swift in Sources */,
 				9DC901E923262CB80097FD85 /* TransactionArgument.swift in Sources */,
+				9D628AAF239F3A4400E222FB /* OrderDetailTableViewCell.swift in Sources */,
 				9D9B4A542366955B00354EF0 /* ImportWalletViewController.swift in Sources */,
 				9DA0264D236FFEB10084905B /* BackupMnemonicCollectionViewManager.swift in Sources */,
 				9D1A42CD23829EA7008978A7 /* VTokenMainView.swift in Sources */,
@@ -2667,6 +2913,7 @@
 				9D71243F2329F190009DED52 /* WalletCreateView.swift in Sources */,
 				9D9B4A112360491C00354EF0 /* HelpCenterViewController.swift in Sources */,
 				9DF49C0E236BE3DF00C77880 /* WalletListViewModel.swift in Sources */,
+				9D628AC7239F9F6D00E222FB /* ViolasSocketManager.swift in Sources */,
 				9D08AD4B2330D8E6004687E8 /* TransactionDetailWebViewController.swift in Sources */,
 				9DBC267A23408D55009650EA /* ed25519_verify.swift in Sources */,
 				9DBC267B23408D55009650EA /* ed25519_fe.swift in Sources */,
@@ -2685,6 +2932,7 @@
 				9DA02652237011F00084905B /* BackupMnemonicFlowLayout.swift in Sources */,
 				9DC488032320D6A1005FF254 /* LibraMnemonic.swift in Sources */,
 				9DF49C10236BE3EA00C77880 /* WalletListModel.swift in Sources */,
+				9D628AAA239F3A1400E222FB /* OrderProcessingModel.swift in Sources */,
 				9DC488052320DBCB005FF254 /* LibraPublicKey.swift in Sources */,
 				9DBC267723408D55009650EA /* ed25519_utility.swift in Sources */,
 				9DC06A2F2371788100BCE1FE /* CheckBackupViewModel.swift in Sources */,
@@ -2692,8 +2940,10 @@
 				9D9B4A05236048A000354EF0 /* AboutUsTableViewManager.swift in Sources */,
 				9DC06A332371789D00BCE1FE /* CheckBackupView.swift in Sources */,
 				9DE5CE3C2366F2320084608F /* WalletChangeNameView.swift in Sources */,
+				9D628A9A239E3B3100E222FB /* MarketOthersOrderTableViewCell.swift in Sources */,
 				9D9B49B0235DA76100354EF0 /* AddAddressModel.swift in Sources */,
 				9D9B4A152360496900354EF0 /* FeedbackAlert.swift in Sources */,
+				9D628AAC239F3A2100E222FB /* OrderProcessingView.swift in Sources */,
 				9DC9023D2328E8290097FD85 /* CommonData.swift in Sources */,
 				9D9B49AE235DA76100354EF0 /* AddressManagerTableViewCell.swift in Sources */,
 				9DC06A622372D47F00BCE1FE /* validator_change.pb.swift in Sources */,
@@ -2705,6 +2955,7 @@
 				9DC06A6E2373FEB900BCE1FE /* ViolasManager.swift in Sources */,
 				9D9B49E8236031F700354EF0 /* SettingTableViewCell.swift in Sources */,
 				9DC4886C232222CF005FF254 /* LBXScanLineAnimation.swift in Sources */,
+				9D628AC0239F72E100E222FB /* OrderDetailModel.swift in Sources */,
 				9D9B49FC236046CF00354EF0 /* ServiceLegalView.swift in Sources */,
 				9DC902322328C6CC0097FD85 /* LibraAccount.swift in Sources */,
 				9DC902452328FCD00097FD85 /* LibraWalletError.swift in Sources */,
@@ -2713,6 +2964,8 @@
 				9D08AD372330BA75004687E8 /* NetworkManager.swift in Sources */,
 				9DC4884B232111E9005FF254 /* TransferViewController.swift in Sources */,
 				9DF49C12236BE3F700C77880 /* WalletListController.swift in Sources */,
+				9D628A8D239A4A2B00E222FB /* PrivateLegalView.swift in Sources */,
+				9D628A9C239E48A200E222FB /* TokenPickerViewAlert.swift in Sources */,
 				9D5B4E7A236BD22600F4D99C /* AddAssetTableViewHeader.swift in Sources */,
 				9D68D2F9237D24FF005B7593 /* BTCTransferViewController.swift in Sources */,
 				9D712441232F621B009DED52 /* LibraWalletTool.swift in Sources */,
@@ -2736,12 +2989,15 @@
 				9D712445232F7C36009DED52 /* TransferModel.swift in Sources */,
 				9DC4887C23223204005FF254 /* ScanViewController.swift in Sources */,
 				9D9B49D32360268E00354EF0 /* BaseTabBarViewController.swift in Sources */,
+				9D628ABE239F72CE00E222FB /* OrderDetailViewController.swift in Sources */,
 				9D9B4A3423619A8E00354EF0 /* SupportCoinViewController.swift in Sources */,
 				9D9B49DD23602EB900354EF0 /* SettingTableViewManager.swift in Sources */,
 				9D9B4A462362967200354EF0 /* AddWalletViewController.swift in Sources */,
 				9D9B49CD235FFAAB00354EF0 /* MineView.swift in Sources */,
+				9D628A8F239DE9B300E222FB /* MarketExchangeHeaderView.swift in Sources */,
 				9DF9BB542383E5EF00FA800D /* ScanResultInvalidViewController.swift in Sources */,
 				9D62648B2359A61000A79B3D /* CreateIdentityWalletView.swift in Sources */,
+				9D628AC3239F731100E222FB /* OrderDetailTableViewManager.swift in Sources */,
 				9D1A42D62383C43A008978A7 /* VTokenTableViewManager.swift in Sources */,
 				9D9B4A5D2366D1E000354EF0 /* WalletDetailViewController.swift in Sources */,
 				9D9B49B8235DBE8100354EF0 /* ImportIdentityWalletViewController.swift in Sources */,
@@ -2931,7 +3187,7 @@
 				CODE_SIGN_ENTITLEMENTS = LibraWallet/LibraWallet.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development: Jay Zou (JR6LZNW9NA)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = ND49YBN8B3;
 				INFOPLIST_FILE = LibraWallet/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -2958,7 +3214,7 @@
 				CODE_SIGN_ENTITLEMENTS = LibraWallet/LibraWallet.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Jay Zou (ND49YBN8B3)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = ND49YBN8B3;
 				INFOPLIST_FILE = LibraWallet/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
