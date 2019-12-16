@@ -8,6 +8,8 @@
 
 import UIKit
 import Localize_Swift
+import MessageUI
+import Device
 class SettingViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,6 +61,14 @@ class SettingViewController: BaseViewController {
         view.tableView.dataSource = self.tableViewManager
         return view
     }()
+    lazy var mailVC: MFMailComposeViewController = {
+        let vc = MFMailComposeViewController()
+        vc.mailComposeDelegate = self
+        vc.setToRecipients(["violas_blockchain@violas.io"])
+        vc.setSubject("Violas Feedback")
+        vc.setMessageBody("", isHTML: false)
+        return vc
+    }()
     @objc func setText() {
         // 设置标题
         self.title = localLanguage(keyString: "wallet_setting_navigation_title")
@@ -83,8 +93,38 @@ extension SettingViewController: SettingTableViewManagerDelegate {
             let vc = AboutUsViewController()
             self.navigationController?.pushViewController(vc, animated: true)
         } else {
-            let vc = HelpCenterViewController()
-            self.navigationController?.pushViewController(vc, animated: true)
+//            let vc = HelpCenterViewController()
+//            self.navigationController?.pushViewController(vc, animated: true)
+            if MFMailComposeViewController.canSendMail() {
+                let vc = MFMailComposeViewController()
+                vc.mailComposeDelegate = self
+                vc.setToRecipients(["violas_blockchain@violas.io"])
+                vc.setSubject("Violas Feedback")
+                vc.setMessageBody("\n\n\n\n-------------------\nApp version: \(appversion)\niPhone model: \(getVersionCode())\nOS version:\(iosversion)",
+                                  isHTML: false)
+                present(vc, animated: true, completion: nil)
+            } else {
+                print("Whoop...设备不能发送邮件")
+//                showSendMailErrorAlert()
+            }
         }
+    }
+}
+extension SettingViewController: MFMailComposeViewControllerDelegate {
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        switch result.rawValue{
+        case MFMailComposeResult.sent.rawValue:
+            print("邮件已发送")
+        case MFMailComposeResult.cancelled.rawValue:
+            print("邮件已取消")
+        case MFMailComposeResult.saved.rawValue:
+            print("邮件已保存")
+        case MFMailComposeResult.failed.rawValue:
+            print("邮件发送失败")
+        default:
+            print("邮件没有发送")
+            break
+        }
+        controller.dismiss(animated: true, completion: nil)
     }
 }

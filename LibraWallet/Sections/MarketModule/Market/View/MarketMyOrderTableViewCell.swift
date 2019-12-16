@@ -12,7 +12,7 @@ class MarketMyOrderTableViewCell: UITableViewCell {
 //    weak var delegate: AddAssetViewTableViewCellDelegate?
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        contentView.addSubview(iconImageView)
+//        contentView.addSubview(iconImageView)
         contentView.addSubview(nameLabel)
         contentView.addSubview(dateLabel)
         
@@ -34,13 +34,13 @@ class MarketMyOrderTableViewCell: UITableViewCell {
 //            make.right.equalTo(contentView.snp.right).offset(-15)
 //            make.bottom.equalTo(contentView)
 //        }
-        iconImageView.snp.makeConstraints { (make) in
+//        iconImageView.snp.makeConstraints { (make) in
+//            make.top.equalTo(contentView).offset(12)
+//            make.left.equalTo(contentView).offset(14)
+//        }
+        nameLabel.snp.makeConstraints { (make) in
             make.top.equalTo(contentView).offset(12)
             make.left.equalTo(contentView).offset(14)
-        }
-        nameLabel.snp.makeConstraints { (make) in
-            make.centerY.equalTo(iconImageView)
-            make.left.equalTo(iconImageView.snp.right).offset(4)
         }
         dateLabel.snp.makeConstraints { (make) in
             make.left.equalTo(contentView).offset(14)
@@ -72,7 +72,7 @@ class MarketMyOrderTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "0E0051")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: UIFont.Weight.semibold)
-        label.text = "BBBUSD/AAAUSD"
+        label.text = "---"
         return label
     }()
     lazy var dateLabel: UILabel = {
@@ -88,7 +88,7 @@ class MarketMyOrderTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "60606D")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "200")
+        label.text = "---"
         return label
     }()
     lazy var priceLabel: UILabel = {
@@ -96,12 +96,23 @@ class MarketMyOrderTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "60606D")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "7.1")
+        label.text = "---"
         return label
     }()
     //MARK: - 设置数据
-    var model: ViolasTokenModel? {
+    var model: MarketOrderDataModel? {
         didSet {
+            let attString = NSMutableAttributedString.init(string: model?.tokenGiveSymbol ?? "", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 16, weight: .semibold), NSAttributedString.Key.foregroundColor: UIColor.init(hex: "3C3848")])
+            let attString2 = NSAttributedString.init(string: "/", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 16, weight: .regular), NSAttributedString.Key.foregroundColor: UIColor.init(hex: "3C3848")])
+            let attString3 = NSMutableAttributedString.init(string: model?.tokenGetSymbol ?? "", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 12, weight: .regular), NSAttributedString.Key.foregroundColor: UIColor.init(hex: "95969B")])
+            attString.append(attString2)
+            attString.append(attString3)
+            nameLabel.attributedText = attString
+            #warning("此处有amountGive和amountGet，不清楚用哪个")
+            amountLabel.text = model?.amountGet
+            #warning("此处价格待商议")
+            priceLabel.text = "7.1"
+            dateLabel.text = timestampToDateString(timestamp: model?.date ?? 0, dateFormat: "MM/dd HH:mm:ss")
         }
     }
     var indexPath: IndexPath?

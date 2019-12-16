@@ -34,6 +34,8 @@ class OrderDetailView: UIView {
         tableView.estimatedRowHeight = 0;
         tableView.estimatedSectionHeaderHeight = 0;
         tableView.backgroundColor = UIColor.white
+        tableView.register(OrderDetailTableViewCell.classForCoder(), forCellReuseIdentifier: "CellNormal")
+        tableView.register(OrderDetailHeaderView.classForCoder(), forHeaderFooterViewReuseIdentifier: "Header")
         return tableView
     }()
 }

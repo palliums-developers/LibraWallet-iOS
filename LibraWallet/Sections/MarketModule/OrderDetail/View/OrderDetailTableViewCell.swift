@@ -80,7 +80,7 @@ class OrderDetailTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "3C3848")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: UIFont.Weight.regular)
-        label.text = "BBBUSD / AAAUSD"
+        label.text = "---"
         return label
     }()
     lazy var priceTitleLabel: UILabel = {
@@ -104,7 +104,7 @@ class OrderDetailTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "BABABA")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = "时间"
+        label.text = localLanguage(keyString: "时间")
         return label
     }()
     lazy var priceLabel: UILabel = {
@@ -112,7 +112,7 @@ class OrderDetailTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "60606D")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "7.1")
+        label.text = "---"
         return label
     }()
     lazy var amountLabel: UILabel = {
@@ -120,7 +120,7 @@ class OrderDetailTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "60606D")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "200")
+        label.text = "---"
         return label
     }()
     lazy var dateLabel: UILabel = {
@@ -128,7 +128,7 @@ class OrderDetailTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "60606D")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
-        label.text = "01/18 12:06:23"
+        label.text = "---"
         return label
     }()
     lazy var spaceLabel: UILabel = {
@@ -139,11 +139,11 @@ class OrderDetailTableViewCell: UITableViewCell {
     @objc func buttonClick(button: UIButton) {
     }
     //MARK: - 设置数据
-    var dataModel: AddressModel? {
+    var model: MarketOrderDataModel? {
         didSet {
-//            addressLabel.text = dataModel?.address
-//            nameLabel.text = dataModel?.addressName
-//            addressTypeLabel.text = dataModel?.addressType
+            dateLabel.text = timestampToDateString(timestamp: model?.date ?? 0, dateFormat: "MM/dd HH:mm:ss")
+            priceLabel.text = "7.1"
+            amountLabel.text = model?.amountGet
         }
     }
     

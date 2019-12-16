@@ -21,9 +21,10 @@ class TokenPickerViewAlert: UIView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    convenience init(successClosure: @escaping successClosure) {
+    convenience init(successClosure: @escaping successClosure, data: [MarketSupportCoinDataModel]) {
         self.init(frame: CGRect.zero)
         self.actionClosure = successClosure
+        self.models = data
 //        guard let phone = SSOWalletManager.shared.walletBindingPhone else {
 //            return
 //        }
@@ -97,18 +98,26 @@ class TokenPickerViewAlert: UIView {
         button.tag = 10
         return button
     }()
-    typealias successClosure = (String, String) -> Void
+    typealias successClosure = (MarketSupportCoinDataModel) -> Void
     var actionClosure: successClosure?
     @objc func buttonClick(button: UIButton) {
+        guard let model = models?[pickerRow] else {
+            return
+        }
+        if let action = self.actionClosure {
+            action(model)
+        }
         self.hideAnimation()
     }
+    var models: [MarketSupportCoinDataModel]?
+    var pickerRow: Int = 0
 }
 extension TokenPickerViewAlert: actionViewProtocol {
     
 }
 extension TokenPickerViewAlert: UIPickerViewDataSource {
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return 10
+        return models?.count ?? 0
     }
     // MARK: Picker Delegate 实现代理方法
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -118,24 +127,24 @@ extension TokenPickerViewAlert: UIPickerViewDataSource {
 }
 extension TokenPickerViewAlert: UIPickerViewDelegate {
     func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
-           //每行多高
-           return 40
-       }
-       func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
-           // 每列多宽
-           return 100
-       }
+       //每行多高
+       return 40
+    }
+    func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
+       // 每列多宽
+       return mainWidth
+    }
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         //赋值
+        if let model = models?[row] {
+            return (model.name ?? "") + (model.enable == true ? localLanguage(keyString: "（已开启）"):"")
+        }
         return "test"
     }
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         //选中所执行的方法
-        if 0 == component {
-
-        } else {
-
-        }
+        
+        self.pickerRow = row
         print(row)
     }
 }

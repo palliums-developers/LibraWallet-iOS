@@ -147,7 +147,7 @@ class AddAssetModel: NSObject {
             let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
 
             // 拼接交易
-            let request = LibraTransaction.init(sendAddress: wallet.publicKey.toAddress(), sequenceNumber: UInt64(sequenceNumber), code: Data.init(Array<UInt8>(hex: ViolasManager().getViolasPublishCode(content: contact))))
+            let request = ViolasTransaction.init(sendAddress: wallet.publicKey.toAddress(), sequenceNumber: UInt64(sequenceNumber), code: Data.init(Array<UInt8>(hex: ViolasManager().getViolasPublishCode(content: contact))))
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
             makeViolasTransaction(signature: signature.toHexString())

@@ -134,7 +134,7 @@ wallet_market_receive_address_title = "收款地址";
 wallet_market_receive_address_textfield_placeholder = "请输入收款账户";
 wallet_market_exchange_fee_title = "汇率";
 wallet_market_exchange_fee_describe_title = "1BTC = 1Violas";
-wallet_market_exchange_confirm_title = "闪电兑换";
+wallet_market_exchange_confirm_title = "兑换";
 
 /************* 关于我们 *******************/
 wallet_about_us_navigation_right_bar_title = "问题反馈";

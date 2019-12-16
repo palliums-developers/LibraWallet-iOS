@@ -12,7 +12,8 @@ protocol OrderDetailTableViewManagerDelegate: NSObjectProtocol {
 }
 class OrderDetailTableViewManager: NSObject {
     weak var delegate: OrderDetailTableViewManagerDelegate?
-    var dataModel: [AddressModel]?
+    var dataModel: [MarketOrderDataModel]?
+    var headerData: MarketOrderDataModel?
     deinit {
         print("OrderProcessingTableViewManager销毁了")
     }
@@ -29,11 +30,11 @@ extension OrderDetailTableViewManager: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let identifier = "Header"
         if let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier) as? OrderDetailHeaderView {
-//            (header as! OrderDetailHeaderView).model = self.headerTitleArray[section]
+            header.model = self.headerData
             return header
         } else {
             let header = OrderDetailHeaderView.init(reuseIdentifier: identifier)
-//            header.model = self.headerTitleArray[section]
+            header.model = self.headerData
             return header
         }
     }
@@ -50,19 +51,19 @@ extension OrderDetailTableViewManager: UITableViewDelegate {
 }
 extension OrderDetailTableViewManager: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return dataModel?.count ?? 5
+        return dataModel?.count ?? 0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let identifier = "CellNormal"
-        if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? OrderDetailTableViewCell {
             if let data = dataModel, data.isEmpty == false {
-                (cell as! OrderDetailTableViewCell).dataModel = data[indexPath.row]
+                cell.model = data[indexPath.row]
             }
             return cell
         } else {
             let cell = OrderDetailTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
             if let data = dataModel, data.isEmpty == false {
-                cell.dataModel = data[indexPath.row]
+                cell.model = data[indexPath.row]
             }
             return cell
         }

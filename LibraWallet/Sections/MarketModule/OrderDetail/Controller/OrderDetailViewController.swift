@@ -15,8 +15,8 @@ class OrderDetailViewController: BaseViewController {
         self.title = localLanguage(keyString: "wallet_wallet_add_navigation_title")
         // 加载子View
         self.view.addSubview(self.detailView)
-        // 加载数据
-        self.loadLocalData()
+        self.initKVO()
+        
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -31,10 +31,6 @@ class OrderDetailViewController: BaseViewController {
     }
     deinit {
         print("OrderDetailViewController销毁了")
-    }
-    func loadLocalData() {
-//        self.tableViewManager.dataModel = dataModel.getSupportCoinData()
-//        self.detailView.tableView.reloadData()
     }
     //网络请求、数据模型
     lazy var dataModel: OrderDetailModel = {
@@ -54,28 +50,73 @@ class OrderDetailViewController: BaseViewController {
         view.tableView.dataSource = self.tableViewManager
         return view
     }()
+    var myContext = 0
+    var headerData: MarketOrderDataModel? {
+        didSet {
+            self.tableViewManager.headerData = headerData
+        }
+    }
 }
 extension OrderDetailViewController: OrderDetailTableViewManagerDelegate {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, address: String) {
-//        let alert = UIAlertController.init(title: localLanguage(keyString: "wallet_add_wallet_alert_choose_import_or_create_title"), message: nil, preferredStyle: UIAlertController.Style.actionSheet)
-//        let importAction = UIAlertAction.init(title: localLanguage(keyString: "wallet_add_wallet_alert_import_action_title"), style: UIAlertAction.Style.default) { (UIAlertAction) in
-//
-//            let vc = ImportWalletViewController()
-//            vc.type = name
-//            self.navigationController?.pushViewController(vc, animated: true)
-//        }
-//        let createAction = UIAlertAction.init(title: localLanguage(keyString: "wallet_add_wallet_alert_create_action_title"), style: UIAlertAction.Style.default) { (UIAlertAction) in
-//            let vc = AddWalletViewController()
-//            vc.type = name
-//            self.navigationController?.pushViewController(vc, animated: true)
-//        }
-//        let cancelAction = UIAlertAction.init(title: localLanguage(keyString: "wallet_add_wallet_alert_cancel_action_title"), style: UIAlertAction.Style.cancel) { (UIAlertAction) in
-//
-//        }
-//        alert.addAction(importAction)
-//        alert.addAction(createAction)
-//        alert.addAction(cancelAction)
-//        self.present(alert, animated: true, completion: nil)
+    }
+}
+extension OrderDetailViewController {
+    func initKVO() {
+        dataModel.addObserver(self, forKeyPath: "dataDic", options: NSKeyValueObservingOptions.new, context: &myContext)
+        dataModel.getOrderDetail(address: "b45d3e7e8079eb16cd7111b676f0c32294135e4190261240e3fd7b96fe1b9b89",
+                                 payContract: self.headerData?.tokenGive ?? "",
+                                 receiveContract: self.headerData?.tokenGet ?? "",
+                                 version: self.headerData?.version ?? "")
+    }
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?)  {
         
+        guard context == &myContext else {
+            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+            return
+        }
+        guard (change?[NSKeyValueChangeKey.newKey]) != nil else {
+            return
+        }
+        guard let jsonData = (object! as AnyObject).value(forKey: "dataDic") as? NSDictionary else {
+            return
+        }
+        if let error = jsonData.value(forKey: "error") as? LibraWalletError {
+            if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
+                // 网络无法访问
+                print(error.localizedDescription)
+            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletNotExist).localizedDescription {
+                // 钱包不存在
+                print(error.localizedDescription)
+//                let vc = WalletCreateViewController()
+//                let navi = UINavigationController.init(rootViewController: vc)
+//                self.present(navi, animated: true, completion: nil)
+            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionTooOld).localizedDescription {
+                // 版本太久
+                print(error.localizedDescription)
+            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
+                // 解析失败
+                print(error.localizedDescription)
+            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
+                print(error.localizedDescription)
+                // 数据为空
+            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
+                print(error.localizedDescription)
+                // 数据返回状态异常
+            }
+            self.detailView.hideToastActivity()
+            return
+        }
+        let type = jsonData.value(forKey: "type") as! String
+        
+        if type == "GetOrderDetail" {
+            if let tempData = jsonData.value(forKey: "data") as? [MarketOrderDataModel] {
+            //                self.detailView.tableView.reloadData()
+                self.tableViewManager.dataModel = tempData
+                           
+                self.detailView.tableView.reloadData()
+            }
+        }
+        self.detailView.hideToastActivity()
     }
 }

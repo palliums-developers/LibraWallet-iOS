@@ -53,7 +53,8 @@ class MarketView: UIView {
         tableView.register(MarketExchangeHeaderView.classForCoder(), forHeaderFooterViewReuseIdentifier: "MainHeader")
         tableView.register(MarketMyOrderHeaderView.classForCoder(), forHeaderFooterViewReuseIdentifier: "MineHeader")
         tableView.register(MarketOthersOrderHeaderView.classForCoder(), forHeaderFooterViewReuseIdentifier: "OthersHeader")
-
+        tableView.register(MarketMyOrderTableViewCell.classForCoder(), forCellReuseIdentifier: "MineCell")
+        tableView.register(MarketOthersOrderTableViewCell.classForCoder(), forCellReuseIdentifier: "OtherCell")
         return tableView
     }()
 }

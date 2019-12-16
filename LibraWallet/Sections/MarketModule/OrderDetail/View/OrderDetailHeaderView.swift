@@ -128,14 +128,14 @@ class OrderDetailHeaderView: UITableViewHeaderFooterView {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.white
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: UIFont.Weight.regular)
-        label.text = "BBBUSD / AAAUSD"
+        label.text = "---"
         return label
     }()
     lazy var cancelButton: UIButton = {
         let button = UIButton.init()
         button.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.medium)
         button.setTitleColor(UIColor.white, for: UIControl.State.normal)
-        button.setTitle(localLanguage(keyString: "已完成"), for: UIControl.State.normal)
+//        button.setTitle(localLanguage(keyString: "已完成"), for: UIControl.State.normal)
 
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
         button.tag = 10
@@ -162,7 +162,7 @@ class OrderDetailHeaderView: UITableViewHeaderFooterView {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(white: 1.0, alpha: 0.6)
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = "时间"
+        label.text = localLanguage(keyString: "时间")
         return label
     }()
     lazy var successAmountTitleLabel: UILabel = {
@@ -178,7 +178,7 @@ class OrderDetailHeaderView: UITableViewHeaderFooterView {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(white: 1.0, alpha: 0.6)
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = "手续费"
+        label.text = localLanguage(keyString: "手续费")
         return label
     }()
     lazy var priceLabel: UILabel = {
@@ -186,7 +186,7 @@ class OrderDetailHeaderView: UITableViewHeaderFooterView {
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.white
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "7.1")
+        label.text = "---"
         return label
     }()
     lazy var amountLabel: UILabel = {
@@ -194,7 +194,7 @@ class OrderDetailHeaderView: UITableViewHeaderFooterView {
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.white
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "200")
+        label.text = "---"
         return label
     }()
     lazy var dateLabel: UILabel = {
@@ -202,7 +202,7 @@ class OrderDetailHeaderView: UITableViewHeaderFooterView {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.white
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
-        label.text = "01/18 12:06:23"
+        label.text = "---"
         return label
     }()
     lazy var successAmountLabel: UILabel = {
@@ -210,7 +210,7 @@ class OrderDetailHeaderView: UITableViewHeaderFooterView {
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.white
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "200")
+        label.text = "---"
         return label
     }()
     lazy var feeLabel: UILabel = {
@@ -218,7 +218,7 @@ class OrderDetailHeaderView: UITableViewHeaderFooterView {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.white
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
-        label.text = "01/18 12:06:23"
+        label.text = "---"
         return label
     }()
     lazy var orderTitleLabel: UILabel = {
@@ -239,5 +239,30 @@ class OrderDetailHeaderView: UITableViewHeaderFooterView {
         return button
     }()
     @objc func buttonClick(button: UIButton) {
+    }
+    var model: MarketOrderDataModel? {
+        didSet {
+            let attString = NSMutableAttributedString.init(string: model?.tokenGiveSymbol ?? "", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 16, weight: .semibold), NSAttributedString.Key.foregroundColor: UIColor.white])
+            let attString2 = NSAttributedString.init(string: "/", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 16, weight: .regular), NSAttributedString.Key.foregroundColor: UIColor.white])
+            let attString3 = NSMutableAttributedString.init(string: model?.tokenGetSymbol ?? "", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 12, weight: .regular), NSAttributedString.Key.foregroundColor: UIColor.white])
+            attString.append(attString2)
+            attString.append(attString3)
+            coinTitleLabel.attributedText = attString
+            dateLabel.text = timestampToDateString(timestamp: model?.date ?? 0, dateFormat: "MM/dd HH:mm:ss")
+            priceLabel.text = "7.1"
+            amountLabel.text = model?.amountGet
+            successAmountLabel.text = model?.amountFilled
+            feeLabel.text = "---"
+//            order status:0=OPEN 1=FILLED 2=CANCELED 3=FILLED or CANCELED, can not specify
+            var tempString = ""
+            if model?.state == "OPEN" {
+                tempString = localLanguage(keyString: "进行中")
+            } else if model?.state == "FILLED" {
+                tempString = localLanguage(keyString: "已兑换")
+            } else if model?.state == "CANCELED" {
+                tempString = localLanguage(keyString: "已取消")
+            }
+            cancelButton.setTitle(tempString, for: UIControl.State.normal)
+        }
     }
 }

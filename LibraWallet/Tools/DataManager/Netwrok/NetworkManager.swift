@@ -42,6 +42,17 @@ enum mainRequest {
     case SendViolasTransaction(String)
     /// 获取代币
     case GetViolasTokenList
+    
+    /// 获取钱包已开启代币列表
+    case GetViolasAccountEnableToken(String)
+    /// 获取交易所支持的代币列表
+    case GetMarketSupportCoin
+    /// 获取当前委托
+    case GetCurrentOrder(String, String)
+    /// 获取当前全部委托
+    case GetAllProcessingOrder(String, String)
+    /// 获取订单详情(地址、付出Token地址、接收Token地址、第一条version)
+    case GetOrderDetail(String, String, String, String)
 }
 extension mainRequest:TargetType {
     var baseURL: URL {
@@ -62,10 +73,16 @@ extension mainRequest:TargetType {
              .GetViolasAccountSequenceNumber(_),
              .GetViolasAccountTransactionList(_, _, _),
              .SendViolasTransaction(_),
-             .GetViolasTokenList:
+             .GetViolasTokenList,
+             .GetViolasAccountEnableToken(_):
             return URL(string:"http://52.27.228.84:4000/1.0")!
         case .GetTestCoin(_, _):
             return URL(string:"http://faucet.testnet.libra.org/")!
+        case .GetMarketSupportCoin,
+             .GetCurrentOrder(_, _),
+             .GetAllProcessingOrder(_, _),
+             .GetOrderDetail(_, _, _, _):
+            return URL(string:"http://18.220.66.235:38181/v1")!
         }
     }
     var path: String {
@@ -101,6 +118,16 @@ extension mainRequest:TargetType {
             return "/violas/transaction"
         case .GetViolasTokenList:
             return "/violas/currency"
+        case .GetMarketSupportCoin:
+            return "/prices"
+        case .GetViolasAccountEnableToken(_):
+            return "/violas/module"
+        case .GetCurrentOrder(_, _):
+            return "/orderbook"
+        case .GetAllProcessingOrder(_, _):
+            return "/orders"
+        case .GetOrderDetail(_, _, _, _):
+            return "/orders"
         }
     }
     var method: Moya.Method {
@@ -120,9 +147,13 @@ extension mainRequest:TargetType {
              .GetViolasAccountBalance(_, _),
              .GetViolasAccountSequenceNumber(_),
              .GetViolasAccountTransactionList(_, _, _),
-             .GetViolasTokenList:
+             .GetViolasTokenList,
+             .GetMarketSupportCoin,
+             .GetViolasAccountEnableToken(_),
+             .GetCurrentOrder(_, _),
+             .GetAllProcessingOrder(_, _),
+             .GetOrderDetail(_, _, _, _):
             return .get
-        
         }
     }
     public var validate: Bool {
@@ -188,6 +219,36 @@ extension mainRequest:TargetType {
                                       encoding: JSONEncoding.default)
         case .GetViolasTokenList:
             return .requestPlain
+        case .GetMarketSupportCoin:
+            return .requestPlain
+        case .GetViolasAccountEnableToken(let address):
+            return .requestParameters(parameters: ["addr": address],
+                                      encoding: URLEncoding.queryString)
+        case .GetCurrentOrder(let baseAddress, let changeAddress):
+            return .requestParameters(parameters: ["base": baseAddress,
+                                                   "quote":changeAddress],
+                                      encoding: URLEncoding.queryString)
+        case .GetAllProcessingOrder(let address, let version):
+            if version.isEmpty == true {
+                return .requestParameters(parameters: ["user": address,
+                                                       "state":0,
+                                                       "limit":10],
+                                          encoding: URLEncoding.queryString)
+            } else {
+                return .requestParameters(parameters: ["user": address,
+                                                       "state":0,
+                                                       "limit":10,
+                                                       "version":version],
+                                          encoding: URLEncoding.queryString)
+            }
+        case .GetOrderDetail(let address, let payContract, let receiveContract, let version):
+            return .requestParameters(parameters: ["user": address,
+                                                   "state":0,
+                                                   "limit":10,
+                                                   "give":payContract,
+                                                   "get":receiveContract,
+                                                   "version":version],
+                                      encoding: URLEncoding.queryString)
         }
     }
     var headers: [String : String]? {

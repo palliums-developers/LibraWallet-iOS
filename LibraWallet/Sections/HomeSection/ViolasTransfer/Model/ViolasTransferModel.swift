@@ -79,7 +79,7 @@ class ViolasTransferModel: NSObject {
             do {
                 let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
                 // 拼接交易
-                let request = LibraTransaction.init(receiveAddress: receiveAddress, amount: amount, sendAddress: wallet.publicKey.toAddress(), sequenceNumber: UInt64(self.sequenceNumber!))
+                let request = ViolasTransaction.init(receiveAddress: receiveAddress, amount: amount, sendAddress: wallet.publicKey.toAddress(), sequenceNumber: UInt64(self.sequenceNumber!))
                 // 签名交易
                 let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
                 self.makeViolasTransaction(signature: signature.toHexString())

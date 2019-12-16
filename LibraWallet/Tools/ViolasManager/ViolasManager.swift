@@ -25,10 +25,10 @@ struct ViolasManager {
     ///
     /// - Parameter mnemonic: 助词数组
     /// - Returns: 钱包对象
-    public static func getWallet(mnemonic: [String]) throws -> LibraWallet {
+    public static func getWallet(mnemonic: [String]) throws -> ViolasHDWallet {
         do {
             let seed = try LibraMnemonic.seed(mnemonic: mnemonic)
-            let wallet = try LibraWallet.init(seed: seed, depth: 0)
+            let wallet = try ViolasHDWallet.init(seed: seed, depth: 0)
             return wallet
         } catch {
             throw error
@@ -63,4 +63,13 @@ struct ViolasManager {
         code.replaceSubrange(range, with: replaceData)
         return code.toHexString()
     }
+    func getViolasTokenExchangeTransactionCode(content: String) -> String {
+        let replaceData = Data.init(Array<UInt8>(hex: content))
+        var code = getProgramCode(content: ViolasExchangeTokenProgramCode)
+        let range = code.index(after: 167)..<( code.endIndex - (code.endIndex - 168 - 32))
+        code.replaceSubrange(range, with: replaceData)
+        print(code.toHexString())
+        return code.toHexString()
+    }
+    
 }

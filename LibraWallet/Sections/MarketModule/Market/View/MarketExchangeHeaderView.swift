@@ -9,6 +9,7 @@
 import UIKit
 protocol MarketExchangeHeaderViewDelegate: NSObjectProtocol {
     func selectToken(button: UIButton)
+    func exchangeToken(payContract: String, receiveContract: String, amount: Double, exchangeAmount: Double)
 }
 class MarketExchangeHeaderView: UITableViewHeaderFooterView {
     weak var delegate: MarketExchangeHeaderViewDelegate?
@@ -42,6 +43,8 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
         backgroundImageView.addSubview(transferFeeSlider)
         
         backgroundImageView.addSubview(confirmButton)
+        NotificationCenter.default.addObserver(self, selector: #selector(textFieldDidChange), name: UITextField.textDidChangeNotification, object: nil)
+
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -183,22 +186,20 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
     lazy var leftCoinButton: UIButton = {
         let button = UIButton(type: .custom)
         // 设置字体
-        button.setTitle(localLanguage(keyString: "BTC"), for: UIControl.State.normal)
+        button.setTitle("---", for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: UIFont.Weight.regular)
         button.setTitleColor(UIColor.init(hex: "3C3848"), for: UIControl.State.normal)
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
-
         button.tag = 20
         return button
     }()
     lazy var rightCoinButton: UIButton = {
         let button = UIButton(type: .custom)
         // 设置字体
-        button.setTitle(localLanguage(keyString: "Violas"), for: UIControl.State.normal)
+        button.setTitle("---", for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: UIFont.Weight.regular)
         button.setTitleColor(UIColor.init(hex: "3C3848"), for: UIControl.State.normal)
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
-
         button.tag = 30
         return button
     }()
@@ -236,6 +237,8 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
         textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_market_transfer_amount_textfield_placeholder"),
                                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C5C8DB"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)])
         textField.keyboardType = .decimalPad
+        textField.delegate = self
+        textField.tag = 10
         return textField
     }()
     lazy var rightAmountTextField: UITextField = {
@@ -245,6 +248,8 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
         textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_market_receive_amount_textfield_placeholder"),
                                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C5C8DB"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)])
         textField.keyboardType = .decimalPad
+        textField.delegate = self
+        textField.tag = 20
         return textField
     }()
 //    lazy var exchangeToAddressSpaceLabel: UILabel = {
@@ -348,7 +353,7 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
         label.textAlignment = NSTextAlignment.center
         let fee = Float(transferFeeMax - transferFeeMin) * Float(0.2) + Float(transferFeeMin)
         let fee8 = NSString.init(format: "%.8f", fee)
-        label.text = "\(fee8) Libra"
+        label.text = "\(fee8) VToken"
         return label
     }()
     lazy var confirmButton: UIButton = {
@@ -363,18 +368,148 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
         button.layer.insertSublayer(colorGradualChange(size: CGSize.init(width: width, height: 40)), at: 0)
         button.layer.cornerRadius = 5
         button.layer.masksToBounds = true
+        button.tag = 100
         return button
     }()
     @objc func slideValueDidChange(slide: UISlider) {
         let fee = Float(transferFeeMax - transferFeeMin) * slide.value + Float(transferFeeMin)
         let fee8 = NSString.init(format: "%.8f", fee)
-        self.transferFeeLabel.text = "\(fee8) Libra"
+        self.transferFeeLabel.text = "\(fee8) VToken"
     }
     @objc func buttonClick(button: UIButton) {
         if button.tag == 50 {
-            
-        } else {
+            guard let tempLeftModel = self.leftTokenModel else {
+                self.makeToast(localLanguage(keyString: "请先选择要兑换的币种"), position: .center)
+                return
+            }
+            guard let tempRightModel = self.rightTokenModel else {
+                self.makeToast(localLanguage(keyString: "请先选择要兑换的币种"), position: .center)
+                return
+            }
+            let tempModel = tempLeftModel
+            self.rightTokenModel = tempModel
+            self.leftTokenModel = tempRightModel
+        } else if button.tag == 20 || button.tag == 30 {
+            self.leftAmountTextField.resignFirstResponder()
+            self.rightAmountTextField.resignFirstResponder()
             self.delegate?.selectToken(button: button)
+        } else {
+            guard let tempLeftModel = self.leftTokenModel else {
+                self.makeToast(localLanguage(keyString: "请先选择要兑换的币种"), position: .center)
+                return
+            }
+            guard let tempRightModel = self.rightTokenModel else {
+                self.makeToast(localLanguage(keyString: "请先选择要兑换的币种"), position: .center)
+                return
+            }
+            guard let payAmountString = leftAmountTextField.text, payAmountString.isEmpty == false, isPurnDouble(string: payAmountString) == true else {
+                return
+            }
+            guard let exchangeAmountString = rightAmountTextField.text, exchangeAmountString.isEmpty == false, isPurnDouble(string: exchangeAmountString) == true else {
+                return
+            }
+            self.delegate?.exchangeToken(payContract: tempLeftModel.addr ?? "",
+                                         receiveContract: tempRightModel.addr ?? "",
+                                         amount: Double(payAmountString)!,
+                                         exchangeAmount: Double(exchangeAmountString)!)
+
         }
+    }
+    var leftTokenModel: MarketSupportCoinDataModel? {
+        didSet {
+            UIView.animate(withDuration: 2) {
+                self.leftCoinButton.setTitle(self.leftTokenModel?.name, for: UIControl.State.normal)
+            }
+            calculateRate()
+            // 点击左边处理右边
+//            guard let exchangeAmountString = rightAmountTextField.text else {
+//                return
+//            }
+            guard let payAmountString = leftAmountTextField.text, payAmountString.isEmpty == false else {
+                return
+            }
+            let payAmount = Double(payAmountString)
+//            let exchangeAmount = Double(exchangeAmountString)
+            let hkd = (payAmount ?? 1) / self.rate
+            rightAmountTextField.text = "\(hkd)"//String.init(format: "%f", hkd)
+        }
+    }
+    var rightTokenModel: MarketSupportCoinDataModel? {
+        didSet {
+            UIView.animate(withDuration: 2) {
+                self.rightCoinButton.setTitle(self.rightTokenModel?.name, for: UIControl.State.normal)
+            }
+            calculateRate()
+            // 点击右边处理左边
+            guard let exchangeAmountString = rightAmountTextField.text, exchangeAmountString.isEmpty == false else {
+                return
+            }
+//            guard let payAmountString = leftAmountTextField.text else {
+//                return
+//            }
+//            let payAmount = Double(payAmountString)
+            let exchangeAmount = Double(exchangeAmountString)
+            let coinOnSat = (exchangeAmount ?? 1) * self.rate
+            leftAmountTextField.text = "\(coinOnSat)"//String.init(format: "%f", coinOnSat)
+        }
+    }
+    var rate: Double = 0
+    func calculateRate() {
+        guard let mainPrice = self.leftTokenModel?.price, mainPrice > 0 else {
+            return
+        }
+        guard let exchangePrice = self.rightTokenModel?.price, exchangePrice > 0 else {
+            return
+        }
+        if mainPrice == exchangePrice {
+            self.rate = 1
+        } else {
+            self.rate = mainPrice * exchangePrice
+        }
+        print("Rate:\(self.rate)")
+    }
+    @objc func textFieldDidChange() {
+        guard let payAmountString = leftAmountTextField.text else {
+            return
+        }
+        guard let exchangeAmountString = rightAmountTextField.text else {
+            return
+        }
+        
+        let payAmount = Double(payAmountString)
+        let exchangeAmount = Double(exchangeAmountString)
+        if leftAmountTextField.isFirstResponder {
+            guard isPurnDouble(string: payAmountString) else {
+                return
+            }
+            //正在编辑左边
+            let hkd = (payAmount ?? 1) * self.rate
+            rightAmountTextField.text = "\(hkd)"//String.init(format: "%f", hkd)
+        } else {
+            guard isPurnDouble(string: exchangeAmountString) else {
+                return
+            }
+            //正在编辑右边
+            let coinOnSat = (exchangeAmount ?? 1) / self.rate
+            leftAmountTextField.text = "\(coinOnSat)"//String.init(format: "%f", coinOnSat)
+        }
+    }
+}
+extension MarketExchangeHeaderView: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let content = textField.text else {
+            return true
+        }
+        let textLength = content.count + string.count - range.length
+        if textField.tag == 10 {
+            if textLength == 0 {
+                rightAmountTextField.text = ""
+            }
+        } else {
+            if textLength == 0 {
+                leftAmountTextField.text = ""
+            }
+        }
+        return true
     }
 }

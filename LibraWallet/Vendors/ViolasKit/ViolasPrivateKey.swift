@@ -1,14 +1,15 @@
 //
-//  LibraPrivateKey.swift
+//  ViolasPrivateKey.swift
 //  LibraWallet
 //
-//  Created by palliums on 2019/9/5.
+//  Created by palliums on 2019/12/13.
 //  Copyright © 2019 palliums. All rights reserved.
 //
 
 import UIKit
 import CryptoSwift
-struct LibraPrivateKey {
+
+struct ViolasPrivateKey {
 
     let raw: Data
 
@@ -16,12 +17,12 @@ struct LibraPrivateKey {
         self.raw = Data.init(bytes: privateKey, count: privateKey.count)
     }
     
-    public func extendedPublicKey() -> LibraPublicKey {
+    public func extendedPublicKey() -> ViolasPublicKey {
         let publicKey = Ed25519.calcPublicKey(secretKey: raw.bytes)
         let publicKeyData = Data.init(bytes: publicKey, count: publicKey.count)
-        return LibraPublicKey.init(data: publicKeyData)
+        return ViolasPublicKey.init(data: publicKeyData)
     }
-    func signTransaction(transaction: RawTransaction, wallet: LibraWallet) throws -> Data {
+    func signTransaction(transaction: ViolasRawTransaction, wallet: ViolasHDWallet) throws -> Data {
         // 待签名交易
         let transactionRaw = transaction.serialize()
         // 交易第一部分(盐sha3计算结果)

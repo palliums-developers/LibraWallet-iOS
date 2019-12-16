@@ -26,6 +26,8 @@ target 'LibraWallet' do
   pod 'Kingfisher'
   pod 'AttributedTextView'
   pod 'Socket.IO-Client-Swift'
+  pod 'Device'
+  pod 'JXSegmentedView'
   # Pods for LibraWallet
 
   target 'LibraWalletTests' do

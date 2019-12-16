@@ -113,9 +113,9 @@ class OrderCenterTableViewCell: UITableViewCell {
     lazy var coinTitleLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
-        label.textColor = UIColor.init(hex: "3C3848")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: UIFont.Weight.regular)
-        label.text = "BBBUSD / AAAUSD"
+//        label.textColor = UIColor.init(hex: "3C3848")
+//        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: UIFont.Weight.regular)
+        label.attributedText = NSAttributedString.init(string: "---")
         return label
     }()
     lazy var cancelButton: UIButton = {
@@ -149,7 +149,7 @@ class OrderCenterTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "BABABA")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = "时间"
+        label.text = localLanguage(keyString: "时间")
         return label
     }()
     lazy var successAmountTitleLabel: UILabel = {
@@ -165,7 +165,7 @@ class OrderCenterTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "BABABA")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = "手续费"
+        label.text = localLanguage(keyString: "手续费")
         return label
     }()
     private lazy var detailImageView : UIImageView = {
@@ -178,7 +178,7 @@ class OrderCenterTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "60606D")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "7.1")
+        label.text = "---"
         return label
     }()
     lazy var amountLabel: UILabel = {
@@ -186,7 +186,7 @@ class OrderCenterTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "60606D")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "200")
+        label.text = "---"
         return label
     }()
     lazy var dateLabel: UILabel = {
@@ -194,7 +194,7 @@ class OrderCenterTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "60606D")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
-        label.text = "01/18 12:06:23"
+        label.text = "---"
         return label
     }()
     lazy var successAmountLabel: UILabel = {
@@ -202,7 +202,7 @@ class OrderCenterTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "60606D")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "200")
+        label.text = "---"
         return label
     }()
     lazy var feeLabel: UILabel = {
@@ -210,7 +210,7 @@ class OrderCenterTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "60606D")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
-        label.text = "01/18 12:06:23"
+        label.text = "---"
         return label
     }()
     lazy var spaceLabel: UILabel = {
@@ -221,11 +221,20 @@ class OrderCenterTableViewCell: UITableViewCell {
     @objc func buttonClick(button: UIButton) {
     }
     //MARK: - 设置数据
-    var dataModel: AddressModel? {
+    var model: MarketOrderDataModel? {
         didSet {
-//            addressLabel.text = dataModel?.address
-//            nameLabel.text = dataModel?.addressName
-//            addressTypeLabel.text = dataModel?.addressType
+            let attString = NSMutableAttributedString.init(string: model?.tokenGiveSymbol ?? "", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 16, weight: .semibold), NSAttributedString.Key.foregroundColor: UIColor.init(hex: "3C3848")])
+            let attString2 = NSAttributedString.init(string: "/", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 16, weight: .regular), NSAttributedString.Key.foregroundColor: UIColor.init(hex: "3C3848")])
+            let attString3 = NSMutableAttributedString.init(string: model?.tokenGetSymbol ?? "", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 12, weight: .regular), NSAttributedString.Key.foregroundColor: UIColor.init(hex: "95969B")])
+            attString.append(attString2)
+            attString.append(attString3)
+            coinTitleLabel.attributedText = attString
+            #warning("此处有amountGive和amountGet，不清楚用哪个")
+            amountLabel.text = model?.amountGet
+            #warning("此处价格待商议")
+            priceLabel.text = "7.1"
+            dateLabel.text = timestampToDateString(timestamp: model?.date ?? 0, dateFormat: "MM/dd HH:mm:ss")
+            successAmountLabel.text = model?.amountFilled
         }
     }
     

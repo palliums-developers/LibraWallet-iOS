@@ -34,6 +34,7 @@ class OrderProcessingView: UIView {
         tableView.estimatedRowHeight = 0;
         tableView.estimatedSectionHeaderHeight = 0;
         tableView.backgroundColor = UIColor.white
+        tableView.register(OrderCenterTableViewCell.classForCoder(), forCellReuseIdentifier: "CellNormal")
         return tableView
     }()
 }

@@ -12,11 +12,16 @@ protocol MarketTableViewManagerDelegate: NSObjectProtocol {
 //    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: ViolasTokenModel)
     func selectToken(button: UIButton)
     func showOrderCenter()
+    func exchangeToken(payContract: String, receiveContract: String, amount: Double, exchangeAmount: Double)
 }
 class MarketTableViewManager: NSObject {
     weak var delegate: MarketTableViewManagerDelegate?
     var dataModel: [ViolasTokenModel]?
     var headerData: LibraWalletManager?
+    var normalLeftModel = MarketSupportCoinDataModel.init(addr: "", name: "---", price: 1, enable: true)
+    
+    var buyOrders: [MarketOrderDataModel]?
+    var sellOrders: [MarketOrderDataModel]?
     deinit {
         print("MarketTableViewManager销毁了")
     }
@@ -49,8 +54,10 @@ extension MarketTableViewManager: UITableViewDelegate {
             identifier = "OthersHeader"
         }
         if let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier) as? MarketExchangeHeaderView {
-//            (header as! AddAssetTableViewHeader).model = self.headerData
             header.delegate = self
+            if header.leftTokenModel == nil {
+                header.leftTokenModel = self.normalLeftModel
+            }
             return header
         } else if let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier) as? MarketMyOrderHeaderView {
 //            (header as! AddAssetTableViewHeader).model = self.headerData
@@ -85,8 +92,10 @@ extension MarketTableViewManager: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
             return 0
+        } else if section == 1 {
+            return buyOrders?.count ?? 0 > 5 ? 5:(buyOrders?.count ?? 0)
         } else {
-            return dataModel?.count ?? 5
+            return sellOrders?.count ?? 0 > 5 ? 5:(sellOrders?.count ?? 0)
         }
     }
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -101,13 +110,19 @@ extension MarketTableViewManager: UITableViewDataSource {
         } else {
             identifier = "OtherCell"
         }
-        if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? AddAssetViewTableViewCell {
-//            if let data = dataModel, data.isEmpty == false {
-//                (cell ).model = data[indexPath.row]
-//            }
-            cell.selectionStyle = .none
-//            cell.delegate = self
+        if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? MarketMyOrderTableViewCell {
+            if let data = buyOrders, data.isEmpty == false {
+                cell.model = data[indexPath.row]
+            }
             cell.indexPath = indexPath
+            cell.selectionStyle = .none
+            return cell
+        } else if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? MarketOthersOrderTableViewCell {
+            if let data = sellOrders, data.isEmpty == false {
+                cell.model = data[indexPath.row]
+            }
+            cell.indexPath = indexPath
+            cell.selectionStyle = .none
             return cell
         } else {
             if indexPath.section == 0 {
@@ -116,24 +131,21 @@ extension MarketTableViewManager: UITableViewDataSource {
                 return cell
             } else if indexPath.section == 1 {
                 let cell = MarketMyOrderTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
-    //            if let data = dataModel, data.isEmpty == false {
-    //                cell.model = data[indexPath.row]
-    //            }
+                if let data = buyOrders, data.isEmpty == false {
+                    cell.model = data[indexPath.row]
+                }
                 cell.selectionStyle = .none
-    //            cell.delegate = self
                 cell.indexPath = indexPath
                 return cell
             } else {
                 let cell = MarketOthersOrderTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
-    //            if let data = dataModel, data.isEmpty == false {
-    //                cell.model = data[indexPath.row]
-    //            }
+                if let data = sellOrders, data.isEmpty == false {
+                    cell.model = data[indexPath.row]
+                }
                 cell.selectionStyle = .none
-    //            cell.delegate = self
                 cell.indexPath = indexPath
                 return cell
             }
-            
         }
     }
 }
@@ -143,6 +155,13 @@ extension MarketTableViewManager: UITableViewDataSource {
 //    }
 //}
 extension MarketTableViewManager: MarketExchangeHeaderViewDelegate {
+    func exchangeToken(payContract: String, receiveContract: String, amount: Double, exchangeAmount: Double) {
+//                self.delegate?.exchangeToken(payContract: payContract, receiveContract: receiveContract, amount: exchangeAmount)
+        self.delegate?.exchangeToken(payContract: payContract, receiveContract: receiveContract, amount: amount, exchangeAmount: exchangeAmount)
+    }
+//
+//    func exchangeToken(payContract: String, receiveContract: String, amount: String) {
+//    }
     func selectToken(button: UIButton) {
         self.delegate?.selectToken(button: button)
     }
