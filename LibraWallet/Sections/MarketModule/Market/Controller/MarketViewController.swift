@@ -38,14 +38,10 @@ class MarketViewController: UIViewController {
         closeSocket()
     }
     func addSocket() {
-        ViolasSocketManager.shared.openSocket()
-        ViolasSocketManager.shared.addMarketListening { result in
-            print(result)
-        }
-        ViolasSocketManager.shared.getMarketData(address: "")
+        self.dataModel.addSocket()
     }
     func closeSocket() {
-        ViolasSocketManager.shared.stopSocket()
+        self.dataModel.removeSocket()
     }
     //网络请求、数据模型
     lazy var dataModel: MarketModel = {
@@ -70,11 +66,69 @@ class MarketViewController: UIViewController {
     }
     var manager: SocketManager?
     var myContext = 0
-    typealias nextActionClosure = (MarketSupportCoinDataModel) -> Void
+    typealias nextActionClosure = ([MarketSupportCoinDataModel]) -> Void
     var actionClosure: nextActionClosure?
-    
 }
 extension MarketViewController: MarketTableViewManagerDelegate {
+    func selectToken(button: UIButton, leftModelName: String, rightModelName: String) {
+//        self.detailView.makeToastActivity(.center)
+        self.detailView.toastView?.show()
+        self.dataModel.getMarketSupportToken(address: "b45d3e7e8079eb16cd7111b676f0c32294135e4190261240e3fd7b96fe1b9b89")
+        
+        self.actionClosure = { dataModel in
+            var tempDataModel = dataModel
+            if button.tag == 20 {
+                // 左边点击
+//                tempDataModel = dataModel.filter({ item in
+//                    item.enable == true
+//                })
+                #warning("请先注册币")
+            } else {
+                // 右边点击
+                tempDataModel = dataModel.filter({ item in
+                    item.name != leftModelName
+                })
+            }
+            let alert = TokenPickerViewAlert.init(successClosure: { (model) in
+                if let headerView = self.detailView.tableView.headerView(forSection: 0) as? MarketExchangeHeaderView {
+                    if button.tag == 20 {
+                        // 移除之前监听
+                        if let payContract = headerView.leftTokenModel?.addr, let exchangeContract = headerView.rightTokenModel?.addr, payContract.isEmpty == false, exchangeContract.isEmpty == false {
+                            print("移除之前监听")
+                            self.dataModel.removeDepthsLisening(payContract: payContract, exchangeContract: exchangeContract)
+                        } else {
+                            // 之前无监听
+                            print("之前无监听")
+                        }
+                        headerView.leftTokenModel = model
+                        // 右边设置为空
+                        if headerView.rightTokenModel?.name == headerView.leftTokenModel?.name {
+                            headerView.rightTokenModel = nil
+                        }
+                    } else {
+                        // 移除之前监听
+                        if let payContract = headerView.leftTokenModel?.addr, let exchangeContract = headerView.rightTokenModel?.addr, payContract.isEmpty == false, exchangeContract.isEmpty == false {
+                            print("移除之前监听")
+                            self.dataModel.removeDepthsLisening(payContract: payContract, exchangeContract: exchangeContract)
+                        } else {
+                            // 之前无监听
+                            print("之前无监听")
+                        }
+                        headerView.rightTokenModel = model
+                    }
+                    // 添加监听
+                    if let payContract = headerView.leftTokenModel?.addr, let exchangeContract = headerView.rightTokenModel?.addr, payContract.isEmpty == false, exchangeContract.isEmpty == false {
+                        print("添加监听")
+//                        self.dataModel.getMarketData(address: "b45d3e7e8079eb16cd7111b676f0c32294135e4190261240e3fd7b96fe1b9b89", payContract: payContract, exchangeContract: exchangeContract)
+                        self.dataModel.addDepthsLisening(payContract: payContract, exchangeContract: exchangeContract)
+                    }
+                }
+            }, data: tempDataModel)
+            alert.show()
+            alert.showAnimation()
+        }
+    }
+    
     func exchangeToken(payContract: String, receiveContract: String, amount: Double, exchangeAmount: Double) {
         let menmonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
         self.dataModel.exchangeViolasTokenTransaction(sendAddress: "b45d3e7e8079eb16cd7111b676f0c32294135e4190261240e3fd7b96fe1b9b89",
@@ -90,31 +144,12 @@ extension MarketViewController: MarketTableViewManagerDelegate {
 //        self.dataModel.e
         
     }
-    func selectToken(button: UIButton) {
-
-//        if button.tag == 20 {
-//            ViolasSocketManager.shared.openSocket()
-//            ViolasSocketManager.shared.addMarketListening { (result) in
-//                print(result)
-//            }
-//        } else {
-//            ViolasSocketManager.shared.getMarketData(address: "")
-//        }
-        self.detailView.makeToastActivity(.center)
-        self.dataModel.getMarketSupportToken(address: "b45d3e7e8079eb16cd7111b676f0c32294135e4190261240e3fd7b96fe1b9b89")
-        self.actionClosure = { model in
-            if let headerView = self.detailView.tableView.headerView(forSection: 0) as? MarketExchangeHeaderView {
-                if button.tag == 20 {
-                    headerView.leftTokenModel = model
-                } else {
-                    headerView.rightTokenModel = model
-                }
-            }
-        }
-//        self.dataModel.getCurrentOrder(baseAddress: "0x07e92f79c67fdd6b80ed9103636a49511363de8c873bc709966fffb2e3fcd095", exchangeAddress: "0x4ce68dd6e81b400a4edf4146307b10e5030a372414fd49b1accecc0767753070")
-    }
     func showOrderCenter() {
-        let vc = OrderProcessingViewController()
+//        let vc = OrderProcessingViewController()
+//        vc.hidesBottomBarWhenPushed = true
+//        self.navigationController?.pushViewController(vc, animated: true)
+        
+        let vc = OrderCenterViewController()
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
@@ -158,30 +193,30 @@ extension MarketViewController {
                 print(error.localizedDescription)
                 // 数据返回状态异常
             }
-            self.detailView.hideToastActivity()
+//            self.detailView.hideToastActivity()
+            self.detailView.toastView?.hide()
             return
         }
         let type = jsonData.value(forKey: "type") as! String
         
         if type == "GetTokenList" {
+            self.detailView.toastView?.hide()
             if let tempData = jsonData.value(forKey: "data") as? [MarketSupportCoinDataModel] {
-//                self.detailView.tableView.reloadData()
-                let alert = TokenPickerViewAlert.init(successClosure: { (model) in
-                    if let action = self.actionClosure {
-                        action(model)
-                    }
-                }, data: tempData)
-                alert.show()
-                alert.showAnimation()
+                if let action = self.actionClosure {
+                    action(tempData)
+                }
             }
         } else if type == "GetCurrentOrder" {
+            self.detailView.toastView?.hide()
             if let tempData = jsonData.value(forKey: "data") as? MarketOrderModel {
-//                self.detailView.tableView.reloadData()
                 self.tableViewManager.buyOrders = tempData.buys
                 self.tableViewManager.sellOrders = tempData.sells
                 self.detailView.tableView.reloadData()
             }
         }
-        self.detailView.hideToastActivity()
+//        self.detailView.hideToastActivity()
     }
+}
+extension MarketViewController: MarketExchangeHeaderViewDelegate {
+    
 }

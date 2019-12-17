@@ -12,8 +12,8 @@ protocol OrderDetailTableViewManagerDelegate: NSObjectProtocol {
 }
 class OrderDetailTableViewManager: NSObject {
     weak var delegate: OrderDetailTableViewManagerDelegate?
-    var dataModel: [MarketOrderDataModel]?
-    var headerData: MarketOrderDataModel?
+    var dataModel: [OrderDetailDataModel]?
+//    var headerData: MarketOrderDataModel?
     deinit {
         print("OrderProcessingTableViewManager销毁了")
     }
@@ -27,27 +27,27 @@ extension OrderDetailTableViewManager: UITableViewDelegate {
 //        let data = self.dataModel![indexPath.row]
 //        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, address: data.address ?? "")
     }
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let identifier = "Header"
-        if let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier) as? OrderDetailHeaderView {
-            header.model = self.headerData
-            return header
-        } else {
-            let header = OrderDetailHeaderView.init(reuseIdentifier: identifier)
-            header.model = self.headerData
-            return header
-        }
-    }
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 230
-    }
-    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        let view = UIView.init()
-        return view
-    }
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 0.001
-    }
+//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+//        let identifier = "Header"
+//        if let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier) as? OrderDetailHeaderView {
+//            header.model = self.headerData
+//            return header
+//        } else {
+//            let header = OrderDetailHeaderView.init(reuseIdentifier: identifier)
+//            header.model = self.headerData
+//            return header
+//        }
+//    }
+//    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+//        return 230
+//    }
+//    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+//        let view = UIView.init()
+//        return view
+//    }
+//    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+//        return 0.001
+//    }
 }
 extension OrderDetailTableViewManager: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

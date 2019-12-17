@@ -95,7 +95,7 @@ class VTokenViewModel: NSObject {
     @objc func getMoreReceive() {
         dataOffset += 1
         detailView.tableView.mj_footer.beginRefreshing()
-        dataModel.getViolasTransactionHistory(address: (wallet?.walletAddress)!, page: dataOffset, pageSize: 10, requestStatus: 0)
+        dataModel.getViolasTransactionHistory(address: (wallet?.walletAddress)!, page: dataOffset, pageSize: 10, requestStatus: 1)
     }
     var wallet: LibraWalletManager?
 }

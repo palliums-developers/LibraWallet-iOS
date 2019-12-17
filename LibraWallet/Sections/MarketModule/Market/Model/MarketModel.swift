@@ -19,8 +19,10 @@ struct MarketOrderDataModel: Codable {
     var tokenGiveSymbol: String?
     var amountGive: String?
     var version: String?
-    var date: Int?
-    var update_date: Int?
+//    var date: Int?
+//    var update_date: Int?
+    var date: String?
+    var update_date: String?
     var update_version: String?
     var amountFilled: String?
 }
@@ -39,6 +41,10 @@ struct MarketSupportCoinDataModel: Codable {
     var price: Double?
     // 自行添加
     var enable: Bool?
+}
+struct MarketResponseMainModel: Codable {
+    var orders: [MarketOrderDataModel]?
+    var depths: MarketOrderModel?
 }
 struct MarketSupportCoinMainModel: Codable {
     
@@ -61,13 +67,15 @@ class MarketModel: NSObject {
         group.notify(queue: quene) {
             print("回到该队列中执行")
             DispatchQueue.main.async(execute: {
-                guard let walletTokens = self.walletEnableTokens else {
-                    return
-                }
+//                guard let walletTokens = self.walletEnableTokens else {
+//                    return
+//                }
                 guard let marketTokens = self.marketEnableTokens else {
                     return
                 }
-                let result = self.rebuiltData(walletTokens: walletTokens, marketTokens: marketTokens)
+//                let result = self.rebuiltData(walletTokens: walletTokens, marketTokens: marketTokens)
+                let result = self.rebuiltData(walletTokens: [""], marketTokens: marketTokens)
+
                 let data = setKVOData(type: "GetTokenList", data: result)
                 self.setValue(data, forKey: "dataDic")
             })
@@ -79,7 +87,6 @@ class MarketModel: NSObject {
             switch  result {
             case let .success(response):
                 do {
-                    print(try response.mapString())
                     let json = try response.map([MarketSupportCoinDataModel].self)
                     guard json.isEmpty == false else {
                         let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: "GetMarketEnableCoin")
@@ -112,7 +119,6 @@ class MarketModel: NSObject {
             switch  result {
             case let .success(response):
                 do {
-                    print(try response.mapString())
                     let json = try response.map(ViolasAccountEnableTokenResponseModel.self)
                     guard json.code == 2000 else {
                         let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "GetWalletEnableCoin")
@@ -163,7 +169,6 @@ class MarketModel: NSObject {
             switch  result {
             case let .success(response):
                 do {
-                    print(try response.mapString())
                     let json = try response.map(MarketOrderModel.self)
 //                    guard json. == 2000 else {
 //                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "GetCurrentOrder")
@@ -301,7 +306,46 @@ class MarketModel: NSObject {
         }
         self.requests.append(request)
     }
-    
+    func addSocket() {
+        ViolasSocketManager.shared.openSocket { result in
+            print(result)
+        }
+        ViolasSocketManager.shared.addMarketListening { result in
+            print(result)
+            do {
+                let modelObject = try JSONDecoder().decode(MarketResponseMainModel.self, from: result)
+                print(modelObject)
+            } catch {
+                print(error.localizedDescription)
+            }
+
+        }
+        ViolasSocketManager.shared.addDepthsListening { result in
+            print(result)
+            do {
+                let modelObject = try JSONDecoder().decode(MarketOrderModel.self, from: result)
+                print(modelObject)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    func removeSocket() {
+        ViolasSocketManager.shared.stopSocket()
+    }
+    func getMarketData(address: String, payContract: String, exchangeContract: String) {
+        ViolasSocketManager.shared.getMarketData(address: address,
+                                                 payContract: payContract,
+                                                 exchangeContract: exchangeContract)
+    }
+    func addDepthsLisening(payContract: String, exchangeContract: String) {
+        ViolasSocketManager.shared.addListeningData(payContract: payContract,
+                                                    exchangeContract: exchangeContract)
+    }
+    func removeDepthsLisening(payContract: String, exchangeContract: String) {
+        ViolasSocketManager.shared.removeListeningData(payContract: payContract,
+                                                       exchangeContract: exchangeContract)
+    }
     deinit {
         requests.forEach { cancellable in
             cancellable.cancel()

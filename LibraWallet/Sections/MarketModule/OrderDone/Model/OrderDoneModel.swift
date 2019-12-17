@@ -1,38 +1,31 @@
 //
-//  OrderDetailModel.swift
+//  OrderDoneModel.swift
 //  LibraWallet
 //
-//  Created by palliums on 2019/12/10.
+//  Created by palliums on 2019/12/17.
 //  Copyright © 2019 palliums. All rights reserved.
 //
 
 import UIKit
 import Moya
-struct OrderDetailDataModel: Codable {
-    var version: String?
-    var date: Int?
-    var amount: String?
-}
-struct OrderDetailMainModel: Codable {
-    var trades: [OrderDetailDataModel]?
-}
-class OrderDetailModel: NSObject {
+class OrderDoneModel: NSObject {
     private var requests: [Cancellable] = []
     @objc var dataDic: NSMutableDictionary = [:]
-    func getOrderDetail(address: String, version: String, page: Int, requestStatus: Int) {
-        let type = requestStatus == 0 ? "OrderDetailOrigin":"OrderDetailMore"
-        let request = mainProvide.request(.GetOrderDetail(version, page)) {[weak self](result) in
+    private var sequenceNumber: Int?
+    func getAllDoneOrder(address: String, version: String) {
+        let type = version.isEmpty == true ? "GetAllDoneOrderOrigin":"GetAllDoneOrderMore"
+        let request = mainProvide.request(.GetAllDoneOrder(address, version)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
                     print(try response.mapString())
-                    let json = try response.map(OrderDetailMainModel.self)
-                    guard json.trades?.isEmpty == false else {
-                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: "GetCurrentOrder")
+                    let json = try response.map(AllProcessingOrderMainModel.self)
+                    guard json.orders?.isEmpty == false else {
+                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: type)
                         self?.setValue(data, forKey: "dataDic")
                         return
                     }
-                    let data = setKVOData(type: type, data: json.trades)
+                    let data = setKVOData(type: type, data: json.orders)
                     self?.setValue(data, forKey: "dataDic")
                 } catch {
                     print("\(type)_解析异常\(error.localizedDescription)")
@@ -55,6 +48,6 @@ class OrderDetailModel: NSObject {
             cancellable.cancel()
         }
         requests.removeAll()
-        print("OrderDetailModel销毁了")
+        print("OrderDoneModel销毁了")
     }
 }

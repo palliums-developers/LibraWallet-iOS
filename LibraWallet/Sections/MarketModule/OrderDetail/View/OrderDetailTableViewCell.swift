@@ -139,11 +139,11 @@ class OrderDetailTableViewCell: UITableViewCell {
     @objc func buttonClick(button: UIButton) {
     }
     //MARK: - 设置数据
-    var model: MarketOrderDataModel? {
+    var model: OrderDetailDataModel? {
         didSet {
             dateLabel.text = timestampToDateString(timestamp: model?.date ?? 0, dateFormat: "MM/dd HH:mm:ss")
             priceLabel.text = "7.1"
-            amountLabel.text = model?.amountGet
+            amountLabel.text = model?.amount
         }
     }
     

@@ -8,7 +8,7 @@
 
 import UIKit
 protocol MarketExchangeHeaderViewDelegate: NSObjectProtocol {
-    func selectToken(button: UIButton)
+    func selectToken(button: UIButton, leftModelName: String, rightModelName: String)
     func exchangeToken(payContract: String, receiveContract: String, amount: Double, exchangeAmount: Double)
 }
 class MarketExchangeHeaderView: UITableViewHeaderFooterView {
@@ -189,7 +189,7 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
         button.setTitle("---", for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: UIFont.Weight.regular)
         button.setTitleColor(UIColor.init(hex: "3C3848"), for: UIControl.State.normal)
-        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
+        button.addTarget(self, action: #selector(selectExchangeToken(button:)), for: UIControl.Event.touchUpInside)
         button.tag = 20
         return button
     }()
@@ -199,7 +199,7 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
         button.setTitle("---", for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: UIFont.Weight.regular)
         button.setTitleColor(UIColor.init(hex: "3C3848"), for: UIControl.State.normal)
-        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
+        button.addTarget(self, action: #selector(selectExchangeToken(button:)), for: UIControl.Event.touchUpInside)
         button.tag = 30
         return button
     }()
@@ -386,14 +386,15 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
                 self.makeToast(localLanguage(keyString: "请先选择要兑换的币种"), position: .center)
                 return
             }
+            guard self.rightTokenModel?.enable == true else {
+                self.makeToast(localLanguage(keyString: "此币未开启、或余额为0,不能调换"), position: .center)
+                return
+            }
             let tempModel = tempLeftModel
             self.rightTokenModel = tempModel
             self.leftTokenModel = tempRightModel
-        } else if button.tag == 20 || button.tag == 30 {
-            self.leftAmountTextField.resignFirstResponder()
-            self.rightAmountTextField.resignFirstResponder()
-            self.delegate?.selectToken(button: button)
         } else {
+            // 兑换
             guard let tempLeftModel = self.leftTokenModel else {
                 self.makeToast(localLanguage(keyString: "请先选择要兑换的币种"), position: .center)
                 return
@@ -415,33 +416,43 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
 
         }
     }
+    @objc func selectExchangeToken(button: UIButton) {
+        // 选择要兑换的币
+        self.leftAmountTextField.resignFirstResponder()
+        self.rightAmountTextField.resignFirstResponder()
+        if button.tag == 30 {
+            guard self.leftTokenModel?.name != "---" else {
+                self.makeToast(localLanguage(keyString: "请先选择要付出的代币"), position: .center)
+                return
+            }
+        }
+        self.delegate?.selectToken(button: button, leftModelName: self.leftTokenModel?.name ?? "---", rightModelName: self.rightTokenModel?.name ?? "---")
+    }
+    
     var leftTokenModel: MarketSupportCoinDataModel? {
         didSet {
             UIView.animate(withDuration: 2) {
                 self.leftCoinButton.setTitle(self.leftTokenModel?.name, for: UIControl.State.normal)
             }
             calculateRate()
-            // 点击左边处理右边
-//            guard let exchangeAmountString = rightAmountTextField.text else {
-//                return
-//            }
-            guard let payAmountString = leftAmountTextField.text, payAmountString.isEmpty == false else {
+            // 点击左边处理左边
+            guard let payAmountString = rightAmountTextField.text, payAmountString.isEmpty == false else {
                 return
             }
             let payAmount = Double(payAmountString)
 //            let exchangeAmount = Double(exchangeAmountString)
             let hkd = (payAmount ?? 1) / self.rate
-            rightAmountTextField.text = "\(hkd)"//String.init(format: "%f", hkd)
+            leftAmountTextField.text = "\(hkd)"//String.init(format: "%f", hkd)
         }
     }
     var rightTokenModel: MarketSupportCoinDataModel? {
         didSet {
             UIView.animate(withDuration: 2) {
-                self.rightCoinButton.setTitle(self.rightTokenModel?.name, for: UIControl.State.normal)
+                self.rightCoinButton.setTitle(self.rightTokenModel?.name ?? "---", for: UIControl.State.normal)
             }
             calculateRate()
-            // 点击右边处理左边
-            guard let exchangeAmountString = rightAmountTextField.text, exchangeAmountString.isEmpty == false else {
+            // 点击右边处理右边
+            guard let exchangeAmountString = leftAmountTextField.text, exchangeAmountString.isEmpty == false else {
                 return
             }
 //            guard let payAmountString = leftAmountTextField.text else {
@@ -450,7 +461,7 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
 //            let payAmount = Double(payAmountString)
             let exchangeAmount = Double(exchangeAmountString)
             let coinOnSat = (exchangeAmount ?? 1) * self.rate
-            leftAmountTextField.text = "\(coinOnSat)"//String.init(format: "%f", coinOnSat)
+            rightAmountTextField.text = "\(coinOnSat)"//String.init(format: "%f", coinOnSat)
         }
     }
     var rate: Double = 0
@@ -464,7 +475,7 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
         if mainPrice == exchangePrice {
             self.rate = 1
         } else {
-            self.rate = mainPrice * exchangePrice
+            self.rate = mainPrice / exchangePrice
         }
         print("Rate:\(self.rate)")
     }

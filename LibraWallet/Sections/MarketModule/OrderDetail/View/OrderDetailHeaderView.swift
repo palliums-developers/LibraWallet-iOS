@@ -8,12 +8,35 @@
 
 import UIKit
 
-class OrderDetailHeaderView: UITableViewHeaderFooterView {
-    override init(reuseIdentifier: String?) {
-        super.init(reuseIdentifier: reuseIdentifier)
-        contentView.backgroundColor = UIColor.white
-//        self.addShadow()
-        contentView.addSubview(backgroundImageView)
+class OrderDetailHeaderView: UIView {
+//    override init(reuseIdentifier: String?) {
+//        super.init(reuseIdentifier: reuseIdentifier)
+//        contentView.backgroundColor = UIColor.white
+////        self.addShadow()
+//        contentView.addSubview(backgroundImageView)
+//
+//        backgroundImageView.addSubview(coinTitleLabel)
+//        backgroundImageView.addSubview(cancelButton)
+//        backgroundImageView.addSubview(priceTitleLabel)
+//        backgroundImageView.addSubview(amountTitleLabel)
+//        backgroundImageView.addSubview(dateTitleLabel)
+//        backgroundImageView.addSubview(successAmountTitleLabel)
+//        backgroundImageView.addSubview(feeTitleLabel)
+//
+//        backgroundImageView.addSubview(priceLabel)
+//        backgroundImageView.addSubview(amountLabel)
+//        backgroundImageView.addSubview(dateLabel)
+//        backgroundImageView.addSubview(successAmountLabel)
+//        backgroundImageView.addSubview(feeLabel)
+//
+//        backgroundImageView.addSubview(checkOnlineButton)
+//
+//        contentView.addSubview(orderTitleLabel)
+//    }
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        backgroundColor = UIColor.white
+        addSubview(backgroundImageView)
         
         backgroundImageView.addSubview(coinTitleLabel)
         backgroundImageView.addSubview(cancelButton)
@@ -31,7 +54,7 @@ class OrderDetailHeaderView: UITableViewHeaderFooterView {
         
         backgroundImageView.addSubview(checkOnlineButton)
         
-        contentView.addSubview(orderTitleLabel)
+        addSubview(orderTitleLabel)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -43,7 +66,7 @@ class OrderDetailHeaderView: UITableViewHeaderFooterView {
     override func layoutSubviews() {
         super.layoutSubviews()
         backgroundImageView.snp.makeConstraints { (make) in
-            make.top.left.right.equalTo(contentView)
+            make.top.left.right.equalTo(self)
             make.height.equalTo(186)
         }
         coinTitleLabel.snp.makeConstraints { (make) in
@@ -99,8 +122,8 @@ class OrderDetailHeaderView: UITableViewHeaderFooterView {
             make.bottom.equalTo(backgroundImageView.snp.bottom).offset(-25)
         }
         orderTitleLabel.snp.makeConstraints { (make) in
-            make.bottom.equalTo(contentView)
-            make.left.equalTo(contentView).offset(15)
+            make.bottom.equalTo(self)
+            make.left.equalTo(self).offset(15)
         }
     }
     //MARK: - 懒加载对象
@@ -248,7 +271,7 @@ class OrderDetailHeaderView: UITableViewHeaderFooterView {
             attString.append(attString2)
             attString.append(attString3)
             coinTitleLabel.attributedText = attString
-            dateLabel.text = timestampToDateString(timestamp: model?.date ?? 0, dateFormat: "MM/dd HH:mm:ss")
+//            dateLabel.text = timestampToDateString(timestamp: model?.date ?? 0, dateFormat: "MM/dd HH:mm:ss")
             priceLabel.text = "7.1"
             amountLabel.text = model?.amountGet
             successAmountLabel.text = model?.amountFilled

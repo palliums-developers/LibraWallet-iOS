@@ -7,8 +7,12 @@
 //
 
 import UIKit
-
+protocol OrderCenterTableViewCellDelegate: NSObjectProtocol {
+    func cancelOrder(indexPath: IndexPath, model: MarketOrderDataModel)
+}
 class OrderCenterTableViewCell: UITableViewCell {
+    weak var delegate: OrderCenterTableViewCellDelegate?
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.backgroundColor = UIColor.white
@@ -219,7 +223,16 @@ class OrderCenterTableViewCell: UITableViewCell {
         return label
     }()
     @objc func buttonClick(button: UIButton) {
+        if reuseIdentifier == "OrderProcessingCell" {
+            print("OrderProcessingCell")
+            if let tempIndexPath = self.indexPath, let tempModel = self.model {
+                self.delegate?.cancelOrder(indexPath: tempIndexPath, model: tempModel)
+            }
+        } else {
+            print("OrderDoneCell")
+        }
     }
+    var indexPath: IndexPath?
     //MARK: - 设置数据
     var model: MarketOrderDataModel? {
         didSet {
@@ -233,9 +246,18 @@ class OrderCenterTableViewCell: UITableViewCell {
             amountLabel.text = model?.amountGet
             #warning("此处价格待商议")
             priceLabel.text = "7.1"
-            dateLabel.text = timestampToDateString(timestamp: model?.date ?? 0, dateFormat: "MM/dd HH:mm:ss")
+//            dateLabel.text = timestampToDateString(timestamp: model?.date ?? 0, dateFormat: "MM/dd HH:mm:ss")
             successAmountLabel.text = model?.amountFilled
+            if model?.state == "OPEN" {
+                cancelButton.setTitle(localLanguage(keyString: "撤销"), for: UIControl.State.normal)
+                cancelButton.setTitleColor(UIColor.init(hex: "726BD9"), for: UIControl.State.normal)
+            } else if model?.state == "FILLED" {
+                cancelButton.setTitle(localLanguage(keyString: "已完成"), for: UIControl.State.normal)
+                cancelButton.setTitleColor(UIColor.init(hex: "63636F"), for: UIControl.State.normal)
+            } else if model?.state == "CANCELED" {
+                cancelButton.setTitle(localLanguage(keyString: "已取消"), for: UIControl.State.normal)
+                cancelButton.setTitleColor(UIColor.init(hex: "63636F"), for: UIControl.State.normal)
+            }
         }
     }
-    
 }

@@ -57,4 +57,8 @@ class MarketView: UIView {
         tableView.register(MarketOthersOrderTableViewCell.classForCoder(), forCellReuseIdentifier: "OtherCell")
         return tableView
     }()
+    var toastView: ToastView? {
+        let toast = ToastView.init()
+        return toast
+    }
 }

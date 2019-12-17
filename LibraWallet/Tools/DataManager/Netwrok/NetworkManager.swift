@@ -47,12 +47,14 @@ enum mainRequest {
     case GetViolasAccountEnableToken(String)
     /// 获取交易所支持的代币列表
     case GetMarketSupportCoin
-    /// 获取当前委托
+    /// 获取当前委托（暂废）
     case GetCurrentOrder(String, String)
-    /// 获取当前全部委托
+    /// 获取当前进行中全部委托（地址、Version）
     case GetAllProcessingOrder(String, String)
-    /// 获取订单详情(地址、付出Token地址、接收Token地址、第一条version)
-    case GetOrderDetail(String, String, String, String)
+    /// 获取订单详情(地址、页数)
+    case GetOrderDetail(String, Int)
+    /// 获取已完成订单
+    case GetAllDoneOrder(String, String)
 }
 extension mainRequest:TargetType {
     var baseURL: URL {
@@ -81,7 +83,8 @@ extension mainRequest:TargetType {
         case .GetMarketSupportCoin,
              .GetCurrentOrder(_, _),
              .GetAllProcessingOrder(_, _),
-             .GetOrderDetail(_, _, _, _):
+             .GetOrderDetail(_, _),
+             .GetAllDoneOrder(_, _):
             return URL(string:"http://18.220.66.235:38181/v1")!
         }
     }
@@ -126,7 +129,9 @@ extension mainRequest:TargetType {
             return "/orderbook"
         case .GetAllProcessingOrder(_, _):
             return "/orders"
-        case .GetOrderDetail(_, _, _, _):
+        case .GetOrderDetail(_, _):
+            return "/trades"
+        case .GetAllDoneOrder(_, _):
             return "/orders"
         }
     }
@@ -152,7 +157,8 @@ extension mainRequest:TargetType {
              .GetViolasAccountEnableToken(_),
              .GetCurrentOrder(_, _),
              .GetAllProcessingOrder(_, _),
-             .GetOrderDetail(_, _, _, _):
+             .GetOrderDetail(_, _),
+             .GetAllDoneOrder(_, _):
             return .get
         }
     }
@@ -241,17 +247,28 @@ extension mainRequest:TargetType {
                                                        "version":version],
                                           encoding: URLEncoding.queryString)
             }
-        case .GetOrderDetail(let address, let payContract, let receiveContract, let version):
-            return .requestParameters(parameters: ["user": address,
-                                                   "state":0,
-                                                   "limit":10,
-                                                   "give":payContract,
-                                                   "get":receiveContract,
-                                                   "version":version],
+        case .GetOrderDetail(let version, let page):
+            return .requestParameters(parameters: ["version":version,
+                                                   "pagesize":10,
+                                                   "pagenum":page],
                                       encoding: URLEncoding.queryString)
+        case .GetAllDoneOrder(let address, let version):
+            if version.isEmpty == true {
+                return .requestParameters(parameters: ["user": address,
+                                                       "state":3,
+                                                       "limit":10],
+                                          encoding: URLEncoding.queryString)
+            } else {
+                return .requestParameters(parameters: ["user": address,
+                                                       "state":3,
+                                                       "limit":10,
+                                                       "version":version],
+                                          encoding: URLEncoding.queryString)
+            }
         }
     }
     var headers: [String : String]? {
         return ["Content-Type":"application/json"]
     }
 }
+//pagenum=1&pagesize=1

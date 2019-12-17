@@ -48,7 +48,7 @@ class TokenPickerViewAlert: UIView {
         whiteBackgroundView.snp.makeConstraints { (make) in
             make.left.right.equalTo(self)
             make.height.equalTo(358)
-            make.bottom.equalTo(self).offset(358)
+            make.bottom.equalTo(self).offset(358).priority(250)
         }
         alertTitleLabel.snp.makeConstraints { (make) in
             make.top.equalTo(whiteBackgroundView).offset(5)

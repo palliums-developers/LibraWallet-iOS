@@ -1,25 +1,23 @@
 //
-//  OrderProcessingTableViewManager.swift
+//  OrderDoneTableViewManager.swift
 //  LibraWallet
 //
-//  Created by palliums on 2019/12/10.
+//  Created by palliums on 2019/12/17.
 //  Copyright © 2019 palliums. All rights reserved.
 //
 
 import UIKit
-protocol OrderProcessingTableViewManagerDelegate: NSObjectProtocol {
+protocol OrderDoneTableViewManagerDelegate: NSObjectProtocol {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: MarketOrderDataModel)
-    func cancelOrder(indexPath: IndexPath, model: MarketOrderDataModel)
-
 }
-class OrderProcessingTableViewManager: NSObject {
-    weak var delegate: OrderProcessingTableViewManagerDelegate?
+class OrderDoneTableViewManager: NSObject {
+    weak var delegate: OrderDoneTableViewManagerDelegate?
     var dataModel: [MarketOrderDataModel]?
     deinit {
-        print("OrderProcessingTableViewManager销毁了")
+        print("OrderDoneTableViewManager销毁了")
     }
 }
-extension OrderProcessingTableViewManager: UITableViewDelegate {
+extension OrderDoneTableViewManager: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 141
     }
@@ -31,19 +29,17 @@ extension OrderProcessingTableViewManager: UITableViewDelegate {
         }
     }
 }
-extension OrderProcessingTableViewManager: UITableViewDataSource {
+extension OrderDoneTableViewManager: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dataModel?.count ?? 0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let identifier = "OrderProcessingCell"
+        let identifier = "OrderDoneCell"
         if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? OrderCenterTableViewCell {
             if let data = dataModel, data.isEmpty == false {
                 cell.model = data[indexPath.row]
             }
             cell.selectionStyle = .none
-            cell.indexPath = indexPath
-            cell.delegate = self
             return cell
         } else {
             let cell = OrderCenterTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
@@ -51,15 +47,7 @@ extension OrderProcessingTableViewManager: UITableViewDataSource {
                 cell.model = data[indexPath.row]
             }
             cell.selectionStyle = .none
-            cell.indexPath = indexPath
-            cell.delegate = self
-            
             return cell
         }
     }
-}
-extension OrderProcessingTableViewManager: OrderCenterTableViewCellDelegate {
-    func cancelOrder(indexPath: IndexPath, model: MarketOrderDataModel) {
-        self.delegate?.cancelOrder(indexPath: indexPath, model: model)
-    }    
 }

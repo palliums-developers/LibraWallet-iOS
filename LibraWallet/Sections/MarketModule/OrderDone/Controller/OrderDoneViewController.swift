@@ -1,51 +1,35 @@
 //
-//  OrderDetailViewController.swift
+//  OrderDoneViewController.swift
 //  LibraWallet
 //
-//  Created by palliums on 2019/12/10.
+//  Created by palliums on 2019/12/17.
 //  Copyright © 2019 palliums. All rights reserved.
 //
 
 import UIKit
+import JXSegmentedView
 import MJRefresh
-class OrderDetailViewController: BaseViewController {
+class OrderDoneViewController: UIViewController {
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        // 设置标题
-        self.title = localLanguage(keyString: "订单详情")
-        // 加载子View
-        self.view.addSubview(self.detailView)
-        self.initKVO()
-        
+
+        // Do any additional setup after loading the view.
     }
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        self.detailView.snp.makeConstraints { (make) in
-            if #available(iOS 11.0, *) {
-                make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
-            } else {
-                make.top.bottom.equalTo(self.view)
-            }
-            make.left.right.equalTo(self.view)
-        }
-    }
-    deinit {
-        print("OrderDetailViewController销毁了")
-    }
-    //网络请求、数据模型
-    lazy var dataModel: OrderDetailModel = {
-        let model = OrderDetailModel.init()
+        //网络请求、数据模型
+    lazy var dataModel: OrderDoneModel = {
+        let model = OrderDoneModel.init()
         return model
     }()
     //tableView管理类
-    lazy var tableViewManager: OrderDetailTableViewManager = {
-        let manager = OrderDetailTableViewManager.init()
+    lazy var tableViewManager: OrderDoneTableViewManager = {
+        let manager = OrderDoneTableViewManager.init()
         manager.delegate = self
         return manager
     }()
     //子View
-    lazy var detailView : OrderDetailView = {
-        let view = OrderDetailView.init()
+    lazy var detailView : OrderDoneView = {
+        let view = OrderDoneView.init()
         view.tableView.delegate = self.tableViewManager
         view.tableView.dataSource = self.tableViewManager
         view.tableView.mj_header = MJRefreshNormalHeader.init(refreshingTarget: self, refreshingAction:  #selector(refreshReceive))
@@ -53,42 +37,39 @@ class OrderDetailViewController: BaseViewController {
         return view
     }()
     @objc func refreshReceive() {
-        dataOffset = 1
         detailView.tableView.mj_footer.resetNoMoreData()
         detailView.tableView.mj_header.beginRefreshing()
-        dataModel.getOrderDetail(address: "b45d3e7e8079eb16cd7111b676f0c32294135e4190261240e3fd7b96fe1b9b89",
-                                 version: self.headerData?.version ?? "",
-                                 page: dataOffset,
-                                 requestStatus: 0)
+        dataModel.getAllDoneOrder(address: "b45d3e7e8079eb16cd7111b676f0c32294135e4190261240e3fd7b96fe1b9b89", version: "")
     }
     @objc func getMoreReceive() {
-        dataOffset += 1
         detailView.tableView.mj_footer.beginRefreshing()
-        dataModel.getOrderDetail(address: "b45d3e7e8079eb16cd7111b676f0c32294135e4190261240e3fd7b96fe1b9b89",
-                                 version: self.headerData?.version ?? "",
-                                 page: dataOffset,
-                                 requestStatus: 1)
-    }
-    var dataOffset: Int = 1
-    var myContext = 0
-    var headerData: MarketOrderDataModel? {
-        didSet {
-            self.detailView.headerView.model = headerData
+        if let version = self.tableViewManager.dataModel?.last?.version {
+            dataModel.getAllDoneOrder(address: "b45d3e7e8079eb16cd7111b676f0c32294135e4190261240e3fd7b96fe1b9b89", version: version)
+        } else {
+            detailView.tableView.mj_footer.endRefreshing()
         }
     }
+    var myContext = 0
+    var firstIn: Bool = true
 }
-extension OrderDetailViewController: OrderDetailTableViewManagerDelegate {
-    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, address: String) {
+extension OrderDoneViewController: OrderDoneTableViewManagerDelegate {
+    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: MarketOrderDataModel) {
+        let vc = OrderDetailViewController()
+        vc.headerData = model
+        self.navigationController?.pushViewController(vc, animated: true)
+//        let menmonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
+//        self.dataModel.cancelTransaction(sendAddress: "b45d3e7e8079eb16cd7111b676f0c32294135e4190261240e3fd7b96fe1b9b89",
+//                                         fee: 0,
+//                                         mnemonic: menmonic,
+//                                         contact: model.tokenGive ?? "",
+//                                         version: model.version ?? "")
     }
 }
-extension OrderDetailViewController {
+extension OrderDoneViewController {
     func initKVO() {
         dataModel.addObserver(self, forKeyPath: "dataDic", options: NSKeyValueObservingOptions.new, context: &myContext)
         self.detailView.makeToastActivity(.center)
-        dataModel.getOrderDetail(address: "b45d3e7e8079eb16cd7111b676f0c32294135e4190261240e3fd7b96fe1b9b89",
-                                 version: self.headerData?.version ?? "",
-                                 page: dataOffset,
-                                 requestStatus: 0)
+        dataModel.getAllDoneOrder(address: "b45d3e7e8079eb16cd7111b676f0c32294135e4190261240e3fd7b96fe1b9b89", version: "")
     }
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?)  {
         
@@ -122,7 +103,6 @@ extension OrderDetailViewController {
                 print(error.localizedDescription)
                 // 数据为空
                 self.detailView.tableView.mj_footer.endRefreshingWithNoMoreData()
-
             } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
                 print(error.localizedDescription)
                 // 数据返回状态异常
@@ -133,16 +113,16 @@ extension OrderDetailViewController {
         }
         let type = jsonData.value(forKey: "type") as! String
         
-        if type == "OrderDetailOrigin" {
-            if let tempData = jsonData.value(forKey: "data") as? [OrderDetailDataModel] {
+        if type == "GetAllDoneOrderOrigin" {
+            if let tempData = jsonData.value(forKey: "data") as? [MarketOrderDataModel] {
             //                self.detailView.tableView.reloadData()
                 self.tableViewManager.dataModel = tempData
                            
                 self.detailView.tableView.reloadData()
+                self.detailView.tableView.mj_header.endRefreshing()
             }
-            self.detailView.tableView.mj_header.endRefreshing()
         } else {
-            guard let tempData = jsonData.value(forKey: "data") as? [OrderDetailDataModel] else {
+            guard let tempData = jsonData.value(forKey: "data") as? [MarketOrderDataModel] else {
                 return
             }
             if let oldData = self.tableViewManager.dataModel, oldData.isEmpty == false {
@@ -153,7 +133,7 @@ extension OrderDetailViewController {
                     insertIndexPath.add(indexPath)
                 }
                 tempArray.addObjects(from: tempData)
-                self.tableViewManager.dataModel = tempArray as? [OrderDetailDataModel]
+                self.tableViewManager.dataModel = tempArray as? [MarketOrderDataModel]
                 self.detailView.tableView.beginUpdates()
                 self.detailView.tableView.insertRows(at: insertIndexPath as! [IndexPath], with: UITableView.RowAnimation.bottom)
                 self.detailView.tableView.endUpdates()
@@ -164,5 +144,30 @@ extension OrderDetailViewController {
             self.detailView.tableView.mj_footer.endRefreshing()
         }
         self.detailView.hideToastActivity()
+    }
+}
+extension OrderDoneViewController: JXSegmentedListContainerViewListDelegate {
+    func listView() -> UIView {
+        return self.detailView
+    }
+    /// 可选实现，列表显示的时候调用
+    func listDidAppear() {
+        //防止重复加载数据
+        guard firstIn == true else {
+            return
+        }
+        self.detailView.makeToastActivity(.center)
+//        let wallet = DataBaseManager.BDManager.getDefaultWallet()
+//        let address = wallet.first?.walletAddress
+//        guard address != nil else {
+//            self.detailView.hideToastActivity()
+//            return
+//        }
+//        self.dataModel.getOrderedList(address: address!, offset: 0, requestStatus: 0)
+        firstIn = false
+    }
+    /// 可选实现，列表消失的时候调用
+    func listDidDisappear() {
+        
     }
 }

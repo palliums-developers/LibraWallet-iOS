@@ -59,7 +59,7 @@ struct ViolasManager {
     func getViolasTransactionCode(content: String) -> String {
         let replaceData = Data.init(Array<UInt8>(hex: content))
         var code = getProgramCode(content: ViolasTransactionProgramCode)
-        let range = code.index(after: 155)..<( code.endIndex - (code.endIndex - 156 - 32))
+        let range = code.index(after: 180)..<( code.endIndex - (code.endIndex - 181 - 32))
         code.replaceSubrange(range, with: replaceData)
         return code.toHexString()
     }
@@ -71,5 +71,11 @@ struct ViolasManager {
         print(code.toHexString())
         return code.toHexString()
     }
-    
+    func getViolasTokenContractLocation(contract: String) -> Int {
+        //7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614
+        let code = getProgramCode(content: ViolasTransactionProgramCode)
+        let range: Range = code.toHexString().range(of: contract)!
+        let location: Int = code.toHexString().distance(from: code.toHexString().startIndex, to: range.lowerBound)
+        return location / 2
+    }
 }

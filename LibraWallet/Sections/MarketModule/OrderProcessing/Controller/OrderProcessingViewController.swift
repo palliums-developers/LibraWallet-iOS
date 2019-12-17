@@ -8,15 +8,12 @@
 
 import UIKit
 import MJRefresh
+import JXSegmentedView
 class OrderProcessingViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        // 设置标题
-//        self.title = localLanguage(keyString: "wallet_wallet_add_navigation_title")
         // 加载子View
-        self.view.addSubview(self.detailView)
-        
-        self.initKVO()
+//        self.view.addSubview(self.detailView)
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -66,19 +63,84 @@ class OrderProcessingViewController: BaseViewController {
         }
     }
     var myContext = 0
+    var firstIn: Bool = true
 }
 extension OrderProcessingViewController: OrderProcessingTableViewManagerDelegate {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: MarketOrderDataModel) {
         let vc = OrderDetailViewController()
         vc.headerData = model
         self.navigationController?.pushViewController(vc, animated: true)
+
+    }
+    func cancelOrder(indexPath: IndexPath, model: MarketOrderDataModel) {
+        
 //        let menmonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
 //        self.dataModel.cancelTransaction(sendAddress: "b45d3e7e8079eb16cd7111b676f0c32294135e4190261240e3fd7b96fe1b9b89",
 //                                         fee: 0,
 //                                         mnemonic: menmonic,
 //                                         contact: model.tokenGive ?? "",
 //                                         version: model.version ?? "")
+        
+        let alertView = UIAlertController.init(title: localLanguage(keyString: "提示"),
+                                               message: localLanguage(keyString: "您确定要取消当前未完成订单吗？"),
+                                               preferredStyle: .alert)
+        let cancelAction = UIAlertAction.init(title:localLanguage(keyString: "wallet_add_asset_alert_cancel_button_title"), style: .default) { okAction in
+        }
+        let confirmAction = UIAlertAction.init(title:localLanguage(keyString: "wallet_add_asset_alert_confirm_button_title"), style: .default) { okAction in
+            self.showPasswordAlert(model: model)
+        }
+        alertView.addAction(cancelAction)
+        alertView.addAction(confirmAction)
+        self.present(alertView, animated: true, completion: nil)
     }
+    func showPasswordAlert(model: MarketOrderDataModel) {
+        let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: localLanguage(keyString: "wallet_type_in_password_content"), preferredStyle: .alert)
+        alertContr.addTextField {
+            (textField: UITextField!) -> Void in
+            textField.placeholder = localLanguage(keyString: "wallet_type_in_password_textfield_placeholder")
+            textField.tintColor = DefaultGreenColor
+            textField.isSecureTextEntry = true
+        }
+        alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_confirm_button_title"), style: .default) { [weak self] clickHandler in
+            let passwordTextField = alertContr.textFields!.first! as UITextField
+            guard let password = passwordTextField.text else {
+                self?.view.makeToast(LibraWalletError.WalletCheckPassword(reason: .passwordInvalidError).localizedDescription,
+                                    position: .center)
+                return
+            }
+            guard password.isEmpty == false else {
+                self?.view.makeToast(LibraWalletError.WalletCheckPassword(reason: .passwordEmptyError).localizedDescription,
+                                    position: .center)
+                return
+            }
+            NSLog("Password:\(password)")
+            do {
+//                let state = try LibraWalletManager.shared.isValidPaymentPassword(walletRootAddress: (self?.model?.walletRootAddress)!, password: password)
+//                guard state == true else {
+//                    self?.view.makeToast(LibraWalletError.WalletCheckPassword(reason: .passwordEmptyError).localizedDescription,
+//                                         position: .center)
+//                    return
+//                }
+                self?.detailView.toastView?.show()
+//                let menmonic = try LibraWalletManager.shared.getMnemonicFromKeychain(walletRootAddress: (self?.model?.walletRootAddress)!)
+//                self?.viewModel.dataModel.publishViolasToken(sendAddress: (self?.model?.walletAddress)!, mnemonic: menmonic, contact: model.address ?? "")
+                let menmonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
+                self?.dataModel.cancelTransaction(sendAddress: "b45d3e7e8079eb16cd7111b676f0c32294135e4190261240e3fd7b96fe1b9b89",
+                                                 fee: 0,
+                                                 mnemonic: menmonic,
+                                                 contact: model.tokenGive ?? "",
+                                                 version: model.version ?? "")
+            } catch {
+                self?.detailView.toastView?.hide()
+            }
+        })
+        alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_cancel_button_title"), style: .cancel){
+            clickHandler in
+            NSLog("点击了取消")
+            })
+        self.present(alertContr, animated: true, completion: nil)
+    }
+
 }
 extension OrderProcessingViewController {
     func initKVO() {
@@ -114,6 +176,8 @@ extension OrderProcessingViewController {
             } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
                 // 解析失败
                 print(error.localizedDescription)
+                self.detailView.toastView?.hide()
+                self.detailView.makeToast(error.localizedDescription, position: .center)
             } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
                 print(error.localizedDescription)
                 // 数据为空
@@ -136,7 +200,7 @@ extension OrderProcessingViewController {
                 self.detailView.tableView.reloadData()
                 self.detailView.tableView.mj_header.endRefreshing()
             }
-        } else {
+        } else if type == "GetAllProcessingOrderMore" {
             guard let tempData = jsonData.value(forKey: "data") as? [MarketOrderDataModel] else {
                 return
             }
@@ -157,7 +221,29 @@ extension OrderProcessingViewController {
                 self.detailView.tableView.reloadData()
             }
             self.detailView.tableView.mj_footer.endRefreshing()
+        } else {
+            self.detailView.toastView?.hide()
+            self.detailView.makeToast(localLanguage(keyString: "取消成功"))
         }
         self.detailView.hideToastActivity()
+    }
+}
+extension OrderProcessingViewController: JXSegmentedListContainerViewListDelegate {
+    func listView() -> UIView {
+        return self.detailView
+    }
+    /// 可选实现，列表显示的时候调用
+    func listDidAppear() {
+        //防止重复加载数据
+        guard firstIn == true else {
+            return
+        }
+        self.detailView.makeToastActivity(.center)
+        dataModel.getAllProcessingOrder(address: "b45d3e7e8079eb16cd7111b676f0c32294135e4190261240e3fd7b96fe1b9b89", version: "")
+        firstIn = false
+    }
+    /// 可选实现，列表消失的时候调用
+    func listDidDisappear() {
+        
     }
 }

@@ -47,16 +47,23 @@ class BTCManagerTests: XCTestCase {
     }
     func testIsValidViolasAddress() {
         let str = "["
-        let result = ViolasManager().isValidViolasAddress(address: str)
+        let result = ViolasManager.isValidViolasAddress(address: str)
         XCTAssertEqual(result, false)
         let str2 = "9db71b006cb300c1682e3a1ab3755,52344fa808b2acd4f53340470a5267bf082"
-        let result2 = ViolasManager().isValidViolasAddress(address: str2)
+        let result2 = ViolasManager.isValidViolasAddress(address: str2)
         XCTAssertEqual(result2, false)
         let str3 = "9db71b006cb300c1682e3a1ab375552344fa808b2acd4f53340470a5267bf082"
-        let result3 = ViolasManager().isValidViolasAddress(address: str3)
+        let result3 = ViolasManager.isValidViolasAddress(address: str3)
         XCTAssertEqual(result3, true)
         let str4 = "9db71b006cb300c1682e3a1ab375552344fa808b2acd4f53340470a5267bf082😊"
-        let result4 = ViolasManager().isValidViolasAddress(address: str4)
+        let result4 = ViolasManager.isValidViolasAddress(address: str4)
         XCTAssertEqual(result4, false)
+    }
+    func testCacul() {
+        let code = getProgramCode(content: ViolasTransactionProgramCode)
+        print(code.toHexString())
+        let range: Range = code.toHexString().range(of: "7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614")!
+        let location: Int = code.toHexString().distance(from: code.toHexString().startIndex, to: range.lowerBound)
+        print("location = \(location)")
     }
 }

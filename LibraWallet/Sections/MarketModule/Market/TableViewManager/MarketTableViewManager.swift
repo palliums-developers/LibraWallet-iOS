@@ -10,7 +10,7 @@ import UIKit
 protocol MarketTableViewManagerDelegate: NSObjectProtocol {
 //    func switchButtonChange(model: ViolasTokenModel, state: Bool, indexPath: IndexPath)
 //    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: ViolasTokenModel)
-    func selectToken(button: UIButton)
+    func selectToken(button: UIButton, leftModelName: String, rightModelName: String)
     func showOrderCenter()
     func exchangeToken(payContract: String, receiveContract: String, amount: Double, exchangeAmount: Double)
 }
@@ -155,15 +155,12 @@ extension MarketTableViewManager: UITableViewDataSource {
 //    }
 //}
 extension MarketTableViewManager: MarketExchangeHeaderViewDelegate {
-    func exchangeToken(payContract: String, receiveContract: String, amount: Double, exchangeAmount: Double) {
-//                self.delegate?.exchangeToken(payContract: payContract, receiveContract: receiveContract, amount: exchangeAmount)
-        self.delegate?.exchangeToken(payContract: payContract, receiveContract: receiveContract, amount: amount, exchangeAmount: exchangeAmount)
+    func selectToken(button: UIButton, leftModelName: String, rightModelName: String) {
+        self.delegate?.selectToken(button: button, leftModelName: leftModelName, rightModelName: rightModelName)
     }
-//
-//    func exchangeToken(payContract: String, receiveContract: String, amount: String) {
-//    }
-    func selectToken(button: UIButton) {
-        self.delegate?.selectToken(button: button)
+    
+    func exchangeToken(payContract: String, receiveContract: String, amount: Double, exchangeAmount: Double) {
+        self.delegate?.exchangeToken(payContract: payContract, receiveContract: receiveContract, amount: amount, exchangeAmount: exchangeAmount)
     }
 }
 extension MarketTableViewManager: MarketMyOrderHeaderViewDelegate {

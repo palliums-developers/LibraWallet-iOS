@@ -32,6 +32,10 @@
 		9D5B4E76236BCC1700F4D99C /* AddAssetTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B4E75236BCC1700F4D99C /* AddAssetTableViewManager.swift */; };
 		9D5B4E78236BCE1700F4D99C /* AddAssetViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B4E77236BCE1700F4D99C /* AddAssetViewTableViewCell.swift */; };
 		9D5B4E7A236BD22600F4D99C /* AddAssetTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B4E79236BD22600F4D99C /* AddAssetTableViewHeader.swift */; };
+		9D5C7C5A23A871480090385C /* OrderDoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5C7C5923A871480090385C /* OrderDoneViewController.swift */; };
+		9D5C7C5C23A876540090385C /* OrderDoneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5C7C5B23A876540090385C /* OrderDoneView.swift */; };
+		9D5C7C6023A8A0040090385C /* OrderDoneModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5C7C5F23A8A0040090385C /* OrderDoneModel.swift */; };
+		9D5C7C6523A8A3510090385C /* OrderDoneTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5C7C6423A8A3510090385C /* OrderDoneTableViewManager.swift */; };
 		9D5D13C523692D3800A2C6AF /* HomeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5D13C423692D3800A2C6AF /* HomeHeaderView.swift */; };
 		9D60189C236810EE00922237 /* WalletMnemonicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D60189B236810EE00922237 /* WalletMnemonicViewController.swift */; };
 		9D60189E236810FD00922237 /* WalletMnemonicView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D60189D236810FD00922237 /* WalletMnemonicView.swift */; };
@@ -314,6 +318,10 @@
 		9D5B4E75236BCC1700F4D99C /* AddAssetTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAssetTableViewManager.swift; sourceTree = "<group>"; };
 		9D5B4E77236BCE1700F4D99C /* AddAssetViewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAssetViewTableViewCell.swift; sourceTree = "<group>"; };
 		9D5B4E79236BD22600F4D99C /* AddAssetTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAssetTableViewHeader.swift; sourceTree = "<group>"; };
+		9D5C7C5923A871480090385C /* OrderDoneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderDoneViewController.swift; sourceTree = "<group>"; };
+		9D5C7C5B23A876540090385C /* OrderDoneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderDoneView.swift; sourceTree = "<group>"; };
+		9D5C7C5F23A8A0040090385C /* OrderDoneModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderDoneModel.swift; sourceTree = "<group>"; };
+		9D5C7C6423A8A3510090385C /* OrderDoneTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderDoneTableViewManager.swift; sourceTree = "<group>"; };
 		9D5D13C423692D3800A2C6AF /* HomeHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeHeaderView.swift; sourceTree = "<group>"; };
 		9D60189B236810EE00922237 /* WalletMnemonicViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletMnemonicViewController.swift; sourceTree = "<group>"; };
 		9D60189D236810FD00922237 /* WalletMnemonicView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletMnemonicView.swift; sourceTree = "<group>"; };
@@ -789,6 +797,14 @@
 			path = TableViewManager;
 			sourceTree = "<group>";
 		};
+		9D5C7C6323A8A32F0090385C /* TableViewManager */ = {
+			isa = PBXGroup;
+			children = (
+				9D5C7C6423A8A3510090385C /* OrderDoneTableViewManager.swift */,
+			);
+			path = TableViewManager;
+			sourceTree = "<group>";
+		};
 		9D60189723680F8900922237 /* WalletMnemonic */ = {
 			isa = PBXGroup;
 			children = (
@@ -1028,8 +1044,8 @@
 		9D628A9D239F318C00E222FB /* OrderCenter */ = {
 			isa = PBXGroup;
 			children = (
-				9DB515C523A391D10069A909 /* Model */,
 				9DB515C423A391C80069A909 /* Controller */,
+				9DB515C523A391D10069A909 /* Model */,
 				9D628AB3239F720400E222FB /* View */,
 			);
 			path = OrderCenter;
@@ -1057,19 +1073,21 @@
 			path = OrderProcessing;
 			sourceTree = "<group>";
 		};
-		9D628AA0239F341C00E222FB /* OrderFinished */ = {
+		9D628AA0239F341C00E222FB /* OrderDone */ = {
 			isa = PBXGroup;
 			children = (
+				9D5C7C6323A8A32F0090385C /* TableViewManager */,
 				9D628AA3239F343F00E222FB /* Controller */,
 				9D628AA2239F343500E222FB /* Model */,
 				9D628AA1239F343000E222FB /* View */,
 			);
-			path = OrderFinished;
+			path = OrderDone;
 			sourceTree = "<group>";
 		};
 		9D628AA1239F343000E222FB /* View */ = {
 			isa = PBXGroup;
 			children = (
+				9D5C7C5B23A876540090385C /* OrderDoneView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1077,6 +1095,7 @@
 		9D628AA2239F343500E222FB /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				9D5C7C5F23A8A0040090385C /* OrderDoneModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1084,6 +1103,7 @@
 		9D628AA3239F343F00E222FB /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				9D5C7C5923A871480090385C /* OrderDoneViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1115,9 +1135,9 @@
 		9D628AAD239F3A2900E222FB /* View */ = {
 			isa = PBXGroup;
 			children = (
-				9D628AAE239F3A4400E222FB /* OrderDetailTableViewCell.swift */,
-				9D628AB7239F729300E222FB /* OrderDetailHeaderView.swift */,
 				9D628AB9239F72A800E222FB /* OrderDetailView.swift */,
+				9D628AB7239F729300E222FB /* OrderDetailHeaderView.swift */,
+				9D628AAE239F3A4400E222FB /* OrderDetailTableViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -2040,9 +2060,9 @@
 		9DC06A382372A92100BCE1FE /* MarketModule */ = {
 			isa = PBXGroup;
 			children = (
-				9D628AA0239F341C00E222FB /* OrderFinished */,
-				9D628A9F239F31A900E222FB /* OrderProcessing */,
 				9D628A9E239F319800E222FB /* OrderDetail */,
+				9D628AA0239F341C00E222FB /* OrderDone */,
+				9D628A9F239F31A900E222FB /* OrderProcessing */,
 				9D628A9D239F318C00E222FB /* OrderCenter */,
 				9DC06A392372A92C00BCE1FE /* Market */,
 			);
@@ -2845,6 +2865,7 @@
 				9D9B49BF235EE03C00354EF0 /* EmptyDataPlaceholderView.swift in Sources */,
 				9DFFA88723683E1C00EA74F9 /* WalletTransactionsTableViewCell.swift in Sources */,
 				9DA0264A236FFE0A0084905B /* BackupMnemonicCollectionViewCell.swift in Sources */,
+				9D5C7C5C23A876540090385C /* OrderDoneView.swift in Sources */,
 				9D9B4A1E23613B1600354EF0 /* WalletManagerViewController.swift in Sources */,
 				9DC488012320BE88005FF254 /* LibraNetwork.swift in Sources */,
 				9D9B4A672366D93900354EF0 /* WalletDetailTableViewCell.swift in Sources */,
@@ -2950,6 +2971,7 @@
 				9DA8E2A22317ABC400E28D07 /* AppDelegate.swift in Sources */,
 				9D9B49C9235FFA8E00354EF0 /* MineModel.swift in Sources */,
 				9DC4886B232222CF005FF254 /* LBXScanViewController.swift in Sources */,
+				9D5C7C5A23A871480090385C /* OrderDoneViewController.swift in Sources */,
 				9DB515C123A32F3E0069A909 /* ViolasTransactionWriteSet.swift in Sources */,
 				9DC4886F232222CF005FF254 /* LBXScanWrapper.swift in Sources */,
 				9DB515B223A32BC50069A909 /* ViolasPrivateKey.swift in Sources */,
@@ -2994,6 +3016,7 @@
 				9D9B4A2523613B8D00354EF0 /* WalletManagerTableViewManager.swift in Sources */,
 				9D9B4A442362966100354EF0 /* AddWalletView.swift in Sources */,
 				9D9B4A3823619AAC00354EF0 /* SupportCoinModel.swift in Sources */,
+				9D5C7C6023A8A0040090385C /* OrderDoneModel.swift in Sources */,
 				9DC487FD2320AF4E005FF254 /* LibraWallet.swift in Sources */,
 				9D68D301237D260E005B7593 /* ViolasTransferModel.swift in Sources */,
 				9DC902432328FC4A0097FD85 /* HomeModel.swift in Sources */,
@@ -3009,6 +3032,7 @@
 				9DC06A2F2371788100BCE1FE /* CheckBackupViewModel.swift in Sources */,
 				9D5B4E76236BCC1700F4D99C /* AddAssetTableViewManager.swift in Sources */,
 				9DB515BB23A32E4C0069A909 /* ViolasRawTransaction.swift in Sources */,
+				9D5C7C6523A8A3510090385C /* OrderDoneTableViewManager.swift in Sources */,
 				9DB5159523A0F3030069A909 /* mempool_status.pb.swift in Sources */,
 				9D9B4A05236048A000354EF0 /* AboutUsTableViewManager.swift in Sources */,
 				9DB515A523A0F3030069A909 /* proof.pb.swift in Sources */,

@@ -1,14 +1,14 @@
 //
-//  OrderProcessingView.swift
+//  OrderDoneView.swift
 //  LibraWallet
 //
-//  Created by palliums on 2019/12/10.
+//  Created by palliums on 2019/12/17.
 //  Copyright © 2019 palliums. All rights reserved.
 //
 
 import UIKit
 
-class OrderProcessingView: UIView {
+class OrderDoneView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(tableView)
@@ -17,7 +17,7 @@ class OrderProcessingView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
-        print("OrderProcessingView销毁了")
+        print("OrderDoneView销毁了")
     }
     //MARK: - 布局
     override func layoutSubviews() {
@@ -34,12 +34,7 @@ class OrderProcessingView: UIView {
         tableView.estimatedRowHeight = 0;
         tableView.estimatedSectionHeaderHeight = 0;
         tableView.backgroundColor = UIColor.white
-        
-        tableView.register(OrderCenterTableViewCell.classForCoder(), forCellReuseIdentifier: "OrderProcessingCell")
+        tableView.register(OrderCenterTableViewCell.classForCoder(), forCellReuseIdentifier: "OrderDoneCell")
         return tableView
     }()
-    var toastView: ToastView? {
-        let toast = ToastView.init()
-        return toast
-    }
 }
