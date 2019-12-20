@@ -51,6 +51,7 @@ class VTokenMainViewController: BaseViewController {
         didSet {
             self.viewModel.detailView.headerView.assetLabel.text = "\(Double(vtokenModel?.balance ?? 0) / 1000000.0)"
             self.viewModel.detailView.headerView.assetUnitLabel.text = vtokenModel?.name
+            self.viewModel.vtokenModel = vtokenModel
         }
     }
 }

@@ -21,7 +21,6 @@ class OrderProcessingModel: NSObject {
             switch  result {
             case let .success(response):
                 do {
-                    print(try response.mapString())
                     let json = try response.map(AllProcessingOrderMainModel.self)
                     guard json.orders?.isEmpty == false else {
                         let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: type)
@@ -97,7 +96,6 @@ class OrderProcessingModel: NSObject {
             semaphore.wait()
             do {
                 let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
-
                 // 拼接交易
                 let request = ViolasTransaction.init(sendAddress: sendAddress,
                                                      fee: fee,

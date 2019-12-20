@@ -14,7 +14,7 @@ struct ViolasManager {
     /// - Returns: 助词数组
     public static func getLibraMnemonic() throws -> [String] {
         do {
-            let mnemonic = try LibraMnemonic.generate(strength: .veryHigh, language: .english)
+            let mnemonic = try LibraMnemonic.generate(strength: .default, language: .english)
             return mnemonic
         } catch {
             print(error.localizedDescription)
@@ -49,30 +49,40 @@ struct ViolasManager {
             return false
         }
     }
+    /// 注册代币
+    /// - Parameter content: 合约地址
     func getViolasPublishCode(content: String) -> String {
         let replaceData = Data.init(Array<UInt8>(hex: content))
         var code = getProgramCode(content: ViolasPublishProgramCode)
-        let range = code.index(after: 148)..<( code.endIndex - (code.endIndex - 149 - 32))
-        code.replaceSubrange(range, with: replaceData)
-        return code.toHexString()
-    }
-    func getViolasTransactionCode(content: String) -> String {
-        let replaceData = Data.init(Array<UInt8>(hex: content))
-        var code = getProgramCode(content: ViolasTransactionProgramCode)
-        let range = code.index(after: 180)..<( code.endIndex - (code.endIndex - 181 - 32))
-        code.replaceSubrange(range, with: replaceData)
-        return code.toHexString()
-    }
-    func getViolasTokenExchangeTransactionCode(content: String) -> String {
-        let replaceData = Data.init(Array<UInt8>(hex: content))
-        var code = getProgramCode(content: ViolasExchangeTokenProgramCode)
-        let range = code.index(after: 167)..<( code.endIndex - (code.endIndex - 168 - 32))
+        let range = code.index(after: 153)..<( code.endIndex - (code.endIndex - 154 - 32))
         code.replaceSubrange(range, with: replaceData)
         print(code.toHexString())
         return code.toHexString()
     }
+    /// 稳定币交易
+    /// - Parameter content: 合约地址
+    func getViolasTransactionCode(content: String) -> String {
+        let replaceData = Data.init(Array<UInt8>(hex: content))
+        var code = getProgramCode(content: ViolasTransactionProgramCode)
+        let range = code.index(after: 160)..<( code.endIndex - (code.endIndex - 161 - 32))
+        code.replaceSubrange(range, with: replaceData)
+        return code.toHexString()
+    }
+    /// 交易所兑换
+    /// - Parameter content: 合约地址
+    func getViolasTokenExchangeTransactionCode(content: String) -> String {
+        let replaceData = Data.init(Array<UInt8>(hex: content))
+        var code = getProgramCode(content: ViolasExchangeTokenProgramCode)
+        let range = code.index(after: 172)..<( code.endIndex - (code.endIndex - 173 - 32))
+        code.replaceSubrange(range, with: replaceData)
+        print(code.toHexString())
+        return code.toHexString()
+    }
+    /// 计算位置
+    /// - Parameter contract: 合约地址
     func getViolasTokenContractLocation(contract: String) -> Int {
         //7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614
+        //位置-1所得正好
         let code = getProgramCode(content: ViolasTransactionProgramCode)
         let range: Range = code.toHexString().range(of: contract)!
         let location: Int = code.toHexString().distance(from: code.toHexString().startIndex, to: range.lowerBound)

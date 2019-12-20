@@ -36,8 +36,8 @@ enum mainRequest {
     case GetViolasAccountBalance(String, String)
     /// 获取Violas账户Sequence Number
     case GetViolasAccountSequenceNumber(String)
-    /// 获取Violas账户交易记录(地址、偏移量、数量)
-    case GetViolasAccountTransactionList(String, Int, Int)
+    /// 获取Violas账户交易记录(地址、偏移量、数量, 合约地址)
+    case GetViolasAccountTransactionList(String, Int, Int, String)
     /// 发送Violas交易
     case SendViolasTransaction(String)
     /// 获取代币
@@ -73,7 +73,7 @@ extension mainRequest:TargetType {
             return URL(string:"http://52.27.228.84:4000/1.0")!
         case .GetViolasAccountBalance(_, _),
              .GetViolasAccountSequenceNumber(_),
-             .GetViolasAccountTransactionList(_, _, _),
+             .GetViolasAccountTransactionList(_, _, _, _),
              .SendViolasTransaction(_),
              .GetViolasTokenList,
              .GetViolasAccountEnableToken(_):
@@ -115,7 +115,7 @@ extension mainRequest:TargetType {
             return "/violas/balance"
         case .GetViolasAccountSequenceNumber(_):
             return "/violas/seqnum"
-        case .GetViolasAccountTransactionList(_, _, _):
+        case .GetViolasAccountTransactionList(_, _, _, _):
             return "/violas/transaction"
         case .SendViolasTransaction(_):
             return "/violas/transaction"
@@ -151,7 +151,7 @@ extension mainRequest:TargetType {
              .GetLibraAccountTransactionList(_),
              .GetViolasAccountBalance(_, _),
              .GetViolasAccountSequenceNumber(_),
-             .GetViolasAccountTransactionList(_, _, _),
+             .GetViolasAccountTransactionList(_, _, _, _),
              .GetViolasTokenList,
              .GetMarketSupportCoin,
              .GetViolasAccountEnableToken(_),
@@ -215,10 +215,11 @@ extension mainRequest:TargetType {
         case .GetViolasAccountSequenceNumber(let address):
             return .requestParameters(parameters: ["addr": address],
                                       encoding: URLEncoding.queryString)
-        case .GetViolasAccountTransactionList(let address, let offset, let limit):
+        case .GetViolasAccountTransactionList(let address, let offset, let limit, let contract):
             return .requestParameters(parameters: ["addr": address,
                                                    "limit": limit,
-                                                   "offset":offset],
+                                                   "offset":offset,
+                                                   "modu":contract],
                                       encoding: URLEncoding.queryString)
         case .SendViolasTransaction(let signature):
             return .requestParameters(parameters: ["signedtxn": signature],

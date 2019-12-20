@@ -14,7 +14,7 @@ struct LibraManager {
     /// - Returns: 助词数组
     public static func getLibraMnemonic() throws -> [String] {
         do {
-            let mnemonic = try LibraMnemonic.generate(strength: .veryHigh, language: .english)
+            let mnemonic = try LibraMnemonic.generate(strength: .default, language: .english)
             return mnemonic
         } catch {
             print(error.localizedDescription)

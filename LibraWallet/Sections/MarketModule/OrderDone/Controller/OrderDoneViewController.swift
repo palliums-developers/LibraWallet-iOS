@@ -37,39 +37,44 @@ class OrderDoneViewController: UIViewController {
         return view
     }()
     @objc func refreshReceive() {
+        guard let walletAddress = self.wallet?.walletAddress else {
+            return
+        }
         detailView.tableView.mj_footer.resetNoMoreData()
         detailView.tableView.mj_header.beginRefreshing()
-        dataModel.getAllDoneOrder(address: "b45d3e7e8079eb16cd7111b676f0c32294135e4190261240e3fd7b96fe1b9b89", version: "")
+        dataModel.getAllDoneOrder(address: walletAddress, version: "")
     }
     @objc func getMoreReceive() {
+        guard let walletAddress = self.wallet?.walletAddress else {
+            return
+        }
         detailView.tableView.mj_footer.beginRefreshing()
         if let version = self.tableViewManager.dataModel?.last?.version {
-            dataModel.getAllDoneOrder(address: "b45d3e7e8079eb16cd7111b676f0c32294135e4190261240e3fd7b96fe1b9b89", version: version)
+            dataModel.getAllDoneOrder(address: walletAddress, version: version)
         } else {
             detailView.tableView.mj_footer.endRefreshing()
         }
     }
     var myContext = 0
     var firstIn: Bool = true
+    var wallet: LibraWalletManager?
 }
 extension OrderDoneViewController: OrderDoneTableViewManagerDelegate {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: MarketOrderDataModel) {
         let vc = OrderDetailViewController()
         vc.headerData = model
+        vc.wallet = self.wallet
         self.navigationController?.pushViewController(vc, animated: true)
-//        let menmonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
-//        self.dataModel.cancelTransaction(sendAddress: "b45d3e7e8079eb16cd7111b676f0c32294135e4190261240e3fd7b96fe1b9b89",
-//                                         fee: 0,
-//                                         mnemonic: menmonic,
-//                                         contact: model.tokenGive ?? "",
-//                                         version: model.version ?? "")
     }
 }
 extension OrderDoneViewController {
     func initKVO() {
+        guard let walletAddress = self.wallet?.walletAddress else {
+            return
+        }
         dataModel.addObserver(self, forKeyPath: "dataDic", options: NSKeyValueObservingOptions.new, context: &myContext)
         self.detailView.makeToastActivity(.center)
-        dataModel.getAllDoneOrder(address: "b45d3e7e8079eb16cd7111b676f0c32294135e4190261240e3fd7b96fe1b9b89", version: "")
+        dataModel.getAllDoneOrder(address: walletAddress, version: "")
     }
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?)  {
         
@@ -157,13 +162,11 @@ extension OrderDoneViewController: JXSegmentedListContainerViewListDelegate {
             return
         }
         self.detailView.makeToastActivity(.center)
-//        let wallet = DataBaseManager.BDManager.getDefaultWallet()
-//        let address = wallet.first?.walletAddress
-//        guard address != nil else {
-//            self.detailView.hideToastActivity()
-//            return
-//        }
-//        self.dataModel.getOrderedList(address: address!, offset: 0, requestStatus: 0)
+        guard let walletAddress = self.wallet?.walletAddress else {
+            return
+        }
+        self.detailView.makeToastActivity(.center)
+        dataModel.getAllDoneOrder(address: walletAddress, version: "")
         firstIn = false
     }
     /// 可选实现，列表消失的时候调用

@@ -122,7 +122,7 @@ class WalletTransactionsViewController: BaseViewController {
             dataModel.getLibraTransactionHistory(address: (wallet?.walletAddress)!, page: dataOffset, pageSize: 10, requestStatus: requestState)
             break
         case .Violas:
-            dataModel.getViolasTransactionHistory(address: (wallet?.walletAddress)!, page: dataOffset, pageSize: 10, requestStatus: requestState)
+            dataModel.getViolasTransactionHistory(address: (wallet?.walletAddress)!, page: dataOffset, pageSize: 10, contract: "", requestStatus: requestState)
             break
         case .BTC:
             dataModel.getBTCTransactionHistory(address: (wallet?.walletAddress)!, page: dataOffset + 1, pageSize: 10, requestStatus: requestState)

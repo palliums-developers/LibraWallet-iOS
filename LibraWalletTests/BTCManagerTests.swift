@@ -64,6 +64,20 @@ class BTCManagerTests: XCTestCase {
         print(code.toHexString())
         let range: Range = code.toHexString().range(of: "7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614")!
         let location: Int = code.toHexString().distance(from: code.toHexString().startIndex, to: range.lowerBound)
+        print("location = \((location / 2) - 1)")
+    }
+    func testCaculll() {
+        let code = getProgramCode(content: ViolasPublishProgramCode)
+        print(code.toHexString())
+        let range: Range = code.toHexString().range(of: "7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614")!
+        let location: Int = code.toHexString().distance(from: code.toHexString().startIndex, to: range.lowerBound)
         print("location = \(location)")
+    }
+    func testExchange() {
+        var code = getProgramCode(content: ViolasExchangeTokenProgramCode)
+        print(code.toHexString())
+        let range: Range = code.toHexString().range(of: "7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614")!
+        let location: Int = code.toHexString().distance(from: code.toHexString().startIndex, to: range.lowerBound)
+        print("location = \((location / 2) - 1)")
     }
 }

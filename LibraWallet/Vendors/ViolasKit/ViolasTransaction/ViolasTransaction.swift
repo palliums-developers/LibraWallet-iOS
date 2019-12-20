@@ -62,12 +62,14 @@ struct ViolasTransaction {
         let argument1 = ViolasTransactionArgument.init(code: .Address, value: MarketAddress)
         let argument2 = ViolasTransactionArgument.init(code: .U64, value: "\(Int(0 * 1000000))")
         
-        let temp = ["type":"wd_ex",
-                    "ver":version] as [String : Any]
+//        let temp = ["type":"wd_ex",
+//                    "ver":version] as [String : Any]
         
-        let json = try! JSONSerialization.data(withJSONObject: temp, options: JSONSerialization.WritingOptions.prettyPrinted)
+//        let json = try! JSONSerialization.data(withJSONObject: temp, options: JSONSerialization.WritingOptions.prettyPrinted)
+//        let argument3 = ViolasTransactionArgument.init(code: .Bytes, value: json.toHexString())
+        let data = "{\"type\":\"wd_ex\",\"ver\":\"\(version)\"}".data(using: .utf8)!
         
-        let argument3 = ViolasTransactionArgument.init(code: .Bytes, value: json.toHexString())
+        let argument3 = ViolasTransactionArgument.init(code: .Bytes, value: data.toHexString())
         
         let program = ViolasTransactionScript.init(code: code, argruments: [argument1, argument2, argument3])
         
@@ -85,15 +87,18 @@ struct ViolasTransaction {
         let argument1 = ViolasTransactionArgument.init(code: .Address, value: MarketAddress)
         let argument2 = ViolasTransactionArgument.init(code: .U64, value: "\(Int(amount * 1000000))")
         
-        let temp = ["type":"sub_ex",
-                    "addr":receiveTokenAddress,
-                    "amount":200,
-                    "fee":0,
-                    "exp":1000] as [String : Any]
-        
-        let json = try! JSONSerialization.data(withJSONObject: temp, options: JSONSerialization.WritingOptions.prettyPrinted)
-        print(json.toHexString())
-        let argument3 = ViolasTransactionArgument.init(code: .Bytes, value: json.toHexString())
+//        let temp = ["type":"sub_ex",
+//                    "addr":receiveTokenAddress,
+//                    "amount":Int(exchangeAmount * 1000000),
+//                    "fee":0,
+//                    "exp":1000] as [String : Any]
+//
+//        let json = try! JSONSerialization.data(withJSONObject: temp, options: JSONSerialization.WritingOptions.prettyPrinted)
+//
+//        let argument3 = ViolasTransactionArgument.init(code: .Bytes, value: json.toHexString())
+        let data = "{\"type\":\"sub_ex\",\"addr\":\"\(receiveTokenAddress)\",\"amount\":\(Int(exchangeAmount * 1000000)),\"fee\":0,\"exp\":1000}".data(using: .utf8)!
+               
+        let argument3 = ViolasTransactionArgument.init(code: .Bytes, value: data.toHexString())
         
         let program = ViolasTransactionScript.init(code: code, argruments: [argument1, argument2, argument3])
         

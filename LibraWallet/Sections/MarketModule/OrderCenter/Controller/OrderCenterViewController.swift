@@ -92,15 +92,18 @@ class OrderCenterViewController: BaseViewController {
     }()
     lazy var processingOrder: OrderProcessingViewController = {
         let con = OrderProcessingViewController()
+        con.wallet = self.wallet
         con.initKVO()
 //        con.delegate = self
         return con
     }()
     lazy var doneOrder: OrderDoneViewController = {
         let con = OrderDoneViewController()
+        con.wallet = self.wallet
         con.initKVO()
         return con
     }()
+    var wallet: LibraWalletManager?
 }
 extension OrderCenterViewController: JXSegmentedListContainerViewDataSource {
     func numberOfLists(in listContainerView: JXSegmentedListContainerView) -> Int {

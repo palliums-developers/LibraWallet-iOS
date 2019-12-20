@@ -165,9 +165,9 @@ class WalletTransactionsModel: NSObject {
     ///   - address: 地址
     ///   - page: 页数
     ///   - pageSize: 数量
-    func getViolasTransactionHistory(address: String, page: Int, pageSize: Int, requestStatus: Int) {
+    func getViolasTransactionHistory(address: String, page: Int, pageSize: Int, contract: String, requestStatus: Int) {
         let type = requestStatus == 0 ? "ViolasTransactionHistoryOrigin":"ViolasTransactionHistoryMore"
-        let request = mainProvide.request(.GetViolasAccountTransactionList(address, page, pageSize)) {[weak self](result) in
+        let request = mainProvide.request(.GetViolasAccountTransactionList(address, page, pageSize, contract)) {[weak self](result) in
                 switch  result {
                 case let .success(response):
                     do {

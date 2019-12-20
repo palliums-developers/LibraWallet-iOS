@@ -27,9 +27,7 @@ struct ViolasPrivateKey {
         let transactionRaw = transaction.serialize()
         // 交易第一部分(盐sha3计算结果)
 //        var sha3Data = Data.init(hex: signTransactionSalt)
-        //RawTransaction::libra_types::transaction@@$$LIBRA$$@@
-//        var sha3Data = Data.init(Array<UInt8>(hex: signTransactionSalt))
-        var sha3Data = Data.init(Array<UInt8>(hex: ("RawTransaction@@$$LIBRA$$@@".sha3(SHA3.Variant.sha256))))
+        var sha3Data = Data.init(Array<UInt8>(hex: (ViolasSignSalt.sha3(SHA3.Variant.sha256))))
 
 //        var sha3Data = Data.init(Array<UInt8>(hex: ("RawTransaction::libra_types::transaction@@$$LIBRA$$@@".sha3(SHA3.Variant.sha256))))
 

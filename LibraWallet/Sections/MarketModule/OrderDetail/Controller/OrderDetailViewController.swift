@@ -53,18 +53,24 @@ class OrderDetailViewController: BaseViewController {
         return view
     }()
     @objc func refreshReceive() {
+        guard let walletAddress = self.wallet?.walletAddress else {
+            return
+        }
         dataOffset = 1
         detailView.tableView.mj_footer.resetNoMoreData()
         detailView.tableView.mj_header.beginRefreshing()
-        dataModel.getOrderDetail(address: "b45d3e7e8079eb16cd7111b676f0c32294135e4190261240e3fd7b96fe1b9b89",
+        dataModel.getOrderDetail(address: walletAddress,
                                  version: self.headerData?.version ?? "",
                                  page: dataOffset,
                                  requestStatus: 0)
     }
     @objc func getMoreReceive() {
+        guard let walletAddress = self.wallet?.walletAddress else {
+            return
+        }
         dataOffset += 1
         detailView.tableView.mj_footer.beginRefreshing()
-        dataModel.getOrderDetail(address: "b45d3e7e8079eb16cd7111b676f0c32294135e4190261240e3fd7b96fe1b9b89",
+        dataModel.getOrderDetail(address: walletAddress,
                                  version: self.headerData?.version ?? "",
                                  page: dataOffset,
                                  requestStatus: 1)
@@ -76,6 +82,7 @@ class OrderDetailViewController: BaseViewController {
             self.detailView.headerView.model = headerData
         }
     }
+    var wallet: LibraWalletManager?
 }
 extension OrderDetailViewController: OrderDetailTableViewManagerDelegate {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, address: String) {
@@ -83,9 +90,12 @@ extension OrderDetailViewController: OrderDetailTableViewManagerDelegate {
 }
 extension OrderDetailViewController {
     func initKVO() {
+        guard let walletAddress = self.wallet?.walletAddress else {
+            return
+        }
         dataModel.addObserver(self, forKeyPath: "dataDic", options: NSKeyValueObservingOptions.new, context: &myContext)
         self.detailView.makeToastActivity(.center)
-        dataModel.getOrderDetail(address: "b45d3e7e8079eb16cd7111b676f0c32294135e4190261240e3fd7b96fe1b9b89",
+        dataModel.getOrderDetail(address: walletAddress,
                                  version: self.headerData?.version ?? "",
                                  page: dataOffset,
                                  requestStatus: 0)
@@ -122,7 +132,6 @@ extension OrderDetailViewController {
                 print(error.localizedDescription)
                 // 数据为空
                 self.detailView.tableView.mj_footer.endRefreshingWithNoMoreData()
-
             } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
                 print(error.localizedDescription)
                 // 数据返回状态异常

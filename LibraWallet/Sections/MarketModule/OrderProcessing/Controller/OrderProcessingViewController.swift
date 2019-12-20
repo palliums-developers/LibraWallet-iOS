@@ -50,36 +50,38 @@ class OrderProcessingViewController: BaseViewController {
         return view
     }()
     @objc func refreshReceive() {
+        guard let walletAddress = self.wallet?.walletAddress else {
+            return
+        }
         detailView.tableView.mj_footer.resetNoMoreData()
         detailView.tableView.mj_header.beginRefreshing()
-        dataModel.getAllProcessingOrder(address: "b45d3e7e8079eb16cd7111b676f0c32294135e4190261240e3fd7b96fe1b9b89", version: "")
+        dataModel.getAllProcessingOrder(address: walletAddress, version: "")
     }
     @objc func getMoreReceive() {
+        guard let walletAddress = self.wallet?.walletAddress else {
+            return
+        }
         detailView.tableView.mj_footer.beginRefreshing()
         if let version = self.tableViewManager.dataModel?.last?.version {
-            dataModel.getAllProcessingOrder(address: "b45d3e7e8079eb16cd7111b676f0c32294135e4190261240e3fd7b96fe1b9b89", version: version)
+            dataModel.getAllProcessingOrder(address: walletAddress, version: version)
         } else {
             detailView.tableView.mj_footer.endRefreshing()
         }
     }
     var myContext = 0
     var firstIn: Bool = true
+    var wallet: LibraWalletManager?
+    var cancelIndexPath: IndexPath?
 }
 extension OrderProcessingViewController: OrderProcessingTableViewManagerDelegate {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: MarketOrderDataModel) {
         let vc = OrderDetailViewController()
         vc.headerData = model
+        vc.wallet = self.wallet
         self.navigationController?.pushViewController(vc, animated: true)
 
     }
     func cancelOrder(indexPath: IndexPath, model: MarketOrderDataModel) {
-        
-//        let menmonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
-//        self.dataModel.cancelTransaction(sendAddress: "b45d3e7e8079eb16cd7111b676f0c32294135e4190261240e3fd7b96fe1b9b89",
-//                                         fee: 0,
-//                                         mnemonic: menmonic,
-//                                         contact: model.tokenGive ?? "",
-//                                         version: model.version ?? "")
         
         let alertView = UIAlertController.init(title: localLanguage(keyString: "提示"),
                                                message: localLanguage(keyString: "您确定要取消当前未完成订单吗？"),
@@ -87,6 +89,7 @@ extension OrderProcessingViewController: OrderProcessingTableViewManagerDelegate
         let cancelAction = UIAlertAction.init(title:localLanguage(keyString: "wallet_add_asset_alert_cancel_button_title"), style: .default) { okAction in
         }
         let confirmAction = UIAlertAction.init(title:localLanguage(keyString: "wallet_add_asset_alert_confirm_button_title"), style: .default) { okAction in
+            self.cancelIndexPath = indexPath
             self.showPasswordAlert(model: model)
         }
         alertView.addAction(cancelAction)
@@ -115,17 +118,20 @@ extension OrderProcessingViewController: OrderProcessingTableViewManagerDelegate
             }
             NSLog("Password:\(password)")
             do {
-//                let state = try LibraWalletManager.shared.isValidPaymentPassword(walletRootAddress: (self?.model?.walletRootAddress)!, password: password)
-//                guard state == true else {
-//                    self?.view.makeToast(LibraWalletError.WalletCheckPassword(reason: .passwordEmptyError).localizedDescription,
-//                                         position: .center)
-//                    return
-//                }
+                let state = try LibraWalletManager.shared.isValidPaymentPassword(walletRootAddress: (self?.wallet?.walletRootAddress)!, password: password)
+                guard state == true else {
+                    self?.view.makeToast(LibraWalletError.WalletCheckPassword(reason: .passwordEmptyError).localizedDescription,
+                                         position: .center)
+                    return
+                }
                 self?.detailView.toastView?.show()
-//                let menmonic = try LibraWalletManager.shared.getMnemonicFromKeychain(walletRootAddress: (self?.model?.walletRootAddress)!)
-//                self?.viewModel.dataModel.publishViolasToken(sendAddress: (self?.model?.walletAddress)!, mnemonic: menmonic, contact: model.address ?? "")
-                let menmonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
-                self?.dataModel.cancelTransaction(sendAddress: "b45d3e7e8079eb16cd7111b676f0c32294135e4190261240e3fd7b96fe1b9b89",
+                let menmonic = try LibraWalletManager.shared.getMnemonicFromKeychain(walletRootAddress: (self?.wallet?.walletRootAddress)!)
+//                let menmonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
+                guard let walletAddress = self?.wallet?.walletAddress else {
+                    #warning("缺少错误提示")
+                    return
+                }
+                self?.dataModel.cancelTransaction(sendAddress: walletAddress,
                                                  fee: 0,
                                                  mnemonic: menmonic,
                                                  contact: model.tokenGive ?? "",
@@ -144,9 +150,12 @@ extension OrderProcessingViewController: OrderProcessingTableViewManagerDelegate
 }
 extension OrderProcessingViewController {
     func initKVO() {
+        guard let walletAddress = self.wallet?.walletAddress else {
+            return
+        }
         dataModel.addObserver(self, forKeyPath: "dataDic", options: NSKeyValueObservingOptions.new, context: &myContext)
         self.detailView.makeToastActivity(.center)
-        dataModel.getAllProcessingOrder(address: "b45d3e7e8079eb16cd7111b676f0c32294135e4190261240e3fd7b96fe1b9b89", version: "")
+        dataModel.getAllProcessingOrder(address: walletAddress, version: "")
     }
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?)  {
         
@@ -223,7 +232,15 @@ extension OrderProcessingViewController {
             self.detailView.tableView.mj_footer.endRefreshing()
         } else {
             self.detailView.toastView?.hide()
-            self.detailView.makeToast(localLanguage(keyString: "取消成功"))
+            if let indexPath = self.cancelIndexPath {
+                self.tableViewManager.dataModel?.remove(at: indexPath.row)
+                self.detailView.tableView.beginUpdates()
+                self.detailView.tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.left)
+                self.detailView.tableView.endUpdates()
+            } else {
+                self.refreshReceive()
+            }
+            self.detailView.makeToast(localLanguage(keyString: "取消成功"), position: .center)
         }
         self.detailView.hideToastActivity()
     }
@@ -238,8 +255,11 @@ extension OrderProcessingViewController: JXSegmentedListContainerViewListDelegat
         guard firstIn == true else {
             return
         }
+        guard let walletAddress = self.wallet?.walletAddress else {
+            return
+        }
         self.detailView.makeToastActivity(.center)
-        dataModel.getAllProcessingOrder(address: "b45d3e7e8079eb16cd7111b676f0c32294135e4190261240e3fd7b96fe1b9b89", version: "")
+        dataModel.getAllProcessingOrder(address: walletAddress, version: "")
         firstIn = false
     }
     /// 可选实现，列表消失的时候调用

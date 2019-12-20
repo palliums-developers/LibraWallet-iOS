@@ -297,7 +297,7 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
         label.textAlignment = NSTextAlignment.center
         label.textColor = UIColor.init(hex: "3C3848")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "wallet_market_exchange_fee_describe_title")
+        label.text = "---"
         return label
     }()
     lazy var exchangeRateSpaceLabel: UILabel = {
@@ -395,6 +395,8 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
             self.leftTokenModel = tempRightModel
         } else {
             // 兑换
+            self.leftAmountTextField.resignFirstResponder()
+            self.rightAmountTextField.resignFirstResponder()
             guard let tempLeftModel = self.leftTokenModel else {
                 self.makeToast(localLanguage(keyString: "请先选择要兑换的币种"), position: .center)
                 return
@@ -404,9 +406,12 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
                 return
             }
             guard let payAmountString = leftAmountTextField.text, payAmountString.isEmpty == false, isPurnDouble(string: payAmountString) == true else {
+                self.makeToast(localLanguage(keyString: "请输入要付出的数量"), position: .center)
+
                 return
             }
             guard let exchangeAmountString = rightAmountTextField.text, exchangeAmountString.isEmpty == false, isPurnDouble(string: exchangeAmountString) == true else {
+                self.makeToast(localLanguage(keyString: "请输入要兑换的数量"), position: .center)
                 return
             }
             self.delegate?.exchangeToken(payContract: tempLeftModel.addr ?? "",
@@ -442,7 +447,7 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
             let payAmount = Double(payAmountString)
 //            let exchangeAmount = Double(exchangeAmountString)
             let hkd = (payAmount ?? 1) / self.rate
-            leftAmountTextField.text = "\(hkd)"//String.init(format: "%f", hkd)
+            leftAmountTextField.text = String.init(format: "%.4f", hkd)
         }
     }
     var rightTokenModel: MarketSupportCoinDataModel? {
@@ -461,7 +466,7 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
 //            let payAmount = Double(payAmountString)
             let exchangeAmount = Double(exchangeAmountString)
             let coinOnSat = (exchangeAmount ?? 1) * self.rate
-            rightAmountTextField.text = "\(coinOnSat)"//String.init(format: "%f", coinOnSat)
+            rightAmountTextField.text = String.init(format: "%.4f", coinOnSat)
         }
     }
     var rate: Double = 0
@@ -476,6 +481,11 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
             self.rate = 1
         } else {
             self.rate = mainPrice / exchangePrice
+        }
+        if let leftName = self.leftCoinButton.titleLabel?.text, let rightName = self.rightCoinButton.titleLabel?.text, leftName.isEmpty == false, rightName.isEmpty == false {
+            self.exchangeRateLabel.text = "1 \(leftName) = \(String.init(format: "%.4f", self.rate)) \(rightName)"
+        } else {
+            self.exchangeRateLabel.text = "---"
         }
         print("Rate:\(self.rate)")
     }
@@ -495,14 +505,14 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
             }
             //正在编辑左边
             let hkd = (payAmount ?? 1) * self.rate
-            rightAmountTextField.text = "\(hkd)"//String.init(format: "%f", hkd)
+            rightAmountTextField.text = String.init(format: "%.4f", hkd)
         } else {
             guard isPurnDouble(string: exchangeAmountString) else {
                 return
             }
             //正在编辑右边
             let coinOnSat = (exchangeAmount ?? 1) / self.rate
-            leftAmountTextField.text = "\(coinOnSat)"//String.init(format: "%f", coinOnSat)
+            leftAmountTextField.text = String.init(format: "%.4f", coinOnSat)
         }
     }
 }

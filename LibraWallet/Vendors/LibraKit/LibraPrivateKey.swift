@@ -28,9 +28,9 @@ struct LibraPrivateKey {
 //        var sha3Data = Data.init(hex: signTransactionSalt)
         //RawTransaction::libra_types::transaction@@$$LIBRA$$@@
 //        var sha3Data = Data.init(Array<UInt8>(hex: signTransactionSalt))
-        var sha3Data = Data.init(Array<UInt8>(hex: ("RawTransaction@@$$LIBRA$$@@".sha3(SHA3.Variant.sha256))))
+//        var sha3Data = Data.init(Array<UInt8>(hex: ("RawTransaction@@$$LIBRA$$@@".sha3(SHA3.Variant.sha256))))
 
-//        var sha3Data = Data.init(Array<UInt8>(hex: ("RawTransaction::libra_types::transaction@@$$LIBRA$$@@".sha3(SHA3.Variant.sha256))))
+        var sha3Data = Data.init(Array<UInt8>(hex: (LibraSignSalt.sha3(SHA3.Variant.sha256))))
 
         
         // 交易第二部分(追加带签名交易)

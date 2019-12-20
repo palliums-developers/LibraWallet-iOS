@@ -112,7 +112,7 @@ class MarketMyOrderTableViewCell: UITableViewCell {
             amountLabel.text = model?.amountGet
             #warning("此处价格待商议")
             priceLabel.text = "7.1"
-//            dateLabel.text = timestampToDateString(timestamp: model?.date ?? 0, dateFormat: "MM/dd HH:mm:ss")
+            dateLabel.text = timestampToDateString(timestamp: model?.date ?? 0, dateFormat: "MM/dd HH:mm:ss")
         }
     }
     var indexPath: IndexPath?

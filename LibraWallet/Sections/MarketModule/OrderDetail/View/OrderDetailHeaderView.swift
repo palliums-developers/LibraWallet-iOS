@@ -271,7 +271,7 @@ class OrderDetailHeaderView: UIView {
             attString.append(attString2)
             attString.append(attString3)
             coinTitleLabel.attributedText = attString
-//            dateLabel.text = timestampToDateString(timestamp: model?.date ?? 0, dateFormat: "MM/dd HH:mm:ss")
+            dateLabel.text = timestampToDateString(timestamp: model?.date ?? 0, dateFormat: "MM/dd HH:mm:ss")
             priceLabel.text = "7.1"
             amountLabel.text = model?.amountGet
             successAmountLabel.text = model?.amountFilled

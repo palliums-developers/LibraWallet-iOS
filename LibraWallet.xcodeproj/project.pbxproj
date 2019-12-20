@@ -36,6 +36,7 @@
 		9D5C7C5C23A876540090385C /* OrderDoneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5C7C5B23A876540090385C /* OrderDoneView.swift */; };
 		9D5C7C6023A8A0040090385C /* OrderDoneModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5C7C5F23A8A0040090385C /* OrderDoneModel.swift */; };
 		9D5C7C6523A8A3510090385C /* OrderDoneTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5C7C6423A8A3510090385C /* OrderDoneTableViewManager.swift */; };
+		9D5C7C6723AA243A0090385C /* LibraCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5C7C6623AA24390090385C /* LibraCommon.swift */; };
 		9D5D13C523692D3800A2C6AF /* HomeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5D13C423692D3800A2C6AF /* HomeHeaderView.swift */; };
 		9D60189C236810EE00922237 /* WalletMnemonicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D60189B236810EE00922237 /* WalletMnemonicViewController.swift */; };
 		9D60189E236810FD00922237 /* WalletMnemonicView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D60189D236810FD00922237 /* WalletMnemonicView.swift */; };
@@ -322,6 +323,7 @@
 		9D5C7C5B23A876540090385C /* OrderDoneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderDoneView.swift; sourceTree = "<group>"; };
 		9D5C7C5F23A8A0040090385C /* OrderDoneModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderDoneModel.swift; sourceTree = "<group>"; };
 		9D5C7C6423A8A3510090385C /* OrderDoneTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderDoneTableViewManager.swift; sourceTree = "<group>"; };
+		9D5C7C6623AA24390090385C /* LibraCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraCommon.swift; sourceTree = "<group>"; };
 		9D5D13C423692D3800A2C6AF /* HomeHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeHeaderView.swift; sourceTree = "<group>"; };
 		9D60189B236810EE00922237 /* WalletMnemonicViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletMnemonicViewController.swift; sourceTree = "<group>"; };
 		9D60189D236810FD00922237 /* WalletMnemonicView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletMnemonicView.swift; sourceTree = "<group>"; };
@@ -2142,6 +2144,7 @@
 				9DC487FC2320AF4E005FF254 /* LibraWallet.swift */,
 				9DC488042320DBCB005FF254 /* LibraPublicKey.swift */,
 				9DC4880A2320E6C1005FF254 /* LibraPrivateKey.swift */,
+				9D5C7C6623AA24390090385C /* LibraCommon.swift */,
 				9DC487FE2320AFB8005FF254 /* LibraError.swift */,
 				9DC488002320BE88005FF254 /* LibraNetwork.swift */,
 				9DC4880C2320EDF8005FF254 /* LibraUtils.swift */,
@@ -3012,6 +3015,7 @@
 				9D08AD4B2330D8E6004687E8 /* TransactionDetailWebViewController.swift in Sources */,
 				9DBC267A23408D55009650EA /* ed25519_verify.swift in Sources */,
 				9DBC267B23408D55009650EA /* ed25519_fe.swift in Sources */,
+				9D5C7C6723AA243A0090385C /* LibraCommon.swift in Sources */,
 				9D9B49AF235DA76100354EF0 /* AddAddressViewController.swift in Sources */,
 				9D9B4A2523613B8D00354EF0 /* WalletManagerTableViewManager.swift in Sources */,
 				9D9B4A442362966100354EF0 /* AddWalletView.swift in Sources */,

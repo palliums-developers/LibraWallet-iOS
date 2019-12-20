@@ -230,8 +230,7 @@ struct DataBaseManager {
                     } else if walletType == 2 {
                         tempWalletType = WalletType.BTC
                     }
-                    
-                    let wallet = LibraWalletManager.init(walletID: walletID,
+                    LibraWalletManager.shared.initWallet(walletID: walletID,
                                                          walletBalance: walletBalance,
                                                          walletAddress: walletAddress,
                                                          walletRootAddress: walletRootAddress,
@@ -241,7 +240,17 @@ struct DataBaseManager {
                                                          walletBiometricLock: walletBiometricLock,
                                                          walletIdentity: walletIdentity,
                                                          walletType: tempWalletType)
-                    return wallet
+//                    let wallet = LibraWalletManager.init(walletID: walletID,
+//                                                         walletBalance: walletBalance,
+//                                                         walletAddress: walletAddress,
+//                                                         walletRootAddress: walletRootAddress,
+//                                                         walletCreateTime: walletCreateTime,
+//                                                         walletName: walletName,
+//                                                         walletCurrentUse: walletCurrentUse,
+//                                                         walletBiometricLock: walletBiometricLock,
+//                                                         walletIdentity: walletIdentity,
+//                                                         walletType: tempWalletType)
+                    return LibraWalletManager.shared
                 }
                 throw LibraWalletError.error("获取当前使用钱包检索失败")
             } else {

@@ -28,7 +28,7 @@ class OrderDetailModel: NSObject {
                     print(try response.mapString())
                     let json = try response.map(OrderDetailMainModel.self)
                     guard json.trades?.isEmpty == false else {
-                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: "GetCurrentOrder")
+                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: type)
                         self?.setValue(data, forKey: "dataDic")
                         return
                     }
