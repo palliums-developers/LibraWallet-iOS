@@ -55,11 +55,11 @@ class MarketModel: NSObject {
     private var walletEnableTokens: [String]?
     private var marketEnableTokens: [MarketSupportCoinDataModel]?
     private var sequenceNumber: Int?
-    func getMarketSupportToken(address: String) {
+    func getSupportToken(address: String) {
         let group = DispatchGroup.init()
         let quene = DispatchQueue.init(label: "SupportTokenQuene")
         quene.async(group: group, qos: .default, flags: [], execute: {
-            self.getSupportToken(group: group)
+            self.getMarketSupportToken(group: group)
         })
         quene.async(group: group, qos: .default, flags: [], execute: {
             self.getWalletEnableToken(address: address, group: group)
@@ -81,7 +81,7 @@ class MarketModel: NSObject {
             })
         }
     }
-    private func getSupportToken(group: DispatchGroup) {
+    private func getMarketSupportToken(group: DispatchGroup) {
         group.enter()
         let request = mainProvide.request(.GetMarketSupportCoin) {[weak self](result) in
             switch  result {
@@ -89,7 +89,7 @@ class MarketModel: NSObject {
                 do {
                     let json = try response.map([MarketSupportCoinDataModel].self)
                     guard json.isEmpty == false else {
-                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: "GetMarketEnableCoin")
+                        let data = setKVOData(error: LibraWalletError.error(localLanguage(keyString: "交易所支持稳定币为空")), type: "GetMarketEnableCoin")
                         self?.setValue(data, forKey: "dataDic")
                         return
                     }
@@ -120,9 +120,13 @@ class MarketModel: NSObject {
             case let .success(response):
                 do {
                     let json = try response.map(ViolasAccountEnableTokenResponseModel.self)
-                    #warning("缺少为空判断")
                     guard json.code == 2000 else {
                         let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "GetWalletEnableCoin")
+                        self?.setValue(data, forKey: "dataDic")
+                        return
+                    }
+                    guard json.data?.isEmpty == false else {
+                        let data = setKVOData(error: LibraWalletError.error(localLanguage(keyString: "尚未注册任何稳定币")), type: "GetWalletEnableCoin")
                         self?.setValue(data, forKey: "dataDic")
                         return
                     }
@@ -255,7 +259,7 @@ class MarketModel: NSObject {
                                                     exchangeAmount: exchangeTokenAmount)
                 // 签名交易
                 let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
-                self.makeViolasTransaction(signature: signature.toHexString())
+                self.makeViolasTransaction(signature: signature.toHexString(), type: "ExchangeDone")
             } catch {
                 print(error.localizedDescription)
                 DispatchQueue.main.async(execute: {
@@ -267,7 +271,7 @@ class MarketModel: NSObject {
         }
         
     }
-    private func makeViolasTransaction(signature: String) {
+    private func makeViolasTransaction(signature: String, type: String) {
         let request = mainProvide.request(.SendViolasTransaction(signature)) {[weak self](result) in
             switch  result {
             case let .success(response):
@@ -275,20 +279,20 @@ class MarketModel: NSObject {
                     let json = try response.map(ViolaSendTransactionMainModel.self)
                     guard json.code == 2000 else {
                         DispatchQueue.main.async(execute: {
-                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "ExchangeDone")
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: type)
                             self?.setValue(data, forKey: "dataDic")
                         })
                         return
                     }
                     DispatchQueue.main.async(execute: {
-                        let data = setKVOData(type: "ExchangeDone")
+                        let data = setKVOData(type: type)
                         self?.setValue(data, forKey: "dataDic")
                     })
                     // 刷新本地数据
                 } catch {
                     print("ExchangeDone_解析异常\(error.localizedDescription)")
                     DispatchQueue.main.async(execute: {
-                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "ExchangeDone")
+                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: type)
                         self?.setValue(data, forKey: "dataDic")
                     })
                 }
@@ -298,13 +302,83 @@ class MarketModel: NSObject {
                     return
                 }
                 DispatchQueue.main.async(execute: {
-                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "ExchangeDone")
+                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: type)
                     self?.setValue(data, forKey: "dataDic")
                 })
                 
             }
         }
         self.requests.append(request)
+    }
+    func getViolasBalance(walletID: Int64, address: String, vtoken: String) {
+        let tempVToken = Data.init(Array<UInt8>(hex: vtoken)).toHexString()
+        let request = mainProvide.request(.GetViolasAccountBalance(address, tempVToken)) {[weak self](result) in
+            switch  result {
+            case let .success(response):
+                do {
+                    let json = try response.map(BalanceLibraMainModel.self)
+                    guard json.code == 2000 else {
+                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "UpdateViolasBalance")
+                        self?.setValue(data, forKey: "dataDic")
+                        return
+                    }
+                    let data = setKVOData(type: "UpdateViolasBalance", data: json.data)
+                    self?.setValue(data, forKey: "dataDic")
+                    // 刷新本地数据
+                    self?.updateLocalWalletData(walletID: walletID, balance: json.data?.balance ?? 0)
+                    guard let tokenModel = json.data?.modules else {
+                        return
+                    }
+                    self?.updateLocalWalletTokenData(walletID: walletID, modules: tokenModel)
+                } catch {
+                    print("UpdateViolasBalance_解析异常\(error.localizedDescription)")
+                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "UpdateViolasBalance")
+                    self?.setValue(data, forKey: "dataDic")
+                }
+            case let .failure(error):
+                guard error.errorCode != -999 else {
+                    print("UpdateViolasBalance_网络请求已取消")
+                    return
+                }
+                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "UpdateViolasBalance")
+                self?.setValue(data, forKey: "dataDic")
+            }
+        }
+        self.requests.append(request)
+    }
+    func updateLocalWalletData(walletID: Int64, balance: Int64) {
+        // 刷新本地缓存数据
+        let result = DataBaseManager.DBManager.updateWalletBalance(walletID: walletID, balance: balance)
+        print("刷新本地钱包数据状态: \(result),walletID = \(walletID)")
+    }
+    func updateLocalWalletTokenData(walletID: Int64, modules: [BalanceViolasModulesModel]) {
+        // 刷新本地缓存数据
+        for item in modules {
+            let result = DataBaseManager.DBManager.updateViolasToken(walletID: walletID, model: item)
+            print("刷新本地钱包Token数据状态: \(result),walletID = \(walletID)")
+        }
+    }
+    func publishTokenForTransaction(sendAddress: String, mnemonic: [String], contact: String) {
+        let semaphore = DispatchSemaphore.init(value: 1)
+        let queue = DispatchQueue.init(label: "SendQueue")
+        queue.async {
+            self.getViolasSequenceNumber(sendAddress: sendAddress, semaphore: semaphore, queue: queue)
+        }
+        queue.async {
+            semaphore.wait()
+            do {
+                let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
+
+                // 拼接交易
+                let request = ViolasTransaction.init(sendAddress: wallet.publicKey.toAddress(), sequenceNumber: UInt64(self.sequenceNumber!), code: Data.init(Array<UInt8>(hex: ViolasManager().getViolasPublishCode(content: contact))))
+                // 签名交易
+                let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
+                self.makeViolasTransaction(signature: signature.toHexString(), type: "PublishTokenForTransaction")
+            } catch {
+                print(error.localizedDescription)
+            }
+            semaphore.signal()
+        }
     }
     func addSocket() {
         ViolasSocketManager.shared.openSocket { result in

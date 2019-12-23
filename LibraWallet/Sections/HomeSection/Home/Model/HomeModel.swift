@@ -211,7 +211,7 @@ class HomeModel: NSObject {
                 do {
                     let json = try response.map(BalanceLibraMainModel.self)
                     guard json.code == 2000 else {
-                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "UpdateViolasTokenList")
+                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "UpdateViolasBalance")
                         self?.setValue(data, forKey: "dataDic")
                         return
                     }

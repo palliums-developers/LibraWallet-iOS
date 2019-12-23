@@ -12,7 +12,7 @@ protocol MarketTableViewManagerDelegate: NSObjectProtocol {
 //    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: ViolasTokenModel)
     func selectToken(button: UIButton, leftModelName: String, rightModelName: String)
     func showOrderCenter()
-    func exchangeToken(payContract: String, receiveContract: String, amount: Double, exchangeAmount: Double)
+    func exchangeToken(payToken: MarketSupportCoinDataModel, receiveToken: MarketSupportCoinDataModel, amount: Double, exchangeAmount: Double)
 }
 class MarketTableViewManager: NSObject {
     weak var delegate: MarketTableViewManagerDelegate?
@@ -159,8 +159,8 @@ extension MarketTableViewManager: MarketExchangeHeaderViewDelegate {
         self.delegate?.selectToken(button: button, leftModelName: leftModelName, rightModelName: rightModelName)
     }
     
-    func exchangeToken(payContract: String, receiveContract: String, amount: Double, exchangeAmount: Double) {
-        self.delegate?.exchangeToken(payContract: payContract, receiveContract: receiveContract, amount: amount, exchangeAmount: exchangeAmount)
+    func exchangeToken(payToken: MarketSupportCoinDataModel, receiveToken: MarketSupportCoinDataModel, amount: Double, exchangeAmount: Double) {
+        self.delegate?.exchangeToken(payToken: payToken, receiveToken: receiveToken, amount: amount, exchangeAmount: exchangeAmount)
     }
 }
 extension MarketTableViewManager: MarketMyOrderHeaderViewDelegate {

@@ -39,6 +39,13 @@ class AddAssetViewController: BaseViewController {
     deinit {
         print("AddAssetViewController销毁了")
     }
+    override func back() {
+        if needDismissViewController == true {
+            self.dismiss(animated: true, completion: nil)
+        } else {
+            self.navigationController?.popViewController(animated: true)
+        }
+    }
     lazy var viewModel: AddAssetViewModel = {
         let viewModel = AddAssetViewModel.init()
         viewModel.tableViewManager.headerData = self.model
@@ -46,6 +53,8 @@ class AddAssetViewController: BaseViewController {
         return viewModel
     }()
     var model: LibraWalletManager?
+    var needDismissViewController: Bool?
+
 }
 extension AddAssetViewController: AddAssetViewModelDelegate {
     func switchButtonChange(model: ViolasTokenModel, state: Bool, indexPath: IndexPath) {
@@ -57,13 +66,13 @@ extension AddAssetViewController: AddAssetViewModelDelegate {
             cell.switchButton.setOn(!state, animated: true)
         }
         let confirmAction = UIAlertAction.init(title:localLanguage(keyString: "wallet_add_asset_alert_confirm_button_title"), style: .default) { okAction in
-            self.showPasswordAlert(model: model)
+            self.showPasswordAlert(model: model, indexPath: indexPath)
         }
         alertView.addAction(cancelAction)
         alertView.addAction(confirmAction)
         self.present(alertView, animated: true, completion: nil)
     }
-    func showPasswordAlert(model: ViolasTokenModel) {
+    func showPasswordAlert(model: ViolasTokenModel, indexPath: IndexPath) {
         let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: localLanguage(keyString: "wallet_type_in_password_content"), preferredStyle: .alert)
         alertContr.addTextField {
             (textField: UITextField!) -> Void in
@@ -87,7 +96,9 @@ extension AddAssetViewController: AddAssetViewModelDelegate {
             do {
                 let state = try LibraWalletManager.shared.isValidPaymentPassword(walletRootAddress: (self?.model?.walletRootAddress)!, password: password)
                 guard state == true else {
-                    self?.view.makeToast(LibraWalletError.WalletCheckPassword(reason: .passwordEmptyError).localizedDescription,
+                    let cell = self?.viewModel.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
+                    cell.switchButton.setOn(false, animated: true)
+                    self?.view.makeToast(LibraWalletError.WalletCheckPassword(reason: .passwordInvalidError).localizedDescription,
                                          position: .center)
                     return
                 }

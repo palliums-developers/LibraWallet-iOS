@@ -192,6 +192,24 @@ public enum LibraWalletError: Error {
         case transferToSelf
     }
     case WalletTransfer(reason: TransferError)
+    
+//    public enum WalletEnableToken {
+//        /// 数量无效
+//        case amountInvalid
+//        /// 数量为空
+//        case amountEmpty
+//        /// 数量超过自己余额
+//        case amountOverload
+//        /// 金额太小不能转账
+//        case amountTooSmall
+//        /// 地址无效
+//        case addressInvalid
+//        /// 地址为空
+//        case addressEmpty
+//        /// 像自己付款无效
+//        case transferToSelf
+//    }
+//    case WalletTransfer(reason: TransferError)
 }
 extension LibraWalletError: LocalizedError {
     public var errorDescription: String? {

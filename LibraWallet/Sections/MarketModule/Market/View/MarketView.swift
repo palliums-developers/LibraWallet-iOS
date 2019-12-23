@@ -33,6 +33,18 @@ class MarketView: UIView {
             make.left.right.bottom.equalTo(self)
         }
     }
+    func changeHeaderViewDefault(hideLeftModel: Bool) {
+        guard let headerView = tableView.headerView(forSection: 0) as? MarketExchangeHeaderView else {
+            return
+        }
+        if hideLeftModel == true {
+            headerView.leftTokenModel = nil
+        }
+        headerView.rightTokenModel = nil
+        headerView.exchangeRateLabel.text = "---"
+        headerView.leftAmountTextField.text = ""
+        headerView.rightAmountTextField.text = ""
+    }
     //MARK: - 懒加载对象
     private lazy var headerBackground : UIImageView = {
         let imageView = UIImageView.init()

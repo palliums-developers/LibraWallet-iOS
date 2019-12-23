@@ -9,7 +9,7 @@
 import UIKit
 protocol MarketExchangeHeaderViewDelegate: NSObjectProtocol {
     func selectToken(button: UIButton, leftModelName: String, rightModelName: String)
-    func exchangeToken(payContract: String, receiveContract: String, amount: Double, exchangeAmount: Double)
+    func exchangeToken(payToken: MarketSupportCoinDataModel, receiveToken: MarketSupportCoinDataModel, amount: Double, exchangeAmount: Double)
 }
 class MarketExchangeHeaderView: UITableViewHeaderFooterView {
     weak var delegate: MarketExchangeHeaderViewDelegate?
@@ -414,8 +414,8 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
                 self.makeToast(localLanguage(keyString: "请输入要兑换的数量"), position: .center)
                 return
             }
-            self.delegate?.exchangeToken(payContract: tempLeftModel.addr ?? "",
-                                         receiveContract: tempRightModel.addr ?? "",
+            self.delegate?.exchangeToken(payToken: tempLeftModel,
+                                         receiveToken: tempRightModel,
                                          amount: Double(payAmountString)!,
                                          exchangeAmount: Double(exchangeAmountString)!)
 
@@ -426,7 +426,7 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
         self.leftAmountTextField.resignFirstResponder()
         self.rightAmountTextField.resignFirstResponder()
         if button.tag == 30 {
-            guard self.leftTokenModel?.name != "---" else {
+            guard self.leftCoinButton.titleLabel?.text != "---" else {
                 self.makeToast(localLanguage(keyString: "请先选择要付出的代币"), position: .center)
                 return
             }
@@ -437,7 +437,7 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
     var leftTokenModel: MarketSupportCoinDataModel? {
         didSet {
             UIView.animate(withDuration: 2) {
-                self.leftCoinButton.setTitle(self.leftTokenModel?.name, for: UIControl.State.normal)
+                self.leftCoinButton.setTitle(self.leftTokenModel?.name ?? "---", for: UIControl.State.normal)
             }
             calculateRate()
             // 点击左边处理左边

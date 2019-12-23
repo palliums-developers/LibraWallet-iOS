@@ -53,9 +53,7 @@ class WalletListController: BaseViewController {
 extension WalletListController: WalletListTableViewManagerDelegate {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: LibraWalletManager) {
         print(indexPath.row)
-        if let action = self.actionClosure {
-            action(.update, model)
-        }
+        
         // 去除旧的选中
         let oldIndex = viewModel.tableViewManager.dataModelLocation!
         var oldModel = viewModel.tableViewManager.dataModel![oldIndex.section][oldIndex.row]
@@ -75,9 +73,10 @@ extension WalletListController: WalletListTableViewManagerDelegate {
         }
         viewModel.tableViewManager.dataModelLocation = indexPath
 
-//        self.viewModel.detailView.tableView.beginUpdates()
-//        self.viewModel.detailView.tableView.reloadRows(at: [oldIndex, indexPath], with: .none)
-//        self.viewModel.detailView.tableView.endUpdates()
+        if let action = self.actionClosure {
+            LibraWalletManager.shared.changeDefaultWallet(wallet: model)
+            action(.update, model)
+        }
         self.navigationController?.popViewController(animated: true)
     }
 }

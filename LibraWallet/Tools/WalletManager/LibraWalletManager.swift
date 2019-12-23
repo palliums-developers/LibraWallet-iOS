@@ -112,6 +112,22 @@ extension LibraWalletManager {
         self.walletCurrentUse = state
         self.semaphore.signal()
     }
+    mutating func changeDefaultWallet(wallet: LibraWalletManager) {
+        self.semaphore.wait()
+        
+        self.walletID = wallet.walletID
+        self.walletBalance = wallet.walletBalance
+        self.walletAddress = wallet.walletAddress
+        self.walletRootAddress = wallet.walletRootAddress
+        self.walletCreateTime = wallet.walletCreateTime
+        self.walletName = wallet.walletName
+        self.walletCurrentUse = true
+        self.walletBiometricLock = wallet.walletBiometricLock
+        self.walletIdentity = wallet.walletIdentity
+        self.walletType = wallet.walletType
+        
+        self.semaphore.signal()
+    }
 }
 extension LibraWalletManager {
     func savePaymentPasswordToKeychain(password: String, walletRootAddress: String) throws {

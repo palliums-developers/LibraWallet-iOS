@@ -8,14 +8,18 @@
 
 import UIKit
 import SocketIO
+import StatefulViewController
 class MarketViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.init(hex: "F7F7F9")
         // 加载子View
         self.view.addSubview(detailView)
-        self.wallet = LibraWalletManager.shared
+        //设置空数据页面
+        setEmptyView()
         self.initKVO()
+        //设置默认页面（无数据、无网络）
+        setPlaceholderView()
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -31,8 +35,18 @@ class MarketViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.barStyle = .black
+        // 关闭后当前页面可以刷新
+        stopRefreshTableView = false
         addSocket()
-        
+        // 判断是否切换钱包
+        if self.wallet?.walletRootAddress != LibraWalletManager.shared.walletRootAddress {
+            self.detailView.changeHeaderViewDefault(hideLeftModel: true)
+        }
+        // 更新钱包
+        self.wallet = LibraWalletManager.shared
+        // 判断时候是Violas钱包
+        self.requestData()
+        // 更新数据
         guard restartLisening == true else {
             return
         }
@@ -49,12 +63,47 @@ class MarketViewController: UIViewController {
         super.viewDidDisappear(animated)
         self.navigationController?.navigationBar.barStyle = .default
 //        closeSocket()
+        stopRefreshTableView = true
+    }
+    deinit {
+        print("MarketViewController销毁了")
     }
     func addSocket() {
         self.dataModel.addSocket()
     }
     func closeSocket() {
         self.dataModel.removeSocket()
+    }
+    func requestData() {
+        if (lastState == .Loading) {return}
+        startLoading()
+        guard self.wallet?.walletType == .Violas else {
+            endLoading(error: NSError.init(domain: "test", code: 1, userInfo: nil))
+            return
+        }
+        endLoading()
+        if let headerView = self.detailView.tableView.headerView(forSection: 0) as? MarketExchangeHeaderView {
+            if let payContract = headerView.leftTokenModel?.addr, let exchangeContract = headerView.rightTokenModel?.addr, payContract.isEmpty == false, exchangeContract.isEmpty == false {
+                guard let walletAddress = self.wallet?.walletAddress else {
+                    return
+                }
+                print("添加监听")
+                self.dataModel.getMarketData(address: walletAddress, payContract: payContract, exchangeContract: exchangeContract)
+            }
+        }
+        
+    }
+    func hasContent() -> Bool {
+        guard self.wallet?.walletType == .Violas else {
+            return false
+        }
+        return true
+    }
+    func setPlaceholderView() {
+        if let error = errorView as? WalletInvalidInMarketWarningAlert {
+            error.emptyImageName = "backup_mnemonic_icon"
+            error.descString = localLanguage(keyString: "当前钱包不支持交易所交易，交易所仅支持Violas钱包交易")
+        }
     }
     //网络请求、数据模型
     lazy var dataModel: MarketModel = {
@@ -74,16 +123,20 @@ class MarketViewController: UIViewController {
         view.tableView.dataSource = self.tableViewManager
         return view
     }()
-    deinit {
-        print("MarketViewController销毁了")
-    }
+    
     var manager: SocketManager?
     var myContext = 0
     typealias nextActionClosure = ([MarketSupportCoinDataModel]) -> Void
     var actionClosure: nextActionClosure?
-    var restartLisening: Bool?
     
+    typealias exchangeStateClosure = (Int) -> Void
+    var checkBalanceClosure: exchangeStateClosure?
+    
+    typealias publishTokenForTransactionClosure = () -> Void
+    var publishTokenClosure: publishTokenForTransactionClosure?
+    var restartLisening: Bool?
     var wallet: LibraWalletManager?
+    var stopRefreshTableView: Bool?
 }
 extension MarketViewController: MarketTableViewManagerDelegate {
     func selectToken(button: UIButton, leftModelName: String, rightModelName: String) {
@@ -91,26 +144,23 @@ extension MarketViewController: MarketTableViewManagerDelegate {
             return
         }
         self.detailView.toastView?.show()
-        self.dataModel.getMarketSupportToken(address: walletAddress)
-        
+        self.dataModel.getSupportToken(address: walletAddress)
+
         self.actionClosure = { dataModel in
             var tempDataModel = dataModel
+            // 筛选左右展示数据
             if button.tag == 20 {
                 // 左边点击
                 tempDataModel = dataModel.filter({ item in
                     item.enable == true
                 })
-                #warning("请先注册币")
-                guard tempDataModel.isEmpty == false else {
-                    self.detailView.makeToast(localLanguage(keyString: "请先注册稳定币"),
-                                              position: .center)
-                    return
-                }
             } else {
                 // 右边点击
                 tempDataModel = dataModel.filter({ item in
                     item.name != leftModelName
-                })
+                }).sorted(by: {
+                    ($0.enable ?? false) != ($1.enable ?? false)
+                }).reversed()
             }
             let alert = TokenPickerViewAlert.init(successClosure: { (model) in
                 if let headerView = self.detailView.tableView.headerView(forSection: 0) as? MarketExchangeHeaderView {
@@ -126,7 +176,7 @@ extension MarketViewController: MarketTableViewManagerDelegate {
                         headerView.leftTokenModel = model
                         // 右边设置为空
                         if headerView.rightTokenModel?.name == headerView.leftTokenModel?.name {
-                            headerView.rightTokenModel = nil
+                            self.detailView.changeHeaderViewDefault(hideLeftModel: false)
                         }
                     } else {
                         guard headerView.rightTokenModel?.name != model.name else {
@@ -158,64 +208,79 @@ extension MarketViewController: MarketTableViewManagerDelegate {
             alert.showAnimation()
         }
     }
-    func exchangeToken(payContract: String, receiveContract: String, amount: Double, exchangeAmount: Double) {
-        self.showPasswordAlert(payContract: payContract,
-                               receiveContract: receiveContract,
-                               amount: amount,
-                               exchangeAmount: exchangeAmount)
+    func exchangeToken(payToken: MarketSupportCoinDataModel, receiveToken: MarketSupportCoinDataModel, amount: Double, exchangeAmount: Double) {
+        self.detailView.toastView?.show()
+        // 第一步，检查余额是否充足
+        self.dataModel.getViolasBalance(walletID: LibraWalletManager.shared.walletID ?? 0,
+                                        address: LibraWalletManager.shared.walletAddress ?? "",
+                                        vtoken: payToken.addr ?? "")
+        
+        self.checkBalanceClosure = { balance in
+            if balance > Int(amount * 1000000) {
+                //第二步，余额充足，检查是否将要兑换的币已注册
+                guard receiveToken.enable == true else {
+                    let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: localLanguage(keyString: "您将要兑换的币尚未开启，开启需要消耗一定数量Gas费，是否立即开启并兑换"), preferredStyle: .alert)
+                    alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_confirm_button_title"), style: .default){ [weak self] clickHandler in
+                        self?.showPublishPasswordAlert(payContract: payToken.addr ?? "",
+                                                      receiveContract: receiveToken.addr ?? "",
+                                                      amount: amount,
+                                                      exchangeAmount: exchangeAmount)
+                        
+                    })
+                    alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_cancel_button_title"), style: .cancel){ clickHandler in
+                        NSLog("点击了取消")
+                    })
+                    self.present(alertContr, animated: true, completion: nil)
+                    return
+                }
+                self.showPasswordAlert(payContract: payToken.addr ?? "",
+                                       receiveContract: receiveToken.addr ?? "",
+                                       amount: amount,
+                                       exchangeAmount: exchangeAmount)
+            } else {
+                self.detailView.makeToast(localLanguage(keyString: "余额不足以兑换，请确认"), position: .center)
+            }
+        }
     }
     func showPasswordAlert(payContract: String, receiveContract: String, amount: Double, exchangeAmount: Double) {
-        let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: localLanguage(keyString: "wallet_type_in_password_content"), preferredStyle: .alert)
-        alertContr.addTextField {
-            (textField: UITextField!) -> Void in
-            textField.placeholder = localLanguage(keyString: "wallet_type_in_password_textfield_placeholder")
-            textField.tintColor = DefaultGreenColor
-            textField.isSecureTextEntry = true
+        let alert = showPassowordAlertViewController(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] mnemonic in
+            guard let walletAddress = self?.wallet?.walletAddress else {
+                return
+            }
+            self?.dataModel.exchangeViolasTokenTransaction(sendAddress: walletAddress,
+                                                           amount: amount,
+                                                           fee: 0,
+                                                           mnemonic: mnemonic,
+                                                           contact: payContract,
+                                                           exchangeTokenContract: receiveContract,
+                                                           exchangeTokenAmount: exchangeAmount)
+        }) { [weak self] errorContent in
+            self?.view.makeToast(errorContent, position: .center)
         }
-        alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_confirm_button_title"), style: .default) { [weak self] clickHandler in
-            let passwordTextField = alertContr.textFields!.first! as UITextField
-            guard let password = passwordTextField.text else {
-                self?.view.makeToast(LibraWalletError.WalletCheckPassword(reason: .passwordInvalidError).localizedDescription,
-                                    position: .center)
+        self.present(alert, animated: true, completion: nil)
+    }
+    func showPublishPasswordAlert(payContract: String, receiveContract: String, amount: Double, exchangeAmount: Double) {
+        let alert = showPassowordAlertViewController(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] mnemonic in
+            guard let walletAddress = self?.wallet?.walletAddress else {
                 return
             }
-            guard password.isEmpty == false else {
-                self?.view.makeToast(LibraWalletError.WalletCheckPassword(reason: .passwordEmptyError).localizedDescription,
-                                    position: .center)
-                return
-            }
-            NSLog("Password:\(password)")
-            do {
-                let state = try LibraWalletManager.shared.isValidPaymentPassword(walletRootAddress: (self?.wallet?.walletRootAddress)!, password: password)
-                guard state == true else {
-                    self?.view.makeToast(LibraWalletError.WalletCheckPassword(reason: .passwordEmptyError).localizedDescription,
-                                         position: .center)
-                    return
-                }
-                self?.detailView.toastView?.show()
-                let menmonic = try LibraWalletManager.shared.getMnemonicFromKeychain(walletRootAddress: (self?.wallet?.walletRootAddress)!)
-                guard let walletAddress = self?.wallet?.walletAddress else {
-                    #warning("缺少错误提示")
-                    return
-                }
+            self?.dataModel.publishTokenForTransaction(sendAddress: walletAddress,
+                                                       mnemonic: mnemonic,
+                                                       contact: receiveContract)
+            self?.publishTokenClosure = {
                 self?.dataModel.exchangeViolasTokenTransaction(sendAddress: walletAddress,
                                                                amount: amount,
                                                                fee: 0,
-                                                               mnemonic: menmonic,
+                                                               mnemonic: mnemonic,
                                                                contact: payContract,
                                                                exchangeTokenContract: receiveContract,
                                                                exchangeTokenAmount: exchangeAmount)
-            } catch {
-                self?.detailView.toastView?.hide()
             }
-        })
-        alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_cancel_button_title"), style: .cancel){
-            clickHandler in
-            NSLog("点击了取消")
-            })
-        self.present(alertContr, animated: true, completion: nil)
+        }) { [weak self] errorContent in
+            self?.view.makeToast(errorContent, position: .center)
+        }
+        self.present(alert, animated: true, completion: nil)
     }
-
     
     func switchButtonChange(model: ViolasTokenModel, state: Bool, indexPath: IndexPath) {
 //        self.dataModel.e
@@ -245,32 +310,51 @@ extension MarketViewController {
             return
         }
         if let error = jsonData.value(forKey: "error") as? LibraWalletError {
+            self.detailView.toastView?.hide()
             if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
                 // 网络无法访问
                 print(error.localizedDescription)
+                self.detailView.makeToast(error.localizedDescription, position: .center)
             } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletNotExist).localizedDescription {
                 // 钱包不存在
                 print(error.localizedDescription)
-//                let vc = WalletCreateViewController()
-//                let navi = UINavigationController.init(rootViewController: vc)
-//                self.present(navi, animated: true, completion: nil)
+                self.detailView.makeToast(error.localizedDescription, position: .center)
             } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionTooOld).localizedDescription {
                 // 版本太久
                 print(error.localizedDescription)
+                self.detailView.makeToast(error.localizedDescription, position: .center)
             } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
                 // 解析失败
                 print(error.localizedDescription)
+                self.detailView.makeToast(error.localizedDescription, position: .center)
             } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
                 print(error.localizedDescription)
                 // 数据为空
+                self.detailView.makeToast(error.localizedDescription, position: .center)
             } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
                 print(error.localizedDescription)
                 // 数据返回状态异常
+                self.detailView.makeToast(error.localizedDescription, position: .center)
+            } else if error.localizedDescription == LibraWalletError.error(localLanguage(keyString: "尚未注册任何稳定币")).localizedDescription {
+                print(error.localizedDescription)
+                let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: error.localizedDescription + localLanguage(keyString: ",是否立即注册"), preferredStyle: .alert)
+                alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_confirm_button_title"), style: .default){ [weak self] clickHandler in
+                    let vc = AddAssetViewController()
+                    vc.model = self?.wallet
+                    vc.needDismissViewController = true
+                    let navi = UINavigationController.init(rootViewController: vc)
+                    self?.present(navi, animated: true, completion: nil)
+                })
+                alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_cancel_button_title"), style: .cancel){ clickHandler in
+                    NSLog("点击了取消")
+                })
+                self.present(alertContr, animated: true, completion: nil)
+            } else if error.localizedDescription == LibraWalletError.error(localLanguage(keyString: "交易所支持稳定币为空")).localizedDescription {
+                print(error.localizedDescription)
+                
             }
 //            self.detailView.hideToastActivity()
-            self.detailView.toastView?.hide()
-            self.detailView.makeToast(error.localizedDescription,
-                                      position: .center)
+            
             return
         }
         let type = jsonData.value(forKey: "type") as! String
@@ -302,10 +386,21 @@ extension MarketViewController {
             }
         } else if type == "ExchangeDone" {
             self.detailView.toastView?.hide()
-            self.detailView.makeToast(localLanguage(keyString: "挂单成功"),
-                                      position: .center)
+            self.detailView.makeToast(localLanguage(keyString: "挂单成功"), position: .center)
+        } else if type == "UpdateViolasBalance" {
+            self.detailView.toastView?.hide()
+            if let tempData = jsonData.value(forKey: "data") as? BalanceLibraModel {
+                if let data = tempData.modules, data.isEmpty == false, let tempModule = data.first {
+                    if let action = self.checkBalanceClosure {
+                        action(Int(tempModule.balance ?? 0))
+                    }
+                }
+            }
+        } else if type == "PublishTokenForTransaction" {
+            if let action = self.publishTokenClosure {
+                action()
+            }
         }
-//        self.detailView.hideToastActivity()
     }
     func refreshTableView(data: [MarketOrderDataModel]) {
         // 开始筛选所有我的订单
@@ -325,6 +420,9 @@ extension MarketViewController {
                         if let count = self.tableViewManager.buyOrders?.count, count >= 0 {
                             // 判断返回数据是否在已展示的5条数据中，如果在，删除数据+刷新Tableview，不在仅删除数据
                             if j < 5 {
+                                guard stopRefreshTableView == false else {
+                                    return
+                                }
                                 self.detailView.tableView.beginUpdates()
                                 self.detailView.tableView.deleteRows(at: [IndexPath.init(row: j, section: 1)], with: UITableView.RowAnimation.left)
                                 // 判断删除数据后已展示数据是否满足5条，不满足追加Tableview的Cell，满足不做操作
@@ -341,6 +439,9 @@ extension MarketViewController {
                             // 判断返回数据是否在已展示的5条数据中，如果在，删除数据+刷新Tableview，不在仅删除数据
                             if j < 5 {
                                 // 已在列表中展示
+                                guard stopRefreshTableView == false else {
+                                    return
+                                }
                                 self.detailView.tableView.beginUpdates()
                                 self.detailView.tableView.deleteRows(at: [IndexPath.init(row: j, section: 1)], with: UITableView.RowAnimation.left)
                                 // 判断删除数据后已展示数据是否满足5条，不满足追加Tableview的Cell，满足不做操作
@@ -360,6 +461,9 @@ extension MarketViewController {
                             // 判断返回数据是否在已展示的5条数据中，如果在，刷新Tableview的Cell，不在仅刷新数据
                             if j < 5 {
                                 // 已在列表中展示
+                                guard stopRefreshTableView == false else {
+                                    return
+                                }
                                 self.detailView.tableView.beginUpdates()
                                 self.detailView.tableView.reloadRows(at: [IndexPath.init(row: j, section: 1)], with: UITableView.RowAnimation.fade)
                                 self.detailView.tableView.endUpdates()
@@ -377,6 +481,9 @@ extension MarketViewController {
                 self.tableViewManager.buyOrders = self.tableViewManager.buyOrders?.sorted(by: {
                     ($0.date ?? 0) > ($1.date ?? 0)
                 })
+                guard stopRefreshTableView == false else {
+                    return
+                }
                 self.detailView.tableView.beginUpdates()
                 if let count = self.tableViewManager.buyOrders?.count, count >= 0 {
                     // 判断数据是否已展示五条，已展示删除最后一条，未展示直接插入到列首
@@ -408,6 +515,9 @@ extension MarketViewController {
                             // 判断返回数据是否在已展示的5条数据中，如果在，删除数据+刷新Tableview，不在仅删除数据
                             if j < 5 {
                                 // 已在列表中展示
+                                guard stopRefreshTableView == false else {
+                                    return
+                                }
                                 self.detailView.tableView.beginUpdates()
                                 self.detailView.tableView.deleteRows(at: [IndexPath.init(row: j, section: 2)], with: UITableView.RowAnimation.left)
                                 if count >= 5 {
@@ -415,6 +525,9 @@ extension MarketViewController {
                                 }
                                 self.detailView.tableView.endUpdates()
                             }
+                        }
+                        guard stopRefreshTableView == false else {
+                            return
                         }
                         self.detailView.tableView.beginUpdates()
                         self.detailView.tableView.deleteRows(at: [IndexPath.init(row: j, section: 2)], with: UITableView.RowAnimation.left)
@@ -427,6 +540,9 @@ extension MarketViewController {
                             // 判断返回数据是否在已展示的5条数据中，如果在，删除数据+刷新Tableview，不在仅删除数据
                             if j < 5 {
                                 // 已在列表中展示
+                                guard stopRefreshTableView == false else {
+                                    return
+                                }
                                 self.detailView.tableView.beginUpdates()
                                 self.detailView.tableView.deleteRows(at: [IndexPath.init(row: j, section: 2)], with: UITableView.RowAnimation.left)
                                 if count >= 5 {
@@ -443,6 +559,9 @@ extension MarketViewController {
                             // 判断返回数据是否在已展示的5条数据中，如果在，刷新Tableview的Cell，不在仅刷新数据
                             if j < 5 {
                                 // 已在列表中展示
+                                guard stopRefreshTableView == false else {
+                                    return
+                                }
                                 self.detailView.tableView.beginUpdates()
                                 self.detailView.tableView.reloadRows(at: [IndexPath.init(row: j, section: 2)], with: UITableView.RowAnimation.fade)
                                 self.detailView.tableView.endUpdates()
@@ -458,6 +577,9 @@ extension MarketViewController {
                 self.tableViewManager.sellOrders = self.tableViewManager.sellOrders?.sorted(by: {
                     ($0.date ?? 0) > ($1.date ?? 0)
                 })
+                guard stopRefreshTableView == false else {
+                    return
+                }
                 self.detailView.tableView.beginUpdates()
                 if let count = self.tableViewManager.sellOrders?.count, count >= 0 {
                     // 判断数据是否已展示五条，已展示删除最后一条，未展示直接插入到列首
@@ -471,6 +593,9 @@ extension MarketViewController {
         }
     }
 }
-extension MarketViewController: MarketExchangeHeaderViewDelegate {
-    
+extension MarketViewController: StatefulViewController {
+    func setEmptyView() {
+        //空数据
+        errorView = WalletInvalidInMarketWarningAlert()
+    }
 }

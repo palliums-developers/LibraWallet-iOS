@@ -137,7 +137,7 @@ extension TokenPickerViewAlert: UIPickerViewDelegate {
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         //赋值
         if let model = models?[row] {
-            return (model.name ?? "") + (model.enable == true ? localLanguage(keyString: "（已开启）"):"")
+            return (model.name ?? "") + (model.enable == true ? localLanguage(keyString: "（已注册）"):"")
         }
         return "test"
     }

@@ -77,3 +77,40 @@ func isPurnDouble(string: String) -> Bool {
     return scan.scanDouble(&val) && scan.isAtEnd
     
 }
+func showPassowordAlertViewController(rootAddress: String, mnemonic: @escaping (([String])->Void), errorContent: @escaping ((String)->Void)) -> UIAlertController {
+    let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: localLanguage(keyString: "wallet_type_in_password_content"), preferredStyle: .alert)
+    alertContr.addTextField {
+        (textField: UITextField!) -> Void in
+        textField.placeholder = localLanguage(keyString: "wallet_type_in_password_textfield_placeholder")
+        textField.tintColor = DefaultGreenColor
+        textField.isSecureTextEntry = true
+    }
+    alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_confirm_button_title"), style: .default) { clickHandler in
+        let passwordTextField = alertContr.textFields!.first! as UITextField
+        guard let password = passwordTextField.text else {
+            errorContent(LibraWalletError.WalletCheckPassword(reason: .passwordInvalidError).localizedDescription)
+            return
+        }
+        guard password.isEmpty == false else {
+            errorContent(LibraWalletError.WalletCheckPassword(reason: .passwordEmptyError).localizedDescription)
+            return
+        }
+        NSLog("Password:\(password)")
+        do {
+            let state = try LibraWalletManager.shared.isValidPaymentPassword(walletRootAddress: rootAddress, password: password)
+            guard state == true else {
+                errorContent(LibraWalletError.WalletCheckPassword(reason: .passwordInvalidError).localizedDescription)
+                return
+            }
+            let tempMenmonic = try LibraWalletManager.shared.getMnemonicFromKeychain(walletRootAddress: rootAddress)
+            mnemonic(tempMenmonic)
+        } catch {
+            errorContent(error.localizedDescription)
+        }
+    })
+    alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_cancel_button_title"), style: .cancel){
+        clickHandler in
+        NSLog("点击了取消")
+    })
+    return alertContr
+}
