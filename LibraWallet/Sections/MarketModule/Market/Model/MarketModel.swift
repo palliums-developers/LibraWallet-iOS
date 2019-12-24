@@ -354,7 +354,7 @@ class MarketModel: NSObject {
     func updateLocalWalletTokenData(walletID: Int64, modules: [BalanceViolasModulesModel]) {
         // 刷新本地缓存数据
         for item in modules {
-            let result = DataBaseManager.DBManager.updateViolasToken(walletID: walletID, model: item)
+            let result = DataBaseManager.DBManager.updateViolasTokenBalance(walletID: walletID, model: item)
             print("刷新本地钱包Token数据状态: \(result),walletID = \(walletID)")
         }
     }

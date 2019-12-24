@@ -192,13 +192,15 @@ class HomeModel: NSObject {
 //    }
     func getEnableViolasToken(walletID: Int64,  address: String) {
         do {
-            let vtokens = try DataBaseManager.DBManager.getViolasTokens(walletID: walletID)
+            let vtokens = try DataBaseManager.DBManager.getViolasTokens(walletID: walletID).filter({ item in
+                item.enable == true
+            })
             let data = setKVOData(type: "LoadEnableViolasTokenList", data: vtokens)
             self.setValue(data, forKey: "dataDic")
             
             getViolasBalance(walletID: walletID, address: address, vtokens: vtokens)
         } catch {
-            
+            print(error.localizedDescription)
         }
     }
     func getViolasBalance(walletID: Int64, address: String, vtokens: [ViolasTokenModel]) {
@@ -259,7 +261,7 @@ class HomeModel: NSObject {
     func updateLocalWalletTokenData(walletID: Int64, modules: [BalanceViolasModulesModel]) {
         // 刷新本地缓存数据
         for item in modules {
-            let result = DataBaseManager.DBManager.updateViolasToken(walletID: walletID, model: item)
+            let result = DataBaseManager.DBManager.updateViolasTokenBalance(walletID: walletID, model: item)
             print("刷新本地钱包Token数据状态: \(result),walletID = \(walletID)")
         }
     }

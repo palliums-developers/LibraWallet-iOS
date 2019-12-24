@@ -28,7 +28,6 @@
 		9D5B4E6E236BCBC200F4D99C /* AddAssetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B4E6D236BCBC200F4D99C /* AddAssetView.swift */; };
 		9D5B4E70236BCBDB00F4D99C /* AddAssetModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B4E6F236BCBDB00F4D99C /* AddAssetModel.swift */; };
 		9D5B4E72236BCBEE00F4D99C /* AddAssetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B4E71236BCBEE00F4D99C /* AddAssetViewController.swift */; };
-		9D5B4E74236BCC0300F4D99C /* AddAssetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B4E73236BCC0300F4D99C /* AddAssetViewModel.swift */; };
 		9D5B4E76236BCC1700F4D99C /* AddAssetTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B4E75236BCC1700F4D99C /* AddAssetTableViewManager.swift */; };
 		9D5B4E78236BCE1700F4D99C /* AddAssetViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B4E77236BCE1700F4D99C /* AddAssetViewTableViewCell.swift */; };
 		9D5B4E7A236BD22600F4D99C /* AddAssetTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B4E79236BD22600F4D99C /* AddAssetTableViewHeader.swift */; };
@@ -316,7 +315,6 @@
 		9D5B4E6D236BCBC200F4D99C /* AddAssetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAssetView.swift; sourceTree = "<group>"; };
 		9D5B4E6F236BCBDB00F4D99C /* AddAssetModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAssetModel.swift; sourceTree = "<group>"; };
 		9D5B4E71236BCBEE00F4D99C /* AddAssetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAssetViewController.swift; sourceTree = "<group>"; };
-		9D5B4E73236BCC0300F4D99C /* AddAssetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAssetViewModel.swift; sourceTree = "<group>"; };
 		9D5B4E75236BCC1700F4D99C /* AddAssetTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAssetTableViewManager.swift; sourceTree = "<group>"; };
 		9D5B4E77236BCE1700F4D99C /* AddAssetViewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAssetViewTableViewCell.swift; sourceTree = "<group>"; };
 		9D5B4E79236BD22600F4D99C /* AddAssetTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAssetTableViewHeader.swift; sourceTree = "<group>"; };
@@ -752,7 +750,6 @@
 			children = (
 				9D5B4E69236BCB8200F4D99C /* Controller */,
 				9D5B4E6B236BCB9700F4D99C /* TableViewManager */,
-				9D5B4E6A236BCB8F00F4D99C /* ViewModel */,
 				9D5B4E68236BCB7B00F4D99C /* Model */,
 				9D5B4E67236BCB7600F4D99C /* View */,
 			);
@@ -783,14 +780,6 @@
 				9D5B4E71236BCBEE00F4D99C /* AddAssetViewController.swift */,
 			);
 			path = Controller;
-			sourceTree = "<group>";
-		};
-		9D5B4E6A236BCB8F00F4D99C /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
-				9D5B4E73236BCC0300F4D99C /* AddAssetViewModel.swift */,
-			);
-			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		9D5B4E6B236BCB9700F4D99C /* TableViewManager */ = {
@@ -2065,11 +2054,11 @@
 		9DC06A382372A92100BCE1FE /* MarketModule */ = {
 			isa = PBXGroup;
 			children = (
+				9DC06A392372A92C00BCE1FE /* Market */,
 				9D628A9E239F319800E222FB /* OrderDetail */,
 				9D628AA0239F341C00E222FB /* OrderDone */,
 				9D628A9F239F31A900E222FB /* OrderProcessing */,
 				9D628A9D239F318C00E222FB /* OrderCenter */,
-				9DC06A392372A92C00BCE1FE /* Market */,
 			);
 			path = MarketModule;
 			sourceTree = "<group>";
@@ -2895,7 +2884,6 @@
 				9D9B49E123602EE400354EF0 /* SettingModel.swift in Sources */,
 				9DA0263C236BFD030084905B /* WalletListCollectionViewManager.swift in Sources */,
 				9D3954FE235D4C0F0068019F /* BTCManager.swift in Sources */,
-				9D5B4E74236BCC0300F4D99C /* AddAssetViewModel.swift in Sources */,
 				9D628AB6239F722E00E222FB /* OrderCenterTableViewCell.swift in Sources */,
 				9DC06A3F2372A9B100BCE1FE /* MarketViewController.swift in Sources */,
 				9D9B49AA235DA76100354EF0 /* AddressManagerViewController.swift in Sources */,
@@ -3336,7 +3324,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.palliums.wallet;
 				PRODUCT_NAME = Violas;
-				PROVISIONING_PROFILE_SPECIFIER = HobaWallet;
+				PROVISIONING_PROFILE_SPECIFIER = HobaWalletDeveloper;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

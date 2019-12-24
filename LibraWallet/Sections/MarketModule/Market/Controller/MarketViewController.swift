@@ -41,6 +41,9 @@ class MarketViewController: UIViewController {
         // 判断是否切换钱包
         if self.wallet?.walletRootAddress != LibraWalletManager.shared.walletRootAddress {
             self.detailView.changeHeaderViewDefault(hideLeftModel: true)
+            self.tableViewManager.buyOrders = nil
+            self.tableViewManager.sellOrders = nil
+            self.detailView.tableView.reloadData()
         }
         // 更新钱包
         self.wallet = LibraWalletManager.shared
@@ -340,7 +343,7 @@ extension MarketViewController {
                 let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: error.localizedDescription + localLanguage(keyString: ",是否立即注册"), preferredStyle: .alert)
                 alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_confirm_button_title"), style: .default){ [weak self] clickHandler in
                     let vc = AddAssetViewController()
-                    vc.model = self?.wallet
+                    vc.wallet = self?.wallet
                     vc.needDismissViewController = true
                     let navi = UINavigationController.init(rootViewController: vc)
                     self?.present(navi, animated: true, completion: nil)

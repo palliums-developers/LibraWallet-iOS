@@ -13,9 +13,9 @@ class AddAssetViewController: BaseViewController {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.white
         // 加载子View
-        self.view.addSubview(self.viewModel.detailView)
+        self.view.addSubview(self.detailView)
         // 加载数据
-        self.viewModel.initKVO(walletID: (model?.walletID)!)
+        self.initKVO(walletID: (wallet?.walletID)!, walletAddress: wallet?.walletAddress ?? "")
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -27,7 +27,7 @@ class AddAssetViewController: BaseViewController {
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        self.viewModel.detailView.snp.makeConstraints { (make) in
+        self.detailView.snp.makeConstraints { (make) in
             if #available(iOS 11.0, *) {
                 make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
             } else {
@@ -46,73 +46,156 @@ class AddAssetViewController: BaseViewController {
             self.navigationController?.popViewController(animated: true)
         }
     }
-    lazy var viewModel: AddAssetViewModel = {
-        let viewModel = AddAssetViewModel.init()
-        viewModel.tableViewManager.headerData = self.model
-        viewModel.delegate = self
-        return viewModel
+//    lazy var viewModel: AddAssetViewModel = {
+//        let viewModel = AddAssetViewModel.init()
+//        viewModel.tableViewManager.headerData = self.wallet
+//        viewModel.delegate = self
+//        return viewModel
+//    }()
+    //网络请求、数据模型
+    lazy var dataModel: AddAssetModel = {
+        let model = AddAssetModel.init()
+        return model
     }()
-    var model: LibraWalletManager?
+    //tableView管理类
+    lazy var tableViewManager: AddAssetTableViewManager = {
+        let manager = AddAssetTableViewManager.init()
+        manager.delegate = self
+        return manager
+    }()
+    //子View
+    lazy var detailView : AddAssetView = {
+        let view = AddAssetView.init()
+        view.tableView.delegate = self.tableViewManager
+        view.tableView.dataSource = self.tableViewManager
+        return view
+    }()
+    typealias successClosure = (Bool) -> Void
+    var actionClosure: successClosure?
+    var wallet: LibraWalletManager?
     var needDismissViewController: Bool?
-
+    var myContext = 0
+    var needUpdateClosure: successClosure?
 }
-extension AddAssetViewController: AddAssetViewModelDelegate {
+extension AddAssetViewController: AddAssetTableViewManagerDelegate {
     func switchButtonChange(model: ViolasTokenModel, state: Bool, indexPath: IndexPath) {
-        let alertView = UIAlertController.init(title: localLanguage(keyString: "wallet_add_asset_alert_title"),
-                                               message: localLanguage(keyString: "wallet_add_asset_alert_content"),
-                                               preferredStyle: .alert)
-        let cancelAction = UIAlertAction.init(title:localLanguage(keyString: "wallet_add_asset_alert_cancel_button_title"), style: .default) { okAction in
-            let cell = self.viewModel.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
-            cell.switchButton.setOn(!state, animated: true)
+        if model.registerState == true {
+            // 已注册
+            //判断数据库是否已存在
+            print("已注册")
+            if DataBaseManager.DBManager.isExistViolasToken(walletID: wallet?.walletID ?? 0, contract: model.address ?? "") {
+                //已存在改状态
+                print("已存在改状态")
+                let cell = self.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
+                cell.switchButton.setOn(state, animated: true)
+                _ = DataBaseManager.DBManager.updateViolasTokenState(walletID: wallet?.walletID ?? 0, tokenAddress: model.address ?? "", state: state)
+            } else {
+                //不存在插入
+                print("不存在插入")
+                _ = DataBaseManager.DBManager.insertViolasToken(walletID: wallet?.walletID ?? 0, model: model)
+            }
+        } else {
+            // 未注册
+            print("未注册")
+            let alertView = UIAlertController.init(title: localLanguage(keyString: "wallet_add_asset_alert_title"),
+                                                   message: localLanguage(keyString: "wallet_add_asset_alert_content"),
+                                                   preferredStyle: .alert)
+            let cancelAction = UIAlertAction.init(title:localLanguage(keyString: "wallet_add_asset_alert_cancel_button_title"), style: .default) { okAction in
+                let cell = self.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
+                cell.switchButton.setOn(!state, animated: true)
+            }
+            let confirmAction = UIAlertAction.init(title:localLanguage(keyString: "wallet_add_asset_alert_confirm_button_title"), style: .default) { okAction in
+                self.showPasswordAlert(model: model, indexPath: indexPath)
+            }
+            alertView.addAction(cancelAction)
+            alertView.addAction(confirmAction)
+            self.present(alertView, animated: true, completion: nil)
         }
-        let confirmAction = UIAlertAction.init(title:localLanguage(keyString: "wallet_add_asset_alert_confirm_button_title"), style: .default) { okAction in
-            self.showPasswordAlert(model: model, indexPath: indexPath)
+        if let action = self.needUpdateClosure {
+            action(true)
         }
-        alertView.addAction(cancelAction)
-        alertView.addAction(confirmAction)
-        self.present(alertView, animated: true, completion: nil)
     }
     func showPasswordAlert(model: ViolasTokenModel, indexPath: IndexPath) {
-        let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: localLanguage(keyString: "wallet_type_in_password_content"), preferredStyle: .alert)
-        alertContr.addTextField {
-            (textField: UITextField!) -> Void in
-            textField.placeholder = localLanguage(keyString: "wallet_type_in_password_textfield_placeholder")
-            textField.tintColor = DefaultGreenColor
-            textField.isSecureTextEntry = true
-        }
-        alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_confirm_button_title"), style: .default) { [weak self] clickHandler in
-            let passwordTextField = alertContr.textFields!.first! as UITextField
-            guard let password = passwordTextField.text else {
-                self?.view.makeToast(LibraWalletError.WalletCheckPassword(reason: .passwordInvalidError).localizedDescription,
-                                    position: .center)
-                return
-            }
-            guard password.isEmpty == false else {
-                self?.view.makeToast(LibraWalletError.WalletCheckPassword(reason: .passwordEmptyError).localizedDescription,
-                                    position: .center)
-                return
-            }
-            NSLog("Password:\(password)")
-            do {
-                let state = try LibraWalletManager.shared.isValidPaymentPassword(walletRootAddress: (self?.model?.walletRootAddress)!, password: password)
-                guard state == true else {
-                    let cell = self?.viewModel.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
-                    cell.switchButton.setOn(false, animated: true)
-                    self?.view.makeToast(LibraWalletError.WalletCheckPassword(reason: .passwordInvalidError).localizedDescription,
-                                         position: .center)
-                    return
+        let alert = showPassowordAlertViewController(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
+            self?.detailView.toastView?.show()
+            self?.dataModel.publishViolasToken(sendAddress: (self?.wallet?.walletAddress)!, mnemonic: mnemonic, contact: model.address ?? "")
+            self?.actionClosure = { result in
+                if result == true {
+                    let cell = self?.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
+                    cell.switchButton.setOn(result, animated: true)
+                    print("开启成功插入")
+                    _ = DataBaseManager.DBManager.insertViolasToken(walletID: self?.wallet?.walletID ?? 0, model: model)
+                } else {
+                    let cell = self?.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
+                    cell.switchButton.setOn(result, animated: true)
+                    print("开启失败")
                 }
-                self?.viewModel.detailView.toastView?.show()
-                let menmonic = try LibraWalletManager.shared.getMnemonicFromKeychain(walletRootAddress: (self?.model?.walletRootAddress)!)
-                self?.viewModel.dataModel.publishViolasToken(sendAddress: (self?.model?.walletAddress)!, mnemonic: menmonic, contact: model.address ?? "")
-            } catch {
-                self?.viewModel.detailView.toastView?.hide()
             }
-        })
-        alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_cancel_button_title"), style: .cancel){
-            clickHandler in
-            NSLog("点击了取消")
-            })
-        self.present(alertContr, animated: true, completion: nil)
+        }) { [weak self] (errorContent) in
+            let cell = self?.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
+            cell.switchButton.setOn(false, animated: true)
+            self?.view.makeToast(errorContent, position: .center)
+        }
+        self.present(alert, animated: true, completion: nil)
+    }
+}
+extension AddAssetViewController {
+    func initKVO(walletID: Int64, walletAddress: String) {
+        dataModel.addObserver(self, forKeyPath: "dataDic", options: NSKeyValueObservingOptions.new, context: &myContext)
+        self.detailView.makeToastActivity(.center)
+        self.dataModel.getSupportToken(walletID: walletID, walletAddress: walletAddress)
+    }
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?)  {
+        
+        guard context == &myContext else {
+            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+            return
+        }
+        guard (change?[NSKeyValueChangeKey.newKey]) != nil else {
+            return
+        }
+        guard let jsonData = (object! as AnyObject).value(forKey: "dataDic") as? NSDictionary else {
+            return
+        }
+        if let error = jsonData.value(forKey: "error") as? LibraWalletError {
+            if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
+                // 网络无法访问
+                print(error.localizedDescription)
+            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletNotExist).localizedDescription {
+                print(error.localizedDescription)
+            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionTooOld).localizedDescription {
+                // 版本太久
+                print(error.localizedDescription)
+            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
+                // 解析失败
+                print(error.localizedDescription)
+            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
+                print(error.localizedDescription)
+                // 数据为空
+            }
+            self.detailView.toastView?.hide()
+            if let action = self.actionClosure {
+                action(false)
+            }
+//            self.detailView.makeToast("开启失败", position: .center)
+            return
+        }
+        let type = jsonData.value(forKey: "type") as! String
+        
+        if type == "GetTokenList" {
+            if let tempData = jsonData.value(forKey: "data") as? [ViolasTokenModel] {
+                self.tableViewManager.dataModel = tempData
+                self.detailView.tableView.reloadData()
+                self.detailView.hideToastActivity()
+            }
+        } else if type == "SendViolasTransaction" {
+            self.detailView.toastView?.hide()
+            if let action = self.actionClosure {
+                action(true)
+            }
+            self.detailView.makeToast(localLanguage(keyString: "wallet_add_asset_alert_success_title"),
+                                position: .center)
+            
+        }
     }
 }

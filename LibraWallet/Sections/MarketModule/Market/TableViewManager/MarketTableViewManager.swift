@@ -16,8 +16,8 @@ protocol MarketTableViewManagerDelegate: NSObjectProtocol {
 }
 class MarketTableViewManager: NSObject {
     weak var delegate: MarketTableViewManagerDelegate?
-    var dataModel: [ViolasTokenModel]?
-    var headerData: LibraWalletManager?
+//    var dataModel: [ViolasTokenModel]?
+//    var headerData: LibraWalletManager?
     var normalLeftModel = MarketSupportCoinDataModel.init(addr: "", name: "---", price: 1, enable: true)
     
     var buyOrders: [MarketOrderDataModel]?

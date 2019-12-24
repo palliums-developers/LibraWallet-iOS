@@ -273,8 +273,8 @@ class OrderDetailHeaderView: UIView {
             coinTitleLabel.attributedText = attString
             dateLabel.text = timestampToDateString(timestamp: model?.date ?? 0, dateFormat: "MM/dd HH:mm:ss")
             priceLabel.text = "7.1"
-            amountLabel.text = model?.amountGet
-            successAmountLabel.text = model?.amountFilled
+            amountLabel.text = "\(Double(model?.amountGet ?? "0")! / 1000000)"
+            successAmountLabel.text = "\(Double(model?.amountFilled ?? "0")! / 1000000)"
             feeLabel.text = "---"
 //            order status:0=OPEN 1=FILLED 2=CANCELED 3=FILLED or CANCELED, can not specify
             var tempString = ""

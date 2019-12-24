@@ -32,10 +32,17 @@ class ImportWalletViewController: BaseViewController {
         view.delegate = self
         return view
     }()
+    //网络请求、数据模型
+    lazy var dataModel: ImportWalletModel = {
+        let model = ImportWalletModel.init()
+        return model
+    }()
     deinit {
         print("ImportWalletViewController销毁了")
     }
     var type: String?
+    var myContext = 0
+
 }
 extension ImportWalletViewController: ImportWalletViewDelegate {
     func confirmAddWallet(name: String, password: String, mnemonicArray: [String]) {
@@ -217,6 +224,64 @@ extension ImportWalletViewController: ImportWalletViewDelegate {
             let tabbar = BaseTabBarViewController.init()
             UIApplication.shared.keyWindow?.rootViewController = tabbar
             UIApplication.shared.keyWindow?.makeKeyAndVisible()
+        }
+    }
+}
+extension ImportWalletViewController {
+    func initKVO() {
+        dataModel.addObserver(self, forKeyPath: "dataDic", options: NSKeyValueObservingOptions.new, context: &myContext)
+    }
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?)  {
+        
+        guard context == &myContext else {
+            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+            return
+        }
+        guard (change?[NSKeyValueChangeKey.newKey]) != nil else {
+            return
+        }
+        guard let jsonData = (object! as AnyObject).value(forKey: "dataDic") as? NSDictionary else {
+            return
+        }
+        if let error = jsonData.value(forKey: "error") as? LibraWalletError {
+            self.detailView.toastView.hide()
+            if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
+                // 网络无法访问
+                print(error.localizedDescription)
+                self.detailView.makeToast(error.localizedDescription, position: .center)
+            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionTooOld).localizedDescription {
+                // 版本太久
+                print(error.localizedDescription)
+                self.detailView.makeToast(error.localizedDescription, position: .center)
+            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
+                // 解析失败
+                print(error.localizedDescription)
+                self.detailView.makeToast(error.localizedDescription, position: .center)
+            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
+                print(error.localizedDescription)
+                // 数据为空
+                self.detailView.makeToast(error.localizedDescription, position: .center)
+            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
+                print(error.localizedDescription)
+                // 数据返回状态异常
+                self.detailView.makeToast(error.localizedDescription, position: .center)
+            } else if error.localizedDescription == LibraWalletError.error(localLanguage(keyString: "尚未注册任何稳定币")).localizedDescription {
+                print(error.localizedDescription)
+                
+            } else if error.localizedDescription == LibraWalletError.error(localLanguage(keyString: "交易所支持稳定币为空")).localizedDescription {
+                print(error.localizedDescription)
+                
+            }
+//            self.detailView.hideToastActivity()
+            
+            return
+        }
+        let type = jsonData.value(forKey: "type") as! String
+        
+        if type == "ImportViolasWallet" {
+            
+        } else if type == "GetCurrentOrder" {
+            
         }
     }
 }

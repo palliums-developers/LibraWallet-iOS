@@ -90,19 +90,20 @@ class AddAssetViewTableViewCell: UITableViewCell {
         return button
     }()
     @objc func valueChange(button: UISwitch) {
-        print(button.isOn)
-        guard let tempModel = self.model else {
+        guard var tempModel = self.model else {
             return
         }
         guard let tempIndexPath = self.indexPath else {
             return
         }
+        tempModel.enable = button.isOn
         self.delegate?.switchButtonChange(model: tempModel, state: button.isOn, indexPath: tempIndexPath)
     }
     //MARK: - 设置数据
     var model: ViolasTokenModel? {
         didSet {
-            nameLabel.text = model?.name
+            let state = model?.registerState == true ? localLanguage(keyString: "(已注册)"):""
+            nameLabel.text = (model?.name ?? "") + state
             detailLabel.text = model?.description
             
             let url = URL(string: model?.icon ?? "")

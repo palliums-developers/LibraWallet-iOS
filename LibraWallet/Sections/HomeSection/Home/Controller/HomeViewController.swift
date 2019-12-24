@@ -404,7 +404,10 @@ extension HomeViewController: HomeHeaderViewDelegate {
     func addCoinToWallet() {
         let vc = AddAssetViewController()
         vc.hidesBottomBarWhenPushed = true
-        vc.model = self.detailView.headerView.walletModel
+        vc.wallet = self.detailView.headerView.walletModel
+        vc.needUpdateClosure = { result in
+            self.refreshData()
+        }
         self.navigationController?.pushViewController(vc, animated: true)
     }
     func walletSend() {
