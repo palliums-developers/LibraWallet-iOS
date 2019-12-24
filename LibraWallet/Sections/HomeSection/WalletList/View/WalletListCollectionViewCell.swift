@@ -42,4 +42,5 @@ class WalletListCollectionViewCell: UICollectionViewCell {
             coinImageView.image = UIImage.init(named: imageName)
         }
     }
+    
 }

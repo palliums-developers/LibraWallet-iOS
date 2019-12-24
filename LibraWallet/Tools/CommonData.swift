@@ -250,3 +250,6 @@ let privateAndUseLegal = "感谢您选择了SSO APP\n我们极度重视您的用
 let privateLegalURL = "https://violas.io/violas_service_html/Privacy_Policy.html"
 let useLegalURL = "https://violas.io/violas_service_html/Terms_of_Service.html"
 let addressRemarksLimit = 20
+let PasswordMinLimit = 8
+let PasswordMaxLimit = 20
+let NameMaxLimit = 20

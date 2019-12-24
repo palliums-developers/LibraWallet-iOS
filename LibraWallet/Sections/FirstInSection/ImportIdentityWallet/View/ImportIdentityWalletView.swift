@@ -112,9 +112,10 @@ class ImportIdentityWalletView: UIView {
         textField.textColor = UIColor.init(hex: "3C3848")
         textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_add_wallet_nickname_textfield_placeholder"),
                                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "BDBCC0"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16)])
-        //        textField.delegate = self
+        textField.delegate = self
         textField.keyboardType = .default
         textField.tintColor = DefaultGreenColor
+        textField.tag = 10
         return textField
     }()
     lazy var nameSpaceLabel: UILabel = {
@@ -128,10 +129,11 @@ class ImportIdentityWalletView: UIView {
         textField.textColor = UIColor.init(hex: "3C3848")
         textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_add_wallet_password_textfield_placeholder"),
                                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "BDBCC0"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16)])
-        //        textField.delegate = self
+        textField.delegate = self
         textField.keyboardType = .default
         textField.isSecureTextEntry = true
         textField.tintColor = DefaultGreenColor
+        textField.tag = 20
         return textField
     }()
     lazy var passwordSpaceLabel: UILabel = {
@@ -145,10 +147,11 @@ class ImportIdentityWalletView: UIView {
         textField.textColor = UIColor.init(hex: "3C3848")
         textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_add_wallet_password_confirm_textfield_placeholder"),
                                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "BDBCC0"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16)])
-        //        textField.delegate = self
+        textField.delegate = self
         textField.keyboardType = .default
         textField.isSecureTextEntry = true
         textField.tintColor = DefaultGreenColor
+        textField.tag = 30
         return textField
     }()
     lazy var passwordConfirmSpaceLabel: UILabel = {
@@ -209,39 +212,33 @@ class ImportIdentityWalletView: UIView {
             return
         }
 
-        guard let name = nameTextField.text else {
-            // 名字拆包失败
-            self.makeToast(LibraWalletError.WalletAddWallet(reason: .walletNameInvalidError).localizedDescription,
-                           position: .center)
-            return
-        }
-        guard name.isEmpty == false else {
+        guard let name = nameTextField.text, name.isEmpty == false else {
             // 名字为空
             self.makeToast(LibraWalletError.WalletAddWallet(reason: .walletNameEmptyError).localizedDescription,
                            position: .center)
             return
         }
-        guard let password = passwordTextField.text else {
-            // 密码拆包失败
-            self.makeToast(LibraWalletError.WalletAddWallet(reason: .passwordInvalidError).localizedDescription,
-                           position: .center)
-            return
-        }
-        guard password.isEmpty == false else {
+        guard let password = passwordTextField.text, password.isEmpty == false else {
             // 密码为空
             self.makeToast(LibraWalletError.WalletAddWallet(reason: .passwordEmptyError).localizedDescription,
                            position: .center)
             return
         }
-        guard let passwordConfirm = passwordConfirmTextField.text else {
-            // 确认密码拆包失败
-            self.makeToast(LibraWalletError.WalletAddWallet(reason: .passwordCofirmInvalidError).localizedDescription,
+        guard handlePassword(password: password) else {
+            // 密码规则
+            self.makeToast(LibraWalletError.WalletAddWallet(reason: .passwordInvalidError).localizedDescription,
                            position: .center)
             return
         }
-        guard passwordConfirm.isEmpty == false else {
+        guard let passwordConfirm = passwordConfirmTextField.text, passwordConfirm.isEmpty == false else {
             // 确认密码为空
             self.makeToast(LibraWalletError.WalletAddWallet(reason: .passwordConfirmEmptyError).localizedDescription,
+                           position: .center)
+            return
+        }
+        guard handlePassword(password: passwordConfirm) else {
+            // 密码规则
+            self.makeToast(LibraWalletError.WalletAddWallet(reason: .passwordCofirmInvalidError).localizedDescription,
                            position: .center)
             return
         }
@@ -256,5 +253,19 @@ class ImportIdentityWalletView: UIView {
         self.passwordTextField.resignFirstResponder()
         self.passwordConfirmTextField.resignFirstResponder()
         self.delegate?.confirmImportWallet(walletName: name, password: password, mnemonic: tempArray)
+    }
+}
+extension ImportIdentityWalletView: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let content = textField.text else {
+            return true
+        }
+        let textLength = content.count + string.count - range.length
+        
+        if tag == 10 {
+            return textLength <= NameMaxLimit
+        } else {
+            return textLength <= PasswordMaxLimit
+        }
     }
 }

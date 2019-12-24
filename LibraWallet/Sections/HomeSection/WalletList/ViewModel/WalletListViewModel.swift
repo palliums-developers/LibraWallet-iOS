@@ -85,6 +85,7 @@ class WalletListViewModel: NSObject {
         view.collectionView.dataSource = self.collectionViewManager
         return view
     }()
+    var oldCollectionSelectIndexPath: IndexPath?
 }
 extension WalletListViewModel: WalletListCollectionViewCellDelegate {
     func collectionViewDidSelectRowAtIndexPath(collectionView: UICollectionView, indexPath: IndexPath) {

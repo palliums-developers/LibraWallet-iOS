@@ -18,10 +18,10 @@ class CreateIdentityWalletView: UIView {
         addSubview(whiteBackgroundView)
         whiteBackgroundView.addSubview(walletNameTextField)
         whiteBackgroundView.addSubview(walletNameSpaceLabel)
-        whiteBackgroundView.addSubview(paymentPasswordTextField)
-        whiteBackgroundView.addSubview(paymentPasswordSpaceLabel)
-        whiteBackgroundView.addSubview(paymentPasswordConfirmTextField)
-        whiteBackgroundView.addSubview(paymentPasswordConfirmSpaceLabel)
+        whiteBackgroundView.addSubview(passwordTextField)
+        whiteBackgroundView.addSubview(passwordSpaceLabel)
+        whiteBackgroundView.addSubview(passwordConfirmTextField)
+        whiteBackgroundView.addSubview(passwordConfirmSpaceLabel)
         whiteBackgroundView.addSubview(confirmButton)
     }
     required init?(coder aDecoder: NSCoder) {
@@ -50,24 +50,24 @@ class CreateIdentityWalletView: UIView {
             make.right.equalTo(whiteBackgroundView.snp.right).offset(-17)
             make.height.equalTo(1)
         }
-        paymentPasswordTextField.snp.makeConstraints { (make) in
-            make.bottom.equalTo(paymentPasswordSpaceLabel.snp.top)
+        passwordTextField.snp.makeConstraints { (make) in
+            make.bottom.equalTo(passwordSpaceLabel.snp.top)
             make.left.right.equalTo(walletNameSpaceLabel)
             make.top.equalTo(walletNameSpaceLabel.snp.bottom)
         }
-        paymentPasswordSpaceLabel.snp.makeConstraints { (make) in
+        passwordSpaceLabel.snp.makeConstraints { (make) in
             make.top.equalTo(walletNameSpaceLabel.snp.bottom).offset(51)
             make.left.equalTo(whiteBackgroundView).offset(17)
             make.right.equalTo(whiteBackgroundView.snp.right).offset(-17)
             make.height.equalTo(1)
         }
-        paymentPasswordConfirmTextField.snp.makeConstraints { (make) in
-            make.bottom.equalTo(paymentPasswordConfirmSpaceLabel.snp.top)
+        passwordConfirmTextField.snp.makeConstraints { (make) in
+            make.bottom.equalTo(passwordConfirmSpaceLabel.snp.top)
             make.left.right.equalTo(walletNameSpaceLabel)
-            make.top.equalTo(paymentPasswordSpaceLabel.snp.bottom)
+            make.top.equalTo(passwordSpaceLabel.snp.bottom)
         }
-        paymentPasswordConfirmSpaceLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(paymentPasswordSpaceLabel.snp.bottom).offset(51)
+        passwordConfirmSpaceLabel.snp.makeConstraints { (make) in
+            make.top.equalTo(passwordSpaceLabel.snp.bottom).offset(51)
             make.left.equalTo(whiteBackgroundView).offset(17)
             make.right.equalTo(whiteBackgroundView.snp.right).offset(-17)
             make.height.equalTo(1)
@@ -100,7 +100,7 @@ class CreateIdentityWalletView: UIView {
         label.backgroundColor = UIColor.init(hex: "DEDFE0")
         return label
     }()
-    lazy var paymentPasswordTextField: UITextField = {
+    lazy var passwordTextField: UITextField = {
         let textField = UITextField.init()
         textField.textAlignment = NSTextAlignment.left
         textField.textColor = UIColor.init(hex: "3C3848")
@@ -113,12 +113,12 @@ class CreateIdentityWalletView: UIView {
 
         return textField
     }()
-    lazy var paymentPasswordSpaceLabel: UILabel = {
+    lazy var passwordSpaceLabel: UILabel = {
         let label = UILabel.init()
         label.backgroundColor = UIColor.init(hex: "DEDFE0")
         return label
     }()
-    lazy var paymentPasswordConfirmTextField: UITextField = {
+    lazy var passwordConfirmTextField: UITextField = {
         let textField = UITextField.init()
         textField.textAlignment = NSTextAlignment.left
         textField.textColor = UIColor.init(hex: "3C3848")
@@ -130,7 +130,7 @@ class CreateIdentityWalletView: UIView {
         textField.tag = 30
         return textField
     }()
-    lazy var paymentPasswordConfirmSpaceLabel: UILabel = {
+    lazy var passwordConfirmSpaceLabel: UILabel = {
         let label = UILabel.init()
         label.backgroundColor = UIColor.init(hex: "DEDFE0")
         return label
@@ -179,27 +179,27 @@ class CreateIdentityWalletView: UIView {
                            position: .center)
             return
         }
-        guard let password = paymentPasswordTextField.text else {
-            // 拆包失败
-            self.makeToast(LibraWalletError.WalletAddWallet(reason: .passwordInvalidError).localizedDescription,
-                           position: .center)
-            return
-        }
-        guard password.isEmpty == false else {
+        guard let password = passwordTextField.text, password.isEmpty == false else {
             // 密码为空
             self.makeToast(LibraWalletError.WalletAddWallet(reason: .passwordEmptyError).localizedDescription,
                            position: .center)
             return
         }
-        guard let passwordConfirm = paymentPasswordConfirmTextField.text else {
-            // 确认密码拆包失败
-            self.makeToast(LibraWalletError.WalletAddWallet(reason: .passwordCofirmInvalidError).localizedDescription,
+        guard handlePassword(password: password) else {
+            // 密码规则
+            self.makeToast(LibraWalletError.WalletAddWallet(reason: .passwordInvalidError).localizedDescription,
                            position: .center)
             return
         }
-        guard passwordConfirm.isEmpty == false else {
+        guard let passwordConfirm = passwordConfirmTextField.text, passwordConfirm.isEmpty == false else {
             // 确认密码为空
             self.makeToast(LibraWalletError.WalletAddWallet(reason: .passwordConfirmEmptyError).localizedDescription,
+                           position: .center)
+            return
+        }
+        guard handlePassword(password: passwordConfirm) else {
+            // 密码规则
+            self.makeToast(LibraWalletError.WalletAddWallet(reason: .passwordCofirmInvalidError).localizedDescription,
                            position: .center)
             return
         }
@@ -209,24 +209,24 @@ class CreateIdentityWalletView: UIView {
                            position: .center)
             return
         }
-        #warning("密码规则检查")
         self.walletNameTextField.resignFirstResponder()
-        self.paymentPasswordTextField.resignFirstResponder()
-        self.paymentPasswordConfirmTextField.resignFirstResponder()
+        self.passwordTextField.resignFirstResponder()
+        self.passwordConfirmTextField.resignFirstResponder()
         self.delegate?.comfirmCreateWallet(walletName: name, password: password)
     }
 }
 extension CreateIdentityWalletView: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        #warning("规则待定")
-        guard textField.tag == 10 else {
-            return true
-        }
+
         guard let content = textField.text else {
             return true
         }
         let textLength = content.count + string.count - range.length
         
-        return textLength<=6
+        if tag == 10 {
+            return textLength <= NameMaxLimit
+        } else {
+            return textLength <= PasswordMaxLimit
+        }
     }
 }

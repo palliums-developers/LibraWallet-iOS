@@ -153,3 +153,34 @@ func handleScanContent(content: String) throws -> ScanAddressModel {
                                      addressTokenName: nil)
     }
 }
+func handlePassword(password: String) -> Bool {
+    guard (password.count >= PasswordMinLimit) && (password.count <= PasswordMaxLimit) else {
+        return false
+    }
+    guard isContainAlphabet(content: password) else {
+        return false
+    }
+    guard isContainNumber(content: password) else {
+        return false
+    }
+    return true
+}
+fileprivate func isContainAlphabet(content: String) -> Bool {
+    let email = ".*[A-Za-z]+.*$"
+    let regextestmobile = NSPredicate(format: "SELF MATCHES %@",email)
+    if (regextestmobile.evaluate(with: content) == true) {
+        return true
+    } else {
+        return false
+    }
+}
+fileprivate func isContainNumber(content: String) -> Bool {
+
+    let email = "^.*[0-9]+.*$"
+    let regextestmobile = NSPredicate(format: "SELF MATCHES %@",email)
+    if (regextestmobile.evaluate(with: content) == true) {
+        return true
+    } else {
+        return false
+    }
+}

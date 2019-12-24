@@ -291,7 +291,7 @@ wallet_add_address_type_invalid_error = "类型未选择";
 wallet_add_wallet_name_invalid_error = "钱包名字无效";
 wallet_add_wallet_name_empty_error = "钱包名字为空";
 wallet_add_wallet_name_too_long_error = "钱包名字长度超限";
-wallet_add_wallet_password_invalid_error = "密码无效";
+wallet_add_wallet_password_invalid_error = "密码需同时包含大小写字母、数字，长度8-20位";
 wallet_add_wallet_password_empty_error = "密码为空";
 wallet_add_wallet_password_cofirm_invalid_error = "确认密码无效";
 wallet_add_wallet_password_cofirm_empty_error = "确认密码为空";
@@ -310,7 +310,7 @@ wallet_change_name_empty_error = "钱包名称为空";
 wallet_change_name_same_as_old_error = "钱包名称和以前相同";
 wallet_change_name_failed_error = "修改钱包名称失败";
 // 校验密码相关
-wallet_check_password_invalid_error = "密码无效";
+wallet_check_password_invalid_error = "密码需同时包含大小写字母、数字，长度8-20位";
 wallet_check_password_empty_error = "密码为空";
 wallet_check_password_failed_error = "密码不正确";
 // 转账相关

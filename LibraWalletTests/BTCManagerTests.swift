@@ -80,4 +80,16 @@ class BTCManagerTests: XCTestCase {
         let location: Int = code.toHexString().distance(from: code.toHexString().startIndex, to: range.lowerBound)
         print("location = \((location / 2) - 1)")
     }
+    func testPasswordLogic() {
+        XCTAssertEqual(false, handlePassword(password: "A"))
+        XCTAssertEqual(false, handlePassword(password: "Aa"))
+        XCTAssertEqual(false, handlePassword(password: "Aa123"))
+        XCTAssertEqual(false, handlePassword(password: "12345678"))
+        XCTAssertEqual(false, handlePassword(password: "1234512345678678"))
+        XCTAssertEqual(false, handlePassword(password: "Aa123123Aa123123Aa123123Aa123123Aa123123Aa123123Aa123123"))
+        XCTAssertEqual(true, handlePassword(password: "As123123"))
+        XCTAssertEqual(true, handlePassword(password: "123123LL"))
+        XCTAssertEqual(true, handlePassword(password: "As123123As123123As12"))
+
+    }
 }
