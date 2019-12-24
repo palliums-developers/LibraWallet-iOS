@@ -110,15 +110,21 @@ extension ViolasTransferViewController: ViolasTransferViewDelegate {
     func scanAddressQRcode() {
         let vc = ScanViewController()
         vc.actionClosure = { address in
-            if address.hasPrefix("violas:") {
-                let tempAddress = address.replacingOccurrences(of: "violas:", with: "")
-                guard ViolasManager.isValidViolasAddress(address: tempAddress) else {
-                    self.view.makeToast("不是有效的Violas地址", position: .center)
-                    return
-                }
-                self.detailView.addressTextField.text = tempAddress
-            } else {
-                self.view.makeToast("不是有效的Violas地址", position: .center)
+//            if address.hasPrefix("violas:") {
+//                let tempAddress = address.replacingOccurrences(of: "violas:", with: "")
+//                guard ViolasManager.isValidViolasAddress(address: tempAddress) else {
+//                    self.view.makeToast("不是有效的Violas地址", position: .center)
+//                    return
+//                }
+//                self.detailView.addressTextField.text = tempAddress
+//            } else {
+//                self.view.makeToast("不是有效的Violas地址", position: .center)
+//            }
+            do {
+                let tempAddressModel = try handleScanContent(content: address)
+                self.detailView.addressTextField.text = tempAddressModel.address
+            } catch {
+                self.detailView.makeToast(error.localizedDescription, position: .center)
             }
         }
         self.navigationController?.pushViewController(vc, animated: true)

@@ -107,15 +107,21 @@ extension BTCTransferViewController: BTCTransferViewDelegate {
     func scanAddressQRcode() {
         let vc = ScanViewController()
         vc.actionClosure = { address in
-            if address.hasPrefix("bitcoin:") {
-                let tempAddress = address.replacingOccurrences(of: "bitcoin:", with: "")
-                guard BTCManager.isValidBTCAddress(address: tempAddress) else {
-                    self.view.makeToast("不是有效的Bitcoin地址", position: .center)
-                    return
-                }
-                self.detailView.addressTextField.text = tempAddress
-            } else {
-                self.view.makeToast("不是有效的Bitcoin地址", position: .center)
+//            if address.hasPrefix("bitcoin:") {
+//                let tempAddress = address.replacingOccurrences(of: "bitcoin:", with: "")
+//                guard BTCManager.isValidBTCAddress(address: tempAddress) else {
+//                    self.view.makeToast("不是有效的Bitcoin地址", position: .center)
+//                    return
+//                }
+//                self.detailView.addressTextField.text = tempAddress
+//            } else {
+//                self.view.makeToast("不是有效的Bitcoin地址", position: .center)
+//            }
+            do {
+                let tempAddressModel = try handleScanContent(content: address)
+                self.detailView.addressTextField.text = tempAddressModel.address
+            } catch {
+                self.detailView.makeToast(error.localizedDescription, position: .center)
             }
         }
         self.navigationController?.pushViewController(vc, animated: true)

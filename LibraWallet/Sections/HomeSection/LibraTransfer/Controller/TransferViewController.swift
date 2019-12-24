@@ -117,16 +117,22 @@ extension TransferViewController: TransferViewDelegate {
     func scanAddressQRcode() {
         let vc = ScanViewController()
         vc.actionClosure = { address in
-            if address.hasPrefix("libra:") {
-                let tempAddress = address.replacingOccurrences(of: "libra:", with: "")
-                
-                guard LibraManager.isValidLibraAddress(address: tempAddress) else {
-                    self.view.makeToast("不是有效的Libra地址", position: .center)
-                    return
-                }
-                self.detailView.addressTextField.text = tempAddress
-            } else {
-                self.view.makeToast("不是有效的Libra地址", position: .center)
+//            if address.hasPrefix("libra:") {
+//                let tempAddress = address.replacingOccurrences(of: "libra:", with: "")
+//
+//                guard LibraManager.isValidLibraAddress(address: tempAddress) else {
+//                    self.view.makeToast("不是有效的Libra地址", position: .center)
+//                    return
+//                }
+//                self.detailView.addressTextField.text = tempAddress
+//            } else {
+//                self.view.makeToast("不是有效的Libra地址", position: .center)
+//            }
+            do {
+                let tempAddressModel = try handleScanContent(content: address)
+                self.detailView.addressTextField.text = tempAddressModel.address
+            } catch {
+                self.detailView.makeToast(error.localizedDescription, position: .center)
             }
         }
         self.navigationController?.pushViewController(vc, animated: true)
