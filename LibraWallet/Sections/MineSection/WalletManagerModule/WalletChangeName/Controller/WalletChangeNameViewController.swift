@@ -12,7 +12,7 @@ class WalletChangeNameViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        self.title = localLanguage(keyString: "wallet_wallet_manager_change_wallet_name_navigationbar_title")
+        self.title = localLanguage(keyString: "wallet_wallet_manager_change_wallet_name_navigationbar_title")
         self.view.addSubview(detailView)
     }
     

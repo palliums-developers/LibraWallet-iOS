@@ -286,6 +286,10 @@ extension HomeViewController {
             self.view.makeToast("未开启或不支持", position: .center)
             return
         }
+        guard ViolasManager.isValidViolasAddress(address: coinAddress ?? "") else {
+            self.view.makeToast("不是有效的Violas地址", position: .center)
+            return
+        }
         let vc = ViolasTransferViewController()
         vc.actionClosure = {
         //            self.dataModel.getLocalUserInfo()
@@ -298,7 +302,6 @@ extension HomeViewController {
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }
-
 extension HomeViewController {
     func initKVO() {
         dataModel.addObserver(self, forKeyPath: "dataDic", options: NSKeyValueObservingOptions.new, context: &myContext)

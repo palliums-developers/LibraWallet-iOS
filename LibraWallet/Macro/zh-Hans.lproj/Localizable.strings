@@ -81,7 +81,7 @@ wallet_manager_detail_export_mnemonic_title = "导出助记词";
 /************* 钱包管理修改名称 *******************/
 wallet_manager_detail_change_wallet_name_title = "更换钱包名";
 wallet_manager_detail_change_wallet_name_textfield_placeholder = "请输入钱包名";
-wallet_manager_detail_change_wallet_name_button_title = "确定修改";
+wallet_manager_detail_change_wallet_name_button_title = "确定";
 wallet_manager_detail_change_wallet_name_cancel_button_title = "取消";
 
 /************* 地址簿 *******************/
@@ -210,6 +210,12 @@ wallet_private_and_use_legal_confirm_button_title = "同意";
 wallet_welcome_alert_title = "欢迎来到";
 wallet_welcome_alert_describe = "钱包";
 wallet_welcome_alert_confirm_button_title = "马上进入";
+
+// 删除地址
+wallet_alert_delete_address_title = "提示";
+wallet_alert_delete_address_content = "确定要删除此地址吗";
+wallet_alert_delete_address_cancel_button_title = "取消";
+wallet_alert_delete_address_confirm_button_title = "确定";
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "安全提醒";
 wallet_alert_backup_warning_detail_title = "您的身份助记词未备份，请务必备份助记词\n助记词可用于恢复身份下钱包资产，防止忘记密码、应用删除、手机丢失等情况导致资产损失";
@@ -232,6 +238,8 @@ wallet_address_navigation_title = "地址簿";
 wallet_address_add_navigation_title = "添加地址";
 wallet_wallet_manager_navigation_title = "钱包管理";
 wallet_wallet_add_navigation_title = "添加钱包";
+wallet_assert_add_navigation_title = "添加币种";
+wallet_wallet_manager_change_wallet_name_navigationbar_title = "钱包详情";
 
 /************* App错误 *******************/
 // 请求遇到错误

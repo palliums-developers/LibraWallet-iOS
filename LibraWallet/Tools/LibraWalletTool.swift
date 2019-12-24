@@ -114,3 +114,42 @@ func showPassowordAlertViewController(rootAddress: String, mnemonic: @escaping (
     })
     return alertContr
 }
+struct ScanAddressModel {
+    let address: String?
+    let addressType: WalletType?
+    let addressTokenName: String?
+}
+func handleScanContent(content: String) throws -> ScanAddressModel {
+    if content.hasPrefix("bitcoin:") {
+        let tempAddress = content.replacingOccurrences(of: "bitcoin:", with: "")
+        return ScanAddressModel.init(address: tempAddress,
+                                     addressType: .BTC,
+                                     addressTokenName: "")
+    } else if content.hasPrefix("libra:") {
+        let tempAddress = content.replacingOccurrences(of: "libra:", with: "")
+        return ScanAddressModel.init(address: tempAddress,
+                                     addressType: .Libra,
+                                     addressTokenName: "")
+    } else if content.hasPrefix("violas:") {
+        let tempAddress = content.replacingOccurrences(of: "violas:", with: "")
+        return ScanAddressModel.init(address: tempAddress,
+                                     addressType: .Violas,
+                                     addressTokenName: "")
+    } else if content.hasPrefix("violas-") {
+        let coinAddress = content.split(separator: ":").last?.description
+        
+        let addressPrifix = content.split(separator: ":").first?.description
+
+        let coinName = addressPrifix?.split(separator: "-")
+        guard coinName?.count == 2 else {
+            throw LibraWalletError.error("Token名称为空")
+        }
+        return ScanAddressModel.init(address: coinAddress,
+                                     addressType: .Violas,
+                                     addressTokenName: coinName?.last?.description)
+    } else {
+        return ScanAddressModel.init(address: content,
+                                     addressType: nil,
+                                     addressTokenName: nil)
+    }
+}

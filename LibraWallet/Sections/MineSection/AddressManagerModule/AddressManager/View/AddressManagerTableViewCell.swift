@@ -30,6 +30,7 @@ class AddressManagerTableViewCell: UITableViewCell {
         nameLabel.snp.makeConstraints { (make) in
             make.bottom.equalTo(addressBackgroundView.snp.top).offset(-5)
             make.left.equalTo(contentView).offset(19)
+            make.right.equalTo(addressTypeLabel.snp.left).offset(-5)
         }
         addressBackgroundView.snp.makeConstraints { (make) in
             make.top.equalTo(self).offset(38)
@@ -43,11 +44,18 @@ class AddressManagerTableViewCell: UITableViewCell {
             make.right.equalTo(addressBackgroundView.snp.right).offset(-5)
 
         }
-        self.addressTypeLabel.snp.makeConstraints { (make) in
+        addressTypeLabel.snp.makeConstraints { (make) in
             make.top.equalTo(contentView).offset(10)
             make.right.equalTo(contentView.snp.right).offset(-10)
             make.size.equalTo(CGSize.init(width: 55, height: 23))
         }
+//        //防止用户名字挤压
+//        //宽度不够时，可以被压缩
+//        nameLabel.setContentCompressionResistancePriority(UILayoutPriority.fittingSizeLevel, for: NSLayoutConstraint.Axis.horizontal)
+//        //抱紧内容
+//        nameLabel.setContentHuggingPriority(UILayoutPriority.required, for: NSLayoutConstraint.Axis.horizontal)
+//        //不可以被压缩，尽量显示完整
+//        addressTypeLabel.setContentCompressionResistancePriority(UILayoutPriority.required, for: NSLayoutConstraint.Axis.horizontal)
     }
     //MARK: - 懒加载对象
     private lazy var addressBackgroundView: UIView = {
@@ -61,6 +69,7 @@ class AddressManagerTableViewCell: UITableViewCell {
         label.textColor = UIColor.init(hex: "3C3848")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: UIFont.Weight.regular)
         label.text = "---"
+        label.lineBreakMode = .byTruncatingMiddle
         return label
     }()
     lazy var addressLabel: UILabel = {
@@ -69,6 +78,7 @@ class AddressManagerTableViewCell: UITableViewCell {
         label.textColor = UIColor.init(hex: "3C3848")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
         label.text = "---"
+        label.lineBreakMode = .byTruncatingMiddle
         return label
     }()
     lazy var addressTypeLabel: UILabel = {

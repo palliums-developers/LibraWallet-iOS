@@ -65,12 +65,13 @@ class AddAddressView: UIView {
         addressTextField.snp.makeConstraints { (make) in
             make.bottom.equalTo(addressSpaceLabel.snp.top)
             make.left.equalTo(addressSpaceLabel)
-            make.right.equalTo(scanAddressButton.snp.left).offset(-5)
+            make.right.equalTo(scanAddressButton.snp.left)
             make.height.equalTo(50)
         }
         scanAddressButton.snp.makeConstraints { (make) in
             make.centerY.equalTo(addressTextField)
             make.right.equalTo(self.addressSpaceLabel)
+            make.size.equalTo(CGSize.init(width: 40, height: 40))
         }
         addressSpaceLabel.snp.makeConstraints { (make) in
             make.top.equalTo(remarksSpaceLabel.snp.bottom).offset(50)
@@ -113,6 +114,7 @@ class AddAddressView: UIView {
         textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_address_add_remarks_textfield_placeholder"),
                                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "B5B5B5"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: adaptFont(fontSize: 16))])
         textField.tintColor = DefaultGreenColor
+        textField.delegate = self
         return textField
     }()
     lazy var remarksSpaceLabel: UILabel = {
@@ -254,4 +256,15 @@ class AddAddressView: UIView {
         gradientLayer.colors = [UIColor.init(hex: "363E57").cgColor, UIColor.init(hex: "101633").cgColor]
         return gradientLayer
     }()
+}
+extension AddAddressView: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        #warning("规则待定")
+        guard let content = textField.text else {
+            return true
+        }
+        let textLength = content.count + string.count - range.length
+        
+        return textLength <= addressRemarksLimit
+    }
 }

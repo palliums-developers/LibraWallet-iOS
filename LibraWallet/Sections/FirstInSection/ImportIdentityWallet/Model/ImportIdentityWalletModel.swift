@@ -15,9 +15,9 @@ class ImportIdentityWalletModel: NSObject {
         let quene = DispatchQueue.init(label: "createWalletQuene")
         quene.async {
             do {
+                try self.createViolasWallet(name: walletName, password: password, mnemonics: mnemonic)
                 try self.createBTCWallet(name: walletName, password: password, mnemonics: mnemonic)
                 try self.createLibraWallet(name: walletName, password: password, mnemonics: mnemonic)
-                try self.createViolasWallet(name: walletName, password: password, mnemonics: mnemonic)
                 setIdentityWalletState(show: true)
                 DispatchQueue.main.async(execute: {
                     //需更新

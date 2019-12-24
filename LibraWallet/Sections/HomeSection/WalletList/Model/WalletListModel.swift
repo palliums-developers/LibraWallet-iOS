@@ -11,7 +11,7 @@ import UIKit
 class WalletListModel: NSObject {
     @objc var dataDic: NSMutableDictionary = [:]
     func getSupportCoinList() -> [String] {
-        return ["wallet_list_total", "violas_icon", "libra_icon", "btc_icon"]
+        return ["wallet_list_total", "violas_icon", "btc_icon", "libra_icon"]
     }
     func loadLocalWallet() {
         let wallets = DataBaseManager.DBManager.getLocalWallets()

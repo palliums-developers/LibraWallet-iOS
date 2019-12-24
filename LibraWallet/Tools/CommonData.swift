@@ -249,3 +249,4 @@ let transferBTCLeast = 0.0001
 let privateAndUseLegal = "感谢您选择了SSO APP\n我们极度重视您的用户隐私。您在使用我们的服务时，我们可能会收集和使用您的相关信息。在使用我们的产品前，请务必审慎阅读《隐私政策》和《服务协议》内的所有内容，来了解我们如何收集、使用、储存和分享这些信息，以及我们为您提供的访问、更新、控制和保护这些信息的方式。"
 let privateLegalURL = "https://violas.io/violas_service_html/Privacy_Policy.html"
 let useLegalURL = "https://violas.io/violas_service_html/Terms_of_Service.html"
+let addressRemarksLimit = 20

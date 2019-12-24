@@ -125,7 +125,12 @@ extension AddAddressViewController: AddAddressViewDelegate {
     func scanAddress() {
         let vc = ScanViewController()
         vc.actionClosure = { address in
-           self.detailView.addressTextField.text = address
+            do {
+                let tempAddressModel = try handleScanContent(content: address)
+                self.detailView.addressTextField.text = tempAddressModel.address
+            } catch {
+                self.detailView.makeToast(error.localizedDescription, position: .center)
+            }
        }
         self.navigationController?.pushViewController(vc, animated: true)
     }

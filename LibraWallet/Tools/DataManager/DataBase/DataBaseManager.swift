@@ -168,7 +168,6 @@ struct DataBaseManager {
                     } else {
                         type = .BTC
                     }
-                    
                     let wallet = LibraWalletManager.init(walletID: walletID,
                                                          walletBalance: walletBalance,
                                                          walletAddress: walletAddress,

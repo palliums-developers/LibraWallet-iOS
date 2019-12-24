@@ -103,22 +103,22 @@ extension WalletListViewModel: WalletListCollectionViewCellDelegate {
             tableViewManager.dataModel = tempArray
             detailView.tableView.reloadData()
         } else if indexPath.row == 2 {
-            let tempArray = tableViewManager.originModel.map { groupArray in
-                groupArray.map { items in
-                    items.filter { item in
-                        item.walletType == .Libra
-                    }
-                }
-            }
-            tableViewManager.dataModel = tempArray
-            detailView.tableView.reloadData()
-        } else if indexPath.row == 3 {
             let tempArray = tableViewManager.originModel.map { (groupArray) in
                groupArray.map { (items) in
                    items.filter { (item) in
                     item.walletType == .BTC
                    }
                }
+            }
+            tableViewManager.dataModel = tempArray
+            detailView.tableView.reloadData()
+        } else if indexPath.row == 3 {
+            let tempArray = tableViewManager.originModel.map { groupArray in
+                groupArray.map { items in
+                    items.filter { item in
+                        item.walletType == .Libra
+                    }
+                }
             }
             tableViewManager.dataModel = tempArray
             detailView.tableView.reloadData()

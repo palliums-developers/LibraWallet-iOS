@@ -10,15 +10,16 @@ import UIKit
 
 class SupportCoinModel: NSObject {
     func getSupportCoinData() -> [[String: String]] {
-        return [["name":localLanguage(keyString: "BTC"),
+        return [["name":localLanguage(keyString: "vtoken"),
+                 "detail":"Violas",
+                 "icon":"violas_icon"],
+                ["name":localLanguage(keyString: "BTC"),
                  "detail":"Bitcoin",
                  "icon":"btc_icon"],
-                ["name":localLanguage(keyString: "Lib"),
+                ["name":localLanguage(keyString: "Libra"),
                  "detail":"Libra",
-                 "icon":"libra_icon"],
-                ["name":localLanguage(keyString: "Vtoken"),
-                 "detail":"Violas",
-                 "icon":"violas_icon"]]
+                 "icon":"libra_icon"]
+                ]
     }
     deinit {
         print("SupportCoinModel销毁了")

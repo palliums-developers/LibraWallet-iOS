@@ -16,9 +16,9 @@ class CreateIdentityWalletModel: NSObject {
         quene.async {
             do {
                 let mnemonic = try LibraMnemonic.generate(strength: .default, language: .english)
+                try self.createViolasWallet(name: walletName, password: password, mnemonics: mnemonic)
                 try self.createBTCWallet(name: walletName, password: password, mnemonics: mnemonic)
                 try self.createLibraWallet(name: walletName, password: password, mnemonics: mnemonic)
-                try self.createViolasWallet(name: walletName, password: password, mnemonics: mnemonic)
                 setIdentityWalletState(show: true)
                 let tempWallet = CreateWalletModel.init(password: nil,
                                                         mnemonic: mnemonic,

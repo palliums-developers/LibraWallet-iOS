@@ -11,6 +11,8 @@ import UIKit
 class AddAssetViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = localLanguage(keyString: "wallet_assert_add_navigation_title")
+
         self.view.backgroundColor = UIColor.white
         // 加载子View
         self.view.addSubview(self.detailView)
@@ -94,6 +96,9 @@ extension AddAssetViewController: AddAssetTableViewManagerDelegate {
                 print("不存在插入")
                 _ = DataBaseManager.DBManager.insertViolasToken(walletID: wallet?.walletID ?? 0, model: model)
             }
+            if let action = self.needUpdateClosure {
+                action(true)
+            }
         } else {
             // 未注册
             print("未注册")
@@ -111,9 +116,6 @@ extension AddAssetViewController: AddAssetTableViewManagerDelegate {
             alertView.addAction(confirmAction)
             self.present(alertView, animated: true, completion: nil)
         }
-        if let action = self.needUpdateClosure {
-            action(true)
-        }
     }
     func showPasswordAlert(model: ViolasTokenModel, indexPath: IndexPath) {
         let alert = showPassowordAlertViewController(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
@@ -125,6 +127,9 @@ extension AddAssetViewController: AddAssetTableViewManagerDelegate {
                     cell.switchButton.setOn(result, animated: true)
                     print("开启成功插入")
                     _ = DataBaseManager.DBManager.insertViolasToken(walletID: self?.wallet?.walletID ?? 0, model: model)
+                    if let action = self?.needUpdateClosure {
+                        action(true)
+                    }
                 } else {
                     let cell = self?.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
                     cell.switchButton.setOn(result, animated: true)

@@ -178,15 +178,17 @@ extension AddressManagerViewController: AddressManagerTableViewManagerDelegate {
         }
     }
     func tableViewDeleteRowAtIndexPath(indexPath: IndexPath, model: AddressModel) {
-        let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: localLanguage(keyString: "wallet_type_in_password_content"), preferredStyle: .alert)
-        alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_confirm_button_title"), style: .default){ [weak self] clickHandler in
-            
+        let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_alert_delete_address_title"), message: localLanguage(keyString: "wallet_alert_delete_address_content"), preferredStyle: .alert)
+        alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_alert_delete_address_confirm_button_title"), style: .default){ [weak self] clickHandler in
+            self?.deleteAddress(indexPath: indexPath, model: model)
         })
-        alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_cancel_button_title"), style: .cancel){ clickHandler in
+        alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_alert_delete_address_cancel_button_title"), style: .cancel){ clickHandler in
             NSLog("点击了取消")
         })
         self.present(alertContr, animated: true, completion: nil)
         
+    }
+    func deleteAddress(indexPath: IndexPath, model: AddressModel) {
         let deleteStatus = DataBaseManager.DBManager.deleteTransferAddressFromTable(model: model)
         guard deleteStatus == true else {
             self.view.makeToast(localLanguage(keyString: "wallet_transection_address_delete_error"), position: .center)
