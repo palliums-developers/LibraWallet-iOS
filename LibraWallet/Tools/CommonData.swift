@@ -39,7 +39,7 @@ func stringValueDic(_ str: String) -> [String : Any]? {
 /// 待iOS支持最低版本位11的时候启用UIColor.init(named: "DefaultBackgroundColor")
 let defaultBackgroundColor = UIColor.white
 let DefaultSpaceColor = UIColor.init(hex: "F7F7F9")
-let DefaultGreenColor = UIColor.init(hex: "7038FD")
+let DefaultGreenColor = UIColor.init(hex: "9339F3")
 let DefaultFontColor = UIColor.init(hex: "3D3949")
 // 主色50%
 let DefaultFontMiddleColor = UIColor.init(hex: "9D9CA3")
@@ -254,3 +254,7 @@ let addressRemarksLimit = 20
 let PasswordMinLimit = 8
 let PasswordMaxLimit = 20
 let NameMaxLimit = 20
+/// 发币数量位数
+let ApplyTokenAmountLengthLimit = 12
+/// 最大发币9000亿
+let ApplyTokenMaxLimit: Int64 = 900000000000

@@ -15,8 +15,14 @@ class OrderDetailViewController: BaseViewController {
         self.title = localLanguage(keyString: "订单详情")
         // 加载子View
         self.view.addSubview(self.detailView)
+        //设置空数据页面
+        self.setEmptyView()
+        // 初始化KVO
         self.initKVO()
-        
+        //设置默认页面（无数据、无网络）
+        self.setPlaceholderView()
+        //网络请求
+        self.requestData()
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -31,6 +37,34 @@ class OrderDetailViewController: BaseViewController {
     }
     deinit {
         print("OrderDetailViewController销毁了")
+    }
+    //MARK: - 默认页面
+    func setPlaceholderView() {
+        if let empty = emptyView as? EmptyDataPlaceholderView {
+            empty.emptyImageName = "transaction_list_empty_default"
+            empty.tipString = localLanguage(keyString: "wallet_transactions_empty_default_title")
+        }
+    }
+    //MARK: - 网络请求
+    func requestData() {
+        if (lastState == .Loading) {return}
+        startLoading ()
+        
+        self.detailView.makeToastActivity(.center)
+        guard let walletAddress = self.wallet?.walletAddress else {
+            return
+        }
+        dataModel.getOrderDetail(address: walletAddress,
+                                 version: self.headerData?.version ?? "",
+                                 page: dataOffset,
+                                 requestStatus: 0)
+    }
+    override func hasContent() -> Bool {
+        if let models = self.tableViewManager.dataModel, models.isEmpty == false {
+            return true
+        } else {
+            return false
+        }
     }
     //网络请求、数据模型
     lazy var dataModel: OrderDetailModel = {
@@ -80,6 +114,7 @@ class OrderDetailViewController: BaseViewController {
     var headerData: MarketOrderDataModel? {
         didSet {
             self.detailView.headerView.model = headerData
+            self.tableViewManager.priceModel = headerData
         }
     }
     var wallet: LibraWalletManager?
@@ -90,15 +125,9 @@ extension OrderDetailViewController: OrderDetailTableViewManagerDelegate {
 }
 extension OrderDetailViewController {
     func initKVO() {
-        guard let walletAddress = self.wallet?.walletAddress else {
-            return
-        }
+        
         dataModel.addObserver(self, forKeyPath: "dataDic", options: NSKeyValueObservingOptions.new, context: &myContext)
-        self.detailView.makeToastActivity(.center)
-        dataModel.getOrderDetail(address: walletAddress,
-                                 version: self.headerData?.version ?? "",
-                                 page: dataOffset,
-                                 requestStatus: 0)
+        
     }
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?)  {
         
@@ -138,6 +167,8 @@ extension OrderDetailViewController {
             }
             self.detailView.hideToastActivity()
             self.detailView.tableView.mj_header.endRefreshing()
+//            self.endLoading()
+
             return
         }
         let type = jsonData.value(forKey: "type") as! String
@@ -173,5 +204,6 @@ extension OrderDetailViewController {
             self.detailView.tableView.mj_footer.endRefreshing()
         }
         self.detailView.hideToastActivity()
+//        self.endLoading()
     }
 }

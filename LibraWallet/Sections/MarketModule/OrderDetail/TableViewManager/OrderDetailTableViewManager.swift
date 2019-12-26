@@ -13,6 +13,7 @@ protocol OrderDetailTableViewManagerDelegate: NSObjectProtocol {
 class OrderDetailTableViewManager: NSObject {
     weak var delegate: OrderDetailTableViewManagerDelegate?
     var dataModel: [OrderDetailDataModel]?
+    var priceModel: MarketOrderDataModel?
 //    var headerData: MarketOrderDataModel?
     deinit {
         print("OrderProcessingTableViewManager销毁了")
@@ -58,12 +59,14 @@ extension OrderDetailTableViewManager: UITableViewDataSource {
         if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? OrderDetailTableViewCell {
             if let data = dataModel, data.isEmpty == false {
                 cell.model = data[indexPath.row]
+                cell.priceModel = self.priceModel
             }
             return cell
         } else {
             let cell = OrderDetailTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
             if let data = dataModel, data.isEmpty == false {
                 cell.model = data[indexPath.row]
+                cell.priceModel = self.priceModel
             }
             return cell
         }

@@ -358,12 +358,26 @@ class HomeHeaderView: UIView {
                 break
             case .Violas:
                 assetUnitLabel.text = "VToken"
-                assetLabel.text = "\(Double((walletModel?.walletBalance ?? 0) / 1000000))"
+                let numberConfig = NSDecimalNumberHandler.init(roundingMode: .plain,
+                                                               scale: 4,
+                                                               raiseOnExactness: false,
+                                                               raiseOnOverflow: false,
+                                                               raiseOnUnderflow: false,
+                                                               raiseOnDivideByZero: false)
+                let number = NSDecimalNumber.init(value: (walletModel?.walletBalance ?? 0)).dividing(by: NSDecimalNumber.init(value: 1000000), withBehavior: numberConfig)
+                assetLabel.text = number.stringValue
                 hideAddTokenButtonState = false
                 break
             case .BTC:
                 assetUnitLabel.text = "BTC"
-                assetLabel.text = String.init(format: "%.8f", (Double(walletModel?.walletBalance ?? 0) / 100000000.0))
+                let numberConfig = NSDecimalNumberHandler.init(roundingMode: .plain,
+                                                               scale: 8,
+                                                               raiseOnExactness: false,
+                                                               raiseOnOverflow: false,
+                                                               raiseOnUnderflow: false,
+                                                               raiseOnDivideByZero: false)
+                let number = NSDecimalNumber.init(value: (walletModel?.walletBalance ?? 0)).dividing(by: NSDecimalNumber.init(value: 100000000), withBehavior: numberConfig)
+                assetLabel.text = number.stringValue
                 hideAddTokenButtonState = true
                 break
             default:

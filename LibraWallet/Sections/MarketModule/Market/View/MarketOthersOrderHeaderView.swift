@@ -8,7 +8,7 @@
 
 import UIKit
 protocol MarketOthersOrderHeaderViewDelegate: NSObjectProtocol {
-    
+    func showHideOthersToMax(button: UIButton)
 }
 class MarketOthersOrderHeaderView: UITableViewHeaderFooterView {
     weak var delegate: MarketOthersOrderHeaderViewDelegate?
@@ -66,6 +66,7 @@ class MarketOthersOrderHeaderView: UITableViewHeaderFooterView {
     lazy var headerButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setImage(UIImage.init(named: "bottom_arrow"), for: UIControl.State.normal)
+        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
         return button
     }()
     lazy var headerSpaceLabel: UILabel = {
@@ -90,4 +91,12 @@ class MarketOthersOrderHeaderView: UITableViewHeaderFooterView {
         label.text = localLanguage(keyString: "价格")
         return label
     }()
+    @objc func buttonClick(button: UIButton) {
+        if button.image(for: .normal) == UIImage.init(named: "top_arrow") {
+            button.setImage(UIImage.init(named: "bottom_arrow"), for: .normal)
+        } else {
+            button.setImage(UIImage.init(named: "top_arrow"), for: .normal)
+        }
+        self.delegate?.showHideOthersToMax(button: button)
+    }
 }

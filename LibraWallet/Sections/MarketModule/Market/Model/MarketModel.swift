@@ -9,22 +9,36 @@
 import UIKit
 import Moya
 struct MarketOrderDataModel: Codable {
+    /// 用户ID
     var id: String?
+    /// 用户
     var user: String?
+    /// 状态（OPEN兑换中、FILLED已兑换、CANCELED已取消、CANCELLING取消中）
     var state: String?
+    /// 将要兑换合约地址
     var tokenGet: String?
+    /// 将要兑换名字
     var tokenGetSymbol: String?
+    /// 将要兑换数量
     var amountGet: String?
+    /// 付出合约地址
     var tokenGive: String?
+    /// 付出名字
     var tokenGiveSymbol: String?
+    /// 付出数量
     var amountGive: String?
+    /// 交易编号
     var version: String?
+    /// 日期
     var date: Int?
+    /// 最后动作日期
     var update_date: Int?
-//    var date: String?
-//    var update_date: String?
+    /// 最后交易编号
     var update_version: String?
+    /// 已兑换数量
     var amountFilled: String?
+    /// 价格（自行添加）
+    var price: Double?
 }
 struct MarketOrderModel: Codable {
     var buys: [MarketOrderDataModel]?

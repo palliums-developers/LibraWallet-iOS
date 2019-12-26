@@ -18,13 +18,13 @@ class WalletTransactionsViewController: BaseViewController {
         // 加载子View
         self.view.addSubview(self.detailView)
         //设置空数据页面
-        setEmptyView()
+        self.setEmptyView()
         // 初始化KVO
         self.initKVO()
         //设置默认页面（无数据、无网络）
-        setPlaceholderView()
+        self.setPlaceholderView()
         //网络请求
-        requestData()
+        self.requestData()
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -40,8 +40,8 @@ class WalletTransactionsViewController: BaseViewController {
     //MARK: - 默认页面
     func setPlaceholderView() {
         if let empty = emptyView as? EmptyDataPlaceholderView {
-            empty.emptyImageName = "transactions_empty"
-            empty.tipString = localLanguage(keyString: "wallet_withdraw_address_list_empty_view_content")
+            empty.emptyImageName = "transaction_list_empty_default"
+            empty.tipString = localLanguage(keyString: "wallet_transactions_empty_default_title")
         }
     }
     //MARK: - 网络请求
@@ -191,7 +191,6 @@ extension WalletTransactionsViewController {
                 for index in 0..<tempData.count {
                     let indexPath = IndexPath.init(row: 0, section: oldData.count + index)
                     insertIndexPath.append(indexPath)
-                    
                 }
                 tempArray.addObjects(from: tempData)
                 self.tableViewManager.btcTransactions = tempArray as? [BTCTransaction]
@@ -209,6 +208,7 @@ extension WalletTransactionsViewController {
             guard let tempData = jsonData.value(forKey: "data") as? [ViolasDataModel] else {
                 return
             }
+            self.tableViewManager.tokenName = "vtoken"
             self.tableViewManager.violasTransactions = tempData
             self.detailView.tableView.reloadData()
         } else if type == "ViolasTransactionHistoryMore" {
@@ -222,9 +222,9 @@ extension WalletTransactionsViewController {
                 for index in 0..<tempData.count {
                     let indexPath = IndexPath.init(row: 0, section: oldData.count + index)
                     insertIndexPath.append(indexPath)
-                    
                 }
                 tempArray.addObjects(from: tempData)
+                self.tableViewManager.tokenName = "vtoken"
                 self.tableViewManager.violasTransactions = tempArray as? [ViolasDataModel]
                 self.detailView.tableView.beginUpdates()
                 for index in 0..<tempData.count {
@@ -232,6 +232,7 @@ extension WalletTransactionsViewController {
                 }
                 self.detailView.tableView.endUpdates()
             } else {
+                self.tableViewManager.tokenName = "vtoken"
                 self.tableViewManager.violasTransactions = tempData
                 self.detailView.tableView.reloadData()
             }

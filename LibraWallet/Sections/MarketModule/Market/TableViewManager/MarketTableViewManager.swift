@@ -13,6 +13,8 @@ protocol MarketTableViewManagerDelegate: NSObjectProtocol {
     func selectToken(button: UIButton, leftModelName: String, rightModelName: String)
     func showOrderCenter()
     func exchangeToken(payToken: MarketSupportCoinDataModel, receiveToken: MarketSupportCoinDataModel, amount: Double, exchangeAmount: Double)
+    func showHideOthersToMax(state: Bool)
+    func changeLeftRightTokenModel(leftModel: MarketSupportCoinDataModel, rightModel: MarketSupportCoinDataModel)
 }
 class MarketTableViewManager: NSObject {
     weak var delegate: MarketTableViewManagerDelegate?
@@ -22,6 +24,7 @@ class MarketTableViewManager: NSObject {
     
     var buyOrders: [MarketOrderDataModel]?
     var sellOrders: [MarketOrderDataModel]?
+    var showOtherSellOrdersToMax: Bool = false
     deinit {
         print("MarketTableViewManager销毁了")
     }
@@ -65,7 +68,7 @@ extension MarketTableViewManager: UITableViewDelegate {
             return header
         } else if let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier) as? MarketOthersOrderHeaderView {
 //            (header as! AddAssetTableViewHeader).model = self.headerData
-//            header.delegate = self
+            header.delegate = self
             return header
         } else {
             let view = UIView()
@@ -95,7 +98,11 @@ extension MarketTableViewManager: UITableViewDataSource {
         } else if section == 1 {
             return buyOrders?.count ?? 0 > 5 ? 5:(buyOrders?.count ?? 0)
         } else {
-            return sellOrders?.count ?? 0 > 5 ? 5:(sellOrders?.count ?? 0)
+            if showOtherSellOrdersToMax == false {
+                return sellOrders?.count ?? 0 > 5 ? 5:(sellOrders?.count ?? 0)
+            } else {
+                return sellOrders?.count ?? 0 > 20 ? 20:(sellOrders?.count ?? 0)
+            }
         }
     }
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -155,6 +162,10 @@ extension MarketTableViewManager: UITableViewDataSource {
 //    }
 //}
 extension MarketTableViewManager: MarketExchangeHeaderViewDelegate {
+    func changeLeftRightTokenModel(leftModel: MarketSupportCoinDataModel, rightModel: MarketSupportCoinDataModel) {
+        self.delegate?.changeLeftRightTokenModel(leftModel: leftModel, rightModel: rightModel)
+    }
+    
     func selectToken(button: UIButton, leftModelName: String, rightModelName: String) {
         self.delegate?.selectToken(button: button, leftModelName: leftModelName, rightModelName: rightModelName)
     }
@@ -162,9 +173,16 @@ extension MarketTableViewManager: MarketExchangeHeaderViewDelegate {
     func exchangeToken(payToken: MarketSupportCoinDataModel, receiveToken: MarketSupportCoinDataModel, amount: Double, exchangeAmount: Double) {
         self.delegate?.exchangeToken(payToken: payToken, receiveToken: receiveToken, amount: amount, exchangeAmount: exchangeAmount)
     }
+    
 }
 extension MarketTableViewManager: MarketMyOrderHeaderViewDelegate {
     func showOrderCenter() {
         self.delegate?.showOrderCenter()
     }    
+}
+extension MarketTableViewManager: MarketOthersOrderHeaderViewDelegate {
+    func showHideOthersToMax(button: UIButton) {
+        self.showOtherSellOrdersToMax = !self.showOtherSellOrdersToMax
+        self.delegate?.showHideOthersToMax(state: self.showOtherSellOrdersToMax)
+    }
 }

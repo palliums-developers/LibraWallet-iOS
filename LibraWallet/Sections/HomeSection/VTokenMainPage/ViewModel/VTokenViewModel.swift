@@ -32,9 +32,6 @@ class VTokenViewModel: NSObject {
             } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletNotExist).localizedDescription {
                 // 钱包不存在
                 print(error.localizedDescription)
-//                let vc = WalletCreateViewController()
-//                let navi = UINavigationController.init(rootViewController: vc)
-//                self.present(navi, animated: true, completion: nil)
             } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionTooOld).localizedDescription {
                 // 版本太久
                 print(error.localizedDescription)
@@ -56,6 +53,7 @@ class VTokenViewModel: NSObject {
             guard let tempData = jsonData.value(forKey: "data") as? [ViolasDataModel] else {
                 return
             }
+            self.tableViewManager.tokenName = vtokenModel?.name
             self.tableViewManager.violasTransactions = tempData
             self.detailView.tableView.reloadData()
         } else if type == "ViolasTransactionHistoryMore" {
@@ -65,7 +63,7 @@ class VTokenViewModel: NSObject {
         self.detailView.tableView.mj_header.endRefreshing()
 //        self.endLoading()
     }
-    var dataOffset: Int = 1
+    var dataOffset: Int = 0
     //网络请求、数据模型
     lazy var dataModel: VTokenMainModel = {
         let model = VTokenMainModel.init()
@@ -75,6 +73,7 @@ class VTokenViewModel: NSObject {
     lazy var tableViewManager: VTokenTableViewManager = {
         let manager = VTokenTableViewManager.init()
 //        manager.delegate = self
+        
         return manager
     }()
     //子View
@@ -87,10 +86,10 @@ class VTokenViewModel: NSObject {
         return view
     }()
     @objc func refreshReceive() {
-        dataOffset = 1
+        dataOffset = 0
         detailView.tableView.mj_footer.resetNoMoreData()
         detailView.tableView.mj_header.beginRefreshing()
-        dataModel.getViolasTransactionHistory(address: (wallet?.walletAddress)!, page: 1, pageSize: 10, contract: self.vtokenModel?.address ?? "", requestStatus: 0)
+        dataModel.getViolasTransactionHistory(address: (wallet?.walletAddress)!, page: dataOffset, pageSize: 10, contract: self.vtokenModel?.address ?? "", requestStatus: 0)
     }
     @objc func getMoreReceive() {
         dataOffset += 1

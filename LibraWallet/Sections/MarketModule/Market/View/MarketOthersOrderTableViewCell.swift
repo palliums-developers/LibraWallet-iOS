@@ -66,7 +66,7 @@ class MarketOthersOrderTableViewCell: UITableViewCell {
         didSet {
             amountLabel.text = "\(Double(model?.amountGet ?? "0")! / 1000000)"
 
-            priceLabel.text = "7.1"
+            priceLabel.text = "\(model?.price ?? 0)"
         }
     }
     var indexPath: IndexPath?

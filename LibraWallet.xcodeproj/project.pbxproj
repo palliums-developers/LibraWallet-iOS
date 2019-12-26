@@ -1039,7 +1039,6 @@
 			isa = PBXGroup;
 			children = (
 				9DB515C423A391C80069A909 /* Controller */,
-				9DB515C523A391D10069A909 /* Model */,
 				9D628AB3239F720400E222FB /* View */,
 			);
 			path = OrderCenter;
@@ -1988,13 +1987,6 @@
 			path = Controller;
 			sourceTree = "<group>";
 		};
-		9DB515C523A391D10069A909 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
 		9DBC266F23408D3A009650EA /* ED25519 */ = {
 			isa = PBXGroup;
 			children = (
@@ -2066,8 +2058,8 @@
 		9DC06A392372A92C00BCE1FE /* Market */ = {
 			isa = PBXGroup;
 			children = (
-				9DC06A3D2372A94600BCE1FE /* Controller */,
 				9D628A94239DEBDD00E222FB /* TableViewManager */,
+				9DC06A3D2372A94600BCE1FE /* Controller */,
 				9DC06A3B2372A93700BCE1FE /* Model */,
 				9DC06A3A2372A93200BCE1FE /* View */,
 			);

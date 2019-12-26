@@ -13,10 +13,8 @@ class OrderDoneViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
     }
-        //网络请求、数据模型
+    //网络请求、数据模型
     lazy var dataModel: OrderDoneModel = {
         let model = OrderDoneModel.init()
         return model
@@ -69,12 +67,7 @@ extension OrderDoneViewController: OrderDoneTableViewManagerDelegate {
 }
 extension OrderDoneViewController {
     func initKVO() {
-        guard let walletAddress = self.wallet?.walletAddress else {
-            return
-        }
         dataModel.addObserver(self, forKeyPath: "dataDic", options: NSKeyValueObservingOptions.new, context: &myContext)
-        self.detailView.makeToastActivity(.center)
-        dataModel.getAllDoneOrder(address: walletAddress, version: "")
     }
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?)  {
         
@@ -161,7 +154,6 @@ extension OrderDoneViewController: JXSegmentedListContainerViewListDelegate {
         guard firstIn == true else {
             return
         }
-        self.detailView.makeToastActivity(.center)
         guard let walletAddress = self.wallet?.walletAddress else {
             return
         }

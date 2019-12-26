@@ -19,13 +19,13 @@ class AddressManagerViewController: BaseViewController {
         // 添加NavigationRightBar
         self.addNavigationRightBar()
         //设置空数据页面
-        setEmptyView()
+        self.setEmptyView()
         // 初始化KVO
         self.initKVO()
         //设置默认页面（无数据、无网络）
-        setPlaceholderView()
+        self.setPlaceholderView()
         //网络请求
-        requestData()
+        self.requestData()
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -44,7 +44,7 @@ class AddressManagerViewController: BaseViewController {
     //MARK: - 默认页面
     func setPlaceholderView() {
         if let empty = emptyView as? EmptyDataPlaceholderView {
-            empty.emptyImageName = "transactions_empty"
+            empty.emptyImageName = "address_list_empty_default"
             empty.tipString = localLanguage(keyString: "wallet_address_manager_empty_data_title")
         }
     }

@@ -150,12 +150,7 @@ extension OrderProcessingViewController: OrderProcessingTableViewManagerDelegate
 }
 extension OrderProcessingViewController {
     func initKVO() {
-        guard let walletAddress = self.wallet?.walletAddress else {
-            return
-        }
         dataModel.addObserver(self, forKeyPath: "dataDic", options: NSKeyValueObservingOptions.new, context: &myContext)
-        self.detailView.makeToastActivity(.center)
-        dataModel.getAllProcessingOrder(address: walletAddress, version: "")
     }
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?)  {
         

@@ -139,6 +139,7 @@ class WalletTransactionsTableViewCell: UITableViewCell {
         return label
     }()
     //MARK: - 设置数据
+    var tokenName: String?
     var btcModel: BTCTransaction? {
         didSet {
             guard let model = btcModel else {
@@ -164,16 +165,19 @@ class WalletTransactionsTableViewCell: UITableViewCell {
             guard let model = violasModel else {
                 return
             }
+            #warning("不丢失精度方法")
+            let numberConfig = NSDecimalNumberHandler.init(roundingMode: .plain,
+                                                           scale: 4,
+                                                           raiseOnExactness: false,
+                                                           raiseOnOverflow: false,
+                                                           raiseOnUnderflow: false,
+                                                           raiseOnDivideByZero: false)
+            let number = NSDecimalNumber.init(value: (model.amount ?? 0)).dividing(by: NSDecimalNumber.init(value: 1000000), withBehavior: numberConfig)
             dateLabel.text = timestampToDateString(timestamp: model.expiration_time ?? 0, dateFormat: "yyyy-MM-dd HH:mm:ss")
-            amountLabel.text = "\(Double((model.amount ?? 0) / 1000000))"
+            amountLabel.text = number.stringValue
             addressLabel.text = model.receiver
-            if model.type == 1 {
-                // publish
-                typeLabel.textColor = UIColor.init(hex: "FB8F0B")
-                typeLabel.text = localLanguage(keyString: "wallet_transactions_publish_title")
-                coinLabel.text = "VToken"
-            } else if model.type == 2 {
-                // 交易
+            if model.type == 0 {
+                // vtoken交易
                 if model.transaction_type == 0 {
                     // 转账
                     typeLabel.textColor = UIColor.init(hex: "E54040")
@@ -183,7 +187,25 @@ class WalletTransactionsTableViewCell: UITableViewCell {
                     typeLabel.textColor = UIColor.init(hex: "13B788")
                     typeLabel.text = localLanguage(keyString: "wallet_transaction_receive_title")
                 }
-                coinLabel.text = "Violas"
+                coinLabel.text = "vtoken"
+            } else if model.type == 1 {
+                // publish
+                typeLabel.textColor = UIColor.init(hex: "FB8F0B")
+                typeLabel.text = localLanguage(keyString: "wallet_transactions_publish_title")
+                coinLabel.text = tokenName ?? "vtoken"
+            } else if model.type == 2 {
+                // 稳定币交易
+                if model.transaction_type == 0 {
+                    // 转账
+                    typeLabel.textColor = UIColor.init(hex: "E54040")
+                    typeLabel.text = localLanguage(keyString: "wallet_transaction_transfer_title")
+                } else {
+                    // 收款
+                    typeLabel.textColor = UIColor.init(hex: "13B788")
+                    typeLabel.text = localLanguage(keyString: "wallet_transaction_receive_title")
+                }
+                coinLabel.text = tokenName
+                
             }
         }
     }
@@ -208,4 +230,5 @@ class WalletTransactionsTableViewCell: UITableViewCell {
             }
         }
     }
+    
 }

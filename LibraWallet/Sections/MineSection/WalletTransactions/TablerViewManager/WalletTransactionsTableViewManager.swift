@@ -19,6 +19,7 @@ class WalletTransactionsTableViewManager: NSObject {
     /// Libra
     var libraTransactions: [LibraDataModel]?
     var transactionType: WalletType?
+    var tokenName: String?
     deinit {
         print("WalletTransactionsTableViewManager销毁了")
     }
@@ -76,6 +77,7 @@ extension WalletTransactionsTableViewManager: UITableViewDataSource {
                 }
             case .Violas:
                 if let data = violasTransactions, data.isEmpty == false {
+                    (cell as! WalletTransactionsTableViewCell).tokenName = self.tokenName
                     (cell as! WalletTransactionsTableViewCell).violasModel = data[indexPath.section]
                 }
             case .BTC:
@@ -95,7 +97,9 @@ extension WalletTransactionsTableViewManager: UITableViewDataSource {
                 }
             case .Violas:
                 if let data = violasTransactions, data.isEmpty == false {
+                    cell.tokenName = self.tokenName
                     cell.violasModel = data[indexPath.section]
+                    
                 }
             case .BTC:
                 if let data = btcTransactions, data.isEmpty == false {

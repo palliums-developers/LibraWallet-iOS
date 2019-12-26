@@ -13,6 +13,7 @@ class VTokenTableViewManager: NSObject {
     /// Violas
     var violasTransactions: [ViolasDataModel]?
     var transactionType: WalletType?
+    var tokenName: String?
     deinit {
         print("VTokenTableViewManager销毁了")
     }
@@ -53,14 +54,16 @@ extension VTokenTableViewManager: UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let identifier = "CellNormal"
-        if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? WalletTransactionsTableViewCell {
             if let data = violasTransactions, data.isEmpty == false {
-                (cell as! WalletTransactionsTableViewCell).violasModel = data[indexPath.section]
+                cell.tokenName = self.tokenName
+                cell.violasModel = data[indexPath.section]
             }
             return cell
         } else {
             let cell = WalletTransactionsTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
             if let data = violasTransactions, data.isEmpty == false {
+                cell.tokenName = self.tokenName
                 cell.violasModel = data[indexPath.section]
             }
             return cell

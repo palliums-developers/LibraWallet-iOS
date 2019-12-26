@@ -98,10 +98,13 @@ struct ViolasDataModel: Codable {
     var sender: String?
     var sender_module: String?
     var sequence_number: Int?
+    /// 0. vtoken p2p transaction; 1. module publish transaction; 2. module p2p transaction
     var type: Int?
     var version: Int?
     // 判断接收发送(自行添加0:转账,1收款)
     var transaction_type: Int?
+    // 判断交易代币名字
+    var transaction_token_name: String?
 }
 struct ViolasResponseModel: Codable {
     var code: Int?
@@ -203,6 +206,42 @@ class WalletTransactionsModel: NSObject {
             }
             self.requests.append(request)
     }
+//    private func getViolasTokenList(group: DispatchGroup) {
+//        let request = mainProvide.request(.GetViolasTokenList) {[weak self](result) in
+//            switch  result {
+//            case let .success(response):
+//                do {
+//                    let json = try response.map(ViolasTokenMainModel.self)
+//                    guard json.code == 2000 else {
+//                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "UpdateViolasTokenList")
+//                        self?.setValue(data, forKey: "dataDic")
+//                        return
+//                    }
+//                    guard let models = json.data, models.isEmpty == false else {
+//                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: "UpdateViolasTokenList")
+//                        self?.setValue(data, forKey: "dataDic")
+//                        return
+//                    }
+////                    let result = self?.dealModelWithSelect(walletID: walletID, models: models)
+////                    let data = setKVOData(type: "UpdateViolasTokenList", data: result)
+////                    self?.setValue(data, forKey: "dataDic")
+//                    self?.supportTokens = json.data
+//                } catch {
+//                    print("解析异常\(error.localizedDescription)")
+//                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "UpdateViolasTokenList")
+//                    self?.setValue(data, forKey: "dataDic")
+//                }
+//            case let .failure(error):
+//                guard error.errorCode != -999 else {
+//                    print("网络请求已取消")
+//                    return
+//                }
+//                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "UpdateViolasTokenList")
+//                self?.setValue(data, forKey: "dataDic")
+//            }
+//        }
+//        self.requests.append(request)
+//    }
     /// 获取Libra交易记录
     /// - Parameters:
     ///   - address: 地址

@@ -74,6 +74,7 @@ class VTokenMainView: UIView {
             // Fallback on earlier versions
         }
         tableView.backgroundColor = defaultBackgroundColor
+        tableView.register(WalletTransactionsTableViewCell.classForCoder(), forCellReuseIdentifier: "CellNormal")
         return tableView
     }()
     //

@@ -15,11 +15,12 @@ class MarketViewController: UIViewController {
         self.view.backgroundColor = UIColor.init(hex: "F7F7F9")
         // 加载子View
         self.view.addSubview(detailView)
-        //设置空数据页面
-        setEmptyView()
+        // 设置空数据页面
+        self.setEmptyView()
+        // 初始化KVO
         self.initKVO()
         //设置默认页面（无数据、无网络）
-        setPlaceholderView()
+        self.setPlaceholderView()
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -94,7 +95,6 @@ class MarketViewController: UIViewController {
                 self.dataModel.getMarketData(address: walletAddress, payContract: payContract, exchangeContract: exchangeContract)
             }
         }
-        
     }
     func hasContent() -> Bool {
         guard self.wallet?.walletType == .Violas else {
@@ -132,7 +132,7 @@ class MarketViewController: UIViewController {
     typealias nextActionClosure = ([MarketSupportCoinDataModel]) -> Void
     var actionClosure: nextActionClosure?
     
-    typealias exchangeStateClosure = (Int) -> Void
+    typealias exchangeStateClosure = (Int64) -> Void
     var checkBalanceClosure: exchangeStateClosure?
     
     typealias publishTokenForTransactionClosure = () -> Void
@@ -142,6 +142,42 @@ class MarketViewController: UIViewController {
     var stopRefreshTableView: Bool?
 }
 extension MarketViewController: MarketTableViewManagerDelegate {
+    func changeLeftRightTokenModel(leftModel: MarketSupportCoinDataModel, rightModel: MarketSupportCoinDataModel) {
+        let headerView = self.detailView.tableView.headerView(forSection: 0) as! MarketExchangeHeaderView
+        guard rightModel.enable == true else {
+            let content = (rightModel.name ?? "") + localLanguage(keyString: "未开启、或余额为0,不能调换")
+            headerView.makeToast(content, position: .center)
+            return
+        }
+        guard isPurnDouble(string: headerView.rightAmountTextField.text ?? "") == true else {
+            headerView.makeToast(localLanguage(keyString: "请输入正确的付出数量后交换"), position: .center)
+            return
+        }
+        guard Int64(Double(headerView.rightAmountTextField.text ?? "0")!) < ApplyTokenMaxLimit else {
+            headerView.makeToast(localLanguage(keyString: "您需要兑换的稳定币数量过大，不支持交换，请减少兑换数量后交换"), position: .center)
+            return
+        }
+        guard isPurnDouble(string: headerView.leftAmountTextField.text ?? "") == true else {
+            headerView.makeToast(localLanguage(keyString: "请输入正确兑换的数量后交换"), position: .center)
+            return
+        }
+        guard Int64(Double(headerView.leftAmountTextField.text ?? "0")!) < ApplyTokenMaxLimit else {
+            headerView.makeToast(localLanguage(keyString: "您付出的稳定币数量过大，不支持交换，请减少付出数量后交换"), position: .center)
+            return
+        }
+        self.dataModel.removeDepthsLisening(payContract: leftModel.addr ?? "", exchangeContract: rightModel.addr ?? "")
+
+        let tempModel = leftModel
+        headerView.rightTokenModel = tempModel
+        headerView.leftTokenModel = rightModel
+        guard let walletAddress = self.wallet?.walletAddress else {
+            return
+        }
+        self.detailView.toastView?.show()
+        self.dataModel.getMarketData(address: walletAddress, payContract: rightModel.addr ?? "", exchangeContract: leftModel.addr ?? "")
+        self.dataModel.addDepthsLisening(payContract: rightModel.addr ?? "", exchangeContract: leftModel.addr ?? "")
+    }
+    
     func selectToken(button: UIButton, leftModelName: String, rightModelName: String) {
         guard let walletAddress = self.wallet?.walletAddress else {
             return
@@ -219,7 +255,7 @@ extension MarketViewController: MarketTableViewManagerDelegate {
                                         vtoken: payToken.addr ?? "")
         
         self.checkBalanceClosure = { balance in
-            if balance > Int(amount * 1000000) {
+            if balance > Int64(amount * 1000000) {
                 //第二步，余额充足，检查是否将要兑换的币已注册
                 guard receiveToken.enable == true else {
                     let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: localLanguage(keyString: "您将要兑换的币尚未开启，开启需要消耗一定数量Gas费，是否立即开启并兑换"), preferredStyle: .alert)
@@ -250,6 +286,7 @@ extension MarketViewController: MarketTableViewManagerDelegate {
             guard let walletAddress = self?.wallet?.walletAddress else {
                 return
             }
+            self?.detailView.toastView?.show()
             self?.dataModel.exchangeViolasTokenTransaction(sendAddress: walletAddress,
                                                            amount: amount,
                                                            fee: 0,
@@ -267,6 +304,7 @@ extension MarketViewController: MarketTableViewManagerDelegate {
             guard let walletAddress = self?.wallet?.walletAddress else {
                 return
             }
+            self?.detailView.toastView?.show()
             self?.dataModel.publishTokenForTransaction(sendAddress: walletAddress,
                                                        mnemonic: mnemonic,
                                                        contact: receiveContract)
@@ -298,6 +336,40 @@ extension MarketViewController: MarketTableViewManagerDelegate {
         vc.hidesBottomBarWhenPushed = true
         vc.wallet = self.wallet
         self.navigationController?.pushViewController(vc, animated: true)
+    }
+    func showHideOthersToMax(state: Bool) {
+        self.detailView.tableView.beginUpdates()
+        if state == true  {
+            // 展示
+            if (self.tableViewManager.sellOrders?.count ?? 0) > 5 {
+                // 大于5条
+                var tempIndexPaths = [IndexPath]()
+                let maxRow = (self.tableViewManager.sellOrders?.count ?? 0) >= 20 ? 20:(self.tableViewManager.sellOrders?.count ?? 0)
+                for i in 5..<maxRow {
+                    let indexPath = IndexPath.init(row: i, section: 2)
+                    tempIndexPaths.append(indexPath)
+                }
+                self.detailView.tableView.insertRows(at: tempIndexPaths, with: UITableView.RowAnimation.bottom)
+            } else {
+                // 小于5条不做操作
+            }
+        } else {
+            // 隐藏
+            if (self.tableViewManager.sellOrders?.count ?? 0) > 5 {
+                // 大于5条
+                var tempIndexPaths = [IndexPath]()
+                let maxRow = (self.tableViewManager.sellOrders?.count ?? 0) >= 20 ? 20:(self.tableViewManager.sellOrders?.count ?? 0)
+                for i in 5..<maxRow {
+                    let indexPath = IndexPath.init(row: i, section: 2)
+                    tempIndexPaths.append(indexPath)
+                }
+                self.detailView.tableView.deleteRows(at: tempIndexPaths, with: UITableView.RowAnimation.bottom)
+            } else {
+                // 小于5条不做操作
+            }
+        }
+        self.detailView.tableView.endUpdates()
+//        self.detailView.tableView.setContentOffset(CGPoint.init(x: 0, y: self.detailView.tableView.contentSize.height - self.detailView.tableView.bounds.size.height), animated: true)
     }
 }
 extension MarketViewController {
@@ -376,15 +448,22 @@ extension MarketViewController {
         } else if type == "GetCurrentOrder" {
             self.detailView.toastView?.hide()
             if let tempData = jsonData.value(forKey: "data") as? MarketResponseMainModel {
+                #warning("无奈之举，望谅解")
+                let headerView = self.detailView.tableView.headerView(forSection: 0) as! MarketExchangeHeaderView
                 self.tableViewManager.buyOrders = tempData.orders?.filter({
                     $0.user?.contains(self.wallet?.walletAddress ?? "") == true
                 }).sorted(by: {
                     ($0.date ?? 0) > ($1.date ?? 0)
+                }).map({ (item) in
+                    MarketOrderDataModel.init(id: item.id, user: item.user, state: item.state, tokenGet: item.tokenGet, tokenGetSymbol: item.tokenGetSymbol, amountGet: item.amountGet, tokenGive: item.tokenGive, tokenGiveSymbol: item.tokenGiveSymbol, amountGive: item.amountGive, version: item.version, date: item.date, update_date: item.update_date, update_version: item.update_version, amountFilled: item.amountFilled, price: headerView.rightTokenModel?.price)
                 })
+                #warning("无奈之举，望谅解")
                 self.tableViewManager.sellOrders = tempData.depths?.buys?.filter({
                     $0.user?.contains(self.wallet?.walletAddress ?? "") == false
                 }).sorted(by: {
                     ($0.date ?? 0) < ($1.date ?? 0)
+                }).map({ (item) in
+                    MarketOrderDataModel.init(id: item.id, user: item.user, state: item.state, tokenGet: item.tokenGet, tokenGetSymbol: item.tokenGetSymbol, amountGet: item.amountGet, tokenGive: item.tokenGive, tokenGiveSymbol: item.tokenGiveSymbol, amountGive: item.amountGive, version: item.version, date: item.date, update_date: item.update_date, update_version: item.update_version, amountFilled: item.amountFilled, price: headerView.rightTokenModel?.price)
                 })
                 self.detailView.tableView.reloadData()
             }
@@ -403,7 +482,7 @@ extension MarketViewController {
             if let tempData = jsonData.value(forKey: "data") as? BalanceLibraModel {
                 if let data = tempData.modules, data.isEmpty == false, let tempModule = data.first {
                     if let action = self.checkBalanceClosure {
-                        action(Int(tempModule.balance ?? 0))
+                        action(Int64(tempModule.balance ?? 0))
                     }
                 }
             }
@@ -415,7 +494,7 @@ extension MarketViewController {
     }
     func refreshTableView(data: [MarketOrderDataModel]) {
         // 开始筛选所有我的订单
-        let myOrders = data.filter({ item in
+        var myOrders = data.filter({ item in
             item.user?.contains(self.wallet?.walletAddress ?? "") == true
         })
         for i in 0..<(myOrders.count) {
@@ -488,7 +567,10 @@ extension MarketViewController {
             }
             if dataExist == false {
                 print("匹配失败添加数据")
-                self.tableViewManager.buyOrders?.append((myOrders[i]))
+                let headerView = self.detailView.tableView.headerView(forSection: 0) as! MarketExchangeHeaderView
+                myOrders[i].price = headerView.rightTokenModel?.price
+
+                self.tableViewManager.buyOrders?.append(myOrders[i])
                 self.tableViewManager.buyOrders = self.tableViewManager.buyOrders?.sorted(by: {
                     ($0.date ?? 0) > ($1.date ?? 0)
                 })
@@ -501,6 +583,7 @@ extension MarketViewController {
                     if count >= 5 {
                         self.detailView.tableView.deleteRows(at: [IndexPath.init(row: 4, section: 1)], with: UITableView.RowAnimation.left)
                     }
+                    
                     self.detailView.tableView.insertRows(at: [IndexPath.init(row: 0, section: 1)], with: UITableView.RowAnimation.bottom)
                 }
                 self.detailView.tableView.endUpdates()
@@ -508,7 +591,7 @@ extension MarketViewController {
         }
         
         // 开始筛选其他人订单
-        let otherOrders = data.filter({ item in
+        var otherOrders = data.filter({ item in
             item.user?.contains(self.wallet?.walletAddress ?? "") == false
         })
 //                let oldOtherBuyOrders = self.tableViewManager.sellOrders
@@ -584,6 +667,9 @@ extension MarketViewController {
                 }
             }
             if dataExist == false {
+                let headerView = self.detailView.tableView.headerView(forSection: 0) as! MarketExchangeHeaderView
+                otherOrders[i].price = headerView.rightTokenModel?.price
+                
                 self.tableViewManager.sellOrders?.append(otherOrders[i])
                 self.tableViewManager.sellOrders = self.tableViewManager.sellOrders?.sorted(by: {
                     ($0.date ?? 0) > ($1.date ?? 0)

@@ -51,6 +51,7 @@ wallet_transaction_check_detail_on_chain = "浏览器查询";
 wallet_transactions_receive_title = "收款";
 wallet_transactions_transfer_title = "转账";
 wallet_transactions_publish_title = "开启";
+wallet_transactions_empty_default_title = "暂无交易记录";
 
 /************* 已存在身份钱包创建钱包 *******************/
 wallet_add_wallet_btc_title = "创建Bitcoin钱包";
@@ -198,7 +199,7 @@ wallet_manager_change_wallet_name_alert_confirm_button_title = "保存";
 wallet_manager_change_wallet_name_success_title = "修改成功";
 // 注册代币
 wallet_add_asset_alert_title = "提醒";
-wallet_add_asset_alert_content = "开启需要消耗Gas费,是否立即开启";
+wallet_add_asset_alert_content = "开启需要消耗Gas费,请确保您的账户余额充足，是否立即开启";
 wallet_add_asset_alert_cancel_button_title = "取消";
 wallet_add_asset_alert_confirm_button_title = "确定";
 wallet_add_asset_alert_success_title = "开启成功";

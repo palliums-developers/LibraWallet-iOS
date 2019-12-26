@@ -10,6 +10,7 @@ import UIKit
 protocol MarketExchangeHeaderViewDelegate: NSObjectProtocol {
     func selectToken(button: UIButton, leftModelName: String, rightModelName: String)
     func exchangeToken(payToken: MarketSupportCoinDataModel, receiveToken: MarketSupportCoinDataModel, amount: Double, exchangeAmount: Double)
+    func changeLeftRightTokenModel(leftModel: MarketSupportCoinDataModel, rightModel: MarketSupportCoinDataModel)
 }
 class MarketExchangeHeaderView: UITableViewHeaderFooterView {
     weak var delegate: MarketExchangeHeaderViewDelegate?
@@ -386,14 +387,32 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
                 self.makeToast(localLanguage(keyString: "请选择要兑换的币种"), position: .center)
                 return
             }
-            guard self.rightTokenModel?.enable == true else {
-                let content = (self.rightTokenModel?.name ?? "") + localLanguage(keyString: "未开启、或余额为0,不能调换")
-                self.makeToast(content, position: .center)
-                return
-            }
-            let tempModel = tempLeftModel
-            self.rightTokenModel = tempModel
-            self.leftTokenModel = tempRightModel
+//            guard self.rightTokenModel?.enable == true else {
+//                let content = (self.rightTokenModel?.name ?? "") + localLanguage(keyString: "未开启、或余额为0,不能调换")
+//                self.makeToast(content, position: .center)
+//                return
+//            }
+//            guard isPurnDouble(string: self.rightAmountTextField.text ?? "") == true else {
+//                self.makeToast(localLanguage(keyString: "请输入正确的付出数量后交换"), position: .center)
+//                return
+//            }
+//            guard Int64(Double(self.rightAmountTextField.text ?? "0")!) < ApplyTokenMaxLimit else {
+//                self.makeToast(localLanguage(keyString: "您需要兑换的稳定币数量过大，不支持交换，请减少兑换数量后交换"), position: .center)
+//                return
+//            }
+//            guard isPurnDouble(string: self.leftAmountTextField.text ?? "") == true else {
+//                self.makeToast(localLanguage(keyString: "请输入正确兑换的数量后交换"), position: .center)
+//                return
+//            }
+//            guard Int64(Double(self.leftAmountTextField.text ?? "0")!) < ApplyTokenMaxLimit else {
+//                self.makeToast(localLanguage(keyString: "您付出的稳定币数量过大，不支持交换，请减少付出数量后交换"), position: .center)
+//                return
+//            }
+//            
+//            let tempModel = tempLeftModel
+//            self.rightTokenModel = tempModel
+//            self.leftTokenModel = tempRightModel
+            self.delegate?.changeLeftRightTokenModel(leftModel: tempLeftModel, rightModel: tempRightModel)
         } else {
             // 兑换
             self.leftAmountTextField.resignFirstResponder()
@@ -406,13 +425,20 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
                 self.makeToast(localLanguage(keyString: "请选择要兑换的稳定币"), position: .center)
                 return
             }
-            guard let payAmountString = leftAmountTextField.text, payAmountString.isEmpty == false, isPurnDouble(string: payAmountString) == true else {
+            guard let payAmountString = leftAmountTextField.text, payAmountString.isEmpty == false else {
                 self.makeToast(localLanguage(keyString: "请输入要付出的数量"), position: .center)
-
                 return
             }
-            guard let exchangeAmountString = rightAmountTextField.text, exchangeAmountString.isEmpty == false, isPurnDouble(string: exchangeAmountString) == true else {
+            guard isPurnDouble(string: payAmountString) == true else {
+                self.makeToast(localLanguage(keyString: "请输入正确的付出数量"), position: .center)
+                return
+            }
+            guard let exchangeAmountString = rightAmountTextField.text, exchangeAmountString.isEmpty == false else {
                 self.makeToast(localLanguage(keyString: "请输入要兑换的数量"), position: .center)
+                return
+            }
+            guard isPurnDouble(string: exchangeAmountString) == true else {
+                self.makeToast(localLanguage(keyString: "请输入正确兑换的数量"), position: .center)
                 return
             }
             self.delegate?.exchangeToken(payToken: tempLeftModel,
@@ -497,7 +523,6 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
         guard let exchangeAmountString = rightAmountTextField.text else {
             return
         }
-        
         let payAmount = Double(payAmountString)
         let exchangeAmount = Double(exchangeAmountString)
         if leftAmountTextField.isFirstResponder {
@@ -532,6 +557,11 @@ extension MarketExchangeHeaderView: UITextFieldDelegate {
                 leftAmountTextField.text = ""
             }
         }
-        return true
+        if content.contains(".") {
+            return textLength < (ApplyTokenAmountLengthLimit + 5)
+        } else {
+            return textLength < ApplyTokenAmountLengthLimit
+        }
+        
     }
 }

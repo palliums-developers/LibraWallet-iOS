@@ -59,7 +59,7 @@ class OrderDetailTableViewCell: UITableViewCell {
             make.top.equalTo(priceTitleLabel.snp.bottom).offset(7)
         }
         amountLabel.snp.makeConstraints { (make) in
-            make.left.equalTo(amountTitleLabel)
+            make.right.equalTo(contentView).offset(-15)
             make.top.equalTo(amountTitleLabel.snp.bottom).offset(7)
         }
         spaceLabel.snp.makeConstraints { (make) in
@@ -142,9 +142,12 @@ class OrderDetailTableViewCell: UITableViewCell {
     var model: OrderDetailDataModel? {
         didSet {
             dateLabel.text = timestampToDateString(timestamp: model?.date ?? 0, dateFormat: "MM/dd HH:mm:ss")
-            priceLabel.text = "7.1"
             amountLabel.text = model?.amount
         }
     }
-    
+    var priceModel: MarketOrderDataModel? {
+        didSet {
+            priceLabel.text = "\(priceModel?.price ?? 0)"
+        }
+    }
 }

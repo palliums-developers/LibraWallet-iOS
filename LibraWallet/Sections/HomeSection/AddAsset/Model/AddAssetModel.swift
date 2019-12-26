@@ -65,6 +65,7 @@ class AddAssetModel: NSObject {
         }
     }
     private func getViolasTokenList(group: DispatchGroup) {
+        group.enter()
         let request = mainProvide.request(.GetViolasTokenList) {[weak self](result) in
             switch  result {
             case let .success(response):
@@ -97,6 +98,7 @@ class AddAssetModel: NSObject {
                 let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "UpdateViolasTokenList")
                 self?.setValue(data, forKey: "dataDic")
             }
+            group.leave()
         }
         self.requests.append(request)
     }

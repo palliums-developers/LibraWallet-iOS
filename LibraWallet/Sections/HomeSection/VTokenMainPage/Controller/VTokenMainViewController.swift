@@ -14,7 +14,6 @@ class VTokenMainViewController: BaseViewController {
         self.view.addSubview(viewModel.detailView)
 //        self.detailView.wallet = self.wallet
         self.viewModel.initKVO()
-        
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -40,7 +39,6 @@ class VTokenMainViewController: BaseViewController {
     typealias successClosure = () -> Void
     var actionClosure: successClosure?
     var myContext = 0
-    var dataOffset: Int = 1
     var wallet: LibraWalletManager? {
         didSet {
             self.viewModel.detailView.headerView.walletAddressLabel.text = wallet?.walletAddress
