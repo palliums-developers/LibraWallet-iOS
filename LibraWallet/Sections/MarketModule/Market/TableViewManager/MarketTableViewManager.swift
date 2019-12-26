@@ -55,9 +55,9 @@ extension MarketTableViewManager: UITableViewDelegate {
         }
         if let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier) as? MarketExchangeHeaderView {
             header.delegate = self
-            if header.leftTokenModel == nil {
-                header.leftTokenModel = self.normalLeftModel
-            }
+//            if header.leftTokenModel == nil {
+//                header.leftTokenModel = self.normalLeftModel
+//            }
             return header
         } else if let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier) as? MarketMyOrderHeaderView {
 //            (header as! AddAssetTableViewHeader).model = self.headerData

@@ -61,14 +61,6 @@ class SettingViewController: BaseViewController {
         view.tableView.dataSource = self.tableViewManager
         return view
     }()
-    lazy var mailVC: MFMailComposeViewController = {
-        let vc = MFMailComposeViewController()
-        vc.mailComposeDelegate = self
-        vc.setToRecipients(["violas_blockchain@violas.io"])
-        vc.setSubject("Violas Feedback")
-        vc.setMessageBody("", isHTML: false)
-        return vc
-    }()
     @objc func setText() {
         // 设置标题
         self.title = localLanguage(keyString: "wallet_setting_navigation_title")

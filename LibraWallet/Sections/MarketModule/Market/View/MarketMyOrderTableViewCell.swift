@@ -109,7 +109,8 @@ class MarketMyOrderTableViewCell: UITableViewCell {
             attString.append(attString3)
             nameLabel.attributedText = attString
             #warning("此处有amountGive和amountGet，不清楚用哪个")
-            amountLabel.text = model?.amountGet
+            amountLabel.text = "\(Double(model?.amountGet ?? "0")! / 1000000)"
+
             #warning("此处价格待商议")
             priceLabel.text = "7.1"
             dateLabel.text = timestampToDateString(timestamp: model?.date ?? 0, dateFormat: "MM/dd HH:mm:ss")

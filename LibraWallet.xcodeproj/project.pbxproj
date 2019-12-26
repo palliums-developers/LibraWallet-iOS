@@ -2056,9 +2056,9 @@
 			children = (
 				9DC06A392372A92C00BCE1FE /* Market */,
 				9D628A9E239F319800E222FB /* OrderDetail */,
+				9D628A9D239F318C00E222FB /* OrderCenter */,
 				9D628AA0239F341C00E222FB /* OrderDone */,
 				9D628A9F239F31A900E222FB /* OrderProcessing */,
-				9D628A9D239F318C00E222FB /* OrderCenter */,
 			);
 			path = MarketModule;
 			sourceTree = "<group>";
@@ -3287,7 +3287,7 @@
 				CODE_SIGN_ENTITLEMENTS = LibraWallet/LibraWallet.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development: Jay Zou (JR6LZNW9NA)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = ND49YBN8B3;
 				INFOPLIST_FILE = LibraWallet/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -3314,7 +3314,7 @@
 				CODE_SIGN_ENTITLEMENTS = LibraWallet/LibraWallet.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Jay Zou (ND49YBN8B3)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = ND49YBN8B3;
 				INFOPLIST_FILE = LibraWallet/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;

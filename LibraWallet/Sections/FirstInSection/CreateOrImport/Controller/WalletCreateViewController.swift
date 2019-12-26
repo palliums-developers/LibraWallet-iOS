@@ -13,7 +13,7 @@ class WalletCreateViewController: UIViewController {
         super.viewDidLoad()
         // 设置背景色
         self.view.addSubview(detailView)
-        
+        checkConfirmLegal()
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -51,9 +51,6 @@ class WalletCreateViewController: UIViewController {
         }
 
         alert.show()
-        guard getWelcomeState() == false else {
-            return
-        }
 //        let alert = WelcomeAlert.init()
 //        alert.show()
     }

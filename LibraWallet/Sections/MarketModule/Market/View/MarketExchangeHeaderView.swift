@@ -379,15 +379,16 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
     @objc func buttonClick(button: UIButton) {
         if button.tag == 50 {
             guard let tempLeftModel = self.leftTokenModel else {
-                self.makeToast(localLanguage(keyString: "请先选择要兑换的币种"), position: .center)
+                self.makeToast(localLanguage(keyString: "请先选择要付出的稳定币"), position: .center)
                 return
             }
             guard let tempRightModel = self.rightTokenModel else {
-                self.makeToast(localLanguage(keyString: "请先选择要兑换的币种"), position: .center)
+                self.makeToast(localLanguage(keyString: "请选择要兑换的币种"), position: .center)
                 return
             }
             guard self.rightTokenModel?.enable == true else {
-                self.makeToast(localLanguage(keyString: "此币未开启、或余额为0,不能调换"), position: .center)
+                let content = (self.rightTokenModel?.name ?? "") + localLanguage(keyString: "未开启、或余额为0,不能调换")
+                self.makeToast(content, position: .center)
                 return
             }
             let tempModel = tempLeftModel
@@ -398,11 +399,11 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
             self.leftAmountTextField.resignFirstResponder()
             self.rightAmountTextField.resignFirstResponder()
             guard let tempLeftModel = self.leftTokenModel else {
-                self.makeToast(localLanguage(keyString: "请先选择要兑换的币种"), position: .center)
+                self.makeToast(localLanguage(keyString: "请先选择要付出的稳定币"), position: .center)
                 return
             }
             guard let tempRightModel = self.rightTokenModel else {
-                self.makeToast(localLanguage(keyString: "请先选择要兑换的币种"), position: .center)
+                self.makeToast(localLanguage(keyString: "请选择要兑换的稳定币"), position: .center)
                 return
             }
             guard let payAmountString = leftAmountTextField.text, payAmountString.isEmpty == false, isPurnDouble(string: payAmountString) == true else {

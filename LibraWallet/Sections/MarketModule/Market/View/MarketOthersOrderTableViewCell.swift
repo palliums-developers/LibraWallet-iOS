@@ -64,8 +64,8 @@ class MarketOthersOrderTableViewCell: UITableViewCell {
     //MARK: - 设置数据
     var model: MarketOrderDataModel? {
         didSet {
-            #warning("此处有amountGive和amountGet，不清楚用哪个")
-            amountLabel.text = model?.amountGet
+            amountLabel.text = "\(Double(model?.amountGet ?? "0")! / 1000000)"
+
             priceLabel.text = "7.1"
         }
     }

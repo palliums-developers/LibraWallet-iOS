@@ -323,16 +323,10 @@ class ViolasTransferView: UIView {
                return
             }
             // 地址拆包检查
-            guard let address = self.addressTextField.text else {
-               self.makeToast(LibraWalletError.WalletTransfer(reason: .addressInvalid).localizedDescription,
+            guard let address = self.addressTextField.text, address.isEmpty == false else {
+               self.makeToast(LibraWalletError.WalletTransfer(reason: .addressEmpty).localizedDescription,
                               position: .center)
                return
-            }
-            // 地址是否为空
-            guard address.isEmpty == false else {
-                self.makeToast(LibraWalletError.WalletTransfer(reason: .addressEmpty).localizedDescription,
-                               position: .center)
-                return
             }
             // 是否有效地址
             guard ViolasManager.isValidViolasAddress(address: address) else {
@@ -379,6 +373,15 @@ class ViolasTransferView: UIView {
                 return
             }
             let balance = "\(Double((model.walletBalance ?? 0) / 1000000))"
+            walletBalanceLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + balance + " VToken"
+        }
+    }
+    var vtoken: ViolasTokenModel? {
+        didSet {
+            guard let model = vtoken else {
+                return
+            }
+            let balance = "\(Double((model.balance ?? 0) / 1000000))"
             walletBalanceLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + balance + " VToken"
         }
     }

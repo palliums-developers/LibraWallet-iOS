@@ -63,7 +63,7 @@ extension VTokenMainViewController: VTokenMainHeaderViewDelegate {
         }
         vc.wallet = self.wallet
         vc.sendViolasTokenState = true
-        vc.contract = self.vtokenModel?.address
+        vc.vtokenModel = self.vtokenModel
         vc.title = (vtokenModel?.name ?? "") + localLanguage(keyString: "wallet_transfer_navigation_title")
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)

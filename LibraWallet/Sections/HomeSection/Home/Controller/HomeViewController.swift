@@ -296,7 +296,7 @@ extension HomeViewController {
         }
         vc.wallet = self.detailView.headerView.walletModel
         vc.sendViolasTokenState = true
-        vc.contract = contract?.first?.address
+        vc.vtokenModel = contract?.first
         vc.address = coinAddress
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)

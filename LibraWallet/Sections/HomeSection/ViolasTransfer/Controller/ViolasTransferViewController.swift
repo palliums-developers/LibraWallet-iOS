@@ -11,9 +11,9 @@ import UIKit
 class ViolasTransferViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-//        self.title = (self.wallet?.walletType?.description ?? "") + localLanguage(keyString: "wallet_transfer_navigation_title")
         self.view.addSubview(detailView)
         self.detailView.wallet = self.wallet
+        self.detailView.vtoken = self.vtokenModel
         self.initKVO()
     }
     override func viewWillLayoutSubviews() {
@@ -45,7 +45,7 @@ class ViolasTransferViewController: BaseViewController {
     var myContext = 0
     var wallet: LibraWalletManager?
     var sendViolasTokenState: Bool?
-    var contract: String?
+    var vtokenModel: ViolasTokenModel?
     var address: String? {
         didSet {
            self.detailView.addressTextField.text = address
@@ -173,7 +173,7 @@ extension ViolasTransferViewController: ViolasTransferViewDelegate {
                 if self?.sendViolasTokenState == false {
                     self?.dataModel.sendViolasTransaction(sendAddress: (self?.wallet?.walletAddress)!, receiveAddress: address, amount: amount, fee: fee, mnemonic: menmonic)
                 } else {
-                    self?.dataModel.sendViolasTokenTransaction(sendAddress: (self?.wallet?.walletAddress)!, receiveAddress: address, amount: amount, fee: fee, mnemonic: menmonic, contact: self?.contract ?? "")
+                    self?.dataModel.sendViolasTokenTransaction(sendAddress: (self?.wallet?.walletAddress)!, receiveAddress: address, amount: amount, fee: fee, mnemonic: menmonic, contact: self?.vtokenModel?.address ?? "")
                 }
             } catch {
                 self?.detailView.toastView?.hide()

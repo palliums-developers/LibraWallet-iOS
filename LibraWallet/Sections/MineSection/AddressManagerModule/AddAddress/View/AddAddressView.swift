@@ -56,7 +56,6 @@ class AddAddressView: UIView {
             make.right.equalTo(self.snp.right).offset(-23)
             make.height.equalTo(1)
         }
-        
         addressTitleLabel.snp.makeConstraints { (make) in
             make.centerY.equalTo(addressTextField)
             make.left.equalTo(self)
@@ -103,16 +102,16 @@ class AddAddressView: UIView {
         let label = UILabel.init()
         label.textAlignment = .center
         label.textColor = UIColor.init(hex: "2E2E2E")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 13), weight: .regular)
+        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: .regular)
         label.text = localLanguage(keyString: "wallet_address_add_remarks_title")
         return label
     }()
     lazy var remarksTextField: UITextField = {
         let textField = UITextField.init()
         textField.textAlignment = NSTextAlignment.left
-        textField.textColor = UIColor.init(hex: "333333")
+        textField.textColor = UIColor.init(hex: "3C3848")
         textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_address_add_remarks_textfield_placeholder"),
-                                                             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "B5B5B5"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: adaptFont(fontSize: 16))])
+                                                             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "3C3848").alpha(0.3),NSAttributedString.Key.font: UIFont.systemFont(ofSize: adaptFont(fontSize: 16))])
         textField.tintColor = DefaultGreenColor
         textField.delegate = self
         return textField
@@ -122,21 +121,20 @@ class AddAddressView: UIView {
         label.backgroundColor = DefaultSpaceColor
         return label
     }()
-    
     lazy var addressTitleLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = .center
         label.textColor = UIColor.init(hex: "515151")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 15), weight: .regular)
+        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: .regular)
         label.text = localLanguage(keyString: "wallet_address_add_address_title")
         return label
     }()
     lazy var addressTextField: UITextField = {
         let textField = UITextField.init()
         textField.textAlignment = NSTextAlignment.left
-        textField.textColor = UIColor.init(hex: "333333")
+        textField.textColor = UIColor.init(hex: "3C3848")
         textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_address_add_address_textfield_placeholder"),
-                                                             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "B5B5B5"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: adaptFont(fontSize: 16))])
+                                                             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "3C3848").alpha(0.3),NSAttributedString.Key.font: UIFont.systemFont(ofSize: adaptFont(fontSize: 16))])
         textField.tintColor = DefaultGreenColor
         return textField
     }()
@@ -153,7 +151,7 @@ class AddAddressView: UIView {
         let label = UILabel.init()
         label.textAlignment = .center
         label.textColor = UIColor.init(hex: "515151")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 15), weight: .regular)
+        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: .regular)
         label.text = localLanguage(keyString: "wallet_address_add_type_title")
         return label
     }()
@@ -161,7 +159,7 @@ class AddAddressView: UIView {
         let button = UIButton.init(type: UIButton.ButtonType.custom)
         button.setTitle(localLanguage(keyString: "wallet_address_add_type_button_title"), for: UIControl.State.normal)
         button.setTitleColor(UIColor.init(hex: "3C3848"), for: UIControl.State.normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: UIFont.Weight.regular)
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
         button.layer.cornerRadius = 7
         button.layer.masksToBounds = true
@@ -259,7 +257,6 @@ class AddAddressView: UIView {
 }
 extension AddAddressView: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        #warning("规则待定")
         guard let content = textField.text else {
             return true
         }

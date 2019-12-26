@@ -35,9 +35,9 @@ class PrivateAlertView: UIView {
         walletWhiteBackgroundView.snp.makeConstraints { (make) in
             make.centerX.equalTo(self)
             make.centerY.equalTo(self).offset(-20)
-            make.left.equalTo(self).offset(68)
-            make.right.equalTo(self).offset(-68)
-            make.height.equalTo(335)
+            make.left.equalTo(self).offset(27)
+            make.right.equalTo(self).offset(-27)
+            make.height.equalTo(404)
         }
         titleLabel.snp.makeConstraints { (make) in
             make.centerX.equalTo(walletWhiteBackgroundView)
@@ -51,14 +51,14 @@ class PrivateAlertView: UIView {
             make.bottom.equalTo(cancelButton.snp.top).offset(-15)
         }
         cancelButton.snp.makeConstraints { (make) in
-            make.bottom.equalTo(walletWhiteBackgroundView.snp.bottom)
-            make.left.equalTo(walletWhiteBackgroundView)
-            make.height.equalTo(40)
+            make.bottom.equalTo(walletWhiteBackgroundView.snp.bottom).offset(-18)
+            make.left.equalTo(walletWhiteBackgroundView).offset(25)
+            make.height.equalTo(37)
         }
         confirmButton.snp.makeConstraints { (make) in
-            make.bottom.equalTo(walletWhiteBackgroundView.snp.bottom)
-            make.right.equalTo(walletWhiteBackgroundView.snp.right)
-            make.left.equalTo(cancelButton.snp.right)
+            make.bottom.equalTo(walletWhiteBackgroundView.snp.bottom).offset(-18)
+            make.right.equalTo(walletWhiteBackgroundView.snp.right).offset(-25)
+            make.left.equalTo(cancelButton.snp.right).offset(13)
             make.height.width.equalTo(cancelButton)
         }
     }
@@ -107,6 +107,10 @@ class PrivateAlertView: UIView {
         button.setTitle(localLanguage(keyString: "wallet_private_and_use_legal_cancel_button_title"), for: UIControl.State.normal)
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
         button.tag = 10
+        button.layer.cornerRadius = 4
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.init(hex: "979797").alpha(0.8).cgColor
+        button.layer.masksToBounds = true
         return button
     }()
     private lazy var confirmButton: UIButton = {
@@ -115,8 +119,10 @@ class PrivateAlertView: UIView {
         button.setTitleColor(UIColor.white, for: UIControl.State.normal)
         button.setTitle(localLanguage(keyString: "wallet_private_and_use_legal_confirm_button_title"), for: UIControl.State.normal)
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
-        button.layer.insertSublayer(colorGradualChange(size: CGSize.init(width: UIScreen.main.bounds.size.width - 136, height: 40)), at: 0)
+        button.layer.insertSublayer(colorGradualChange(size: CGSize.init(width: (UIScreen.main.bounds.size.width - 54 - 50 - 13) / 2, height: 37)), at: 0)
         button.tag = 15
+        button.layer.cornerRadius = 4
+        button.layer.masksToBounds = true
         return button
     }()
     @objc func buttonClick(button: UIButton) {

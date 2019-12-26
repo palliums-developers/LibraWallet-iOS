@@ -216,11 +216,18 @@ extension mainRequest:TargetType {
             return .requestParameters(parameters: ["addr": address],
                                       encoding: URLEncoding.queryString)
         case .GetViolasAccountTransactionList(let address, let offset, let limit, let contract):
-            return .requestParameters(parameters: ["addr": address,
-                                                   "limit": limit,
-                                                   "offset":offset,
-                                                   "modu":contract],
-                                      encoding: URLEncoding.queryString)
+            if contract.isEmpty == true {
+                return .requestParameters(parameters: ["addr": address,
+                                                       "limit": limit,
+                                                       "offset":offset],
+                                          encoding: URLEncoding.queryString)
+            } else {
+                return .requestParameters(parameters: ["addr": address,
+                                                       "limit": limit,
+                                                       "offset":offset,
+                                                       "modu":contract],
+                                          encoding: URLEncoding.queryString)
+            }
         case .SendViolasTransaction(let signature):
             return .requestParameters(parameters: ["signedtxn": signature],
                                       encoding: JSONEncoding.default)

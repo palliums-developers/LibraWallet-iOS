@@ -271,6 +271,10 @@ extension MarketViewController: MarketTableViewManagerDelegate {
                                                        mnemonic: mnemonic,
                                                        contact: receiveContract)
             self?.publishTokenClosure = {
+                #warning("更新列表")
+                if let headerView = self?.detailView.tableView.headerView(forSection: 0) as? MarketExchangeHeaderView {
+                    headerView.rightTokenModel?.enable = true
+                }
                 self?.dataModel.exchangeViolasTokenTransaction(sendAddress: walletAddress,
                                                                amount: amount,
                                                                fee: 0,
@@ -372,11 +376,15 @@ extension MarketViewController {
         } else if type == "GetCurrentOrder" {
             self.detailView.toastView?.hide()
             if let tempData = jsonData.value(forKey: "data") as? MarketResponseMainModel {
-                self.tableViewManager.buyOrders = tempData.orders?.sorted(by: {
+                self.tableViewManager.buyOrders = tempData.orders?.filter({
+                    $0.user?.contains(self.wallet?.walletAddress ?? "") == true
+                }).sorted(by: {
                     ($0.date ?? 0) > ($1.date ?? 0)
                 })
-                self.tableViewManager.sellOrders = tempData.depths?.buys?.sorted(by: {
-                    ($0.date ?? 0) > ($1.date ?? 0)
+                self.tableViewManager.sellOrders = tempData.depths?.buys?.filter({
+                    $0.user?.contains(self.wallet?.walletAddress ?? "") == false
+                }).sorted(by: {
+                    ($0.date ?? 0) < ($1.date ?? 0)
                 })
                 self.detailView.tableView.reloadData()
             }
