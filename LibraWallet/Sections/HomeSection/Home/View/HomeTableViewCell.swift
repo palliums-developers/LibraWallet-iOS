@@ -68,7 +68,9 @@ class HomeTableViewCell: UITableViewCell {
     var model: ViolasTokenModel? {
         didSet {
             coinNameLabel.text = model?.name
-            coinAmountLabel.text =  "\(Double(model?.balance ?? 0) / 1000000.0)"
+            coinAmountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model?.balance ?? 0)),
+                                                          scale: 4,
+                                                          unit: 1000000)
         }
     }
 }

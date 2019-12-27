@@ -44,7 +44,7 @@ class SettingTableViewCell: UITableViewCell {
     lazy var nameLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
-        label.textColor = UIColor.init(hex: "7F7F7F")
+        label.textColor = UIColor.init(hex: "3C3848")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
         label.text = "---"
         return label
@@ -84,6 +84,13 @@ class SettingTableViewCell: UITableViewCell {
     var model: [String: String]? {
         didSet {
             self.nameLabel.text = model!["name"]
+        }
+    }
+    var hideSpcaeLineState: Bool? {
+        didSet {
+            if hideSpcaeLineState == true {
+                cellSpaceLabel.alpha = 0
+            }
         }
     }
 }

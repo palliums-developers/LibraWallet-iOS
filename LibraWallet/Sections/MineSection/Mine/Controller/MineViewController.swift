@@ -70,19 +70,40 @@ class MineViewController: UIViewController {
 }
 extension MineViewController: MineTableViewManagerDelegate {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath) {
-        if indexPath.row == 1 {
-            let vc = AddressManagerViewController()
-            vc.hidesBottomBarWhenPushed = true
-            self.navigationController?.pushViewController(vc, animated: true)
-        } else if indexPath.row == 2 {
-            let vc = SettingViewController()
-            vc.hidesBottomBarWhenPushed = true
-            self.navigationController?.pushViewController(vc, animated: true)
-        } else if indexPath.row == 0 {
-            let vc = WalletManagerViewController()
-            vc.hidesBottomBarWhenPushed = true
-            vc.managerWallet = true
-            self.navigationController?.pushViewController(vc, animated: true)
+        if indexPath.section == 0 {
+            
+            if indexPath.row == 0 {
+                let vc = WalletManagerViewController()
+                vc.hidesBottomBarWhenPushed = true
+                vc.managerWallet = true
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
+        } else if indexPath.section == 1 {
+            if indexPath.row == 0 {
+                let vc = AddressManagerViewController()
+                vc.hidesBottomBarWhenPushed = true
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
+        } else if indexPath.section == 2 {
+            if indexPath.row == 0 {
+                let vc = SettingViewController()
+                vc.hidesBottomBarWhenPushed = true
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
         }
+//        if indexPath.row == 1 {
+//            let vc = AddressManagerViewController()
+//            vc.hidesBottomBarWhenPushed = true
+//            self.navigationController?.pushViewController(vc, animated: true)
+//        } else if indexPath.row == 2 {
+//            let vc = SettingViewController()
+//            vc.hidesBottomBarWhenPushed = true
+//            self.navigationController?.pushViewController(vc, animated: true)
+//        } else if indexPath.row == 0 {
+//            let vc = WalletManagerViewController()
+//            vc.hidesBottomBarWhenPushed = true
+//            vc.managerWallet = true
+//            self.navigationController?.pushViewController(vc, animated: true)
+//        }
     }
 }

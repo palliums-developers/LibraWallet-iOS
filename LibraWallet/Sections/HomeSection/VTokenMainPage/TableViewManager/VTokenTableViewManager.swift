@@ -56,14 +56,12 @@ extension VTokenTableViewManager: UITableViewDataSource {
         let identifier = "CellNormal"
         if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? WalletTransactionsTableViewCell {
             if let data = violasTransactions, data.isEmpty == false {
-                cell.tokenName = self.tokenName
                 cell.violasModel = data[indexPath.section]
             }
             return cell
         } else {
             let cell = WalletTransactionsTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
             if let data = violasTransactions, data.isEmpty == false {
-                cell.tokenName = self.tokenName
                 cell.violasModel = data[indexPath.section]
             }
             return cell

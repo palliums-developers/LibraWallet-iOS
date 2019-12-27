@@ -44,7 +44,8 @@ class MineView: UIView {
         } else {
             // Fallback on earlier versions
         }
-        tableView.backgroundColor = defaultBackgroundColor
+        tableView.backgroundColor = UIColor.init(hex: "F7F7F9")//defaultBackgroundColor
+        tableView.register(MineTableViewCell.classForCoder(), forCellReuseIdentifier: "CellNormal")
         return tableView
     }()
     private lazy var mineHeaderView : MineHeaderView = {

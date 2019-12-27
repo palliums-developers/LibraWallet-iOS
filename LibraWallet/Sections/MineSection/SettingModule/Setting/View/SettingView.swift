@@ -43,7 +43,8 @@ class SettingView: UIView {
         } else {
             // Fallback on earlier versions
         }
-        tableView.backgroundColor = defaultBackgroundColor
+        tableView.backgroundColor = UIColor.init(hex: "F7F7F9")//defaultBackgroundColor
+        tableView.register(SettingTableViewCell.classForCoder(), forCellReuseIdentifier: "CellNormal")
         return tableView
     }()
     private lazy var header : SettingViewHeader = {

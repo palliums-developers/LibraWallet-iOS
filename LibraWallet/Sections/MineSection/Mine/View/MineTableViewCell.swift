@@ -54,7 +54,7 @@ class MineTableViewCell: UITableViewCell {
     lazy var nameLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
-        label.textColor = UIColor.init(hex: "7F7F7F")
+        label.textColor = UIColor.init(hex: "3C3848")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
         label.text = "---"
         return label
@@ -84,6 +84,13 @@ class MineTableViewCell: UITableViewCell {
         didSet {
             self.nameLabel.text = model!["name"]
             iconImageView.image = UIImage.init(named: model!["icon"]!)
+        }
+    }
+    var hideSpcaeLineState: Bool? {
+        didSet {
+            if hideSpcaeLineState == true {
+                cellSpaceLabel.alpha = 0
+            }
         }
     }
 }

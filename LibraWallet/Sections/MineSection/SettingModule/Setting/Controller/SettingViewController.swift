@@ -13,8 +13,6 @@ import Device
 class SettingViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        // 初始化本地配置
-//        self.setBaseControlllerConfig()
         // 设置标题
         self.title = localLanguage(keyString: "wallet_setting_navigation_title")
         // 加载子View
@@ -28,11 +26,11 @@ class SettingViewController: BaseViewController {
         super.viewWillLayoutSubviews()
         detailView.snp.makeConstraints { (make) in
             if #available(iOS 11.0, *) {
-                make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
+                make.top.equalTo(self.view.safeAreaLayoutGuide)
             } else {
-                make.top.bottom.equalTo(self.view)
+                make.top.equalTo(self.view)
             }
-            make.left.right.equalTo(self.view)
+            make.left.right.bottom.equalTo(self.view)
         }
     }
     deinit {

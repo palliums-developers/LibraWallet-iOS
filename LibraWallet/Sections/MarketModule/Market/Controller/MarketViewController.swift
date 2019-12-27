@@ -282,7 +282,7 @@ extension MarketViewController: MarketTableViewManagerDelegate {
         }
     }
     func showPasswordAlert(payContract: String, receiveContract: String, amount: Double, exchangeAmount: Double) {
-        let alert = showPassowordAlertViewController(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] mnemonic in
+        let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] mnemonic in
             guard let walletAddress = self?.wallet?.walletAddress else {
                 return
             }
@@ -300,7 +300,7 @@ extension MarketViewController: MarketTableViewManagerDelegate {
         self.present(alert, animated: true, completion: nil)
     }
     func showPublishPasswordAlert(payContract: String, receiveContract: String, amount: Double, exchangeAmount: Double) {
-        let alert = showPassowordAlertViewController(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] mnemonic in
+        let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] mnemonic in
             guard let walletAddress = self?.wallet?.walletAddress else {
                 return
             }
@@ -612,6 +612,9 @@ extension MarketViewController {
                                 guard stopRefreshTableView == false else {
                                     return
                                 }
+                                guard stopRefreshTableView == false else {
+                                    return
+                                }
                                 self.detailView.tableView.beginUpdates()
                                 self.detailView.tableView.deleteRows(at: [IndexPath.init(row: j, section: 2)], with: UITableView.RowAnimation.left)
                                 if count >= 5 {
@@ -620,12 +623,7 @@ extension MarketViewController {
                                 self.detailView.tableView.endUpdates()
                             }
                         }
-                        guard stopRefreshTableView == false else {
-                            return
-                        }
-                        self.detailView.tableView.beginUpdates()
-                        self.detailView.tableView.deleteRows(at: [IndexPath.init(row: j, section: 2)], with: UITableView.RowAnimation.left)
-                        self.detailView.tableView.endUpdates()
+                        
                     } else if otherOrders[i].state == "CANCELED" || otherOrders[i].state == "CANCELLING" {
                         // 其他人订单已取消
 //                                tempOrderDeleteIndexPath.append(IndexPath.init(row: j, section: 1))

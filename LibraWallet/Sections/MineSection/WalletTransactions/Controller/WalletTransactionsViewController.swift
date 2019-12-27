@@ -112,7 +112,7 @@ class WalletTransactionsViewController: BaseViewController {
         transactionRequest(refresh: true)
     }
     @objc func getMoreData() {
-        dataOffset += 1
+        dataOffset += 10
         transactionRequest(refresh: false)
     }
     func transactionRequest(refresh: Bool) {
@@ -122,7 +122,7 @@ class WalletTransactionsViewController: BaseViewController {
             dataModel.getLibraTransactionHistory(address: (wallet?.walletAddress)!, page: dataOffset, pageSize: 10, requestStatus: requestState)
             break
         case .Violas:
-            dataModel.getViolasTransactionHistory(address: (wallet?.walletAddress)!, page: dataOffset, pageSize: 10, contract: "", requestStatus: requestState)
+            dataModel.getViolasTransactionList(address: (wallet?.walletAddress)!, page: dataOffset, pageSize: 10, contract: "", requestStatus: requestState)
             break
         case .BTC:
             dataModel.getBTCTransactionHistory(address: (wallet?.walletAddress)!, page: dataOffset + 1, pageSize: 10, requestStatus: requestState)
@@ -208,7 +208,7 @@ extension WalletTransactionsViewController {
             guard let tempData = jsonData.value(forKey: "data") as? [ViolasDataModel] else {
                 return
             }
-            self.tableViewManager.tokenName = "vtoken"
+//            self.tableViewManager.tokenName = "vtoken"
             self.tableViewManager.violasTransactions = tempData
             self.detailView.tableView.reloadData()
         } else if type == "ViolasTransactionHistoryMore" {

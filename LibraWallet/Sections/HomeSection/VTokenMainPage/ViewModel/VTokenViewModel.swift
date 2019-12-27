@@ -41,6 +41,8 @@ class VTokenViewModel: NSObject {
             } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
                 print(error.localizedDescription)
                 // 数据为空
+                 self.detailView.tableView.mj_footer.endRefreshingWithNoMoreData()
+                 self.detailView.makeToast("没有更多数据", position: .center)
             } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
                 print(error.localizedDescription)
                 // 数据返回状态异常
@@ -57,7 +59,32 @@ class VTokenViewModel: NSObject {
             self.tableViewManager.violasTransactions = tempData
             self.detailView.tableView.reloadData()
         } else if type == "ViolasTransactionHistoryMore" {
-                   
+            guard let tempData = jsonData.value(forKey: "data") as? [ViolasDataModel] else {
+                return
+            }
+            if let oldData = self.tableViewManager.violasTransactions, oldData.isEmpty == false {
+                let tempArray = NSMutableArray.init(array: oldData)
+                var insertIndexPath = [IndexPath]()
+
+                for index in 0..<tempData.count {
+                    let indexPath = IndexPath.init(row: 0, section: oldData.count + index)
+                    insertIndexPath.append(indexPath)
+                }
+                tempArray.addObjects(from: tempData)
+                self.tableViewManager.tokenName = vtokenModel?.name
+                self.tableViewManager.violasTransactions = tempArray as? [ViolasDataModel]
+                self.detailView.tableView.beginUpdates()
+                for index in 0..<tempData.count {
+                    self.detailView.tableView.insertSections(IndexSet.init(integer: oldData.count + index), with: UITableView.RowAnimation.bottom)
+                }
+                self.detailView.tableView.endUpdates()
+            } else {
+                self.tableViewManager.tokenName = vtokenModel?.name
+                self.tableViewManager.violasTransactions = tempData
+                self.detailView.tableView.reloadData()
+            }
+            self.detailView.tableView.mj_footer.endRefreshing()
+
         }
         self.detailView.hideToastActivity()
         self.detailView.tableView.mj_header.endRefreshing()
@@ -89,12 +116,12 @@ class VTokenViewModel: NSObject {
         dataOffset = 0
         detailView.tableView.mj_footer.resetNoMoreData()
         detailView.tableView.mj_header.beginRefreshing()
-        dataModel.getViolasTransactionHistory(address: (wallet?.walletAddress)!, page: dataOffset, pageSize: 10, contract: self.vtokenModel?.address ?? "", requestStatus: 0)
+        dataModel.getViolasTransactionHistory(address: (wallet?.walletAddress)!, page: dataOffset, pageSize: 10, contract: self.vtokenModel?.address ?? "", requestStatus: 0, tokenName: self.vtokenModel?.name ?? "")
     }
     @objc func getMoreReceive() {
-        dataOffset += 1
+        dataOffset += 10
         detailView.tableView.mj_footer.beginRefreshing()
-        dataModel.getViolasTransactionHistory(address: (wallet?.walletAddress)!, page: dataOffset, pageSize: 10, contract: self.vtokenModel?.address ?? "", requestStatus: 1)
+        dataModel.getViolasTransactionHistory(address: (wallet?.walletAddress)!, page: dataOffset, pageSize: 10, contract: self.vtokenModel?.address ?? "", requestStatus: 1, tokenName: self.vtokenModel?.name ?? "")
     }
     var wallet: LibraWalletManager?
     var vtokenModel: ViolasTokenModel?

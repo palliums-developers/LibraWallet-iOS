@@ -78,42 +78,14 @@ extension WalletDetailViewController: WalletDetailTableViewManagerDelegate {
             }
             self.navigationController?.pushViewController(vc, animated: true)
         } else {
-            let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: localLanguage(keyString: "wallet_type_in_password_content"), preferredStyle: .alert)
-            alertContr.addTextField {
-                (textField: UITextField!) -> Void in
-                textField.placeholder = localLanguage(keyString: "wallet_type_in_password_textfield_placeholder")
-                textField.tintColor = DefaultGreenColor
-                textField.isSecureTextEntry = true
-            }
-            alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_confirm_button_title"), style: .default){ [weak self] clickHandler in
-                let passwordTextField = alertContr.textFields!.first! as UITextField
-
-                guard let password = passwordTextField.text else {
-                    self?.view.makeToast(LibraWalletError.WalletCheckPassword(reason: .passwordInvalidError).localizedDescription,
-                                        position: .center)
-                    return
-                }
-                guard password.isEmpty == false else {
-                    self?.view.makeToast(LibraWalletError.WalletCheckPassword(reason: .passwordEmptyError).localizedDescription,
-                                        position: .center)
-                    return
-                }
-                NSLog("Password:\(password)")
-                let state = try? LibraWalletManager.shared.isValidPaymentPassword(walletRootAddress: (self?.walletModel?.walletRootAddress)!, password: password)
-                guard state == true else {
-                    self?.view.makeToast(LibraWalletError.WalletCheckPassword(reason: .passwordCheckFailed).localizedDescription,
-                                        position: .center)
-                    return
-                }
+            let alert = passowordAlert(rootAddress: (self.walletModel?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
                 let vc = WalletMnemonicViewController()
                 vc.rootAddress = self?.walletModel?.walletRootAddress
                 self?.navigationController?.pushViewController(vc, animated: true)
-                })
-            alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_cancel_button_title"), style: .cancel){
-                clickHandler in
-                NSLog("点击了取消")
-                })
-            self.present(alertContr, animated: true, completion: nil)
+            }) { [weak self] (errorContent) in
+                self?.view.makeToast(errorContent, position: .center)
+            }
+            self.present(alert, animated: true, completion: nil)
         }
     }
 }

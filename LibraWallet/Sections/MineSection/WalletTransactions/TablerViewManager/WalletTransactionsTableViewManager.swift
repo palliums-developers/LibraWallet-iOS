@@ -77,7 +77,6 @@ extension WalletTransactionsTableViewManager: UITableViewDataSource {
                 }
             case .Violas:
                 if let data = violasTransactions, data.isEmpty == false {
-                    (cell as! WalletTransactionsTableViewCell).tokenName = self.tokenName
                     (cell as! WalletTransactionsTableViewCell).violasModel = data[indexPath.section]
                 }
             case .BTC:
@@ -97,7 +96,6 @@ extension WalletTransactionsTableViewManager: UITableViewDataSource {
                 }
             case .Violas:
                 if let data = violasTransactions, data.isEmpty == false {
-                    cell.tokenName = self.tokenName
                     cell.violasModel = data[indexPath.section]
                     
                 }

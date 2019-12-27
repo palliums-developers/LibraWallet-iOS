@@ -77,7 +77,7 @@ func isPurnDouble(string: String) -> Bool {
     return scan.scanDouble(&val) && scan.isAtEnd
     
 }
-func showPassowordAlertViewController(rootAddress: String, mnemonic: @escaping (([String])->Void), errorContent: @escaping ((String)->Void)) -> UIAlertController {
+func passowordAlert(rootAddress: String, mnemonic: @escaping (([String])->Void), errorContent: @escaping ((String)->Void)) -> UIAlertController {
     let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: localLanguage(keyString: "wallet_type_in_password_content"), preferredStyle: .alert)
     alertContr.addTextField {
         (textField: UITextField!) -> Void in
@@ -99,7 +99,7 @@ func showPassowordAlertViewController(rootAddress: String, mnemonic: @escaping (
         do {
             let state = try LibraWalletManager.shared.isValidPaymentPassword(walletRootAddress: rootAddress, password: password)
             guard state == true else {
-                errorContent(LibraWalletError.WalletCheckPassword(reason: .passwordInvalidError).localizedDescription)
+                errorContent(LibraWalletError.WalletCheckPassword(reason: .passwordCheckFailed).localizedDescription)
                 return
             }
             let tempMenmonic = try LibraWalletManager.shared.getMnemonicFromKeychain(walletRootAddress: rootAddress)
@@ -183,4 +183,18 @@ fileprivate func isContainNumber(content: String) -> Bool {
     } else {
         return false
     }
+}
+func getDecimalNumberAmount(amount: NSDecimalNumber, scale: Int16, unit: Int) -> String {
+//    NSRoundPlain:四舍五入
+//    NSRoundDown:只舍不入
+//    NSRoundUp：只入不舍
+//    NSRoundBankers: 在四舍五入的基础上加了一个判断：当最后一位为5的时候，只会舍入成偶数。比如：1.25不会返回1.3而是1.2，因为1.3不是偶数。
+    let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
+                                                   scale: scale,
+                                                   raiseOnExactness: false,
+                                                   raiseOnOverflow: false,
+                                                   raiseOnUnderflow: false,
+                                                   raiseOnDivideByZero: false)
+    let number = amount.dividing(by: NSDecimalNumber.init(value: unit), withBehavior: numberConfig)
+    return number.stringValue
 }

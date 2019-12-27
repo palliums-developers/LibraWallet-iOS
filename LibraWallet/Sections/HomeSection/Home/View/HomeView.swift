@@ -38,7 +38,7 @@ class HomeView: UIView {
             make.height.equalTo((196 * ratio))
         }
         headerView.snp.makeConstraints { (make) in
-            make.top.equalTo(topBackgroundImageView.snp.bottom).offset(-100)
+            make.top.equalTo(topBackgroundImageView.snp.bottom).offset(-((196 * ratio) - Int(navigationBarHeight)))
             make.left.right.equalTo(self)
             make.height.equalTo(301)
         }

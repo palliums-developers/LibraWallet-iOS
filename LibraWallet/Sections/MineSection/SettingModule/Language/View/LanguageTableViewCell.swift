@@ -14,7 +14,7 @@ class LanguageTableViewCell: UITableViewCell {
         contentView.backgroundColor = UIColor.white
         contentView.addSubview(titleLabel)
         contentView.addSubview(IndicatorImageView)
-        contentView.addSubview(addressSpaceLabel)
+        contentView.addSubview(cellSpaceLabel)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -34,7 +34,7 @@ class LanguageTableViewCell: UITableViewCell {
             make.right.equalTo(contentView.snp.right).offset(-15)
             make.centerY.equalTo(contentView)
         }
-        addressSpaceLabel.snp.makeConstraints { (make) in
+        cellSpaceLabel.snp.makeConstraints { (make) in
             make.bottom.equalTo(contentView.snp.bottom)
             make.left.equalTo(self).offset(14)
             make.right.equalTo(self.snp.right).offset(-14)
@@ -57,7 +57,7 @@ class LanguageTableViewCell: UITableViewCell {
         imageView.isUserInteractionEnabled = true
         return imageView
     }()
-    lazy var addressSpaceLabel: UILabel = {
+    lazy var cellSpaceLabel: UILabel = {
         let label = UILabel.init()
         label.backgroundColor = DefaultSpaceColor
         return label
@@ -77,6 +77,13 @@ class LanguageTableViewCell: UITableViewCell {
             IndicatorImageView.image = UIImage.init(named: "language_select")
         } else {
             IndicatorImageView.image = UIImage.init(named: "language_deselect")
+        }
+    }
+    var hideSpcaeLineState: Bool? {
+        didSet {
+            if hideSpcaeLineState == true {
+                cellSpaceLabel.alpha = 0
+            }
         }
     }
 }

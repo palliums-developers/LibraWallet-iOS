@@ -181,7 +181,7 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
         // 阴影的偏移量
         imageView.layer.shadowOffset = CGSize(width: 0, height: 3)
         // 阴影的透明度，默认为0，不设置则不会显示阴影****
-        imageView.layer.shadowOpacity = 0.1
+        imageView.layer.shadowOpacity = 0.05
         return imageView
     }()
     lazy var leftCoinButton: UIButton = {

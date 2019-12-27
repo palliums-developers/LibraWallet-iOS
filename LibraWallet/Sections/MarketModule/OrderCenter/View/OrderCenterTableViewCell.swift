@@ -242,10 +242,14 @@ class OrderCenterTableViewCell: UITableViewCell {
             attString.append(attString2)
             attString.append(attString3)
             coinTitleLabel.attributedText = attString
-            amountLabel.text = "\(Double(model?.amountGet ?? "0")! / 1000000)"
+            amountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(string: (model?.amountGet ?? "0")),
+                                                      scale: 4,
+                                                      unit: 1000000)
             priceLabel.text = "\(model?.price ?? 0)"
             dateLabel.text = timestampToDateString(timestamp: model?.date ?? 0, dateFormat: "MM/dd HH:mm:ss")
-            successAmountLabel.text = "\(Double(model?.amountFilled ?? "0")! / 1000000)"
+            successAmountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(string: (model?.amountFilled ?? "0")),
+                                                             scale: 4,
+                                                             unit: 1000000)
             if model?.state == "OPEN" {
                 cancelButton.setTitle(localLanguage(keyString: "撤销"), for: UIControl.State.normal)
                 cancelButton.setTitleColor(UIColor.init(hex: "726BD9"), for: UIControl.State.normal)

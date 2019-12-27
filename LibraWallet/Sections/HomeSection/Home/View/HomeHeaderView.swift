@@ -35,8 +35,8 @@ class HomeHeaderView: UIView {
         
         addSubview(lastTransactionBackgroundButton)
         addSubview(transferButton)
-        addSubview(buttonSpaceLabel)
         addSubview(receiveButton)
+        addSubview(buttonSpaceLabel)
         
         addSubview(coinBackgroundView)
         addSubview(coinTitleLabel)
@@ -222,7 +222,7 @@ class HomeHeaderView: UIView {
         let button = UIButton.init(type: UIButton.ButtonType.custom)
         // 设置字体
         button.setTitle(localLanguage(keyString: "wallet_home_transfer_button_title"), for: UIControl.State.normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.regular)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.regular)
         button.setTitleColor(UIColor.init(hex: "22126C"), for: UIControl.State.normal)
         // 设置图片
         button.setImage(UIImage.init(named: "home_transfer"), for: UIControl.State.normal)
@@ -251,7 +251,7 @@ class HomeHeaderView: UIView {
         let button = UIButton.init(type: UIButton.ButtonType.custom)
         // 设置字体
         button.setTitle(localLanguage(keyString: "wallet_home_receive_button_title"), for: UIControl.State.normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.regular)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.regular)
         button.setTitleColor(UIColor.init(hex: "22126C"), for: UIControl.State.normal)
         // 设置图片
         button.setImage(UIImage.init(named: "home_receive"), for: UIControl.State.normal)
@@ -358,26 +358,17 @@ class HomeHeaderView: UIView {
                 break
             case .Violas:
                 assetUnitLabel.text = "VToken"
-                let numberConfig = NSDecimalNumberHandler.init(roundingMode: .plain,
-                                                               scale: 4,
-                                                               raiseOnExactness: false,
-                                                               raiseOnOverflow: false,
-                                                               raiseOnUnderflow: false,
-                                                               raiseOnDivideByZero: false)
-                let number = NSDecimalNumber.init(value: (walletModel?.walletBalance ?? 0)).dividing(by: NSDecimalNumber.init(value: 1000000), withBehavior: numberConfig)
-                assetLabel.text = number.stringValue
+                assetLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (walletModel?.walletBalance ?? 0)),
+                                                         scale: 4,
+                                                         unit: 1000000)
                 hideAddTokenButtonState = false
                 break
             case .BTC:
                 assetUnitLabel.text = "BTC"
-                let numberConfig = NSDecimalNumberHandler.init(roundingMode: .plain,
-                                                               scale: 8,
-                                                               raiseOnExactness: false,
-                                                               raiseOnOverflow: false,
-                                                               raiseOnUnderflow: false,
-                                                               raiseOnDivideByZero: false)
-                let number = NSDecimalNumber.init(value: (walletModel?.walletBalance ?? 0)).dividing(by: NSDecimalNumber.init(value: 100000000), withBehavior: numberConfig)
-                assetLabel.text = number.stringValue
+
+                assetLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (walletModel?.walletBalance ?? 0)),
+                                                         scale: 8,
+                                                         unit: 100000000)
                 hideAddTokenButtonState = true
                 break
             default:
@@ -397,7 +388,9 @@ class HomeHeaderView: UIView {
     var violasModel: BalanceLibraModel? {
         didSet {
             if violasModel?.address == self.walletAddressLabel.text {
-                assetLabel.text = "\(Double((violasModel?.balance ?? 0) / 1000000))"
+                assetLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (violasModel?.balance ?? 0)),
+                                                         scale: 4,
+                                                         unit: 1000000)
                 self.walletModel?.changeWalletBalance(banlance: violasModel?.balance ?? 0)
                 assetUnitLabel.text = "VToken"
             }
@@ -406,7 +399,9 @@ class HomeHeaderView: UIView {
     var btcModel: BalanceBTCModel? {
         didSet {
             if btcModel?.address == self.walletAddressLabel.text {
-                assetLabel.text = String.init(format: "%.8f", (Double(btcModel?.balance ?? 0) / 100000000.0))
+                assetLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (btcModel?.balance ?? 0)),
+                                                         scale: 8,
+                                                         unit: 100000000)
                 self.walletModel?.changeWalletBalance(banlance: btcModel?.balance ?? 0)
                 assetUnitLabel.text = "BTC"
             }

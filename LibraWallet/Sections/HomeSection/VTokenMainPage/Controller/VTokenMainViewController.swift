@@ -47,7 +47,9 @@ class VTokenMainViewController: BaseViewController {
     }
     var vtokenModel: ViolasTokenModel? {
         didSet {
-            self.viewModel.detailView.headerView.assetLabel.text = "\(Double(vtokenModel?.balance ?? 0) / 1000000.0)"
+            self.viewModel.detailView.headerView.assetLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (vtokenModel?.balance ?? 0)),
+                                                                                          scale: 4,
+                                                                                          unit: 1000000)
             self.viewModel.detailView.headerView.assetUnitLabel.text = vtokenModel?.name
             self.viewModel.vtokenModel = vtokenModel
         }

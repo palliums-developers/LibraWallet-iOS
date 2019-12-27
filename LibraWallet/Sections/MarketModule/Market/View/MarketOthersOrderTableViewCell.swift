@@ -64,7 +64,12 @@ class MarketOthersOrderTableViewCell: UITableViewCell {
     //MARK: - 设置数据
     var model: MarketOrderDataModel? {
         didSet {
-            amountLabel.text = "\(Double(model?.amountGet ?? "0")! / 1000000)"
+            // 计算剩余
+            let lastAmount = NSDecimalNumber.init(string: model?.amountGet ?? "0").subtracting(NSDecimalNumber.init(string: model?.amountFilled ?? "0"))
+            
+            amountLabel.text = getDecimalNumberAmount(amount: lastAmount,
+                                                      scale: 4,
+                                                      unit: 1000000)
 
             priceLabel.text = "\(model?.price ?? 0)"
         }

@@ -118,7 +118,7 @@ extension AddAssetViewController: AddAssetTableViewManagerDelegate {
         }
     }
     func showPasswordAlert(model: ViolasTokenModel, indexPath: IndexPath) {
-        let alert = showPassowordAlertViewController(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
+        let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
             self?.detailView.toastView?.show()
             self?.dataModel.publishViolasToken(sendAddress: (self?.wallet?.walletAddress)!, mnemonic: mnemonic, contact: model.address ?? "")
             self?.actionClosure = { result in

@@ -28,6 +28,7 @@ class AddAddressView: UIView {
         
         addSubview(typeTitleLabel)
         addSubview(typeButton)
+        addSubview(typeSpaceLabel)
             
         addSubview(confirmButton)
     }
@@ -86,7 +87,15 @@ class AddAddressView: UIView {
         typeButton.snp.makeConstraints { (make) in
             make.top.equalTo(addressSpaceLabel.snp.bottom)
             make.left.equalTo(self).offset(67)
-            make.size.equalTo(CGSize.init(width: 100, height: 50))
+//            make.size.equalTo(CGSize.init(width: 100, height: 50))
+            make.right.equalTo(self.snp.right).offset(-23)
+            make.height.equalTo(50)
+        }
+        typeSpaceLabel.snp.makeConstraints { (make) in
+            make.top.equalTo(addressSpaceLabel.snp.bottom).offset(50)
+            make.left.equalTo(self).offset(67)
+            make.right.equalTo(self.snp.right).offset(-23)
+            make.height.equalTo(1)
         }
         confirmButton.snp.makeConstraints { (make) in
             make.centerX.equalTo(self)
@@ -147,6 +156,11 @@ class AddAddressView: UIView {
         button.tag = 20
         return button
     }()
+    lazy var addressSpaceLabel: UILabel = {
+        let label = UILabel.init()
+        label.backgroundColor = DefaultSpaceColor
+        return label
+    }()
     lazy var typeTitleLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = .center
@@ -166,7 +180,7 @@ class AddAddressView: UIView {
         button.tag = 30
         return button
     }()
-    lazy var addressSpaceLabel: UILabel = {
+    lazy var typeSpaceLabel: UILabel = {
         let label = UILabel.init()
         label.backgroundColor = DefaultSpaceColor
         return label

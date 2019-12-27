@@ -317,6 +317,10 @@ class ViolasTransferView: UIView {
             let fee = Double(feeString!.replacingOccurrences(of: " VToken", with: ""))!
             #warning("暂时不用手续费")
             // 金额大于我的金额
+//            let mineAmount = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (wallet?.walletBalance ?? 0)),
+//                                                                           scale: 6,
+//                                                                           unit: 1000000)
+            #warning("待处理")
             guard (amount) <= Double((wallet?.walletBalance ?? 0) / 1000000) else {
                self.makeToast(LibraWalletError.WalletTransfer(reason: .amountOverload).localizedDescription,
                               position: .center)
@@ -372,7 +376,10 @@ class ViolasTransferView: UIView {
             guard let model = wallet else {
                 return
             }
-            let balance = "\(Double((model.walletBalance ?? 0) / 1000000))"
+            
+            let balance = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.walletBalance ?? 0)),
+                                                 scale: 4,
+                                                 unit: 1000000)
             walletBalanceLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + balance + " VToken"
         }
     }
@@ -381,7 +388,9 @@ class ViolasTransferView: UIView {
             guard let model = vtoken else {
                 return
             }
-            let balance = "\(Double((model.balance ?? 0) / 1000000))"
+            let balance = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.balance ?? 0)),
+                                                 scale: 4,
+                                                 unit: 1000000)
             walletBalanceLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + balance + " VToken"
         }
     }

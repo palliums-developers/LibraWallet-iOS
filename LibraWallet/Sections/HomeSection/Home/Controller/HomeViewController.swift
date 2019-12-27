@@ -64,7 +64,7 @@ class HomeViewController: UIViewController {
         
         // 重要方法，用来调整自定义返回view距离左边的距离
         let barButtonItem = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
-        barButtonItem.width = -10
+        barButtonItem.width = 15
         // 返回按钮设置成功
         self.navigationItem.leftBarButtonItems = [barButtonItem, backView]
         
@@ -103,11 +103,12 @@ class HomeViewController: UIViewController {
         button.setTitleColor(UIColor.white, for: UIControl.State.normal)
         // 设置图片
         button.setImage(UIImage.init(named: "home_show_detail"), for: UIControl.State.normal)
-        // 调整位置
-        button.titleEdgeInsets = UIEdgeInsets(top: 0, left: -15, bottom: 0, right: 15)
-        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 80, bottom: 0, right: -80)
+//        // 调整位置
+//        button.titleEdgeInsets = UIEdgeInsets(top: 0, left: -15, bottom: 0, right: 15)
+//        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 80, bottom: 0, right: -80)
+        button.imagePosition(at: .right, space: 10, imageViewSize: CGSize.init(width: 13, height: 7))
         // 设置frame
-        button.frame = CGRect(x: 0, y: 0, width: 80, height: 37)
+//        button.frame = CGRect(x: 0, y: 0, width: 80, height: 37)
         button.addTarget(self, action: #selector(changeWallet), for: .touchUpInside)
         return button
     }()
@@ -143,17 +144,23 @@ class HomeViewController: UIViewController {
                 self.detailView.makeToastActivity(.center)
                 if wallet.walletType == .Libra {
                     self.changeWalletButton.setTitle("Libra " + localLanguage(keyString: "wallet_home_wallet_type_last_title"), for: UIControl.State.normal)
+                    self.changeWalletButton.imagePosition(at: .right, space: 10, imageViewSize: CGSize.init(width: 13, height: 7))
+
                     self.dataModel.tempGetLibraBalance(walletID: wallet.walletID!, address: wallet.walletAddress ?? "")
                     self.tableViewManager.dataModel?.removeAll()
                     self.detailView.tableView.reloadData()
                     self.detailView.headerView.hideAddTokenButtonState = true
                 } else if wallet.walletType == .Violas {
                     self.changeWalletButton.setTitle("Violas " + localLanguage(keyString: "wallet_home_wallet_type_last_title"), for: UIControl.State.normal)
+                    self.changeWalletButton.imagePosition(at: .right, space: 10, imageViewSize: CGSize.init(width: 13, height: 7))
+
                     self.dataModel.getEnableViolasToken(walletID: wallet.walletID ?? 0, address: wallet.walletAddress ?? "")
                     self.detailView.headerView.hideAddTokenButtonState = false
 
                 } else {
                     self.changeWalletButton.setTitle("BTC " + localLanguage(keyString: "wallet_home_wallet_type_last_title"), for: UIControl.State.normal)
+                    self.changeWalletButton.imagePosition(at: .right, space: 10, imageViewSize: CGSize.init(width: 13, height: 7))
+
                     self.dataModel.getBTCBalance(walletID: wallet.walletID ?? 0, address: wallet.walletAddress ?? "")
                     self.tableViewManager.dataModel?.removeAll()
                     self.detailView.tableView.reloadData()
@@ -192,6 +199,7 @@ class HomeViewController: UIViewController {
         } else {
             self.changeWalletButton.setTitle("BTC " + localLanguage(keyString: "wallet_home_wallet_type_last_title"), for: UIControl.State.normal)
         }
+        self.changeWalletButton.imagePosition(at: .right, space: 10, imageViewSize: CGSize.init(width: 13, height: 7))
 //        UIView.animate(withDuration: 0.3) { [weak self] in
 //            var width = 80
 //            if Localize.currentLanguage() == "en" {
@@ -361,6 +369,7 @@ extension HomeViewController {
                 } else {
                     self.changeWalletButton.setTitle("BTC " + localLanguage(keyString: "wallet_home_wallet_type_last_title"), for: UIControl.State.normal)
                 }
+                self.changeWalletButton.imagePosition(at: .right, space: 10, imageViewSize: CGSize.init(width: 13, height: 7))
             }
         } else if type == "UpdateBTCBalance" {
             if let tempData = jsonData.value(forKey: "data") as? BalanceBTCModel {

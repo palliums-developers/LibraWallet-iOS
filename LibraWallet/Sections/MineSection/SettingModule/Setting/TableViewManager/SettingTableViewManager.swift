@@ -45,9 +45,10 @@ extension SettingTableViewManager: UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let identifier = "CellNormal"
-        if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? SettingTableViewCell {
             if let data = dataModel, data.isEmpty == false {
-               (cell as! SettingTableViewCell).model = data[indexPath.section][indexPath.row]
+                cell.model = data[indexPath.section][indexPath.row]
+                cell.hideSpcaeLineState = (data[indexPath.section].count - 1) == indexPath.row ? true:false
             }
             cell.selectionStyle = UITableViewCell.SelectionStyle.none
             return cell
@@ -55,7 +56,8 @@ extension SettingTableViewManager: UITableViewDataSource {
             let cell = SettingTableViewCell.init(style: .default, reuseIdentifier: identifier)
             if let data = dataModel, data.isEmpty == false {
                 cell.model = data[indexPath.section][indexPath.row]
-                }
+                cell.hideSpcaeLineState = (data[indexPath.section].count - 1) == indexPath.row ? true:false
+            }
             cell.selectionStyle = UITableViewCell.SelectionStyle.none
             return cell
         }

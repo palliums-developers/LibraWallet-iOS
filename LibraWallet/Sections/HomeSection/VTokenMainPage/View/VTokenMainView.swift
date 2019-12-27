@@ -77,16 +77,10 @@ class VTokenMainView: UIView {
         tableView.register(WalletTransactionsTableViewCell.classForCoder(), forCellReuseIdentifier: "CellNormal")
         return tableView
     }()
-    //
     @objc func buttonClick(button: UIButton) {
-//
     }
     var clickCount: Int = 0
-    var model: LibraWalletManager? {
-        didSet {
-//            headerView.walletModel = model
-        }
-    }
+    var model: LibraWalletManager?
     @objc func setText(){
         walletTitleLabel.text = localLanguage(keyString: "wallet_home_title")
 //        walletTotalAmountTitleLabel.text = localLanguage(keyString: "wallet_home_total_amount_title")

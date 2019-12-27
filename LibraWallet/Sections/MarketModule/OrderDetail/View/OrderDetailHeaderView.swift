@@ -273,15 +273,13 @@ class OrderDetailHeaderView: UIView {
             coinTitleLabel.attributedText = attString
             dateLabel.text = timestampToDateString(timestamp: model?.date ?? 0, dateFormat: "MM/dd HH:mm:ss")
             priceLabel.text = "\(model?.price ?? 0)"
-            let numberConfig = NSDecimalNumberHandler.init(roundingMode: .plain,
-                                                           scale: 4,
-                                                           raiseOnExactness: false,
-                                                           raiseOnOverflow: false,
-                                                           raiseOnUnderflow: false,
-                                                           raiseOnDivideByZero: false)
-            let number = NSDecimalNumber.init(string: (model?.amountGet ?? "0")).dividing(by: NSDecimalNumber.init(value: 1000000), withBehavior: numberConfig)
-            amountLabel.text = number.stringValue
-            successAmountLabel.text = "\(Double(model?.amountFilled ?? "0")! / 1000000)"
+            amountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(string: (model?.amountGet ?? "0")),
+                                                      scale: 4,
+                                                      unit: 1000000)
+            
+            successAmountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(string: (model?.amountFilled ?? "0")),
+                                                             scale: 4,
+                                                             unit: 1000000)
             feeLabel.text = "---"
 //            order status:0=OPEN 1=FILLED 2=CANCELED 3=FILLED or CANCELED, can not specify
             var tempString = ""

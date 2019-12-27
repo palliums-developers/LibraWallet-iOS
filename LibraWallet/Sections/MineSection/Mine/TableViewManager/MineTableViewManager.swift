@@ -12,7 +12,7 @@ protocol MineTableViewManagerDelegate: NSObjectProtocol {
 }
 class MineTableViewManager: NSObject {
     weak var delegate: MineTableViewManagerDelegate?
-    var dataModel: [[String: String]]?
+    var dataModel: [[[String: String]]]?
     var selectRow: Int?
     deinit {
         print("MineTableViewManager销毁了")
@@ -27,22 +27,35 @@ extension MineTableViewManager: UITableViewDelegate {
                 
         self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath)
     }
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let view = UIView()
+        view.backgroundColor = UIColor.init(hex: "F7F7F9")
+        return view
+    }
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 10
+    }
 }
 extension MineTableViewManager: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return dataModel?[section].count ?? 0
+    }
+    func numberOfSections(in tableView: UITableView) -> Int {
         return dataModel?.count ?? 0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let identifier = "CellNormal"
-        if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? MineTableViewCell {
             if let data = dataModel, data.isEmpty == false {
-                (cell as! MineTableViewCell).model = data[indexPath.row]
+                cell.model = data[indexPath.section][indexPath.row]
+                cell.hideSpcaeLineState = (data[indexPath.section].count - 1) == indexPath.row ? true:false
             }
             return cell
         } else {
             let cell = MineTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
             if let data = dataModel, data.isEmpty == false {
-                cell.model = data[indexPath.row]
+                cell.model = data[indexPath.section][indexPath.row]
+                cell.hideSpcaeLineState = (data[indexPath.section].count - 1) == indexPath.row ? true:false
             }
             return cell
         }

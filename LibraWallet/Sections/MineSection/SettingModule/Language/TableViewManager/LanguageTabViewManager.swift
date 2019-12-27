@@ -60,15 +60,17 @@ extension LanguageTabViewManager: UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let identifier = "CellNormal"
-        if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) {
-            (cell as! LanguageTableViewCell).dataModel = dataModel[indexPath.section]
+        if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? LanguageTableViewCell {
+            cell.dataModel = dataModel[indexPath.section]
+            cell.hideSpcaeLineState = true
             if indexPath.section == self.selectRow! {
-                (cell as! LanguageTableViewCell).setCellSelected(status: true)
+                cell.setCellSelected(status: true)
             }
             return cell
         } else {
             let cell = LanguageTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
             cell.dataModel = dataModel[indexPath.section]
+            cell.hideSpcaeLineState = true
             if indexPath.section == self.selectRow! {
                 cell.setCellSelected(status: true)
             }

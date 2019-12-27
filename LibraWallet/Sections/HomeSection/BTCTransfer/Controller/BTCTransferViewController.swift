@@ -145,46 +145,13 @@ extension BTCTransferViewController: BTCTransferViewDelegate {
 
     }
     func confirmTransfer(amount: Double, address: String, fee: Double) {
-        let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: localLanguage(keyString: "wallet_type_in_password_content"), preferredStyle: .alert)
-        alertContr.addTextField {
-            (textField: UITextField!) -> Void in
-            textField.placeholder = localLanguage(keyString: "wallet_type_in_password_textfield_placeholder")
-            textField.tintColor = DefaultGreenColor
-            textField.isSecureTextEntry = true
+        let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
+            self?.detailView.toastView?.show()
+            let walletttt = BTCManager().getWallet(mnemonic: mnemonic)
+            self?.dataModel.makeTransaction(wallet: walletttt, amount: amount, fee: fee, toAddress: address)
+        }) { [weak self] (errorContent) in
+            self?.view.makeToast(errorContent, position: .center)
         }
-        alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_confirm_button_title"), style: .default) { [weak self] clickHandler in
-            let passwordTextField = alertContr.textFields!.first! as UITextField
-            guard let password = passwordTextField.text else {
-                self?.view.makeToast(LibraWalletError.WalletCheckPassword(reason: .passwordInvalidError).localizedDescription,
-                                    position: .center)
-                return
-            }
-            guard password.isEmpty == false else {
-                self?.view.makeToast(LibraWalletError.WalletCheckPassword(reason: .passwordEmptyError).localizedDescription,
-                                    position: .center)
-                return
-            }
-            NSLog("Password:\(password)")
-            do {
-                let state = try LibraWalletManager.shared.isValidPaymentPassword(walletRootAddress: (self?.wallet?.walletRootAddress)!, password: password)
-                guard state == true else {
-                    self?.view.makeToast(LibraWalletError.WalletCheckPassword(reason: .passwordCheckFailed).localizedDescription,
-                                        position: .center)
-                    return
-                }
-                self?.detailView.toastView?.show()
-                let menmonic = try LibraWalletManager.shared.getMnemonicFromKeychain(walletRootAddress: (self?.wallet?.walletRootAddress)!)
-                
-                let walletttt = BTCManager().getWallet(mnemonic: menmonic)
-                self?.dataModel.makeTransaction(wallet: walletttt, amount: amount, fee: fee, toAddress: address)
-            } catch {
-                self?.detailView.toastView?.hide()
-            }
-        })
-        alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_cancel_button_title"), style: .cancel){
-            clickHandler in
-            NSLog("点击了取消")
-            })
-        self.present(alertContr, animated: true, completion: nil)
+        self.present(alert, animated: true, completion: nil)
     }
 }

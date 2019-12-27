@@ -34,6 +34,7 @@ class LanguageView: UIView {
         tableView.estimatedRowHeight = 0;
         tableView.estimatedSectionHeaderHeight = 0;
         tableView.backgroundColor = UIColor.init(hex: "F7F7F9")
+        tableView.register(LanguageTableViewCell.classForCoder(), forCellReuseIdentifier: "CellNormal")
         return tableView
     }()
 }
