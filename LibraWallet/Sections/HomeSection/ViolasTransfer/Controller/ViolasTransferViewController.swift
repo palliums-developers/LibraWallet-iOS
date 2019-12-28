@@ -12,8 +12,12 @@ class ViolasTransferViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.addSubview(detailView)
-        self.detailView.wallet = self.wallet
-        self.detailView.vtoken = self.vtokenModel
+        self.detailView.sendViolasTokenState = self.sendViolasTokenState
+        if self.sendViolasTokenState == false {
+            self.detailView.wallet = self.wallet
+        } else {
+            self.detailView.vtoken = self.vtokenModel
+        }
         self.initKVO()
     }
     override func viewWillLayoutSubviews() {
@@ -29,6 +33,7 @@ class ViolasTransferViewController: BaseViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.setNavigationBarTitleColorDefault()
         self.navigationController?.navigationBar.barStyle = .default
     }
     private lazy var detailView : ViolasTransferView = {

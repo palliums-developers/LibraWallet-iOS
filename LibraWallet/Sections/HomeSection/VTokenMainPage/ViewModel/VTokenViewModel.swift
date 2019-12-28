@@ -12,7 +12,7 @@ class VTokenViewModel: NSObject {
     var myContext = 0
     func initKVO() {
         dataModel.addObserver(self, forKeyPath: "dataDic", options: NSKeyValueObservingOptions.new, context: &myContext)
-        self.refreshReceive()
+        self.detailView.tableView.mj_header?.beginRefreshing()
     }
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?)  {
         guard context == &myContext else {
@@ -84,7 +84,6 @@ class VTokenViewModel: NSObject {
                 self.detailView.tableView.reloadData()
             }
             self.detailView.tableView.mj_footer.endRefreshing()
-
         }
         self.detailView.hideToastActivity()
         self.detailView.tableView.mj_header.endRefreshing()
@@ -115,12 +114,12 @@ class VTokenViewModel: NSObject {
     @objc func refreshReceive() {
         dataOffset = 0
         detailView.tableView.mj_footer.resetNoMoreData()
-        detailView.tableView.mj_header.beginRefreshing()
+//        detailView.tableView.mj_header.beginRefreshing()
         dataModel.getViolasTransactionHistory(address: (wallet?.walletAddress)!, page: dataOffset, pageSize: 10, contract: self.vtokenModel?.address ?? "", requestStatus: 0, tokenName: self.vtokenModel?.name ?? "")
     }
     @objc func getMoreReceive() {
         dataOffset += 10
-        detailView.tableView.mj_footer.beginRefreshing()
+//        detailView.tableView.mj_footer.beginRefreshing()
         dataModel.getViolasTransactionHistory(address: (wallet?.walletAddress)!, page: dataOffset, pageSize: 10, contract: self.vtokenModel?.address ?? "", requestStatus: 1, tokenName: self.vtokenModel?.name ?? "")
     }
     var wallet: LibraWalletManager?

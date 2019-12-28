@@ -54,14 +54,14 @@ class OrderProcessingViewController: BaseViewController {
             return
         }
         detailView.tableView.mj_footer.resetNoMoreData()
-        detailView.tableView.mj_header.beginRefreshing()
+//        detailView.tableView.mj_header.beginRefreshing()
         dataModel.getAllProcessingOrder(address: walletAddress, version: "")
     }
     @objc func getMoreReceive() {
         guard let walletAddress = self.wallet?.walletAddress else {
             return
         }
-        detailView.tableView.mj_footer.beginRefreshing()
+//        detailView.tableView.mj_footer.beginRefreshing()
         if let version = self.tableViewManager.dataModel?.last?.version {
             dataModel.getAllProcessingOrder(address: walletAddress, version: version)
         } else {

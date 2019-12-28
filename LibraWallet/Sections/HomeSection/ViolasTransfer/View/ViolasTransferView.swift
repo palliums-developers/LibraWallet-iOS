@@ -321,11 +321,23 @@ class ViolasTransferView: UIView {
 //                                                                           scale: 6,
 //                                                                           unit: 1000000)
             #warning("待处理")
-            guard (amount) <= Double((wallet?.walletBalance ?? 0) / 1000000) else {
-               self.makeToast(LibraWalletError.WalletTransfer(reason: .amountOverload).localizedDescription,
-                              position: .center)
-               return
+            // 金额大于我的金额
+            if sendViolasTokenState == false {
+                // 平台币
+                guard (amount) <= Double((wallet?.walletBalance ?? 0) / 1000000) else {
+                   self.makeToast(LibraWalletError.WalletTransfer(reason: .amountOverload).localizedDescription,
+                                  position: .center)
+                   return
+                }
+            } else {
+                // 稳定币
+                guard (amount) <= Double((vtoken?.balance ?? 0) / 1000000) else {
+                   self.makeToast(LibraWalletError.WalletTransfer(reason: .amountOverload).localizedDescription,
+                                  position: .center)
+                   return
+                }
             }
+            
             // 地址拆包检查
             guard let address = self.addressTextField.text, address.isEmpty == false else {
                self.makeToast(LibraWalletError.WalletTransfer(reason: .addressEmpty).localizedDescription,
@@ -391,7 +403,8 @@ class ViolasTransferView: UIView {
             let balance = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.balance ?? 0)),
                                                  scale: 4,
                                                  unit: 1000000)
-            walletBalanceLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + balance + " VToken"
+            walletBalanceLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + balance + " " + (model.name ?? "")
         }
     }
+    var sendViolasTokenState: Bool?
 }

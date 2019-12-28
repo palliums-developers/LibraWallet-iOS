@@ -65,9 +65,7 @@ extension WalletListTableViewManager: UITableViewDataSource {
                     if data.last?.count == origin.last?.count {
                         self.originModelLocation = indexPath
                     }
-                }
-                
-                
+                }                
             }
             cell.selectionStyle = .none
             return cell
