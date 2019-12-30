@@ -151,8 +151,8 @@ class ViolasTransferView: UIView {
         label.text = localLanguage(keyString: "wallet_transfer_amount_title")
         return label
     }()
-    lazy var amountTextField: UITextField = {
-        let textField = UITextField.init()
+    lazy var amountTextField: WYDTextField = {
+        let textField = WYDTextField.init()
         textField.textAlignment = NSTextAlignment.left
         textField.textColor = UIColor.init(hex: "333333")
         textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_transfer_amount_textfield_placeholder"),

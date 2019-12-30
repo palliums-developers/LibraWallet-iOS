@@ -13,7 +13,10 @@ protocol HomeTableViewManagerDelegate: NSObjectProtocol {
 }
 class HomeTableViewManager: NSObject {
     weak var delegate: HomeTableViewManagerDelegate?
+    /// 数据
     var dataModel: [ViolasTokenModel]?
+    /// 资产第一个
+    var defaultModel: ViolasTokenModel?
     var selectRow: Int?
     deinit {
         print("HomeTableViewManager销毁了")

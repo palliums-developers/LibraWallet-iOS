@@ -254,11 +254,11 @@ class OrderDetailHeaderView: UIView {
     }()
     lazy var checkOnlineButton: UIButton = {
         let button = UIButton.init(type: UIButton.ButtonType.custom)
-        button.setTitle(localLanguage(keyString: "浏览器查询"), for: UIControl.State.normal)
+//        button.setTitle(localLanguage(keyString: "浏览器查询"), for: UIControl.State.normal)
         button.setTitleColor(UIColor.init(hex: "FF8C8C"), for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.medium)
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
-
+        button.alpha = 0
         return button
     }()
     @objc func buttonClick(button: UIButton) {

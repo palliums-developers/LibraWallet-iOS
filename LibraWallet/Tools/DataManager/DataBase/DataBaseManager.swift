@@ -52,7 +52,8 @@ struct DataBaseManager {
             let walletIdentity = Expression<Int>("wallet_identity")
             // 钱包类型(0=Libra、1=Violas、2=BTC)
             let walletType = Expression<Int>("wallet_type")
-            
+            // 钱包是否已备份
+            let walletBackupState = Expression<Bool>("wallet_backup_state")
             // 建表
             try db!.run(walletTable.create { t in
                 t.column(walletID, primaryKey: true)
@@ -65,6 +66,7 @@ struct DataBaseManager {
                 t.column(walletBiometricLock)
                 t.column(walletIdentity)
                 t.column(walletType)
+                t.column(walletBackupState)
             })
         } catch {
             let errorString = error.localizedDescription
@@ -99,7 +101,8 @@ struct DataBaseManager {
                     Expression<Bool>("wallet_current_use") <- model.walletCurrentUse ?? true,
                     Expression<Bool>("wallet_biometric_lock") <- model.walletBiometricLock ?? false,
                     Expression<Int>("wallet_identity") <- model.walletIdentity ?? 999,
-                    Expression<Int>("wallet_type") <- model.walletType!.value)
+                    Expression<Int>("wallet_type") <- model.walletType!.value,
+                    Expression<Bool>("wallet_backup_state") <- model.walletBackupState ?? false)
                 let rowid = try tempDB.run(insert)
                 print(rowid)
                 return true
@@ -160,6 +163,7 @@ struct DataBaseManager {
                     let walletIdentity = wallet[Expression<Int>("wallet_identity")]
                     // 钱包类型(0=Libra、1=Violas、2=BTC)
                     let walletType = wallet[Expression<Int>("wallet_type")]
+                    
                     let type: WalletType
                     if walletType == 0 {
                         type = .Libra
@@ -168,6 +172,9 @@ struct DataBaseManager {
                     } else {
                         type = .BTC
                     }
+                    // 钱包是否已备份
+                    let walletBackupState = wallet[Expression<Bool>("wallet_backup_state")]
+                    
                     let wallet = LibraWalletManager.init(walletID: walletID,
                                                          walletBalance: walletBalance,
                                                          walletAddress: walletAddress,
@@ -177,7 +184,8 @@ struct DataBaseManager {
                                                          walletCurrentUse: walletCurrentUse,
                                                          walletBiometricLock: walletBiometricLock,
                                                          walletIdentity: walletIdentity,
-                                                         walletType: type)
+                                                         walletType: type,
+                                                         walletBackupState: walletBackupState)
                     if walletIdentity == 0 {
                         originWallets.append(wallet)
                     } else {
@@ -222,13 +230,14 @@ struct DataBaseManager {
                     let walletIdentity = wallet[Expression<Int>("wallet_identity")]
                     // 钱包类型(0=Libra、1=Violas、2=BTC)
                     let walletType = wallet[Expression<Int>("wallet_type")]
-                    
                     var tempWalletType = WalletType.Libra
                     if walletType == 1 {
                         tempWalletType = WalletType.Violas
                     } else if walletType == 2 {
                         tempWalletType = WalletType.BTC
                     }
+                    // 钱包是否已备份
+                    let walletBackupState = wallet[Expression<Bool>("wallet_backup_state")]
                     LibraWalletManager.shared.initWallet(walletID: walletID,
                                                          walletBalance: walletBalance,
                                                          walletAddress: walletAddress,
@@ -238,17 +247,8 @@ struct DataBaseManager {
                                                          walletCurrentUse: walletCurrentUse,
                                                          walletBiometricLock: walletBiometricLock,
                                                          walletIdentity: walletIdentity,
-                                                         walletType: tempWalletType)
-//                    let wallet = LibraWalletManager.init(walletID: walletID,
-//                                                         walletBalance: walletBalance,
-//                                                         walletAddress: walletAddress,
-//                                                         walletRootAddress: walletRootAddress,
-//                                                         walletCreateTime: walletCreateTime,
-//                                                         walletName: walletName,
-//                                                         walletCurrentUse: walletCurrentUse,
-//                                                         walletBiometricLock: walletBiometricLock,
-//                                                         walletIdentity: walletIdentity,
-//                                                         walletType: tempWalletType)
+                                                         walletType: tempWalletType,
+                                                         walletBackupState: walletBackupState)
                     return LibraWalletManager.shared
                 }
                 throw LibraWalletError.error("获取当前使用钱包检索失败")
@@ -327,6 +327,21 @@ struct DataBaseManager {
             if let tempDB = self.db {
                 let contract = walletTable.filter(Expression<Int64>("wallet_id") == walletID)
                 try tempDB.run(contract.update(Expression<Bool>("wallet_current_use") <- state))
+                return true
+            } else {
+                return false
+            }
+        } catch {
+            print(error.localizedDescription)
+            return false
+        }
+    }
+    func updateWalletBackupState(walletID: Int64, state: Bool) -> Bool {
+        let walletTable = Table("Wallet")
+        do {
+            if let tempDB = self.db {
+                let contract = walletTable.filter(Expression<Int64>("wallet_id") == walletID)
+                try tempDB.run(contract.update(Expression<Bool>("wallet_backup_state") <- state))
                 return true
             } else {
                 return false

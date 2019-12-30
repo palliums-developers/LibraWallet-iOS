@@ -68,7 +68,8 @@ extension ImportWalletViewController: ImportWalletViewDelegate {
                                                       walletCurrentUse: false,
                                                       walletBiometricLock: false,
                                                       walletIdentity: 1,
-                                                      walletType: .BTC)
+                                                      walletType: .BTC,
+                                                      walletBackupState: true)
             guard DataBaseManager.DBManager.isExistAddressInWallet(address: walletModel.walletRootAddress ?? "") == false else {
                 DispatchQueue.main.async(execute: {
                     self.detailView.toastView.hide()
@@ -121,7 +122,8 @@ extension ImportWalletViewController: ImportWalletViewDelegate {
                                                           walletCurrentUse: false,
                                                           walletBiometricLock: false,
                                                           walletIdentity: 1,
-                                                          walletType: .Violas)
+                                                          walletType: .Violas,
+                                                          walletBackupState: true)
                 guard DataBaseManager.DBManager.isExistAddressInWallet(address: walletModel.walletRootAddress ?? "") == false else {
                     DispatchQueue.main.async(execute: {
                         self.detailView.toastView.hide()
@@ -171,7 +173,8 @@ extension ImportWalletViewController: ImportWalletViewDelegate {
                                                           walletCurrentUse: false,
                                                           walletBiometricLock: false,
                                                           walletIdentity: 1,
-                                                          walletType: .Libra)
+                                                          walletType: .Libra,
+                                                          walletBackupState: true)
                 guard DataBaseManager.DBManager.isExistAddressInWallet(address: walletModel.walletRootAddress ?? "") == false else {
                     DispatchQueue.main.async(execute: {
                         self.detailView.toastView.hide()

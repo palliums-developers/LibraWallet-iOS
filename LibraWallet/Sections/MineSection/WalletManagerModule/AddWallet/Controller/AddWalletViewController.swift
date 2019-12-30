@@ -66,7 +66,8 @@ extension AddWalletViewController: AddWalletViewDelegate {
                                                       walletCurrentUse: false,
                                                       walletBiometricLock: false,
                                                       walletIdentity: 1,
-                                                      walletType: .BTC)
+                                                      walletType: .BTC,
+                                                      walletBackupState: true)
             
             let createModel = CreateWalletModel.init(password: password,
                                                      mnemonic: mnemonic,
@@ -97,7 +98,8 @@ extension AddWalletViewController: AddWalletViewDelegate {
                                                           walletCurrentUse: false,
                                                           walletBiometricLock: false,
                                                           walletIdentity: 1,
-                                                          walletType: .Violas)
+                                                          walletType: .Violas,
+                                                          walletBackupState: true)
                 
                 let createModel = CreateWalletModel.init(password: password,
                                                          mnemonic: mnemonic,
@@ -130,7 +132,8 @@ extension AddWalletViewController: AddWalletViewDelegate {
                                                           walletCurrentUse: false,
                                                           walletBiometricLock: false,
                                                           walletIdentity: 1,
-                                                          walletType: .Libra)
+                                                          walletType: .Libra,
+                                                          walletBackupState: true)
                 
                 let createModel = CreateWalletModel.init(password: password,
                                                          mnemonic: mnemonic,

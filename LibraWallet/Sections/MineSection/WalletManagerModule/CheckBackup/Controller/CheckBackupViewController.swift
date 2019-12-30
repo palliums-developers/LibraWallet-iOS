@@ -11,8 +11,7 @@ import Toast_Swift
 class CheckBackupViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        // 初始化本地配置
-//        self.setBaseControlllerConfig()
+        self.title = localLanguage(keyString: "wallet_backup_mnemonic_check_navigationbar_title")
         // 加载子View
         self.view.addSubview(self.viewModel.detailView)
     }
@@ -49,18 +48,23 @@ extension CheckBackupViewController: CheckBackupViewDelegate {
         do {
             try self.viewModel.checkIsAllValid()
             if FirstInApp == true {
+                #warning("缺少更新失败操作")
+                let result = DataBaseManager.DBManager.updateWalletBackupState(walletID: tempWallet!.wallet!.walletID!, state: true)
+                print("更新钱包\(tempWallet!.wallet!.walletID!)备份状态-\(result)")
                 self.view.makeToast(localLanguage(keyString: "wallet_check_mnemonic_success_title"), duration: 0.5, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
                     let tabbar = BaseTabBarViewController.init()
                     UIApplication.shared.keyWindow?.rootViewController = tabbar
                     UIApplication.shared.keyWindow?.makeKeyAndVisible()
                 })
             } else {
-                let result = DataBaseManager.DBManager.insertWallet(model: tempWallet!.wallet!)
+                let result = DataBaseManager.DBManager.isExistAddressInWallet(address: tempWallet!.wallet!.walletRootAddress!)//insertWallet(model: tempWallet!.wallet!)
                 self.view.hideToastActivity()
-                if result == true {
+                if result == false {
+                    // 不存在
+                    #warning("缺少更新失败操作")
+                    let insertResult = DataBaseManager.DBManager.insertWallet(model: tempWallet!.wallet!)
                     do {
                         try LibraWalletManager().saveMnemonicToKeychain(mnemonic: tempWallet!.mnemonic!, walletRootAddress: tempWallet?.wallet?.walletRootAddress ?? "")
-                        try LibraWalletManager().savePaymentPasswordToKeychain(password: tempWallet!.password!, walletRootAddress: tempWallet?.wallet?.walletRootAddress ?? "")
                         self.view.makeToast(localLanguage(keyString: localLanguage(keyString: "wallet_create_wallet_success_title")), duration: 1, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { [weak self](bool) in
                             self?.jumpToWalletManagerController()
                         })
@@ -69,6 +73,15 @@ extension CheckBackupViewController: CheckBackupViewDelegate {
                         //删除从数据库创建好钱包
                         _ = DataBaseManager.DBManager.deleteWalletFromTable(model: tempWallet!.wallet!)
                     }
+                } else {
+                    // 已存在
+                    #warning("缺少更新失败操作")
+                    let updateBackupResult = DataBaseManager.DBManager.updateWalletBackupState(walletID: tempWallet!.wallet!.walletID!, state: true)
+                    LibraWalletManager.shared.changeWalletBackupState(state: true)
+
+                    self.view.makeToast(localLanguage(keyString: localLanguage(keyString: "wallet_check_mnemonic_success_title")), duration: 1, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { [weak self](bool) in
+                        self?.jumpToWalletManagerController()
+                    })
                 }
             }
         } catch {

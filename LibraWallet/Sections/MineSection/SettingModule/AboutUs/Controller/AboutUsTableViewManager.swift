@@ -7,20 +7,15 @@
 //
 
 import UIKit
-
+protocol AboutUsTableViewManagerDelegate: NSObjectProtocol {
+    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, content: String)
+}
 class AboutUsTableViewManager: NSObject {
-    var dataModel = [["Title":"Official Site",
-                      "content":"https://sealpay.io"],
-                     ["Title":"Email",
-                      "content":"sealpay@sealpay.io"],
-                     ["Title":"Facebook",
-                      "content":""],
-                     ["Title":"Instagram",
-                      "content":""],
-                     ["Title":"Whatsapp",
-                      "content":""],
-                     ["Title":"Telegram",
-                      "content":""]]
+    weak var delegate: AboutUsTableViewManagerDelegate?
+    var dataModel = [["Title":localLanguage(keyString: "wallet_mine_about_us_official_address"),
+                      "content":officialAddress],
+                     ["Title":localLanguage(keyString: "wallet_mine_about_us_official_email"),
+                      "content":officialEmail]]
     var selectRow: Int?
     deinit {
         print("AboutUsTableViewManager销毁了")
@@ -32,8 +27,8 @@ extension AboutUsTableViewManager: UITableViewDelegate {
         return 54
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //        let data = self.dataModel![indexPath.row]
-        //        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath)
+        let data = self.dataModel[indexPath.row]["content"]!
+        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, content: data)
     }
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let identifier = "Header"

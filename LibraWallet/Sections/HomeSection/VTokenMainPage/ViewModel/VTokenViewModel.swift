@@ -48,6 +48,8 @@ class VTokenViewModel: NSObject {
                 // 数据返回状态异常
             }
             self.detailView.hideToastActivity()
+            self.detailView.tableView.mj_header.endRefreshing()
+            self.detailView.tableView.mj_footer.endRefreshing()
             return
         }
         let type = jsonData.value(forKey: "type") as! String

@@ -139,6 +139,8 @@ wallet_market_exchange_confirm_title = "兑换";
 
 /************* 关于我们 *******************/
 wallet_about_us_navigation_right_bar_title = "问题反馈";
+wallet_mine_about_us_official_address = "官方网站";
+wallet_mine_about_us_official_email = "邮箱";
 
 /************* 设置页面 *******************/
 wallet_setting_language_title = "多语言";
@@ -149,6 +151,7 @@ wallet_setting_help_center_title = "帮助与反馈";
 
 /************* 地址页面 *******************/
 wallet_address_manager_empty_data_title = "暂时没有地址";
+
 
 /************* 弹出提示 *******************/
 // 转账弹出提示
@@ -241,6 +244,9 @@ wallet_wallet_manager_navigation_title = "钱包管理";
 wallet_wallet_add_navigation_title = "添加钱包";
 wallet_assert_add_navigation_title = "添加币种";
 wallet_wallet_manager_change_wallet_name_navigationbar_title = "钱包详情";
+wallet_backup_mnemonic_warning_navigationbar_title = "备份提示";
+wallet_backup_mnemonic_show_navigationbar_title = "备份助记词";
+wallet_backup_mnemonic_check_navigationbar_title = "确认助记词";
 
 /************* App错误 *******************/
 // 请求遇到错误

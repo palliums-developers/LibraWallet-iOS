@@ -46,12 +46,12 @@ class MineHeaderView: UIView {
     }()
     private lazy var avatarImageView : UIImageView = {
         let imageView = UIImageView.init()
-        imageView.image = UIImage.init(named: "default_avatar")
+        imageView.image = UIImage.init(named: "mine_default_avatar")
         imageView.isUserInteractionEnabled = true
-        imageView.layer.cornerRadius = 30
-        imageView.layer.borderColor = UIColor.white.cgColor
-        imageView.layer.borderWidth = 1
-        imageView.layer.masksToBounds = true
+//        imageView.layer.cornerRadius = 30
+//        imageView.layer.borderColor = UIColor.white.cgColor
+//        imageView.layer.borderWidth = 1
+//        imageView.layer.masksToBounds = true
         return imageView
     }()
     lazy var nickNameLabel: UILabel = {
@@ -59,7 +59,7 @@ class MineHeaderView: UIView {
         label.textAlignment = NSTextAlignment.center
         label.textColor = UIColor.white
         label.font = UIFont.systemFont(ofSize: 15, weight: .regular)
-        label.text = "---"
+        label.text = "ViolasPay"
         return label
     }()
 //    var model: WalletData? {

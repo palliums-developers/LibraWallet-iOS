@@ -48,7 +48,8 @@ class CreateIdentityWalletModel: NSObject {
                                                   walletCurrentUse: false,
                                                   walletBiometricLock: false,
                                                   walletIdentity: 0,
-                                                  walletType: .BTC)
+                                                  walletType: .BTC,
+                                                  walletBackupState: false)
         let result = DataBaseManager.DBManager.insertWallet(model: walletModel)
         if result == true {
             do {
@@ -74,7 +75,8 @@ class CreateIdentityWalletModel: NSObject {
                                                       walletCurrentUse: true,
                                                       walletBiometricLock: false,
                                                       walletIdentity: 0,
-                                                      walletType: .Violas)
+                                                      walletType: .Violas,
+                                                      walletBackupState: false)
             let result = DataBaseManager.DBManager.insertWallet(model: walletModel)
             if result == true {
                 do {
@@ -104,7 +106,8 @@ class CreateIdentityWalletModel: NSObject {
                                                       walletCurrentUse: false,
                                                       walletBiometricLock: false,
                                                       walletIdentity: 0,
-                                                      walletType: .Libra)
+                                                      walletType: .Libra,
+                                                      walletBackupState: false)
             let result = DataBaseManager.DBManager.insertWallet(model: walletModel)
             if result == true {
                 do {

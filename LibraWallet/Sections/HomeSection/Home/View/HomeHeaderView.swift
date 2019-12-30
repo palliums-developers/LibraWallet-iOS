@@ -347,7 +347,7 @@ class HomeHeaderView: UIView {
     }
     var walletModel: LibraWalletManager? {
         didSet {
-            walletNameLabel.text = walletModel?.walletName
+            walletNameLabel.text = "address"
             walletAddressLabel.text = walletModel?.walletAddress
             // 更新本地数据
             switch walletModel?.walletType {
@@ -422,6 +422,5 @@ class HomeHeaderView: UIView {
         receiveButton.setTitle(localLanguage(keyString: "wallet_home_receive_button_title"), for: UIControl.State.normal)
         transactionTitleLabel.text = localLanguage(keyString: "wallet_home_last_transaction_date_title")
         coinTitleLabel.text = localLanguage(keyString: "wallet_home_wallet_asset_title")
-
     }
 }

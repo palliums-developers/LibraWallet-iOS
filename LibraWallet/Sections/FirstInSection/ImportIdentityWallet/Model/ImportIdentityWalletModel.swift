@@ -15,9 +15,9 @@ class ImportIdentityWalletModel: NSObject {
         let quene = DispatchQueue.init(label: "createWalletQuene")
         quene.async {
             do {
-                try self.createViolasWallet(name: walletName, password: password, mnemonics: mnemonic)
-                try self.createBTCWallet(name: walletName, password: password, mnemonics: mnemonic)
-                try self.createLibraWallet(name: walletName, password: password, mnemonics: mnemonic)
+                try self.importViolasWallet(name: walletName, password: password, mnemonics: mnemonic)
+                try self.importBTCWallet(name: walletName, password: password, mnemonics: mnemonic)
+                try self.importLibraWallet(name: walletName, password: password, mnemonics: mnemonic)
                 setIdentityWalletState(show: true)
                 DispatchQueue.main.async(execute: {
                     //需更新
@@ -33,7 +33,7 @@ class ImportIdentityWalletModel: NSObject {
             }
         }
     }
-    func createBTCWallet(name: String, password: String, mnemonics: [String]) throws {
+    func importBTCWallet(name: String, password: String, mnemonics: [String]) throws {
         let wallet = BTCManager().getWallet(mnemonic: mnemonics)
         let walletModel = LibraWalletManager.init(walletID: 999,
                                                   walletBalance: 0,
@@ -44,7 +44,8 @@ class ImportIdentityWalletModel: NSObject {
                                                   walletCurrentUse: false,
                                                   walletBiometricLock: false,
                                                   walletIdentity: 0,
-                                                  walletType: .BTC)
+                                                  walletType: .BTC,
+                                                  walletBackupState: true)
         let result = DataBaseManager.DBManager.insertWallet(model: walletModel)
         if result == true {
             do {
@@ -58,7 +59,7 @@ class ImportIdentityWalletModel: NSObject {
             }
         }
     }
-    func createViolasWallet(name: String, password: String, mnemonics: [String]) throws {
+    func importViolasWallet(name: String, password: String, mnemonics: [String]) throws {
         do {
             let wallet = try ViolasManager.getWallet(mnemonic: mnemonics)
             let walletModel = LibraWalletManager.init(walletID: 999,
@@ -70,7 +71,8 @@ class ImportIdentityWalletModel: NSObject {
                                                       walletCurrentUse: true,
                                                       walletBiometricLock: false,
                                                       walletIdentity: 0,
-                                                      walletType: .Violas)
+                                                      walletType: .Violas,
+                                                      walletBackupState: true)
             let result = DataBaseManager.DBManager.insertWallet(model: walletModel)
             if result == true {
                 do {
@@ -87,7 +89,7 @@ class ImportIdentityWalletModel: NSObject {
             throw error
         }
     }
-    func createLibraWallet(name: String, password: String, mnemonics: [String]) throws {
+    func importLibraWallet(name: String, password: String, mnemonics: [String]) throws {
         do {
             let wallet = try LibraManager.getWallet(mnemonic: mnemonics)
             let walletModel = LibraWalletManager.init(walletID: 999,
@@ -99,7 +101,8 @@ class ImportIdentityWalletModel: NSObject {
                                                       walletCurrentUse: false,
                                                       walletBiometricLock: false,
                                                       walletIdentity: 0,
-                                                      walletType: .Libra)
+                                                      walletType: .Libra,
+                                                      walletBackupState: true)
             let result = DataBaseManager.DBManager.insertWallet(model: walletModel)
             if result == true {
                 do {

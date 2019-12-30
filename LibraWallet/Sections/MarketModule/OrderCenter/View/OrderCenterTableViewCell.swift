@@ -250,6 +250,7 @@ class OrderCenterTableViewCell: UITableViewCell {
             successAmountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(string: (model?.amountFilled ?? "0")),
                                                              scale: 4,
                                                              unit: 1000000)
+            feeLabel.text = "0.00"
             if model?.state == "OPEN" {
                 cancelButton.setTitle(localLanguage(keyString: "撤销"), for: UIControl.State.normal)
                 cancelButton.setTitleColor(UIColor.init(hex: "726BD9"), for: UIControl.State.normal)

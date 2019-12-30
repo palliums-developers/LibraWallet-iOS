@@ -364,34 +364,97 @@ extension HomeViewController {
                 self.detailView.tableView.reloadData()
                 if tempData.walletType == .Libra {
                     self.changeWalletButton.setTitle("Libra " + localLanguage(keyString: "wallet_home_wallet_type_last_title"), for: UIControl.State.normal)
+                    let defaultModel = ViolasTokenModel.init(name: "Libra",
+                                                             description: "",
+                                                             address: tempData.walletAddress ?? "",
+                                                             icon: "",
+                                                             enable: true,
+                                                             balance: tempData.walletBalance ?? 0,
+                                                             registerState: true)
+                    self.tableViewManager.dataModel = [defaultModel]
                 } else if tempData.walletType == .Violas {
                     self.changeWalletButton.setTitle("Violas " + localLanguage(keyString: "wallet_home_wallet_type_last_title"), for: UIControl.State.normal)
+                    let defaultModel = ViolasTokenModel.init(name: "Violas",
+                                                             description: "",
+                                                             address: tempData.walletAddress ?? "",
+                                                             icon: "",
+                                                             enable: true,
+                                                             balance: tempData.walletBalance ?? 0,
+                                                             registerState: true)
+                    self.tableViewManager.dataModel = [defaultModel]
                 } else {
                     self.changeWalletButton.setTitle("BTC " + localLanguage(keyString: "wallet_home_wallet_type_last_title"), for: UIControl.State.normal)
+                    let defaultModel = ViolasTokenModel.init(name: "BTC",
+                                                             description: "",
+                                                             address: tempData.walletAddress ?? "",
+                                                             icon: "",
+                                                             enable: true,
+                                                             balance: (tempData.walletBalance ?? 0) / 100,
+                                                             registerState: true)
+                    self.tableViewManager.dataModel = [defaultModel]
                 }
+                self.detailView.tableView.reloadData()
                 self.changeWalletButton.imagePosition(at: .right, space: 10, imageViewSize: CGSize.init(width: 13, height: 7))
             }
         } else if type == "UpdateBTCBalance" {
             if let tempData = jsonData.value(forKey: "data") as? BalanceBTCModel {
                 self.detailView.headerView.btcModel = tempData
+                let defaultModel = ViolasTokenModel.init(name: "BTC",
+                                                         description: "",
+                                                         address: tempData.address ?? "",
+                                                         icon: "",
+                                                         enable: true,
+                                                         balance: (tempData.balance ?? 0) / 100,
+                                                         registerState: true)
+                self.tableViewManager.dataModel = [defaultModel]
+                self.detailView.tableView.reloadData()
+            } else {
+                let defaultModel = ViolasTokenModel.init(name: "BTC",
+                                                         description: "",
+                                                         address: self.detailView.model?.walletAddress ?? "",
+                                                         icon: "",
+                                                         enable: true,
+                                                         balance: 0,
+                                                         registerState: true)
+                self.tableViewManager.dataModel = [defaultModel]
                 self.detailView.tableView.reloadData()
             }
         } else if type == "UpdateLibraBalance" {
             if let tempData = jsonData.value(forKey: "data") as? BalanceLibraModel {
                 self.detailView.headerView.libraModel = tempData
+                let defaultModel = ViolasTokenModel.init(name: "lib",
+                                                         description: "",
+                                                         address: tempData.address ?? "",
+                                                         icon: "",
+                                                         enable: true,
+                                                         balance: (tempData.balance ?? 0) * 1000000,
+                                                         registerState: true)
+                self.tableViewManager.dataModel = [defaultModel]
                 self.detailView.tableView.reloadData()
             }
         } else if type == "UpdateViolasBalance" {
             if let tempData = jsonData.value(forKey: "data") as? BalanceLibraModel {
                 self.detailView.headerView.violasModel = tempData
+
                 if let modules = tempData.modules, let dataModel = self.tableViewManager.dataModel, modules.isEmpty == false, dataModel.isEmpty == false {
-                    self.tableViewManager.dataModel = self.dataModel.dealBalanceWithContract(modules: modules, violasTokens: dataModel)
+                    var tempModules = modules
+                    tempModules.append(BalanceViolasModulesModel.init(balance: tempData.balance ?? 0, address: tempData.address ?? ""))
+                    
+                    self.tableViewManager.dataModel = self.dataModel.dealBalanceWithContract(modules: tempModules, violasTokens: dataModel)
                 }
                 self.detailView.tableView.reloadData()
             }
         } else if type == "LoadEnableViolasTokenList" {
             if let tempData = jsonData.value(forKey: "data") as? [ViolasTokenModel] {
+                let defaultModel = ViolasTokenModel.init(name: "vtoken",
+                                                         description: "",
+                                                         address: self.detailView.model?.walletAddress ?? "",
+                                                         icon: "",
+                                                         enable: true,
+                                                         balance: self.detailView.model?.walletBalance ?? 0,
+                                                         registerState: true)
                 self.tableViewManager.dataModel = tempData
+                self.tableViewManager.dataModel?.insert(defaultModel, at: 0)
                 self.detailView.tableView.reloadData()
             }
         }
@@ -469,12 +532,14 @@ extension HomeViewController: HomeHeaderViewDelegate {
 
 extension HomeViewController: HomeTableViewManagerDelegate {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: ViolasTokenModel) {
+        guard indexPath.row != 0 else {
+            return
+        }
         let vc = VTokenMainViewController()
         vc.hidesBottomBarWhenPushed = true
         vc.wallet = self.detailView.headerView.walletModel
         vc.vtokenModel = model
         vc.title = model.name ?? ""
-
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }

@@ -86,7 +86,7 @@ class PrivateAlertView: UIView {
         textView.isEditable = false
         textView.attributer = privateAndUseLegal
             .color(UIColor.init(hex: "62606B"))
-            .font(UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.regular))
+            .font(UIFont.systemFont(ofSize: 16, weight: .regular))
             .match("《隐私政策》").underline.makeInteract({ _ in
                 if let action = self.openPrivateLegalAction {
                     action()

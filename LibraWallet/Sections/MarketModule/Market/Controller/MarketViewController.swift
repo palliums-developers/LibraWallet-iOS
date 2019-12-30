@@ -188,11 +188,13 @@ extension MarketViewController: MarketTableViewManagerDelegate {
         self.actionClosure = { dataModel in
             var tempDataModel = dataModel
             // 筛选左右展示数据
+            var showRegisterModel: Bool = false
             if button.tag == 20 {
                 // 左边点击
                 tempDataModel = dataModel.filter({ item in
                     item.enable == true
                 })
+                showRegisterModel = true
             } else {
                 // 右边点击
                 tempDataModel = dataModel.filter({ item in
@@ -200,6 +202,7 @@ extension MarketViewController: MarketTableViewManagerDelegate {
                 }).sorted(by: {
                     ($0.enable ?? false) != ($1.enable ?? false)
                 }).reversed()
+                showRegisterModel = false
             }
             let alert = TokenPickerViewAlert.init(successClosure: { (model) in
                 if let headerView = self.detailView.tableView.headerView(forSection: 0) as? MarketExchangeHeaderView {
@@ -242,7 +245,7 @@ extension MarketViewController: MarketTableViewManagerDelegate {
                         self.restartLisening = true
                     }
                 }
-            }, data: tempDataModel)
+            }, data: tempDataModel, onlyRegisterToken: showRegisterModel)
             alert.show()
             alert.showAnimation()
         }
@@ -255,7 +258,7 @@ extension MarketViewController: MarketTableViewManagerDelegate {
                                         vtoken: payToken.addr ?? "")
         
         self.checkBalanceClosure = { balance in
-            if balance > Int64(amount * 1000000) {
+            if balance >= Int64(amount * 1000000) {
                 //第二步，余额充足，检查是否将要兑换的币已注册
                 guard receiveToken.enable == true else {
                     let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: localLanguage(keyString: "您将要兑换的币尚未开启，开启需要消耗一定数量Gas费，是否立即开启并兑换"), preferredStyle: .alert)
@@ -263,7 +266,8 @@ extension MarketViewController: MarketTableViewManagerDelegate {
                         self?.showPublishPasswordAlert(payContract: payToken.addr ?? "",
                                                       receiveContract: receiveToken.addr ?? "",
                                                       amount: amount,
-                                                      exchangeAmount: exchangeAmount)
+                                                      exchangeAmount: exchangeAmount,
+                                                      name: payToken.name ?? "")
                         
                     })
                     alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_cancel_button_title"), style: .cancel){ clickHandler in
@@ -299,7 +303,7 @@ extension MarketViewController: MarketTableViewManagerDelegate {
         }
         self.present(alert, animated: true, completion: nil)
     }
-    func showPublishPasswordAlert(payContract: String, receiveContract: String, amount: Double, exchangeAmount: Double) {
+    func showPublishPasswordAlert(payContract: String, receiveContract: String, amount: Double, exchangeAmount: Double, name: String) {
         let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] mnemonic in
             guard let walletAddress = self?.wallet?.walletAddress else {
                 return
@@ -309,10 +313,20 @@ extension MarketViewController: MarketTableViewManagerDelegate {
                                                        mnemonic: mnemonic,
                                                        contact: receiveContract)
             self?.publishTokenClosure = {
-                #warning("更新列表")
+                // 更新列表数据
                 if let headerView = self?.detailView.tableView.headerView(forSection: 0) as? MarketExchangeHeaderView {
                     headerView.rightTokenModel?.enable = true
                 }
+                // 插入本地数据库
+                let violasToken = ViolasTokenModel.init(name: name,
+                                                        description: "",
+                                                        address: receiveContract,
+                                                        icon: "",
+                                                        enable: true,
+                                                        balance: Int64(exchangeAmount * 1000000),
+                                                        registerState: true)
+                _ = DataBaseManager.DBManager.insertViolasToken(walletID: self?.wallet?.walletID ?? 0, model: violasToken)
+                // 发送交易
                 self?.dataModel.exchangeViolasTokenTransaction(sendAddress: walletAddress,
                                                                amount: amount,
                                                                fee: 0,
@@ -477,6 +491,9 @@ extension MarketViewController {
         } else if type == "ExchangeDone" {
             self.detailView.toastView?.hide()
             self.detailView.makeToast(localLanguage(keyString: "挂单成功"), position: .center)
+            let headerView = self.detailView.tableView.headerView(forSection: 0) as! MarketExchangeHeaderView
+            headerView.leftAmountTextField.text = ""
+            headerView.rightAmountTextField.text = ""
         } else if type == "UpdateViolasBalance" {
             self.detailView.toastView?.hide()
             if let tempData = jsonData.value(forKey: "data") as? BalanceLibraModel {

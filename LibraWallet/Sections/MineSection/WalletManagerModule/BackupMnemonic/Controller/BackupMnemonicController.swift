@@ -12,7 +12,7 @@ class BackupMnemonicController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // 初始化本地配置
-//        self.setBaseControlllerConfig()
+        self.title = localLanguage(keyString: "wallet_backup_mnemonic_show_navigationbar_title")
         // 加载子View
         self.view.addSubview(self.viewModel.detailView)
     }
@@ -24,7 +24,7 @@ class BackupMnemonicController: BaseViewController {
             } else {
                 make.top.bottom.equalTo(self.view)
             }
-            make.left.right.equalTo(self.view)
+            make.left.right.bottom.equalTo(self.view)
         }
     }
     deinit {
@@ -38,6 +38,11 @@ class BackupMnemonicController: BaseViewController {
         return viewModel
     }()
     var FirstInApp: Bool?
+    var JustShow: Bool? {
+        didSet {
+            self.viewModel.detailView.JustShow = JustShow
+        }
+    }
     var tempWallet: CreateWalletModel? {
         didSet {
             self.viewModel.dataArray = tempWallet?.mnemonic

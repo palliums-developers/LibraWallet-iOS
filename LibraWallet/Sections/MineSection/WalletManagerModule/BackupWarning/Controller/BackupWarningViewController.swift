@@ -11,8 +11,7 @@ import UIKit
 class BackupWarningViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        // 初始化本地配置
-//        self.setBaseControlllerConfig()
+        self.title = localLanguage(keyString: "wallet_backup_mnemonic_warning_navigationbar_title")
         if FirstInApp == true {
             self.addRightNavigationBar()
         }

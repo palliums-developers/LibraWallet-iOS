@@ -134,6 +134,11 @@ class BackupMnemonicView: UIView {
             }
         }
     }
+    var JustShow: Bool? {
+        didSet {
+            confirmButton.alpha = JustShow == true ? 0:1
+        }
+    }
     @objc func buttonClick(button: UIButton) {
         self.delegate?.checkBackupMnemonic()
     }

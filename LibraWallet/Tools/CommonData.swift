@@ -258,3 +258,6 @@ let NameMaxLimit = 20
 let ApplyTokenAmountLengthLimit = 12
 /// 最大发币9000亿
 let ApplyTokenMaxLimit: Int64 = 900000000000
+
+let officialAddress = "https://violas.io"
+let officialEmail = "violas_blockchain@violas.io"

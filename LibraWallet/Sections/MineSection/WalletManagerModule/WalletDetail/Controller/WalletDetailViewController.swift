@@ -79,9 +79,20 @@ extension WalletDetailViewController: WalletDetailTableViewManagerDelegate {
             self.navigationController?.pushViewController(vc, animated: true)
         } else {
             let alert = passowordAlert(rootAddress: (self.walletModel?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
-                let vc = WalletMnemonicViewController()
-                vc.rootAddress = self?.walletModel?.walletRootAddress
-                self?.navigationController?.pushViewController(vc, animated: true)
+//                let vc = WalletMnemonicViewController()
+//                vc.rootAddress = self?.walletModel?.walletRootAddress
+//                self?.navigationController?.pushViewController(vc, animated: true)
+                if self?.walletModel?.walletBackupState == true {
+                    let vc = BackupMnemonicController()
+                    vc.JustShow = true
+                    vc.tempWallet = CreateWalletModel.init(password: "", mnemonic: mnemonic, wallet: self?.walletModel)
+                    self?.navigationController?.pushViewController(vc, animated: true)
+                } else {
+                    let vc = BackupWarningViewController()
+                    vc.FirstInApp = false
+                    vc.tempWallet = CreateWalletModel.init(password: "", mnemonic: mnemonic, wallet: self?.walletModel)
+                    self?.navigationController?.pushViewController(vc, animated: true)
+                }
             }) { [weak self] (errorContent) in
                 self?.view.makeToast(errorContent, position: .center)
             }

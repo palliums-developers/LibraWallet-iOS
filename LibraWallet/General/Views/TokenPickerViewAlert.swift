@@ -21,23 +21,11 @@ class TokenPickerViewAlert: UIView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    convenience init(successClosure: @escaping successClosure, data: [MarketSupportCoinDataModel]) {
+    convenience init(successClosure: @escaping successClosure, data: [MarketSupportCoinDataModel], onlyRegisterToken: Bool) {
         self.init(frame: CGRect.zero)
         self.actionClosure = successClosure
         self.models = data
-//        guard let phone = SSOWalletManager.shared.walletBindingPhone else {
-//            return
-//        }
-////        let range = phone.index(phone.startIndex, offsetBy: 6)..<phone.index(phone.startIndex, offsetBy: 10)
-////        self.phoneTitleLabel.text = phone.replacingCharacters(in: range, with: "****")
-//        self.phoneTitleLabel.text = phone
-//
-//        guard let email = SSOWalletManager.shared.walletBindingEmail else {
-//            return
-//        }
-////        let range2 = email.index(email.startIndex, offsetBy: 6)..<email.index(email.startIndex, offsetBy: 10)
-////        self.emailTitleLabel.text = email.replacingCharacters(in: range2, with: "****")
-//        self.emailTitleLabel.text = email
+        self.onlyRegisterToken = onlyRegisterToken
     }
     deinit {
         print("TokenPickerViewAlert销毁了")
@@ -111,6 +99,7 @@ class TokenPickerViewAlert: UIView {
     }
     var models: [MarketSupportCoinDataModel]?
     var pickerRow: Int = 0
+    var onlyRegisterToken: Bool?
 }
 extension TokenPickerViewAlert: actionViewProtocol {
     
@@ -137,7 +126,11 @@ extension TokenPickerViewAlert: UIPickerViewDelegate {
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         //赋值
         if let model = models?[row] {
-            return (model.name ?? "") + (model.enable == true ? localLanguage(keyString: "（已注册）"):"")
+            if onlyRegisterToken == true {
+                return (model.name ?? "")
+            } else {
+                return (model.name ?? "") + (model.enable == true ? localLanguage(keyString: "（已注册）"):"")
+            }
         }
         return "test"
     }

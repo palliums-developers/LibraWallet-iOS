@@ -41,7 +41,6 @@ class AboutUsView: UIView {
         tableView.estimatedSectionHeaderHeight = 0;
         tableView.backgroundColor = UIColor.white
         tableView.isScrollEnabled = false
-        tableView.allowsSelection = false
         return tableView
     }()
     private lazy var topBackgroundImageView : UIImageView = {

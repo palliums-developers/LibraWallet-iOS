@@ -126,7 +126,7 @@ class HomeModel: NSObject {
             } catch {
                 print(error.localizedDescription)
                 DispatchQueue.main.async(execute: {
-                    let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "UpdateBTCBalance")
+                    let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "UpdateLibraBalance")
                     self.setValue(data, forKey: "dataDic")
                 })
             }
