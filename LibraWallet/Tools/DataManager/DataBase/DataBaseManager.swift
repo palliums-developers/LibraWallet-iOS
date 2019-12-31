@@ -260,6 +260,20 @@ struct DataBaseManager {
             throw error
         }
     }
+    func updateDefaultViolasWallet() -> Bool {
+        let walletTable = Table("Wallet").filter(Expression<Int>("wallet_identity") == 0 && Expression<Int>("wallet_type") == 1)
+        do {
+            if let tempDB = self.db {
+                try tempDB.run(walletTable.update(Expression<Bool>("wallet_current_use") <- true))
+                return true
+            } else {
+                return false
+            }
+        } catch {
+            print(error.localizedDescription)
+            return false
+        }
+    }
     func deleteWalletFromTable(model: LibraWalletManager) -> Bool {
         let transectionAddressHistoryTable = Table("Wallet")
         do {

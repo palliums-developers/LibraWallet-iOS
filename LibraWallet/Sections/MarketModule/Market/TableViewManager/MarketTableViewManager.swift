@@ -63,11 +63,9 @@ extension MarketTableViewManager: UITableViewDelegate {
 //            }
             return header
         } else if let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier) as? MarketMyOrderHeaderView {
-//            (header as! AddAssetTableViewHeader).model = self.headerData
             header.delegate = self
             return header
         } else if let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier) as? MarketOthersOrderHeaderView {
-//            (header as! AddAssetTableViewHeader).model = self.headerData
             header.delegate = self
             return header
         } else {
@@ -165,7 +163,6 @@ extension MarketTableViewManager: MarketExchangeHeaderViewDelegate {
     func changeLeftRightTokenModel(leftModel: MarketSupportCoinDataModel, rightModel: MarketSupportCoinDataModel) {
         self.delegate?.changeLeftRightTokenModel(leftModel: leftModel, rightModel: rightModel)
     }
-    
     func selectToken(button: UIButton, leftModelName: String, rightModelName: String) {
         self.delegate?.selectToken(button: button, leftModelName: leftModelName, rightModelName: rightModelName)
     }
@@ -173,7 +170,6 @@ extension MarketTableViewManager: MarketExchangeHeaderViewDelegate {
     func exchangeToken(payToken: MarketSupportCoinDataModel, receiveToken: MarketSupportCoinDataModel, amount: Double, exchangeAmount: Double) {
         self.delegate?.exchangeToken(payToken: payToken, receiveToken: receiveToken, amount: amount, exchangeAmount: exchangeAmount)
     }
-    
 }
 extension MarketTableViewManager: MarketMyOrderHeaderViewDelegate {
     func showOrderCenter() {

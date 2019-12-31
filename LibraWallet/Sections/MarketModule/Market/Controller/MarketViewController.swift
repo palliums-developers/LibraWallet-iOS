@@ -204,6 +204,21 @@ extension MarketViewController: MarketTableViewManagerDelegate {
                 }).reversed()
                 showRegisterModel = false
             }
+            if button.tag == 20 && tempDataModel.isEmpty == true {
+                let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: localLanguage(keyString: "尚未注册任何稳定币") + localLanguage(keyString: ",是否立即注册"), preferredStyle: .alert)
+                alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_confirm_button_title"), style: .default){ [weak self] clickHandler in
+                    let vc = AddAssetViewController()
+                    vc.wallet = self?.wallet
+                    vc.needDismissViewController = true
+                    let navi = UINavigationController.init(rootViewController: vc)
+                    self?.present(navi, animated: true, completion: nil)
+                })
+                alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_cancel_button_title"), style: .cancel){ clickHandler in
+                    NSLog("点击了取消")
+                })
+                self.present(alertContr, animated: true, completion: nil)
+                return
+            }
             let alert = TokenPickerViewAlert.init(successClosure: { (model) in
                 if let headerView = self.detailView.tableView.headerView(forSection: 0) as? MarketExchangeHeaderView {
                     if button.tag == 20 {
@@ -267,7 +282,7 @@ extension MarketViewController: MarketTableViewManagerDelegate {
                                                       receiveContract: receiveToken.addr ?? "",
                                                       amount: amount,
                                                       exchangeAmount: exchangeAmount,
-                                                      name: payToken.name ?? "")
+                                                      name: receiveToken.name ?? "")
                         
                     })
                     alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_cancel_button_title"), style: .cancel){ clickHandler in
@@ -284,24 +299,6 @@ extension MarketViewController: MarketTableViewManagerDelegate {
                 self.detailView.makeToast(localLanguage(keyString: "余额不足以兑换，请确认"), position: .center)
             }
         }
-    }
-    func showPasswordAlert(payContract: String, receiveContract: String, amount: Double, exchangeAmount: Double) {
-        let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] mnemonic in
-            guard let walletAddress = self?.wallet?.walletAddress else {
-                return
-            }
-            self?.detailView.toastView?.show()
-            self?.dataModel.exchangeViolasTokenTransaction(sendAddress: walletAddress,
-                                                           amount: amount,
-                                                           fee: 0,
-                                                           mnemonic: mnemonic,
-                                                           contact: payContract,
-                                                           exchangeTokenContract: receiveContract,
-                                                           exchangeTokenAmount: exchangeAmount)
-        }) { [weak self] errorContent in
-            self?.view.makeToast(errorContent, position: .center)
-        }
-        self.present(alert, animated: true, completion: nil)
     }
     func showPublishPasswordAlert(payContract: String, receiveContract: String, amount: Double, exchangeAmount: Double, name: String) {
         let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] mnemonic in
@@ -340,7 +337,24 @@ extension MarketViewController: MarketTableViewManagerDelegate {
         }
         self.present(alert, animated: true, completion: nil)
     }
-    
+    func showPasswordAlert(payContract: String, receiveContract: String, amount: Double, exchangeAmount: Double) {
+        let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] mnemonic in
+            guard let walletAddress = self?.wallet?.walletAddress else {
+                return
+            }
+            self?.detailView.toastView?.show()
+            self?.dataModel.exchangeViolasTokenTransaction(sendAddress: walletAddress,
+                                                           amount: amount,
+                                                           fee: 0,
+                                                           mnemonic: mnemonic,
+                                                           contact: payContract,
+                                                           exchangeTokenContract: receiveContract,
+                                                           exchangeTokenAmount: exchangeAmount)
+        }) { [weak self] errorContent in
+            self?.view.makeToast(errorContent, position: .center)
+        }
+        self.present(alert, animated: true, completion: nil)
+    }
     func switchButtonChange(model: ViolasTokenModel, state: Bool, indexPath: IndexPath) {
 //        self.dataModel.e
         

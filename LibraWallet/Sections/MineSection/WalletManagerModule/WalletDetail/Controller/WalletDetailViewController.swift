@@ -110,6 +110,8 @@ extension WalletDetailViewController: WalletDetailViewDelegate {
             guard state == true else {
                 return
             }
+            _ = DataBaseManager.DBManager.updateDefaultViolasWallet()
+                        
             self.view.makeToast(localLanguage(keyString: "wallet_delete_wallet_success_title"), duration: 1, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { [weak self](bool) in
                 if let action = self?.actionClosure {
                     action(.delete, self?.walletModel)

@@ -33,6 +33,11 @@ class HomeViewController: UIViewController {
         if needRefresh == true {
 //            dataModel.getLocalUserInfo()
         }
+        let result = DataBaseManager.DBManager.isExistAddressInWallet(address: self.detailView.model?.walletRootAddress ?? "")
+        if result == false {
+            self.detailView.makeToastActivity(.center)
+            self.dataModel.getLocalUserInfo()
+        }
         self.navigationController?.navigationBar.barStyle = .black
     }
     override func viewWillDisappear(_ animated: Bool) {
@@ -138,7 +143,8 @@ class HomeViewController: UIViewController {
             if action == .update {
                 //更新管理页面
                 if self.detailView.headerView.walletModel?.walletRootAddress != wallet.walletRootAddress {
-                    self.detailView.headerView.walletModel = wallet
+//                    self.detailView.headerView.walletModel = wallet
+                    self.detailView.model = wallet
                 }
                 // 需要更新
                 self.detailView.makeToastActivity(.center)
@@ -200,16 +206,6 @@ class HomeViewController: UIViewController {
             self.changeWalletButton.setTitle("BTC " + localLanguage(keyString: "wallet_home_wallet_type_last_title"), for: UIControl.State.normal)
         }
         self.changeWalletButton.imagePosition(at: .right, space: 10, imageViewSize: CGSize.init(width: 13, height: 7))
-//        UIView.animate(withDuration: 0.3) { [weak self] in
-//            var width = 80
-//            if Localize.currentLanguage() == "en" {
-//                width = 120
-//            } else {
-//                width = 80
-//            }
-//            self?.changeWalletButton.frame = CGRect.init(x: 0, y: 0, width: width, height: 37)
-//            self?.changeWalletButtonView.frame = CGRect.init(x: 0, y: 0, width: width, height: 37)
-//        }
     }
     @objc func refreshData() {
         if self.detailView.headerView.walletModel?.walletType == .Libra {
@@ -448,10 +444,10 @@ extension HomeViewController {
             if let tempData = jsonData.value(forKey: "data") as? [ViolasTokenModel] {
                 let defaultModel = ViolasTokenModel.init(name: "vtoken",
                                                          description: "",
-                                                         address: self.detailView.model?.walletAddress ?? "",
+                                                         address: self.detailView.headerView.walletModel?.walletAddress ?? "",
                                                          icon: "",
                                                          enable: true,
-                                                         balance: self.detailView.model?.walletBalance ?? 0,
+                                                         balance: self.detailView.headerView.walletModel?.walletBalance ?? 0,
                                                          registerState: true)
                 self.tableViewManager.dataModel = tempData
                 self.tableViewManager.dataModel?.insert(defaultModel, at: 0)

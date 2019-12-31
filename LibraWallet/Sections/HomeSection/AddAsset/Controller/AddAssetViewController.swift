@@ -26,6 +26,9 @@ class AddAssetViewController: BaseViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.navigationController?.navigationBar.barStyle = .black
+        if let action = self.needUpdateClosure {
+            action(true)
+        }
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -87,7 +90,7 @@ extension AddAssetViewController: AddAssetTableViewManagerDelegate {
             print("已注册")
             if DataBaseManager.DBManager.isExistViolasToken(walletID: wallet?.walletID ?? 0, contract: model.address ?? "") {
                 //已存在改状态
-                print("已存在改状态")
+                print("已存在改状态,\(model.address ?? "")")
                 let cell = self.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
                 cell.switchButton.setOn(state, animated: true)
                 _ = DataBaseManager.DBManager.updateViolasTokenState(walletID: wallet?.walletID ?? 0, tokenAddress: model.address ?? "", state: state)
@@ -95,9 +98,6 @@ extension AddAssetViewController: AddAssetTableViewManagerDelegate {
                 //不存在插入
                 print("不存在插入")
                 _ = DataBaseManager.DBManager.insertViolasToken(walletID: wallet?.walletID ?? 0, model: model)
-            }
-            if let action = self.needUpdateClosure {
-                action(true)
             }
         } else {
             // 未注册
