@@ -66,7 +66,7 @@ class TokenPickerViewAlert: UIView {
         let label = UILabel.init()
         label.textColor = UIColor.init(hex: "000000")
         label.textAlignment = NSTextAlignment.left
-        label.text = localLanguage(keyString: "选择Token")
+        label.text = localLanguage(keyString: "wallet_alert_market_support_token_list_title") + "Token"
         label.font = UIFont.systemFont(ofSize: 22, weight: UIFont.Weight.semibold)
         return label
     }()
@@ -80,7 +80,7 @@ class TokenPickerViewAlert: UIView {
         let button = UIButton.init()
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.regular)
         button.setTitleColor(UIColor.init(hex: "7C7C7C"), for: UIControl.State.normal)
-        button.setTitle(localLanguage(keyString: "确定"), for: UIControl.State.normal)
+        button.setTitle(localLanguage(keyString: "wallet_alert_market_support_token_cancel_button_title"), for: UIControl.State.normal)
 
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
         button.tag = 10

@@ -250,6 +250,8 @@ let useLegalURL = "https://violas.io/violas_service_html/Terms_of_Service.html"
 let transferFeeMax = 0.001
 let transferFeeMin = 0.0001
 let transferBTCLeast = 0.0001
+let transferViolasLeast = 0.0001
+let transferLibraLeast = 0.0001
 let addressRemarksLimit = 20
 let PasswordMinLimit = 8
 let PasswordMaxLimit = 20
@@ -261,3 +263,5 @@ let ApplyTokenMaxLimit: Int64 = 900000000000
 
 let officialAddress = "https://violas.io"
 let officialEmail = "violas_blockchain@violas.io"
+/************* 弹出提示隐藏时间 *******************/
+let toastDuration = 0.5

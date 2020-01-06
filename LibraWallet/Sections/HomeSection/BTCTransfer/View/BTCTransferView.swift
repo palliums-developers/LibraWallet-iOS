@@ -144,7 +144,7 @@ class BTCTransferView: UIView {
         textField.textColor = UIColor.init(hex: "333333")
         textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_transfer_amount_textfield_placeholder"),
                                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C4C3C7"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16)])
-        //        textField.delegate = self
+        textField.delegate = self
         textField.keyboardType = .decimalPad
         textField.tintColor = DefaultGreenColor
         textField.layer.borderColor = UIColor.init(hex: "D8D7DA").cgColor
@@ -296,13 +296,13 @@ class BTCTransferView: UIView {
                 return
             }
             // 转换数字
-            let amount = (amountString as NSString).doubleValue
+            let amount = NSDecimalNumber.init(string: amountString).doubleValue
             // 手续费转换
             let feeString = self.transferFeeLabel.text
             let fee = Double(feeString!.replacingOccurrences(of: " BTC", with: ""))!
             // 最少0.0001
             guard amount >= 0.0001 else {
-               self.makeToast(LibraWalletError.WalletTransfer(reason: .amountTooSmall).localizedDescription,
+               self.makeToast(LibraWalletError.WalletTransfer(reason: .btcAmountLeast).localizedDescription,
                               position: .center)
                return
             }
@@ -374,4 +374,22 @@ class BTCTransferView: UIView {
             walletBalanceLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + balance + " BTC"
         }
     }
+}
+extension BTCTransferView: UITextFieldDelegate {
+   func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+       guard let content = textField.text else {
+           return true
+       }
+       let textLength = content.count + string.count - range.length
+       if content.contains(".") {
+           let firstContent = content.split(separator: ".").first?.description ?? "0"
+           if (textLength - firstContent.count) < 10 {
+               return true
+           } else {
+               return false
+           }
+       } else {
+           return textLength <= ApplyTokenAmountLengthLimit
+       }
+   }
 }

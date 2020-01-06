@@ -13,7 +13,7 @@ class OrderCenterViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // 设置标题
-        self.title = localLanguage(keyString: "订单")
+        self.title = localLanguage(keyString: "wallet_order_center_navigationbar_title")
         // 加载子View
         self.view.addSubview(segmentView)
         self.view.addSubview(segmentSpaceLabel)
@@ -62,8 +62,8 @@ class OrderCenterViewController: BaseViewController {
     private lazy var segmentedDataSource : JXSegmentedTitleDataSource = {
         let data = JXSegmentedTitleDataSource.init()
         //配置数据源相关配置属性
-        data.titles = [localLanguage(keyString: "未完成"),
-                       localLanguage(keyString: "已完成")]
+        data.titles = [localLanguage(keyString: "wallet_market_processing_order_title"),
+                       localLanguage(keyString: "wallet_market_done_order_title")]
         data.isTitleColorGradientEnabled = true
         data.titleNormalColor = UIColor.init(hex: "D9D9D9")
         data.titleNormalFont = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.medium)

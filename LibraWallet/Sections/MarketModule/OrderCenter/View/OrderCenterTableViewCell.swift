@@ -126,7 +126,7 @@ class OrderCenterTableViewCell: UITableViewCell {
         let button = UIButton.init()
         button.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
         button.setTitleColor(UIColor.init(hex: "726BD9"), for: UIControl.State.normal)
-        button.setTitle(localLanguage(keyString: "撤销"), for: UIControl.State.normal)
+        button.setTitle(localLanguage(keyString: "wallet_market_order_state_cancel_title"), for: UIControl.State.normal)
 
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
         button.tag = 10
@@ -137,7 +137,7 @@ class OrderCenterTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "BABABA")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "价格")
+        label.text = localLanguage(keyString: "wallet_market_order_price_title")
         return label
     }()
     lazy var amountTitleLabel: UILabel = {
@@ -145,7 +145,7 @@ class OrderCenterTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.center
         label.textColor = UIColor.init(hex: "BABABA")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "数量")
+        label.text = localLanguage(keyString: "wallet_market_order_amount_title")
         return label
     }()
     lazy var dateTitleLabel: UILabel = {
@@ -153,7 +153,7 @@ class OrderCenterTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "BABABA")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "时间")
+        label.text = localLanguage(keyString: "wallet_market_order_date_title")
         return label
     }()
     lazy var successAmountTitleLabel: UILabel = {
@@ -161,7 +161,7 @@ class OrderCenterTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "BABABA")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "已成交数量")
+        label.text = localLanguage(keyString: "wallet_market_order_fill_amount_title")
         return label
     }()
     lazy var feeTitleLabel: UILabel = {
@@ -169,7 +169,7 @@ class OrderCenterTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "BABABA")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "手续费")
+        label.text = localLanguage(keyString: "wallet_market_order_fee_title")
         return label
     }()
     private lazy var detailImageView : UIImageView = {
@@ -252,13 +252,13 @@ class OrderCenterTableViewCell: UITableViewCell {
                                                              unit: 1000000)
             feeLabel.text = "0.00"
             if model?.state == "OPEN" {
-                cancelButton.setTitle(localLanguage(keyString: "撤销"), for: UIControl.State.normal)
+                cancelButton.setTitle(localLanguage(keyString: "wallet_market_order_state_cancel_title"), for: UIControl.State.normal)
                 cancelButton.setTitleColor(UIColor.init(hex: "726BD9"), for: UIControl.State.normal)
             } else if model?.state == "FILLED" {
-                cancelButton.setTitle(localLanguage(keyString: "已完成"), for: UIControl.State.normal)
+                cancelButton.setTitle(localLanguage(keyString: "wallet_market_order_state_done_title"), for: UIControl.State.normal)
                 cancelButton.setTitleColor(UIColor.init(hex: "63636F"), for: UIControl.State.normal)
             } else if model?.state == "CANCELED" {
-                cancelButton.setTitle(localLanguage(keyString: "已取消"), for: UIControl.State.normal)
+                cancelButton.setTitle(localLanguage(keyString: "wallet_market_order_state_canceled_title"), for: UIControl.State.normal)
                 cancelButton.setTitleColor(UIColor.init(hex: "63636F"), for: UIControl.State.normal)
             }
         }

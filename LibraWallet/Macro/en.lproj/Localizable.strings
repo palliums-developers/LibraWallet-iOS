@@ -41,11 +41,14 @@ wallet_transfer_transaction_fee_least_title = "Slow";
 wallet_transfer_transaction_fee_max_title = "Fast";
 wallet_transfer_confirm_button_title = "Confirm Transfer";
 
-
 /************* 交易历史 *******************/
-wallet_transactions_receive_title = "Receive";
+wallet_transactions_date_title = "Date";
+wallet_transactions_amount_title = "Amount";
 wallet_transactions_transfer_title = "Transfer";
+wallet_transactions_receive_title = "Receive";
+wallet_transactions_check_detail_on_chain = "Transaction History";
 wallet_transactions_publish_title = "Open Account";
+wallet_transactions_empty_default_title = "No Transaction Yet";
 
 /************* 已存在身份钱包创建钱包 *******************/
 wallet_add_wallet_btc_title = "Create a Bitcoin Wallet";
@@ -129,15 +132,10 @@ wallet_market_exchange_fee_title = "Exchange Rate";
 wallet_market_exchange_fee_describe_title = "1BTC = 1Vbtc";
 wallet_market_exchange_confirm_title = "Exchange";
 
-/************* 交易记录 *******************/
-wallet_transaction_date_title = "Date";
-wallet_transaction_amount_title = "Amount";
-wallet_transaction_transfer_title = "Transfer";
-wallet_transaction_receive_title = "Receive";
-wallet_transaction_check_detail_on_chain = "Transaction History";
-
 /************* 关于我们 *******************/
 wallet_about_us_navigation_right_bar_title = "Question & Feedback";
+wallet_mine_about_us_official_address = "Official site";
+wallet_mine_about_us_official_email = "Email";
 
 /************* 设置页面 *******************/
 wallet_setting_language_title = "Languages";
@@ -148,6 +146,41 @@ wallet_setting_help_center_title = "Help & Feedback";
 
 /************* 地址页面 *******************/
 wallet_address_manager_empty_data_title = "No Address Yet";
+
+/************* 稳定币管理 *******************/
+wallet_add_token_registered_title = "(Registered)";
+
+/************* 交易所 *******************/
+wallet_market_mine_commission_title = "Mine commission";
+wallet_market_order_center_title = "All";
+wallet_market_other_commission_title = "Others commission";
+wallet_market_trade_name_title = "Market";
+wallet_market_trade_amount_title = "Amount";
+wallet_market_trade_price_title = "Price";
+
+/************* 订单中心 *******************/
+wallet_market_processing_order_title = "Unfinished";
+wallet_market_done_order_title = "Completed";
+wallet_market_order_price_title = "Price";
+wallet_market_order_amount_title = "Amount";
+wallet_market_order_date_title = "Date";
+wallet_market_order_fill_amount_title = "Fill amount";
+wallet_market_order_fee_title = "Fee";
+wallet_market_order_state_cancel_title = "Cancel";
+wallet_market_order_state_canceled_title = "canceled";
+wallet_market_order_state_done_title = "Done";
+
+/************* 订单详情 *******************/
+wallet_market_order_detail_price_title = "Price";
+wallet_market_order_detail_amount_title = "Amount";
+wallet_market_order_detail_date_title = "Date";
+wallet_market_order_detail_fill_amount_title = "Fill amount";
+wallet_market_order_detail_fee_title = "Fee";
+wallet_market_order_detail_state_cancel_title = "Cancel";
+wallet_market_order_detail_state_canceled_title = "Canceled";
+wallet_market_order_detail_state_done_title = "Finished";
+wallet_market_order_detail_state_processing_title = "Progressing";
+wallet_market_order_detail_fill_order_title = "Finished order";
 
 /************* 弹出提示 *******************/
 // 转账弹出提示
@@ -202,6 +235,23 @@ wallet_add_asset_alert_content = "Open Requires Gas Fee. Continue to Open?";
 wallet_add_asset_alert_cancel_button_title = "Cancel";
 wallet_add_asset_alert_confirm_button_title = "Confirm";
 wallet_add_asset_alert_success_title = "Open Success";
+// 用户协议与隐私保护
+wallet_private_and_use_legal_title = "User agreement & privacy protection";
+wallet_private_and_use_legal_cancel_button_title = "Disagree";
+wallet_private_and_use_legal_confirm_button_title = "Agree";
+// 欢迎页面
+wallet_welcome_alert_title = "Welcome to";
+wallet_welcome_alert_describe = "Wallet";
+wallet_welcome_alert_confirm_button_title = "马上进入";
+// 删除地址
+wallet_alert_delete_address_title = "Hint";
+wallet_alert_delete_address_content = "Confirm to delete address?";
+wallet_alert_delete_address_cancel_button_title = "Cancel";
+wallet_alert_delete_address_confirm_button_title = "Confirm";
+// 交易所支持稳定币页面
+wallet_alert_market_support_token_list_title = "Select";
+wallet_alert_market_support_token_cancel_button_title = "Confirm";
+
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "Safety Warning";
 wallet_alert_backup_warning_detail_title = "You have not yet backup the mnemonic words of your identity wallet. Please backup them as soon as possible.\nThe mnemonic words can be used to recover funds in your identity wallet in case you have removed this App or forget the password or have lost or demaged your phone";
@@ -213,16 +263,25 @@ wallet_transactions_navigation_title = "Transaction History";
 wallet_receive_navigation_title = "Receive";
 wallet_wallet_list_navigation_title = "Select Wallet Type";
 wallet_manager_navigation_title = "Manage";
-
 wallet_setting_navigation_title = "Settings";
 wallet_language_navigation_title = "Languages";
 wallet_service_navigation_title = "Service Agreement";
+wallet_private_navigation_title = "Private Agreement";
 wallet_about_us_navigation_title = "About Us";
 wallet_feedback_navigation_title = "Service & Feedback";
 wallet_address_navigation_title = "Address Book";
 wallet_address_add_navigation_title = "Add Address";
 wallet_wallet_manager_navigation_title = "Manage Wallet";
 wallet_wallet_add_navigation_title = "Add Wallet";
+wallet_assert_add_navigation_title = "Add token";
+wallet_wallet_manager_change_wallet_name_navigationbar_title = "Wallet Detail";
+wallet_backup_mnemonic_warning_navigationbar_title = "Backup alert";
+wallet_backup_mnemonic_show_navigationbar_title = "Backup mnemonic";
+wallet_backup_mnemonic_check_navigationbar_title = "Confirm mnemonic";
+wallet_first_in_create_identity_wallet_navigationbar_title = "Create identity wallet";
+wallet_first_in_import_identity_wallet_navigationbar_title = "Import identity wallet";
+wallet_order_center_navigationbar_title = "Order";
+wallet_order_center_detail_navigationbar_title = "Order detail";
 
 /************* App错误 *******************/
 // 请求遇到错误

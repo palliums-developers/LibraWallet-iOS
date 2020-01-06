@@ -408,6 +408,11 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
                 self.makeToast(localLanguage(keyString: "请输入正确的付出数量"), position: .center)
                 return
             }
+            let payAmount = NSDecimalNumber.init(string: payAmountString).doubleValue
+            guard payAmount != 0 else {
+                self.makeToast(localLanguage(keyString: "最少付出金额: \(transferViolasLeast)"), position: .center)
+                return
+            }
             guard let exchangeAmountString = rightAmountTextField.text, exchangeAmountString.isEmpty == false else {
                 self.makeToast(localLanguage(keyString: "请输入要兑换的数量"), position: .center)
                 return
@@ -416,10 +421,15 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
                 self.makeToast(localLanguage(keyString: "请输入正确兑换的数量"), position: .center)
                 return
             }
+            let exchangeAmount = NSDecimalNumber.init(string: exchangeAmountString).doubleValue
+            guard exchangeAmount != 0 else {
+                self.makeToast(localLanguage(keyString: "最少兑换金额: \(transferViolasLeast)"), position: .center)
+                return
+            }
             self.delegate?.exchangeToken(payToken: tempLeftModel,
                                          receiveToken: tempRightModel,
-                                         amount: NSDecimalNumber.init(string: payAmountString).doubleValue,
-                                         exchangeAmount: Double(exchangeAmountString)!)
+                                         amount: payAmount,
+                                         exchangeAmount: exchangeAmount)
 
         }
     }

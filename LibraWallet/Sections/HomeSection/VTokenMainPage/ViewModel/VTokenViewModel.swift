@@ -42,7 +42,7 @@ class VTokenViewModel: NSObject {
                 print(error.localizedDescription)
                 // 数据为空
                  self.detailView.tableView.mj_footer.endRefreshingWithNoMoreData()
-                 self.detailView.makeToast("没有更多数据", position: .center)
+                self.detailView.makeToast(LibraWalletError.WalletRequest(reason: .noMoreData).localizedDescription, position: .center)
             } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
                 print(error.localizedDescription)
                 // 数据返回状态异常

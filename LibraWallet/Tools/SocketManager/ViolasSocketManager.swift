@@ -12,13 +12,12 @@ struct ViolasSocketManager {
     static var shared = ViolasSocketManager()
     private var manager: SocketManager?
     private let requestURL = "http://18.220.66.235:38181"
-//    private let requestURL = "http://192.168.1.103:8181"
 
 }
 extension ViolasSocketManager {
 
     mutating func openSocket(response: @escaping (Bool)->Void) {
-        manager = SocketManager(socketURL: URL(string: requestURL)!, config: [.log(true),
+        manager = SocketManager(socketURL: URL(string: requestURL)!, config: [.log(false),
                                                                               .compress,
                                                                               .reconnectWait(60)])
         let socket = manager!.defaultSocket
@@ -49,6 +48,7 @@ extension ViolasSocketManager {
                     let tempData = try JSONSerialization.data(withJSONObject: data[0], options: [])
                     response(tempData)
                 }
+                ack.with(["state": "success"])
             } catch {
                 print("market_解析失败")
             }

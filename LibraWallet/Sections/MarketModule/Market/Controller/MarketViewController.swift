@@ -149,7 +149,7 @@ extension MarketViewController: MarketTableViewManagerDelegate {
             headerView.makeToast(content, position: .center)
             return
         }
-        guard isPurnDouble(string: headerView.rightAmountTextField.text ?? "") == true else {
+        guard isPurnDouble(string: headerView.rightAmountTextField.text ?? "0") == true else {
             headerView.makeToast(localLanguage(keyString: "请输入正确的付出数量后交换"), position: .center)
             return
         }
@@ -157,7 +157,7 @@ extension MarketViewController: MarketTableViewManagerDelegate {
             headerView.makeToast(localLanguage(keyString: "您需要兑换的稳定币数量过大，不支持交换，请减少兑换数量后交换"), position: .center)
             return
         }
-        guard isPurnDouble(string: headerView.leftAmountTextField.text ?? "") == true else {
+        guard isPurnDouble(string: headerView.leftAmountTextField.text ?? "0") == true else {
             headerView.makeToast(localLanguage(keyString: "请输入正确兑换的数量后交换"), position: .center)
             return
         }
@@ -317,7 +317,7 @@ extension MarketViewController: MarketTableViewManagerDelegate {
                 // 插入本地数据库
                 let violasToken = ViolasTokenModel.init(name: name,
                                                         description: "",
-                                                        address: receiveContract,
+                                                        address: Data.init(Array<UInt8>(hex: receiveContract)).toHexString(),
                                                         icon: "",
                                                         enable: true,
                                                         balance: Int64(exchangeAmount * 1000000),

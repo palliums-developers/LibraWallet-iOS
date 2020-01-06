@@ -36,7 +36,7 @@ class ImportWalletView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         coinTypeIcon.snp.makeConstraints { (make) in
-            make.top.equalTo(self).offset(46)
+            make.top.equalTo(self).offset(36)
             make.centerX.equalTo(self)
             make.size.equalTo(CGSize.init(width: 65, height: 65))
         }
@@ -46,10 +46,10 @@ class ImportWalletView: UIView {
         }
         mnemonicTextView.snp.makeConstraints { (make) in
             make.centerX.equalTo(self)
-            make.top.equalTo(coinTypeIcon.snp.bottom).offset(86)
+            make.top.equalTo(coinTypeIcon.snp.bottom).offset(66)
             make.left.equalTo(self).offset(19)
             make.right.equalTo(self).offset(-19)
-            make.height.equalTo(165)
+            make.height.equalTo(135)
         }
         nameTextField.snp.makeConstraints { (make) in
             make.centerX.equalTo(self)
@@ -58,7 +58,7 @@ class ImportWalletView: UIView {
             make.left.right.equalTo(nameSpaceLabel)
         }
         nameSpaceLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(mnemonicTextView.snp.bottom).offset(76)
+            make.top.equalTo(mnemonicTextView.snp.bottom).offset(66)
             make.left.equalTo(self).offset(35)
             make.right.equalTo(self).offset(-35)
             make.height.equalTo(1)

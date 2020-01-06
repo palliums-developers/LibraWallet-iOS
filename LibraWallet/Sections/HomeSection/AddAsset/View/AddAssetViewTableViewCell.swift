@@ -102,7 +102,7 @@ class AddAssetViewTableViewCell: UITableViewCell {
     //MARK: - 设置数据
     var model: ViolasTokenModel? {
         didSet {
-            let state = model?.registerState == true ? localLanguage(keyString: "(已注册)"):""
+            let state = model?.registerState == true ? localLanguage(keyString: "wallet_add_token_registered_title"):""
             nameLabel.text = (model?.name ?? "") + state
             detailLabel.text = model?.description
             

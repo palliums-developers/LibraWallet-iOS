@@ -88,7 +88,7 @@ class OrderDetailTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "BABABA")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "价格")
+        label.text = localLanguage(keyString: "wallet_market_order_detail_price_title")
         return label
     }()
     lazy var amountTitleLabel: UILabel = {
@@ -96,7 +96,7 @@ class OrderDetailTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.center
         label.textColor = UIColor.init(hex: "BABABA")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "数量")
+        label.text = localLanguage(keyString: "wallet_market_order_detail_amount_title")
         return label
     }()
     lazy var dateTitleLabel: UILabel = {
@@ -104,7 +104,7 @@ class OrderDetailTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "BABABA")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "时间")
+        label.text = localLanguage(keyString: "wallet_market_order_detail_date_title")
         return label
     }()
     lazy var priceLabel: UILabel = {

@@ -11,7 +11,7 @@ import Toast_Swift
 class ImportIdentityWalletViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-//        self.title = localLanguage(keyString: "wallet_wallet_manager_import_new_wallet_navigationbar_title")
+        self.title = localLanguage(keyString: "wallet_first_in_import_identity_wallet_navigationbar_title")
         self.view.addSubview(detailView)
         self.initKVO()
     }
@@ -25,6 +25,10 @@ class ImportIdentityWalletViewController: BaseViewController {
             }
             make.left.right.equalTo(self.view)
         }
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.barStyle = .default
     }
     var mnemonicArray: [String]?
     //懒加载子View

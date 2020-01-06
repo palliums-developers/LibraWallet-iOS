@@ -169,7 +169,7 @@ class OrderDetailHeaderView: UIView {
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(white: 1.0, alpha: 0.6)
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "价格")
+        label.text = localLanguage(keyString: "wallet_market_order_detail_price_title")
         return label
     }()
     lazy var amountTitleLabel: UILabel = {
@@ -177,7 +177,7 @@ class OrderDetailHeaderView: UIView {
         label.textAlignment = NSTextAlignment.center
         label.textColor = UIColor.init(white: 1.0, alpha: 0.6)
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "数量")
+        label.text = localLanguage(keyString: "wallet_market_order_detail_amount_title")
         return label
     }()
     lazy var dateTitleLabel: UILabel = {
@@ -185,7 +185,7 @@ class OrderDetailHeaderView: UIView {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(white: 1.0, alpha: 0.6)
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "时间")
+        label.text = localLanguage(keyString: "wallet_market_order_detail_date_title")
         return label
     }()
     lazy var successAmountTitleLabel: UILabel = {
@@ -193,7 +193,7 @@ class OrderDetailHeaderView: UIView {
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(white: 1.0, alpha: 0.6)
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "已成交数量")
+        label.text = localLanguage(keyString: "wallet_market_order_detail_fill_amount_title")
         return label
     }()
     lazy var feeTitleLabel: UILabel = {
@@ -201,7 +201,7 @@ class OrderDetailHeaderView: UIView {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(white: 1.0, alpha: 0.6)
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "手续费")
+        label.text = localLanguage(keyString: "wallet_market_order_detail_fee_title")
         return label
     }()
     lazy var priceLabel: UILabel = {
@@ -249,7 +249,7 @@ class OrderDetailHeaderView: UIView {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "60606D")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.medium)
-        label.text = localLanguage(keyString: "成交记录")
+        label.text = localLanguage(keyString: "wallet_market_order_detail_fill_order_title")
         return label
     }()
     lazy var checkOnlineButton: UIButton = {
@@ -284,11 +284,11 @@ class OrderDetailHeaderView: UIView {
 //            order status:0=OPEN 1=FILLED 2=CANCELED 3=FILLED or CANCELED, can not specify
             var tempString = ""
             if model?.state == "OPEN" {
-                tempString = localLanguage(keyString: "进行中")
+                tempString = localLanguage(keyString: "wallet_market_order_detail_state_processing_title")
             } else if model?.state == "FILLED" {
-                tempString = localLanguage(keyString: "已兑换")
+                tempString = localLanguage(keyString: "wallet_market_order_detail_state_done_title")
             } else if model?.state == "CANCELED" {
-                tempString = localLanguage(keyString: "已取消")
+                tempString = localLanguage(keyString: "wallet_market_order_detail_state_canceled_title")
             }
             cancelButton.setTitle(tempString, for: UIControl.State.normal)
         }

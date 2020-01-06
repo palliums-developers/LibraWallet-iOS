@@ -65,13 +65,13 @@ class MarketMyOrderHeaderView: UITableViewHeaderFooterView {
         label.textAlignment = NSTextAlignment.center
         label.textColor = UIColor.init(hex: "60606D")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: UIFont.Weight.semibold)
-        label.text = localLanguage(keyString: "当前委托")
+        label.text = localLanguage(keyString: "wallet_market_mine_commission_title")
         return label
     }()
     lazy var headerButton: UIButton = {
         let button = UIButton(type: .custom)
         // 设置字体
-        button.setTitle(localLanguage(keyString: "全部"), for: UIControl.State.normal)
+        button.setTitle(localLanguage(keyString: "wallet_market_order_center_title"), for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
         button.setTitleColor(UIColor.init(hex: "60606D"), for: UIControl.State.normal)
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
@@ -88,7 +88,7 @@ class MarketMyOrderHeaderView: UITableViewHeaderFooterView {
         label.textAlignment = NSTextAlignment.center
         label.textColor = UIColor.init(hex: "95969B")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "市场")
+        label.text = localLanguage(keyString: "wallet_market_trade_name_title")
         return label
     }()
     lazy var transactionAmountLabel: UILabel = {
@@ -96,7 +96,7 @@ class MarketMyOrderHeaderView: UITableViewHeaderFooterView {
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "95969B")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "数量")
+        label.text = localLanguage(keyString: "wallet_market_trade_amount_title")
         return label
     }()
     lazy var transactionPriceLabel: UILabel = {
@@ -104,7 +104,7 @@ class MarketMyOrderHeaderView: UITableViewHeaderFooterView {
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "95969B")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "价格")
+        label.text = localLanguage(keyString: "wallet_market_trade_price_title")
         return label
     }()
     @objc func buttonClick(button: UIButton) {

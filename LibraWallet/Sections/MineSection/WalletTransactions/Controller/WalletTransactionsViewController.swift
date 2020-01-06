@@ -150,7 +150,7 @@ extension WalletTransactionsViewController {
             if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
                 // 网络无法访问
                 print(error.localizedDescription)
-                self.detailView.makeToast("网络异常", position: .center)
+                self.detailView.makeToast(LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription, position: .center)
             } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionTooOld).localizedDescription {
                 // 版本太久
                 print(error.localizedDescription)
@@ -162,11 +162,11 @@ extension WalletTransactionsViewController {
                 print(error.localizedDescription)
                 // 数据为空
                 self.detailView.tableView.mj_footer.endRefreshingWithNoMoreData()
-                self.detailView.makeToast("没有更多数据", position: .center)
+                self.detailView.makeToast(LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription, position: .center)
             } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
                 print(error.localizedDescription)
                 // 数据状态异常
-                self.detailView.makeToast("数据状态异常", position: .center)
+                self.detailView.makeToast(LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription, position: .center)
             }
             self.detailView.hideToastActivity()
             self.endLoading()

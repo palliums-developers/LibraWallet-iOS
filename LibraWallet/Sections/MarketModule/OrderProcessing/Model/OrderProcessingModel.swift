@@ -163,7 +163,6 @@ class OrderProcessingModel: NSObject {
         self.requests.append(request)
     }
     func cancelTransaction(sendAddress: String, fee: Double, mnemonic: [String], contact: String, version: String) {
-//        "05599ef248e215849cc599f563b4883fc8aff31f1e43dff1e3ebe4de1370e054"
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
         queue.async {

@@ -103,7 +103,7 @@ extension TransferViewController {
         if type == "Transfer" {
             self.detailView.toastView?.hide()
             // 转账成功
-            self.view.makeToast("转账成功",
+            self.view.makeToast(localLanguage(keyString: "wallet_transfer_success_alert"),
                                 position: .center)
             if let action = self.actionClosure {
                 action()

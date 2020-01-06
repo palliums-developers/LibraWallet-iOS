@@ -157,7 +157,7 @@ class ViolasTransferView: UIView {
         textField.textColor = UIColor.init(hex: "333333")
         textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_transfer_amount_textfield_placeholder"),
                                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C4C3C7"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16)])
-        //        textField.delegate = self
+        textField.delegate = self
         textField.keyboardType = .decimalPad
         textField.tintColor = DefaultGreenColor
         textField.layer.borderColor = UIColor.init(hex: "D8D7DA").cgColor
@@ -172,7 +172,7 @@ class ViolasTransferView: UIView {
         label.textAlignment = NSTextAlignment.center
         label.textColor = UIColor.init(hex: "3C3848")
         label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
-        label.text = localLanguage(keyString: "wallet_transfer_balance_title") + " --- VToken"
+        label.text = localLanguage(keyString: "wallet_transfer_balance_title") + " --- vtoken"
         return label
     }()
     lazy var addressTitleLabel: UILabel = {
@@ -265,11 +265,9 @@ class ViolasTransferView: UIView {
         label.textAlignment = NSTextAlignment.center
         let fee = Float(transferFeeMax - transferFeeMin) * Float(0.2) + Float(transferFeeMin)
         let fee8 = NSString.init(format: "%.8f", fee)
-        label.text = "\(fee8) VToken"
+        label.text = "\(fee8) vtoken"
         return label
     }()
-
-
     lazy var confirmButton: UIButton = {
         let button = UIButton.init(type: UIButton.ButtonType.custom)
         button.setTitle(localLanguage(keyString: "wallet_transfer_confirm_button_title"), for: UIControl.State.normal)
@@ -292,14 +290,8 @@ class ViolasTransferView: UIView {
             // 常用地址
             self.delegate?.chooseAddress()
         } else {
-            // 拆包金额
-            guard let amountString = self.amountTextField.text else {
-                self.makeToast(LibraWalletError.WalletTransfer(reason: .amountInvalid).localizedDescription,
-                               position: .center)
-                return
-            }
             // 金额不为空检查
-            guard amountString.isEmpty == false else {
+            guard let amountString = self.amountTextField.text, amountString.isEmpty == false else {
                 self.makeToast(LibraWalletError.WalletTransfer(reason: .amountEmpty).localizedDescription,
                                position: .center)
                 return
@@ -311,33 +303,46 @@ class ViolasTransferView: UIView {
                 return
             }
             // 转换数字
-            let amount = (amountString as NSString).doubleValue
+            let amount = NSDecimalNumber.init(string: amountString).doubleValue
+            guard amount != 0 else {
+                self.makeToast(LibraWalletError.WalletTransfer(reason: .violasAmountLeast).localizedDescription,
+                               position: .center)
+                return
+            }
             // 手续费转换
             let feeString = self.transferFeeLabel.text
-            let fee = Double(feeString!.replacingOccurrences(of: " VToken", with: ""))!
+            let fee = Double(feeString!.replacingOccurrences(of: " vtoken", with: ""))!
             #warning("暂时不用手续费")
             // 金额大于我的金额
-//            let mineAmount = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (wallet?.walletBalance ?? 0)),
-//                                                                           scale: 6,
-//                                                                           unit: 1000000)
-            #warning("待处理")
-            // 金额大于我的金额
             if sendViolasTokenState == false {
+                let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
+                                                               scale: 4,
+                                                               raiseOnExactness: false,
+                                                               raiseOnOverflow: false,
+                                                               raiseOnUnderflow: false,
+                                                               raiseOnDivideByZero: false)
+                let balance = NSDecimalNumber.init(value: wallet?.walletBalance ?? 0).dividing(by: NSDecimalNumber.init(value: 1000000), withBehavior: numberConfig)
                 // 平台币
-                guard (amount) <= Double((wallet?.walletBalance ?? 0) / 1000000) else {
+                guard (amount) <= balance.doubleValue else {
                    self.makeToast(LibraWalletError.WalletTransfer(reason: .amountOverload).localizedDescription,
                                   position: .center)
                    return
                 }
             } else {
+                let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
+                                                               scale: 4,
+                                                               raiseOnExactness: false,
+                                                               raiseOnOverflow: false,
+                                                               raiseOnUnderflow: false,
+                                                               raiseOnDivideByZero: false)
+                let balance = NSDecimalNumber.init(value: vtoken?.balance ?? 0).dividing(by: NSDecimalNumber.init(value: 1000000), withBehavior: numberConfig)
                 // 稳定币
-                guard (amount) <= Double((vtoken?.balance ?? 0) / 1000000) else {
+                guard (amount) <= balance.doubleValue else {
                    self.makeToast(LibraWalletError.WalletTransfer(reason: .amountOverload).localizedDescription,
                                   position: .center)
                    return
                 }
             }
-            
             // 地址拆包检查
             guard let address = self.addressTextField.text, address.isEmpty == false else {
                self.makeToast(LibraWalletError.WalletTransfer(reason: .addressEmpty).localizedDescription,
@@ -381,7 +386,7 @@ class ViolasTransferView: UIView {
     @objc func slideValueDidChange(slide: UISlider) {
         let fee = Float(transferFeeMax - transferFeeMin) * slide.value + Float(transferFeeMin)
         let fee8 = NSString.init(format: "%.8f", fee)
-        self.transferFeeLabel.text = "\(fee8) VToken"
+        self.transferFeeLabel.text = "\(fee8) vtoken"
     }
     var wallet: LibraWalletManager? {
         didSet {
@@ -392,7 +397,7 @@ class ViolasTransferView: UIView {
             let balance = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.walletBalance ?? 0)),
                                                  scale: 4,
                                                  unit: 1000000)
-            walletBalanceLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + balance + " VToken"
+            walletBalanceLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + balance + " vtoken"
         }
     }
     var vtoken: ViolasTokenModel? {
@@ -407,4 +412,22 @@ class ViolasTransferView: UIView {
         }
     }
     var sendViolasTokenState: Bool?
+}
+extension ViolasTransferView: UITextFieldDelegate {
+   func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+       guard let content = textField.text else {
+           return true
+       }
+       let textLength = content.count + string.count - range.length
+       if content.contains(".") {
+           let firstContent = content.split(separator: ".").first?.description ?? "0"
+           if (textLength - firstContent.count) < 6 {
+               return true
+           } else {
+               return false
+           }
+       } else {
+           return textLength <= ApplyTokenAmountLengthLimit
+       }
+   }
 }

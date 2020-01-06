@@ -181,10 +181,10 @@ open class LBXScanViewController: UIViewController, UIImagePickerControllerDeleg
         
         if(image != nil)
         {
-            let arrayResult = LBXScanWrapper.recognizeQRImage(image: image!)
-            if arrayResult.count > 0
+            let arrayResult = try? LBXScanWrapper.recognizeQRImage(image: image!)
+            if arrayResult!.count > 0
             {
-                handleCodeResult(arrayResult: arrayResult)
+                handleCodeResult(arrayResult: arrayResult!)
                 return
             }
         }

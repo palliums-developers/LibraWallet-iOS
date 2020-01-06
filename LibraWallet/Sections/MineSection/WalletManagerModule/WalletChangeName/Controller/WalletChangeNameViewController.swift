@@ -88,12 +88,13 @@ class WalletChangeNameViewController: BaseViewController {
                                 position: .center)
             return
         }
-        self.view.makeToast(localLanguage(keyString: "wallet_manager_change_wallet_name_success_title"), duration: ToastManager.shared.duration, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { [weak self](bool) in
-            if let action = self?.actionClosure {
-                action(.update, tempAccount!)
-            }
+        self.view.makeToast(localLanguage(keyString: "wallet_manager_change_wallet_name_success_title"), duration: toastDuration, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { [weak self](bool) in
+            
             self?.navigationController?.popViewController(animated: true)
         })
+        if let action = self.actionClosure {
+            action(.update, tempAccount!)
+        }
     }
 }
 extension WalletChangeNameViewController: WalletChangeNameViewDelegate {

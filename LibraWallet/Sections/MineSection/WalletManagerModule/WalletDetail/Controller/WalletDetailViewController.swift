@@ -69,6 +69,7 @@ extension WalletDetailViewController: WalletDetailTableViewManagerDelegate {
                 if action == .update {
                     //更新管理页面
                     self.loadLocalData(model: wallet)
+                    self.walletModel = wallet
                     self.detailView.tableView.reloadData()
                     //更新钱包列表页面
                     if let action = self.actionClosure {

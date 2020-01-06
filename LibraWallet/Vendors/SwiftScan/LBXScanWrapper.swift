@@ -9,50 +9,30 @@
 import UIKit
 import AVFoundation
 
-public struct  LBXScanResult {
-    
-    //码内容
-    public var strScanned:String? = ""
-    //扫描图像
-    public var imgScanned:UIImage?
-    //码的类型
-    public var strBarCodeType:String? = ""
-    
-    //码在图像中的位置
-    public var arrayCorner:[AnyObject]?
-    
-    public init(str:String?,img:UIImage?,barCodeType:String?,corner:[AnyObject]?)
-    {
-        self.strScanned = str
-        self.imgScanned = img
-        self.strBarCodeType = barCodeType
-        self.arrayCorner = corner
-    }
+public struct LBXScanResult {
+    /// 码内容
+    public var strScanned: String? = ""
+    /// 扫描图像
+    public var imgScanned: UIImage?
+    /// 码的类型
+    public var strBarCodeType: String? = ""
+    /// 码在图像中的位置
+    public var arrayCorner: [AnyObject]?
 }
 
+open class LBXScanWrapper: NSObject {
 
-
-open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
-    
-    let device = AVCaptureDevice.default(for: AVMediaType.video)
-    var input:AVCaptureDeviceInput?
-    var output:AVCaptureMetadataOutput
-    
-    let session = AVCaptureSession()
-    var previewLayer:AVCaptureVideoPreviewLayer?
-    var stillImageOutput:AVCaptureStillImageOutput?
-    
     //存储返回结果
-    var arrayResult:[LBXScanResult] = [];
+    var arrayResult: [LBXScanResult] = [];
     
     //扫码结果返回block
-    var successBlock:([LBXScanResult]) -> Void
+    var successBlock: ([LBXScanResult]) -> Void
     
     //是否需要拍照
-    var isNeedCaptureImage:Bool
+    var isNeedCaptureImage: Bool
     
     //当前扫码结果是否处理
-    var isNeedScanResult:Bool = true
+    var isNeedScanResult: Bool = true
     
     /**
      初始化设备
@@ -63,112 +43,99 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
      - parameter success:      返回识别信息
      - returns:
      */
-    init( videoPreView:UIView,objType:[AVMetadataObject.ObjectType] = [(AVMetadataObject.ObjectType.qr as NSString) as AVMetadataObject.ObjectType],isCaptureImg:Bool,cropRect:CGRect=CGRect.zero,success:@escaping ( ([LBXScanResult]) -> Void) )
-    {
-        do{
-            input = try AVCaptureDeviceInput(device: device!)
-        }
-        catch let error as NSError {
-            print("AVCaptureDeviceInput(): \(error)")
-        }
-        
+    init(videoPreView: UIView, objType: [AVMetadataObject.ObjectType], isCaptureImg: Bool, cropRect: CGRect = CGRect.zero, success: @escaping (([LBXScanResult]) -> Void)) {
         successBlock = success
-        
-        // Output
-        output = AVCaptureMetadataOutput()
-        
         isNeedCaptureImage = isCaptureImg
-        
-        stillImageOutput = AVCaptureStillImageOutput();
-        
+
         super.init()
         
-        if device == nil || input == nil {
+        guard let device = AVCaptureDevice.default(for: AVMediaType.video) else {
+            print("初始化设备失败")
             return
         }
-        
-        if session.canAddInput(input!) {
-            session.addInput(input!)
+        do {
+            let input = try AVCaptureDeviceInput(device: device)
+            if session.canAddInput(input) {
+                session.addInput(input)
+            }
+            if (device.isFocusPointOfInterestSupported && device.isFocusModeSupported(AVCaptureDevice.FocusMode.continuousAutoFocus)) {
+                do {
+                    try input.device.lockForConfiguration()
+                    
+                    input.device.focusMode = AVCaptureDevice.FocusMode.continuousAutoFocus
+                    
+                    input.device.unlockForConfiguration()
+                }
+                catch {
+                    print("device.lockForConfiguration(): \(error)")
+                }
+            }
+        } catch {
+            print("AVCaptureDeviceInput(): \(error)")
+            return
         }
         
         if session.canAddOutput(output) {
             session.addOutput(output)
         }
         
-        if session.canAddOutput(stillImageOutput!) {
-            session.addOutput(stillImageOutput!)
+        if session.canAddOutput(stillImageOutput) {
+            session.addOutput(stillImageOutput)
         }
         
-        let outputSettings:Dictionary = [AVVideoCodecJPEG:AVVideoCodecKey]
-        stillImageOutput?.outputSettings = outputSettings
-        
-        session.sessionPreset = AVCaptureSession.Preset.high
-        
-        //参数设置
-        output.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
-        
+        // 识别类型
+        #warning("objType数量未统计")
         output.metadataObjectTypes = objType
-        
-        //        output.metadataObjectTypes = [AVMetadataObjectTypeQRCode,AVMetadataObjectTypeEAN13Code, AVMetadataObjectTypeEAN8Code, AVMetadataObjectTypeCode128Code]
-        
-        if !cropRect.equalTo(CGRect.zero)
-        {
+        // 设置识别区域
+        if !cropRect.equalTo(CGRect.zero) {
             //启动相机后，直接修改该参数无效
             output.rectOfInterest = cropRect
         }
         
-        previewLayer = AVCaptureVideoPreviewLayer(session: session)
-        previewLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
-        
         var frame:CGRect = videoPreView.frame
         frame.origin = CGPoint.zero
-        previewLayer?.frame = frame
+        previewLayer.frame = frame
         
-        videoPreView.layer .insertSublayer(previewLayer!, at: 0)
-        
-        if ( device!.isFocusPointOfInterestSupported && device!.isFocusModeSupported(AVCaptureDevice.FocusMode.continuousAutoFocus) )
-        {
-            do
-            {
-                try input?.device.lockForConfiguration()
-                
-                input?.device.focusMode = AVCaptureDevice.FocusMode.continuousAutoFocus
-                
-                input?.device.unlockForConfiguration()
-            }
-            catch let error as NSError {
-                print("device.lockForConfiguration(): \(error)")
-                
-            }
+        videoPreView.layer.insertSublayer(previewLayer, at: 0)
+    }
+    lazy var output: AVCaptureMetadataOutput = {
+        let metadataOutput = AVCaptureMetadataOutput()
+        // 设置数据处理方法，设置数据处理线程
+        metadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
+        return metadataOutput
+    }()
+    lazy var stillImageOutput: AVCapturePhotoOutput = {
+        return AVCapturePhotoOutput()
+    }()
+    lazy var previewLayer: AVCaptureVideoPreviewLayer = {
+        let previewLayer = AVCaptureVideoPreviewLayer(session: session)
+        previewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
+        return previewLayer
+    }()
+    lazy var session: AVCaptureSession = {
+        let captureSession = AVCaptureSession()
+        captureSession.sessionPreset = AVCaptureSession.Preset.high
+        return captureSession
+    }()
+
+    func start() {
+        guard session.isRunning == false else {
+            return
         }
+        isNeedScanResult = true
+        session.startRunning()
+    }
+    func stop() {
+        guard session.isRunning == true else {
+            return
+        }
+        isNeedScanResult = false
+        session.stopRunning()
     }
     
-    public func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
-        captureOutput(output, didOutputMetadataObjects: metadataObjects, from: connection)
-    }
-    
-    func start()
-    {
-        if !session.isRunning
-        {
-            isNeedScanResult = true
-            session.startRunning()
-        }
-    }
-    func stop()
-    {
-        if session.isRunning
-        {
-            isNeedScanResult = false
-            session.stopRunning()
-        }
-    }
-    
-    open func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [Any]!, from connection: AVCaptureConnection!) {
+    open func captureOutput(_ captureOutput: AVCaptureOutput, didOutputMetadataObjects metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection!) {
         
-        if !isNeedScanResult
-        {
-            //上一帧处理中
+        guard isNeedScanResult == true else {
             return
         }
         
@@ -177,10 +144,8 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
         arrayResult.removeAll()
         
         //识别扫码类型
-        for current:Any in metadataObjects
-        {
-            if (current as AnyObject).isKind(of: AVMetadataMachineReadableCodeObject.self)
-            {
+        for current in metadataObjects {
+            if current.isKind(of: AVMetadataMachineReadableCodeObject.self) {
                 let code = current as! AVMetadataMachineReadableCodeObject
                 
                 //码类型
@@ -192,82 +157,98 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
                 
                 //4个字典，分别 左上角-右上角-右下角-左下角的 坐标百分百，可以使用这个比例抠出码的图像
                 // let arrayRatio = code.corners
-                
-                arrayResult.append(LBXScanResult(str: codeContent, img: UIImage(), barCodeType: codeType.rawValue, corner: code.corners as [AnyObject]?))
+                let result = LBXScanResult.init(strScanned: codeContent, imgScanned: UIImage(), strBarCodeType: codeType.rawValue, arrayCorner: code.corners as [AnyObject]?)
+                arrayResult.append(result)
             }
         }
         
-        if arrayResult.count > 0
-        {
-            if isNeedCaptureImage
-            {
+        if arrayResult.count > 0 {
+            if !isNeedCaptureImage {
                 captureImage()
-            }
-            else
-            {
+            } else {
                 stop()
                 successBlock(arrayResult)
             }
             
-        }
-        else
-        {
+        } else {
             isNeedScanResult = true
         }
         
     }
     
     //MARK: ----拍照
-    open func captureImage()
-    {
-        let stillImageConnection:AVCaptureConnection? = connectionWithMediaType(mediaType: AVMediaType.video as AVMediaType, connections: (stillImageOutput?.connections)! as [AnyObject])
+    open func captureImage() {
+//        let stillImageConnection:AVCaptureConnection? = connectionWithMediaType(mediaType: AVMediaType.video as AVMediaType, connections: (stillImageOutput?.connections)! as [AnyObject])
         
         
-        stillImageOutput?.captureStillImageAsynchronously(from: stillImageConnection!, completionHandler: { (imageDataSampleBuffer, error) -> Void in
-            
-            self.stop()
-            if imageDataSampleBuffer != nil
-            {
-                let imageData: Data = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(imageDataSampleBuffer!)!
-                let scanImg:UIImage? = UIImage(data: imageData)
-                
-                
-                for idx in 0...self.arrayResult.count-1
-                {
-                    self.arrayResult[idx].imgScanned = scanImg
-                }
-            }
-            
-            self.successBlock(self.arrayResult)
-            
-        })
+//        stillImageOutput?.captureStillImageAsynchronously(from: stillImageConnection!, completionHandler: { (imageDataSampleBuffer, error) -> Void in
+//
+//            self.stop()
+//            if imageDataSampleBuffer != nil {
+//                let imageData: Data = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(imageDataSampleBuffer!)!
+//                let scanImg:UIImage? = UIImage(data: imageData)
+//
+//                for idx in 0...self.arrayResult.count-1 {
+//                    self.arrayResult[idx].imgScanned = scanImg
+//                }
+//            }
+//
+//            self.successBlock(self.arrayResult)
+//
+//        })
+        let settings = AVCapturePhotoSettings()
+        let previewPixelType = settings.availablePreviewPhotoPixelFormatTypes.first!
+        let previewFormat = [
+            kCVPixelBufferPixelFormatTypeKey as String: previewPixelType,
+            kCVPixelBufferWidthKey as String: 160,
+            kCVPixelBufferHeightKey as String: 160
+        ]
+        settings.previewPhotoFormat = previewFormat
+        stillImageOutput.capturePhoto(with: settings, delegate: self)
     }
     
-    open func connectionWithMediaType(mediaType:AVMediaType, connections:[AnyObject]) -> AVCaptureConnection?
-    {
-        for connection:AnyObject in connections
-        {
-            let connectionTmp:AVCaptureConnection = connection as! AVCaptureConnection
-            
-            for port:Any in connectionTmp.inputPorts
-            {
-                if (port as AnyObject).isKind(of: AVCaptureInput.Port.self)
-                {
-                    let portTmp:AVCaptureInput.Port = port as! AVCaptureInput.Port
-                    if portTmp.mediaType == mediaType
-                    {
-                        return connectionTmp
-                    }
-                }
-            }
-        }
-        return nil
-    }
-    
+//    open func connectionWithMediaType(mediaType:AVMediaType, connections:[AnyObject]) -> AVCaptureConnection? {
+//        for connection:AnyObject in connections {
+//            let connectionTmp:AVCaptureConnection = connection as! AVCaptureConnection
+//
+//            for port:Any in connectionTmp.inputPorts {
+//                if (port as AnyObject).isKind(of: AVCaptureInput.Port.self) {
+//                    let portTmp:AVCaptureInput.Port = port as! AVCaptureInput.Port
+//                    if portTmp.mediaType == mediaType {
+//                        return connectionTmp
+//                    }
+//                }
+//            }
+//        }
+//        return nil
+//    }
+//    public func photoOutput(_ captureOutput: AVCapturePhotoOutput, didFinishProcessingPhoto photoSampleBuffer: CMSampleBuffer?, previewPhoto previewPhotoSampleBuffer: CMSampleBuffer?, resolvedSettings: AVCaptureResolvedPhotoSettings, bracketSettings: AVCaptureBracketedStillImageSettings?, error: Error?) {
+//
+//        if let error = error {
+//            print("error occure : \(error.localizedDescription)")
+//        }
+//
+//        if  let sampleBuffer = photoSampleBuffer,
+//            let previewBuffer = previewPhotoSampleBuffer,
+//            let dataImage =  AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer:  sampleBuffer, previewPhotoSampleBuffer: previewBuffer) {
+//                print(UIImage(data: dataImage)?.size as Any)
+////let dataImage =  AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer:  sampleBuffer, previewPhotoSampleBuffer: previewBuffer)
+//            let dataProvider = CGDataProvider(data: dataImage as CFData)
+//            let cgImageRef: CGImage! = CGImage(jpegDataProviderSource: dataProvider!, decode: nil, shouldInterpolate: true, intent: .defaultIntent)
+//            let image = UIImage(cgImage: cgImageRef, scale: 1.0, orientation: UIImage.Orientation.right)
+//
+////            self.capturedImage.image = image
+//            for idx in 0...self.arrayResult.count-1 {
+//                self.arrayResult[idx].imgScanned = image
+//            }
+//            self.successBlock(self.arrayResult)
+//        } else {
+//            print("some error here")
+//        }
+//    }
     
     //MARK:切换识别区域
-    open func changeScanRect(cropRect:CGRect)
-    {
+    open func changeScanRect(cropRect:CGRect) {
         //待测试，不知道是否有效
         stop()
         output.rectOfInterest = cropRect
@@ -275,84 +256,65 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
     }
     
     //MARK: 切换识别码的类型
-    open func changeScanType(objType:[AVMetadataObject.ObjectType])
-    {
+    open func changeScanType(objType:[AVMetadataObject.ObjectType]) {
         //待测试中途修改是否有效
         output.metadataObjectTypes = objType
     }
     
-    open func isGetFlash()->Bool
-    {
-        if (device != nil &&  device!.hasFlash && device!.hasTorch)
-        {
-            return true
+    open func isFlashValid()->Bool {
+        guard let device = AVCaptureDevice.default(for: AVMediaType.video) else {
+            return false
         }
-        return false
+        guard device.hasFlash == true else {
+            return false
+        }
+        guard device.hasTorch == true else {
+            return false
+        }
+        return true
     }
-    
     /**
      打开或关闭闪关灯
      - parameter torch: true：打开闪关灯 false:关闭闪光灯
      */
-    open func setTorch(torch:Bool)
-    {
-        if isGetFlash()
-        {
-            do
-            {
-                try input?.device.lockForConfiguration()
-                
-                input?.device.torchMode = torch ? AVCaptureDevice.TorchMode.on : AVCaptureDevice.TorchMode.off
-                
-                input?.device.unlockForConfiguration()
-            }
-            catch let error as NSError {
-                print("device.lockForConfiguration(): \(error)")
-                
-            }
+    open func setTorch(torch:Bool) {
+        guard isFlashValid() == true else {
+            return
         }
-        
+        guard let device = AVCaptureDevice.default(for: AVMediaType.video) else {
+            return
+        }
+        do {
+            let input = try AVCaptureDeviceInput(device: device)
+            try input.device.lockForConfiguration()
+            input.device.torchMode = torch ? AVCaptureDevice.TorchMode.on : AVCaptureDevice.TorchMode.off
+            input.device.unlockForConfiguration()
+        } catch {
+            print("device.lockForConfiguration(): \(error)")
+        }
     }
-    
-    
     /**
      ------闪光灯打开或关闭
      */
-    open func changeTorch()
-    {
-        if isGetFlash()
-        {
-            do
-            {
-                try input?.device.lockForConfiguration()
-                
-                var torch = false
-                
-                if input?.device.torchMode == AVCaptureDevice.TorchMode.on
-                {
-                    torch = false
-                }
-                else if input?.device.torchMode == AVCaptureDevice.TorchMode.off
-                {
-                    torch = true
-                }
-                
-                input?.device.torchMode = torch ? AVCaptureDevice.TorchMode.on : AVCaptureDevice.TorchMode.off
-                
-                input?.device.unlockForConfiguration()
-            }
-            catch let error as NSError {
-                print("device.lockForConfiguration(): \(error)")
-                
-            }
+    open func changeTorch() {
+        guard isFlashValid() == true else {
+            return
+        }
+        guard let device = AVCaptureDevice.default(for: AVMediaType.video) else {
+            return
+        }
+        do {
+            let input = try AVCaptureDeviceInput(device: device)
+            try input.device.lockForConfiguration()
+            input.device.torchMode = input.device.torchMode == .on ? AVCaptureDevice.TorchMode.off : AVCaptureDevice.TorchMode.on
+            input.device.unlockForConfiguration()
+        } catch {
+            print("device.lockForConfiguration(): \(error)")
         }
     }
-    
     //MARK: ------获取系统默认支持的码的类型
-    static func defaultMetaDataObjectTypes() ->[AVMetadataObject.ObjectType]
-    {
-        var types =
-            [AVMetadataObject.ObjectType.qr,
+    static func defaultMetaDataObjectTypes() ->[AVMetadataObject.ObjectType] {
+        var types = [AVMetadataObject.ObjectType.qr,
              AVMetadataObject.ObjectType.upce,
              AVMetadataObject.ObjectType.code39,
              AVMetadataObject.ObjectType.code39Mod43,
@@ -363,25 +325,12 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
              AVMetadataObject.ObjectType.pdf417,
              AVMetadataObject.ObjectType.aztec
         ]
-        //if #available(iOS 8.0, *)
         
         types.append(AVMetadataObject.ObjectType.interleaved2of5)
         types.append(AVMetadataObject.ObjectType.itf14)
         types.append(AVMetadataObject.ObjectType.dataMatrix)
-        return types as [AVMetadataObject.ObjectType]
+        return types
     }
-    
-    
-    static func isSysIos8Later()->Bool
-    {
-        //        return floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_8_0
-        
-        if #available(iOS 8, *) {
-            return true;
-        }
-        return false
-    }
-    
     /**
      识别二维码码图像
      
@@ -389,51 +338,33 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
      
      - returns: 返回识别结果
      */
-    static public func recognizeQRImage(image:UIImage) ->[LBXScanResult]
-    {
-        var returnResult:[LBXScanResult]=[]
+    static public func recognizeQRImage(image:UIImage) throws -> [LBXScanResult] {
+        var returnResult: [LBXScanResult] = []
         
-        if LBXScanWrapper.isSysIos8Later()
-        {
-            //if #available(iOS 8.0, *)
+        if let detector = CIDetector.init(ofType: CIDetectorTypeQRCode, context: nil, options: [CIDetectorAccuracy:CIDetectorAccuracyHigh]) {
+            let img = CIImage.init(cgImage: (image.cgImage)!)
             
-            let detector:CIDetector = CIDetector(ofType: CIDetectorTypeQRCode, context: nil, options: [CIDetectorAccuracy:CIDetectorAccuracyHigh])!
-            
-            let img = CIImage(cgImage: (image.cgImage)!)
-            
-            let features:[CIFeature]? = detector.features(in: img, options: [CIDetectorAccuracy:CIDetectorAccuracyHigh])
-            
-            if( features != nil && (features?.count)! > 0)
-            {
-                let feature = features![0]
-                
-                if feature.isKind(of: CIQRCodeFeature.self)
-                {
-                    let featureTmp:CIQRCodeFeature = feature as! CIQRCodeFeature
-                    
-                    let scanResult = featureTmp.messageString
-                    
-                    
-                    let result = LBXScanResult(str: scanResult, img: image, barCodeType: AVMetadataObject.ObjectType.qr.rawValue,corner: nil)
-                    
-                    returnResult.append(result)
-                }
+            let features = detector.features(in: img, options: [CIDetectorAccuracy: CIDetectorAccuracyHigh])
+            guard features.isEmpty == false else {
+                throw LBXScanError.error("二维码未识别")
             }
-            
+            if let feature = features[0] as? CIQRCodeFeature {
+                                
+                let result = LBXScanResult.init(strScanned: feature.messageString, imgScanned: image, strBarCodeType: AVMetadataObject.ObjectType.qr.rawValue, arrayCorner: nil)
+                returnResult.append(result)
+            } else {
+                throw LBXScanError.error("获取识别结果失败")
+            }
+        } else {
+            throw LBXScanError.error("获取识别器失败")
         }
         
         return returnResult
     }
-    
-    
     //MARK: -- - 生成二维码，背景色及二维码颜色设置
-    static public func createCode( codeType:String, codeString:String, size:CGSize,qrColor:UIColor,bkColor:UIColor )->UIImage?
-    {
+    static public func createCode( codeType:String, codeString:String, size:CGSize,qrColor:UIColor,bkColor:UIColor ) -> UIImage? {
         //if #available(iOS 8.0, *)
-        
         let stringData = codeString.data(using: String.Encoding.utf8)
-        
-        
         //系统自带能生成的码
         //        CIAztecCodeGenerator
         //        CICode128BarcodeGenerator
@@ -441,21 +372,15 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
         //        CIQRCodeGenerator
         let qrFilter = CIFilter(name: codeType)
         
-        
         qrFilter?.setValue(stringData, forKey: "inputMessage")
         
         qrFilter?.setValue("H", forKey: "inputCorrectionLevel")
-        
-        
         //上色
         let colorFilter = CIFilter(name: "CIFalseColor", parameters: ["inputImage":qrFilter!.outputImage!,"inputColor0":CIColor(cgColor: qrColor.cgColor),"inputColor1":CIColor(cgColor: bkColor.cgColor)])
         
-        
         let qrImage = colorFilter!.outputImage!;
-        
         //绘制
         let cgImage = CIContext().createCGImage(qrImage, from: qrImage.extent)!
-        
         
         UIGraphicsBeginImageContext(size);
         let context = UIGraphicsGetCurrentContext()!;
@@ -469,11 +394,8 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
         
     }
     
-    static public func createCode128(  codeString:String, size:CGSize,qrColor:UIColor,bkColor:UIColor )->UIImage?
-    {
+    static public func createCode128(  codeString:String, size:CGSize,qrColor:UIColor,bkColor:UIColor )->UIImage? {
         let stringData = codeString.data(using: String.Encoding.utf8)
-        
-        
         //系统自带能生成的码
         //        CIAztecCodeGenerator 二维码
         //        CICode128BarcodeGenerator 条形码
@@ -482,8 +404,6 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
         let qrFilter = CIFilter(name: "CICode128BarcodeGenerator")
         qrFilter?.setDefaults()
         qrFilter?.setValue(stringData, forKey: "inputMessage")
-        
-        
         
         let outputImage:CIImage? = qrFilter?.outputImage
         let context = CIContext()
@@ -498,50 +418,38 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
         
         return resized;
     }
-    
-    
     //MARK:根据扫描结果，获取图像中得二维码区域图像（如果相机拍摄角度故意很倾斜，获取的图像效果很差）
-    static func getConcreteCodeImage(srcCodeImage:UIImage,codeResult:LBXScanResult)->UIImage?
-    {
+    static func getConcreteCodeImage(srcCodeImage:UIImage,codeResult:LBXScanResult)->UIImage? {
         let rect:CGRect = getConcreteCodeRectFromImage(srcCodeImage: srcCodeImage, codeResult: codeResult)
         
-        if rect.isEmpty
-        {
+        if rect.isEmpty {
             return nil
         }
-        
         let img = imageByCroppingWithStyle(srcImg: srcCodeImage, rect: rect)
         
-        if img != nil
-        {
+        if img != nil {
             let imgRotation = imageRotation(image: img!, orientation: UIImage.Orientation.right)
             return imgRotation
         }
         return nil
     }
     //根据二维码的区域截取二维码区域图像
-    static public func getConcreteCodeImage(srcCodeImage:UIImage,rect:CGRect)->UIImage?
-    {
-        if rect.isEmpty
-        {
+    static public func getConcreteCodeImage(srcCodeImage:UIImage,rect:CGRect) -> UIImage? {
+        if rect.isEmpty {
             return nil
         }
         
         let img = imageByCroppingWithStyle(srcImg: srcCodeImage, rect: rect)
         
-        if img != nil
-        {
+        if img != nil {
             let imgRotation = imageRotation(image: img!, orientation: UIImage.Orientation.right)
             return imgRotation
         }
         return nil
     }
-    
     //获取二维码的图像区域
-    static public func getConcreteCodeRectFromImage(srcCodeImage:UIImage,codeResult:LBXScanResult)->CGRect
-    {
-        if (codeResult.arrayCorner == nil || (codeResult.arrayCorner?.count)! < 4  )
-        {
+    static public func getConcreteCodeRectFromImage(srcCodeImage:UIImage,codeResult:LBXScanResult)->CGRect {
+        if (codeResult.arrayCorner == nil || (codeResult.arrayCorner?.count)! < 4){
             return CGRect.zero
         }
         
@@ -578,20 +486,14 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
         let rect = CGRect(x: xMinLeft * imgH, y: yMinTop*imgW, width: (xMaxRight-xMinLeft)*imgH, height: (yMaxBottom-yMinTop)*imgW)
         return rect
     }
-    
     //MARK: ----图像处理
     
-    /**
-
-    @brief  图像中间加logo图片
-    @param srcImg    原图像
-    @param LogoImage logo图像
-    @param logoSize  logo图像尺寸
-    @return 加Logo的图像
-    */
-    static public func addImageLogo(srcImg:UIImage,logoImg:UIImage,logoSize:CGSize )->UIImage
-
-    {
+    /// 图像中间加logo图片
+    /// - Parameters:
+    ///   - srcImg: 原图像
+    ///   - logoImg: logo图像
+    ///   - logoSize: logo图像尺寸
+    static public func addImageLogo(srcImg:UIImage,logoImg:UIImage,logoSize:CGSize ) -> UIImage {
         UIGraphicsBeginImageContext(srcImg.size);
         srcImg.draw(in: CGRect(x: 0, y: 0, width: srcImg.size.width, height: srcImg.size.height))
         let rect = CGRect(x: srcImg.size.width/2 - logoSize.width/2, y: srcImg.size.height/2-logoSize.height/2, width:logoSize.width, height: logoSize.height);
@@ -600,10 +502,8 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
         UIGraphicsEndImageContext();
         return resultingImage!;
     }
-    
     //图像缩放
-    static func resizeImage(image:UIImage,quality:CGInterpolationQuality,rate:CGFloat)->UIImage?
-    {
+    static func resizeImage(image:UIImage,quality:CGInterpolationQuality,rate:CGFloat) -> UIImage? {
         var resized:UIImage?;
         let width    = image.size.width * rate;
         let height   = image.size.height * rate;
@@ -618,11 +518,8 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
         
         return resized;
     }
-    
-    
     //图像裁剪
-    static func imageByCroppingWithStyle(srcImg:UIImage,rect:CGRect)->UIImage?
-    {
+    static func imageByCroppingWithStyle(srcImg:UIImage,rect:CGRect) -> UIImage? {
         let imageRef = srcImg.cgImage
         let imagePartRef = imageRef!.cropping(to: rect)
         let cropImage = UIImage(cgImage: imagePartRef!)
@@ -630,8 +527,7 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
         return cropImage
     }
     //图像旋转
-    static func imageRotation(image:UIImage,orientation:UIImage.Orientation)->UIImage
-    {
+    static func imageRotation(image:UIImage,orientation:UIImage.Orientation) -> UIImage {
         var rotate:Double = 0.0;
         var rect:CGRect;
         var translateX:CGFloat = 0.0;
@@ -685,9 +581,34 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
         
         return newPic!;
     }
-    
-    deinit
-    {
+    deinit {
         //        print("LBXScanWrapper deinit")
+    }
+}
+extension LBXScanWrapper: AVCaptureMetadataOutputObjectsDelegate {
+    public func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
+        captureOutput(output, didOutputMetadataObjects: metadataObjects, from: connection)
+    }
+}
+extension LBXScanWrapper: AVCapturePhotoCaptureDelegate {
+    public func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+        if let error = error {
+            print("error occure : \(error.localizedDescription)")
+        }
+        if let dataImage = photo.fileDataRepresentation() {
+            print(UIImage(data: dataImage)?.size as Any)
+        //let dataImage =  AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer:  sampleBuffer, previewPhotoSampleBuffer: previewBuffer)
+            let dataProvider = CGDataProvider(data: dataImage as CFData)
+            let cgImageRef: CGImage! = CGImage(jpegDataProviderSource: dataProvider!, decode: nil, shouldInterpolate: true, intent: .defaultIntent)
+            let image = UIImage(cgImage: cgImageRef, scale: 1.0, orientation: UIImage.Orientation.right)
+
+//            self.capturedImage.image = image
+            for idx in 0...self.arrayResult.count-1 {
+                self.arrayResult[idx].imgScanned = image
+            }
+            self.successBlock(self.arrayResult)
+        } else {
+            print("some error here")
+        }
     }
 }

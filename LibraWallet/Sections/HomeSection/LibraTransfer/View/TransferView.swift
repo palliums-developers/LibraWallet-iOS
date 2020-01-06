@@ -194,7 +194,7 @@ class TransferView: UIView {
         textField.textColor = UIColor.init(hex: "333333")
         textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_transfer_amount_textfield_placeholder"),
                                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C4C3C7"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16)])
-        //        textField.delegate = self
+        textField.delegate = self
         textField.keyboardType = .decimalPad
         textField.tintColor = DefaultGreenColor
         textField.layer.borderColor = UIColor.init(hex: "D8D7DA").cgColor
@@ -327,14 +327,8 @@ class TransferView: UIView {
             // 常用地址
             self.delegate?.chooseAddress()
         } else {
-            // 拆包金额
-            guard let amountString = self.amountTextField.text else {
-                self.makeToast(LibraWalletError.WalletTransfer(reason: .amountInvalid).localizedDescription,
-                               position: .center)
-                return
-            }
             // 金额不为空检查
-            guard amountString.isEmpty == false else {
+            guard let amountString = self.amountTextField.text, amountString.isEmpty == false else {
                 self.makeToast(LibraWalletError.WalletTransfer(reason: .amountEmpty).localizedDescription,
                                position: .center)
                 return
@@ -346,7 +340,12 @@ class TransferView: UIView {
                 return
             }
             // 转换数字
-            let amount = (amountString as NSString).doubleValue
+            let amount = NSDecimalNumber.init(string: amountString).doubleValue
+            guard amount != 0 else {
+                self.makeToast(LibraWalletError.WalletTransfer(reason: .libraAmountLeast).localizedDescription,
+                               position: .center)
+                return
+            }
             // 手续费转换
             let feeString = self.transferFeeLabel.text
             let fee = Double(feeString!.replacingOccurrences(of: " Libra", with: ""))!
@@ -357,17 +356,11 @@ class TransferView: UIView {
                               position: .center)
                return
             }
-            // 地址拆包检查
-            guard let address = self.addressTextField.text else {
-               self.makeToast(LibraWalletError.WalletTransfer(reason: .addressInvalid).localizedDescription,
+            // 地址是否为空
+            guard let address = self.addressTextField.text, address.isEmpty == false else {
+               self.makeToast(LibraWalletError.WalletTransfer(reason: .addressEmpty).localizedDescription,
                               position: .center)
                return
-            }
-            // 地址是否为空
-            guard address.isEmpty == false else {
-                self.makeToast(LibraWalletError.WalletTransfer(reason: .addressEmpty).localizedDescription,
-                               position: .center)
-                return
             }
             // 是否有效地址
             guard LibraManager.isValidLibraAddress(address: address) else {
@@ -417,4 +410,22 @@ class TransferView: UIView {
             walletBalanceLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + balance + " Libra"
         }
     }
+}
+extension TransferView: UITextFieldDelegate {
+   func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+       guard let content = textField.text else {
+           return true
+       }
+       let textLength = content.count + string.count - range.length
+       if content.contains(".") {
+           let firstContent = content.split(separator: ".").first?.description ?? "0"
+           if (textLength - firstContent.count) < 6 {
+               return true
+           } else {
+               return false
+           }
+       } else {
+           return textLength <= ApplyTokenAmountLengthLimit
+       }
+   }
 }

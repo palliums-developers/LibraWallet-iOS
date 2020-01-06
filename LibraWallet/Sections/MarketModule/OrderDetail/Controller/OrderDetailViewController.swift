@@ -12,7 +12,7 @@ class OrderDetailViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // 设置标题
-        self.title = localLanguage(keyString: "订单详情")
+        self.title = localLanguage(keyString: "wallet_order_center_detail_navigationbar_title")
         // 加载子View
         self.view.addSubview(self.detailView)
         //设置空数据页面

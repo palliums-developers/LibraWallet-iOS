@@ -41,17 +41,15 @@ wallet_transfer_transaction_fee_least_title = "慢";
 wallet_transfer_transaction_fee_max_title = "快";
 wallet_transfer_confirm_button_title = "确认转账";
 
-
 /************* 交易历史 *******************/
-wallet_transaction_date_title = "日期";
-wallet_transaction_amount_title = "数量";
-wallet_transaction_transfer_title = "转账";
-wallet_transaction_receive_title = "收款";
-wallet_transaction_check_detail_on_chain = "浏览器查询";
-wallet_transactions_receive_title = "收款";
+wallet_transactions_date_title = "日期";
+wallet_transactions_amount_title = "数量";
 wallet_transactions_transfer_title = "转账";
+wallet_transactions_receive_title = "收款";
+wallet_transactions_check_detail_on_chain = "浏览器查询";
 wallet_transactions_publish_title = "开启";
 wallet_transactions_empty_default_title = "暂无交易记录";
+
 
 /************* 已存在身份钱包创建钱包 *******************/
 wallet_add_wallet_btc_title = "创建Bitcoin钱包";
@@ -76,8 +74,6 @@ wallet_manager_import_or_create_wallet_header_title = "创建/导入";
 /************* 钱包详情 *******************/
 wallet_manager_detail_delete_button_title = "删除";
 wallet_manager_detail_export_mnemonic_title = "导出助记词";
-
-
 
 /************* 钱包管理修改名称 *******************/
 wallet_manager_detail_change_wallet_name_title = "更换钱包名";
@@ -152,6 +148,40 @@ wallet_setting_help_center_title = "帮助与反馈";
 /************* 地址页面 *******************/
 wallet_address_manager_empty_data_title = "暂时没有地址";
 
+/************* 稳定币管理 *******************/
+wallet_add_token_registered_title = "（已注册）";
+
+/************* 交易所 *******************/
+wallet_market_mine_commission_title = "当前委托";
+wallet_market_order_center_title = "全部";
+wallet_market_other_commission_title = "他人委托";
+wallet_market_trade_name_title = "市场";
+wallet_market_trade_amount_title = "数量";
+wallet_market_trade_price_title = "价格";
+
+/************* 订单中心 *******************/
+wallet_market_processing_order_title = "未完成";
+wallet_market_done_order_title = "已完成";
+wallet_market_order_price_title = "价格";
+wallet_market_order_amount_title = "数量";
+wallet_market_order_date_title = "时间";
+wallet_market_order_fill_amount_title = "已成交数量";
+wallet_market_order_fee_title = "手续费";
+wallet_market_order_state_cancel_title = "撤销";
+wallet_market_order_state_canceled_title = "已取消";
+wallet_market_order_state_done_title = "已完成";
+
+/************* 订单详情 *******************/
+wallet_market_order_detail_price_title = "价格";
+wallet_market_order_detail_amount_title = "数量";
+wallet_market_order_detail_date_title = "时间";
+wallet_market_order_detail_fill_amount_title = "已成交数量";
+wallet_market_order_detail_fee_title = "手续费";
+wallet_market_order_detail_state_cancel_title = "撤销";
+wallet_market_order_detail_state_canceled_title = "已取消";
+wallet_market_order_detail_state_done_title = "已完成";
+wallet_market_order_detail_state_processing_title = "处理中";
+wallet_market_order_detail_fill_order_title = "成交记录";
 
 /************* 弹出提示 *******************/
 // 转账弹出提示
@@ -214,12 +244,15 @@ wallet_private_and_use_legal_confirm_button_title = "同意";
 wallet_welcome_alert_title = "欢迎来到";
 wallet_welcome_alert_describe = "钱包";
 wallet_welcome_alert_confirm_button_title = "马上进入";
-
 // 删除地址
 wallet_alert_delete_address_title = "提示";
 wallet_alert_delete_address_content = "确定要删除此地址吗";
 wallet_alert_delete_address_cancel_button_title = "取消";
 wallet_alert_delete_address_confirm_button_title = "确定";
+// 交易所支持稳定币页面
+wallet_alert_market_support_token_list_title = "选择";
+wallet_alert_market_support_token_cancel_button_title = "确定";
+
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "安全提醒";
 wallet_alert_backup_warning_detail_title = "您的身份助记词未备份，请务必备份助记词\n助记词可用于恢复身份下钱包资产，防止忘记密码、应用删除、手机丢失等情况导致资产损失";
@@ -231,7 +264,6 @@ wallet_transactions_navigation_title = "交易记录";
 wallet_receive_navigation_title = "收款";
 wallet_wallet_list_navigation_title = "选择钱包体系";
 wallet_manager_navigation_title = "管理";
-
 wallet_setting_navigation_title = "设置";
 wallet_language_navigation_title = "多语言";
 wallet_service_navigation_title = "服务协议";
@@ -247,6 +279,10 @@ wallet_wallet_manager_change_wallet_name_navigationbar_title = "钱包详情";
 wallet_backup_mnemonic_warning_navigationbar_title = "备份提示";
 wallet_backup_mnemonic_show_navigationbar_title = "备份助记词";
 wallet_backup_mnemonic_check_navigationbar_title = "确认助记词";
+wallet_first_in_create_identity_wallet_navigationbar_title = "创建身份";
+wallet_first_in_import_identity_wallet_navigationbar_title = "导入身份";
+wallet_order_center_navigationbar_title = "订单";
+wallet_order_center_detail_navigationbar_title = "订单详情";
 
 /************* App错误 *******************/
 // 请求遇到错误
@@ -328,3 +364,9 @@ wallet_transfer_amount_limit_error = "最少转账金额为";
 wallet_transfer_address_invalid_error = "转账地址无效";
 wallet_transfer_address_empty_error = "转账地址为空";
 wallet_transfer_to_self_error = "向自己转账无效";
+// 扫描二维码
+wallet_scan_result_address_btc_invalid_error = "BTC地址无效";
+wallet_scan_result_address_violas_invalid_error = "Violas地址无效";
+wallet_scan_result_address_libra_invalid_error = "Libra地址无效";
+wallet_scan_result_address_libra_invalid_error = "Violas稳定币名字为空";
+wallet_scan_result_address_contract_invalid_error = "Violas稳定币合约未开启或不支持";

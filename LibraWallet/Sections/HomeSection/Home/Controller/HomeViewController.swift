@@ -226,7 +226,7 @@ extension HomeViewController {
     func showBTCTransferViewController(address: String) {
         let tempAddress = address.replacingOccurrences(of: "bitcoin:", with: "")
         guard BTCManager.isValidBTCAddress(address: tempAddress) else {
-            self.view.makeToast("不是有效的Bitcoin地址", position: .center)
+            self.view.makeToast(LibraWalletError.WalletScan(reason: .btcAddressInvalid).localizedDescription, position: .center)
             return
         }
         let vc = BTCTransferViewController()
@@ -241,7 +241,7 @@ extension HomeViewController {
     func showLibraTransferViewController(address: String) {
         let tempAddress = address.replacingOccurrences(of: "libra:", with: "")
         guard LibraManager.isValidLibraAddress(address: tempAddress) else {
-           self.view.makeToast("不是有效的Libra地址", position: .center)
+            self.view.makeToast(LibraWalletError.WalletScan(reason: .libraAddressInvalid).localizedDescription, position: .center)
            return
         }
         let vc = TransferViewController()
@@ -256,7 +256,7 @@ extension HomeViewController {
     func showViolasTransferViewController(address: String) {
         let tempAddress = address.replacingOccurrences(of: "violas:", with: "")
         guard ViolasManager.isValidViolasAddress(address: tempAddress) else {
-            self.view.makeToast("不是有效的Violas地址", position: .center)
+            self.view.makeToast(LibraWalletError.WalletScan(reason: .violasAddressInvalid).localizedDescription, position: .center)
             return
         }
         let vc = ViolasTransferViewController()
@@ -278,7 +278,7 @@ extension HomeViewController {
         let coinName = addressPrifix?.split(separator: "-")
         guard coinName?.count == 2 else {
             print("token名称为空")
-            self.view.makeToast("Token名称为空", position: .center)
+            self.view.makeToast(LibraWalletError.WalletScan(reason: .violasTokenNameEmpty).localizedDescription, position: .center)
             return
         }
         let contract = self.tableViewManager.dataModel?.filter({ item in
@@ -287,11 +287,11 @@ extension HomeViewController {
         guard (contract?.count ?? 0) > 0 else {
             // 不支持或未开启
             print("不支持或未开启")
-            self.view.makeToast("未开启或不支持", position: .center)
+            self.view.makeToast(LibraWalletError.WalletScan(reason: .violasTokenContractInvalid).localizedDescription, position: .center)
             return
         }
         guard ViolasManager.isValidViolasAddress(address: coinAddress ?? "") else {
-            self.view.makeToast("不是有效的Violas地址", position: .center)
+            self.view.makeToast(LibraWalletError.WalletScan(reason: .violasAddressInvalid).localizedDescription, position: .center)
             return
         }
         let vc = ViolasTransferViewController()

@@ -279,4 +279,3 @@ extension mainRequest:TargetType {
         return ["Content-Type":"application/json"]
     }
 }
-//pagenum=1&pagesize=1

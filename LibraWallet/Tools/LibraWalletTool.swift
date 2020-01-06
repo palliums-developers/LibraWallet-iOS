@@ -198,3 +198,17 @@ func getDecimalNumberAmount(amount: NSDecimalNumber, scale: Int16, unit: Int) ->
     let number = amount.dividing(by: NSDecimalNumber.init(value: unit), withBehavior: numberConfig)
     return number.stringValue
 }
+func getDecimalNumber(amount: NSDecimalNumber, scale: Int16, unit: Int) -> NSDecimalNumber {
+//    NSRoundPlain:四舍五入
+//    NSRoundDown:只舍不入
+//    NSRoundUp：只入不舍
+//    NSRoundBankers: 在四舍五入的基础上加了一个判断：当最后一位为5的时候，只会舍入成偶数。比如：1.25不会返回1.3而是1.2，因为1.3不是偶数。
+    let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
+                                                   scale: scale,
+                                                   raiseOnExactness: false,
+                                                   raiseOnOverflow: false,
+                                                   raiseOnUnderflow: false,
+                                                   raiseOnDivideByZero: false)
+    let number = amount.dividing(by: NSDecimalNumber.init(value: unit), withBehavior: numberConfig)
+    return number
+}

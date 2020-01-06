@@ -91,6 +91,15 @@ class ScanViewController: UIViewController {
         barButtonItem.width = -5
         // 返回按钮设置成功
         self.navigationItem.leftBarButtonItems = [barButtonItem, backView]
+        
+        
+//        // 自定义导航栏的UIBarButtonItem类型的按钮
+//        let tempBackView = UIBarButtonItem(customView: albumButton)
+//        // 重要方法，用来调整自定义返回view距离左边的距离
+//        let rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+//        barButtonItem.width = 5
+//        // 返回按钮设置成功
+//        self.navigationItem.rightBarButtonItems = [rightBarButtonItem, tempBackView]
     }
     @objc func back() {
         self.navigationController?.popViewController(animated: true)
@@ -116,11 +125,11 @@ class ScanViewController: UIViewController {
     private lazy var scanManager: LBXScanWrapper = {
         let cropRect = CGRect.zero
         //指定识别几种码
-        let arrayCodeType = [AVMetadataObject.ObjectType.qr as NSString,
-                             AVMetadataObject.ObjectType.ean13 as NSString,
-                             AVMetadataObject.ObjectType.code128 as NSString] as [AVMetadataObject.ObjectType]
+        let arrayCodeType = [AVMetadataObject.ObjectType.qr,
+                             AVMetadataObject.ObjectType.ean13,
+                             AVMetadataObject.ObjectType.code128]
         
-        let scan = LBXScanWrapper(videoPreView: self.view,objType:arrayCodeType, isCaptureImg: isNeedCodeImage,cropRect:cropRect, success: { [weak self] (arrayResult) -> Void in
+        let scan = LBXScanWrapper(videoPreView: self.detailView, objType:arrayCodeType, isCaptureImg: isNeedCodeImage,cropRect:cropRect, success: { [weak self] (arrayResult) -> Void in
             
             if let strongSelf = self {
                 // 停止扫描动画
@@ -130,6 +139,14 @@ class ScanViewController: UIViewController {
             }
         })
         return scan
+    }()
+    lazy var albumButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setTitle(localLanguage(keyString: "wallet_scan_right_navigationbar_title"), for: UIControl.State.normal)
+        button.setTitleColor(UIColor.white, for: UIControl.State.normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.regular)
+        button.addTarget(self, action: #selector(rechargeHistory), for: .touchUpInside)
+        return button
     }()
     @objc func rechargeHistory() {
         openPhotoAlbum()
@@ -145,17 +162,24 @@ extension ScanViewController: UIImagePickerControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         picker.dismiss(animated: true, completion: nil)
         if let editedImage = info[.editedImage] as? UIImage {
-            let arrayResult = LBXScanWrapper.recognizeQRImage(image: editedImage)
-            if arrayResult.count > 0 {
-                handleCodeResult(arrayResult: arrayResult)
-                return
+            do {
+                let arrayResult = try LBXScanWrapper.recognizeQRImage(image: editedImage)
+                if arrayResult.count > 0 {
+                    handleCodeResult(arrayResult: arrayResult)
+                    return
+                }
+            } catch {
+                print(error.localizedDescription)
             }
-            picker.dismiss(animated: true, completion: nil)
         } else if let originalImage = info[.originalImage] as? UIImage {
-            let arrayResult = LBXScanWrapper.recognizeQRImage(image: originalImage)
-            if arrayResult.count > 0 {
-                handleCodeResult(arrayResult: arrayResult)
-                return
+            do {
+                let arrayResult = try LBXScanWrapper.recognizeQRImage(image: originalImage)
+                if arrayResult.count > 0 {
+                    handleCodeResult(arrayResult: arrayResult)
+                    return
+                }
+            } catch {
+                print(error.localizedDescription)
             }
         }
     }
