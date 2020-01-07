@@ -28,7 +28,7 @@ class MarketMyOrderHeaderView: UITableViewHeaderFooterView {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
-        print("WalletManagerHeaderView销毁了")
+        print("MarketMyOrderHeaderView销毁了")
     }
     //MARK: - 布局
     override func layoutSubviews() {
@@ -78,7 +78,6 @@ class MarketMyOrderHeaderView: UITableViewHeaderFooterView {
         return button
     }()
     lazy var headerSpaceLabel: UILabel = {
-        //#263C4E
         let label = UILabel.init()
         label.backgroundColor = DefaultSpaceColor
         return label

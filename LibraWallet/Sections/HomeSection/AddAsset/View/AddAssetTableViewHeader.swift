@@ -78,7 +78,7 @@ class AddAssetTableViewHeader: UITableViewHeaderFooterView {
     }()
     var model: LibraWalletManager? {
         didSet {
-            nameLabel.text = "VToken"
+            nameLabel.text = "vtoken"
             detailLabel.text = model?.walletType?.description
             let url = URL(string: "")
             iconImageView.kf.setImage(with: url, placeholder: UIImage.init(named: "violas_icon"))

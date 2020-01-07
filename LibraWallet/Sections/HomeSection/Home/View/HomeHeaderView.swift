@@ -357,7 +357,7 @@ class HomeHeaderView: UIView {
                 hideAddTokenButtonState = true
                 break
             case .Violas:
-                assetUnitLabel.text = "VToken"
+                assetUnitLabel.text = "vtoken"
                 assetLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (walletModel?.walletBalance ?? 0)),
                                                          scale: 4,
                                                          unit: 1000000)
@@ -392,7 +392,7 @@ class HomeHeaderView: UIView {
                                                          scale: 4,
                                                          unit: 1000000)
                 self.walletModel?.changeWalletBalance(banlance: violasModel?.balance ?? 0)
-                assetUnitLabel.text = "VToken"
+                assetUnitLabel.text = "vtoken"
             }
         }
     }

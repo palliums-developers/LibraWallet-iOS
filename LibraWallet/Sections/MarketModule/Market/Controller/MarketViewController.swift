@@ -21,6 +21,10 @@ class MarketViewController: UIViewController {
         self.initKVO()
         //设置默认页面（无数据、无网络）
         self.setPlaceholderView()
+        addSocket()
+        // 判断时候是Violas钱包
+//        self.requestData()
+        self.restartLisening = true
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -38,35 +42,25 @@ class MarketViewController: UIViewController {
         self.navigationController?.navigationBar.barStyle = .black
         // 关闭后当前页面可以刷新
         stopRefreshTableView = false
-        addSocket()
         // 判断是否切换钱包
         if self.wallet?.walletRootAddress != LibraWalletManager.shared.walletRootAddress {
             self.detailView.changeHeaderViewDefault(hideLeftModel: true)
-            self.tableViewManager.buyOrders = nil
-            self.tableViewManager.sellOrders = nil
+            self.tableViewManager.buyOrders?.removeAll()
+            self.tableViewManager.sellOrders?.removeAll()
             self.detailView.tableView.reloadData()
         }
         // 更新钱包
         self.wallet = LibraWalletManager.shared
-        // 判断时候是Violas钱包
-        self.requestData()
         // 更新数据
         guard restartLisening == true else {
             return
         }
-//        if let headerView = self.detailView.tableView.headerView(forSection: 0) as? MarketExchangeHeaderView {
-//            // 添加监听
-//           if let payContract = headerView.leftTokenModel?.addr, let exchangeContract = headerView.rightTokenModel?.addr, payContract.isEmpty == false, exchangeContract.isEmpty == false {
-//               print("添加监听")
-//               self.dataModel.getMarketData(address: "b45d3e7e8079eb16cd7111b676f0c32294135e4190261240e3fd7b96fe1b9b89", payContract: payContract, exchangeContract: exchangeContract)
-//               self.dataModel.addDepthsLisening(payContract: payContract, exchangeContract: exchangeContract)
-//           }
-//        }
+        // 判断时候是Violas钱包
+        self.requestData()
     }
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         self.navigationController?.navigationBar.barStyle = .default
-//        closeSocket()
         stopRefreshTableView = true
     }
     deinit {
@@ -74,9 +68,7 @@ class MarketViewController: UIViewController {
     }
     func addSocket() {
         self.dataModel.addSocket()
-    }
-    func closeSocket() {
-        self.dataModel.removeSocket()
+        self.dataModel.addSocketListening()
     }
     func requestData() {
         if (lastState == .Loading) {return}
@@ -105,7 +97,7 @@ class MarketViewController: UIViewController {
     func setPlaceholderView() {
         if let error = errorView as? WalletInvalidInMarketWarningAlert {
             error.emptyImageName = "backup_mnemonic_icon"
-            error.descString = localLanguage(keyString: "当前钱包不支持交易所交易，交易所仅支持Violas钱包交易")
+            error.descString = localLanguage(keyString: "wallet_market_empty_default_describe")
         }
     }
     //网络请求、数据模型
@@ -145,24 +137,24 @@ extension MarketViewController: MarketTableViewManagerDelegate {
     func changeLeftRightTokenModel(leftModel: MarketSupportCoinDataModel, rightModel: MarketSupportCoinDataModel) {
         let headerView = self.detailView.tableView.headerView(forSection: 0) as! MarketExchangeHeaderView
         guard rightModel.enable == true else {
-            let content = (rightModel.name ?? "") + localLanguage(keyString: "未开启、或余额为0,不能调换")
+            let content = (rightModel.name ?? "") + LibraWalletError.WalletMarket(reason: .swpUnpublishTokenError).localizedDescription
             headerView.makeToast(content, position: .center)
             return
         }
         guard isPurnDouble(string: headerView.rightAmountTextField.text ?? "0") == true else {
-            headerView.makeToast(localLanguage(keyString: "请输入正确的付出数量后交换"), position: .center)
+            headerView.makeToast(LibraWalletError.WalletMarket(reason: .exchangeAmountInvalid).localizedDescription, position: .center)
             return
         }
         guard Int64(Double(headerView.rightAmountTextField.text ?? "0")!) < ApplyTokenMaxLimit else {
-            headerView.makeToast(localLanguage(keyString: "您需要兑换的稳定币数量过大，不支持交换，请减少兑换数量后交换"), position: .center)
+            headerView.makeToast(LibraWalletError.WalletMarket(reason: .exchangeAmountMaxLimit).localizedDescription, position: .center)
             return
         }
         guard isPurnDouble(string: headerView.leftAmountTextField.text ?? "0") == true else {
-            headerView.makeToast(localLanguage(keyString: "请输入正确兑换的数量后交换"), position: .center)
+            headerView.makeToast(LibraWalletError.WalletMarket(reason: .payAmountInvalid).localizedDescription, position: .center)
             return
         }
         guard Int64(Double(headerView.leftAmountTextField.text ?? "0")!) < ApplyTokenMaxLimit else {
-            headerView.makeToast(localLanguage(keyString: "您付出的稳定币数量过大，不支持交换，请减少付出数量后交换"), position: .center)
+            headerView.makeToast(LibraWalletError.WalletMarket(reason: .payAmountMaxLimit).localizedDescription, position: .center)
             return
         }
         self.dataModel.removeDepthsLisening(payContract: leftModel.addr ?? "", exchangeContract: rightModel.addr ?? "")
@@ -205,7 +197,7 @@ extension MarketViewController: MarketTableViewManagerDelegate {
                 showRegisterModel = false
             }
             if button.tag == 20 && tempDataModel.isEmpty == true {
-                let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: localLanguage(keyString: "尚未注册任何稳定币") + localLanguage(keyString: ",是否立即注册"), preferredStyle: .alert)
+                let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_market_alert_register_token_title"), message: localLanguage(keyString: "wallet_market_alert_register_token_content"), preferredStyle: .alert)
                 alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_confirm_button_title"), style: .default){ [weak self] clickHandler in
                     let vc = AddAssetViewController()
                     vc.wallet = self?.wallet
@@ -257,7 +249,6 @@ extension MarketViewController: MarketTableViewManagerDelegate {
                         print("添加监听")
                         self.dataModel.getMarketData(address: walletAddress, payContract: payContract, exchangeContract: exchangeContract)
                         self.dataModel.addDepthsLisening(payContract: payContract, exchangeContract: exchangeContract)
-                        self.restartLisening = true
                     }
                 }
             }, data: tempDataModel, onlyRegisterToken: showRegisterModel)
@@ -276,7 +267,7 @@ extension MarketViewController: MarketTableViewManagerDelegate {
             if balance >= Int64(amount * 1000000) {
                 //第二步，余额充足，检查是否将要兑换的币已注册
                 guard receiveToken.enable == true else {
-                    let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: localLanguage(keyString: "您将要兑换的币尚未开启，开启需要消耗一定数量Gas费，是否立即开启并兑换"), preferredStyle: .alert)
+                    let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: LibraWalletError.WalletMarket(reason: .exchangeTokenPublishedInvalid).localizedDescription, preferredStyle: .alert)
                     alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_confirm_button_title"), style: .default){ [weak self] clickHandler in
                         self?.showPublishPasswordAlert(payContract: payToken.addr ?? "",
                                                       receiveContract: receiveToken.addr ?? "",
@@ -296,7 +287,7 @@ extension MarketViewController: MarketTableViewManagerDelegate {
                                        amount: amount,
                                        exchangeAmount: exchangeAmount)
             } else {
-                self.detailView.makeToast(localLanguage(keyString: "余额不足以兑换，请确认"), position: .center)
+                self.detailView.makeToast(LibraWalletError.WalletMarket(reason: .payAmountNotEnough).localizedDescription, position: .center)
             }
         }
     }
@@ -442,9 +433,9 @@ extension MarketViewController {
                 print(error.localizedDescription)
                 // 数据返回状态异常
                 self.detailView.makeToast(error.localizedDescription, position: .center)
-            } else if error.localizedDescription == LibraWalletError.error(localLanguage(keyString: "尚未注册任何稳定币")).localizedDescription {
+            } else if error.localizedDescription == LibraWalletError.WalletMarket(reason: .publishedListEmpty).localizedDescription {
                 print(error.localizedDescription)
-                let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: error.localizedDescription + localLanguage(keyString: ",是否立即注册"), preferredStyle: .alert)
+                let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: localLanguage(keyString: "wallet_market_alert_register_token_content"), preferredStyle: .alert)
                 alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_confirm_button_title"), style: .default){ [weak self] clickHandler in
                     let vc = AddAssetViewController()
                     vc.wallet = self?.wallet
@@ -456,7 +447,7 @@ extension MarketViewController {
                     NSLog("点击了取消")
                 })
                 self.present(alertContr, animated: true, completion: nil)
-            } else if error.localizedDescription == LibraWalletError.error(localLanguage(keyString: "交易所支持稳定币为空")).localizedDescription {
+            } else if error.localizedDescription == LibraWalletError.WalletMarket(reason: .marketSupportTokenEmpty).localizedDescription {
                 print(error.localizedDescription)
                 
             }
@@ -467,6 +458,7 @@ extension MarketViewController {
         let type = jsonData.value(forKey: "type") as! String
         
         if type == "GetTokenList" {
+            // 获取交易所支持稳定币列表
             self.detailView.toastView?.hide()
             if let tempData = jsonData.value(forKey: "data") as? [MarketSupportCoinDataModel] {
                 if let action = self.actionClosure {
@@ -477,13 +469,13 @@ extension MarketViewController {
             self.detailView.toastView?.hide()
             if let tempData = jsonData.value(forKey: "data") as? MarketResponseMainModel {
                 #warning("无奈之举，望谅解")
-                let headerView = self.detailView.tableView.headerView(forSection: 0) as! MarketExchangeHeaderView
+                let headerView = self.detailView.tableView.headerView(forSection: 0) as? MarketExchangeHeaderView
                 self.tableViewManager.buyOrders = tempData.orders?.filter({
                     $0.user?.contains(self.wallet?.walletAddress ?? "") == true
                 }).sorted(by: {
                     ($0.date ?? 0) > ($1.date ?? 0)
                 }).map({ (item) in
-                    MarketOrderDataModel.init(id: item.id, user: item.user, state: item.state, tokenGet: item.tokenGet, tokenGetSymbol: item.tokenGetSymbol, amountGet: item.amountGet, tokenGive: item.tokenGive, tokenGiveSymbol: item.tokenGiveSymbol, amountGive: item.amountGive, version: item.version, date: item.date, update_date: item.update_date, update_version: item.update_version, amountFilled: item.amountFilled, price: headerView.rightTokenModel?.price)
+                    MarketOrderDataModel.init(id: item.id, user: item.user, state: item.state, tokenGet: item.tokenGet, tokenGetSymbol: item.tokenGetSymbol, amountGet: item.amountGet, tokenGive: item.tokenGive, tokenGiveSymbol: item.tokenGiveSymbol, amountGive: item.amountGive, version: item.version, date: item.date, update_date: item.update_date, update_version: item.update_version, amountFilled: item.amountFilled, price: headerView?.rightTokenModel?.price)
                 })
                 #warning("无奈之举，望谅解")
                 self.tableViewManager.sellOrders = tempData.depths?.buys?.filter({
@@ -491,11 +483,12 @@ extension MarketViewController {
                 }).sorted(by: {
                     ($0.date ?? 0) < ($1.date ?? 0)
                 }).map({ (item) in
-                    MarketOrderDataModel.init(id: item.id, user: item.user, state: item.state, tokenGet: item.tokenGet, tokenGetSymbol: item.tokenGetSymbol, amountGet: item.amountGet, tokenGive: item.tokenGive, tokenGiveSymbol: item.tokenGiveSymbol, amountGive: item.amountGive, version: item.version, date: item.date, update_date: item.update_date, update_version: item.update_version, amountFilled: item.amountFilled, price: headerView.rightTokenModel?.price)
+                    MarketOrderDataModel.init(id: item.id, user: item.user, state: item.state, tokenGet: item.tokenGet, tokenGetSymbol: item.tokenGetSymbol, amountGet: item.amountGet, tokenGive: item.tokenGive, tokenGiveSymbol: item.tokenGiveSymbol, amountGive: item.amountGive, version: item.version, date: item.date, update_date: item.update_date, update_version: item.update_version, amountFilled: item.amountFilled, price: headerView?.rightTokenModel?.price)
                 })
                 self.detailView.tableView.reloadData()
             }
         } else if type == "OrderChange" {
+            // 订单状态变更
             self.detailView.toastView?.hide()
             if let tempData = jsonData.value(forKey: "data") as? MarketOrderModel {
                 if let data = tempData.buys, data.isEmpty == false {
@@ -503,12 +496,14 @@ extension MarketViewController {
                 }
             }
         } else if type == "ExchangeDone" {
+            // 兑换挂单成功
             self.detailView.toastView?.hide()
-            self.detailView.makeToast(localLanguage(keyString: "挂单成功"), position: .center)
+            self.detailView.makeToast(localLanguage(keyString: "wallet_market_alert_make_order_success_title"), position: .center)
             let headerView = self.detailView.tableView.headerView(forSection: 0) as! MarketExchangeHeaderView
             headerView.leftAmountTextField.text = ""
             headerView.rightAmountTextField.text = ""
         } else if type == "UpdateViolasBalance" {
+            // 获取余额
             self.detailView.toastView?.hide()
             if let tempData = jsonData.value(forKey: "data") as? BalanceLibraModel {
                 if let data = tempData.modules, data.isEmpty == false, let tempModule = data.first {
@@ -518,9 +513,16 @@ extension MarketViewController {
                 }
             }
         } else if type == "PublishTokenForTransaction" {
+            // 代币注册
             if let action = self.publishTokenClosure {
                 action()
             }
+        } else if type == "SocketReconnect" {
+            // Socket 重连
+            self.tableViewManager.buyOrders?.removeAll()
+            self.tableViewManager.sellOrders?.removeAll()
+            self.detailView.tableView.reloadData()
+            self.requestData()
         }
     }
     func refreshTableView(data: [MarketOrderDataModel]) {
@@ -542,6 +544,7 @@ extension MarketViewController {
                             // 判断返回数据是否在已展示的5条数据中，如果在，删除数据+刷新Tableview，不在仅删除数据
                             if j < 5 {
                                 guard stopRefreshTableView == false else {
+                                    dataExist = true
                                     return
                                 }
                                 self.detailView.tableView.beginUpdates()
@@ -561,6 +564,7 @@ extension MarketViewController {
                             if j < 5 {
                                 // 已在列表中展示
                                 guard stopRefreshTableView == false else {
+                                    dataExist = true
                                     return
                                 }
                                 self.detailView.tableView.beginUpdates()
@@ -572,17 +576,16 @@ extension MarketViewController {
                                 self.detailView.tableView.endUpdates()
                             }
                         }
-                        
                     } else if myOrders[i].state == "OPEN" {
                         // 成交中,刷新数据
                         self.tableViewManager.buyOrders?.remove(at: j)
                         self.tableViewManager.buyOrders?.insert(myOrders[i], at: j)
-                        
                         if let count = self.tableViewManager.buyOrders?.count, count >= 0 {
                             // 判断返回数据是否在已展示的5条数据中，如果在，刷新Tableview的Cell，不在仅刷新数据
                             if j < 5 {
                                 // 已在列表中展示
                                 guard stopRefreshTableView == false else {
+                                    dataExist = true
                                     return
                                 }
                                 self.detailView.tableView.beginUpdates()
@@ -596,9 +599,9 @@ extension MarketViewController {
                     break
                 }
             }
-            if dataExist == false {
+            if dataExist == false &&  myOrders[i].state == "OPEN" {
                 print("匹配失败添加数据")
-                let headerView = self.detailView.tableView.headerView(forSection: 0) as! MarketExchangeHeaderView
+                let headerView = self.detailView.tableView.dequeueReusableHeaderFooterView(withIdentifier: "MainHeader") as! MarketExchangeHeaderView//headerView(forSection: 0) as! MarketExchangeHeaderView
                 myOrders[i].price = headerView.rightTokenModel?.price
 
                 self.tableViewManager.buyOrders?.append(myOrders[i])
@@ -611,10 +614,9 @@ extension MarketViewController {
                 self.detailView.tableView.beginUpdates()
                 if let count = self.tableViewManager.buyOrders?.count, count >= 0 {
                     // 判断数据是否已展示五条，已展示删除最后一条，未展示直接插入到列首
-                    if count >= 5 {
+                    if count > 5 {
                         self.detailView.tableView.deleteRows(at: [IndexPath.init(row: 4, section: 1)], with: UITableView.RowAnimation.left)
                     }
-                    
                     self.detailView.tableView.insertRows(at: [IndexPath.init(row: 0, section: 1)], with: UITableView.RowAnimation.bottom)
                 }
                 self.detailView.tableView.endUpdates()
@@ -641,9 +643,7 @@ extension MarketViewController {
                             if j < 5 {
                                 // 已在列表中展示
                                 guard stopRefreshTableView == false else {
-                                    return
-                                }
-                                guard stopRefreshTableView == false else {
+                                    dataExist = true
                                     return
                                 }
                                 self.detailView.tableView.beginUpdates()
@@ -664,6 +664,7 @@ extension MarketViewController {
                             if j < 5 {
                                 // 已在列表中展示
                                 guard stopRefreshTableView == false else {
+                                    dataExist = true
                                     return
                                 }
                                 self.detailView.tableView.beginUpdates()
@@ -683,6 +684,7 @@ extension MarketViewController {
                             if j < 5 {
                                 // 已在列表中展示
                                 guard stopRefreshTableView == false else {
+                                    dataExist = true
                                     return
                                 }
                                 self.detailView.tableView.beginUpdates()
@@ -695,8 +697,9 @@ extension MarketViewController {
                     break
                 }
             }
-            if dataExist == false {
-                let headerView = self.detailView.tableView.headerView(forSection: 0) as! MarketExchangeHeaderView
+            if dataExist == false &&  otherOrders[i].state == "OPEN" {
+//                let headerView = self.detailView.tableView.headerView(forSection: 0) as! MarketExchangeHeaderView
+                let headerView = self.detailView.tableView.dequeueReusableHeaderFooterView(withIdentifier: "MainHeader") as! MarketExchangeHeaderView//headerView(forSection: 0) as! MarketExchangeHeaderView
                 otherOrders[i].price = headerView.rightTokenModel?.price
                 
                 self.tableViewManager.sellOrders?.append(otherOrders[i])
@@ -709,7 +712,7 @@ extension MarketViewController {
                 self.detailView.tableView.beginUpdates()
                 if let count = self.tableViewManager.sellOrders?.count, count >= 0 {
                     // 判断数据是否已展示五条，已展示删除最后一条，未展示直接插入到列首
-                    if count >= 5 {
+                    if count > 5 {
                         self.detailView.tableView.deleteRows(at: [IndexPath.init(row: 4, section: 2)], with: UITableView.RowAnimation.left)
                     }
                     self.detailView.tableView.insertRows(at: [IndexPath.init(row: count - 1, section: 2)], with: UITableView.RowAnimation.bottom)

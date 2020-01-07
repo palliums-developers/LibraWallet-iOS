@@ -73,4 +73,13 @@ class MarketView: UIView {
         let toast = ToastView.init()
         return toast
     }
+    func deleteRowInTableView(indexPaths: [IndexPath]) {
+        
+    }
+    func insertRowInTableView(indexPaths: [IndexPath]) {
+        
+    }
+    func reloadRowInTableView(indexPaths: [IndexPath]) {
+        
+    }
 }

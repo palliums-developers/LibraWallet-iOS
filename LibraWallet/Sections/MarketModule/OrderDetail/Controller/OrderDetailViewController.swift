@@ -92,7 +92,6 @@ class OrderDetailViewController: BaseViewController {
         }
         dataOffset = 1
         detailView.tableView.mj_footer.resetNoMoreData()
-//        detailView.tableView.mj_header.beginRefreshing()
         dataModel.getOrderDetail(address: walletAddress,
                                  version: self.headerData?.version ?? "",
                                  page: dataOffset,
@@ -103,7 +102,6 @@ class OrderDetailViewController: BaseViewController {
             return
         }
         dataOffset += 1
-//        detailView.tableView.mj_footer.beginRefreshing()
         dataModel.getOrderDetail(address: walletAddress,
                                  version: self.headerData?.version ?? "",
                                  page: dataOffset,

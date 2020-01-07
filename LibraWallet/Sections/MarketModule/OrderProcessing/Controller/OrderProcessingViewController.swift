@@ -12,8 +12,6 @@ import JXSegmentedView
 class OrderProcessingViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        // 加载子View
-//        self.view.addSubview(self.detailView)
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -82,9 +80,8 @@ extension OrderProcessingViewController: OrderProcessingTableViewManagerDelegate
 
     }
     func cancelOrder(indexPath: IndexPath, model: MarketOrderDataModel) {
-        
-        let alertView = UIAlertController.init(title: localLanguage(keyString: "提示"),
-                                               message: localLanguage(keyString: "您确定要取消当前未完成订单吗？"),
+        let alertView = UIAlertController.init(title: localLanguage(keyString: "wallet_market_order_center_cancel_order_alert_title"),
+                                               message: localLanguage(keyString: "wallet_market_order_center_cancel_order_alert_content"),
                                                preferredStyle: .alert)
         let cancelAction = UIAlertAction.init(title:localLanguage(keyString: "wallet_add_asset_alert_cancel_button_title"), style: .default) { okAction in
         }
@@ -202,7 +199,7 @@ extension OrderProcessingViewController {
             } else {
                 self.refreshReceive()
             }
-            self.detailView.makeToast(localLanguage(keyString: "取消成功"), position: .center)
+            self.detailView.makeToast(localLanguage(keyString: "wallet_market_alert_cancel_order_success_title"), position: .center)
         }
         self.detailView.hideToastActivity()
     }

@@ -132,6 +132,8 @@ wallet_market_receive_address_textfield_placeholder = "请输入收款账户";
 wallet_market_exchange_fee_title = "汇率";
 wallet_market_exchange_fee_describe_title = "1BTC = 1Violas";
 wallet_market_exchange_confirm_title = "兑换";
+wallet_market_pay_amount_least_title = "最少付出金额：";
+wallet_market_exchange_amount_least_title = "最少兑换金额：";
 
 /************* 关于我们 *******************/
 wallet_about_us_navigation_right_bar_title = "问题反馈";
@@ -158,6 +160,7 @@ wallet_market_other_commission_title = "他人委托";
 wallet_market_trade_name_title = "市场";
 wallet_market_trade_amount_title = "数量";
 wallet_market_trade_price_title = "价格";
+wallet_market_empty_default_describe = "当前钱包不支持交易所交易，交易所仅支持Violas钱包交易";
 
 /************* 订单中心 *******************/
 wallet_market_processing_order_title = "未完成";
@@ -252,7 +255,17 @@ wallet_alert_delete_address_confirm_button_title = "确定";
 // 交易所支持稳定币页面
 wallet_alert_market_support_token_list_title = "选择";
 wallet_alert_market_support_token_cancel_button_title = "确定";
+// 提示注册稳定币
+wallet_market_alert_register_token_title = "提示";
+wallet_market_alert_register_token_content = "尚未注册任何稳定币,是否立即注册";
 
+//挂单成功
+wallet_market_alert_make_order_success_title = "挂单成功";
+wallet_market_alert_cancel_order_success_title = "撤单成功";
+
+//订单中心撤销订单提示
+wallet_market_order_center_cancel_order_alert_title = "提示";
+wallet_market_order_center_cancel_order_alert_content = "您确定要取消当前未完成订单吗？";
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "安全提醒";
 wallet_alert_backup_warning_detail_title = "您的身份助记词未备份，请务必备份助记词\n助记词可用于恢复身份下钱包资产，防止忘记密码、应用删除、手机丢失等情况导致资产损失";
@@ -370,3 +383,18 @@ wallet_scan_result_address_violas_invalid_error = "Violas地址无效";
 wallet_scan_result_address_libra_invalid_error = "Libra地址无效";
 wallet_scan_result_address_libra_invalid_error = "Violas稳定币名字为空";
 wallet_scan_result_address_contract_invalid_error = "Violas稳定币合约未开启或不支持";
+// 交易所
+wallet_market_swap_unpublisheda_error = "未开启不能调换";
+wallet_market_exchange_amount_error = "待兑换金额无效";
+wallet_market_exchange_amount_max_limit_error = "您需要兑换的稳定币数量过大，不支持交换，请减少兑换数量后交换";
+wallet_market_pay_amount_invalid_error = "付出金额无效";
+wallet_market_pay_amount_max_limit_error = "您付出的稳定币数量过大，不支持交换，请减少付出数量后交换";
+wallet_market_amount_not_enough_error = "余额不足以兑换，请确认";
+wallet_market_exchange_token_unpublish_error = "您将要兑换的币尚未开启，开启需要消耗一定数量Gas费，是否立即开启并兑换";
+wallet_market_published_list_empty_error = "尚未开启任何稳定币";
+wallet_market_token_list_empty_error = "获取交易所稳定币列表为空";
+
+wallet_market_pay_token_not_select_error = "付出稳定币未选择";
+wallet_market_exchange_token_not_select_error = "待兑换稳定币未选择";
+wallet_market_pay_amount_empty_error = "付出稳定币数量为空";
+wallet_market_exchange_amount_empty_error = "兑换稳定币数量为空";

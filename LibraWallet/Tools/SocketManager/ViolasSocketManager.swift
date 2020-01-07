@@ -12,19 +12,20 @@ struct ViolasSocketManager {
     static var shared = ViolasSocketManager()
     private var manager: SocketManager?
     private let requestURL = "http://18.220.66.235:38181"
-
 }
 extension ViolasSocketManager {
 
-    mutating func openSocket(response: @escaping (Bool)->Void) {
-        manager = SocketManager(socketURL: URL(string: requestURL)!, config: [.log(false),
+    mutating func configSocket(response: @escaping ()->Void) {
+        manager = SocketManager(socketURL: URL(string: requestURL)!, config: [.log(true),
                                                                               .compress,
-                                                                              .reconnectWait(60)])
-        let socket = manager!.defaultSocket
+                                                                              .reconnectWait(30)])
+        guard let socket = manager?.defaultSocket else {
+            print("获取默认Socket失败")
+            return
+        }
         socket.on(clientEvent: .connect) {data, ack in
             print("socket connected")
-            response(true)
-//            socket.emit("getMarket", "{\"tokenBase\":\"0xb9e3266ca9f28103ca7c9bb9e5eb6d0d8c1a9d774a11b384798a3c4784d5411e\",\"tokenQuote\":\"0x75bea7a9c432fe0d94f13c6d73543ea8758940e9b622b70dbbafec5ffbf74782\" ,\"user\":\"b45d3e7e8079eb16cd7111b676f0c32294135e4190261240e3fd7b96fe1b9b89\"}")
+            response()
         }
         socket.on(clientEvent: .disconnect) {data, ack in
             print("socket disconnect")
@@ -35,13 +36,19 @@ extension ViolasSocketManager {
         socket.on(clientEvent: .statusChange) {data, ack in
             print("socket change")
         }
+        socket.on(clientEvent: .reconnect) { (data, ack) in
+            print("socket reconnect")
+        }
         socket.connect()
     }
     mutating func stopSocket() {
         manager?.defaultSocket.disconnect()
     }
     mutating func addMarketListening(response: @escaping (Data)->Void) {
-        let socket = manager!.defaultSocket
+        guard let socket = manager?.defaultSocket else {
+            print("获取默认Socket失败")
+            return
+        }
         socket.on("market") {data, ack in
             do {
                 if data.count > 0 {
@@ -55,12 +62,18 @@ extension ViolasSocketManager {
         }
     }
     mutating func getMarketData(address: String, payContract: String, exchangeContract: String) {
-        let socket = manager!.defaultSocket
+        guard let socket = manager?.defaultSocket else {
+            print("获取默认Socket失败")
+            return
+        }
         socket.emit("getMarket", "{\"tokenBase\":\"\(payContract)\",\"tokenQuote\":\"\(exchangeContract)\" ,\"user\":\"\(address)\"}")
     }
     
     mutating func addDepthsListening(response: @escaping (Data)->Void) {
-        let socket = manager!.defaultSocket
+        guard let socket = manager?.defaultSocket else {
+            print("获取默认Socket失败")
+            return
+        }
         socket.on("depths") {data, ack in
             do {
                 if data.count > 0 {
@@ -73,11 +86,33 @@ extension ViolasSocketManager {
         }
     }
     mutating func addListeningData(payContract: String, exchangeContract: String) {
-        let socket = manager!.defaultSocket
-        socket.emit("subscribe", "{\"tokenBase\":\"\(payContract)\",\"tokenQuote\":\"\(exchangeContract)\"}")
+        guard let socket = manager?.defaultSocket else {
+            print("获取默认Socket失败")
+            return
+        }
+        if socket.status == .connected {
+            // 已连接
+            socket.emit("subscribe", "{\"tokenBase\":\"\(payContract)\",\"tokenQuote\":\"\(exchangeContract)\"}")
+        } else if socket.status == .connecting {
+            // 连接中
+        } else {
+            // 未连接
+            socket.connect()
+        }
     }
     mutating func removeListeningData(payContract: String, exchangeContract: String) {
-        let socket = manager!.defaultSocket
-        socket.emit("unsubscribe", "{\"tokenBase\":\"\(payContract)\",\"tokenQuote\":\"\(exchangeContract)\"}")
+        guard let socket = manager?.defaultSocket else {
+            print("获取默认Socket失败")
+            return
+        }
+        if socket.status == .connected {
+            // 已连接
+            socket.emit("unsubscribe", "{\"tokenBase\":\"\(payContract)\",\"tokenQuote\":\"\(exchangeContract)\"}")
+        } else if socket.status == .connecting {
+            // 连接中
+        } else {
+            // 未连接
+            socket.connect()
+        }
     }
 }

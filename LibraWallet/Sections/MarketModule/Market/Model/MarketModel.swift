@@ -60,9 +60,6 @@ struct MarketResponseMainModel: Codable {
     var orders: [MarketOrderDataModel]?
     var depths: MarketOrderModel?
 }
-struct MarketSupportCoinMainModel: Codable {
-    
-}
 class MarketModel: NSObject {
     private var requests: [Cancellable] = []
     @objc var dataDic: NSMutableDictionary = [:]
@@ -103,7 +100,7 @@ class MarketModel: NSObject {
                 do {
                     let json = try response.map([MarketSupportCoinDataModel].self)
                     guard json.isEmpty == false else {
-                        let data = setKVOData(error: LibraWalletError.error(localLanguage(keyString: "交易所支持稳定币为空")), type: "GetMarketEnableCoin")
+                        let data = setKVOData(error: LibraWalletError.WalletMarket(reason: .marketSupportTokenEmpty), type: "GetMarketEnableCoin")
                         self?.setValue(data, forKey: "dataDic")
                         return
                     }
@@ -140,7 +137,7 @@ class MarketModel: NSObject {
                         return
                     }
                     guard json.data?.isEmpty == false else {
-                        let data = setKVOData(error: LibraWalletError.error(localLanguage(keyString: "尚未注册任何稳定币")), type: "GetWalletEnableCoin")
+                        let data = setKVOData(error: LibraWalletError.WalletMarket(reason: .publishedListEmpty), type: "GetWalletEnableCoin")
                         self?.setValue(data, forKey: "dataDic")
                         return
                     }
@@ -194,7 +191,7 @@ class MarketModel: NSObject {
 ////                        self?.setValue(data, forKey: "dataDic")
 ////                        return
 ////                    }
-//                    let data = setKVOData(type: "GetCurrentOrder", data: json)
+//                    let data = setKVOData(type: "GetCurrentOrder", data: json.buys)
 //                    self?.setValue(data, forKey: "dataDic")
 //                } catch {
 //                    print("GetCurrentOrder_解析异常\(error.localizedDescription)")
@@ -212,7 +209,7 @@ class MarketModel: NSObject {
 //        }
 //        self.requests.append(request)
 //    }
-    func getViolasSequenceNumber(sendAddress: String, semaphore: DispatchSemaphore, queue: DispatchQueue) {
+    private func getViolasSequenceNumber(sendAddress: String, semaphore: DispatchSemaphore, queue: DispatchQueue) {
         semaphore.wait()
         let request = mainProvide.request(.GetViolasAccountSequenceNumber(sendAddress)) {[weak self](result) in
             switch  result {
@@ -253,7 +250,6 @@ class MarketModel: NSObject {
         self.requests.append(request)
     }
     func exchangeViolasTokenTransaction(sendAddress: String, amount: Double, fee: Double, mnemonic: [String], contact: String, exchangeTokenContract: String, exchangeTokenAmount: Double) {
-//        "05599ef248e215849cc599f563b4883fc8aff31f1e43dff1e3ebe4de1370e054"
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
         queue.async {
@@ -394,10 +390,16 @@ class MarketModel: NSObject {
             semaphore.signal()
         }
     }
+    
     func addSocket() {
-        ViolasSocketManager.shared.openSocket { result in
-            print(result)
+        ViolasSocketManager.shared.configSocket {
+            // 重连后，重新添加监听
+            self.addSocketListening()
+            let data = setKVOData(type: "SocketReconnect")
+            self.setValue(data, forKey: "dataDic")
         }
+    }
+    func addSocketListening() {
         ViolasSocketManager.shared.addMarketListening { result in
             do {
                 let modelObject = try JSONDecoder().decode(MarketResponseMainModel.self, from: result)
@@ -407,12 +409,10 @@ class MarketModel: NSObject {
             } catch {
                 print(error.localizedDescription)
             }
-
         }
         ViolasSocketManager.shared.addDepthsListening { result in
             do {
                 let modelObject = try JSONDecoder().decode(MarketOrderModel.self, from: result)
-                print(modelObject)
                 let data = setKVOData(type: "OrderChange", data: modelObject)
                 self.setValue(data, forKey: "dataDic")
             } catch {
@@ -436,6 +436,7 @@ class MarketModel: NSObject {
         ViolasSocketManager.shared.removeListeningData(payContract: payContract,
                                                        exchangeContract: exchangeContract)
     }
+    
     deinit {
         requests.forEach { cancellable in
             cancellable.cancel()

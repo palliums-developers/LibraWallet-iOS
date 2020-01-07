@@ -47,7 +47,6 @@ public enum LibraWalletError: Error {
         case deleteMnemonicFailedError
         /// 搜寻标示为空
         case searchStringEmptyError
-        
     }
     case WalletKeychain(reason: KeychainError)
     
@@ -182,8 +181,12 @@ public enum LibraWalletError: Error {
         case amountEmpty
         /// 数量超过自己余额
         case amountOverload
-        /// 金额太小不能转账
-        case amountTooSmall
+        /// BTC最小转账金额
+        case btcAmountLeast
+        /// Violas最小转账金额
+        case violasAmountLeast
+        /// Libra最小转账金额
+        case libraAmountLeast
         /// 地址无效
         case addressInvalid
         /// 地址为空
@@ -193,23 +196,49 @@ public enum LibraWalletError: Error {
     }
     case WalletTransfer(reason: TransferError)
     
-//    public enum WalletEnableToken {
-//        /// 数量无效
-//        case amountInvalid
-//        /// 数量为空
-//        case amountEmpty
-//        /// 数量超过自己余额
-//        case amountOverload
-//        /// 金额太小不能转账
-//        case amountTooSmall
-//        /// 地址无效
-//        case addressInvalid
-//        /// 地址为空
-//        case addressEmpty
-//        /// 像自己付款无效
-//        case transferToSelf
-//    }
-//    case WalletTransfer(reason: TransferError)
+    public enum ScanError {
+        /// BTC地址无效
+        case btcAddressInvalid
+        /// Violas地址无效
+        case violasAddressInvalid
+        /// Libra地址无效
+        case libraAddressInvalid
+        /// Violas稳定币名字为空
+        case violasTokenNameEmpty
+        /// Violas稳定币合约未开启或不支持
+        case violasTokenContractInvalid
+    }
+    case WalletScan(reason: ScanError)
+    public enum ExchangeMarketError {
+        /// 未开启不能调换
+        case swpUnpublishTokenError
+        /// 待兑换金额无效
+        case exchangeAmountInvalid
+        /// 待兑换金额超限
+        case exchangeAmountMaxLimit
+        /// 付出金额无效
+        case payAmountInvalid
+        /// 付出金额超限
+        case payAmountMaxLimit
+        /// 余额不足
+        case payAmountNotEnough
+        /// 待兑换稳定币尚未开启
+        case exchangeTokenPublishedInvalid
+        /// 尚未开启任何稳定币
+        case publishedListEmpty
+        /// 获取交易所稳定币列表为空
+        case marketSupportTokenEmpty
+        
+        /// 付出稳定币未选择
+        case payTokenNotSelect
+        /// 待兑换稳定币未选择
+        case exchangeTokenNotSelect
+        /// 付出稳定币数量为空
+        case payAmountEmpty
+        /// 兑换稳定币数量为空
+        case exchangeAmountEmpty
+    }
+    case WalletMarket(reason: ExchangeMarketError)
 }
 extension LibraWalletError: LocalizedError {
     public var errorDescription: String? {
@@ -237,6 +266,10 @@ extension LibraWalletError: LocalizedError {
         case .WalletCheckPassword(let reason):
             return reason.localizedDescription
         case .WalletTransfer(let reason):
+            return reason.localizedDescription
+        case .WalletScan(let reason):
+            return reason.localizedDescription
+        case .WalletMarket(let reason):
             return reason.localizedDescription
         }
     }
@@ -457,14 +490,82 @@ extension LibraWalletError.TransferError {
             return localLanguage(keyString: "wallet_transfer_amount_empty_error")
         case .amountOverload:
             return localLanguage(keyString: "wallet_transfer_amount_overload_error")
-        case .amountTooSmall:
+        /// BTC最小转账金额
+        case .btcAmountLeast:
             return localLanguage(keyString: "wallet_transfer_amount_limit_error") + ":\(transferBTCLeast)"
+        /// Violas最小转账金额
+        case .violasAmountLeast:
+            return localLanguage(keyString: "wallet_transfer_amount_limit_error") + ":\(transferViolasLeast)"
+        /// Libra最小转账金额
+        case .libraAmountLeast:
+            return localLanguage(keyString: "wallet_transfer_amount_limit_error") + ":\(transferLibraLeast)"
         case .addressInvalid:
             return localLanguage(keyString: "wallet_transfer_address_invalid_error")
         case .addressEmpty:
             return localLanguage(keyString: "wallet_transfer_address_empty_error")
         case .transferToSelf:
             return localLanguage(keyString: "wallet_transfer_to_self_error")
+        }
+    }
+}
+extension LibraWalletError.ScanError {
+    var localizedDescription: String {
+        switch self {
+        case .btcAddressInvalid:
+            return localLanguage(keyString: "wallet_scan_result_address_btc_invalid_error")
+        case .violasAddressInvalid:
+            return localLanguage(keyString: "wallet_scan_result_address_violas_invalid_error")
+        case .libraAddressInvalid:
+            return localLanguage(keyString: "wallet_scan_result_address_libra_invalid_error")
+        case .violasTokenNameEmpty:
+            return localLanguage(keyString: "wallet_scan_result_address_libra_invalid_error") + ":\(transferBTCLeast)"
+        case .violasTokenContractInvalid:
+            return localLanguage(keyString: "wallet_scan_result_address_contract_invalid_error") + ":\(transferViolasLeast)"
+        }
+    }
+}
+extension LibraWalletError.ExchangeMarketError {
+    var localizedDescription: String {
+        switch self {
+        // 未开启不能调换
+        case .swpUnpublishTokenError:
+            return localLanguage(keyString: "wallet_market_swap_unpublisheda_error")
+        // 待兑换金额无效
+        case .exchangeAmountInvalid:
+            return localLanguage(keyString: "wallet_market_exchange_amount_error")
+        // 待兑换金额超限
+        case .exchangeAmountMaxLimit:
+            return localLanguage(keyString: "wallet_market_exchange_amount_max_limit_error")
+        // 付出金额无效
+        case .payAmountInvalid:
+            return localLanguage(keyString: "wallet_market_pay_amount_invalid_error")
+        // 付出金额超限
+        case .payAmountMaxLimit:
+            return localLanguage(keyString: "wallet_market_pay_amount_max_limit_error")
+        // 余额不足
+        case .payAmountNotEnough:
+            return localLanguage(keyString: "wallet_market_amount_not_enough_error")
+        // 待兑换稳定币尚未开启
+        case .exchangeTokenPublishedInvalid:
+            return localLanguage(keyString: "wallet_market_exchange_token_unpublish_error")
+        // 尚未开启任何稳定币
+        case .publishedListEmpty:
+            return localLanguage(keyString: "wallet_market_published_list_empty_error")
+        // 获取交易所稳定币列表为空
+        case .marketSupportTokenEmpty:
+            return localLanguage(keyString: "wallet_market_token_list_empty_error")
+        // 付出稳定币未选择
+        case .payTokenNotSelect:
+            return localLanguage(keyString: "wallet_market_pay_token_not_select_error")
+        // 待兑换稳定币未选择
+        case .exchangeTokenNotSelect:
+            return localLanguage(keyString: "wallet_market_exchange_token_not_select_error")
+        // 付出稳定币数量为空
+        case .payAmountEmpty:
+            return localLanguage(keyString: "wallet_market_pay_amount_empty_error")
+        // 兑换稳定币数量为空
+        case .exchangeAmountEmpty:
+            return localLanguage(keyString: "wallet_market_exchange_amount_empty_error")
         }
     }
 }

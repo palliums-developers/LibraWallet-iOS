@@ -2069,10 +2069,10 @@
 			isa = PBXGroup;
 			children = (
 				9DC06A392372A92C00BCE1FE /* Market */,
-				9D628A9E239F319800E222FB /* OrderDetail */,
 				9D628A9D239F318C00E222FB /* OrderCenter */,
 				9D628AA0239F341C00E222FB /* OrderDone */,
 				9D628A9F239F31A900E222FB /* OrderProcessing */,
+				9D628A9E239F319800E222FB /* OrderDetail */,
 			);
 			path = MarketModule;
 			sourceTree = "<group>";

@@ -16,9 +16,7 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
     weak var delegate: MarketExchangeHeaderViewDelegate?
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
-//        self.backgroundView?.backgroundColor = UIColor.red
         contentView.backgroundColor = UIColor.clear
-//        contentView.addSubview(headerBackground)
         contentView.addSubview(backgroundImageView)
         backgroundImageView.addSubview(leftCoinButton)
         backgroundImageView.addSubview(rightCoinButton)
@@ -51,16 +49,11 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
-        print("WalletManagerHeaderView销毁了")
+        print("MarketExchangeHeaderView销毁了")
     }
     //MARK: - 布局
     override func layoutSubviews() {
         super.layoutSubviews()
-//        headerBackground.snp.makeConstraints { (make) in
-//            make.top.equalTo(contentView).offset(-88)
-//            make.left.right.equalTo(self)
-//            make.height.equalTo(196)
-//        }
         backgroundImageView.snp.makeConstraints { (make) in
             make.top.equalTo(self).offset(0)
             make.left.equalTo(self).offset(15)
@@ -162,14 +155,8 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
             make.right.equalTo(self).offset(-69)
             make.height.equalTo(40)
         }
-
     }
     //MARK: - 懒加载对象
-//    private lazy var headerBackground : UIImageView = {
-//        let imageView = UIImageView.init()
-//        imageView.image = UIImage.init(named: "home_top_background")
-//        return imageView
-//    }()
     private lazy var backgroundImageView : UIImageView = {
         let imageView = UIImageView.init()
         imageView.image = UIImage.init(named: "market_background")
@@ -205,7 +192,6 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
         return button
     }()
     lazy var exchangeCoinSpaceLabel: UILabel = {
-        //#263C4E
         let label = UILabel.init()
         label.backgroundColor = DefaultSpaceColor
         return label
@@ -226,7 +212,6 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
         return button
     }()
     lazy var exchangeAmountSpaceLabel: UILabel = {
-        //#263C4E
         let label = UILabel.init()
         label.backgroundColor = DefaultSpaceColor
         return label
@@ -254,7 +239,6 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
         return textField
     }()
 //    lazy var exchangeToAddressSpaceLabel: UILabel = {
-//        //#263C4E
 //        let label = UILabel.init()
 //        label.backgroundColor = DefaultSpaceColor
 //        return label
@@ -302,7 +286,6 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
         return label
     }()
     lazy var exchangeRateSpaceLabel: UILabel = {
-        //#263C4E
         let label = UILabel.init()
         label.backgroundColor = DefaultSpaceColor
         return label
@@ -354,7 +337,7 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
         label.textAlignment = NSTextAlignment.center
         let fee = Float(transferFeeMax - transferFeeMin) * Float(0.2) + Float(transferFeeMin)
         let fee8 = NSString.init(format: "%.8f", fee)
-        label.text = "\(fee8) VToken"
+        label.text = "\(fee8) vtoken"
         return label
     }()
     lazy var confirmButton: UIButton = {
@@ -375,16 +358,16 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
     @objc func slideValueDidChange(slide: UISlider) {
         let fee = Float(transferFeeMax - transferFeeMin) * slide.value + Float(transferFeeMin)
         let fee8 = NSString.init(format: "%.8f", fee)
-        self.transferFeeLabel.text = "\(fee8) VToken"
+        self.transferFeeLabel.text = "\(fee8) vtoken"
     }
     @objc func buttonClick(button: UIButton) {
         if button.tag == 50 {
             guard let tempLeftModel = self.leftTokenModel else {
-                self.makeToast(localLanguage(keyString: "请先选择要付出的稳定币"), position: .center)
+                self.makeToast(LibraWalletError.WalletMarket(reason: .payTokenNotSelect).localizedDescription, position: .center)
                 return
             }
             guard let tempRightModel = self.rightTokenModel else {
-                self.makeToast(localLanguage(keyString: "请选择要兑换的币种"), position: .center)
+                self.makeToast(LibraWalletError.WalletMarket(reason: .exchangeTokenNotSelect).localizedDescription, position: .center)
                 return
             }
             self.delegate?.changeLeftRightTokenModel(leftModel: tempLeftModel, rightModel: tempRightModel)
@@ -393,44 +376,45 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
             self.leftAmountTextField.resignFirstResponder()
             self.rightAmountTextField.resignFirstResponder()
             guard let tempLeftModel = self.leftTokenModel else {
-                self.makeToast(localLanguage(keyString: "请先选择要付出的稳定币"), position: .center)
+                self.makeToast(LibraWalletError.WalletMarket(reason: .payTokenNotSelect).localizedDescription, position: .center)
+
                 return
             }
             guard let tempRightModel = self.rightTokenModel else {
-                self.makeToast(localLanguage(keyString: "请选择要兑换的稳定币"), position: .center)
+                self.makeToast(LibraWalletError.WalletMarket(reason: .exchangeTokenNotSelect).localizedDescription, position: .center)
+
                 return
             }
             guard let payAmountString = leftAmountTextField.text, payAmountString.isEmpty == false else {
-                self.makeToast(localLanguage(keyString: "请输入要付出的数量"), position: .center)
+                self.makeToast(LibraWalletError.WalletMarket(reason: .payAmountEmpty).localizedDescription, position: .center)
                 return
             }
             guard isPurnDouble(string: payAmountString) == true else {
-                self.makeToast(localLanguage(keyString: "请输入正确的付出数量"), position: .center)
+                self.makeToast(LibraWalletError.WalletMarket(reason: .payAmountInvalid).localizedDescription, position: .center)
                 return
             }
             let payAmount = NSDecimalNumber.init(string: payAmountString).doubleValue
             guard payAmount != 0 else {
-                self.makeToast(localLanguage(keyString: "最少付出金额: \(transferViolasLeast)"), position: .center)
+                self.makeToast(localLanguage(keyString: "wallet_market_pay_amount_least_title") + "\(transferViolasLeast)", position: .center)
                 return
             }
             guard let exchangeAmountString = rightAmountTextField.text, exchangeAmountString.isEmpty == false else {
-                self.makeToast(localLanguage(keyString: "请输入要兑换的数量"), position: .center)
+                self.makeToast(LibraWalletError.WalletMarket(reason: .exchangeAmountEmpty).localizedDescription, position: .center)
                 return
             }
             guard isPurnDouble(string: exchangeAmountString) == true else {
-                self.makeToast(localLanguage(keyString: "请输入正确兑换的数量"), position: .center)
+                self.makeToast(LibraWalletError.WalletMarket(reason: .exchangeAmountInvalid).localizedDescription, position: .center)
                 return
             }
             let exchangeAmount = NSDecimalNumber.init(string: exchangeAmountString).doubleValue
             guard exchangeAmount != 0 else {
-                self.makeToast(localLanguage(keyString: "最少兑换金额: \(transferViolasLeast)"), position: .center)
+                self.makeToast(localLanguage(keyString: "wallet_market_exchange_amount_least_title") + "\(transferViolasLeast)", position: .center)
                 return
             }
             self.delegate?.exchangeToken(payToken: tempLeftModel,
                                          receiveToken: tempRightModel,
                                          amount: payAmount,
                                          exchangeAmount: exchangeAmount)
-
         }
     }
     @objc func selectExchangeToken(button: UIButton) {
@@ -439,7 +423,7 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
         self.rightAmountTextField.resignFirstResponder()
         if button.tag == 30 {
             guard self.leftCoinButton.titleLabel?.text != "---" else {
-                self.makeToast(localLanguage(keyString: "请先选择要付出的代币"), position: .center)
+                self.makeToast(LibraWalletError.WalletMarket(reason: .payTokenNotSelect).localizedDescription, position: .center)
                 return
             }
         }

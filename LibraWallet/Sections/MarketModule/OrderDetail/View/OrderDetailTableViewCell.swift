@@ -142,7 +142,9 @@ class OrderDetailTableViewCell: UITableViewCell {
     var model: OrderDetailDataModel? {
         didSet {
             dateLabel.text = timestampToDateString(timestamp: model?.date ?? 0, dateFormat: "MM/dd HH:mm:ss")
-            amountLabel.text = model?.amount
+            amountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(string: (model?.amount ?? "0")),
+                                                      scale: 4,
+                                                      unit: 1000000)
         }
     }
     var priceModel: MarketOrderDataModel? {

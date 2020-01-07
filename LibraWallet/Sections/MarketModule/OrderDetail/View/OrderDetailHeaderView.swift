@@ -9,30 +9,6 @@
 import UIKit
 
 class OrderDetailHeaderView: UIView {
-//    override init(reuseIdentifier: String?) {
-//        super.init(reuseIdentifier: reuseIdentifier)
-//        contentView.backgroundColor = UIColor.white
-////        self.addShadow()
-//        contentView.addSubview(backgroundImageView)
-//
-//        backgroundImageView.addSubview(coinTitleLabel)
-//        backgroundImageView.addSubview(cancelButton)
-//        backgroundImageView.addSubview(priceTitleLabel)
-//        backgroundImageView.addSubview(amountTitleLabel)
-//        backgroundImageView.addSubview(dateTitleLabel)
-//        backgroundImageView.addSubview(successAmountTitleLabel)
-//        backgroundImageView.addSubview(feeTitleLabel)
-//
-//        backgroundImageView.addSubview(priceLabel)
-//        backgroundImageView.addSubview(amountLabel)
-//        backgroundImageView.addSubview(dateLabel)
-//        backgroundImageView.addSubview(successAmountLabel)
-//        backgroundImageView.addSubview(feeLabel)
-//
-//        backgroundImageView.addSubview(checkOnlineButton)
-//
-//        contentView.addSubview(orderTitleLabel)
-//    }
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = UIColor.white
@@ -131,8 +107,6 @@ class OrderDetailHeaderView: UIView {
         let imageView = UIImageView.init()
         imageView.image = UIImage.init(named: "order_detail_header_background")
         imageView.isUserInteractionEnabled = true
-//        imageView.layer.cornerRadius = 30
-//        imageView.layer.masksToBounds = true
         return imageView
     }()
     func addShadow() {
@@ -158,8 +132,6 @@ class OrderDetailHeaderView: UIView {
         let button = UIButton.init()
         button.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.medium)
         button.setTitleColor(UIColor.white, for: UIControl.State.normal)
-//        button.setTitle(localLanguage(keyString: "已完成"), for: UIControl.State.normal)
-
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
         button.tag = 10
         return button

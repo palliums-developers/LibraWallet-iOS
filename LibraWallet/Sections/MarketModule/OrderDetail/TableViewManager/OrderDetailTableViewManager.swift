@@ -16,7 +16,7 @@ class OrderDetailTableViewManager: NSObject {
     var priceModel: MarketOrderDataModel?
 //    var headerData: MarketOrderDataModel?
     deinit {
-        print("OrderProcessingTableViewManager销毁了")
+        print("OrderDetailTableViewManager销毁了")
     }
 }
 extension OrderDetailTableViewManager: UITableViewDelegate {

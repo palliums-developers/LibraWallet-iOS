@@ -70,7 +70,6 @@ class MarketOthersOrderHeaderView: UITableViewHeaderFooterView {
         return button
     }()
     lazy var headerSpaceLabel: UILabel = {
-        //#263C4E
         let label = UILabel.init()
         label.backgroundColor = DefaultSpaceColor
         return label

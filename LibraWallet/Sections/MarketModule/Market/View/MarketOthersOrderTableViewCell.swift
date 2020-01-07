@@ -70,7 +70,6 @@ class MarketOthersOrderTableViewCell: UITableViewCell {
             amountLabel.text = getDecimalNumberAmount(amount: lastAmount,
                                                       scale: 4,
                                                       unit: 1000000)
-
             priceLabel.text = "\(model?.price ?? 0)"
         }
     }

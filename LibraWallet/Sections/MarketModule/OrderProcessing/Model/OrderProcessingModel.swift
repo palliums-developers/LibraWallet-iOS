@@ -85,7 +85,7 @@ class OrderProcessingModel: NSObject {
                 do {
                     let json = try response.map([MarketSupportCoinDataModel].self)
                     guard json.isEmpty == false else {
-                        let data = setKVOData(error: LibraWalletError.error(localLanguage(keyString: "交易所支持稳定币为空")), type: "GetOrderPrices")
+                        let data = setKVOData(error: LibraWalletError.WalletMarket(reason: .marketSupportTokenEmpty), type: "GetOrderPrices")
                         self?.setValue(data, forKey: "dataDic")
                         return
                     }

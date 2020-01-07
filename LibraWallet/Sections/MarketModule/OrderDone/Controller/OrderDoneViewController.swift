@@ -10,7 +10,6 @@ import UIKit
 import JXSegmentedView
 import MJRefresh
 class OrderDoneViewController: UIViewController {
-
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -39,14 +38,12 @@ class OrderDoneViewController: UIViewController {
             return
         }
         detailView.tableView.mj_footer.resetNoMoreData()
-//        detailView.tableView.mj_header.beginRefreshing()
         dataModel.getAllDoneOrder(address: walletAddress, version: "")
     }
     @objc func getMoreReceive() {
         guard let walletAddress = self.wallet?.walletAddress else {
             return
         }
-//        detailView.tableView.mj_footer.beginRefreshing()
         if let version = self.tableViewManager.dataModel?.last?.version {
             dataModel.getAllDoneOrder(address: walletAddress, version: version)
         } else {

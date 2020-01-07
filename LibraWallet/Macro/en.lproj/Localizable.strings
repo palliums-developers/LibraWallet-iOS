@@ -131,6 +131,8 @@ wallet_market_receive_address_textfield_placeholder = "Input Receiving Address";
 wallet_market_exchange_fee_title = "Exchange Rate";
 wallet_market_exchange_fee_describe_title = "1BTC = 1Vbtc";
 wallet_market_exchange_confirm_title = "Exchange";
+wallet_market_pay_amount_least_title = "最少付出金额：";
+wallet_market_exchange_amount_least_title = "最少兑换金额：";
 
 /************* 关于我们 *******************/
 wallet_about_us_navigation_right_bar_title = "Question & Feedback";
@@ -157,6 +159,7 @@ wallet_market_other_commission_title = "Others commission";
 wallet_market_trade_name_title = "Market";
 wallet_market_trade_amount_title = "Amount";
 wallet_market_trade_price_title = "Price";
+wallet_market_empty_default_describe = "The current wallet does not support exchange transactions, the exchange only supports Violas wallet transactions";
 
 /************* 订单中心 *******************/
 wallet_market_processing_order_title = "Unfinished";
@@ -251,6 +254,17 @@ wallet_alert_delete_address_confirm_button_title = "Confirm";
 // 交易所支持稳定币页面
 wallet_alert_market_support_token_list_title = "Select";
 wallet_alert_market_support_token_cancel_button_title = "Confirm";
+// 提示注册稳定币
+wallet_market_alert_register_token_title = "Hint";
+wallet_market_alert_register_token_content = "Haven't registered any stablecoins, do you want to register now?";
+
+//挂单成功
+wallet_market_alert_make_order_success_title = "Successful";
+wallet_market_alert_cancel_order_success_title = "Cancel Successful";
+
+//订单中心撤销订单提示
+wallet_market_order_center_cancel_order_alert_title = "Hint";
+wallet_market_order_center_cancel_order_alert_content = "Are you sure you want to cancel the currently outstanding order?";
 
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "Safety Warning";
@@ -363,3 +377,20 @@ wallet_transfer_amount_limit_error = "Minimal Transfer Amount is ";
 wallet_transfer_address_invalid_error = "Invalid Transfer Address";
 wallet_transfer_address_empty_error = "Empty Transfer Address";
 wallet_transfer_to_self_error = "Invalid Transfer to Self";
+// 交易所
+wallet_market_swap_unpublisheda_error = "Stable currency to be exchanged has not been opened and cannot be exchanged";
+wallet_market_exchange_amount_error = "Exchange amount invalid";
+wallet_market_exchange_amount_max_limit_error = "The amount of stablecoins you need to exchange is too large and does not support exchange. Please reduce the amount of exchange and exchange
+";
+wallet_market_pay_amount_invalid_error = "Pay amount invalid";
+wallet_market_pay_amount_max_limit_error = "The amount of stablecoin you paid is too large, and exchange is not supported. Please reduce the amount you pay to exchange";
+wallet_market_amount_not_enough_error = "The balance is not enough to redeem, please confirm";
+wallet_market_exchange_token_unpublish_error = "The currency you are going to exchange has not yet been published. It will consume a certain amount of gas fee to open it. Whether to open and exchange it immediately?";
+wallet_market_published_list_empty_error = "No stablecoin has been published";
+wallet_market_token_list_empty_error = "Market support token empty";
+
+wallet_market_pay_token_not_select_error = "Pay token not selected
+";
+wallet_market_exchange_token_not_select_error = "Exchange token not selected";
+wallet_market_pay_amount_empty_error = "Pay amount empty";
+wallet_market_exchange_amount_empty_error = "Exchange amount empty";

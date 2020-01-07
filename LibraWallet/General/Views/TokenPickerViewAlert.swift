@@ -129,7 +129,7 @@ extension TokenPickerViewAlert: UIPickerViewDelegate {
             if onlyRegisterToken == true {
                 return (model.name ?? "")
             } else {
-                return (model.name ?? "") + (model.enable == true ? localLanguage(keyString: "（已注册）"):"")
+                return (model.name ?? "") + (model.enable == true ? localLanguage(keyString: "wallet_add_token_registered_title"):"")
             }
         }
         return "test"
