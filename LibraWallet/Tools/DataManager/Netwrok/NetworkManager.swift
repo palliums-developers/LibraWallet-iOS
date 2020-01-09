@@ -47,8 +47,8 @@ enum mainRequest {
     case GetViolasAccountEnableToken(String)
     /// 获取交易所支持的代币列表
     case GetMarketSupportCoin
-    /// 获取当前委托（暂废）
-    case GetCurrentOrder(String, String)
+    /// 获取当前委托（地址、付出稳定币合约、兑换稳定币合约）
+    case GetCurrentOrder(String, String, String)
     /// 获取当前进行中全部委托（地址、Version）
     case GetAllProcessingOrder(String, String)
     /// 获取订单详情(地址、页数)
@@ -81,7 +81,7 @@ extension mainRequest:TargetType {
         case .GetTestCoin(_, _):
             return URL(string:"http://faucet.testnet.libra.org/")!
         case .GetMarketSupportCoin,
-             .GetCurrentOrder(_, _),
+             .GetCurrentOrder(_, _, _),
              .GetAllProcessingOrder(_, _),
              .GetOrderDetail(_, _),
              .GetAllDoneOrder(_, _):
@@ -122,11 +122,11 @@ extension mainRequest:TargetType {
         case .GetViolasTokenList:
             return "/violas/currency"
         case .GetMarketSupportCoin:
-            return "/prices"
+            return "/tokens"
         case .GetViolasAccountEnableToken(_):
             return "/violas/module"
-        case .GetCurrentOrder(_, _):
-            return "/orderbook"
+        case .GetCurrentOrder(_, _, _):
+            return "/orders"
         case .GetAllProcessingOrder(_, _):
             return "/orders"
         case .GetOrderDetail(_, _):
@@ -155,7 +155,7 @@ extension mainRequest:TargetType {
              .GetViolasTokenList,
              .GetMarketSupportCoin,
              .GetViolasAccountEnableToken(_),
-             .GetCurrentOrder(_, _),
+             .GetCurrentOrder(_, _, _),
              .GetAllProcessingOrder(_, _),
              .GetOrderDetail(_, _),
              .GetAllDoneOrder(_, _):
@@ -238,8 +238,9 @@ extension mainRequest:TargetType {
         case .GetViolasAccountEnableToken(let address):
             return .requestParameters(parameters: ["addr": address],
                                       encoding: URLEncoding.queryString)
-        case .GetCurrentOrder(let baseAddress, let changeAddress):
-            return .requestParameters(parameters: ["base": baseAddress,
+        case .GetCurrentOrder(let address, let baseAddress, let changeAddress):
+            return .requestParameters(parameters: ["user":address,
+                                                   "base": baseAddress,
                                                    "quote":changeAddress],
                                       encoding: URLEncoding.queryString)
         case .GetAllProcessingOrder(let address, let version):

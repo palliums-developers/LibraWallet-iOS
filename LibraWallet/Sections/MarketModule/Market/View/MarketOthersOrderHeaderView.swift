@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Localize_Swift
 protocol MarketOthersOrderHeaderViewDelegate: NSObjectProtocol {
     func showHideOthersToMax(button: UIButton)
 }
@@ -22,11 +23,14 @@ class MarketOthersOrderHeaderView: UITableViewHeaderFooterView {
         
         contentView.addSubview(transactionAmountLabel)
         contentView.addSubview(transactionPriceLabel)
+        // 添加语言变换通知
+        NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
         print("MarketOthersOrderHeaderView销毁了")
     }
     //MARK: - 布局
@@ -97,5 +101,10 @@ class MarketOthersOrderHeaderView: UITableViewHeaderFooterView {
             button.setImage(UIImage.init(named: "top_arrow"), for: .normal)
         }
         self.delegate?.showHideOthersToMax(button: button)
+    }
+    @objc func setText() {
+        headerTitleLabel.text = localLanguage(keyString: "wallet_market_other_commission_title")
+        transactionAmountLabel.text = localLanguage(keyString: "wallet_market_trade_amount_title")
+        transactionPriceLabel.text = localLanguage(keyString: "wallet_market_trade_price_title")
     }
 }

@@ -10,6 +10,11 @@ import UIKit
 import SocketIO
 import StatefulViewController
 class MarketViewController: UIViewController {
+    /*
+     1.切换兑换币会GetMarket
+     2.页面跳转后加载会GetMarket
+     3.交换左右币后加载GetMarket
+     */
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.init(hex: "F7F7F9")
@@ -85,6 +90,7 @@ class MarketViewController: UIViewController {
                 }
                 print("添加监听")
                 self.dataModel.getMarketData(address: walletAddress, payContract: payContract, exchangeContract: exchangeContract)
+//                self.dataModel.getCurrentOrder(address: walletAddress, baseAddress: payContract, exchangeAddress: exchangeContract)
             }
         }
     }
@@ -388,7 +394,6 @@ extension MarketViewController: MarketTableViewManagerDelegate {
             }
         }
         self.detailView.tableView.endUpdates()
-//        self.detailView.tableView.setContentOffset(CGPoint.init(x: 0, y: self.detailView.tableView.contentSize.height - self.detailView.tableView.bounds.size.height), animated: true)
     }
 }
 extension MarketViewController {
@@ -485,6 +490,7 @@ extension MarketViewController {
                 }).map({ (item) in
                     MarketOrderDataModel.init(id: item.id, user: item.user, state: item.state, tokenGet: item.tokenGet, tokenGetSymbol: item.tokenGetSymbol, amountGet: item.amountGet, tokenGive: item.tokenGive, tokenGiveSymbol: item.tokenGiveSymbol, amountGive: item.amountGive, version: item.version, date: item.date, update_date: item.update_date, update_version: item.update_version, amountFilled: item.amountFilled, price: headerView?.rightTokenModel?.price)
                 })
+                headerView?.rate = tempData.price ?? 0
                 self.detailView.tableView.reloadData()
             }
         } else if type == "OrderChange" {
@@ -661,19 +667,36 @@ extension MarketViewController {
                         self.tableViewManager.sellOrders?.remove(at: j)
                         if let count = self.tableViewManager.sellOrders?.count, count >= 0 {
                             // 判断返回数据是否在已展示的5条数据中，如果在，删除数据+刷新Tableview，不在仅删除数据
-                            if j < 5 {
-                                // 已在列表中展示
-                                guard stopRefreshTableView == false else {
-                                    dataExist = true
-                                    return
+                            if self.tableViewManager.showOtherSellOrdersToMax == false {
+                                if j < 5 {
+                                    // 已在列表中展示
+                                    guard stopRefreshTableView == false else {
+                                        dataExist = true
+                                        return
+                                    }
+                                    self.detailView.tableView.beginUpdates()
+                                    self.detailView.tableView.deleteRows(at: [IndexPath.init(row: j, section: 2)], with: UITableView.RowAnimation.left)
+                                    if count >= 5 {
+                                        self.detailView.tableView.insertRows(at: [IndexPath.init(row: 4, section: 2)], with: UITableView.RowAnimation.bottom)
+                                    }
+                                    self.detailView.tableView.endUpdates()
                                 }
-                                self.detailView.tableView.beginUpdates()
-                                self.detailView.tableView.deleteRows(at: [IndexPath.init(row: j, section: 2)], with: UITableView.RowAnimation.left)
-                                if count >= 5 {
-                                    self.detailView.tableView.insertRows(at: [IndexPath.init(row: 4, section: 2)], with: UITableView.RowAnimation.bottom)
+                            } else {
+                                if j < 20 {
+                                    // 已在列表中展示
+                                    guard stopRefreshTableView == false else {
+                                        dataExist = true
+                                        return
+                                    }
+                                    self.detailView.tableView.beginUpdates()
+                                    self.detailView.tableView.deleteRows(at: [IndexPath.init(row: j, section: 2)], with: UITableView.RowAnimation.left)
+                                    if count >= 20 {
+                                        self.detailView.tableView.insertRows(at: [IndexPath.init(row: 19, section: 2)], with: UITableView.RowAnimation.bottom)
+                                    }
+                                    self.detailView.tableView.endUpdates()
                                 }
-                                self.detailView.tableView.endUpdates()
                             }
+                            
                         }
                     } else if otherOrders[i].state == "OPEN" {
                         // 其他人订单成交中,刷新数据

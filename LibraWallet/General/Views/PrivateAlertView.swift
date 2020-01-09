@@ -74,7 +74,7 @@ class PrivateAlertView: UIView {
         label.textAlignment = NSTextAlignment.center
         label.textColor = UIColor.black
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 18), weight: .medium)
-        label.text = localLanguage(keyString: "wallet_private_and_use_legal_title")
+        label.text = localLanguage(keyString: "wallet_user_and_private_agreement_title")
         return label
     }()
     private lazy var contentTextView: AttributedTextView = {
@@ -84,15 +84,15 @@ class PrivateAlertView: UIView {
 //        textView.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
         textView.backgroundColor = UIColor.white
         textView.isEditable = false
-        textView.attributer = privateAndUseLegal
+        textView.attributer = localLanguage(keyString: "wallet_private_and_use_legal_content")
             .color(UIColor.init(hex: "62606B"))
-            .font(UIFont.systemFont(ofSize: 16, weight: .regular))
-            .match("《隐私政策》").underline.makeInteract({ _ in
+            .font(UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.regular))
+            .match(localLanguage(keyString: "wallet_private_agreement_title")).underline.makeInteract({ _ in
                 if let action = self.openPrivateLegalAction {
                     action()
                 }
             })
-            .match("《服务协议》").underline.makeInteract({ _ in
+            .match(localLanguage(keyString: "wallet_user_agreement_title")).underline.makeInteract({ _ in
                 if let action = self.openUseLegalAction {
                     action()
                 }

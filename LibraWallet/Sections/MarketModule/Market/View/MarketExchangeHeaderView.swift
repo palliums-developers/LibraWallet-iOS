@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Localize_Swift
 protocol MarketExchangeHeaderViewDelegate: NSObjectProtocol {
     func selectToken(button: UIButton, leftModelName: String, rightModelName: String)
     func exchangeToken(payToken: MarketSupportCoinDataModel, receiveToken: MarketSupportCoinDataModel, amount: Double, exchangeAmount: Double)
@@ -43,12 +44,15 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
         
         backgroundImageView.addSubview(confirmButton)
         NotificationCenter.default.addObserver(self, selector: #selector(textFieldDidChange), name: UITextField.textDidChangeNotification, object: nil)
+        // 添加语言变换通知
+        NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
 
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
         print("MarketExchangeHeaderView销毁了")
     }
     //MARK: - 布局
@@ -435,7 +439,7 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
             UIView.animate(withDuration: 2) {
                 self.leftCoinButton.setTitle(self.leftTokenModel?.name ?? "---", for: UIControl.State.normal)
             }
-            calculateRate()
+//            calculateRate()
             // 点击左边处理左边
             guard let payAmountString = rightAmountTextField.text, payAmountString.isEmpty == false else {
                 return
@@ -446,7 +450,7 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
                                                            raiseOnOverflow: false,
                                                            raiseOnUnderflow: false,
                                                            raiseOnDivideByZero: false)
-            let number = NSDecimalNumber.init(string: payAmountString).dividing(by: NSDecimalNumber.init(value: self.rate), withBehavior: numberConfig)
+            let number = NSDecimalNumber.init(string: payAmountString).dividing(by: NSDecimalNumber.init(value: self.rate ?? 0), withBehavior: numberConfig)
             leftAmountTextField.text = number.stringValue
         }
     }
@@ -455,7 +459,7 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
             UIView.animate(withDuration: 2) {
                 self.rightCoinButton.setTitle(self.rightTokenModel?.name ?? "---", for: UIControl.State.normal)
             }
-            calculateRate()
+//            calculateRate()
             // 点击右边处理右边
             guard let exchangeAmountString = leftAmountTextField.text, exchangeAmountString.isEmpty == false else {
                 return
@@ -466,39 +470,42 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
                                                            raiseOnOverflow: false,
                                                            raiseOnUnderflow: false,
                                                            raiseOnDivideByZero: false)
-            let number = NSDecimalNumber.init(string: exchangeAmountString).multiplying(by: NSDecimalNumber.init(value: self.rate), withBehavior: numberConfig)
+            let number = NSDecimalNumber.init(string: exchangeAmountString).multiplying(by: NSDecimalNumber.init(value: self.rate ?? 0), withBehavior: numberConfig)
             rightAmountTextField.text = number.stringValue
-
         }
     }
-    var rate: Double = 0
-    func calculateRate() {
-        guard let mainPrice = self.leftTokenModel?.price, mainPrice > 0 else {
-            return
+    var rate: Double? {
+        didSet {
+            self.exchangeRateLabel.text = NSDecimalNumber.init(value: rate ?? 0).stringValue
         }
-        guard let exchangePrice = self.rightTokenModel?.price, exchangePrice > 0 else {
-            return
-        }
-        if mainPrice == exchangePrice {
-            self.rate = 1
-        } else {
-            self.rate = mainPrice / exchangePrice
-        }
-        if let leftName = self.leftCoinButton.titleLabel?.text, let rightName = self.rightCoinButton.titleLabel?.text, leftName.isEmpty == false, rightName.isEmpty == false {
-            let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
-                                                           scale: 4,
-                                                           raiseOnExactness: false,
-                                                           raiseOnOverflow: false,
-                                                           raiseOnUnderflow: false,
-                                                           raiseOnDivideByZero: false)
-            let number = NSDecimalNumber.init(value: self.rate).multiplying(by: NSDecimalNumber.init(value: 1), withBehavior: numberConfig)
-            self.exchangeRateLabel.text = "1 \(leftName) = \(number.stringValue) \(rightName)"
-
-        } else {
-            self.exchangeRateLabel.text = "---"
-        }
-        print("Rate:\(self.rate)")
     }
+//    func calculateRate() {
+//        guard let mainPrice = self.leftTokenModel?.price, mainPrice > 0 else {
+//            return
+//        }
+//        guard let exchangePrice = self.rightTokenModel?.price, exchangePrice > 0 else {
+//            return
+//        }
+//        if mainPrice == exchangePrice {
+//            self.rate = 1
+//        } else {
+//            self.rate = mainPrice / exchangePrice
+//        }
+//        if let leftName = self.leftCoinButton.titleLabel?.text, let rightName = self.rightCoinButton.titleLabel?.text, leftName.isEmpty == false, rightName.isEmpty == false {
+//            let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
+//                                                           scale: 4,
+//                                                           raiseOnExactness: false,
+//                                                           raiseOnOverflow: false,
+//                                                           raiseOnUnderflow: false,
+//                                                           raiseOnDivideByZero: false)
+//            let number = NSDecimalNumber.init(value: self.rate).multiplying(by: NSDecimalNumber.init(value: 1), withBehavior: numberConfig)
+//            self.exchangeRateLabel.text = "1 \(leftName) = \(number.stringValue) \(rightName)"
+//
+//        } else {
+//            self.exchangeRateLabel.text = "---"
+//        }
+//        print("Rate:\(self.rate)")
+//    }
     @objc func textFieldDidChange() {
         guard let payAmountString = leftAmountTextField.text else {
             return
@@ -517,7 +524,7 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
                                                            raiseOnOverflow: false,
                                                            raiseOnUnderflow: false,
                                                            raiseOnDivideByZero: false)
-            let number = NSDecimalNumber.init(string: payAmountString).multiplying(by: NSDecimalNumber.init(value: self.rate), withBehavior: numberConfig)
+            let number = NSDecimalNumber.init(string: payAmountString).multiplying(by: NSDecimalNumber.init(value: self.rate ?? 0), withBehavior: numberConfig)
             rightAmountTextField.text = number.stringValue
         } else {
             guard isPurnDouble(string: exchangeAmountString) else {
@@ -530,9 +537,20 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
                                                            raiseOnOverflow: false,
                                                            raiseOnUnderflow: false,
                                                            raiseOnDivideByZero: false)
-            let number = NSDecimalNumber.init(string: exchangeAmountString).dividing(by: NSDecimalNumber.init(value: self.rate), withBehavior: numberConfig)
+            let number = NSDecimalNumber.init(string: exchangeAmountString).dividing(by: NSDecimalNumber.init(value: self.rate ?? 0), withBehavior: numberConfig)
             leftAmountTextField.text = number.stringValue
         }
+    }
+    @objc func setText() {
+        leftAmountTextField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_market_transfer_amount_textfield_placeholder"),
+                                                                       attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C5C8DB"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)])
+        rightAmountTextField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_market_receive_amount_textfield_placeholder"),
+                                                                        attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C5C8DB"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)])
+        exchangeRateTitleLabel.text = localLanguage(keyString: "wallet_market_exchange_fee_title")
+        transferFeeTitleLabel.text = localLanguage(keyString: "wallet_transfer_transaction_fee_title")
+        transferSpeedLeftTitleLabel.text = localLanguage(keyString: "wallet_transfer_transaction_fee_least_title")
+        transferSpeedRightTitleLabel.text = localLanguage(keyString: "wallet_transfer_transaction_fee_max_title")
+        confirmButton.setTitle(localLanguage(keyString: "wallet_market_exchange_confirm_title"), for: UIControl.State.normal)
     }
 }
 extension MarketExchangeHeaderView: UITextFieldDelegate {

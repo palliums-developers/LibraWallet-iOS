@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Localize_Swift
 protocol MarketMyOrderHeaderViewDelegate: NSObjectProtocol {
     func showOrderCenter()
 }
@@ -23,11 +24,14 @@ class MarketMyOrderHeaderView: UITableViewHeaderFooterView {
         contentView.addSubview(transactionTitleLabel)
         contentView.addSubview(transactionAmountLabel)
         contentView.addSubview(transactionPriceLabel)
+        // 添加语言变换通知
+        NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
         print("MarketMyOrderHeaderView销毁了")
     }
     //MARK: - 布局
@@ -108,5 +112,12 @@ class MarketMyOrderHeaderView: UITableViewHeaderFooterView {
     }()
     @objc func buttonClick(button: UIButton) {
         self.delegate?.showOrderCenter()
+    }
+    @objc func setText() {
+        headerTitleLabel.text = localLanguage(keyString: "wallet_market_mine_commission_title")
+        headerButton.setTitle(localLanguage(keyString: "wallet_market_order_center_title"), for: UIControl.State.normal)
+        transactionTitleLabel.text = localLanguage(keyString: "wallet_market_trade_name_title")
+        transactionAmountLabel.text = localLanguage(keyString: "wallet_market_trade_amount_title")
+        transactionPriceLabel.text = localLanguage(keyString: "wallet_market_trade_price_title")
     }
 }

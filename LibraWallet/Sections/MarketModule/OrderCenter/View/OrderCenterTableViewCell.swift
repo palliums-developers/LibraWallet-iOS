@@ -245,7 +245,7 @@ class OrderCenterTableViewCell: UITableViewCell {
             amountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(string: (model?.amountGet ?? "0")),
                                                       scale: 4,
                                                       unit: 1000000)
-            priceLabel.text = "\(model?.price ?? 0)"
+            priceLabel.text = "\(model?.tokenGetPrice ?? 0)"
             dateLabel.text = timestampToDateString(timestamp: model?.date ?? 0, dateFormat: "MM/dd HH:mm:ss")
             successAmountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(string: (model?.amountFilled ?? "0")),
                                                              scale: 4,

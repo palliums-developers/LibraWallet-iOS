@@ -39,6 +39,10 @@ struct MarketOrderDataModel: Codable {
     var amountFilled: String?
     /// 价格（自行添加）
     var price: Double?
+    
+    var tokenGivePrice: Double?
+    
+    var tokenGetPrice: Double?
 }
 struct MarketOrderModel: Codable {
     var buys: [MarketOrderDataModel]?
@@ -59,6 +63,7 @@ struct MarketSupportCoinDataModel: Codable {
 struct MarketResponseMainModel: Codable {
     var orders: [MarketOrderDataModel]?
     var depths: MarketOrderModel?
+    var price: Double?
 }
 class MarketModel: NSObject {
     private var requests: [Cancellable] = []
@@ -180,18 +185,18 @@ class MarketModel: NSObject {
         }
         return tempMarketTokens
     }
-//    func getCurrentOrder(baseAddress: String, exchangeAddress: String) {
-//        let request = mainProvide.request(.GetCurrentOrder(baseAddress, exchangeAddress)) {[weak self](result) in
+//    func getCurrentOrder(address: String, baseAddress: String, exchangeAddress: String) {
+//        let request = mainProvide.request(.GetCurrentOrder(address, baseAddress, exchangeAddress)) {[weak self](result) in
 //            switch  result {
 //            case let .success(response):
 //                do {
-//                    let json = try response.map(MarketOrderModel.self)
+//                    let json = try response.map(MarketResponseMainModel.self)
 ////                    guard json. == 2000 else {
 ////                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "GetCurrentOrder")
 ////                        self?.setValue(data, forKey: "dataDic")
 ////                        return
 ////                    }
-//                    let data = setKVOData(type: "GetCurrentOrder", data: json.buys)
+//                    let data = setKVOData(type: "GetCurrentOrder", data: json)
 //                    self?.setValue(data, forKey: "dataDic")
 //                } catch {
 //                    print("GetCurrentOrder_解析异常\(error.localizedDescription)")
@@ -403,7 +408,6 @@ class MarketModel: NSObject {
         ViolasSocketManager.shared.addMarketListening { result in
             do {
                 let modelObject = try JSONDecoder().decode(MarketResponseMainModel.self, from: result)
-                print(modelObject)
                 let data = setKVOData(type: "GetCurrentOrder", data: modelObject)
                 self.setValue(data, forKey: "dataDic")
             } catch {

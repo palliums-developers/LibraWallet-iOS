@@ -209,6 +209,7 @@ public enum LibraWalletError: Error {
         case violasTokenContractInvalid
     }
     case WalletScan(reason: ScanError)
+    
     public enum ExchangeMarketError {
         /// 未开启不能调换
         case swpUnpublishTokenError

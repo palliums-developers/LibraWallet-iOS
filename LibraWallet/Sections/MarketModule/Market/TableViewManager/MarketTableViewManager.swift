@@ -18,13 +18,16 @@ protocol MarketTableViewManagerDelegate: NSObjectProtocol {
 }
 class MarketTableViewManager: NSObject {
     weak var delegate: MarketTableViewManagerDelegate?
-//    var dataModel: [ViolasTokenModel]?
-//    var headerData: LibraWalletManager?
-    var normalLeftModel = MarketSupportCoinDataModel.init(addr: "", name: "---", price: 1, enable: true)
-    
+    /// 当前委托
     var buyOrders: [MarketOrderDataModel]?
+    /// 他人委托
     var sellOrders: [MarketOrderDataModel]?
+    /// 是否展示其他人挂单至20条上线
     var showOtherSellOrdersToMax: Bool = false
+    /// 付出稳定币
+    var payToken: MarketSupportCoinDataModel?
+    /// 兑换稳定币
+    var exchangeToken: MarketSupportCoinDataModel?
     deinit {
         print("MarketTableViewManager销毁了")
     }
@@ -38,7 +41,6 @@ extension MarketTableViewManager: UITableViewDelegate {
         } else {
             return 30
         }
-        
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
@@ -151,11 +153,6 @@ extension MarketTableViewManager: UITableViewDataSource {
         }
     }
 }
-//extension MarketTableViewManager: AddAssetViewTableViewCellDelegate {
-//    func switchButtonChange(model: ViolasTokenModel, state: Bool, indexPath: IndexPath) {
-//        self.delegate?.switchButtonChange(model: model, state: state, indexPath: indexPath)
-//    }
-//}
 extension MarketTableViewManager: MarketExchangeHeaderViewDelegate {
     func changeLeftRightTokenModel(leftModel: MarketSupportCoinDataModel, rightModel: MarketSupportCoinDataModel) {
         self.delegate?.changeLeftRightTokenModel(leftModel: leftModel, rightModel: rightModel)
