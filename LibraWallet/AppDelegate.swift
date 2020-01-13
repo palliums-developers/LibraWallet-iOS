@@ -38,7 +38,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         DataBaseManager.DBManager.createTransferAddressListTable()
         DataBaseManager.DBManager.createViolasTokenTable()
         IQKeyboardManager.shared.enable = true
-
         return true
     }
 

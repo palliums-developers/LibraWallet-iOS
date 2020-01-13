@@ -71,16 +71,22 @@ extension mainRequest:TargetType {
              .GetLibraAccountSequenceNumber(_),
              .GetLibraAccountTransactionList(_),
              .SendLibraTransaction(_):
-//            return URL(string:"http://52.27.228.84:4000/1.0")!
-            return URL(string:"https://api.violas.io/1.0")!
+            #if PUBLISH_VERSION
+                return URL(string:"https://api.violas.io/1.0")!
+            #else
+                return URL(string:"http://52.27.228.84:4000/1.0")!
+            #endif
         case .GetViolasAccountBalance(_, _),
              .GetViolasAccountSequenceNumber(_),
              .GetViolasAccountTransactionList(_, _, _, _),
              .SendViolasTransaction(_),
              .GetViolasTokenList,
              .GetViolasAccountEnableToken(_):
-//            return URL(string:"http://52.27.228.84:4000/1.0")!
-            return URL(string:"https://api.violas.io/1.0")!
+            #if PUBLISH_VERSION
+                return URL(string:"https://api.violas.io/1.0")!
+            #else
+                return URL(string:"http://52.27.228.84:4000/1.0")!
+            #endif
         case .GetTestCoin(_, _):
             return URL(string:"http://faucet.testnet.libra.org/")!
         case .GetMarketSupportCoin,
@@ -88,8 +94,11 @@ extension mainRequest:TargetType {
              .GetAllProcessingOrder(_, _),
              .GetOrderDetail(_, _),
              .GetAllDoneOrder(_, _):
-//            return URL(string:"http://18.220.66.235:38181/v1")!
-            return URL(string:"https://dex.violas.io/v1")!
+            #if PUBLISH_VERSION
+                return URL(string:"https://dex.violas.io/v1")!
+            #else
+                return URL(string:"http://18.220.66.235:38181/v1")!
+            #endif
         }
     }
     var path: String {
