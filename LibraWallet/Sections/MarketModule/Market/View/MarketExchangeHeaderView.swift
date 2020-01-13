@@ -9,7 +9,7 @@
 import UIKit
 import Localize_Swift
 protocol MarketExchangeHeaderViewDelegate: NSObjectProtocol {
-    func selectToken(button: UIButton, leftModelName: String, rightModelName: String)
+    func selectToken(button: UIButton, leftModelName: String, rightModelName: String, header: MarketExchangeHeaderView)
     func exchangeToken(payToken: MarketSupportCoinDataModel, receiveToken: MarketSupportCoinDataModel, amount: Double, exchangeAmount: Double)
     func changeLeftRightTokenModel(leftModel: MarketSupportCoinDataModel, rightModel: MarketSupportCoinDataModel)
 }
@@ -374,7 +374,32 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
                 self.makeToast(LibraWalletError.WalletMarket(reason: .exchangeTokenNotSelect).localizedDescription, position: .center)
                 return
             }
-            self.delegate?.changeLeftRightTokenModel(leftModel: tempLeftModel, rightModel: tempRightModel)
+            guard tempRightModel.enable == true else {
+                let content = (tempRightModel.name ?? "") + LibraWalletError.WalletMarket(reason: .swpUnpublishTokenError).localizedDescription
+                self.makeToast(content, position: .center)
+                return
+            }
+            guard isPurnDouble(string: self.rightAmountTextField.text ?? "0") == true else {
+                self.makeToast(LibraWalletError.WalletMarket(reason: .exchangeAmountInvalid).localizedDescription, position: .center)
+                return
+            }
+            guard Int64(Double(self.rightAmountTextField.text ?? "0")!) < ApplyTokenMaxLimit else {
+                self.makeToast(LibraWalletError.WalletMarket(reason: .exchangeAmountMaxLimit).localizedDescription, position: .center)
+                return
+            }
+            guard isPurnDouble(string: self.leftAmountTextField.text ?? "0") == true else {
+                self.makeToast(LibraWalletError.WalletMarket(reason: .payAmountInvalid).localizedDescription, position: .center)
+                return
+            }
+            guard Int64(Double(self.leftAmountTextField.text ?? "0")!) < ApplyTokenMaxLimit else {
+                self.makeToast(LibraWalletError.WalletMarket(reason: .payAmountMaxLimit).localizedDescription, position: .center)
+                return
+            }
+            let tempModel = tempLeftModel
+            self.rightTokenModel = tempModel
+            self.leftTokenModel = tempRightModel
+            // 交换后请求数据
+            self.delegate?.changeLeftRightTokenModel(leftModel: tempRightModel, rightModel: tempLeftModel)
         } else {
             // 兑换
             self.leftAmountTextField.resignFirstResponder()
@@ -431,7 +456,7 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
                 return
             }
         }
-        self.delegate?.selectToken(button: button, leftModelName: self.leftTokenModel?.name ?? "---", rightModelName: self.rightTokenModel?.name ?? "---")
+        self.delegate?.selectToken(button: button, leftModelName: self.leftTokenModel?.name ?? "---", rightModelName: self.rightTokenModel?.name ?? "---", header: self)
     }
     
     var leftTokenModel: MarketSupportCoinDataModel? {
@@ -476,7 +501,13 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
     }
     var rate: Double? {
         didSet {
-            self.exchangeRateLabel.text = NSDecimalNumber.init(value: rate ?? 0).stringValue
+            let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
+                                                           scale: 4,
+                                                           raiseOnExactness: false,
+                                                           raiseOnOverflow: false,
+                                                           raiseOnUnderflow: false,
+                                                           raiseOnDivideByZero: false)
+            self.exchangeRateLabel.text =  NSDecimalNumber.init(value: rate ?? 0).multiplying(by: NSDecimalNumber.init(value: 1), withBehavior: numberConfig).stringValue
         }
     }
 //    func calculateRate() {

@@ -30,9 +30,24 @@ extension WalletTransactionsTableViewManager: UITableViewDelegate {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
-        
-//        let data = self.dataModel![indexPath.row]
-//        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, address: data.address ?? "")
+        var content = ""
+        switch transactionType {
+        case .Libra:
+            if let data = libraTransactions, data.isEmpty == false {
+                content = data[indexPath.row].explorerLink ?? ""
+            }
+        case .Violas:
+            if let data = violasTransactions, data.isEmpty == false {
+                content = "\(data[indexPath.row].version ?? 0)"
+            }
+        case .BTC:
+            if let data = btcTransactions, data.isEmpty == false {
+                content = data[indexPath.row].hash ?? ""
+            }
+        default:
+            break
+        }
+        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, address: content)
     }
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let view = UIView.init()

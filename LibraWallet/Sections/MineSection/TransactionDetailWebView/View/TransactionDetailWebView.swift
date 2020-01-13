@@ -46,6 +46,10 @@ class TransactionDetailWebView: UIView {
 //        webView.load(webRequest)
         return webView
     }()
+    var toastView: ToastView? {
+        let toast = ToastView.init()
+        return toast
+    }
 //    lazy var webRequest: URLRequest = {
 //        let request = URLRequest.init(url: URL(string: helpCenterURL())!)
 //        return request

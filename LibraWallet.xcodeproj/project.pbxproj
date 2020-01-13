@@ -872,6 +872,7 @@
 		9D6264712356F92A00A79B3D /* DataManager */ = {
 			isa = PBXGroup;
 			children = (
+				9D628AC5239F9F5800E222FB /* SocketManager */,
 				9D6264732356F93700A79B3D /* Netwrok */,
 				9D6264722356F93100A79B3D /* DataBase */,
 			);
@@ -2403,7 +2404,6 @@
 			isa = PBXGroup;
 			children = (
 				36DA3FCC23B5E5C6001D7733 /* Extension */,
-				9D628AC5239F9F5800E222FB /* SocketManager */,
 				9DC8778B237958D2006378C3 /* LibraManager */,
 				9DC06A6C2373FEA300BCE1FE /* ViolasManager */,
 				9D3954FC235D4ABB0068019F /* BTCManager */,
@@ -3307,7 +3307,7 @@
 				CODE_SIGN_ENTITLEMENTS = LibraWallet/LibraWallet.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development: Jay Zou (JR6LZNW9NA)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 21;
+				CURRENT_PROJECT_VERSION = 22;
 				DEVELOPMENT_TEAM = ND49YBN8B3;
 				INFOPLIST_FILE = LibraWallet/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -3334,7 +3334,7 @@
 				CODE_SIGN_ENTITLEMENTS = LibraWallet/LibraWallet.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Jay Zou (ND49YBN8B3)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 21;
+				CURRENT_PROJECT_VERSION = 22;
 				DEVELOPMENT_TEAM = ND49YBN8B3;
 				INFOPLIST_FILE = LibraWallet/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;

@@ -87,7 +87,7 @@ class WalletTransactionsViewController: BaseViewController {
     // tableView管理类
     lazy var tableViewManager: WalletTransactionsTableViewManager = {
         let manager = WalletTransactionsTableViewManager.init()
-//        manager.delegate = self
+        manager.delegate = self
         return manager
     }()
     // 子View
@@ -276,6 +276,21 @@ extension WalletTransactionsViewController {
 }
 extension WalletTransactionsViewController: WalletTransactionsTableViewManagerDelegate {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, address: String) {
-        
+        switch self.wallet?.walletType {
+        case .BTC:
+            print("123")
+            let vc = TransactionDetailWebViewController()
+            vc.requestURL = "https://live.blockcypher.com/btc-testnet/tx/\(address)"
+            self.navigationController?.pushViewController(vc, animated: true)
+        case .Libra:
+            print("123")
+            let vc = TransactionDetailWebViewController()
+            vc.requestURL = address
+            self.navigationController?.pushViewController(vc, animated: true)
+        case .Violas:
+            print("123")
+        case .none:
+            print("钱包类型异常")
+        }
     }
 }

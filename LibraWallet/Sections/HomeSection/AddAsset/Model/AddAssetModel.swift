@@ -114,6 +114,11 @@ class AddAssetModel: NSObject {
                         self?.setValue(data, forKey: "dataDic")
                         return
                     }
+                    guard let models = json.data, models.isEmpty == false else {
+                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: "GetWalletEnableCoin")
+                        self?.setValue(data, forKey: "dataDic")
+                        return
+                    }
                     self?.walletEnableTokens = json.data
                 } catch {
                     print("GetWalletEnableCoin_解析异常\(error.localizedDescription)")

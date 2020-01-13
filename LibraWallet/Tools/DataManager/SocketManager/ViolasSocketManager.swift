@@ -11,7 +11,8 @@ import SocketIO
 struct ViolasSocketManager {
     static var shared = ViolasSocketManager()
     private var manager: SocketManager?
-    private let requestURL = "http://18.220.66.235:38181"
+//    private let requestURL = "http://18.220.66.235:38181"
+    private let requestURL = "https://dex.violas.io"
 }
 extension ViolasSocketManager {
 

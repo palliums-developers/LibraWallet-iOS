@@ -15,31 +15,33 @@ class OrderDoneModel: NSObject {
     private var orderModels: [MarketOrderDataModel]?
     private var priceModels: [MarketSupportCoinDataModel]?
     func getAllDoneOrder(address: String, version: String) {
-        let type = version.isEmpty == true ? "GetAllDoneOrderOrigin":"GetAllDoneOrderMore"
+//        let type = version.isEmpty == true ? "GetAllDoneOrderOrigin":"GetAllDoneOrderMore"
 
         let group = DispatchGroup.init()
-        let quene = DispatchQueue.init(label: "AllDoneOrderQuene")
-        quene.async(group: group, qos: .default, flags: [], execute: {
-            self.getAllDoneOrderList(address: address, version: version, group: group)
-        })
-        quene.async(group: group, qos: .default, flags: [], execute: {
-            self.getCurrentPrice(group: group)
-        })
-        group.notify(queue: quene) {
-            print("回到该队列中执行")
-            DispatchQueue.main.async(execute: {
-                guard let tempOrderModels = self.orderModels else {
-                    return
-                }
-                guard let tempPriceModels = self.priceModels else {
-                    return
-                }
-                let result = self.rebuiltData(orderModel: tempOrderModels, priceModel: tempPriceModels)
+//        let quene = DispatchQueue.init(label: "AllDoneOrderQuene")
+//        quene.async(group: group, qos: .default, flags: [], execute: {
+//            self.getAllDoneOrderList(address: address, version: version, group: group)
+//        })
+//        quene.async(group: group, qos: .default, flags: [], execute: {
+//            self.getCurrentPrice(group: group)
+//        })
+//        group.notify(queue: quene) {
+//            print("回到该队列中执行")
+//            DispatchQueue.main.async(execute: {
+//                guard let tempOrderModels = self.orderModels else {
+//                    return
+//                }
+//                guard let tempPriceModels = self.priceModels else {
+//                    return
+//                }
+//                let result = self.rebuiltData(orderModel: tempOrderModels, priceModel: tempPriceModels)
+//
+//                let data = setKVOData(type: type, data: result)
+//                self.setValue(data, forKey: "dataDic")
+//            })
+//        }
+        self.getAllDoneOrderList(address: address, version: version, group: group)
 
-                let data = setKVOData(type: type, data: result)
-                self.setValue(data, forKey: "dataDic")
-            })
-        }
     }
     private func getAllDoneOrderList(address: String, version: String, group: DispatchGroup) {
         group.enter()
@@ -55,9 +57,9 @@ class OrderDoneModel: NSObject {
                         self?.setValue(data, forKey: "dataDic")
                         return
                     }
-//                    let data = setKVOData(type: type, data: json.orders)
-//                    self?.setValue(data, forKey: "dataDic")
-                    self?.orderModels = json.orders
+                    let data = setKVOData(type: type, data: json.orders)
+                    self?.setValue(data, forKey: "dataDic")
+//                    self?.orderModels = json.orders
                 } catch {
                     print("\(type)_解析异常\(error.localizedDescription)")
                     let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: type)

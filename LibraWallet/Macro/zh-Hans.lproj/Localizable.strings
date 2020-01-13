@@ -267,6 +267,8 @@ wallet_private_agreement_title = "《隐私保护》";
 wallet_private_and_use_legal_cancel_button_title = "Disagree";
 wallet_private_and_use_legal_confirm_button_title = "Agree";
 wallet_private_and_use_legal_content = "感谢您选择了SSO APP\n我们极度重视您的用户隐私。您在使用我们的服务时，我们可能会收集和使用您的相关信息。在使用我们的产品前，请务必审慎阅读《隐私政策》和《服务协议》内的所有内容，来了解我们如何收集、使用、储存和分享这些信息，以及我们为您提供的访问、更新、控制和保护这些信息的方式。";
+// 语言切换
+wallet_language_change_success = "切换成功";
 
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "安全提醒";

@@ -8,7 +8,7 @@
 
 import UIKit
 import WebKit
-class TransactionDetailWebViewController: UIViewController {
+class TransactionDetailWebViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // 设置标题
@@ -41,7 +41,8 @@ class TransactionDetailWebViewController: UIViewController {
 extension TransactionDetailWebViewController :WKNavigationDelegate {
     // 页面开始加载时调用
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!){
-        self.view.makeToastActivity(.center)
+//        self.view.makeToastActivity(.center)
+//        self.detailView.toastView?.show()
     }
     // 当内容开始返回时调用
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!){
@@ -49,16 +50,19 @@ extension TransactionDetailWebViewController :WKNavigationDelegate {
     }
     // 页面加载完成之后调用
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!){
-        self.view.hideToastActivity()
-        
+//        self.view.hideToastActivity()
+//        self.detailView.toastView?.hide()
+        self.title = webView.title
     }
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        print(error)
+//        print(error)
+//        self.detailView.toastView?.hide()
     }
     // 页面加载失败时调用
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         /// 弹出提示框点击确定返回
-        self.view.hideToastActivity()
+//        self.view.hideToastActivity()
+//        self.detailView.toastView?.hide()
 //        let alertView = UIAlertController.init(title: localLanguage(keyString: "wallet_withdraw_address_alert_title"),
 //                                               message: HKWalletError.WalletLoadURLError(reason: .loadFailed).localizedDescription,
 //                                               preferredStyle: .alert)

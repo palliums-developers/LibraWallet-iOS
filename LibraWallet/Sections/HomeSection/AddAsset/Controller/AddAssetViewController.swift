@@ -179,6 +179,7 @@ extension AddAssetViewController {
                 // 数据为空
             }
             self.detailView.toastView?.hide()
+            self.detailView.hideToastActivity()
             if let action = self.actionClosure {
                 action(false)
             }
@@ -195,9 +196,9 @@ extension AddAssetViewController {
             }
         } else if type == "SendViolasTransaction" {
             self.detailView.toastView?.hide()
-            if let action = self.actionClosure {
-                action(true)
-            }
+//            if let action = self.actionClosure {
+//                action(true)
+//            }
             self.detailView.makeToast(localLanguage(keyString: "wallet_add_asset_alert_success_title"),
                                 position: .center)
             

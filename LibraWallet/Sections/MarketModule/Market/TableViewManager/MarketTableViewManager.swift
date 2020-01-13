@@ -10,7 +10,7 @@ import UIKit
 protocol MarketTableViewManagerDelegate: NSObjectProtocol {
 //    func switchButtonChange(model: ViolasTokenModel, state: Bool, indexPath: IndexPath)
 //    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: ViolasTokenModel)
-    func selectToken(button: UIButton, leftModelName: String, rightModelName: String)
+    func selectToken(button: UIButton, leftModelName: String, rightModelName: String, header: MarketExchangeHeaderView)
     func showOrderCenter()
     func exchangeToken(payToken: MarketSupportCoinDataModel, receiveToken: MarketSupportCoinDataModel, amount: Double, exchangeAmount: Double)
     func showHideOthersToMax(state: Bool)
@@ -157,8 +157,8 @@ extension MarketTableViewManager: MarketExchangeHeaderViewDelegate {
     func changeLeftRightTokenModel(leftModel: MarketSupportCoinDataModel, rightModel: MarketSupportCoinDataModel) {
         self.delegate?.changeLeftRightTokenModel(leftModel: leftModel, rightModel: rightModel)
     }
-    func selectToken(button: UIButton, leftModelName: String, rightModelName: String) {
-        self.delegate?.selectToken(button: button, leftModelName: leftModelName, rightModelName: rightModelName)
+    func selectToken(button: UIButton, leftModelName: String, rightModelName: String, header: MarketExchangeHeaderView) {
+        self.delegate?.selectToken(button: button, leftModelName: leftModelName, rightModelName: rightModelName, header: header)
     }
     
     func exchangeToken(payToken: MarketSupportCoinDataModel, receiveToken: MarketSupportCoinDataModel, amount: Double, exchangeAmount: Double) {
