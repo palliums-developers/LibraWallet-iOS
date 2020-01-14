@@ -9,6 +9,7 @@
 import UIKit
 import BitcoinKit
 import Moya
+import BigInt
 struct txsData: Codable {
     var txid: String?
     var output_no: Int?
@@ -85,6 +86,38 @@ class BTCManager: NSObject {
             return false
         }
         return true
+    }
+    func getBTCToVBTCScript(address: String, tokenContract: String) -> Data {
+        var data = Data()
+        data += "violas".data(using: .utf8)!
+        data += UInt16(0x0000)
+        data += UInt16(0x3000).bigEndian
+        data += Data.init(Array<UInt8>(hex: (address)))
+        data += UInt64(20200113201).bigEndian
+        data += Data.init(Array<UInt8>(hex: (tokenContract)))
+        print(data.hex)
+        return data
+    }
+    func getData(script: Data) -> Data {
+        var scriptData: Data = Data()
+        scriptData += OpCode.OP_RETURN
+        scriptData += OpCode.OP_PUSHDATA1
+        scriptData += getLengthData(length: script.count, appendBytesCount: 1)
+        scriptData += script
+        return scriptData
+    }
+    private func getLengthData(length: Int, appendBytesCount: Int) -> Data {
+        var newData = Data()
+        let lengthData = BigUInt(length).serialize()
+        // 补全长度
+        for _ in 0..<(appendBytesCount - lengthData.count) {
+            newData.append(Data.init(hex: "00"))
+        }
+        // 追加原始数据
+        newData.append(lengthData)
+        // 倒序输出
+        let reversedAmount = newData.bytes.reversed()
+        return Data() + reversedAmount
     }
     /// 查询助词有效性
     ///

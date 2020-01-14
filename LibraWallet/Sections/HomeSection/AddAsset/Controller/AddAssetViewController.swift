@@ -123,10 +123,18 @@ extension AddAssetViewController: AddAssetTableViewManagerDelegate {
             self?.dataModel.publishViolasToken(sendAddress: (self?.wallet?.walletAddress)!, mnemonic: mnemonic, contact: model.address ?? "")
             self?.actionClosure = { result in
                 if result == true {
-                    let cell = self?.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
-                    cell.switchButton.setOn(result, animated: true)
                     print("开启成功插入")
-                    _ = DataBaseManager.DBManager.insertViolasToken(walletID: self?.wallet?.walletID ?? 0, model: model)
+                    if DataBaseManager.DBManager.isExistViolasToken(walletID: self?.wallet?.walletID ?? 0, contract: model.address ?? "") {
+                        //已存在改状态
+                        print("已存在改状态,\(model.address ?? "")")
+                        let cell = self?.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
+                        cell.switchButton.setOn(result, animated: true)
+                        _ = DataBaseManager.DBManager.updateViolasTokenState(walletID: self?.wallet?.walletID ?? 0, tokenAddress: model.address ?? "", state: result)
+                    } else {
+                        //不存在插入
+                        print("不存在插入")
+                        _ = DataBaseManager.DBManager.insertViolasToken(walletID: self?.wallet?.walletID ?? 0, model: model)
+                    }
                     if let action = self?.needUpdateClosure {
                         action(true)
                     }
@@ -196,12 +204,11 @@ extension AddAssetViewController {
             }
         } else if type == "SendViolasTransaction" {
             self.detailView.toastView?.hide()
-//            if let action = self.actionClosure {
-//                action(true)
-//            }
+            if let action = self.actionClosure {
+                action(true)
+            }
             self.detailView.makeToast(localLanguage(keyString: "wallet_add_asset_alert_success_title"),
                                 position: .center)
-            
         }
     }
 }

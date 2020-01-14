@@ -271,7 +271,9 @@
 		3642EB6523CC1EDD00C7B04A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9D7124362329EA1C009DED52 /* Localizable.strings */; };
 		3642EB6623CC1EDD00C7B04A /* ViolasToken.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9DC87793237B0F16006378C3 /* ViolasToken.plist */; };
 		3642EB6723CC1EDD00C7B04A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D712442232F7662009DED52 /* Assets.xcassets */; };
+		3642EB7123CC654500C7B04A /* Serialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3642EB7023CC654500C7B04A /* Serialization.swift */; };
 		365A89C023B9A7CE00C55A10 /* WYDTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 365A89BF23B9A7CE00C55A10 /* WYDTextField.swift */; };
+		36958B7A23CC78C3006F267C /* Serialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3642EB7023CC654500C7B04A /* Serialization.swift */; };
 		36B43A7223BDE967008E2EEA /* LBXScanError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B43A7123BDE967008E2EEA /* LBXScanError.swift */; };
 		36DA3FCE23B5E5C6001D7733 /* UIButton + imageTitleLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36DA3FCD23B5E5C6001D7733 /* UIButton + imageTitleLocation.swift */; };
 		84F942D4E0AB7CC3C4350654 /* Pods_LibraWalletTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68DEF872B52FD220FD8C8434 /* Pods_LibraWalletTests.framework */; };
@@ -558,8 +560,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		3642EB6C23CC1EDD00C7B04A /* LibraWallet_Publish.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LibraWallet_Publish.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3642EB6C23CC1EDD00C7B04A /* ViolasPay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ViolasPay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3642EB6D23CC1EDD00C7B04A /* LibraWallet copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "LibraWallet copy-Info.plist"; path = "/Users/wangyingdong/Desktop/公司电脑桌面/柏链/LibraWallet/LibraWallet copy-Info.plist"; sourceTree = "<absolute>"; };
+		3642EB7023CC654500C7B04A /* Serialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Serialization.swift; sourceTree = "<group>"; };
 		365A89BF23B9A7CE00C55A10 /* WYDTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WYDTextField.swift; sourceTree = "<group>"; };
 		36B43A7123BDE967008E2EEA /* LBXScanError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LBXScanError.swift; sourceTree = "<group>"; };
 		36DA3FCD23B5E5C6001D7733 /* UIButton + imageTitleLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton + imageTitleLocation.swift"; sourceTree = "<group>"; };
@@ -1035,6 +1038,7 @@
 		9D3954FC235D4ABB0068019F /* BTCManager */ = {
 			isa = PBXGroup;
 			children = (
+				3642EB7023CC654500C7B04A /* Serialization.swift */,
 				9D3954FD235D4C0F0068019F /* BTCManager.swift */,
 			);
 			path = BTCManager;
@@ -2222,7 +2226,7 @@
 				9DA8E29E2317ABC400E28D07 /* Violas.app */,
 				9DA8E2B22317ABC600E28D07 /* LibraWalletTests.xctest */,
 				9DA8E2BD2317ABC600E28D07 /* LibraWalletUITests.xctest */,
-				3642EB6C23CC1EDD00C7B04A /* LibraWallet_Publish.app */,
+				3642EB6C23CC1EDD00C7B04A /* ViolasPay.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2936,7 +2940,7 @@
 			);
 			name = LibraWallet_Publish;
 			productName = LibraWallet;
-			productReference = 3642EB6C23CC1EDD00C7B04A /* LibraWallet_Publish.app */;
+			productReference = 3642EB6C23CC1EDD00C7B04A /* ViolasPay.app */;
 			productType = "com.apple.product-type.application";
 		};
 		9DA8E29D2317ABC400E28D07 /* LibraWallet */ = {
@@ -3211,6 +3215,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				36958B7A23CC78C3006F267C /* Serialization.swift in Sources */,
 				3642EA6023CC1EDD00C7B04A /* WalletListFlowLayout.swift in Sources */,
 				3642EA6123CC1EDD00C7B04A /* ed25519_sign.swift in Sources */,
 				3642EA6223CC1EDD00C7B04A /* BackupMnemonicView.swift in Sources */,
@@ -3675,6 +3680,7 @@
 				9D5B4E72236BCBEE00F4D99C /* AddAssetViewController.swift in Sources */,
 				9DC06A6E2373FEB900BCE1FE /* ViolasManager.swift in Sources */,
 				9D9B49E8236031F700354EF0 /* SettingTableViewCell.swift in Sources */,
+				3642EB7123CC654500C7B04A /* Serialization.swift in Sources */,
 				9DC4886C232222CF005FF254 /* LBXScanLineAnimation.swift in Sources */,
 				9DB515B423A32C130069A909 /* ViolasPublicKey.swift in Sources */,
 				9D628AC0239F72E100E222FB /* OrderDetailModel.swift in Sources */,
@@ -3807,7 +3813,7 @@
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D PUBLISH_VERSION";
 				PRODUCT_BUNDLE_IDENTIFIER = com.palliums.wallet;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = ViolasPay;
 				PROVISIONING_PROFILE_SPECIFIER = HobaWalletDeveloper;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -3835,7 +3841,7 @@
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D PUBLISH_VERSION";
 				PRODUCT_BUNDLE_IDENTIFIER = com.palliums.wallet;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = ViolasPay;
 				PROVISIONING_PROFILE_SPECIFIER = HobaWallet;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;

@@ -104,7 +104,7 @@ struct ViolasDataModel: Codable {
     // 判断接收发送(自行添加0:转账,1收款)
     var transaction_type: Int?
     // 判断交易代币名字
-    var transaction_token_name: String?
+    var module_name: String?
 }
 struct ViolasResponseModel: Codable {
     var code: Int?
@@ -166,35 +166,37 @@ class WalletTransactionsModel: NSObject {
             self.requests.append(request)
     }
     func getViolasTransactionList(address: String, page: Int, pageSize: Int, contract: String, requestStatus: Int) {
-        let type = requestStatus == 0 ? "ViolasTransactionHistoryOrigin":"ViolasTransactionHistoryMore"
+//        let type = requestStatus == 0 ? "ViolasTransactionHistoryOrigin":"ViolasTransactionHistoryMore"
 
+//        let group = DispatchGroup.init()
+//        let quene = DispatchQueue.init(label: "SupportTokenQuene")
+//        quene.async(group: group, qos: .default, flags: [], execute: {
+////            self.getMarketSupportToken(group: group)
+//            self.getViolasTransactionHistory(address: address, page: page, pageSize: pageSize, contract: contract, requestStatus: requestStatus, group: group)
+//        })
+//        quene.async(group: group, qos: .default, flags: [], execute: {
+//            self.getViolasTokenList(group: group)
+//        })
+//        group.notify(queue: quene) {
+//            print("回到该队列中执行")
+//            DispatchQueue.main.async(execute: {
+//                guard let walletTokens = self.transactionList else {
+//                    return
+//                }
+//                guard let tokenList = self.supportTokens else {
+//                    return
+//                }
+////                let tempResult = self.rebuiltData(walletTokens: walletTokens, marketTokens: marketTokens)
+//                let result = self.dealViolasTransactions(models: walletTokens, walletAddress: address, tokenList: tokenList)
+//
+////                let finalResult = self.dealModelWithSelect(walletID: walletID, models: tempResult)
+//
+//                let data = setKVOData(type: type, data: result)
+//                self.setValue(data, forKey: "dataDic")
+//            })
+//        }
         let group = DispatchGroup.init()
-        let quene = DispatchQueue.init(label: "SupportTokenQuene")
-        quene.async(group: group, qos: .default, flags: [], execute: {
-//            self.getMarketSupportToken(group: group)
-            self.getViolasTransactionHistory(address: address, page: page, pageSize: pageSize, contract: contract, requestStatus: requestStatus, group: group)
-        })
-        quene.async(group: group, qos: .default, flags: [], execute: {
-            self.getViolasTokenList(group: group)
-        })
-        group.notify(queue: quene) {
-            print("回到该队列中执行")
-            DispatchQueue.main.async(execute: {
-                guard let walletTokens = self.transactionList else {
-                    return
-                }
-                guard let tokenList = self.supportTokens else {
-                    return
-                }
-//                let tempResult = self.rebuiltData(walletTokens: walletTokens, marketTokens: marketTokens)
-                let result = self.dealViolasTransactions(models: walletTokens, walletAddress: address, tokenList: tokenList)
-
-//                let finalResult = self.dealModelWithSelect(walletID: walletID, models: tempResult)
-                
-                let data = setKVOData(type: type, data: result)
-                self.setValue(data, forKey: "dataDic")
-            })
-        }
+        self.getViolasTransactionHistory(address: address, page: page, pageSize: pageSize, contract: contract, requestStatus: requestStatus, group: group)
     }
     /// 获取Violas交易记录
     /// - Parameters:
@@ -220,10 +222,10 @@ class WalletTransactionsModel: NSObject {
                         self?.setValue(data, forKey: "dataDic")
                         return
                     }
-//                        let result = self?.dealViolasTransactions(models: json.data!, walletAddress: address)
-//                        let data = setKVOData(type: type, data: result)
-//                        self?.setValue(data, forKey: "dataDic")
-                    self?.transactionList = json.data
+                    let result = self?.dealViolasTransactions(models: json.data!, walletAddress: address, tokenList: [ViolasTokenModel]())
+                    let data = setKVOData(type: type, data: result)
+                    self?.setValue(data, forKey: "dataDic")
+//                    self?.transactionList = json.data
                 } catch {
                     print("解析异常\(error.localizedDescription)")
                     let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: type)
@@ -389,14 +391,14 @@ class WalletTransactionsModel: NSObject {
             } else {
                 item.transaction_type = 1
             }
-            for token in tokenList {
-                if item.receiver_module == token.address {
-                    item.transaction_token_name = token.name
-                    break
-                }
-            }
-            if item.transaction_token_name == nil {
-                item.transaction_token_name = "vtoken"
+//            for token in tokenList {
+//                if item.receiver_module == token.address {
+//                    item.module_name = token.name
+//                    break
+//                }
+//            }
+            if item.module_name == nil || item.module_name?.isEmpty == true {
+                item.module_name = "vtoken"
             }
             tempModels.append(item)
             

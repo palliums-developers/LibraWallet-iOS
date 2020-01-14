@@ -48,6 +48,7 @@ wallet_transactions_transfer_title = "转账";
 wallet_transactions_receive_title = "收款";
 wallet_transactions_check_detail_on_chain = "浏览器查询";
 wallet_transactions_publish_title = "开启";
+wallet_transactions_make_coin_title = "铸币";
 wallet_transactions_empty_default_title = "暂无交易记录";
 
 

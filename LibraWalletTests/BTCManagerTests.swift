@@ -92,4 +92,13 @@ class BTCManagerTests: XCTestCase {
         XCTAssertEqual(true, handlePassword(password: "As123123As123123As12"))
 
     }
+    func testBTCToVBTC() {
+        let script = BTCManager().getBTCToVBTCScript(address: "f086b6a2348ac502c708ac41d06fe824c91806cabcd5b2b5fa25ae1c50bed3c6", tokenContract: "cd0476e85ecc5fa71b61d84b9cf2f7fd524689a4f870c46d6a5d901b5ac1fdb2")
+        let data = BTCManager().getData(script: script)
+        print(data.toHexString())
+        XCTAssertEqual("6a4c5276696f6c617300003000f086b6a2348ac502c708ac41d06fe824c91806cabcd5b2b5fa25ae1c50bed3c600000004b4054431cd0476e85ecc5fa71b61d84b9cf2f7fd524689a4f870c46d6a5d901b5ac1fdb2", data.toHexString())
+//        data += Data.init(Array<UInt8>(hex: ("f086b6a2348ac502c708ac41d06fe824c91806cabcd5b2b5fa25ae1c50bed3c6")))
+//        data += UInt64(20200113201).bigEndian
+//        data += Data.init(Array<UInt8>(hex: ("cd0476e85ecc5fa71b61d84b9cf2f7fd524689a4f870c46d6a5d901b5ac1fdb2")))
+    }
 }

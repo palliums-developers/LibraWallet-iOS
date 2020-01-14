@@ -48,6 +48,7 @@ wallet_transactions_transfer_title = "Transfer";
 wallet_transactions_receive_title = "Receive";
 wallet_transactions_check_detail_on_chain = "Transaction History";
 wallet_transactions_publish_title = "Open Account";
+wallet_transactions_make_coin_title = "Publish";
 wallet_transactions_empty_default_title = "No Transaction Yet";
 
 /************* 已存在身份钱包创建钱包 *******************/

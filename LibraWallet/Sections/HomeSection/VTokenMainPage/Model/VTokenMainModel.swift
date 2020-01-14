@@ -64,7 +64,7 @@ class VTokenMainModel: NSObject {
             } else {
                 item.transaction_type = 1
             }
-            item.transaction_token_name = tokenName
+            item.module_name = tokenName
             tempModels.append(item)
         }
         return tempModels

@@ -172,8 +172,12 @@ class WalletTransactionsTableViewCell: UITableViewCell {
                                                       scale: 4,
                                                       unit: 1000000)
             addressLabel.text = model.receiver
-            coinLabel.text = model.transaction_token_name
-            if model.type == 0 {
+            coinLabel.text = model.module_name
+            if model.type == 1 {
+                // 平台币铸币
+                typeLabel.textColor = UIColor.init(hex: "FB8F0B")
+                typeLabel.text = localLanguage(keyString: "wallet_transactions_publish_title")
+            } else if model.type == 2 {
                 // vtoken交易
                 if model.transaction_type == 0 {
                     // 转账
@@ -184,11 +188,15 @@ class WalletTransactionsTableViewCell: UITableViewCell {
                     typeLabel.textColor = UIColor.init(hex: "13B788")
                     typeLabel.text = localLanguage(keyString: "wallet_transactions_receive_title")
                 }
-            } else if model.type == 1 {
+            }  else if model.type == 7 {
+                // 稳定币铸币
+                typeLabel.textColor = UIColor.init(hex: "FB8F0B")
+                typeLabel.text = localLanguage(keyString: "wallet_transactions_make_coin_title")
+            } else if model.type == 9 {
                 // publish
                 typeLabel.textColor = UIColor.init(hex: "FB8F0B")
                 typeLabel.text = localLanguage(keyString: "wallet_transactions_publish_title")
-            } else if model.type == 2 {
+            } else if model.type == 12 {
                 // 稳定币交易
                 if model.transaction_type == 0 {
                     // 转账
@@ -199,6 +207,21 @@ class WalletTransactionsTableViewCell: UITableViewCell {
                     typeLabel.textColor = UIColor.init(hex: "13B788")
                     typeLabel.text = localLanguage(keyString: "wallet_transactions_receive_title")
                 }
+            } else if model.type == 13 {
+                // 交易所交易
+                #warning("交易状态待整理")
+                if model.transaction_type == 0 {
+                    // 转账
+                    typeLabel.textColor = UIColor.init(hex: "E54040")
+                    typeLabel.text = localLanguage(keyString: "wallet_transactions_transfer_title")
+                } else {
+                    // 收款
+                    typeLabel.textColor = UIColor.init(hex: "13B788")
+                    typeLabel.text = localLanguage(keyString: "wallet_transactions_receive_title")
+                }
+            } else {
+                typeLabel.textColor = UIColor.init(hex: "FB8F0B")
+                typeLabel.text = "---"
             }
         }
     }
