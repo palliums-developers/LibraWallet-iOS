@@ -270,7 +270,7 @@ class ImportWalletView: UIView {
             if type == "BTC" {
                 coinTypeIcon.image = UIImage.init(named: "btc_icon")
                 nameLabel.text = localLanguage(keyString: "wallet_import_wallet_btc_title")
-            } else if type == "Lib" {
+            } else if type == "Libra" {
                 coinTypeIcon.image = UIImage.init(named: "libra_icon")
                 nameLabel.text = localLanguage(keyString: "wallet_import_wallet_libra_title")
             } else {

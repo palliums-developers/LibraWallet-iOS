@@ -78,6 +78,35 @@ struct ViolasManager {
         print(code.toHexString())
         return code.toHexString()
     }
+//    /// 注册代币
+//    /// - Parameter content: 合约地址
+//    func getViolasPublishCode(content: String) -> String {
+//        let replaceData = Data.init(Array<UInt8>(hex: content))
+//        var code = getProgramCode(content: ViolasPublishProgramCode)
+//        let range = code.index(after: 300)..<( code.endIndex - (code.endIndex - 301 - 32))
+//        code.replaceSubrange(range, with: replaceData)
+//        print(code.toHexString())
+//        return code.toHexString()
+//    }
+//    /// 稳定币交易
+//    /// - Parameter content: 合约地址
+//    func getViolasTransactionCode(content: String) -> String {
+//        let replaceData = Data.init(Array<UInt8>(hex: content))
+//        var code = getProgramCode(content: ViolasTransactionProgramCode)
+//        let range = code.index(after: 149)..<( code.endIndex - (code.endIndex - 150 - 32))
+//        code.replaceSubrange(range, with: replaceData)
+//        return code.toHexString()
+//    }
+//    /// 交易所兑换
+//    /// - Parameter content: 合约地址
+//    func getViolasTokenExchangeTransactionCode(content: String) -> String {
+//        let replaceData = Data.init(Array<UInt8>(hex: content))
+//        var code = getProgramCode(content: ViolasExchangeTokenProgramCode)
+//        let range = code.index(after: 168)..<( code.endIndex - (code.endIndex - 169 - 32))
+//        code.replaceSubrange(range, with: replaceData)
+//        print(code.toHexString())
+//        return code.toHexString()
+//    }
     /// 计算位置
     /// - Parameter contract: 合约地址
     func getViolasTokenContractLocation(contract: String) -> Int {

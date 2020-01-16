@@ -277,12 +277,12 @@ extension mainRequest:TargetType {
         case .GetAllDoneOrder(let address, let version):
             if version.isEmpty == true {
                 return .requestParameters(parameters: ["user": address,
-                                                       "state":3,
+                                                       "state":4,
                                                        "limit":10],
                                           encoding: URLEncoding.queryString)
             } else {
                 return .requestParameters(parameters: ["user": address,
-                                                       "state":3,
+                                                       "state":4,
                                                        "limit":10,
                                                        "version":version],
                                           encoding: URLEncoding.queryString)

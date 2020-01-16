@@ -16,8 +16,7 @@ struct ViolasTransaction {
         let argument1 = ViolasTransactionArgument.init(code: .Address, value: receiveAddress)
         let argument2 = ViolasTransactionArgument.init(code: .U64, value: "\(Int(amount * 1000000))")
         
-//        let programmm = TransactionProgram.init(code: getProgramCode(content: libraProgramCode), argruments: [argument1, argument2], modules: [])
-        let script = ViolasTransactionScript.init(code: getProgramCode(content: libraProgramCode), argruments: [argument1, argument2])
+        let script = ViolasTransactionScript.init(code: getProgramCode(content: ViolasProgramCode), argruments: [argument1, argument2])
         
         let raw = ViolasRawTransaction.init(senderAddres: sendAddress,
                                             sequenceNumber: sequenceNumber,

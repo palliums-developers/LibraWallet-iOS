@@ -48,7 +48,7 @@ extension ImportWalletViewController: ImportWalletViewDelegate {
     func confirmAddWallet(name: String, password: String, mnemonicArray: [String]) {
         if type == "BTC" {
             self.importBTCWallet(name: name, password: password, mnemonicArray: mnemonicArray)
-        } else if type == "Lib" {
+        } else if type == "Libra" {
             self.importLibraWallet(name: name, password: password, mnemonicArray: mnemonicArray)
         } else {
             self.importViolasWallet(name: name, password: password, mnemonicArray: mnemonicArray)

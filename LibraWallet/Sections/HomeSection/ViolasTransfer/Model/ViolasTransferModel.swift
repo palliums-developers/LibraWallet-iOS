@@ -103,10 +103,10 @@ class ViolasTransferModel: NSObject {
         queue.async {
             semaphore.wait()
             do {
-                let wallet = try LibraManager.getWallet(mnemonic: mnemonic)
+                let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
 
                 // 拼接交易
-                let request = LibraTransaction.init(sendAddress: sendAddress, receiveAddress: receiveAddress, amount: amount, sequenceNumber: UInt64(self.sequenceNumber!), code: Data.init(Array<UInt8>(hex: ViolasManager().getViolasTransactionCode(content: contact))))
+                let request = ViolasTransaction.init(sendAddress: sendAddress, receiveAddress: receiveAddress, amount: amount, sequenceNumber: UInt64(self.sequenceNumber!), code: Data.init(Array<UInt8>(hex: ViolasManager().getViolasTransactionCode(content: contact))))
                 // 签名交易
                 let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
                 self.makeViolasTransaction(signature: signature.toHexString())
