@@ -110,19 +110,19 @@ class OrderProcessingModel: NSObject {
         }
         self.requests.append(request)
     }
-    func rebuiltData(orderModel: [MarketOrderDataModel], priceModel: [MarketSupportCoinDataModel]) -> [MarketOrderDataModel] {
-        var tempOrderModel = [MarketOrderDataModel]()
-        for var item in orderModel {
-            for model in priceModel {
-                if model.addr == item.tokenGet {
-                    item.price = model.price
-                    break
-                }
-            }
-            tempOrderModel.append(item)
-        }
-        return tempOrderModel
-    }
+//    func rebuiltData(orderModel: [MarketOrderDataModel], priceModel: [MarketSupportCoinDataModel]) -> [MarketOrderDataModel] {
+//        var tempOrderModel = [MarketOrderDataModel]()
+//        for var item in orderModel {
+//            for model in priceModel {
+//                if model.addr == item.tokenGet {
+//                    item.price = model.price
+//                    break
+//                }
+//            }
+//            tempOrderModel.append(item)
+//        }
+//        return tempOrderModel
+//    }
     func getViolasSequenceNumber(sendAddress: String, semaphore: DispatchSemaphore, queue: DispatchQueue) {
         semaphore.wait()
         let request = mainProvide.request(.GetViolasAccountSequenceNumber(sendAddress)) {[weak self](result) in

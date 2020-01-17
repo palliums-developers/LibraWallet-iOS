@@ -469,13 +469,13 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
             guard let payAmountString = rightAmountTextField.text, payAmountString.isEmpty == false else {
                 return
             }
-            let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
+            let numberConfig = NSDecimalNumberHandler.init(roundingMode: .up,
                                                            scale: 4,
                                                            raiseOnExactness: false,
                                                            raiseOnOverflow: false,
                                                            raiseOnUnderflow: false,
                                                            raiseOnDivideByZero: false)
-            let number = NSDecimalNumber.init(string: payAmountString).dividing(by: NSDecimalNumber.init(value: self.rate ?? 0), withBehavior: numberConfig)
+            let number = NSDecimalNumber.init(string: payAmountString).dividing(by: NSDecimalNumber.init(string: self.exchangeRateLabel.text ?? "0"), withBehavior: numberConfig)
             leftAmountTextField.text = number.stringValue
         }
     }
@@ -495,7 +495,7 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
                                                            raiseOnOverflow: false,
                                                            raiseOnUnderflow: false,
                                                            raiseOnDivideByZero: false)
-            let number = NSDecimalNumber.init(string: exchangeAmountString).multiplying(by: NSDecimalNumber.init(value: self.rate ?? 0), withBehavior: numberConfig)
+            let number = NSDecimalNumber.init(string: exchangeAmountString).multiplying(by: NSDecimalNumber.init(string: self.exchangeRateLabel.text ?? "0"), withBehavior: numberConfig)
             rightAmountTextField.text = number.stringValue
         }
     }
@@ -555,20 +555,20 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
                                                            raiseOnOverflow: false,
                                                            raiseOnUnderflow: false,
                                                            raiseOnDivideByZero: false)
-            let number = NSDecimalNumber.init(string: payAmountString).multiplying(by: NSDecimalNumber.init(value: self.rate ?? 0), withBehavior: numberConfig)
+            let number = NSDecimalNumber.init(string: payAmountString).multiplying(by: NSDecimalNumber.init(string: self.exchangeRateLabel.text ?? "0"), withBehavior: numberConfig)
             rightAmountTextField.text = number.stringValue
         } else {
             guard isPurnDouble(string: exchangeAmountString) else {
                 return
             }
             //正在编辑右边
-            let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
+            let numberConfig = NSDecimalNumberHandler.init(roundingMode: .up,
                                                            scale: 4,
                                                            raiseOnExactness: false,
                                                            raiseOnOverflow: false,
                                                            raiseOnUnderflow: false,
                                                            raiseOnDivideByZero: false)
-            let number = NSDecimalNumber.init(string: exchangeAmountString).dividing(by: NSDecimalNumber.init(value: self.rate ?? 0), withBehavior: numberConfig)
+            let number = NSDecimalNumber.init(string: exchangeAmountString).dividing(by: NSDecimalNumber.init(string: self.exchangeRateLabel.text ?? "0"), withBehavior: numberConfig)
             leftAmountTextField.text = number.stringValue
         }
     }

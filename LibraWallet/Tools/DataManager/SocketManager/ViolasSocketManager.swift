@@ -8,6 +8,36 @@
 
 import UIKit
 import SocketIO
+enum SocketManagerState {
+    /// 等待请求
+    case WaitingRequest
+    /// 请求中
+    case Requesting
+    /// 等待响应
+    case WaitingResponse
+    /// 空闲
+    case Empty
+}
+struct SocketManagerRequest {
+    /// 任务状态
+    private(set) var state: SocketManagerState?
+    /// 任务请求数据
+    private(set) var requestData: String?
+    /// 信号量防止同时操作数据
+    private let semaphore = DispatchSemaphore.init(value: 1)
+}
+extension SocketManagerRequest {
+    mutating func changeState(state: SocketManagerState) {
+        self.semaphore.wait()
+        self.state = state
+        self.semaphore.signal()
+    }
+    mutating func changeTaskData(data: String) {
+        self.semaphore.wait()
+        self.requestData = data
+        self.semaphore.signal()
+    }
+}
 struct ViolasSocketManager {
     static var shared = ViolasSocketManager()
     private var manager: SocketManager?
@@ -15,8 +45,15 @@ struct ViolasSocketManager {
     #if PUBLISH_VERSION
         private let requestURL = "https://dex.violas.io"
     #else
-        private let requestURL = "http://18.220.66.235:38181"
+//        private let requestURL = "http://18.220.66.235:38181"
+        private let requestURL = "https://dex.violas.io"
     #endif
+    /// 请求超时时间
+    private var timeout = 30
+    /// 设置Socket任务状态
+    private var socketTask: SocketManagerRequest?
+    
+    private var timer: Timer?
 }
 extension ViolasSocketManager {
 
@@ -55,6 +92,10 @@ extension ViolasSocketManager {
             return
         }
         socket.on("market") {data, ack in
+            ViolasSocketManager.shared.timer?.invalidate()
+            ViolasSocketManager.shared.timer = nil
+            ViolasSocketManager.shared.socketTask?.changeState(state: .Empty)
+            ViolasSocketManager.shared.socketTask?.changeTaskData(data: "")
             do {
                 if data.count > 0 {
                     let tempData = try JSONSerialization.data(withJSONObject: data[0], options: [])
@@ -66,12 +107,34 @@ extension ViolasSocketManager {
             }
         }
     }
-    mutating func getMarketData(address: String, payContract: String, exchangeContract: String) {
+    mutating func getMarketData(address: String, payContract: String, exchangeContract: String, failed: @escaping (()->Void)) {
         guard let socket = manager?.defaultSocket else {
             print("获取默认Socket失败")
             return
         }
-        socket.emit("getMarket", "{\"tokenBase\":\"\(payContract)\",\"tokenQuote\":\"\(exchangeContract)\" ,\"user\":\"\(address)\"}")
+        if socket.status == .connected {
+            // 已连接
+            // 判断是否有正在进行的任务
+            guard self.socketTask?.state == .Empty || self.socketTask == nil else {
+                print("有任务正在请求")
+                return
+            }
+            self.socketTask = SocketManagerRequest.init(state: .Requesting, requestData: "{\"tokenBase\":\"\(payContract)\",\"tokenQuote\":\"\(exchangeContract)\" ,\"user\":\"\(address)\"}")
+            socket.emit("getMarket", "{\"tokenBase\":\"\(payContract)\",\"tokenQuote\":\"\(exchangeContract)\" ,\"user\":\"\(address)\"}")
+            self.timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(self.timeout), repeats: false, block: { (Timer) in
+                print("超时")
+                ViolasSocketManager.shared.socketTask?.changeState(state: .Empty)
+                ViolasSocketManager.shared.socketTask?.changeTaskData(data: "")
+                failed()
+            })
+        } else if socket.status == .connecting {
+            // 连接中
+            failed()
+        } else {
+            // 未连接
+            socket.connect()
+            failed()
+        }
     }
     
     mutating func addDepthsListening(response: @escaping (Data)->Void) {

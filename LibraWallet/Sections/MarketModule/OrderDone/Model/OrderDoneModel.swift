@@ -109,19 +109,19 @@ class OrderDoneModel: NSObject {
         }
         self.requests.append(request)
     }
-    func rebuiltData(orderModel: [MarketOrderDataModel], priceModel: [MarketSupportCoinDataModel]) -> [MarketOrderDataModel] {
-        var tempOrderModel = [MarketOrderDataModel]()
-        for var item in orderModel {
-            for model in priceModel {
-                if model.addr == item.tokenGet {
-                    item.price = model.price
-                    break
-                }
-            }
-            tempOrderModel.append(item)
-        }
-        return tempOrderModel
-    }
+//    func rebuiltData(orderModel: [MarketOrderDataModel], priceModel: [MarketSupportCoinDataModel]) -> [MarketOrderDataModel] {
+//        var tempOrderModel = [MarketOrderDataModel]()
+//        for var item in orderModel {
+//            for model in priceModel {
+//                if model.addr == item.tokenGet {
+//                    item.price = model.price
+//                    break
+//                }
+//            }
+//            tempOrderModel.append(item)
+//        }
+//        return tempOrderModel
+//    }
     deinit {
         requests.forEach { cancellable in
             cancellable.cancel()

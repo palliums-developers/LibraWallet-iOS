@@ -37,12 +37,12 @@ struct MarketOrderDataModel: Codable {
     var update_version: String?
     /// 已兑换数量
     var amountFilled: String?
-    /// 价格（自行添加）
-    var price: Double?
-    
+    /// 付出稳定币价格
     var tokenGivePrice: Double?
-    
+    /// 兑换稳定币价格
     var tokenGetPrice: Double?
+    /// 价格（自行添加）
+//    var price: Double?
 }
 struct MarketOrderModel: Codable {
     var buys: [MarketOrderDataModel]?
@@ -190,7 +190,7 @@ class MarketModel: NSObject {
 //            switch  result {
 //            case let .success(response):
 //                do {
-//                    let json = try response.map(MarketResponseMainModel.self)
+//                    let json = try response.map(MarketOrderModel.self)
 ////                    guard json. == 2000 else {
 ////                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "GetCurrentOrder")
 ////                        self?.setValue(data, forKey: "dataDic")
@@ -430,7 +430,11 @@ class MarketModel: NSObject {
     func getMarketData(address: String, payContract: String, exchangeContract: String) {
         ViolasSocketManager.shared.getMarketData(address: address,
                                                  payContract: payContract,
-                                                 exchangeContract: exchangeContract)
+                                                 exchangeContract: exchangeContract, failed: {
+            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "GetCurrentOrder")
+            self.setValue(data, forKey: "dataDic")
+        })
+        
     }
     func addDepthsLisening(payContract: String, exchangeContract: String) {
         ViolasSocketManager.shared.addListeningData(payContract: payContract,

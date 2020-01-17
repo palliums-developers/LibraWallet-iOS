@@ -115,7 +115,7 @@ class MarketMyOrderTableViewCell: UITableViewCell {
                                                       scale: 4,
                                                       unit: 1000000)
             
-            priceLabel.text = "\(model?.price ?? 0)"
+            priceLabel.text = "\(model?.tokenGetPrice ?? 0)"
             dateLabel.text = timestampToDateString(timestamp: model?.date ?? 0, dateFormat: "MM/dd HH:mm:ss")
         }
     }

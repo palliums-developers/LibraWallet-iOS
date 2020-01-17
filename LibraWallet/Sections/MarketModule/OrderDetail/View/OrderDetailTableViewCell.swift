@@ -149,7 +149,7 @@ class OrderDetailTableViewCell: UITableViewCell {
     }
     var priceModel: MarketOrderDataModel? {
         didSet {
-            priceLabel.text = "\(priceModel?.price ?? 0)"
+            priceLabel.text = "\(priceModel?.tokenGetPrice ?? 0)"
         }
     }
 }

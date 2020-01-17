@@ -99,12 +99,13 @@ class WalletTransactionsViewController: BaseViewController {
         view.tableView.mj_footer = MJRefreshBackNormalFooter.init(refreshingTarget: self, refreshingAction:  #selector(getMoreData))
         return view
     }()
+    var observer: NSKeyValueObservation?
     var wallet: LibraWalletManager? {
         didSet {
             self.tableViewManager.transactionType = wallet?.walletType
         }
     }
-    var myContext = 0
+    
     var dataOffset: Int = 0
     @objc func refreshData() {
         dataOffset = 0
@@ -133,145 +134,139 @@ class WalletTransactionsViewController: BaseViewController {
 }
 extension WalletTransactionsViewController {
     func initKVO() {
-        dataModel.addObserver(self, forKeyPath: "dataDic", options: NSKeyValueObservingOptions.new, context: &myContext)
-    }
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?)  {
-        guard context == &myContext else {
-            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
-            return
-        }
-        guard (change?[NSKeyValueChangeKey.newKey]) != nil else {
-            return
-        }
-        guard let jsonData = (object! as AnyObject).value(forKey: "dataDic") as? NSDictionary else {
-            return
-        }
-        if let error = jsonData.value(forKey: "error") as? LibraWalletError {
-            if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
-                // 网络无法访问
-                print(error.localizedDescription)
-                self.detailView.makeToast(LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription, position: .center)
-            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionTooOld).localizedDescription {
-                // 版本太久
-                print(error.localizedDescription)
-                self.detailView.makeToast("版本太旧,请及时更新版本", position: .center)
-            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
-                // 解析失败
-                print(error.localizedDescription)
-            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
-                print(error.localizedDescription)
-                // 数据为空
-                self.detailView.tableView.mj_footer.endRefreshingWithNoMoreData()
-                self.detailView.makeToast(LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription, position: .center)
-            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
-                print(error.localizedDescription)
-                // 数据状态异常
-                self.detailView.makeToast(LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription, position: .center)
-            }
-            self.detailView.hideToastActivity()
-            self.endLoading()
-//            self.endLoading(animated: false, error: error, completion: nil)
-            return
-        }
-        let type = jsonData.value(forKey: "type") as! String
-        if type == "BTCTransactionHistoryOrigin" {
-            guard let tempData = jsonData.value(forKey: "data") as? [BTCTransaction] else {
+        self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
+            guard let dataDic = change.newValue, dataDic.count != 0 else {
+                self?.detailView.hideToastActivity()
+                self?.endLoading()
                 return
             }
-            self.tableViewManager.btcTransactions = tempData
-            self.detailView.tableView.reloadData()
-        } else if type == "BTCTransactionHistoryMore" {
-            guard let tempData = jsonData.value(forKey: "data") as? [BTCTransaction] else {
+            if let error = dataDic.value(forKey: "error") as? LibraWalletError {
+                if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
+                    // 网络无法访问
+                    print(error.localizedDescription)
+                    self?.detailView.makeToast(LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription, position: .center)
+                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionTooOld).localizedDescription {
+                    // 版本太久
+                    print(error.localizedDescription)
+                    self?.detailView.makeToast("版本太旧,请及时更新版本", position: .center)
+                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
+                    // 解析失败
+                    print(error.localizedDescription)
+                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
+                    print(error.localizedDescription)
+                    // 数据为空
+                    self?.detailView.tableView.mj_footer.endRefreshingWithNoMoreData()
+                    self?.detailView.makeToast(LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription, position: .center)
+                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
+                    print(error.localizedDescription)
+                    // 数据状态异常
+                    self?.detailView.makeToast(LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription, position: .center)
+                }
+                self?.detailView.hideToastActivity()
+                self?.endLoading()
+    //            self.endLoading(animated: false, error: error, completion: nil)
                 return
             }
-            if let oldData = self.tableViewManager.btcTransactions, oldData.isEmpty == false {
-                let tempArray = NSMutableArray.init(array: oldData)
-                var insertIndexPath = [IndexPath]()
+            let type = dataDic.value(forKey: "type") as! String
+            if type == "BTCTransactionHistoryOrigin" {
+                guard let tempData = dataDic.value(forKey: "data") as? [BTCTransaction] else {
+                    return
+                }
+                self?.tableViewManager.btcTransactions = tempData
+                self?.detailView.tableView.reloadData()
+            } else if type == "BTCTransactionHistoryMore" {
+                guard let tempData = dataDic.value(forKey: "data") as? [BTCTransaction] else {
+                    return
+                }
+                if let oldData = self?.tableViewManager.btcTransactions, oldData.isEmpty == false {
+                    let tempArray = NSMutableArray.init(array: oldData)
+                    var insertIndexPath = [IndexPath]()
 
-                for index in 0..<tempData.count {
-                    let indexPath = IndexPath.init(row: 0, section: oldData.count + index)
-                    insertIndexPath.append(indexPath)
+                    for index in 0..<tempData.count {
+                        let indexPath = IndexPath.init(row: 0, section: oldData.count + index)
+                        insertIndexPath.append(indexPath)
+                    }
+                    tempArray.addObjects(from: tempData)
+                    self?.tableViewManager.btcTransactions = tempArray as? [BTCTransaction]
+                    self?.detailView.tableView.beginUpdates()
+                    for index in 0..<tempData.count {
+                        self?.detailView.tableView.insertSections(IndexSet.init(integer: oldData.count + index), with: UITableView.RowAnimation.bottom)
+                    }
+                    self?.detailView.tableView.endUpdates()
+                } else {
+                    self?.tableViewManager.btcTransactions = tempData
+                    self?.detailView.tableView.reloadData()
                 }
-                tempArray.addObjects(from: tempData)
-                self.tableViewManager.btcTransactions = tempArray as? [BTCTransaction]
-                self.detailView.tableView.beginUpdates()
-                for index in 0..<tempData.count {
-                    self.detailView.tableView.insertSections(IndexSet.init(integer: oldData.count + index), with: UITableView.RowAnimation.bottom)
+                self?.detailView.tableView.mj_footer.endRefreshing()
+            } else if type == "ViolasTransactionHistoryOrigin" {
+                guard let tempData = dataDic.value(forKey: "data") as? [ViolasDataModel] else {
+                    return
                 }
-                self.detailView.tableView.endUpdates()
-            } else {
-                self.tableViewManager.btcTransactions = tempData
-                self.detailView.tableView.reloadData()
-            }
-            self.detailView.tableView.mj_footer.endRefreshing()
-        } else if type == "ViolasTransactionHistoryOrigin" {
-            guard let tempData = jsonData.value(forKey: "data") as? [ViolasDataModel] else {
-                return
-            }
-//            self.tableViewManager.tokenName = "vtoken"
-            self.tableViewManager.violasTransactions = tempData
-            self.detailView.tableView.reloadData()
-        } else if type == "ViolasTransactionHistoryMore" {
-            guard let tempData = jsonData.value(forKey: "data") as? [ViolasDataModel] else {
-                return
-            }
-            if let oldData = self.tableViewManager.violasTransactions, oldData.isEmpty == false {
-                let tempArray = NSMutableArray.init(array: oldData)
-                var insertIndexPath = [IndexPath]()
+    //            self.tableViewManager.tokenName = "vtoken"
+                self?.tableViewManager.violasTransactions = tempData
+                self?.detailView.tableView.reloadData()
+            } else if type == "ViolasTransactionHistoryMore" {
+                guard let tempData = dataDic.value(forKey: "data") as? [ViolasDataModel] else {
+                    return
+                }
+                if let oldData = self?.tableViewManager.violasTransactions, oldData.isEmpty == false {
+                    let tempArray = NSMutableArray.init(array: oldData)
+                    var insertIndexPath = [IndexPath]()
 
-                for index in 0..<tempData.count {
-                    let indexPath = IndexPath.init(row: 0, section: oldData.count + index)
-                    insertIndexPath.append(indexPath)
+                    for index in 0..<tempData.count {
+                        let indexPath = IndexPath.init(row: 0, section: oldData.count + index)
+                        insertIndexPath.append(indexPath)
+                    }
+                    tempArray.addObjects(from: tempData)
+                    self?.tableViewManager.tokenName = "vtoken"
+                    self?.tableViewManager.violasTransactions = tempArray as? [ViolasDataModel]
+                    self?.detailView.tableView.beginUpdates()
+                    for index in 0..<tempData.count {
+                        self?.detailView.tableView.insertSections(IndexSet.init(integer: oldData.count + index), with: UITableView.RowAnimation.bottom)
+                    }
+                    self?.detailView.tableView.endUpdates()
+                } else {
+                    self?.tableViewManager.tokenName = "vtoken"
+                    self?.tableViewManager.violasTransactions = tempData
+                    self?.detailView.tableView.reloadData()
                 }
-                tempArray.addObjects(from: tempData)
-                self.tableViewManager.tokenName = "vtoken"
-                self.tableViewManager.violasTransactions = tempArray as? [ViolasDataModel]
-                self.detailView.tableView.beginUpdates()
-                for index in 0..<tempData.count {
-                    self.detailView.tableView.insertSections(IndexSet.init(integer: oldData.count + index), with: UITableView.RowAnimation.bottom)
+                self?.detailView.tableView.mj_footer.endRefreshing()
+            } else if type == "LibraTransactionHistoryOrigin" {
+                guard let tempData = dataDic.value(forKey: "data") as? [LibraDataModel] else {
+                   return
                 }
-                self.detailView.tableView.endUpdates()
-            } else {
-                self.tableViewManager.tokenName = "vtoken"
-                self.tableViewManager.violasTransactions = tempData
-                self.detailView.tableView.reloadData()
+                self?.tableViewManager.libraTransactions = tempData
+                self?.detailView.tableView.reloadData()
+            } else if type == "LibraTransactionHistoryMore" {
+    //            guard let tempData = jsonData.value(forKey: "data") as? [LibraDataModel] else {
+    //                return
+    //            }
+    //            if let oldData = self.tableViewManager.violasTransactions, oldData.isEmpty == false {
+    //                let tempArray = NSMutableArray.init(array: oldData)
+    //                var insertIndexPath = [IndexPath]()
+    //
+    //                for index in 0..<tempData.count {
+    //                    let indexPath = IndexPath.init(row: 0, section: oldData.count + index)
+    //                    insertIndexPath.append(indexPath)
+    //
+    //                }
+    //                tempArray.addObjects(from: tempData)
+    //                self.tableViewManager.libraTransactions = tempArray as? [LibraDataModel]
+    //                self.detailView.tableView.beginUpdates()
+    //                for index in 0..<tempData.count {
+    //                    self.detailView.tableView.insertSections(IndexSet.init(integer: oldData.count + index), with: UITableView.RowAnimation.bottom)
+    //                }
+    //                self.detailView.tableView.endUpdates()
+    //            } else {
+    //                self.tableViewManager.libraTransactions = tempData
+    //                self.detailView.tableView.reloadData()
+    //            }
+    //            self.detailView.tableView.mj_footer.endRefreshing()
             }
-            self.detailView.tableView.mj_footer.endRefreshing()
-        } else if type == "LibraTransactionHistoryOrigin" {
-            guard let tempData = jsonData.value(forKey: "data") as? [LibraDataModel] else {
-               return
-            }
-            self.tableViewManager.libraTransactions = tempData
-            self.detailView.tableView.reloadData()
-        } else if type == "LibraTransactionHistoryMore" {
-//            guard let tempData = jsonData.value(forKey: "data") as? [LibraDataModel] else {
-//                return
-//            }
-//            if let oldData = self.tableViewManager.violasTransactions, oldData.isEmpty == false {
-//                let tempArray = NSMutableArray.init(array: oldData)
-//                var insertIndexPath = [IndexPath]()
-//
-//                for index in 0..<tempData.count {
-//                    let indexPath = IndexPath.init(row: 0, section: oldData.count + index)
-//                    insertIndexPath.append(indexPath)
-//
-//                }
-//                tempArray.addObjects(from: tempData)
-//                self.tableViewManager.libraTransactions = tempArray as? [LibraDataModel]
-//                self.detailView.tableView.beginUpdates()
-//                for index in 0..<tempData.count {
-//                    self.detailView.tableView.insertSections(IndexSet.init(integer: oldData.count + index), with: UITableView.RowAnimation.bottom)
-//                }
-//                self.detailView.tableView.endUpdates()
-//            } else {
-//                self.tableViewManager.libraTransactions = tempData
-//                self.detailView.tableView.reloadData()
-//            }
-//            self.detailView.tableView.mj_footer.endRefreshing()
-        }
-        self.detailView.hideToastActivity()
-        self.detailView.tableView.mj_header.endRefreshing()
-        self.endLoading()
+            self?.detailView.hideToastActivity()
+            self?.detailView.tableView.mj_header.endRefreshing()
+            self?.endLoading()
+        })
     }
 }
 extension WalletTransactionsViewController: WalletTransactionsTableViewManagerDelegate {

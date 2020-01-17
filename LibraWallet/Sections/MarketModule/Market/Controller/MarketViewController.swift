@@ -90,6 +90,7 @@ class MarketViewController: UIViewController {
                 }
                 print("添加监听")
                 self.dataModel.getMarketData(address: walletAddress, payContract: payContract, exchangeContract: exchangeContract)
+                // http请求
 //                self.dataModel.getCurrentOrder(address: walletAddress, baseAddress: payContract, exchangeAddress: exchangeContract)
             }
         }
@@ -150,6 +151,8 @@ extension MarketViewController: MarketTableViewManagerDelegate {
         self.dataModel.removeDepthsLisening(payContract: rightModel.addr ?? "", exchangeContract: leftModel.addr ?? "")
         // 请求交易所对应交易对数据
         self.dataModel.getMarketData(address: walletAddress, payContract: leftModel.addr ?? "", exchangeContract: rightModel.addr ?? "")
+        // http请求
+//        self.dataModel.getCurrentOrder(address: walletAddress, baseAddress: leftModel.addr ?? "", exchangeAddress: rightModel.addr ?? "")
         // 添加对应交易对数据变化监听
         self.dataModel.addDepthsLisening(payContract: leftModel.addr ?? "", exchangeContract: rightModel.addr ?? "")
     }
@@ -232,7 +235,11 @@ extension MarketViewController: MarketTableViewManagerDelegate {
                         return
                     }
                     print("添加监听")
+                    self.detailView.toastView?.show()
                     self.dataModel.getMarketData(address: walletAddress, payContract: payContract, exchangeContract: exchangeContract)
+                    // http
+//                    self.dataModel.getCurrentOrder(address: walletAddress, baseAddress: leftModel.addr ?? "", exchangeAddress: rightModel.addr ?? "")
+
                     self.dataModel.addDepthsLisening(payContract: payContract, exchangeContract: exchangeContract)
                 }
             }, data: tempDataModel, onlyRegisterToken: showRegisterModel)
@@ -453,7 +460,7 @@ extension MarketViewController {
                 }).sorted(by: {
                     ($0.date ?? 0) > ($1.date ?? 0)
                 }).map({ (item) in
-                    MarketOrderDataModel.init(id: item.id, user: item.user, state: item.state, tokenGet: item.tokenGet, tokenGetSymbol: item.tokenGetSymbol, amountGet: item.amountGet, tokenGive: item.tokenGive, tokenGiveSymbol: item.tokenGiveSymbol, amountGive: item.amountGive, version: item.version, date: item.date, update_date: item.update_date, update_version: item.update_version, amountFilled: item.amountFilled, price: headerView?.rightTokenModel?.price)
+                    MarketOrderDataModel.init(id: item.id, user: item.user, state: item.state, tokenGet: item.tokenGet, tokenGetSymbol: item.tokenGetSymbol, amountGet: item.amountGet, tokenGive: item.tokenGive, tokenGiveSymbol: item.tokenGiveSymbol, amountGive: item.amountGive, version: item.version, date: item.date, update_date: item.update_date, update_version: item.update_version, amountFilled: item.amountFilled, tokenGivePrice: item.tokenGivePrice, tokenGetPrice: item.tokenGetPrice)
                 })
                 #warning("无奈之举，望谅解")
                 self.tableViewManager.sellOrders = tempData.depths?.buys?.filter({
@@ -461,7 +468,7 @@ extension MarketViewController {
                 }).sorted(by: {
                     ($0.date ?? 0) < ($1.date ?? 0)
                 }).map({ (item) in
-                    MarketOrderDataModel.init(id: item.id, user: item.user, state: item.state, tokenGet: item.tokenGet, tokenGetSymbol: item.tokenGetSymbol, amountGet: item.amountGet, tokenGive: item.tokenGive, tokenGiveSymbol: item.tokenGiveSymbol, amountGive: item.amountGive, version: item.version, date: item.date, update_date: item.update_date, update_version: item.update_version, amountFilled: item.amountFilled, price: headerView?.rightTokenModel?.price)
+                    MarketOrderDataModel.init(id: item.id, user: item.user, state: item.state, tokenGet: item.tokenGet, tokenGetSymbol: item.tokenGetSymbol, amountGet: item.amountGet, tokenGive: item.tokenGive, tokenGiveSymbol: item.tokenGiveSymbol, amountGive: item.amountGive, version: item.version, date: item.date, update_date: item.update_date, update_version: item.update_version, amountFilled: item.amountFilled, tokenGivePrice: item.tokenGivePrice, tokenGetPrice: item.tokenGetPrice)
                 })
                 headerView?.rate = tempData.price ?? 0
                 self.detailView.tableView.reloadData()
@@ -506,7 +513,7 @@ extension MarketViewController {
     }
     func refreshTableView(data: [MarketOrderDataModel]) {
         // 开始筛选所有我的订单
-        var myOrders = data.filter({ item in
+        let myOrders = data.filter({ item in
             item.user?.contains(self.wallet?.walletAddress ?? "") == true
         })
         for i in 0..<(myOrders.count) {
@@ -580,8 +587,8 @@ extension MarketViewController {
             }
             if dataExist == false &&  myOrders[i].state == "OPEN" {
                 print("匹配失败添加数据")
-                let headerView = self.detailView.tableView.dequeueReusableHeaderFooterView(withIdentifier: "MainHeader") as! MarketExchangeHeaderView//headerView(forSection: 0) as! MarketExchangeHeaderView
-                myOrders[i].price = headerView.rightTokenModel?.price
+//                let headerView = self.detailView.tableView.dequeueReusableHeaderFooterView(withIdentifier: "MainHeader") as! MarketExchangeHeaderView//headerView(forSection: 0) as! MarketExchangeHeaderView
+//                myOrders[i].price = headerView.rightTokenModel?.price
 
                 self.tableViewManager.buyOrders?.append(myOrders[i])
                 self.tableViewManager.buyOrders = self.tableViewManager.buyOrders?.sorted(by: {
@@ -696,7 +703,7 @@ extension MarketViewController {
             if dataExist == false &&  otherOrders[i].state == "OPEN" {
 //                let headerView = self.detailView.tableView.headerView(forSection: 0) as! MarketExchangeHeaderView
                 let headerView = self.detailView.tableView.dequeueReusableHeaderFooterView(withIdentifier: "MainHeader") as! MarketExchangeHeaderView//headerView(forSection: 0) as! MarketExchangeHeaderView
-                otherOrders[i].price = headerView.rightTokenModel?.price
+//                otherOrders[i].price = headerView.rightTokenModel?.price
                 
                 self.tableViewManager.sellOrders?.append(otherOrders[i])
                 self.tableViewManager.sellOrders = self.tableViewManager.sellOrders?.sorted(by: {

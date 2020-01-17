@@ -545,6 +545,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		36EB36E723D05AE900DB1812 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9DA8E2962317ABC400E28D07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3642EA5D23CC1EDD00C7B04A;
+			remoteInfo = LibraWallet_Publish;
+		};
+		36EB36E923D05C4300DB1812 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9DA8E2962317ABC400E28D07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3642EA5D23CC1EDD00C7B04A;
+			remoteInfo = LibraWallet_Publish;
+		};
 		9DA8E2B32317ABC600E28D07 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 9DA8E2962317ABC400E28D07 /* Project object */;
@@ -2979,6 +2993,7 @@
 			);
 			dependencies = (
 				9DA8E2B42317ABC600E28D07 /* PBXTargetDependency */,
+				36EB36EA23D05C4300DB1812 /* PBXTargetDependency */,
 			);
 			name = LibraWalletTests;
 			productName = LibraWalletTests;
@@ -2998,6 +3013,7 @@
 			);
 			dependencies = (
 				9DA8E2BF2317ABC600E28D07 /* PBXTargetDependency */,
+				36EB36E823D05AE900DB1812 /* PBXTargetDependency */,
 			);
 			name = LibraWalletUITests;
 			productName = LibraWalletUITests;
@@ -3024,7 +3040,7 @@
 					};
 					9DA8E2BC2317ABC600E28D07 = {
 						CreatedOnToolsVersion = 10.3;
-						TestTargetID = 9DA8E29D2317ABC400E28D07;
+						TestTargetID = 3642EA5D23CC1EDD00C7B04A;
 					};
 				};
 			};
@@ -3767,6 +3783,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		36EB36E823D05AE900DB1812 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3642EA5D23CC1EDD00C7B04A /* LibraWallet_Publish */;
+			targetProxy = 36EB36E723D05AE900DB1812 /* PBXContainerItemProxy */;
+		};
+		36EB36EA23D05C4300DB1812 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3642EA5D23CC1EDD00C7B04A /* LibraWallet_Publish */;
+			targetProxy = 36EB36E923D05C4300DB1812 /* PBXContainerItemProxy */;
+		};
 		9DA8E2B42317ABC600E28D07 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 9DA8E29D2317ABC400E28D07 /* LibraWallet */;
@@ -3809,7 +3835,7 @@
 				CODE_SIGN_ENTITLEMENTS = LibraWallet/LibraWallet.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development: Jay Zou (JR6LZNW9NA)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 24;
 				DEVELOPMENT_TEAM = ND49YBN8B3;
 				INFOPLIST_FILE = "LibraWallet copy-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -3837,7 +3863,7 @@
 				CODE_SIGN_ENTITLEMENTS = LibraWallet/LibraWallet.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Jay Zou (ND49YBN8B3)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 24;
 				DEVELOPMENT_TEAM = ND49YBN8B3;
 				INFOPLIST_FILE = "LibraWallet copy-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -4093,7 +4119,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = LibraWallet;
+				TEST_TARGET_NAME = LibraWallet_Publish;
 			};
 			name = Debug;
 		};
@@ -4116,7 +4142,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = LibraWallet;
+				TEST_TARGET_NAME = LibraWallet_Publish;
 			};
 			name = Release;
 		};
