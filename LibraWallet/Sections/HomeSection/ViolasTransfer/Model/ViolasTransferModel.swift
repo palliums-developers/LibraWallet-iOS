@@ -77,12 +77,13 @@ class ViolasTransferModel: NSObject {
         queue.async {
             semaphore.wait()
             do {
-                let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
-                // 拼接交易
-                let request = ViolasTransaction.init(receiveAddress: receiveAddress, amount: amount, sendAddress: wallet.publicKey.toAddress(), sequenceNumber: UInt64(self.sequenceNumber!))
-                // 签名交易
-                let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
-                self.makeViolasTransaction(signature: signature.toHexString())
+                let signature = try ViolasManager.getNormalTransactionHex(sendAddress: sendAddress,
+                                                                          receiveAddress: receiveAddress,
+                                                                          amount: amount,
+                                                                          fee: fee,
+                                                                          mnemonic: mnemonic,
+                                                                          sequenceNumber: self.sequenceNumber!)
+                self.makeViolasTransaction(signature: signature)
             } catch {
                 print(error.localizedDescription)
                 DispatchQueue.main.async(execute: {
@@ -103,13 +104,14 @@ class ViolasTransferModel: NSObject {
         queue.async {
             semaphore.wait()
             do {
-                let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
-
-                // 拼接交易
-                let request = ViolasTransaction.init(sendAddress: sendAddress, receiveAddress: receiveAddress, amount: amount, sequenceNumber: UInt64(self.sequenceNumber!), code: Data.init(Array<UInt8>(hex: ViolasManager().getViolasTransactionCode(content: contact))))
-                // 签名交易
-                let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
-                self.makeViolasTransaction(signature: signature.toHexString())
+                let signature = try ViolasManager.getViolasTokenTransactionHex(sendAddress: sendAddress,
+                                                                               receiveAddress: receiveAddress,
+                                                                               amount: amount,
+                                                                               fee: fee,
+                                                                               mnemonic: mnemonic,
+                                                                               contact: contact,
+                                                                               sequenceNumber: self.sequenceNumber!)
+                self.makeViolasTransaction(signature: signature)
             } catch {
                 print(error.localizedDescription)
                 DispatchQueue.main.async(execute: {

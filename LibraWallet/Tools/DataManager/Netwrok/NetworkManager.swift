@@ -74,7 +74,7 @@ extension mainRequest:TargetType {
             #if PUBLISH_VERSION
                 return URL(string:"https://api.violas.io/1.0")!
             #else
-//                return URL(string:"http://52.27.228.84:4000/1.0")!
+//                return URL(string:"http://52.27.228.84:40001/1.0")!
                 return URL(string:"https://api.violas.io/1.0")!
             #endif
         case .GetViolasAccountBalance(_, _),
@@ -86,7 +86,7 @@ extension mainRequest:TargetType {
             #if PUBLISH_VERSION
                 return URL(string:"https://api.violas.io/1.0")!
             #else
-//                return URL(string:"http://52.27.228.84:4000/1.0")!
+//                return URL(string:"http://52.27.228.84:40001/1.0")!
                 return URL(string:"https://api.violas.io/1.0")!
             #endif
         case .GetTestCoin(_, _):

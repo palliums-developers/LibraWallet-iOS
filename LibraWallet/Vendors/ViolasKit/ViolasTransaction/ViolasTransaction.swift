@@ -26,7 +26,7 @@ struct ViolasTransaction {
                                             programOrWrite: script.serialize())
         self.request = raw
     }
-    // Violas发币
+    // Violas注册稳定币
     public init(sendAddress: String, sequenceNumber: UInt64, code: Data) {
         
         let program = ViolasTransactionScript.init(code: code, argruments: [])
@@ -96,6 +96,35 @@ struct ViolasTransaction {
 //
 //        let argument3 = ViolasTransactionArgument.init(code: .Bytes, value: json.toHexString())
         let data = "{\"type\":\"sub_ex\",\"addr\":\"\(receiveTokenAddress)\",\"amount\":\(Int(exchangeAmount * 1000000)),\"fee\":0,\"exp\":1000}".data(using: .utf8)!
+               
+        let argument3 = ViolasTransactionArgument.init(code: .Bytes, value: data.toHexString())
+        
+        let program = ViolasTransactionScript.init(code: code, argruments: [argument1, argument2, argument3])
+        
+        let raw = ViolasRawTransaction.init(senderAddres: sendAddress,
+                                            sequenceNumber: sequenceNumber,
+                                            maxGasAmount: 280000,
+                                            gasUnitPrice: 0,
+                                            expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 1000),
+                                            programOrWrite: program.serialize())
+        self.request = raw
+//        return raw
+    }
+    //MARK: - vBTC->BTC兑换币
+    /// vBTC->BTC兑换币
+    /// - Parameters:
+    ///   - sendAddress: 发送地址
+    ///   - amount: 数量
+    ///   - fee: 手续费
+    ///   - sequenceNumber: 序列码
+    ///   - code: 合约地址
+    ///   - btcAddress: 兑换BTC地址
+    public init(sendAddress: String, amount: Double, fee: Double, sequenceNumber: UInt64, code: Data, btcAddress: String) {
+        
+        let argument1 = ViolasTransactionArgument.init(code: .Address, value: MarketAddress)
+        let argument2 = ViolasTransactionArgument.init(code: .U64, value: "\(Int(amount * 1000000))")
+        
+        let data = "{\"flag\":\"violas\", \"type\":\"v2b\", \"to_address\":\"\(btcAddress)\",\"state\":\"start\"}".data(using: .utf8)!
                
         let argument3 = ViolasTransactionArgument.init(code: .Bytes, value: data.toHexString())
         

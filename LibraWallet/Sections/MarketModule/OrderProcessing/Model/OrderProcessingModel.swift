@@ -172,16 +172,13 @@ class OrderProcessingModel: NSObject {
         queue.async {
             semaphore.wait()
             do {
-                let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
-                // 拼接交易
-                let request = ViolasTransaction.init(sendAddress: sendAddress,
-                                                     fee: fee,
-                                                     sequenceNumber: UInt64(self.sequenceNumber!),
-                                                     code: Data.init(Array<UInt8>(hex: ViolasManager().getViolasTokenExchangeTransactionCode(content: contact))),
-                                                     version: version)
-                // 签名交易
-                let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
-                self.makeViolasTransaction(signature: signature.toHexString())
+                let signature = try ViolasManager.getMarketExchangeCancelTransactionHex(sendAddress: sendAddress,
+                                                                                        fee: fee,
+                                                                                        mnemonic: mnemonic,
+                                                                                        contact: contact,
+                                                                                        version: version,
+                                                                                        sequenceNumber: self.sequenceNumber!)
+                self.makeViolasTransaction(signature: signature)
             } catch {
                 print(error.localizedDescription)
                 DispatchQueue.main.async(execute: {

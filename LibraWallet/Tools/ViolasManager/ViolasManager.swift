@@ -49,72 +49,151 @@ struct ViolasManager {
             return false
         }
     }
-    /// 注册代币
-    /// - Parameter content: 合约地址
-    func getViolasPublishCode(content: String) -> String {
-        let replaceData = Data.init(Array<UInt8>(hex: content))
-        var code = getProgramCode(content: ViolasPublishProgramCode)
-        let range = code.index(after: 153)..<( code.endIndex - (code.endIndex - 154 - 32))
+    
+}
+extension ViolasManager {
+    public static func getCodeData(move: String, address: String) -> Data {
+        // 生成待替换数据
+        let replaceData = Data.init(Array<UInt8>(hex: address))
+        // 原始数据
+        var code = getProgramCode(content: move)
+        // 计算位置
+        let location = ViolasManager().getViolasTokenContractLocation(code: move, contract: "7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614")
+        // 设置替换区间
+        let range = code.index(after: location)..<( code.endIndex - (code.endIndex - (location + 1) - 32))
+        // 替换指定区间数据
         code.replaceSubrange(range, with: replaceData)
-        print(code.toHexString())
-        return code.toHexString()
+        return code
     }
-    /// 稳定币交易
-    /// - Parameter content: 合约地址
-    func getViolasTransactionCode(content: String) -> String {
-        let replaceData = Data.init(Array<UInt8>(hex: content))
-        var code = getProgramCode(content: ViolasTransactionProgramCode)
-        let range = code.index(after: 160)..<( code.endIndex - (code.endIndex - 161 - 32))
-        code.replaceSubrange(range, with: replaceData)
-        return code.toHexString()
-    }
-    /// 交易所兑换
-    /// - Parameter content: 合约地址
-    func getViolasTokenExchangeTransactionCode(content: String) -> String {
-        let replaceData = Data.init(Array<UInt8>(hex: content))
-        var code = getProgramCode(content: ViolasExchangeTokenProgramCode)
-        let range = code.index(after: 172)..<( code.endIndex - (code.endIndex - 173 - 32))
-        code.replaceSubrange(range, with: replaceData)
-        print(code.toHexString())
-        return code.toHexString()
-    }
-//    /// 注册代币
-//    /// - Parameter content: 合约地址
-//    func getViolasPublishCode(content: String) -> String {
-//        let replaceData = Data.init(Array<UInt8>(hex: content))
-//        var code = getProgramCode(content: ViolasPublishProgramCode)
-//        let range = code.index(after: 300)..<( code.endIndex - (code.endIndex - 301 - 32))
-//        code.replaceSubrange(range, with: replaceData)
-//        print(code.toHexString())
-//        return code.toHexString()
-//    }
-//    /// 稳定币交易
-//    /// - Parameter content: 合约地址
-//    func getViolasTransactionCode(content: String) -> String {
-//        let replaceData = Data.init(Array<UInt8>(hex: content))
-//        var code = getProgramCode(content: ViolasTransactionProgramCode)
-//        let range = code.index(after: 149)..<( code.endIndex - (code.endIndex - 150 - 32))
-//        code.replaceSubrange(range, with: replaceData)
-//        return code.toHexString()
-//    }
-//    /// 交易所兑换
-//    /// - Parameter content: 合约地址
-//    func getViolasTokenExchangeTransactionCode(content: String) -> String {
-//        let replaceData = Data.init(Array<UInt8>(hex: content))
-//        var code = getProgramCode(content: ViolasExchangeTokenProgramCode)
-//        let range = code.index(after: 168)..<( code.endIndex - (code.endIndex - 169 - 32))
-//        code.replaceSubrange(range, with: replaceData)
-//        print(code.toHexString())
-//        return code.toHexString()
-//    }
     /// 计算位置
     /// - Parameter contract: 合约地址
-    func getViolasTokenContractLocation(contract: String) -> Int {
+    func getViolasTokenContractLocation(code: String, contract: String) -> Int {
         //7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614
         //位置-1所得正好
-        let code = getProgramCode(content: ViolasTransactionProgramCode)
+        let code = getProgramCode(content: code)
         let range: Range = code.toHexString().range(of: contract)!
         let location: Int = code.toHexString().distance(from: code.toHexString().startIndex, to: range.lowerBound)
-        return location / 2
+        return (location / 2) - 1
+    }
+}
+extension ViolasManager {
+    /// 获取Violas交易Hex
+    /// - Parameters:
+    ///   - sendAddress: 发送地址
+    ///   - receiveAddress: 接受地址
+    ///   - amount: 数量
+    ///   - fee: 手续费
+    ///   - mnemonic: 助记词
+    ///   - sequenceNumber: 序列码
+    public static func getNormalTransactionHex(sendAddress: String, receiveAddress: String, amount: Double, fee: Double, mnemonic: [String], sequenceNumber: Int) throws -> String {
+        do {
+            let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
+            // 拼接交易
+            let request = ViolasTransaction.init(receiveAddress: receiveAddress,
+                                                 amount: amount,
+                                                 sendAddress: wallet.publicKey.toAddress(),
+                                                 sequenceNumber: UInt64(sequenceNumber))
+            // 签名交易
+            let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
+            return signature.toHexString()
+        } catch {
+            throw error
+        }
+    }
+    /// 获取注册稳定币交易Hex
+    /// - Parameters:
+    ///   - mnemonic: 助记词
+    ///   - contact: 合约地址
+    ///   - sequenceNumber: 序列码
+    public static func getRegisterTokenTransactionHex(mnemonic: [String], contact: String, sequenceNumber: Int) throws -> String {
+        do {
+            let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
+            // 拼接交易
+            let request = ViolasTransaction.init(sendAddress: wallet.publicKey.toAddress(),
+                                                 sequenceNumber: UInt64(sequenceNumber),
+                                                 code: ViolasManager.getCodeData(move: ViolasPublishProgramCode, address: contact))
+            // 签名交易
+            let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
+            return signature.toHexString()
+        } catch {
+            throw error
+        }
+    }
+    /// 获取稳定币交易Hex
+    /// - Parameters:
+    ///   - sendAddress: 发送地址
+    ///   - receiveAddress: 接收地址
+    ///   - amount: 数量
+    ///   - fee: 手续费
+    ///   - mnemonic: 助记词
+    ///   - contact: 合约地址
+    ///   - sequenceNumber: 序列码
+    public static func getViolasTokenTransactionHex(sendAddress: String, receiveAddress: String, amount: Double, fee: Double, mnemonic: [String], contact: String, sequenceNumber: Int) throws -> String {
+        do {
+            let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
+            // 拼接交易
+            let request = ViolasTransaction.init(sendAddress: sendAddress,
+                                                 receiveAddress: receiveAddress,
+                                                 amount: amount,
+                                                 sequenceNumber: UInt64(sequenceNumber),
+                                                 code: ViolasManager.getCodeData(move: ViolasTransactionProgramCode, address: contact))
+            // 签名交易
+            let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
+            return signature.toHexString()
+        } catch {
+            throw error
+        }
+    }
+    /// 获取交易所兑换交易Hex
+    /// - Parameters:
+    ///   - sendAddress: 发送地址
+    ///   - amount: 付出数量
+    ///   - fee: 手续费
+    ///   - mnemonic: 助记词
+    ///   - contact: 合约地址
+    ///   - exchangeTokenContract: 兑换合约地址
+    ///   - exchangeTokenAmount: 兑换数量
+    ///   - sequenceNumber: 序列码
+    public static func getMarketExchangeTransactionHex(sendAddress: String, amount: Double, fee: Double, mnemonic: [String], contact: String, exchangeTokenContract: String, exchangeTokenAmount: Double, sequenceNumber: Int) throws -> String {
+        do {
+            let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
+            // 拼接交易
+            let request = ViolasTransaction.init(sendAddress: sendAddress,
+                                                amount: amount,
+                                                fee: fee,
+                                                sequenceNumber: UInt64(sequenceNumber),
+                                                code: ViolasManager.getCodeData(move: ViolasExchangeTokenProgramCode, address: contact),
+                                                receiveTokenAddress: exchangeTokenContract,
+                                                exchangeAmount: exchangeTokenAmount)
+            // 签名交易
+            let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
+            return signature.toHexString()
+        } catch {
+            throw error
+        }
+    }
+    /// 获取交易所取消交易Hex
+    /// - Parameters:
+    ///   - sendAddress: 发送地址
+    ///   - fee: 手续费
+    ///   - mnemonic: 助记词
+    ///   - contact: 合约地址
+    ///   - version: 位置（暂翻译）
+    ///   - sequenceNumber: 序列码
+    public static func getMarketExchangeCancelTransactionHex(sendAddress: String, fee: Double, mnemonic: [String], contact: String, version: String, sequenceNumber: Int) throws -> String {
+        do {
+            let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
+            // 拼接交易
+            let request = ViolasTransaction.init(sendAddress: sendAddress,
+                                                 fee: fee,
+                                                 sequenceNumber: UInt64(sequenceNumber),
+                                                 code: ViolasManager.getCodeData(move: ViolasExchangeTokenProgramCode, address: contact),
+                                                 version: version)
+            // 签名交易
+            let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
+            return signature.toHexString()
+        } catch {
+            throw error
+        }
     }
 }

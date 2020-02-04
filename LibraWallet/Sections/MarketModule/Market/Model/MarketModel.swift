@@ -263,18 +263,15 @@ class MarketModel: NSObject {
         queue.async {
             semaphore.wait()
             do {
-                let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
-                // 拼接交易
-                let request = ViolasTransaction.init(sendAddress: sendAddress,
-                                                    amount: amount,
-                                                    fee: fee,
-                                                    sequenceNumber: UInt64(self.sequenceNumber!),
-                                                    code: Data.init(Array<UInt8>(hex: ViolasManager().getViolasTokenExchangeTransactionCode(content: contact))),
-                                                    receiveTokenAddress: exchangeTokenContract,
-                                                    exchangeAmount: exchangeTokenAmount)
-                // 签名交易
-                let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
-                self.makeViolasTransaction(signature: signature.toHexString(), type: "ExchangeDone")
+                let signature = try ViolasManager.getMarketExchangeTransactionHex(sendAddress: sendAddress,
+                                                                                   amount: amount,
+                                                                                   fee: fee,
+                                                                                   mnemonic: mnemonic,
+                                                                                   contact: contact,
+                                                                                   exchangeTokenContract: exchangeTokenContract,
+                                                                                   exchangeTokenAmount: exchangeTokenAmount,
+                                                                                   sequenceNumber: self.sequenceNumber!)
+                self.makeViolasTransaction(signature:signature, type: "ExchangeDone")
             } catch {
                 print(error.localizedDescription)
                 DispatchQueue.main.async(execute: {
@@ -382,13 +379,10 @@ class MarketModel: NSObject {
         queue.async {
             semaphore.wait()
             do {
-                let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
-
-                // 拼接交易
-                let request = ViolasTransaction.init(sendAddress: wallet.publicKey.toAddress(), sequenceNumber: UInt64(self.sequenceNumber!), code: Data.init(Array<UInt8>(hex: ViolasManager().getViolasPublishCode(content: contact))))
-                // 签名交易
-                let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
-                self.makeViolasTransaction(signature: signature.toHexString(), type: "PublishTokenForTransaction")
+                let signature = try ViolasManager.getRegisterTokenTransactionHex(mnemonic: mnemonic,
+                                                                                 contact: contact,
+                                                                                 sequenceNumber: self.sequenceNumber!)
+                self.makeViolasTransaction(signature: signature, type: "PublishTokenForTransaction")
             } catch {
                 print(error.localizedDescription)
             }

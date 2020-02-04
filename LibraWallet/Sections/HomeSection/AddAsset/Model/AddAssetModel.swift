@@ -205,13 +205,10 @@ class AddAssetModel: NSObject {
     }
     private func makeTransaction(sendAddress: String, mnemonic: [String], sequenceNumber: Int, contact: String) {
         do {
-            let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
-
-            // 拼接交易
-            let request = ViolasTransaction.init(sendAddress: wallet.publicKey.toAddress(), sequenceNumber: UInt64(sequenceNumber), code: Data.init(Array<UInt8>(hex: ViolasManager().getViolasPublishCode(content: contact))))
-            // 签名交易
-            let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
-            makeViolasTransaction(signature: signature.toHexString())
+            let signature = try ViolasManager.getRegisterTokenTransactionHex(mnemonic: mnemonic,
+                                                                              contact: contact,
+                                                                              sequenceNumber: sequenceNumber)
+            makeViolasTransaction(signature: signature)
         } catch {
             print(error.localizedDescription)
         }
