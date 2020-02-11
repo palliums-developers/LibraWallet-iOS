@@ -132,7 +132,7 @@ class WalletTransactionsTableViewCell: UITableViewCell {
     }()
     lazy var searchOnChainLabel: UILabel = {
         let label = UILabel.init()
-        label.textAlignment = NSTextAlignment.center
+        label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "7A7AEE")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
         label.text = localLanguage(keyString: "wallet_transactions_check_detail_on_chain")

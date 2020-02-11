@@ -97,6 +97,8 @@ extension BTCTransferViewController {
         
         if type == "SendBTCTransaction" {
             print("SendBTCsuccess")
+            self.detailView.toastView?.hide()
+            self.view.makeToast(localLanguage(keyString: "wallet_transfer_success_alert"), position: .center)
         }
         self.view.hideToastActivity()
     }

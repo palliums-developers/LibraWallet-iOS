@@ -19,6 +19,8 @@ protocol HomeHeaderViewDelegate: NSObjectProtocol {
     func checkWalletTransactionList()
     
     func addCoinToWallet()
+    
+    func mapping()
 }
 class HomeHeaderView: UIView {
     weak var delegate: HomeHeaderViewDelegate?
@@ -33,6 +35,7 @@ class HomeHeaderView: UIView {
         addSubview(walletAddressLabel)
         addSubview(copyAddressButton)
         
+        addSubview(mappingBackgroundButton)
         addSubview(lastTransactionBackgroundButton)
         addSubview(transferButton)
         addSubview(receiveButton)
@@ -45,6 +48,9 @@ class HomeHeaderView: UIView {
         lastTransactionBackgroundButton.addSubview(transactionTitleLabel)
 //        lastTransactionBackgroundButton.addSubview(lastTransactionDateLabel)
         lastTransactionBackgroundButton.addSubview(lastTransactionDetailImageView)
+        
+        mappingBackgroundButton.addSubview(mappingTitleLabel)
+        mappingBackgroundButton.addSubview(mappingDetailImageView)
 
         // 添加语言变换通知
         NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
@@ -116,9 +122,22 @@ class HomeHeaderView: UIView {
             make.right.bottom.equalTo(whiteBackgroundView)
             make.height.equalTo(54)
         }
-        
-        lastTransactionBackgroundButton.snp.makeConstraints { (make) in
+        mappingBackgroundButton.snp.makeConstraints { (make) in
             make.top.equalTo(whiteBackgroundView.snp.bottom).offset(13)
+            make.left.equalTo(self).offset(15)
+            make.right.equalTo(self).offset(-15)
+            make.height.equalTo(42)
+        }
+        mappingTitleLabel.snp.makeConstraints { (make) in
+            make.centerY.equalTo(mappingBackgroundButton)
+            make.left.equalTo(mappingBackgroundButton).offset(14)
+        }
+        mappingDetailImageView.snp.makeConstraints { (make) in
+            make.centerY.equalTo(mappingBackgroundButton)
+            make.right.equalTo(mappingBackgroundButton.snp.right).offset(-15)
+        }
+        lastTransactionBackgroundButton.snp.makeConstraints { (make) in
+            make.top.equalTo(mappingBackgroundButton.snp.bottom).offset(13)
             make.left.equalTo(self).offset(15)
             make.right.equalTo(self).offset(-15)
             make.height.equalTo(42)
@@ -271,6 +290,28 @@ class HomeHeaderView: UIView {
         button.layer.shadowOpacity = 0.02
        return button
     }()
+    private lazy var mappingBackgroundButton : UIButton = {
+        let button = UIButton.init()
+        button.setImage(UIImage.init(named: "home_icon"), for: UIControl.State.normal)
+        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
+        button.tag = 70
+        button.backgroundColor = UIColor.white
+        return button
+    }()
+    lazy var mappingTitleLabel: UILabel = {
+        let label = UILabel.init()
+        label.textAlignment = NSTextAlignment.left
+        label.textColor = UIColor.init(hex: "3D3949")
+        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: .regular)
+        label.text = localLanguage(keyString: "wallet_home_mapping_title")
+        return label
+    }()
+    private lazy var mappingDetailImageView : UIImageView = {
+        let imageView = UIImageView.init()
+        imageView.image = UIImage.init(named: "cell_detail")
+        imageView.isUserInteractionEnabled = true
+        return imageView
+    }()
     private lazy var lastTransactionBackgroundButton : UIButton = {
         let button = UIButton.init()
         button.setImage(UIImage.init(named: "home_icon"), for: UIControl.State.normal)
@@ -343,6 +384,8 @@ class HomeHeaderView: UIView {
         } else if button.tag == 60 {
             // 添加资产
             self.delegate?.addCoinToWallet()
+        } else if button.tag == 70 {
+            self.delegate?.mapping()
         }
     }
     var walletModel: LibraWalletManager? {

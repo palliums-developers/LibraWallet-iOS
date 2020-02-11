@@ -101,9 +101,9 @@ struct ViolasDataModel: Codable {
     /// 0. vtoken p2p transaction; 1. module publish transaction; 2. module p2p transaction
     var type: Int?
     var version: Int?
-    // 判断接收发送(自行添加0:转账,1收款)
+    /// 判断接收发送(自行添加0:转账,1收款)
     var transaction_type: Int?
-    // 判断交易代币名字
+    /// 判断交易代币名字
     var module_name: String?
 }
 struct ViolasResponseModel: Codable {
@@ -387,9 +387,11 @@ class WalletTransactionsModel: NSObject {
         var tempModels = [ViolasDataModel]()
         for var item in models {
             if item.receiver == walletAddress {
-                item.transaction_type = 0
-            } else {
+                // 收款
                 item.transaction_type = 1
+            } else {
+                // 转账
+                item.transaction_type = 0
             }
 //            for token in tokenList {
 //                if item.receiver_module == token.address {

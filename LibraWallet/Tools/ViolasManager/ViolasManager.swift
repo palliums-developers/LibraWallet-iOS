@@ -63,6 +63,7 @@ extension ViolasManager {
         let range = code.index(after: location)..<( code.endIndex - (code.endIndex - (location + 1) - 32))
         // 替换指定区间数据
         code.replaceSubrange(range, with: replaceData)
+        print(code.toHexString())
         return code
     }
     /// 计算位置
@@ -189,6 +190,23 @@ extension ViolasManager {
                                                  sequenceNumber: UInt64(sequenceNumber),
                                                  code: ViolasManager.getCodeData(move: ViolasExchangeTokenProgramCode, address: contact),
                                                  version: version)
+            // 签名交易
+            let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
+            return signature.toHexString()
+        } catch {
+            throw error
+        }
+    }
+    public static func getVBTCToBTCTransactionHex(sendAddress: String, amount: Double, fee: Double, mnemonic: [String], contact: String, sequenceNumber: Int, btcAddress: String) throws -> String {
+        do {
+            let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
+            // 拼接交易
+            let request = ViolasTransaction.init(sendAddress: sendAddress,
+                                                 amount: amount,
+                                                 fee: fee,
+                                                 sequenceNumber: UInt64(sequenceNumber),
+                                                 code: ViolasManager.getCodeData(move: ViolasExchangeTokenProgramCode, address: contact),
+                                                 btcAddress: btcAddress)
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
             return signature.toHexString()

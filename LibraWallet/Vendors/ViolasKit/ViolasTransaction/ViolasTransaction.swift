@@ -108,7 +108,6 @@ struct ViolasTransaction {
                                             expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 1000),
                                             programOrWrite: program.serialize())
         self.request = raw
-//        return raw
     }
     //MARK: - vBTC->BTC兑换币
     /// vBTC->BTC兑换币
@@ -117,19 +116,19 @@ struct ViolasTransaction {
     ///   - amount: 数量
     ///   - fee: 手续费
     ///   - sequenceNumber: 序列码
-    ///   - code: 合约地址
+    ///   - code: 合约编码
     ///   - btcAddress: 兑换BTC地址
     public init(sendAddress: String, amount: Double, fee: Double, sequenceNumber: UInt64, code: Data, btcAddress: String) {
         
-        let argument1 = ViolasTransactionArgument.init(code: .Address, value: MarketAddress)
+        let argument1 = ViolasTransactionArgument.init(code: .Address, value: "fd0426fa9a3ba4fae760d0f614591c61bb53232a3b1138d5078efa11ef07c49c")
         let argument2 = ViolasTransactionArgument.init(code: .U64, value: "\(Int(amount * 1000000))")
-        
-        let data = "{\"flag\":\"violas\", \"type\":\"v2b\", \"to_address\":\"\(btcAddress)\",\"state\":\"start\"}".data(using: .utf8)!
-               
+
+        let data = "{\"flag\":\"violas\",\"type\":\"v2b\",\"to_address\":\"\(btcAddress)\",\"state\":\"start\"}".data(using: .utf8)!
+
         let argument3 = ViolasTransactionArgument.init(code: .Bytes, value: data.toHexString())
-        
+
         let program = ViolasTransactionScript.init(code: code, argruments: [argument1, argument2, argument3])
-        
+
         let raw = ViolasRawTransaction.init(senderAddres: sendAddress,
                                             sequenceNumber: sequenceNumber,
                                             maxGasAmount: 280000,
@@ -137,6 +136,5 @@ struct ViolasTransaction {
                                             expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 1000),
                                             programOrWrite: program.serialize())
         self.request = raw
-//        return raw
     }
 }

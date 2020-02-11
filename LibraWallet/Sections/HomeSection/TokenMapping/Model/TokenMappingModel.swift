@@ -1,44 +1,37 @@
 //
-//  BTCTransferModel.swift
+//  TokenMappingModel.swift
 //  LibraWallet
 //
-//  Created by palliums on 2019/11/14.
-//  Copyright © 2019 palliums. All rights reserved.
+//  Created by wangyingdong on 2020/2/7.
+//  Copyright © 2020 palliums. All rights reserved.
 //
 
 import UIKit
 import Moya
 import BitcoinKit
-struct BTCUnspentUTXOListModel: Codable {
-    var tx_hash: String?
-    var tx_output_n: UInt32?
-    var tx_output_n2: UInt32?
-    var value: UInt64?
-    var confirmations: Int64?
+struct TokenMappingDataModel {
+    var pay_name: String?
+    var exchange_name: String?
+    var exchange_contract: String?
+    var exchange_receive_address: String?
+    var exchange_rate: Double
 }
-struct BTCUnspentUTXODataModel: Codable {
-    var total_count: Int?
-    var page: Int?
-    var pagesize: Int?
-    var list: [BTCUnspentUTXOListModel]?
-}
-struct BTCUnspentUTXOMainModel: Codable {
-    var err_no: Int?
-    var err_msg: String?
-    var data: BTCUnspentUTXODataModel?
-}
-struct BTCSubmitTransactionModel: Codable {
-    var err_no: Int?
-    var err_msg: String?
-    var data: String?
-}
-
-class BTCTransferModel: NSObject {
-    @objc var dataDic: NSMutableDictionary = [:]
+class TokenMappingModel: NSObject {
     private var requests: [Cancellable] = []
-    
+    @objc var dataDic: NSMutableDictionary = [:]
+    func getMappingInfo(walletType: WalletType) {
+        #warning("缺少获取信息")
+        let model = TokenMappingDataModel.init(pay_name: walletType.description,
+                                               exchange_name: "VBTC",
+                                               exchange_contract: "af955c1d62a74a7543235dbb7fa46ed98948d2041dff67dfdb636a54e84f91fb",
+                                               exchange_receive_address: "2MxBZG7295wfsXaUj69quf8vucFzwG35UWh",
+                                               exchange_rate: 1)
+        
+        let data = setKVOData(type: "MappingInfo", data: model)
+        self.setValue(data, forKey: "dataDic")
+    }
     var utxos: [BTCUnspentUTXOListModel]?
-    
+        
     func getUnspentUTXO(address: String, semaphore: DispatchSemaphore) {
         semaphore.wait()
         let request = mainProvide.request(.GetBTCUnspentUTXO(address)) {[weak self](result) in
@@ -86,27 +79,24 @@ class BTCTransferModel: NSObject {
         }
         self.requests.append(request)
     }
-    func makeTransaction(wallet: HDWallet, amount: Double, fee: Double, toAddress: String) {
-        let semaphore = DispatchSemaphore.init(value: 1)
-        let queue = DispatchQueue.init(label: "SendQueue")
-        queue.async {
-            self.getUnspentUTXO(address: wallet.addresses.first!.description, semaphore: semaphore)
+    func makeTransaction(wallet: HDWallet, amount: Double, fee: Double, toAddress: String, mappingReceiveAddress: String, mappingContract: String) {
+            let semaphore = DispatchSemaphore.init(value: 1)
+            let queue = DispatchQueue.init(label: "SendQueue")
+            queue.async {
+                self.getUnspentUTXO(address: wallet.addresses.first!.description, semaphore: semaphore)
+            }
+            queue.async {
+                semaphore.wait()
+                self.selectUTXOMakeBTCToVBTCSignature(utxos: self.utxos!, wallet: wallet, amount: amount, fee: fee, toAddress: toAddress, mappingReceiveAddress: mappingReceiveAddress, mappingContract: mappingContract)
+                semaphore.signal()
+            }
         }
-        queue.async {
-            semaphore.wait()
-            self.selectUTXOMakeSignature(utxos: self.utxos!, wallet: wallet, amount: amount, fee: fee, toAddress: toAddress)
-            semaphore.signal()
-        }
-    }
-    
-    func selectUTXOMakeSignature(utxos: [BTCUnspentUTXOListModel], wallet: HDWallet, amount: Double, fee: Double, toAddress: String) {
+    func selectUTXOMakeBTCToVBTCSignature(utxos: [BTCUnspentUTXOListModel], wallet: HDWallet, amount: Double, fee: Double, toAddress: String, mappingReceiveAddress: String, mappingContract: String) {
         let amountt: UInt64 = UInt64(amount * 100000000)
         let feee: UInt64 = UInt64(fee * 100000000)
-//        let change: UInt64     =  balance - amountt - feee
 
         // 个人公钥
         let lockingScript = Script.buildPublicKeyHashOut(pubKeyHash: wallet.pubKeys.first!.pubkeyHash)
-        
         //
         let inputs = utxos.map { item in
             UnspentTransaction.init(output: TransactionOutput.init(value: item.value ?? 0, lockingScript: lockingScript),
@@ -124,8 +114,16 @@ class BTCTransferModel: NSObject {
         let toAddressResult = try! BitcoinAddress(legacy: toAddress)
 
         let transaction = TransactionBuilder.build(from: plan, toAddress: toAddressResult, changeAddress: wallet.addresses.first!)
-
-        let signature = TransactionSigner.init(unspentTransactions: plan.unspentTransactions, transaction: transaction, sighashHelper: BTCSignatureHashHelper(hashType: .ALL))
+        // 添加脚本
+        let script = BTCManager().getBTCToVBTCScript(address: mappingReceiveAddress, tokenContract: mappingContract)
+        let data = BTCManager().getData(script: script)
+        let opReturn = TransactionOutput.init(value: 0, lockingScript: data)
+        
+        var tempOutputs = transaction.outputs
+        tempOutputs.append(opReturn)
+        let transactionResult = Transaction.init(version: transaction.version, inputs: transaction.inputs, outputs: tempOutputs, lockTime: transaction.lockTime)
+        
+        let signature = TransactionSigner.init(unspentTransactions: plan.unspentTransactions, transaction: transactionResult, sighashHelper: BTCSignatureHashHelper(hashType: .ALL))
         let result = try? signature.sign(with: wallet.privKeys)
         print(result!.serialized().toHexString())
         
@@ -156,7 +154,6 @@ class BTCTransferModel: NSObject {
                         let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "SendBTCTransaction")
                         self?.setValue(data, forKey: "dataDic")
                     })
-                    
                 }
             case let .failure(error):
                 guard error.errorCode != -999 else {
@@ -167,7 +164,6 @@ class BTCTransferModel: NSObject {
                     let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "SendBTCTransaction")
                     self?.setValue(data, forKey: "dataDic")
                 })
-                
             }
         }
         self.requests.append(request)
@@ -177,6 +173,6 @@ class BTCTransferModel: NSObject {
             cancellable.cancel()
         }
         requests.removeAll()
-        print("BTCTransferModel销毁了")
+        print("TokenMappingModel销毁了")
     }
 }

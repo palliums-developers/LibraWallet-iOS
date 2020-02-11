@@ -260,6 +260,77 @@ struct DataBaseManager {
             throw error
         }
     }
+    func getWalletWithType(walletType: WalletType) -> [[LibraWalletManager]] {
+        let walletTable = Table("Wallet").filter(Expression<Int>("wallet_type") == walletType.value)
+        do {
+            // 身份钱包
+            var allWallets = [[LibraWalletManager]]()
+            var originWallets = [LibraWalletManager]()
+            var importWallets = [LibraWalletManager]()
+            if let tempDB = self.db {
+                for wallet in try tempDB.prepare(walletTable) {
+                    // 钱包ID
+                    let walletID = wallet[Expression<Int64>("wallet_id")]
+                    // 钱包金额
+                    let walletBalance = wallet[Expression<Int64>("wallet_balance")]
+                    // 钱包地址
+                    let walletAddress = wallet[Expression<String>("wallet_address")]
+                    // Libra_、Violas_或BTC_ 前缀 + 钱包0层地址
+                    let walletRootAddress = wallet[Expression<String>("wallet_root_address")]
+                    // 钱包创建时间
+                    let walletCreateTime = wallet[Expression<Int>("wallet_creat_time")]
+                    // 钱包名字
+                    let walletName = wallet[Expression<String>("wallet_name")]
+                    // 钱包助记词
+//                    let walletMnemonic = wallet[Expression<String>("wallet_mnemonic")]
+                    // 当前使用用户
+                    let walletCurrentUse = wallet[Expression<Bool>("wallet_current_use")]
+                    // 账户是否开启生物锁定
+                    let walletBiometricLock = wallet[Expression<Bool>("wallet_biometric_lock")]
+                    // 账户类型身份钱包、其他钱包(0=身份钱包、1=其它导入钱包)
+                    let walletIdentity = wallet[Expression<Int>("wallet_identity")]
+                    // 钱包类型(0=Libra、1=Violas、2=BTC)
+                    let walletType = wallet[Expression<Int>("wallet_type")]
+                    
+                    let type: WalletType
+                    if walletType == 0 {
+                        type = .Libra
+                    } else if walletType == 1 {
+                        type = .Violas
+                    } else {
+                        type = .BTC
+                    }
+                    // 钱包是否已备份
+                    let walletBackupState = wallet[Expression<Bool>("wallet_backup_state")]
+                    
+                    let wallet = LibraWalletManager.init(walletID: walletID,
+                                                         walletBalance: walletBalance,
+                                                         walletAddress: walletAddress,
+                                                         walletRootAddress: walletRootAddress,
+                                                         walletCreateTime: walletCreateTime,
+                                                         walletName: walletName,
+                                                         walletCurrentUse: walletCurrentUse,
+                                                         walletBiometricLock: walletBiometricLock,
+                                                         walletIdentity: walletIdentity,
+                                                         walletType: type,
+                                                         walletBackupState: walletBackupState)
+                    if walletIdentity == 0 {
+                        originWallets.append(wallet)
+                    } else {
+                        importWallets.append(wallet)
+                    }
+                }
+                allWallets.append(originWallets)
+                allWallets.append(importWallets)
+                return allWallets
+            } else {
+                return allWallets
+            }
+        } catch {
+            print(error.localizedDescription)
+            return [[LibraWalletManager]]()
+        }
+    }
     func updateDefaultViolasWallet() -> Bool {
         let walletTable = Table("Wallet").filter(Expression<Int>("wallet_identity") == 0 && Expression<Int>("wallet_type") == 1)
         do {

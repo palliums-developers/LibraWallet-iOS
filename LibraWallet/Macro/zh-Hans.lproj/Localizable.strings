@@ -17,6 +17,7 @@ wallet_home_transfer_button_title = "转账";
 wallet_home_receive_button_title = "收款";
 wallet_home_last_transaction_date_title = "交易记录";
 wallet_home_wallet_asset_title = "资产";
+wallet_home_mapping_title = "币币兑换";
 
 /************* 个人中心 *******************/
 wallet_mine_manager_wallet_title = "钱包管理";
@@ -301,6 +302,8 @@ wallet_first_in_create_identity_wallet_navigationbar_title = "创建身份";
 wallet_first_in_import_identity_wallet_navigationbar_title = "导入身份";
 wallet_order_center_navigationbar_title = "订单";
 wallet_order_center_detail_navigationbar_title = "订单详情";
+wallet_mapping_navigationbar_title = "兑换";
+
 
 /************* App错误 *******************/
 // 请求遇到错误

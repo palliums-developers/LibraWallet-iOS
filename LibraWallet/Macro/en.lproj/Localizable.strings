@@ -15,8 +15,9 @@ wallet_home_wallet_type_last_title = " Wallet";
 wallet_home_current_balance_title = "Balance";
 wallet_home_transfer_button_title = "Transfer";
 wallet_home_receive_button_title = "Receive";
-wallet_home_last_transaction_date_title = "Transaction History";
+wallet_home_last_transaction_date_title = "Transactions";
 wallet_home_wallet_asset_title = "Asset";
+wallet_home_mapping_title = "Mapping";
 
 /************* 个人中心 *******************/
 wallet_mine_manager_wallet_title = "Manage Wallet";
@@ -30,23 +31,23 @@ wallet_receive_copy_button_title = "Copy Address";
 /************* 转账 *******************/
 wallet_transfer_amount_title = "Amount";
 wallet_transfer_balance_title = "Balance";
-wallet_transfer_amount_textfield_placeholder = "Input Amount";
+wallet_transfer_amount_textfield_placeholder = "Enter Amount";
 wallet_transfer_address_title = "Receiving Address";
 wallet_transfer_address_contact_title = "Address Book";
-wallet_transfer_address_btc_textfield_placeholder = "Input BTC Receiving Address";
-wallet_transfer_address_libra_textfield_placeholder = "Input Libra Receiving Address";
-wallet_transfer_address_violas_textfield_placeholder = "Input Vtoken Receiving Address";
-wallet_transfer_transaction_fee_title = "Transaction Fee";
+wallet_transfer_address_btc_textfield_placeholder = "Enter BTC Address";
+wallet_transfer_address_libra_textfield_placeholder = "Enter Libra Address";
+wallet_transfer_address_violas_textfield_placeholder = "Enter Violas Address";
+wallet_transfer_transaction_fee_title = "Fee";
 wallet_transfer_transaction_fee_least_title = "Slow";
 wallet_transfer_transaction_fee_max_title = "Fast";
-wallet_transfer_confirm_button_title = "Confirm Transfer";
+wallet_transfer_confirm_button_title = "Confirm";
 
 /************* 交易历史 *******************/
 wallet_transactions_date_title = "Date";
 wallet_transactions_amount_title = "Amount";
 wallet_transactions_transfer_title = "Transfer";
 wallet_transactions_receive_title = "Receive";
-wallet_transactions_check_detail_on_chain = "Transaction History";
+wallet_transactions_check_detail_on_chain = "Browser";
 wallet_transactions_publish_title = "Open Account";
 wallet_transactions_make_coin_title = "Publish";
 wallet_transactions_empty_default_title = "No Transaction Yet";
@@ -145,7 +146,7 @@ wallet_setting_language_title = "Languages";
 wallet_setting_service_legal_title = "Service Agreement";
 wallet_private_service_legal_title = "Private Agreement";
 wallet_setting_about_us_title = "About Us";
-wallet_setting_help_center_title = "Help & Feedback";
+wallet_setting_help_center_title = "Feedback";
 
 /************* 地址页面 *******************/
 wallet_address_manager_empty_data_title = "No Address Yet";
@@ -282,7 +283,7 @@ wallet_alert_backup_warning_button_title = "Backup Now";
 
 /************* 页面标题 *******************/
 wallet_transfer_navigation_title = "Transfer";
-wallet_transactions_navigation_title = "Transaction History";
+wallet_transactions_navigation_title = "Transactions";
 wallet_receive_navigation_title = "Receive";
 wallet_wallet_list_navigation_title = "Select Wallet Type";
 wallet_manager_navigation_title = "Manage";
@@ -305,6 +306,7 @@ wallet_first_in_create_identity_wallet_navigationbar_title = "Create identity wa
 wallet_first_in_import_identity_wallet_navigationbar_title = "Import identity wallet";
 wallet_order_center_navigationbar_title = "Order";
 wallet_order_center_detail_navigationbar_title = "Order detail";
+wallet_mapping_navigationbar_title = "Mapping";
 
 /************* App错误 *******************/
 // 请求遇到错误
@@ -398,8 +400,7 @@ wallet_market_exchange_token_unpublish_error = "The currency you are going to ex
 wallet_market_published_list_empty_error = "No stablecoin has been published";
 wallet_market_token_list_empty_error = "Market support token empty";
 
-wallet_market_pay_token_not_select_error = "Pay token not selected
-";
+wallet_market_pay_token_not_select_error = "Pay token not selected";
 wallet_market_exchange_token_not_select_error = "Exchange token not selected";
 wallet_market_pay_amount_empty_error = "Pay amount empty";
 wallet_market_exchange_amount_empty_error = "Exchange amount empty";

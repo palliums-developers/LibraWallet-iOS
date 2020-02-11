@@ -93,7 +93,8 @@ class BTCManager: NSObject {
         data += UInt16(0x0000)
         data += UInt16(0x3000).bigEndian
         data += Data.init(Array<UInt8>(hex: (address)))
-        data += UInt64(20200113201).bigEndian
+//        data += UInt64(20200113201).bigEndian
+        data += UInt64(Date().timeIntervalSince1970).bigEndian
         data += Data.init(Array<UInt8>(hex: (tokenContract)))
         print(data.hex)
         return data

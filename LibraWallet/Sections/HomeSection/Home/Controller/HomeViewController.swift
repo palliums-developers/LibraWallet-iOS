@@ -524,6 +524,12 @@ extension HomeViewController: HomeHeaderViewDelegate {
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
+    func mapping() {
+        let vc = TokenMappingViewController()
+        vc.hidesBottomBarWhenPushed = true
+        vc.wallet = self.detailView.headerView.walletModel
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
 }
 
 extension HomeViewController: HomeTableViewManagerDelegate {
