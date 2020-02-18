@@ -111,6 +111,13 @@ class ViolasTransferModel: NSObject {
                                                                                mnemonic: mnemonic,
                                                                                contact: contact,
                                                                                sequenceNumber: self.sequenceNumber!)
+//                let signature = try ViolasManager.getVBTCToBTCTransactionHex(sendAddress: sendAddress,
+//                                                                             amount: amount,
+//                                                                             fee: fee,
+//                                                                             mnemonic: mnemonic,
+//                                                                             contact: contact,
+//                                                                             sequenceNumber: self.sequenceNumber!,
+//                                                                             btcAddress: "n1dqi6pwdS46ucUh5eJ9KmHS11JgnQLWwc")
                 self.makeViolasTransaction(signature: signature)
             } catch {
                 print(error.localizedDescription)

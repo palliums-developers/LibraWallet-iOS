@@ -13,7 +13,7 @@ class LocalWalletViewController: BaseViewController {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.white
         // 页面标题
-        self.title = localLanguage(keyString: "选择钱包")
+        self.title = localLanguage(keyString: "wallet_mapping_receive_wallet_navigationbar_title")
         // 加载子View
         self.view.addSubview(self.detailView)
         // 加载数据
@@ -58,6 +58,7 @@ class LocalWalletViewController: BaseViewController {
         return view
     }()
     var observer: NSKeyValueObservation?
+    var walletType: WalletType?
 }
 extension LocalWalletViewController {
     func initKVO() {
@@ -74,9 +75,6 @@ extension LocalWalletViewController {
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletNotExist).localizedDescription {
                     // 钱包不存在
                     print(error.localizedDescription)
-    //                let vc = WalletCreateViewController()
-    //                let navi = UINavigationController.init(rootViewController: vc)
-    //                self.present(navi, animated: true, completion: nil)
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionTooOld).localizedDescription {
                     // 版本太久
                     print(error.localizedDescription)
@@ -101,7 +99,19 @@ extension LocalWalletViewController {
             }
 //            self.detailView.hideToastActivity()
         })
-        self.dataModel.loadLocalWallet()
+        switch self.walletType {
+        case .BTC:
+            self.dataModel.loadLocalWallet(walletType: .Violas)
+        case .Violas:
+            #warning("待处理")
+//            self.dataModel.loadLocalWallet(walletType: .BTC)
+            self.dataModel.loadLocalWallet(walletType: .Libra)
+        case .Libra:
+            self.dataModel.loadLocalWallet(walletType: .Violas)
+        default:
+            print("异常")
+        }
+        
     }
 
 }

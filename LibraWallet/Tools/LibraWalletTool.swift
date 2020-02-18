@@ -77,8 +77,8 @@ func isPurnDouble(string: String) -> Bool {
     return scan.scanDouble(&val) && scan.isAtEnd
     
 }
-func passowordAlert(rootAddress: String, mnemonic: @escaping (([String])->Void), errorContent: @escaping ((String)->Void)) -> UIAlertController {
-    let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: localLanguage(keyString: "wallet_type_in_password_content"), preferredStyle: .alert)
+func passowordAlert(rootAddress: String, message: String? = localLanguage(keyString: "wallet_type_in_password_content"), mnemonic: @escaping (([String])->Void), errorContent: @escaping ((String)->Void)) -> UIAlertController {
+    let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: message, preferredStyle: .alert)
     alertContr.addTextField {
         (textField: UITextField!) -> Void in
         textField.placeholder = localLanguage(keyString: "wallet_type_in_password_textfield_placeholder")
@@ -111,6 +111,7 @@ func passowordAlert(rootAddress: String, mnemonic: @escaping (([String])->Void),
     alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_cancel_button_title"), style: .cancel){
         clickHandler in
         NSLog("点击了取消")
+        errorContent("Cancel")
     })
     return alertContr
 }

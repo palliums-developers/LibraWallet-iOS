@@ -13,8 +13,8 @@ class LocalWalletModel: NSObject {
     func getSupportCoinList() -> [String] {
         return ["wallet_list_total", "violas_icon", "btc_icon", "libra_icon"]
     }
-    func loadLocalWallet() {
-        let wallets = DataBaseManager.DBManager.getWalletWithType(walletType: .Violas)
+    func loadLocalWallet(walletType: WalletType) {
+        let wallets = DataBaseManager.DBManager.getWalletWithType(walletType: walletType)
         guard wallets.isEmpty == false else {
             let data = setKVOData(error: LibraWalletError.error("empty"), type: "LoadLocalWallets")
             self.setValue(data, forKey: "dataDic")

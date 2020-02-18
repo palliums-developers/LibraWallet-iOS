@@ -240,6 +240,14 @@ public enum LibraWalletError: Error {
         case exchangeAmountEmpty
     }
     case WalletMarket(reason: ExchangeMarketError)
+    
+    public enum MappingError {
+        /// 待兑换稳定币尚未开启
+        case mappingTokenPublishedInvalid
+        /// 映射功能异常
+        case mappingFounctionInvalid
+    }
+    case WalletMapping(reason: MappingError)
 }
 extension LibraWalletError: LocalizedError {
     public var errorDescription: String? {
@@ -271,6 +279,8 @@ extension LibraWalletError: LocalizedError {
         case .WalletScan(let reason):
             return reason.localizedDescription
         case .WalletMarket(let reason):
+            return reason.localizedDescription
+        case .WalletMapping(let reason):
             return reason.localizedDescription
         }
     }
@@ -567,6 +577,17 @@ extension LibraWalletError.ExchangeMarketError {
         // 兑换稳定币数量为空
         case .exchangeAmountEmpty:
             return localLanguage(keyString: "wallet_market_exchange_amount_empty_error")
+        }
+    }
+}
+extension LibraWalletError.MappingError {
+    var localizedDescription: String {
+        switch self {
+        /// 暂未映射
+        case .mappingTokenPublishedInvalid:
+            return localLanguage(keyString: "wallet_market_mapping_token_unpublish_error")
+        case .mappingFounctionInvalid:
+            return localLanguage(keyString: "wallet_mapping_info_alert_content")
         }
     }
 }

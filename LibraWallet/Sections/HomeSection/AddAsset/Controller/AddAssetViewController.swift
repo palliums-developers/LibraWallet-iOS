@@ -18,6 +18,8 @@ class AddAssetViewController: BaseViewController {
         self.view.addSubview(self.detailView)
         // 加载数据
         self.initKVO(walletID: (wallet?.walletID)!, walletAddress: wallet?.walletAddress ?? "")
+        
+        self.addNavigationRightBar()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -51,12 +53,6 @@ class AddAssetViewController: BaseViewController {
             self.navigationController?.popViewController(animated: true)
         }
     }
-//    lazy var viewModel: AddAssetViewModel = {
-//        let viewModel = AddAssetViewModel.init()
-//        viewModel.tableViewManager.headerData = self.wallet
-//        viewModel.delegate = self
-//        return viewModel
-//    }()
     //网络请求、数据模型
     lazy var dataModel: AddAssetModel = {
         let model = AddAssetModel.init()
@@ -81,6 +77,12 @@ class AddAssetViewController: BaseViewController {
     var needDismissViewController: Bool?
     var myContext = 0
     var needUpdateClosure: successClosure?
+    lazy var addAddressButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setImage(UIImage.init(named: "add"), for: UIControl.State.normal)
+        button.addTarget(self, action: #selector(addAddressMethod), for: .touchUpInside)
+        return button
+    }()
 }
 extension AddAssetViewController: AddAssetTableViewManagerDelegate {
     func switchButtonChange(model: ViolasTokenModel, state: Bool, indexPath: IndexPath) {
@@ -212,3 +214,28 @@ extension AddAssetViewController {
         }
     }
 }
+extension AddAssetViewController {
+    func addNavigationRightBar() {
+        // 自定义导航栏的UIBarButtonItem类型的按钮
+        let backView = UIBarButtonItem(customView: addAddressButton)
+        // 重要方法，用来调整自定义返回view距离左边的距离
+        let barButtonItem = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        barButtonItem.width = 5
+        // 返回按钮设置成功
+        self.navigationItem.rightBarButtonItems = [barButtonItem, backView]
+    }
+    @objc func addAddressMethod() {
+        let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
+            self?.detailView.toastView?.show()
+            self?.dataModel.publishViolasToken(sendAddress: (self?.wallet?.walletAddress)!, mnemonic: mnemonic, contact: "af955c1d62a74a7543235dbb7fa46ed98948d2041dff67dfdb636a54e84f91fb")
+            self?.actionClosure = { result in
+                
+            }
+        }) { [weak self] (errorContent) in
+            self?.view.makeToast(errorContent, position: .center)
+        }
+        self.present(alert, animated: true, completion: nil)
+    }
+
+}
+

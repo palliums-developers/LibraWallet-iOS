@@ -610,7 +610,7 @@ extension MarketViewController {
         }
         
         // 开始筛选其他人订单
-        var otherOrders = data.filter({ item in
+        let otherOrders = data.filter({ item in
             item.user?.contains(self.wallet?.walletAddress ?? "") == false
         })
 //                let oldOtherBuyOrders = self.tableViewManager.sellOrders
@@ -702,7 +702,7 @@ extension MarketViewController {
             }
             if dataExist == false &&  otherOrders[i].state == "OPEN" {
 //                let headerView = self.detailView.tableView.headerView(forSection: 0) as! MarketExchangeHeaderView
-                let headerView = self.detailView.tableView.dequeueReusableHeaderFooterView(withIdentifier: "MainHeader") as! MarketExchangeHeaderView//headerView(forSection: 0) as! MarketExchangeHeaderView
+//                let headerView = self.detailView.tableView.dequeueReusableHeaderFooterView(withIdentifier: "MainHeader") as! MarketExchangeHeaderView//headerView(forSection: 0) as! MarketExchangeHeaderView
 //                otherOrders[i].price = headerView.rightTokenModel?.price
                 
                 self.tableViewManager.sellOrders?.append(otherOrders[i])

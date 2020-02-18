@@ -49,7 +49,6 @@ class WalletListController: BaseViewController {
         return viewModel
     }()
 }
-
 extension WalletListController: WalletListTableViewManagerDelegate {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: LibraWalletManager) {
         print(indexPath.row)

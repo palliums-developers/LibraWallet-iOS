@@ -206,7 +206,24 @@ extension ViolasManager {
                                                  fee: fee,
                                                  sequenceNumber: UInt64(sequenceNumber),
                                                  code: ViolasManager.getCodeData(move: ViolasExchangeTokenProgramCode, address: contact),
-                                                 btcAddress: btcAddress)
+                                                 btcReceiveAddress: btcAddress)
+            // 签名交易
+            let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
+            return signature.toHexString()
+        } catch {
+            throw error
+        }
+    }
+    public static func getVLibraToLibraTransactionHex(sendAddress: String, amount: Double, fee: Double, mnemonic: [String], contact: String, sequenceNumber: Int, libraReceiveAddress: String) throws -> String {
+        do {
+            let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
+            // 拼接交易
+            let request = ViolasTransaction.init(sendAddress: sendAddress,
+                                                 amount: amount,
+                                                 fee: fee,
+                                                 sequenceNumber: UInt64(sequenceNumber),
+                                                 code: ViolasManager.getCodeData(move: ViolasExchangeTokenProgramCode, address: contact),
+                                                 libraReceiveAddress: libraReceiveAddress)
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
             return signature.toHexString()

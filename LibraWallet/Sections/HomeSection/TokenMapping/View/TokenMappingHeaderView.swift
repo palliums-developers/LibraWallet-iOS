@@ -352,7 +352,7 @@ class TokenMappingHeaderView: UIView {
     }()
     lazy var confirmButton: UIButton = {
         let button = UIButton.init(type: UIButton.ButtonType.custom)
-        button.setTitle(localLanguage(keyString: "wallet_market_exchange_confirm_title"), for: UIControl.State.normal)
+        button.setTitle(localLanguage(keyString: "wallet_mapping_confirm_title"), for: UIControl.State.normal)
         button.setTitleColor(UIColor.white, for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
@@ -375,6 +375,9 @@ class TokenMappingHeaderView: UIView {
             self.delegate?.chooseAddress()
         } else {
             // 兑换
+            guard model != nil else {
+                return
+            }
             self.leftAmountTextField.resignFirstResponder()
             self.rightAmountTextField.resignFirstResponder()
             guard let payAmountString = leftAmountTextField.text, payAmountString.isEmpty == false else {
@@ -432,8 +435,8 @@ class TokenMappingHeaderView: UIView {
     var model: TokenMappingDataModel? {
         didSet {
             self.leftCoinButton.setTitle(model?.pay_name, for: UIControl.State.normal)
-            self.rightCoinButton.setTitle(model?.exchange_name, for: UIControl.State.normal)
-            self.exchangeRateLabel.text = "1\(model?.pay_name ?? "") = \(model?.exchange_rate ?? 0)\(model?.pay_name ?? "")"
+            self.rightCoinButton.setTitle(model?.name, for: UIControl.State.normal)
+            self.exchangeRateLabel.text = "1\(model?.pay_name ?? "") = \(model?.rate ?? 0)\(model?.pay_name ?? "")"
 
         }
     }

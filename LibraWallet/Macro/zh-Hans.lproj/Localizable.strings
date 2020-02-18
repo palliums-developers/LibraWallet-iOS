@@ -188,12 +188,16 @@ wallet_market_order_detail_state_done_title = "已完成";
 wallet_market_order_detail_state_processing_title = "处理中";
 wallet_market_order_detail_fill_order_title = "成交记录";
 
+/************* 映射 *******************/
+wallet_mapping_confirm_title = "确认";
+
 /************* 弹出提示 *******************/
 // 转账弹出提示
 wallet_transfer_success_alert = "转账成功";
 // 解锁钱包
 wallet_type_in_password_title = "提示";
 wallet_type_in_password_content = "请输入钱包密码";
+wallet_type_in_watting_publish_wallet_password_content = "请输入接收映射钱包钱包密码";
 wallet_type_in_password_textfield_placeholder = "密码";
 wallet_type_in_password_cancel_button_title = "取消";
 wallet_type_in_password_confirm_button_title = "确定";
@@ -271,6 +275,10 @@ wallet_private_and_use_legal_confirm_button_title = "Agree";
 wallet_private_and_use_legal_content = "感谢您选择了SSO APP\n我们极度重视您的用户隐私。您在使用我们的服务时，我们可能会收集和使用您的相关信息。在使用我们的产品前，请务必审慎阅读《隐私政策》和《服务协议》内的所有内容，来了解我们如何收集、使用、储存和分享这些信息，以及我们为您提供的访问、更新、控制和保护这些信息的方式。";
 // 语言切换
 wallet_language_change_success = "切换成功";
+// 获取映射信息
+wallet_mapping_info_alert_title = "提示";
+wallet_mapping_info_alert_content = "获取映射信息失败，请稍后重试";
+wallet_mapping_info_alert_confirm_button_title = "确定";
 
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "安全提醒";
@@ -303,6 +311,7 @@ wallet_first_in_import_identity_wallet_navigationbar_title = "导入身份";
 wallet_order_center_navigationbar_title = "订单";
 wallet_order_center_detail_navigationbar_title = "订单详情";
 wallet_mapping_navigationbar_title = "兑换";
+wallet_mapping_receive_wallet_navigationbar_title = "钱包选择";
 
 
 /************* App错误 *******************/
@@ -398,7 +407,7 @@ wallet_market_exchange_amount_max_limit_error = "您需要兑换的稳定币数�
 wallet_market_pay_amount_invalid_error = "付出金额无效";
 wallet_market_pay_amount_max_limit_error = "您付出的稳定币数量过大，不支持交换，请减少付出数量后交换";
 wallet_market_amount_not_enough_error = "余额不足以兑换，请确认";
-wallet_market_exchange_token_unpublish_error = "您将要兑换的币尚未开启，开启需要消耗一定数量Gas费，是否立即开启并兑换";
+wallet_market_exchange_token_unpublish_error = "您将要兑换的稳定币尚未开启，开启需要消耗一定数量Gas费，是否立即开启并兑换";
 wallet_market_published_list_empty_error = "尚未开启任何稳定币";
 wallet_market_token_list_empty_error = "获取交易所稳定币列表为空";
 
@@ -406,3 +415,5 @@ wallet_market_pay_token_not_select_error = "付出稳定币未选择";
 wallet_market_exchange_token_not_select_error = "待兑换稳定币未选择";
 wallet_market_pay_amount_empty_error = "付出稳定币数量为空";
 wallet_market_exchange_amount_empty_error = "兑换稳定币数量为空";
+// 映射
+wallet_market_mapping_token_unpublish_error = "您将要映射的稳定币尚未开启，开启需要消耗一定数量Gas费，是否立即开启并映射？";

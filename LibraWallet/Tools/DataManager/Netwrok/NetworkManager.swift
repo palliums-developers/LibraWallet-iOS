@@ -56,6 +56,11 @@ enum mainRequest {
     case GetOrderDetail(String, Int)
     /// 获取已完成订单
     case GetAllDoneOrder(String, String)
+    
+    /// 查询映射信息
+    case GetMappingInfo(String)
+    /// 获取当前映射笔数
+    case GetMappingTransactionsCount(String, String)
 }
 extension mainRequest:TargetType {
     var baseURL: URL {
@@ -82,7 +87,9 @@ extension mainRequest:TargetType {
              .GetViolasAccountTransactionList(_, _, _, _),
              .SendViolasTransaction(_),
              .GetViolasTokenList,
-             .GetViolasAccountEnableToken(_):
+             .GetViolasAccountEnableToken(_),
+             .GetMappingInfo(_),
+             .GetMappingTransactionsCount(_, _):
             #if PUBLISH_VERSION
                 return URL(string:"https://api.violas.io/1.0")!
             #else
@@ -149,6 +156,10 @@ extension mainRequest:TargetType {
             return "/trades"
         case .GetAllDoneOrder(_, _):
             return "/orders"
+        case .GetMappingInfo(_):
+            return "/crosschain/info"
+        case .GetMappingTransactionsCount(_, _):
+            return "/crosschain/transactions/count"
         }
     }
     var method: Moya.Method {
@@ -174,7 +185,9 @@ extension mainRequest:TargetType {
              .GetCurrentOrder(_, _, _),
              .GetAllProcessingOrder(_, _),
              .GetOrderDetail(_, _),
-             .GetAllDoneOrder(_, _):
+             .GetAllDoneOrder(_, _),
+             .GetMappingInfo(_),
+             .GetMappingTransactionsCount(_, _):
             return .get
         }
     }
@@ -284,11 +297,18 @@ extension mainRequest:TargetType {
                                           encoding: URLEncoding.queryString)
             } else {
                 return .requestParameters(parameters: ["user": address,
-                                                       "state":4,
-                                                       "limit":10,
+                                                       "state": 4,
+                                                       "limit": 10,
                                                        "version":version],
                                           encoding: URLEncoding.queryString)
             }
+        case .GetMappingInfo(let type):
+            return .requestParameters(parameters: ["type":type.lowercased()],
+                                      encoding: URLEncoding.queryString)
+        case .GetMappingTransactionsCount(let address, let type):
+            return .requestParameters(parameters: ["address": address,
+                                                   "type": type.lowercased()],
+                                      encoding: URLEncoding.queryString)
         }
     }
     var headers: [String : String]? {

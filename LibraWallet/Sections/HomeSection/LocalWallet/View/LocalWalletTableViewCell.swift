@@ -70,16 +70,6 @@ class LocalWalletTableViewCell: UITableViewCell {
         label.lineBreakMode = .byTruncatingMiddle
         return label
     }()
-//    private lazy var selectIndicatorImageView : UIImageView = {
-//        let imageView = UIImageView.init()
-//        imageView.layer.backgroundColor = UIColor.init(hex: "F74E4E").cgColor
-//        imageView.layer.cornerRadius = 5
-//        imageView.layer.borderColor = UIColor.white.cgColor
-//        imageView.layer.borderWidth = 1
-//        imageView.layer.masksToBounds = true
-//        imageView.alpha = 0
-//        return imageView
-//    }()
     //MARK: - 设置数据
     var model: LibraWalletManager? {
         didSet {

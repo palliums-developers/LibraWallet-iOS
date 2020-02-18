@@ -525,6 +525,10 @@ extension HomeViewController: HomeHeaderViewDelegate {
         self.navigationController?.pushViewController(vc, animated: true)
     }
     func mapping() {
+//        guard self.detailView.headerView.walletModel?.walletType != .Violas else {
+//            self.detailView.makeToast("正在规划中，请稍后", position: .center)
+//            return
+//        }
         let vc = TokenMappingViewController()
         vc.hidesBottomBarWhenPushed = true
         vc.wallet = self.detailView.headerView.walletModel
