@@ -15,7 +15,6 @@ class HomeTableViewCell: UITableViewCell {
         contentView.addSubview(whiteBackgroundView)
         whiteBackgroundView.addSubview(coinNameLabel)
         whiteBackgroundView.addSubview(coinAmountLabel)
-
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -30,7 +29,6 @@ class HomeTableViewCell: UITableViewCell {
             make.top.bottom.equalTo(contentView)
             make.left.equalTo(contentView).offset(15)
             make.right.equalTo(contentView).offset(-15)
-
         }
         coinNameLabel.snp.makeConstraints { (make) in
             make.centerY.equalTo(whiteBackgroundView)

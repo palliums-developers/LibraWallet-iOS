@@ -12,6 +12,8 @@ class TokenMappingViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = localLanguage(keyString: "wallet_mapping_navigationbar_title")
+        self.addRightNavigationBar()
+
         self.view.addSubview(detailView)
         self.initKVO()
     }
@@ -40,7 +42,34 @@ class TokenMappingViewController: BaseViewController {
         let model = TokenMappingModel.init()
         return model
     }()
-    var wallet: LibraWalletManager?
+    var wallet: LibraWalletManager? {
+        didSet {
+            self.detailView.headerView.walletType = wallet?.walletType
+        }
+    }
+    func addRightNavigationBar() {
+        // 自定义导航栏的UIBarButtonItem类型的按钮
+        let addView = UIBarButtonItem(customView: addButton)
+        // 重要方法，用来调整自定义返回view距离左边的距离
+        let barButtonItem = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        // 返回按钮设置成功
+        self.navigationItem.rightBarButtonItems = [addView, barButtonItem]
+    }
+    lazy var addButton: UIButton = {
+        let button = UIButton(type: .custom)
+        // 给按钮设置返回箭头图片
+        button.setTitle("查看订单", for: UIControl.State.normal)
+        button.setTitleColor(UIColor.white, for: UIControl.State.normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        // 设置frame
+        button.frame = CGRect(x: 200, y: 13, width: 22, height: 44)
+        button.addTarget(self, action: #selector(addMethod), for: .touchUpInside)
+        return button
+    }()
+    @objc func addMethod() {
+        let vc = MappingTransactionsViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
     var observer: NSKeyValueObservation?
     typealias checkPublishClosure = (Bool) -> Void
     var actionClosure: checkPublishClosure?
@@ -61,7 +90,7 @@ extension TokenMappingViewController {
                 if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
                     // 网络无法访问
                     print(error.localizedDescription)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionTooOld).localizedDescription {
+                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionExpired).localizedDescription {
                     // 版本太久
                     print(error.localizedDescription)
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
@@ -111,10 +140,26 @@ extension TokenMappingViewController {
                 if let action = self?.finishClosure {
                     action()
                 }
+            } else if type == "MappingTokenList" {
+                if let tempData = dataDic.value(forKey: "data") as? [TokenMappingListDataModel] {
+                    print(tempData)
+                    self?.detailView.toastView?.hide()
+                    let alert = MappingTokenListAlert.init(data: tempData) { (model) in
+                        print(model)
+                        self?.detailView.headerView.reverseModel = model
+                    }
+                    alert.show()
+                    alert.showAnimation()
+                }
             }
         })
-        self.detailView.toastView?.show()
-        self.dataModel.getMappingInfo(walletType: (wallet?.walletType)!)
+        if wallet?.walletType == .BTC || wallet?.walletType == .Libra {
+            self.detailView.toastView?.show()
+            self.dataModel.getMappingInfo(walletType: (wallet?.walletType)!)
+        } else {
+//            // 获取当前钱包已映射稳定币列表
+//            self.dataModel.getMappingTokenList(walletAddress: "b45d3e7e8079eb16cd7111b676f0c32294135e4190261240e3fd7b96fe1b9b89")
+        }
     }
     private func showMappingFunctionAlert() {
         let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_mapping_info_alert_title"), message: LibraWalletError.WalletMapping(reason: .mappingFounctionInvalid).localizedDescription, preferredStyle: .alert)
@@ -126,39 +171,66 @@ extension TokenMappingViewController {
     }
 }
 extension TokenMappingViewController: TokenMappingHeaderViewDelegate {
+    func showMappingTokenList() {
+        self.detailView.toastView?.show()
+        // 获取当前钱包已映射稳定币列表
+        self.dataModel.getMappingTokenList(walletAddress: self.wallet?.walletAddress ?? "")
+    }
     func chooseAddress() {
         let vc = LocalWalletViewController()
         vc.actionClosure = { (action, wallet) in
             self.detailView.headerView.exchangeToAddressTextField.text = wallet.walletAddress
             self.receiveWallet = wallet
         }
-        vc.walletType = self.wallet?.walletType
+        if self.wallet?.walletType == .BTC || self.wallet?.walletType == .Libra {
+            vc.walletType = .Violas
+        } else {
+            if self.detailView.headerView.rightCoinButton.titleLabel?.text?.lowercased() == "btc" {
+                vc.walletType = .BTC
+            } else {
+                vc.walletType = .Libra
+            }
+        }
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
     func confirmTransfer(amount: Double, address: String, fee: Double) {
-        self.detailView.toastView?.show()
-        self.dataModel.getWalletEnableToken(address: address, contract: (self.detailView.headerView.model?.module)!)
-        self.actionClosure = { (result) in
-            if result == false {
-                // 接收映射钱包未注册映射币
-                self.showUnpublishAlert()
-            } else {
-                // 接收钱包已注册映射币
+        
+        if wallet?.walletType == .Libra || wallet?.walletType == .BTC {
+            self.detailView.toastView?.show()
+            self.dataModel.getWalletEnableToken(address: address, contract: (self.detailView.headerView.model?.module)!)
+            self.actionClosure = { (result) in
+                if result == false {
+                    // 接收映射钱包未注册映射币
+                    self.showUnpublishAlert()
+                } else {
+                    // 接收钱包已注册映射币
+                    self.showMappingWalletPasswordAlert(amount: amount, address: address, fee: fee)
+                }
+            }
+            self.finishClosure = {
+                // 接收映射钱包注册成功映射币
+                let model = ViolasTokenModel.init(name: self.detailView.headerView.model?.name ?? "",
+                                                  description: "",
+                                                  address: self.detailView.headerView.model?.module ?? "",
+                                                  icon: "",
+                                                  enable: true,
+                                                  balance: 0,
+                                                  registerState: true)
+                _ = DataBaseManager.DBManager.insertViolasToken(walletID: self.receiveWallet?.walletID ?? 0, model: model)
+
                 self.showMappingWalletPasswordAlert(amount: amount, address: address, fee: fee)
             }
-        }
-        self.finishClosure = {
-            // 接收映射钱包注册成功映射币
-            let model = ViolasTokenModel.init(name: self.detailView.headerView.model?.name ?? "",
-                                              description: "",
-                                              address: self.detailView.headerView.model?.module ?? "",
-                                              icon: "",
-                                              enable: true,
-                                              balance: 0,
-                                              registerState: true)
-            _ = DataBaseManager.DBManager.insertViolasToken(walletID: self.receiveWallet?.walletID ?? 0, model: model)
-
+        } else {
+//            if self.detailView.headerView.rightCoinButton.titleLabel?.text?.lowercased() == "btc" {
+//                // btc
+//                self.showMappingWalletPasswordAlert(amount: amount, address: address, fee: fee)
+//            } else if self.detailView.headerView.rightCoinButton.titleLabel?.text?.lowercased() == "libra" {
+//                // libra
+//                self.showMappingWalletPasswordAlert(amount: amount, address: address, fee: fee)
+//            } else {
+//                //异常
+//            }
             self.showMappingWalletPasswordAlert(amount: amount, address: address, fee: fee)
         }
     }
@@ -177,18 +249,26 @@ extension TokenMappingViewController: TokenMappingHeaderViewDelegate {
             self.dataModel.transfer(address: address, amount: amount, mnemonic: mnemonic)
         case .Violas:
             print("Violas")
-//            self.dataModel.sendVBTCTransaction(sendAddress: self.wallet?.walletAddress ?? "",
-//                                               receiveAddress: address,
-//                                               amount: amount,
-//                                               fee: fee,
-//                                               mnemonic: mnemonic,
-//                                               contact: "af955c1d62a74a7543235dbb7fa46ed98948d2041dff67dfdb636a54e84f91fb")
-            self.dataModel.sendVLibraTransaction(sendAddress: self.wallet?.walletAddress ?? "",
-                                                 receiveAddress: address,
-                                                 amount: amount,
-                                                 fee: fee,
-                                                 mnemonic: mnemonic,
-                                                 contact: "61b578c0ebaad3852ea5e023fb0f59af61de1a5faf02b1211af0424ee5bbc410")
+            self.detailView.toastView?.show()
+            if self.detailView.headerView.rightCoinButton.titleLabel?.text?.lowercased() == "btc" {
+                // btc
+                self.dataModel.sendVBTCTransaction(sendAddress: self.wallet?.walletAddress ?? "",
+                                                   receiveAddress: address,
+                                                   amount: amount,
+                                                   fee: fee,
+                                                   mnemonic: mnemonic,
+                                                   contact: self.detailView.headerView.reverseModel?.module ?? "")
+            } else if self.detailView.headerView.rightCoinButton.titleLabel?.text?.lowercased() == "libra" {
+                // libra
+                self.dataModel.sendVLibraTransaction(sendAddress: self.wallet?.walletAddress ?? "",
+                                                     receiveAddress: address,
+                                                     amount: amount,
+                                                     fee: fee,
+                                                     mnemonic: mnemonic,
+                                                     contact: self.detailView.headerView.reverseModel?.module ?? "")
+            } else {
+                //异常
+            }
         case .none:
             break
         }

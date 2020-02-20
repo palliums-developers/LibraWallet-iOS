@@ -265,6 +265,70 @@ class HomeModel: NSObject {
             print("刷新本地钱包Token数据状态: \(result),walletID = \(walletID)")
         }
     }
+    func scanResultHandle(content: String, contracts: [ViolasTokenModel]?) throws -> QRQodeHandleResult {
+        if content.hasPrefix("bitcoin:") {
+            let tempAddress = content.replacingOccurrences(of: "bitcoin:", with: "")
+            guard BTCManager.isValidBTCAddress(address: tempAddress) else {
+                throw LibraWalletError.WalletScan(reason: .btcAddressInvalid)
+            }
+            return QRQodeHandleResult.init(addressType: .BTC,
+                                           originContent: content,
+                                           address: tempAddress,
+                                           contract: nil)
+        } else if content.hasPrefix("libra:") {
+            let tempAddress = content.replacingOccurrences(of: "libra:", with: "")
+            guard LibraManager.isValidLibraAddress(address: tempAddress) else {
+               throw LibraWalletError.WalletScan(reason: .libraAddressInvalid)
+            }
+            return QRQodeHandleResult.init(addressType: .Libra,
+                                           originContent: content,
+                                           address: tempAddress,
+                                           contract: nil)
+        } else if content.hasPrefix("violas:") {
+            let tempAddress = content.replacingOccurrences(of: "violas:", with: "")
+            guard ViolasManager.isValidViolasAddress(address: tempAddress) else {
+                throw LibraWalletError.WalletScan(reason: .violasAddressInvalid)
+            }
+            return QRQodeHandleResult.init(addressType: .Violas,
+                                           originContent: content,
+                                           address: tempAddress,
+                                           contract: nil)
+        } else if content.hasPrefix("violas-") {
+            let coinAddress = content.split(separator: ":").last?.description
+            let addressPrifix = content.split(separator: ":").first?.description
+            let coinNames = addressPrifix?.split(separator: "-")
+            guard coinNames?.count == 2 else {
+                print("token名称为空")
+                throw LibraWalletError.WalletScan(reason: .violasTokenNameEmpty)
+            }
+            let contract = contracts?.filter({ item in
+                item.name?.lowercased() == coinNames?.last?.description.lowercased()
+            })
+            guard (contract?.count ?? 0) > 0 else {
+                // 不支持或未开启
+                print("不支持或未开启")
+                throw LibraWalletError.WalletScan(reason: .violasTokenContractInvalid)
+            }
+            guard ViolasManager.isValidViolasAddress(address: coinAddress ?? "") else {
+                throw LibraWalletError.WalletScan(reason: .violasAddressInvalid)
+            }
+            return QRQodeHandleResult.init(addressType: .Violas,
+                                           originContent: content,
+                                           address: coinAddress,
+                                           contract: contract?.first)
+        } else {
+            return QRQodeHandleResult.init(addressType: nil,
+                                           originContent: content,
+                                           address: nil,
+                                           contract: nil)
+        }
+    }
+    struct QRQodeHandleResult {
+        var addressType: WalletType?
+        var originContent: String
+        var address: String?
+        var contract: ViolasTokenModel?
+    }
     deinit {
         requests.forEach { cancellable in
             cancellable.cancel()

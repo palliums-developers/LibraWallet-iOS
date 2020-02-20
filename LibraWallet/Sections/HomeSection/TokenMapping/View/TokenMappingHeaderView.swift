@@ -10,6 +10,7 @@ import UIKit
 protocol TokenMappingHeaderViewDelegate: NSObjectProtocol {
     func chooseAddress()
     func confirmTransfer(amount: Double, address: String, fee: Double)
+    func showMappingTokenList()
 }
 class TokenMappingHeaderView: UIView {
     weak var delegate: TokenMappingHeaderViewDelegate?
@@ -186,7 +187,7 @@ class TokenMappingHeaderView: UIView {
         button.setTitle("---", for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: UIFont.Weight.regular)
         button.setTitleColor(UIColor.init(hex: "3C3848"), for: UIControl.State.normal)
-//        button.addTarget(self, action: #selector(selectExchangeToken(button:)), for: UIControl.Event.touchUpInside)
+        button.addTarget(self, action: #selector(selectExchangeToken(button:)), for: UIControl.Event.touchUpInside)
         button.tag = 20
         return button
     }()
@@ -375,9 +376,9 @@ class TokenMappingHeaderView: UIView {
             self.delegate?.chooseAddress()
         } else {
             // 兑换
-            guard model != nil else {
-                return
-            }
+//            guard model != nil else {
+//                return
+//            }
             self.leftAmountTextField.resignFirstResponder()
             self.rightAmountTextField.resignFirstResponder()
             guard let payAmountString = leftAmountTextField.text, payAmountString.isEmpty == false else {
@@ -421,6 +422,12 @@ class TokenMappingHeaderView: UIView {
                                            fee: fee)
         }
     }
+    @objc func selectExchangeToken(button: UIButton) {
+        guard self.walletType == .Violas else {
+            return
+        }
+        self.delegate?.showMappingTokenList()
+    }
     var rate: Double? {
         didSet {
             let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
@@ -437,9 +444,16 @@ class TokenMappingHeaderView: UIView {
             self.leftCoinButton.setTitle(model?.pay_name, for: UIControl.State.normal)
             self.rightCoinButton.setTitle(model?.name, for: UIControl.State.normal)
             self.exchangeRateLabel.text = "1\(model?.pay_name ?? "") = \(model?.rate ?? 0)\(model?.pay_name ?? "")"
-
         }
     }
+    var reverseModel: TokenMappingListDataModel? {
+        didSet {
+            self.leftCoinButton.setTitle(reverseModel?.mapping_name, for: UIControl.State.normal)
+            self.rightCoinButton.setTitle(reverseModel?.mapping_reverse_name, for: UIControl.State.normal)
+            self.exchangeRateLabel.text = "1\(reverseModel?.mapping_name ?? "") = \(reverseModel?.rate ?? 0)\(reverseModel?.mapping_reverse_name ?? "")"
+        }
+    }
+    var walletType: WalletType?
     @objc func textFieldDidChange() {
         guard let payAmountString = leftAmountTextField.text else {
             return

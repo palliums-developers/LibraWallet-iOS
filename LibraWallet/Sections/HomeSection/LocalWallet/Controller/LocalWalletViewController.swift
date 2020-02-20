@@ -72,10 +72,10 @@ extension LocalWalletViewController {
                 if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
                     // 网络无法访问
                     print(error.localizedDescription)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletNotExist).localizedDescription {
+                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletTokenExpired).localizedDescription {
                     // 钱包不存在
                     print(error.localizedDescription)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionTooOld).localizedDescription {
+                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionExpired).localizedDescription {
                     // 版本太久
                     print(error.localizedDescription)
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
@@ -99,19 +99,19 @@ extension LocalWalletViewController {
             }
 //            self.detailView.hideToastActivity()
         })
-        switch self.walletType {
-        case .BTC:
-            self.dataModel.loadLocalWallet(walletType: .Violas)
-        case .Violas:
-            #warning("待处理")
-//            self.dataModel.loadLocalWallet(walletType: .BTC)
-            self.dataModel.loadLocalWallet(walletType: .Libra)
-        case .Libra:
-            self.dataModel.loadLocalWallet(walletType: .Violas)
-        default:
-            print("异常")
-        }
-        
+//        switch self.walletType {
+//        case .BTC:
+//            self.dataModel.loadLocalWallet(walletType: .Violas)
+//        case .Violas:
+//            #warning("待处理")
+////            self.dataModel.loadLocalWallet(walletType: .BTC)
+//            self.dataModel.loadLocalWallet(walletType: .Libra)
+//        case .Libra:
+//            self.dataModel.loadLocalWallet(walletType: .Violas)
+//        default:
+//            print("异常")
+//        }
+        self.dataModel.loadLocalWallet(walletType: self.walletType!)
     }
 
 }

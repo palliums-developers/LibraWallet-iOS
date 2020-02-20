@@ -145,7 +145,7 @@ extension WalletTransactionsViewController {
                     // 网络无法访问
                     print(error.localizedDescription)
                     self?.detailView.makeToast(LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription, position: .center)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionTooOld).localizedDescription {
+                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionExpired).localizedDescription {
                     // 版本太久
                     print(error.localizedDescription)
                     self?.detailView.makeToast("版本太旧,请及时更新版本", position: .center)

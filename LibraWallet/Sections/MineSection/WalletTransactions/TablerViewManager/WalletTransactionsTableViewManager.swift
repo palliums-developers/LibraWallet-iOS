@@ -84,19 +84,19 @@ extension WalletTransactionsTableViewManager: UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let identifier = "CellNormal"
-        if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? WalletTransactionsTableViewCell {
             switch transactionType {
             case .Libra:
                 if let data = libraTransactions, data.isEmpty == false {
-                    (cell as! WalletTransactionsTableViewCell).libraModel = data[indexPath.section]
+                    cell.libraModel = data[indexPath.section]
                 }
             case .Violas:
                 if let data = violasTransactions, data.isEmpty == false {
-                    (cell as! WalletTransactionsTableViewCell).violasModel = data[indexPath.section]
+                    cell.violasModel = data[indexPath.section]
                 }
             case .BTC:
                 if let data = btcTransactions, data.isEmpty == false {
-                    (cell as! WalletTransactionsTableViewCell).btcModel = data[indexPath.section]
+                    cell.btcModel = data[indexPath.section]
                 }
             default:
                 break

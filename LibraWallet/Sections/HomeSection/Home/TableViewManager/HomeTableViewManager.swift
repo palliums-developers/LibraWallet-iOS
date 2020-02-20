@@ -39,6 +39,20 @@ extension HomeTableViewManager: UITableViewDelegate {
         
         self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, model: model[indexPath.row])
     }
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let identifier = "Header"
+        if let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier) as? HomeTableViewHeader {
+            header.model = self.defaultModel
+            return header
+        } else {
+            let header = HomeTableViewHeader.init(reuseIdentifier: identifier)
+            header.model = self.defaultModel
+            return header
+        }
+    }
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 45
+    }
 }
 extension HomeTableViewManager: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -46,9 +60,9 @@ extension HomeTableViewManager: UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let identifier = "CellNormal"
-        if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? HomeTableViewCell {
             if let data = dataModel, data.isEmpty == false {
-                (cell as! HomeTableViewCell).model = data[indexPath.row]
+                cell.model = data[indexPath.row]
             }
             return cell
         } else {

@@ -12,7 +12,7 @@ public enum LibraWalletError: Error {
     case error(String)
     public enum RequestError {
         /// 没有钱包
-        case walletNotExist
+        case walletTokenExpired
         /// 解析失败
         case parseJsonError
         /// 数据状态异常
@@ -22,7 +22,7 @@ public enum LibraWalletError: Error {
         /// 没有更多数据
         case noMoreData
         /// 钱包版本太老
-        case walletVersionTooOld
+        case walletVersionExpired
         /// 网络无法访问
         case networkInvalid
     }
@@ -207,6 +207,8 @@ public enum LibraWalletError: Error {
         case violasTokenNameEmpty
         /// Violas稳定币合约未开启或不支持
         case violasTokenContractInvalid
+        /// 解析失败，不支持
+        case handleInvalid
     }
     case WalletScan(reason: ScanError)
     
@@ -288,7 +290,7 @@ extension LibraWalletError: LocalizedError {
 extension LibraWalletError.RequestError {
     var localizedDescription: String {
         switch self {
-        case .walletNotExist:
+        case .walletTokenExpired:
             return localLanguage(keyString: "wallet_request_token_invalid_error")
         case .parseJsonError:
             return localLanguage(keyString: "wallet_request_parse_json_error")
@@ -298,7 +300,7 @@ extension LibraWalletError.RequestError {
             return localLanguage(keyString: "wallet_request_data_empty_error")
         case .noMoreData:
             return localLanguage(keyString: "wallet_request_data_no_more_error")
-        case .walletVersionTooOld:
+        case .walletVersionExpired:
             return localLanguage(keyString: "wallet_request_version_invalid_error")
         case .networkInvalid:
             return localLanguage(keyString: "wallet_request_network_invalid_error")
@@ -529,9 +531,11 @@ extension LibraWalletError.ScanError {
         case .libraAddressInvalid:
             return localLanguage(keyString: "wallet_scan_result_address_libra_invalid_error")
         case .violasTokenNameEmpty:
-            return localLanguage(keyString: "wallet_scan_result_address_libra_invalid_error") + ":\(transferBTCLeast)"
+            return localLanguage(keyString: "wallet_scan_result_address_violas_module_name_empty_error")
         case .violasTokenContractInvalid:
-            return localLanguage(keyString: "wallet_scan_result_address_contract_invalid_error") + ":\(transferViolasLeast)"
+            return localLanguage(keyString: "wallet_scan_result_address_contract_invalid_error")
+        case .handleInvalid:
+            return localLanguage(keyString: "wallet_scan_result_not_support_error")
         }
     }
 }

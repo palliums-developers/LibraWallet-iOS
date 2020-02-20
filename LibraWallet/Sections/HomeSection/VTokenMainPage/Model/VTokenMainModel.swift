@@ -60,9 +60,9 @@ class VTokenMainModel: NSObject {
         var tempModels = [ViolasDataModel]()
         for var item in models {
             if item.receiver == walletAddress {
-                item.transaction_type = 0
-            } else {
                 item.transaction_type = 1
+            } else {
+                item.transaction_type = 0
             }
             item.module_name = tokenName
             tempModels.append(item)

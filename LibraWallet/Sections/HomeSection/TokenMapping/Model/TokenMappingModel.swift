@@ -27,6 +27,23 @@ struct TokenMappingMainModel: Codable {
     var message: String?
     var data: TokenMappingDataModel?
 }
+struct TokenMappingListDataModel: Codable {
+    /// 映射币名称
+    var mapping_name: String?
+    /// 映射合约
+    var module: String?
+    /// 待映射币接收地址
+    var receice_address: String?
+    /// 映射比率
+    var rate: Double
+    /// 反向映射名字
+    var mapping_reverse_name: String?
+}
+struct TokenMappingListMainModel: Codable {
+    var code: Int?
+    var message: String?
+    var data: [TokenMappingListDataModel]?
+}
 class TokenMappingModel: NSObject {
     private var requests: [Cancellable] = []
     @objc var dataDic: NSMutableDictionary = [:]
@@ -530,5 +547,37 @@ extension TokenMappingModel {
             }
             semaphore.signal()
         }
+    }
+}
+extension TokenMappingModel {
+    func getMappingTokenList(walletAddress: String) {
+        let request = mainProvide.request(.GetMappingTokenList(walletAddress)) {[weak self](result) in
+            switch  result {
+            case let .success(response):
+                do {
+                    let json = try response.map(TokenMappingListMainModel.self)
+                    guard json.code == 2000 else {
+                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "MappingTokenList")
+                        self?.setValue(data, forKey: "dataDic")
+                        return
+                    }
+                    let data = setKVOData(type: "MappingTokenList", data: json.data)
+                    self?.setValue(data, forKey: "dataDic")
+                    // 刷新本地数据
+                } catch {
+                    print("解析异常\(error.localizedDescription)")
+                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "MappingTokenList")
+                    self?.setValue(data, forKey: "dataDic")
+                }
+            case let .failure(error):
+                guard error.errorCode != -999 else {
+                    print("网络请求已取消")
+                    return
+                }
+                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "MappingTokenList")
+                self?.setValue(data, forKey: "dataDic")
+            }
+        }
+        self.requests.append(request)
     }
 }

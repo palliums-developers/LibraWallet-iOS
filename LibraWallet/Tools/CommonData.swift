@@ -62,6 +62,17 @@ func setKVOData(error: LibraWalletError? = nil, type: String?, data: Any? = nil)
     dic.setValue(data, forKey: "data")
     return dic
 }
+struct RequestHandleModel {
+    var type: String?
+    var error: LibraWalletError?
+    var data: Any?
+}
+func setKVOModel(error: LibraWalletError? = nil, type: String?, data: Any? = nil) -> RequestHandleModel {
+    let model = RequestHandleModel.init(type: type,
+                                        error: error,
+                                        data: data)
+    return model
+}
 /***************************************/
 /// 屏幕宽度
 let mainWidth = UIScreen.main.bounds.width

@@ -190,6 +190,14 @@ wallet_market_order_detail_fill_order_title = "Finished order";
 /************* 映射 *******************/
 wallet_mapping_confirm_title = "Confirm";
 
+/************* 映射交易列表 *******************/
+wallet_mapping_transactions_date_title = "Date";
+wallet_mapping_transactions_amount_title = "Amount";
+wallet_mapping_transactions_state_title = "Mapping";
+wallet_mapping_transactions_state_ongoing_title = "progressing";
+wallet_mapping_transactions_state_success_title = "Success";
+wallet_mapping_transactions_state_failed_title = "Failed";
+
 /************* 弹出提示 *******************/
 // 转账弹出提示
 wallet_transfer_success_alert = "Transfer Successful";
@@ -244,10 +252,6 @@ wallet_add_asset_alert_content = "Open Requires Gas Fee. Continue to Open?";
 wallet_add_asset_alert_cancel_button_title = "Cancel";
 wallet_add_asset_alert_confirm_button_title = "Confirm";
 wallet_add_asset_alert_success_title = "Open Success";
-// 用户协议与隐私保护
-wallet_private_and_use_legal_title = "User agreement & privacy protection";
-wallet_private_and_use_legal_cancel_button_title = "Disagree";
-wallet_private_and_use_legal_confirm_button_title = "Agree";
 // 欢迎页面
 wallet_welcome_alert_title = "Welcome to";
 wallet_welcome_alert_describe = "Wallet";
@@ -263,11 +267,9 @@ wallet_alert_market_support_token_cancel_button_title = "Confirm";
 // 提示注册稳定币
 wallet_market_alert_register_token_title = "Tips";
 wallet_market_alert_register_token_content = "Haven't registered any stablecoins, do you want to register now?";
-
 //挂单成功
 wallet_market_alert_make_order_success_title = "Successful";
 wallet_market_alert_cancel_order_success_title = "Cancel Successful";
-
 //订单中心撤销订单提示
 wallet_market_order_center_cancel_order_alert_title = "Tips";
 wallet_market_order_center_cancel_order_alert_content = "Are you sure you want to cancel the currently outstanding order?";
@@ -284,6 +286,7 @@ wallet_language_change_success = "Change Successful";
 wallet_mapping_info_alert_title = "Tips";
 wallet_mapping_info_alert_content = "Get Mapping Info Failed, Please Try Later";
 wallet_mapping_info_alert_confirm_button_title = "Sure";
+
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "Safety Warning";
 wallet_alert_backup_warning_detail_title = "You have not yet backup the mnemonic words of your identity wallet. Please backup them as soon as possible.\nThe mnemonic words can be used to recover funds in your identity wallet in case you have removed this App or forget the password or have lost or demaged your phone";
@@ -397,11 +400,17 @@ wallet_transfer_amount_limit_error = "Minimal Transfer Amount is ";
 wallet_transfer_address_invalid_error = "Invalid Transfer Address";
 wallet_transfer_address_empty_error = "Empty Transfer Address";
 wallet_transfer_to_self_error = "Invalid Transfer to Self";
+// 扫描二维码
+wallet_scan_result_address_btc_invalid_error = "BTC Address Invalid";
+wallet_scan_result_address_violas_invalid_error = "Violas Address Invalid";
+wallet_scan_result_address_libra_invalid_error = "Libra Address Invalid";
+wallet_scan_result_address_violas_module_name_empty_error = "Violas stable token name empty";
+wallet_scan_result_address_contract_invalid_error = "Violas stable token not open or not support";
+wallet_scan_result_not_support_error = "Scan result not support";
 // 交易所
 wallet_market_swap_unpublisheda_error = "Stable currency to be exchanged has not been opened and cannot be exchanged";
 wallet_market_exchange_amount_error = "Exchange amount invalid";
-wallet_market_exchange_amount_max_limit_error = "The amount of stablecoins you need to exchange is too large and does not support exchange. Please reduce the amount of exchange and exchange
-";
+wallet_market_exchange_amount_max_limit_error = "The amount of stablecoins you need to exchange is too large and does not support exchange. Please reduce the amount of exchange and exchange";
 wallet_market_pay_amount_invalid_error = "Pay amount invalid";
 wallet_market_pay_amount_max_limit_error = "The amount of stablecoin you paid is too large, and exchange is not supported. Please reduce the amount you pay to exchange";
 wallet_market_amount_not_enough_error = "The balance is not enough to redeem, please confirm";

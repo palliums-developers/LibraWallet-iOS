@@ -78,13 +78,10 @@ class HomeView: UIView {
             // Fallback on earlier versions
         }
         tableView.backgroundColor = UIColor.init(hex: "F7F7F9")//defaultBackgroundColor
+        tableView.register(HomeTableViewCell.classForCoder(), forCellReuseIdentifier: "CellNormal")
+        tableView.register(HomeTableViewHeader.classForCoder(), forHeaderFooterViewReuseIdentifier: "Header")
         return tableView
     }()
-    //
-    @objc func buttonClick(button: UIButton) {
-//        
-    }
-    var clickCount: Int = 0
     var model: LibraWalletManager? {
         didSet {
             headerView.walletModel = model

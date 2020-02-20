@@ -76,6 +76,5 @@ extension SupportCoinViewController: SupportCoinTableViewManagerDelegate {
         alert.addAction(createAction)
         alert.addAction(cancelAction)
         self.present(alert, animated: true, completion: nil)
-        
     }
 }

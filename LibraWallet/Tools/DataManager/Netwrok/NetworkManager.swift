@@ -61,6 +61,10 @@ enum mainRequest {
     case GetMappingInfo(String)
     /// 获取当前映射笔数
     case GetMappingTransactionsCount(String, String)
+    /// 获取当前已开启映射币（钱包地址）
+    case GetMappingTokenList(String)
+    /// 获取映射交易记录
+    case GetMappingTransactions(String)
 }
 extension mainRequest:TargetType {
     var baseURL: URL {
@@ -89,7 +93,9 @@ extension mainRequest:TargetType {
              .GetViolasTokenList,
              .GetViolasAccountEnableToken(_),
              .GetMappingInfo(_),
-             .GetMappingTransactionsCount(_, _):
+             .GetMappingTransactionsCount(_, _),
+             .GetMappingTokenList(_),
+             .GetMappingTransactions(_):
             #if PUBLISH_VERSION
                 return URL(string:"https://api.violas.io/1.0")!
             #else
@@ -160,6 +166,11 @@ extension mainRequest:TargetType {
             return "/crosschain/info"
         case .GetMappingTransactionsCount(_, _):
             return "/crosschain/transactions/count"
+            #warning("测试待修改")
+        case .GetMappingTokenList(_):
+            return "/crosschain/token/list"
+        case .GetMappingTransactions(_):
+            return "/crosschain/transactions"
         }
     }
     var method: Moya.Method {
@@ -187,7 +198,9 @@ extension mainRequest:TargetType {
              .GetOrderDetail(_, _),
              .GetAllDoneOrder(_, _),
              .GetMappingInfo(_),
-             .GetMappingTransactionsCount(_, _):
+             .GetMappingTransactionsCount(_, _),
+             .GetMappingTokenList(_),
+             .GetMappingTransactions(_):
             return .get
         }
     }
@@ -308,6 +321,12 @@ extension mainRequest:TargetType {
         case .GetMappingTransactionsCount(let address, let type):
             return .requestParameters(parameters: ["address": address,
                                                    "type": type.lowercased()],
+                                      encoding: URLEncoding.queryString)
+        case .GetMappingTokenList(let walletAddress):
+            return .requestParameters(parameters: ["address": walletAddress],
+                                      encoding: URLEncoding.queryString)
+        case .GetMappingTransactions(let walletAddress):
+            return .requestParameters(parameters: ["address": walletAddress],
                                       encoding: URLEncoding.queryString)
         }
     }

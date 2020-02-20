@@ -77,13 +77,13 @@ extension ViolasTransferViewController {
             if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
                 // 网络无法访问
                 print(error.localizedDescription)
-            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletNotExist).localizedDescription {
+            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletTokenExpired).localizedDescription {
                 // 钱包不存在
                 print(error.localizedDescription)
                 let vc = WalletCreateViewController()
                 let navi = UINavigationController.init(rootViewController: vc)
                 self.present(navi, animated: true, completion: nil)
-            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionTooOld).localizedDescription {
+            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionExpired).localizedDescription {
                 // 版本太久
                 print(error.localizedDescription)
             } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {

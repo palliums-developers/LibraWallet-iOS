@@ -1,14 +1,14 @@
 //
-//  WalletTransactionsView.swift
+//  MappingTransactionsView.swift
 //  LibraWallet
 //
-//  Created by palliums on 2019/10/29.
-//  Copyright © 2019 palliums. All rights reserved.
+//  Created by wangyingdong on 2020/2/18.
+//  Copyright © 2020 palliums. All rights reserved.
 //
 
 import UIKit
 
-class WalletTransactionsView: UIView {
+class MappingTransactionsView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.addSubview(tableView)
@@ -17,7 +17,7 @@ class WalletTransactionsView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
-        print("WalletTransactionsView销毁了")
+        print("MappingTransactionsView销毁了")
     }
     //MARK: - 布局
     override func layoutSubviews() {
@@ -34,7 +34,8 @@ class WalletTransactionsView: UIView {
         tableView.estimatedRowHeight = 0;
         tableView.estimatedSectionHeaderHeight = 0;
         tableView.backgroundColor = UIColor.white
-        tableView.register(WalletTransactionsTableViewCell.classForCoder(), forCellReuseIdentifier: "CellNormal")
+        tableView.register(MappingTransactionsTableViewCell.classForCoder(), forCellReuseIdentifier: "CellNormal")
         return tableView
     }()
+
 }

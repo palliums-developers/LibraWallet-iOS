@@ -233,7 +233,6 @@ class HomeHeaderView: UIView {
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
         button.tag = 10
         button.backgroundColor = UIColor.white
-        
         return button
     }()
     
@@ -333,7 +332,6 @@ class HomeHeaderView: UIView {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "9D9CA3")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: .regular)
-//        label.text = localLanguage(keyString: "2019-10-30")
         return label
     }()
     private lazy var lastTransactionDetailImageView : UIImageView = {
