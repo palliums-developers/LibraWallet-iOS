@@ -189,6 +189,7 @@ wallet_market_order_detail_fill_order_title = "Finished order";
 
 /************* 映射 *******************/
 wallet_mapping_confirm_title = "Confirm";
+wallet_mapping_transactions_title = "Transactions";
 
 /************* 映射交易列表 *******************/
 wallet_mapping_transactions_date_title = "Date";

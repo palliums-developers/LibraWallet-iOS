@@ -11,10 +11,13 @@ import UIKit
 class TokenMappingViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        // 设置标题
         self.title = localLanguage(keyString: "wallet_mapping_navigationbar_title")
+        // 添加导航栏按钮
         self.addRightNavigationBar()
-
+        // 加载子View
         self.view.addSubview(detailView)
+        // 初始化KVO
         self.initKVO()
     }
     override func viewWillLayoutSubviews() {
@@ -33,20 +36,47 @@ class TokenMappingViewController: BaseViewController {
         self.navigationWhiteMode()
         self.navigationController?.navigationBar.barStyle = .black
     }
+    /// 子View
     private lazy var detailView : TokenMappingView = {
         let view = TokenMappingView.init()
         view.headerView.delegate = self
         return view
     }()
+    /// 网络请求、数据模型
     lazy var dataModel: TokenMappingModel = {
         let model = TokenMappingModel.init()
         return model
     }()
+    /// 映射钱包
     var wallet: LibraWalletManager? {
         didSet {
             self.detailView.headerView.walletType = wallet?.walletType
         }
     }
+    /// 导航栏交易记录按钮
+    lazy var addButton: UIButton = {
+        let button = UIButton(type: .custom)
+        // 给按钮设置返回箭头图片
+        button.setTitle(localLanguage(keyString: "wallet_mapping_transactions_title"), for: UIControl.State.normal)
+        button.setTitleColor(UIColor.white, for: UIControl.State.normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        // 设置frame
+        button.frame = CGRect(x: 200, y: 13, width: 22, height: 44)
+        button.addTarget(self, action: #selector(addMethod), for: .touchUpInside)
+        return button
+    }()
+    /// 数据监听KVO
+    var observer: NSKeyValueObservation?
+    /// 接收映射钱包
+    var receiveWallet: LibraWalletManager?
+    typealias checkPublishClosure = (Bool) -> Void
+    var actionClosure: checkPublishClosure?
+    typealias publishFinishClosure = () -> Void
+    var finishClosure: publishFinishClosure?
+    
+}
+//MARK: - 导航栏添加按钮
+extension TokenMappingViewController {
     func addRightNavigationBar() {
         // 自定义导航栏的UIBarButtonItem类型的按钮
         let addView = UIBarButtonItem(customView: addButton)
@@ -55,28 +85,13 @@ class TokenMappingViewController: BaseViewController {
         // 返回按钮设置成功
         self.navigationItem.rightBarButtonItems = [addView, barButtonItem]
     }
-    lazy var addButton: UIButton = {
-        let button = UIButton(type: .custom)
-        // 给按钮设置返回箭头图片
-        button.setTitle("查看订单", for: UIControl.State.normal)
-        button.setTitleColor(UIColor.white, for: UIControl.State.normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .regular)
-        // 设置frame
-        button.frame = CGRect(x: 200, y: 13, width: 22, height: 44)
-        button.addTarget(self, action: #selector(addMethod), for: .touchUpInside)
-        return button
-    }()
     @objc func addMethod() {
         let vc = MappingTransactionsViewController()
+        vc.wallet = self.wallet
         self.navigationController?.pushViewController(vc, animated: true)
     }
-    var observer: NSKeyValueObservation?
-    typealias checkPublishClosure = (Bool) -> Void
-    var actionClosure: checkPublishClosure?
-    typealias publishFinishClosure = () -> Void
-    var finishClosure: publishFinishClosure?
-    var receiveWallet: LibraWalletManager?
 }
+//MARK: - 网络请求数据处理中心
 extension TokenMappingViewController {
     func initKVO() {
         self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
@@ -170,6 +185,7 @@ extension TokenMappingViewController {
         self.present(alertContr, animated: true, completion: nil)
     }
 }
+//MARK: - 映射子View Header代理方法
 extension TokenMappingViewController: TokenMappingHeaderViewDelegate {
     func showMappingTokenList() {
         self.detailView.toastView?.show()

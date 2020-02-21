@@ -227,7 +227,7 @@ extension AddAssetViewController {
     @objc func addAddressMethod() {
         let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
             self?.detailView.toastView?.show()
-            self?.dataModel.publishViolasToken(sendAddress: (self?.wallet?.walletAddress)!, mnemonic: mnemonic, contact: "af955c1d62a74a7543235dbb7fa46ed98948d2041dff67dfdb636a54e84f91fb")
+            self?.dataModel.publishViolasToken(sendAddress: (self?.wallet?.walletAddress)!, mnemonic: mnemonic, contact: "2236322cf1e35198302919c2c1b1e4bf5be07359c8995c6a13ec53c17579c768")
             self?.actionClosure = { result in
                 
             }

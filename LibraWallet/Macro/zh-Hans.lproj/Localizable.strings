@@ -189,6 +189,7 @@ wallet_market_order_detail_fill_order_title = "成交记录";
 
 /************* 映射 *******************/
 wallet_mapping_confirm_title = "确认";
+wallet_mapping_transactions_title = "查看交易记录";
 
 /************* 映射交易列表 *******************/
 wallet_mapping_transactions_date_title = "日期";

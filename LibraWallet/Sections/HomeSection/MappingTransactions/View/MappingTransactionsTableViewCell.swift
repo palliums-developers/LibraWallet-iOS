@@ -142,15 +142,15 @@ class MappingTransactionsTableViewCell: UITableViewCell {
     var model: MappingTransactionsMainDataModel? {
         didSet {
             dateLabel.text = timestampToDateString(timestamp: model?.date ?? 0, dateFormat: "yyyy-MM-dd HH:mm:ss")
-            amountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(string: model?.amount ?? "0"),
+            amountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: model?.amount ?? 0),
                                                       scale: 8,
                                                       unit: 1000000)
-            addressLabel.text = model?.address
-            coinLabel.text = "BTC"
-            if model?.state == 0 {
+            addressLabel.text = model?.address ?? "---"
+            coinLabel.text = model?.coin ?? "---"
+            if model?.status == 0 {
                 stateLabel.text = localLanguage(keyString: "wallet_mapping_transactions_state_ongoing_title")
                 stateLabel.textColor = UIColor.init(hex: "5BBE75")
-            } else if model?.state == 1 {
+            } else if model?.status == 1 {
                 stateLabel.text = localLanguage(keyString: "wallet_mapping_transactions_state_success_title")
                 stateLabel.textColor = UIColor.init(hex: "000000")
             } else {

@@ -52,30 +52,6 @@ class HomeViewController: UIViewController {
             make.top.left.right.equalTo(self.view)
         }
     }
-    func checkIsFisrtOpenApp() {
-        guard getWelcomeState() == false else {
-            return
-        }
-        let alert = WelcomeAlert.init()
-        alert.show()
-    }
-    func addNavigationBar() {
-        // 自定义导航栏的UIBarButtonItem类型的按钮
-        let backView = UIBarButtonItem(customView: changeWalletButton)
-        
-        // 重要方法，用来调整自定义返回view距离左边的距离
-        let barButtonItem = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
-        barButtonItem.width = 15
-        // 返回按钮设置成功
-        self.navigationItem.leftBarButtonItems = [barButtonItem, backView]
-        
-        let scanView = UIBarButtonItem(customView: scanButton)
-        // 重要方法，用来调整自定义返回view距离左边的距离
-        let rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
-        rightBarButtonItem.width = 15
-        // 返回按钮设置成功
-        self.navigationItem.rightBarButtonItems = [rightBarButtonItem, scanView]
-    }
     /// 网络请求、数据模型
     lazy var dataModel: HomeModel = {
         let model = HomeModel.init()
@@ -122,7 +98,24 @@ class HomeViewController: UIViewController {
     /// 数据监听KVO
     var observer: NSKeyValueObservation?
 }
+//MARK: - 导航栏添加按钮
 extension HomeViewController {
+    func addNavigationBar() {
+        // 自定义导航栏的UIBarButtonItem类型的按钮
+        let backView = UIBarButtonItem(customView: changeWalletButton)
+        // 重要方法，用来调整自定义返回view距离左边的距离
+        let barButtonItem = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        barButtonItem.width = 15
+        // 返回按钮设置成功
+        self.navigationItem.leftBarButtonItems = [barButtonItem, backView]
+        
+        let scanView = UIBarButtonItem(customView: scanButton)
+        // 重要方法，用来调整自定义返回view距离左边的距离
+        let rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        rightBarButtonItem.width = 15
+        // 返回按钮设置成功
+        self.navigationItem.rightBarButtonItems = [rightBarButtonItem, scanView]
+    }
     /// 切换钱包
     @objc func changeWallet() {
         let vc = WalletListController()
@@ -191,33 +184,6 @@ extension HomeViewController {
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
-    /// 语言切换
-    @objc func setText() {
-        if self.detailView.headerView.walletModel?.walletType == .Libra {
-            self.changeWalletButton.setTitle("Libra " + localLanguage(keyString: "wallet_home_wallet_type_last_title"), for: UIControl.State.normal)
-        } else if self.detailView.headerView.walletModel?.walletType == .Violas {
-            self.changeWalletButton.setTitle("Violas " + localLanguage(keyString: "wallet_home_wallet_type_last_title"), for: UIControl.State.normal)
-        } else {
-            self.changeWalletButton.setTitle("BTC " + localLanguage(keyString: "wallet_home_wallet_type_last_title"), for: UIControl.State.normal)
-        }
-        self.changeWalletButton.imagePosition(at: .right, space: 10, imageViewSize: CGSize.init(width: 13, height: 7))
-    }
-    /// 下拉刷新
-    @objc func refreshData() {
-        if self.detailView.headerView.walletModel?.walletType == .Libra {
-            self.dataModel.tempGetLibraBalance(walletID: self.detailView.headerView.walletModel?.walletID ?? 0,
-                                               address: self.detailView.headerView.walletModel?.walletAddress ?? "")
-        } else if self.detailView.headerView.walletModel?.walletType == .Violas {
-            self.dataModel.getViolasBalance(walletID: self.detailView.headerView.walletModel?.walletID ?? 0,
-                                            address: self.detailView.headerView.walletModel?.walletAddress ?? "",
-                                            vtokens: self.tableViewManager.dataModel!)
-        } else {
-            self.dataModel.getBTCBalance(walletID: self.detailView.headerView.walletModel?.walletID ?? 0,
-                                         address: self.detailView.headerView.walletModel?.walletAddress ?? "")
-        }
-    }
-}
-extension HomeViewController {
     func showBTCTransferViewController(address: String) {
         let vc = BTCTransferViewController()
         vc.actionClosure = {
@@ -269,6 +235,48 @@ extension HomeViewController {
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }
+//MARK: - APP初次进入处理
+extension HomeViewController {
+    func checkIsFisrtOpenApp() {
+        guard getWelcomeState() == false else {
+            return
+        }
+        let alert = WelcomeAlert.init()
+        alert.show()
+    }
+}
+//MARK: - 下拉刷新
+extension HomeViewController {
+    /// 下拉刷新
+    @objc func refreshData() {
+        if self.detailView.headerView.walletModel?.walletType == .Libra {
+            self.dataModel.tempGetLibraBalance(walletID: self.detailView.headerView.walletModel?.walletID ?? 0,
+                                               address: self.detailView.headerView.walletModel?.walletAddress ?? "")
+        } else if self.detailView.headerView.walletModel?.walletType == .Violas {
+            self.dataModel.getViolasBalance(walletID: self.detailView.headerView.walletModel?.walletID ?? 0,
+                                            address: self.detailView.headerView.walletModel?.walletAddress ?? "",
+                                            vtokens: self.tableViewManager.dataModel!)
+        } else {
+            self.dataModel.getBTCBalance(walletID: self.detailView.headerView.walletModel?.walletID ?? 0,
+                                         address: self.detailView.headerView.walletModel?.walletAddress ?? "")
+        }
+    }
+}
+//MARK: - 语言切换方法
+extension HomeViewController {
+    /// 语言切换
+    @objc func setText() {
+        if self.detailView.headerView.walletModel?.walletType == .Libra {
+            self.changeWalletButton.setTitle("Libra " + localLanguage(keyString: "wallet_home_wallet_type_last_title"), for: UIControl.State.normal)
+        } else if self.detailView.headerView.walletModel?.walletType == .Violas {
+            self.changeWalletButton.setTitle("Violas " + localLanguage(keyString: "wallet_home_wallet_type_last_title"), for: UIControl.State.normal)
+        } else {
+            self.changeWalletButton.setTitle("BTC " + localLanguage(keyString: "wallet_home_wallet_type_last_title"), for: UIControl.State.normal)
+        }
+        self.changeWalletButton.imagePosition(at: .right, space: 10, imageViewSize: CGSize.init(width: 13, height: 7))
+    }
+}
+//MARK: - 网络请求数据处理中心
 extension HomeViewController {
     func initKVO() {
         self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
@@ -394,6 +402,7 @@ extension HomeViewController {
         self.dataModel.getLocalUserInfo()
     }
 }
+//MARK: - 子View代理方法列表
 extension HomeViewController: HomeHeaderViewDelegate {
     func checkWalletDetail() {
         let vc = WalletDetailViewController()
@@ -467,6 +476,7 @@ extension HomeViewController: HomeHeaderViewDelegate {
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }
+//MARK: - TableviewManager代理方法列表
 extension HomeViewController: HomeTableViewManagerDelegate {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: ViolasTokenModel) {
         guard indexPath.row != 0 else {

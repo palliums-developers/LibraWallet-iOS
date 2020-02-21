@@ -126,7 +126,7 @@ extension MappingTokenListAlert: UIPickerViewDelegate {
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         //赋值
         if let model = models?[row] {
-             return (model.mapping_name ?? "")
+             return (model.name ?? "")
         }
         return "test"
     }

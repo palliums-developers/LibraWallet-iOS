@@ -28,16 +28,16 @@ struct TokenMappingMainModel: Codable {
     var data: TokenMappingDataModel?
 }
 struct TokenMappingListDataModel: Codable {
-    /// 映射币名称
-    var mapping_name: String?
+    /// 反向映射名字
+    var map_name: String?
     /// 映射合约
     var module: String?
     /// 待映射币接收地址
     var receice_address: String?
     /// 映射比率
     var rate: Double
-    /// 反向映射名字
-    var mapping_reverse_name: String?
+    /// 映射币名称
+    var name: String?
 }
 struct TokenMappingListMainModel: Codable {
     var code: Int?

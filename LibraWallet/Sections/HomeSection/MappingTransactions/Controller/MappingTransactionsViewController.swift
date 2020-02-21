@@ -37,6 +37,10 @@ class MappingTransactionsViewController: BaseViewController {
             make.left.right.equalTo(self.view)
         }
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.barStyle = .default
+    }
     //MARK: - 默认页面
     func setPlaceholderView() {
         if let empty = emptyView as? EmptyDataPlaceholderView {
@@ -60,20 +64,20 @@ class MappingTransactionsViewController: BaseViewController {
         }
     }
     deinit {
-        print("WalletTransactionsViewController销毁了")
+        print("MappingTransactionsViewController销毁了")
     }
-    // 网络请求、数据模型
+    /// 网络请求、数据模型
     lazy var dataModel: MappingTransactionsModel = {
         let model = MappingTransactionsModel.init()
         return model
     }()
-    // tableView管理类
+    /// tableView管理类
     lazy var tableViewManager: MappingTransactionsTableViewManager = {
         let manager = MappingTransactionsTableViewManager.init()
         manager.delegate = self
         return manager
     }()
-    // 子View
+    /// 子View
     lazy var detailView : MappingTransactionsView = {
         let view = MappingTransactionsView.init()
         view.tableView.delegate = self.tableViewManager
@@ -82,8 +86,15 @@ class MappingTransactionsViewController: BaseViewController {
         view.tableView.mj_footer = MJRefreshBackNormalFooter.init(refreshingTarget: self, refreshingAction:  #selector(getMoreData))
         return view
     }()
+    /// 数据监听KVO
     var observer: NSKeyValueObservation?
+    /// 数据偏移量，每次偏移10个
     var dataOffset: Int = 0
+    /// 查询交易记录钱包
+    var wallet: LibraWalletManager?
+}
+//MARK: - TableView Header和Footer刷新方法
+extension MappingTransactionsViewController {
     @objc func refreshData() {
         dataOffset = 0
         detailView.tableView.mj_footer.resetNoMoreData()
@@ -95,9 +106,21 @@ class MappingTransactionsViewController: BaseViewController {
     }
     func transactionRequest(refresh: Bool) {
         let requestState = refresh == true ? 0:1
-        dataModel.getMappingTransactions(walletAddress: "", page: dataOffset, pageSize: 10, contract: "", requestStatus: requestState)
+        var requestType = ""
+        switch wallet?.walletType {
+        case .Violas:
+            requestType = "0"
+        case .Libra:
+            requestType = "1"
+        case .BTC:
+            requestType = "2"
+        default:
+            requestType = ""
+        }
+        dataModel.getMappingTransactions(walletAddress: wallet?.walletAddress ?? "", page: dataOffset, pageSize: 10, requestType: requestType, requestStatus: requestState)
     }
 }
+//MARK: - 网络请求数据处理中心
 extension MappingTransactionsViewController {
     func initKVO() {
         self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
@@ -171,6 +194,7 @@ extension MappingTransactionsViewController {
         })
     }
 }
+//MARK: - TableViewManager代理方法
 extension MappingTransactionsViewController: MappingTransactionsTableViewManagerDelegate {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, address: String) {
         

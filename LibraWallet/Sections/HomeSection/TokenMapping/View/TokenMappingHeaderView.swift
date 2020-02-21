@@ -448,9 +448,9 @@ class TokenMappingHeaderView: UIView {
     }
     var reverseModel: TokenMappingListDataModel? {
         didSet {
-            self.leftCoinButton.setTitle(reverseModel?.mapping_name, for: UIControl.State.normal)
-            self.rightCoinButton.setTitle(reverseModel?.mapping_reverse_name, for: UIControl.State.normal)
-            self.exchangeRateLabel.text = "1\(reverseModel?.mapping_name ?? "") = \(reverseModel?.rate ?? 0)\(reverseModel?.mapping_reverse_name ?? "")"
+            self.leftCoinButton.setTitle(reverseModel?.name, for: UIControl.State.normal)
+            self.rightCoinButton.setTitle(reverseModel?.map_name, for: UIControl.State.normal)
+            self.exchangeRateLabel.text = "1\(reverseModel?.name ?? "") = \(reverseModel?.rate ?? 0)\(reverseModel?.map_name ?? "")"
         }
     }
     var walletType: WalletType?

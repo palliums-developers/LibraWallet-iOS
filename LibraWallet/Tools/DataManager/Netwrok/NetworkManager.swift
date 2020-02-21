@@ -33,11 +33,11 @@ enum mainRequest {
     case GetLibraAccountTransactionList(String, Int, Int)
     /// 发送Libra交易
     case SendLibraTransaction(String)
-    /// 获取Violas账户余额(钱包地址,代币地址(逗号分隔))
+    /// 获取Violas账户余额（钱包地址,代币地址（逗号分隔））
     case GetViolasAccountBalance(String, String)
     /// 获取Violas账户Sequence Number
     case GetViolasAccountSequenceNumber(String)
-    /// 获取Violas账户交易记录(地址、偏移量、数量, 合约地址)
+    /// 获取Violas账户交易记录（地址、偏移量、数量, 合约地址）
     case GetViolasAccountTransactionList(String, Int, Int, String)
     /// 发送Violas交易
     case SendViolasTransaction(String)
@@ -63,8 +63,8 @@ enum mainRequest {
     case GetMappingTransactionsCount(String, String)
     /// 获取当前已开启映射币（钱包地址）
     case GetMappingTokenList(String)
-    /// 获取映射交易记录
-    case GetMappingTransactions(String)
+    /// 获取映射交易记录（地址、偏移量、数量、类型（0：violas，1：Libra，2：BTC）
+    case GetMappingTransactions(String, Int, Int, String)
 }
 extension mainRequest:TargetType {
     var baseURL: URL {
@@ -95,7 +95,7 @@ extension mainRequest:TargetType {
              .GetMappingInfo(_),
              .GetMappingTransactionsCount(_, _),
              .GetMappingTokenList(_),
-             .GetMappingTransactions(_):
+             .GetMappingTransactions(_, _, _, _):
             #if PUBLISH_VERSION
                 return URL(string:"https://api.violas.io/1.0")!
             #else
@@ -168,8 +168,8 @@ extension mainRequest:TargetType {
             return "/crosschain/transactions/count"
             #warning("测试待修改")
         case .GetMappingTokenList(_):
-            return "/crosschain/token/list"
-        case .GetMappingTransactions(_):
+            return "/crosschain/modules"
+        case .GetMappingTransactions(_, _, _, _):
             return "/crosschain/transactions"
         }
     }
@@ -200,7 +200,7 @@ extension mainRequest:TargetType {
              .GetMappingInfo(_),
              .GetMappingTransactionsCount(_, _),
              .GetMappingTokenList(_),
-             .GetMappingTransactions(_):
+             .GetMappingTransactions(_, _, _, _):
             return .get
         }
     }
@@ -325,8 +325,11 @@ extension mainRequest:TargetType {
         case .GetMappingTokenList(let walletAddress):
             return .requestParameters(parameters: ["address": walletAddress],
                                       encoding: URLEncoding.queryString)
-        case .GetMappingTransactions(let walletAddress):
-            return .requestParameters(parameters: ["address": walletAddress],
+        case .GetMappingTransactions(let walletAddress, let offset, let limit, let type):
+            return .requestParameters(parameters: ["address": walletAddress,
+                                                   "limit": limit,
+                                                   "offset":offset,
+                                                   "type":type],
                                       encoding: URLEncoding.queryString)
         }
     }

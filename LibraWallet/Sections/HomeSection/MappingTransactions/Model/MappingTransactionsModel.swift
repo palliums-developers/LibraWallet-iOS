@@ -12,13 +12,13 @@ struct MappingTransactionsMainDataModel: Codable {
     ///
     var date: Int?
     ///
-    var amount: String?
+    var amount: Int?
     ///
-    var state: Int?
+    var status: Int?
     ///
     var address: String?
     ///
-    var unit: String?
+    var coin: String?
 }
 struct MappingTransactionsMainModel: Codable {
     var code: Int?
@@ -28,15 +28,20 @@ struct MappingTransactionsMainModel: Codable {
 class MappingTransactionsModel: NSObject {
     private var requests: [Cancellable] = []
     @objc var dataDic: NSMutableDictionary = [:]
-    func getMappingTransactions(walletAddress: String, page: Int, pageSize: Int, contract: String, requestStatus: Int) {
+    func getMappingTransactions(walletAddress: String, page: Int, pageSize: Int, requestType: String, requestStatus: Int) {
         let type = requestStatus == 0 ? "MappingTransactionsOrigin":"MappingTransactionsMore"
-        let request = mainProvide.request(.GetMappingTransactions(walletAddress)) {[weak self](result) in
+        let request = mainProvide.request(.GetMappingTransactions(walletAddress, page, pageSize, requestType)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
                     let json = try response.map(MappingTransactionsMainModel.self)
                     guard json.code == 2000 else {
                         let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: type)
+                        self?.setValue(data, forKey: "dataDic")
+                        return
+                    }
+                    guard json.data?.isEmpty == false else {
+                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: type)
                         self?.setValue(data, forKey: "dataDic")
                         return
                     }
