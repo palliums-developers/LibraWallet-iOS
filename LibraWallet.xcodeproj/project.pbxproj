@@ -269,6 +269,7 @@
 		3642EB6623CC1EDD00C7B04A /* ViolasToken.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9DC87793237B0F16006378C3 /* ViolasToken.plist */; };
 		3642EB6723CC1EDD00C7B04A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D712442232F7662009DED52 /* Assets.xcassets */; };
 		3642EB7123CC654500C7B04A /* Serialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3642EB7023CC654500C7B04A /* Serialization.swift */; };
+		364CB180240528C60083B41E /* ViolasTransactionModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364CB17F240528C60083B41E /* ViolasTransactionModule.swift */; };
 		365A89C023B9A7CE00C55A10 /* WYDTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 365A89BF23B9A7CE00C55A10 /* WYDTextField.swift */; };
 		36958B7A23CC78C3006F267C /* Serialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3642EB7023CC654500C7B04A /* Serialization.swift */; };
 		36B43A7223BDE967008E2EEA /* LBXScanError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B43A7123BDE967008E2EEA /* LBXScanError.swift */; };
@@ -613,6 +614,7 @@
 		3642EB6C23CC1EDD00C7B04A /* ViolasPay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ViolasPay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3642EB6D23CC1EDD00C7B04A /* LibraWallet copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "LibraWallet copy-Info.plist"; path = "/Users/wangyingdong/Desktop/公司电脑桌面/柏链/LibraWallet/LibraWallet copy-Info.plist"; sourceTree = "<absolute>"; };
 		3642EB7023CC654500C7B04A /* Serialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Serialization.swift; sourceTree = "<group>"; };
+		364CB17F240528C60083B41E /* ViolasTransactionModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasTransactionModule.swift; sourceTree = "<group>"; };
 		365A89BF23B9A7CE00C55A10 /* WYDTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WYDTextField.swift; sourceTree = "<group>"; };
 		36B43A7123BDE967008E2EEA /* LBXScanError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LBXScanError.swift; sourceTree = "<group>"; };
 		36DA3FCD23B5E5C6001D7733 /* UIButton + imageTitleLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton + imageTitleLocation.swift"; sourceTree = "<group>"; };
@@ -2453,6 +2455,7 @@
 				9DB515BE23A32EF80069A909 /* ViolasTransactionAccessPath.swift */,
 				9DB515C023A32F3E0069A909 /* ViolasTransactionWriteSet.swift */,
 				9DB515C223A32F660069A909 /* ViolasTransactionScript.swift */,
+				364CB17F240528C60083B41E /* ViolasTransactionModule.swift */,
 			);
 			path = ViolasTransaction;
 			sourceTree = "<group>";
@@ -3925,6 +3928,7 @@
 				9D9B49D32360268E00354EF0 /* BaseTabBarViewController.swift in Sources */,
 				9D628ABE239F72CE00E222FB /* OrderDetailViewController.swift in Sources */,
 				9D9B4A3423619A8E00354EF0 /* SupportCoinViewController.swift in Sources */,
+				364CB180240528C60083B41E /* ViolasTransactionModule.swift in Sources */,
 				9D9B49DD23602EB900354EF0 /* SettingTableViewManager.swift in Sources */,
 				9D9B4A462362967200354EF0 /* AddWalletViewController.swift in Sources */,
 				9D9B49CD235FFAAB00354EF0 /* MineView.swift in Sources */,
