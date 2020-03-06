@@ -13,7 +13,7 @@ struct ViolasTransactionModule {
 
     fileprivate let programPrefixData: Data = Data.init(hex: "03000000")
     
-    init(code: Data, argruments: [ViolasTransactionArgument]) {
+    init(code: Data) {
         
         self.code = code
         

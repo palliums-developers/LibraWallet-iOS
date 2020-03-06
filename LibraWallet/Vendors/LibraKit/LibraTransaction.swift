@@ -17,11 +17,13 @@ struct LibraTransaction {
         let argument1 = TransactionArgument.init(code: .Address, value: receiveAddress)
         let argument2 = TransactionArgument.init(code: .U64, value: "\(Int(amount * 1000000))")
         
-        let script = TransactionScript.init(code: getProgramCode(content: libraProgramCode), argruments: [argument1, argument2])
+//        let script = TransactionScript.init(code: getProgramCode(content: libraProgramCode), argruments: [argument1, argument2])
+        let script = TransactionScript.init(code: Data.init(hex: libraProgramCode), argruments: [argument1, argument2])
+
         
         let raw = RawTransaction.init(senderAddres: sendAddress,
                                        sequenceNumber: sequenceNumber,
-                                       maxGasAmount: 140000,
+                                       maxGasAmount: 280000,
                                        gasUnitPrice: 0,
                                        expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 1000),
                                        programOrWrite: script.serialize())
@@ -48,11 +50,12 @@ extension LibraTransaction {
 
         let argument3 = TransactionArgument.init(code: .Bytes, value: data.toHexString())
 
-        let program = TransactionScript.init(code: getProgramCode(content: LibraTransferWithData), argruments: [argument1, argument2, argument3])
+//        let program = TransactionScript.init(code: getProgramCode(content: LibraTransferWithData), argruments: [argument1, argument2, argument3])
+        let program = TransactionScript.init(code: Data.init(hex: LibraTransferWithData), argruments: [argument1, argument2, argument3])
 
         let raw = RawTransaction.init(senderAddres: sendAddress,
                                             sequenceNumber: sequenceNumber,
-                                            maxGasAmount: 280000,
+                                            maxGasAmount: 560000,
                                             gasUnitPrice: 0,
                                             expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 1000),
                                             programOrWrite: program.serialize())

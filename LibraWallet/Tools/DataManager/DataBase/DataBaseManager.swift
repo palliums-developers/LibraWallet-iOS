@@ -436,6 +436,20 @@ struct DataBaseManager {
             return false
         }
     }
+    func updateDefaultViolasWalletBackupState() -> Bool {
+        let walletTable = Table("Wallet").filter(Expression<Int>("wallet_identity") == 0)
+        do {
+            if let tempDB = self.db {
+                try tempDB.run(walletTable.update(Expression<Bool>("wallet_backup_state") <- true))
+                return true
+            } else {
+                return false
+            }
+        } catch {
+            print(error.localizedDescription)
+            return false
+        }
+    }
     func userExistInLocal(walletID: Int64) -> Bool {
         let walletTable = Table("Wallet")
         do {

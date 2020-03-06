@@ -77,7 +77,7 @@ class BTCManagerTests: XCTestCase {
         let location2 = ViolasManager().getViolasTokenContractLocation(code: ViolasPublishProgramCode, contract: "7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614")
         print(location2)
         
-        let data = ViolasManager().getCodeData(move: ViolasPublishProgramCode, address: "238adce0d1b40db648145473a7ba42e42d637dfbe8f7dd007c49a85f0e3a5d89")
+        let data = ViolasManager.getCodeData(move: ViolasPublishProgramCode, address: "238adce0d1b40db648145473a7ba42e42d637dfbe8f7dd007c49a85f0e3a5d89")
         print(data.toHexString())
     }
     func testExchange() {

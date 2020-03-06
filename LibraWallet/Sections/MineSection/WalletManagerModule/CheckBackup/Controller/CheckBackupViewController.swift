@@ -49,8 +49,8 @@ extension CheckBackupViewController: CheckBackupViewDelegate {
             try self.viewModel.checkIsAllValid()
             if FirstInApp == true {
                 #warning("缺少更新失败操作")
-                let result = DataBaseManager.DBManager.updateWalletBackupState(walletID: tempWallet!.wallet!.walletID!, state: true)
-                print("更新钱包\(tempWallet!.wallet!.walletID!)备份状态-\(result)")
+                let result = DataBaseManager.DBManager.updateDefaultViolasWalletBackupState()
+                print("更新钱包备份状态-\(result)")
                 self.view.makeToast(localLanguage(keyString: "wallet_check_mnemonic_success_title"), duration: 0.5, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
                     let tabbar = BaseTabBarViewController.init()
                     UIApplication.shared.keyWindow?.rootViewController = tabbar

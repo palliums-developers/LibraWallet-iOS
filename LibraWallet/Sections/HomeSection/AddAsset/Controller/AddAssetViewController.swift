@@ -18,8 +18,8 @@ class AddAssetViewController: BaseViewController {
         self.view.addSubview(self.detailView)
         // 加载数据
         self.initKVO(walletID: (wallet?.walletID)!, walletAddress: wallet?.walletAddress ?? "")
-        
-        self.addNavigationRightBar()
+        #warning("测试")
+//        self.addNavigationRightBar()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -227,7 +227,9 @@ extension AddAssetViewController {
     @objc func addAddressMethod() {
         let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
             self?.detailView.toastView?.show()
-            self?.dataModel.publishViolasToken(sendAddress: (self?.wallet?.walletAddress)!, mnemonic: mnemonic, contact: "2236322cf1e35198302919c2c1b1e4bf5be07359c8995c6a13ec53c17579c768")
+            self?.dataModel.publishViolasToken(sendAddress: (self?.wallet?.walletAddress)!,
+                                               mnemonic: mnemonic,
+                                               contact: "c026d690a00762e792b874154292b55b20793be9f11e7eaebfa42ff0872ae319")
             self?.actionClosure = { result in
                 
             }
@@ -238,4 +240,3 @@ extension AddAssetViewController {
     }
 
 }
-
