@@ -90,6 +90,7 @@ class MappingTokenListAlert: UIView {
     var actionClosure: successClosure?
     @objc func buttonClick(button: UIButton) {
         guard let model = models?[pickerRow] else {
+            self.hideAnimation()
             return
         }
         if let action = self.actionClosure {

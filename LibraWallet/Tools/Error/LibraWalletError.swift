@@ -248,6 +248,8 @@ public enum LibraWalletError: Error {
         case mappingTokenPublishedInvalid
         /// 映射功能异常
         case mappingFounctionInvalid
+        /// 映射稳定币为空
+        case mappingCoinDataEmpty
     }
     case WalletMapping(reason: MappingError)
 }
@@ -592,6 +594,8 @@ extension LibraWalletError.MappingError {
             return localLanguage(keyString: "wallet_market_mapping_token_unpublish_error")
         case .mappingFounctionInvalid:
             return localLanguage(keyString: "wallet_mapping_info_alert_content")
+        case .mappingCoinDataEmpty:
+            return localLanguage(keyString: "wallet_mapping_info_data_empty_alert_content")
         }
     }
 }

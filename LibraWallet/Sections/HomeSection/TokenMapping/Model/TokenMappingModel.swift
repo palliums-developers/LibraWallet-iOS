@@ -561,6 +561,11 @@ extension TokenMappingModel {
                         self?.setValue(data, forKey: "dataDic")
                         return
                     }
+                    guard let models = json.data, models.isEmpty == false else {
+                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: "MappingTokenList")
+                        self?.setValue(data, forKey: "dataDic")
+                        return
+                    }
                     let data = setKVOData(type: "MappingTokenList", data: json.data)
                     self?.setValue(data, forKey: "dataDic")
                     // 刷新本地数据

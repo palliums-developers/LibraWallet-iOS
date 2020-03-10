@@ -287,6 +287,8 @@ wallet_language_change_success = "Change Successful";
 wallet_mapping_info_alert_title = "Tips";
 wallet_mapping_info_alert_content = "Get Mapping Info Failed, Please Try Later";
 wallet_mapping_info_alert_confirm_button_title = "Sure";
+// 获取反向映射信息
+wallet_mapping_info_data_empty_alert_content = "Don’t have any mapping coins yet, please try again after mapping";
 
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "Safety Warning";

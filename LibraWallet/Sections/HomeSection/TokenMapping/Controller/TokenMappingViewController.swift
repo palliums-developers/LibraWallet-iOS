@@ -114,6 +114,10 @@ extension TokenMappingViewController {
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
                     print(error.localizedDescription)
                     // 数据为空
+                    if type == "MappingTokenList" {
+                        self?.showMappingDataEmptyFunctionAlert()
+                        return
+                    }
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
                     print(error.localizedDescription)
                     // 数据返回状态异常
@@ -178,6 +182,14 @@ extension TokenMappingViewController {
     }
     private func showMappingFunctionAlert() {
         let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_mapping_info_alert_title"), message: LibraWalletError.WalletMapping(reason: .mappingFounctionInvalid).localizedDescription, preferredStyle: .alert)
+        alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_mapping_info_alert_confirm_button_title"), style: .default){ [weak self] clickHandler in
+            self?.detailView.toastView?.hide()
+            self?.navigationController?.popViewController(animated: true)
+        })
+        self.present(alertContr, animated: true, completion: nil)
+    }
+    private func showMappingDataEmptyFunctionAlert() {
+        let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_mapping_info_alert_title"), message: LibraWalletError.WalletMapping(reason: .mappingCoinDataEmpty).localizedDescription, preferredStyle: .alert)
         alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_mapping_info_alert_confirm_button_title"), style: .default){ [weak self] clickHandler in
             self?.detailView.toastView?.hide()
             self?.navigationController?.popViewController(animated: true)
