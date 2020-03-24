@@ -163,20 +163,30 @@ extension HomeViewController {
         vc.actionClosure = { address in
             do {
                 let result = try self.dataModel.scanResultHandle(content: address, contracts: self.tableViewManager.dataModel)
-                switch result.addressType {
-                case .BTC:
-                    self.showBTCTransferViewController(address: result.address ?? "")
-                case .Violas:
-                    if let model = result.contract {
-                        self.showViolasTokenViewController(address: result.address ?? "", tokenModel: model)
-                    } else {
-                        self.showViolasTransferViewController(address: result.address ?? "")
+                if result.type == .transfer {
+                    switch result.addressType {
+                    case .BTC:
+                        self.showBTCTransferViewController(address: result.address ?? "")
+                    case .Violas:
+                        if let model = result.contract {
+                            self.showViolasTokenViewController(address: result.address ?? "", tokenModel: model)
+                        } else {
+                            self.showViolasTransferViewController(address: result.address ?? "")
+                        }
+                    case .Libra:
+                        self.showLibraTransferViewController(address: result.address ?? "")
+                    default:
+                        self.showScanContent(content: address)
                     }
-                case .Libra:
-                    self.showLibraTransferViewController(address: result.address ?? "")
-                default:
+                } else if result.type == .login {
+                    let vc = ScanLoginViewController()
+                    vc.wallet = LibraWalletManager.shared
+                    vc.sessionID = result.address
+                    self.present(vc, animated: true, completion: nil)
+                } else {
                     self.showScanContent(content: address)
                 }
+                
             } catch {
                 self.view.makeToast(error.localizedDescription, position: .center)
             }

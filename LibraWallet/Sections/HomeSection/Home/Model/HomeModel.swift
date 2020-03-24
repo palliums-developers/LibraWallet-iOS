@@ -9,6 +9,10 @@
 import UIKit
 import SwiftGRPC
 import Moya
+struct ScanLoginDataModel: Codable {
+    var type: Int?
+    var session_id: String?
+}
 struct BalanceViolasModulesModel: Codable {
     /// 代币余额
     var balance: Int64?
@@ -265,34 +269,37 @@ class HomeModel: NSObject {
             print("刷新本地钱包Token数据状态: \(result),walletID = \(walletID)")
         }
     }
-    func scanResultHandle(content: String, contracts: [ViolasTokenModel]?) throws -> QRQodeHandleResult {
+    func scanResultHandle(content: String, contracts: [ViolasTokenModel]?) throws -> QRCodeHandleResult {
         if content.hasPrefix("bitcoin:") {
             let tempAddress = content.replacingOccurrences(of: "bitcoin:", with: "")
             guard BTCManager.isValidBTCAddress(address: tempAddress) else {
                 throw LibraWalletError.WalletScan(reason: .btcAddressInvalid)
             }
-            return QRQodeHandleResult.init(addressType: .BTC,
+            return QRCodeHandleResult.init(addressType: .BTC,
                                            originContent: content,
                                            address: tempAddress,
-                                           contract: nil)
+                                           contract: nil,
+                                           type: .transfer)
         } else if content.hasPrefix("libra:") {
             let tempAddress = content.replacingOccurrences(of: "libra:", with: "")
             guard LibraManager.isValidLibraAddress(address: tempAddress) else {
                throw LibraWalletError.WalletScan(reason: .libraAddressInvalid)
             }
-            return QRQodeHandleResult.init(addressType: .Libra,
+            return QRCodeHandleResult.init(addressType: .Libra,
                                            originContent: content,
                                            address: tempAddress,
-                                           contract: nil)
+                                           contract: nil,
+                                           type: .transfer)
         } else if content.hasPrefix("violas:") {
             let tempAddress = content.replacingOccurrences(of: "violas:", with: "")
             guard ViolasManager.isValidViolasAddress(address: tempAddress) else {
                 throw LibraWalletError.WalletScan(reason: .violasAddressInvalid)
             }
-            return QRQodeHandleResult.init(addressType: .Violas,
+            return QRCodeHandleResult.init(addressType: .Violas,
                                            originContent: content,
                                            address: tempAddress,
-                                           contract: nil)
+                                           contract: nil,
+                                           type: .transfer)
         } else if content.hasPrefix("violas-") {
             let coinAddress = content.split(separator: ":").last?.description
             let addressPrifix = content.split(separator: ":").first?.description
@@ -312,22 +319,39 @@ class HomeModel: NSObject {
             guard ViolasManager.isValidViolasAddress(address: coinAddress ?? "") else {
                 throw LibraWalletError.WalletScan(reason: .violasAddressInvalid)
             }
-            return QRQodeHandleResult.init(addressType: .Violas,
+            return QRCodeHandleResult.init(addressType: .Violas,
                                            originContent: content,
                                            address: coinAddress,
-                                           contract: contract?.first)
+                                           contract: contract?.first,
+                                           type: .transfer)
         } else {
-            return QRQodeHandleResult.init(addressType: nil,
-                                           originContent: content,
-                                           address: nil,
-                                           contract: nil)
+            do {
+                let model = try JSONDecoder().decode(ScanLoginDataModel.self, from: content.data(using: .utf8)!)
+                return QRCodeHandleResult.init(addressType: nil,
+                                               originContent: content,
+                                               address: model.session_id,
+                                               contract: nil,
+                                               type: .login)
+            } catch {
+                return QRCodeHandleResult.init(addressType: nil,
+                                               originContent: content,
+                                               address: nil,
+                                               contract: nil,
+                                               type: .others)
+            }
         }
     }
-    struct QRQodeHandleResult {
+    struct QRCodeHandleResult {
         var addressType: WalletType?
         var originContent: String
         var address: String?
         var contract: ViolasTokenModel?
+        var type: QRCodeType
+    }
+    enum QRCodeType {
+        case transfer
+        case login
+        case others
     }
     deinit {
         requests.forEach { cancellable in

@@ -65,6 +65,9 @@ enum mainRequest {
     case GetMappingTokenList(String)
     /// 获取映射交易记录（地址、偏移量、数量、类型（0：violas，1：Libra，2：BTC）
     case GetMappingTransactions(String, Int, Int, String)
+    
+    /// 扫码登录
+    case SubmitScanLoginData(String, String)
 }
 extension mainRequest:TargetType {
     var baseURL: URL {
@@ -95,7 +98,8 @@ extension mainRequest:TargetType {
              .GetMappingInfo(_),
              .GetMappingTransactionsCount(_, _),
              .GetMappingTokenList(_),
-             .GetMappingTransactions(_, _, _, _):
+             .GetMappingTransactions(_, _, _, _),
+             .SubmitScanLoginData(_, _):
             #if PUBLISH_VERSION
                 return URL(string:"https://api.violas.io/1.0")!
             #else
@@ -171,6 +175,8 @@ extension mainRequest:TargetType {
             return "/crosschain/modules"
         case .GetMappingTransactions(_, _, _, _):
             return "/crosschain/transactions"
+        case .SubmitScanLoginData(_, _):
+            return "/violas/singin"
         }
     }
     var method: Moya.Method {
@@ -179,7 +185,8 @@ extension mainRequest:TargetType {
              .GetTransactionHistory(_, _),
              .SendLibraTransaction(_),
              .SendViolasTransaction(_),
-             .SendBTCTransaction(_):
+             .SendBTCTransaction(_),
+             .SubmitScanLoginData(_, _):
             return .post
         case .GetBTCBalance(_),
              .GetBTCTransactionHistory(_),
@@ -331,9 +338,18 @@ extension mainRequest:TargetType {
                                                    "offset":offset,
                                                    "type":type],
                                       encoding: URLEncoding.queryString)
+        case .SubmitScanLoginData(let walletAddress, let sessionID):
+            return .requestParameters(parameters: ["address": walletAddress,
+                                                   "session_id": sessionID,
+                                                   "type":2],
+                                      encoding: JSONEncoding.default)
         }
     }
     var headers: [String : String]? {
-        return ["Content-Type":"application/json"]
+        return ["Content-Type":"application/json",
+                "app_version": appversion,
+                "platform": "ios",
+                "app_bundle_id":bundleID!,
+                "language":Localize.currentLanguage()]
     }
 }
