@@ -216,19 +216,27 @@ class HomeModel: NSObject {
             case let .success(response):
                 do {
                     let json = try response.map(BalanceLibraMainModel.self)
-                    guard json.code == 2000 else {
-                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "UpdateViolasBalance")
+                    if json.code == 2000 {
+                        let data = setKVOData(type: "UpdateViolasBalance", data: json.data)
                         self?.setValue(data, forKey: "dataDic")
-                        return
-                    }
-                    let data = setKVOData(type: "UpdateViolasBalance", data: json.data)
-                    self?.setValue(data, forKey: "dataDic")
-                    // 刷新本地数据
-                    self?.updateLocalWalletData(walletID: walletID, balance: json.data?.balance ?? 0)
-                    guard let tokenModel = json.data?.modules else {
-                        return
-                    }
-                    self?.updateLocalWalletTokenData(walletID: walletID, modules: tokenModel)
+                        // 刷新本地数据
+                        self?.updateLocalWalletData(walletID: walletID, balance: json.data?.balance ?? 0)
+                        guard let tokenModel = json.data?.modules else {
+                            return
+                        }
+                        self?.updateLocalWalletTokenData(walletID: walletID, modules: tokenModel)
+                     } else {
+                         print("UpdateViolasBalance_状态异常")
+                         DispatchQueue.main.async(execute: {
+                             if let message = json.message, message.isEmpty == false {
+                                 let data = setKVOData(error: LibraWalletError.error(message), type: "UpdateViolasBalance")
+                                 self?.setValue(data, forKey: "dataDic")
+                             } else {
+                                 let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "UpdateViolasBalance")
+                                 self?.setValue(data, forKey: "dataDic")
+                             }
+                         })
+                     }
                 } catch {
                     print("UpdateViolasBalance_解析异常\(error.localizedDescription)")
                     let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "UpdateViolasBalance")

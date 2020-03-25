@@ -35,18 +35,23 @@ class ViolasTransferModel: NSObject {
             case let .success(response):
                 do {
                     let json = try response.map(ViolaSequenceNumberMainModel.self)
-                    guard json.code == 2000 else {
+                    if json.code == 2000 {
+   //                    let data = setKVOData(type: "GetViolasSequenceNumber", data: json.data)
+   //                    self?.setValue(data, forKey: "dataDic")
+                       self?.sequenceNumber = json.data
+                       semaphore.signal()
+                    } else {
+                        print("GetViolasSequenceNumber_状态异常")
                         DispatchQueue.main.async(execute: {
-                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "GetViolasSequenceNumber")
-                            self?.setValue(data, forKey: "dataDic")
+                            if let message = json.message, message.isEmpty == false {
+                                let data = setKVOData(error: LibraWalletError.error(message), type: "GetViolasSequenceNumber")
+                                self?.setValue(data, forKey: "dataDic")
+                            } else {
+                                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "GetViolasSequenceNumber")
+                                self?.setValue(data, forKey: "dataDic")
+                            }
                         })
-                        return
                     }
-//                    let data = setKVOData(type: "GetViolasSequenceNumber", data: json.data)
-//                    self?.setValue(data, forKey: "dataDic")
-                    self?.sequenceNumber = json.data
-                    semaphore.signal()
-                    
                 } catch {
                     print("解析异常\(error.localizedDescription)")
                     DispatchQueue.main.async(execute: {
@@ -136,18 +141,23 @@ class ViolasTransferModel: NSObject {
             case let .success(response):
                 do {
                     let json = try response.map(ViolaSendTransactionMainModel.self)
-                    guard json.code == 2000 else {
+                    if json.code == 2000 {
+                       DispatchQueue.main.async(execute: {
+                           let data = setKVOData(type: "SendViolasTransaction")
+                           self?.setValue(data, forKey: "dataDic")
+                       })
+                    } else {
+                        print("SendViolasTransaction_状态异常")
                         DispatchQueue.main.async(execute: {
-                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "SendViolasTransaction")
-                            self?.setValue(data, forKey: "dataDic")
+                            if let message = json.message, message.isEmpty == false {
+                                let data = setKVOData(error: LibraWalletError.error(message), type: "SendViolasTransaction")
+                                self?.setValue(data, forKey: "dataDic")
+                            } else {
+                                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "SendViolasTransaction")
+                                self?.setValue(data, forKey: "dataDic")
+                            }
                         })
-                        return
                     }
-                    DispatchQueue.main.async(execute: {
-                        let data = setKVOData(type: "SendViolasTransaction")
-                        self?.setValue(data, forKey: "dataDic")
-                    })
-                    // 刷新本地数据
                 } catch {
                     print("解析异常\(error.localizedDescription)")
                     DispatchQueue.main.async(execute: {

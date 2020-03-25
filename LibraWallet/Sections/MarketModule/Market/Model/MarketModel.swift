@@ -136,19 +136,25 @@ class MarketModel: NSObject {
             case let .success(response):
                 do {
                     let json = try response.map(ViolasAccountEnableTokenResponseModel.self)
-                    guard json.code == 2000 else {
-                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "GetWalletEnableCoin")
-                        self?.setValue(data, forKey: "dataDic")
-                        return
+                    if json.code == 2000 {
+                        guard json.data?.isEmpty == false else {
+                            let data = setKVOData(error: LibraWalletError.WalletMarket(reason: .publishedListEmpty), type: "GetWalletEnableCoin")
+                            self?.setValue(data, forKey: "dataDic")
+                            return
+                        }
+    //                    let data = setKVOData(type: "GetSupportCoin", data: json.data)
+    //                    self?.setValue(data, forKey: "dataDic")
+                        self?.walletEnableTokens = json.data
+                    } else {
+                        print("GetWalletEnableCoin_状态异常")
+                        if let message = json.message, message.isEmpty == false {
+                            let data = setKVOData(error: LibraWalletError.error(message), type: "GetWalletEnableCoin")
+                            self?.setValue(data, forKey: "dataDic")
+                        } else {
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "GetWalletEnableCoin")
+                            self?.setValue(data, forKey: "dataDic")
+                        }
                     }
-                    guard json.data?.isEmpty == false else {
-                        let data = setKVOData(error: LibraWalletError.WalletMarket(reason: .publishedListEmpty), type: "GetWalletEnableCoin")
-                        self?.setValue(data, forKey: "dataDic")
-                        return
-                    }
-//                    let data = setKVOData(type: "GetSupportCoin", data: json.data)
-//                    self?.setValue(data, forKey: "dataDic")
-                    self?.walletEnableTokens = json.data
                 } catch {
                     print("GetWalletEnableCoin_解析异常\(error.localizedDescription)")
                     let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetWalletEnableCoin")
@@ -221,18 +227,21 @@ class MarketModel: NSObject {
             case let .success(response):
                 do {
                     let json = try response.map(ViolaSequenceNumberMainModel.self)
-                    guard json.code == 2000 else {
+                    if json.code == 2000 {
+                        self?.sequenceNumber = json.data
+                        semaphore.signal()
+                    } else {
+                        print("GetViolasSequenceNumber_状态异常")
                         DispatchQueue.main.async(execute: {
-                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "GetViolasSequenceNumber")
-                            self?.setValue(data, forKey: "dataDic")
+                            if let message = json.message, message.isEmpty == false {
+                                let data = setKVOData(error: LibraWalletError.error(message), type: "GetViolasSequenceNumber")
+                                self?.setValue(data, forKey: "dataDic")
+                            } else {
+                                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "GetViolasSequenceNumber")
+                                self?.setValue(data, forKey: "dataDic")
+                            }
                         })
-                        return
                     }
-//                    let data = setKVOData(type: "GetViolasSequenceNumber", data: json.data)
-//                    self?.setValue(data, forKey: "dataDic")
-                    self?.sequenceNumber = json.data
-                    semaphore.signal()
-                    
                 } catch {
                     print("GetViolasSequenceNumber_解析异常\(error.localizedDescription)")
                     DispatchQueue.main.async(execute: {
@@ -289,18 +298,23 @@ class MarketModel: NSObject {
             case let .success(response):
                 do {
                     let json = try response.map(ViolaSendTransactionMainModel.self)
-                    guard json.code == 2000 else {
+                    if json.code == 2000 {
                         DispatchQueue.main.async(execute: {
-                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: type)
+                            let data = setKVOData(type: type)
                             self?.setValue(data, forKey: "dataDic")
                         })
-                        return
+                    } else {
+                        print("\(type)_状态异常")
+                        DispatchQueue.main.async(execute: {
+                            if let message = json.message, message.isEmpty == false {
+                                let data = setKVOData(error: LibraWalletError.error(message), type: type)
+                                self?.setValue(data, forKey: "dataDic")
+                            } else {
+                                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: type)
+                                self?.setValue(data, forKey: "dataDic")
+                            }
+                        })
                     }
-                    DispatchQueue.main.async(execute: {
-                        let data = setKVOData(type: type)
-                        self?.setValue(data, forKey: "dataDic")
-                    })
-                    // 刷新本地数据
                 } catch {
                     print("ExchangeDone_解析异常\(error.localizedDescription)")
                     DispatchQueue.main.async(execute: {
@@ -329,19 +343,25 @@ class MarketModel: NSObject {
             case let .success(response):
                 do {
                     let json = try response.map(BalanceLibraMainModel.self)
-                    guard json.code == 2000 else {
-                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "UpdateViolasBalance")
+                    if json.code == 2000 {
+                        let data = setKVOData(type: "UpdateViolasBalance", data: json.data)
                         self?.setValue(data, forKey: "dataDic")
-                        return
+                        // 刷新本地数据
+                        self?.updateLocalWalletData(walletID: walletID, balance: json.data?.balance ?? 0)
+                        guard let tokenModel = json.data?.modules else {
+                            return
+                        }
+                        self?.updateLocalWalletTokenData(walletID: walletID, modules: tokenModel)
+                    } else {
+                        print("UpdateViolasBalance_状态异常")
+                        if let message = json.message, message.isEmpty == false {
+                            let data = setKVOData(error: LibraWalletError.error(message), type: "UpdateViolasBalance")
+                            self?.setValue(data, forKey: "dataDic")
+                        } else {
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "UpdateViolasBalance")
+                            self?.setValue(data, forKey: "dataDic")
+                        }
                     }
-                    let data = setKVOData(type: "UpdateViolasBalance", data: json.data)
-                    self?.setValue(data, forKey: "dataDic")
-                    // 刷新本地数据
-                    self?.updateLocalWalletData(walletID: walletID, balance: json.data?.balance ?? 0)
-                    guard let tokenModel = json.data?.modules else {
-                        return
-                    }
-                    self?.updateLocalWalletTokenData(walletID: walletID, modules: tokenModel)
                 } catch {
                     print("UpdateViolasBalance_解析异常\(error.localizedDescription)")
                     let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "UpdateViolasBalance")

@@ -212,20 +212,26 @@ class WalletTransactionsModel: NSObject {
                 do {
                     let json = try response.map(ViolasResponseModel.self)
                     print(try response.mapString())
-                    guard json.code == 2000 else {
-                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: type)
+                    if json.code == 2000 {
+                        guard json.data?.isEmpty == false else {
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: type)
+                            self?.setValue(data, forKey: "dataDic")
+                            return
+                        }
+                        let result = self?.dealViolasTransactions(models: json.data!, walletAddress: address, tokenList: [ViolasTokenModel]())
+                        let data = setKVOData(type: type, data: result)
                         self?.setValue(data, forKey: "dataDic")
-                        return
+    //                    self?.transactionList = json.data
+                    } else {
+                        print("\(type)_状态异常")
+                        if let message = json.message, message.isEmpty == false {
+                            let data = setKVOData(error: LibraWalletError.error(message), type: type)
+                            self?.setValue(data, forKey: "dataDic")
+                        } else {
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: type)
+                            self?.setValue(data, forKey: "dataDic")
+                        }
                     }
-                    guard json.data?.isEmpty == false else {
-                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: type)
-                        self?.setValue(data, forKey: "dataDic")
-                        return
-                    }
-                    let result = self?.dealViolasTransactions(models: json.data!, walletAddress: address, tokenList: [ViolasTokenModel]())
-                    let data = setKVOData(type: type, data: result)
-                    self?.setValue(data, forKey: "dataDic")
-//                    self?.transactionList = json.data
                 } catch {
                     print("解析异常\(error.localizedDescription)")
                     let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: type)
@@ -251,20 +257,26 @@ class WalletTransactionsModel: NSObject {
             case let .success(response):
                 do {
                     let json = try response.map(ViolasTokenMainModel.self)
-                    guard json.code == 2000 else {
-                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "GetWalletEnableCoin")
-                        self?.setValue(data, forKey: "dataDic")
-                        return
+                    if json.code == 2000 {
+                        guard let models = json.data, models.isEmpty == false else {
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: "GetWalletEnableCoin")
+                            self?.setValue(data, forKey: "dataDic")
+                            return
+                        }
+    //                    let result = self?.dealModelWithSelect(walletID: walletID, models: models)
+    //                    let data = setKVOData(type: "UpdateViolasTokenList", data: result)
+    //                    self?.setValue(data, forKey: "dataDic")
+                        self?.supportTokens = json.data
+                    } else {
+                        print("GetWalletEnableCoin_状态异常")
+                        if let message = json.message, message.isEmpty == false {
+                            let data = setKVOData(error: LibraWalletError.error(message), type: "GetWalletEnableCoin")
+                            self?.setValue(data, forKey: "dataDic")
+                        } else {
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "GetWalletEnableCoin")
+                            self?.setValue(data, forKey: "dataDic")
+                        }
                     }
-                    guard let models = json.data, models.isEmpty == false else {
-                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: "GetWalletEnableCoin")
-                        self?.setValue(data, forKey: "dataDic")
-                        return
-                    }
-//                    let result = self?.dealModelWithSelect(walletID: walletID, models: models)
-//                    let data = setKVOData(type: "UpdateViolasTokenList", data: result)
-//                    self?.setValue(data, forKey: "dataDic")
-                    self?.supportTokens = json.data
                 } catch {
                     print("解析异常\(error.localizedDescription)")
                     let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetWalletEnableCoin")

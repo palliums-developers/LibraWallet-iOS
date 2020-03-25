@@ -35,19 +35,24 @@ class MappingTransactionsModel: NSObject {
             case let .success(response):
                 do {
                     let json = try response.map(MappingTransactionsMainModel.self)
-                    guard json.code == 2000 else {
-                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: type)
+                    if json.code == 2000 {
+                        guard json.data?.isEmpty == false else {
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: type)
+                            self?.setValue(data, forKey: "dataDic")
+                            return
+                        }
+                        let data = setKVOData(type: type, data: json.data)
                         self?.setValue(data, forKey: "dataDic")
-                        return
+                    } else {
+                        print("\(type)_状态异常")
+                        if let message = json.message, message.isEmpty == false {
+                            let data = setKVOData(error: LibraWalletError.error(message), type: type)
+                            self?.setValue(data, forKey: "dataDic")
+                        } else {
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: type)
+                            self?.setValue(data, forKey: "dataDic")
+                        }
                     }
-                    guard json.data?.isEmpty == false else {
-                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: type)
-                        self?.setValue(data, forKey: "dataDic")
-                        return
-                    }
-                    let data = setKVOData(type: type, data: json.data)
-                    self?.setValue(data, forKey: "dataDic")
-                    // 刷新本地数据
                 } catch {
                     print("解析异常\(error.localizedDescription)")
                     let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: type)
