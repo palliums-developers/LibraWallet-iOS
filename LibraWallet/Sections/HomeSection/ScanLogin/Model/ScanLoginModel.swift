@@ -72,10 +72,10 @@ class ScanLoginModel: NSObject {
         let identityWallets = wallets.first!
         let othersWallets = wallets.last!
         let tempData = identityWallets.reduce("") {
-            $0 + "{\"name\":\"\($1.walletName ?? "")\",\"identity\":\($1.walletIdentity ?? 0),\"type\":\($1.walletType?.value ?? 0),\"address\":\"\($1.walletAddress ?? "")\"},"
+            $0 + "{\"name\":\"\($1.walletName ?? "")\",\"identity\":\($1.walletIdentity ?? 0),\"type\":\"\($1.walletType!.description.lowercased())\",\"address\":\"\($1.walletAddress ?? "")\"},"
         }
         let tempData2 = othersWallets.reduce("") {
-            $0 + "{\"name\":\"\($1.walletName ?? "")\",\"identity\":\($1.walletIdentity ?? 0),\"type\":\($1.walletType?.value ?? 0),\"address\":\"\($1.walletAddress ?? "")\"},"
+            $0 + "{\"name\":\"\($1.walletName ?? "")\",\"identity\":\($1.walletIdentity ?? 0),\"type\":\"\($1.walletType!.description.lowercased())\",\"address\":\"\($1.walletAddress ?? "")\"},"
         }
         let range = tempData2.index(tempData2.startIndex, offsetBy: tempData2.count - 1)
         // 替换指定区间数据

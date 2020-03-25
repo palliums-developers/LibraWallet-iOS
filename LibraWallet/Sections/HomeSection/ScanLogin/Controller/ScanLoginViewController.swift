@@ -94,11 +94,7 @@ extension ScanLoginViewController: ScanLoginViewDelegate {
     }
     func confirmLogin(password: String) {
         NSLog("Password:\(password)")
-        do {
-            self.dataModel.submitScanLoginData(walletAddress: self.wallet?.walletAddress ?? "",
-                                               sessionID: self.sessionID ?? "")
-        } catch {
-            self.detailView.makeToast(error.localizedDescription, position: .center)
-        }
+        self.dataModel.submitScanLoginData(walletAddress: self.wallet?.walletAddress ?? "",
+                                           sessionID: self.sessionID ?? "")
     }
 }

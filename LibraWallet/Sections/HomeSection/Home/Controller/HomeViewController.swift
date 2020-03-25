@@ -455,7 +455,7 @@ extension HomeViewController: HomeHeaderViewDelegate {
            }
            vc.wallet = self.detailView.headerView.walletModel
            vc.sendViolasTokenState = false
-           vc.title = (self.detailView.headerView.walletModel?.walletType?.description ?? "") + localLanguage(keyString: "wallet_transfer_navigation_title")
+//           vc.title = (self.detailView.headerView.walletModel?.walletType?.description ?? "") + localLanguage(keyString: "wallet_transfer_navigation_title")
 
            vc.hidesBottomBarWhenPushed = true
            self.navigationController?.pushViewController(vc, animated: true)

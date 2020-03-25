@@ -12,7 +12,7 @@ import SwiftProtobuf
 class TransferViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = (self.wallet?.walletType?.description ?? "") + localLanguage(keyString: "wallet_transfer_navigation_title")
+        self.title = (self.wallet?.walletType?.description ?? "") + " " + localLanguage(keyString: "wallet_transfer_navigation_title")
         
         self.view.addSubview(detailView)
         self.detailView.wallet = self.wallet

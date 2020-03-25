@@ -11,6 +11,8 @@ import UIKit
 class ViolasTransferViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = (self.wallet?.walletType?.description ?? "") + " " + localLanguage(keyString: "wallet_transfer_navigation_title")
+
         self.view.addSubview(detailView)
         self.detailView.sendViolasTokenState = self.sendViolasTokenState
         if self.sendViolasTokenState == false {

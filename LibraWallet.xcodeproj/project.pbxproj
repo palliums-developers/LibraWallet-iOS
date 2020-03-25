@@ -295,6 +295,9 @@
 		36E95D8B242A084B0004B86D /* ScanLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E95D86242A084B0004B86D /* ScanLoginViewController.swift */; };
 		36E95D8C242A084B0004B86D /* ScanLoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E95D88242A084B0004B86D /* ScanLoginModel.swift */; };
 		36E95D8D242A084B0004B86D /* ScanLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E95D8A242A084B0004B86D /* ScanLoginView.swift */; };
+		36E95D8E242B09E40004B86D /* ScanLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E95D86242A084B0004B86D /* ScanLoginViewController.swift */; };
+		36E95D8F242B09E40004B86D /* ScanLoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E95D88242A084B0004B86D /* ScanLoginModel.swift */; };
+		36E95D90242B09E40004B86D /* ScanLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E95D8A242A084B0004B86D /* ScanLoginView.swift */; };
 		36EB364223CEB7FF00DB1812 /* ledger_info.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36EB362D23CEB7FC00DB1812 /* ledger_info.pb.swift */; };
 		36EB364323CEB7FF00DB1812 /* admission_control.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36EB362E23CEB7FD00DB1812 /* admission_control.pb.swift */; };
 		36EB364423CEB7FF00DB1812 /* storage.grpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36EB362F23CEB7FD00DB1812 /* storage.grpc.swift */; };
@@ -3460,6 +3463,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				36E95D8E242B09E40004B86D /* ScanLoginViewController.swift in Sources */,
+				36E95D8F242B09E40004B86D /* ScanLoginModel.swift in Sources */,
+				36E95D90242B09E40004B86D /* ScanLoginView.swift in Sources */,
 				36B4A1542411EFFB00401E3E /* MappingTransactionsTableViewManager.swift in Sources */,
 				36B4A1552411EFFB00401E3E /* MappingTransactionsViewController.swift in Sources */,
 				36B4A1562411EFFB00401E3E /* MappingTransactionsModel.swift in Sources */,

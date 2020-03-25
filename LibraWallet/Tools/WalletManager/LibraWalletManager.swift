@@ -20,7 +20,7 @@ extension WalletType {
         case .Libra:
             return "Libra"
         case .BTC:
-            return "BTC"
+            return "Bitcoin"
         }
     }
     public var value: Int {
