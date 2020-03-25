@@ -46,7 +46,7 @@ struct TokenMappingListMainModel: Codable {
 }
 class TokenMappingModel: NSObject {
     private var requests: [Cancellable] = []
-    @objc var dataDic: NSMutableDictionary = [:]
+    @objc dynamic var dataDic: NSMutableDictionary = [:]
     func getMappingInfo(walletType: WalletType) {
 //        let model = getLocalModel(walletType: walletType)
 //        let data = setKVOData(type: "MappingInfo", data: model)

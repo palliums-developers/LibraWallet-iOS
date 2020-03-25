@@ -314,7 +314,7 @@ extension HomeViewController {
                     // 数据返回状态异常
                 }
                 self?.detailView.hideToastActivity()
-                self?.detailView.tableView.mj_header.endRefreshing()
+                self?.detailView.tableView.mj_header?.endRefreshing()
                 return
             }
             if type == "LoadCurrentUseWallet" {
@@ -406,7 +406,7 @@ extension HomeViewController {
                 }
             }
             self?.detailView.hideToastActivity()
-            self?.detailView.tableView.mj_header.endRefreshing()
+            self?.detailView.tableView.mj_header?.endRefreshing()
         })
         self.detailView.makeToastActivity(.center)
         self.dataModel.getLocalUserInfo()

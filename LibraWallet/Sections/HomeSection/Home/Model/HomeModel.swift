@@ -65,7 +65,7 @@ struct BalanceBTCMainModel: Codable {
 }
 class HomeModel: NSObject {
     private var requests: [Cancellable] = []
-    @objc var dataDic: NSMutableDictionary = [:]
+    @objc dynamic var dataDic: NSMutableDictionary = [:]
     func getLocalUserInfo() {
         do {
             let wallet = try DataBaseManager.DBManager.getCurrentUseWallet()

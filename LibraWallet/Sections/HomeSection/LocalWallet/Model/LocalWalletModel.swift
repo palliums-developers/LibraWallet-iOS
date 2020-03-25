@@ -9,7 +9,7 @@
 import UIKit
 
 class LocalWalletModel: NSObject {
-    @objc var dataDic: NSMutableDictionary = [:]
+    @objc dynamic var dataDic: NSMutableDictionary = [:]
     func getSupportCoinList() -> [String] {
         return ["wallet_list_total", "violas_icon", "btc_icon", "libra_icon"]
     }

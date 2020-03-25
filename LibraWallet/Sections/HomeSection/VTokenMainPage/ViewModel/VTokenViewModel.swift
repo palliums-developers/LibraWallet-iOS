@@ -41,15 +41,15 @@ class VTokenViewModel: NSObject {
             } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
                 print(error.localizedDescription)
                 // 数据为空
-                 self.detailView.tableView.mj_footer.endRefreshingWithNoMoreData()
+                self.detailView.tableView.mj_footer?.endRefreshingWithNoMoreData()
                 self.detailView.makeToast(LibraWalletError.WalletRequest(reason: .noMoreData).localizedDescription, position: .center)
             } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
                 print(error.localizedDescription)
                 // 数据返回状态异常
             }
             self.detailView.hideToastActivity()
-            self.detailView.tableView.mj_header.endRefreshing()
-            self.detailView.tableView.mj_footer.endRefreshing()
+            self.detailView.tableView.mj_header?.endRefreshing()
+            self.detailView.tableView.mj_footer?.endRefreshing()
             return
         }
         let type = jsonData.value(forKey: "type") as! String
@@ -85,10 +85,10 @@ class VTokenViewModel: NSObject {
                 self.tableViewManager.violasTransactions = tempData
                 self.detailView.tableView.reloadData()
             }
-            self.detailView.tableView.mj_footer.endRefreshing()
+            self.detailView.tableView.mj_footer?.endRefreshing()
         }
         self.detailView.hideToastActivity()
-        self.detailView.tableView.mj_header.endRefreshing()
+        self.detailView.tableView.mj_header?.endRefreshing()
 //        self.endLoading()
     }
     var dataOffset: Int = 0
@@ -115,7 +115,7 @@ class VTokenViewModel: NSObject {
     }()
     @objc func refreshReceive() {
         dataOffset = 0
-        detailView.tableView.mj_footer.resetNoMoreData()
+        detailView.tableView.mj_footer?.resetNoMoreData()
 //        detailView.tableView.mj_header.beginRefreshing()
         dataModel.getViolasTransactionHistory(address: (wallet?.walletAddress)!, page: dataOffset, pageSize: 10, contract: self.vtokenModel?.address ?? "", requestStatus: 0, tokenName: self.vtokenModel?.name ?? "")
     }

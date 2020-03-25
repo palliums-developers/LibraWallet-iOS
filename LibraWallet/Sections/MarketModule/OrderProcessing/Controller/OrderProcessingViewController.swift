@@ -51,7 +51,7 @@ class OrderProcessingViewController: BaseViewController {
         guard let walletAddress = self.wallet?.walletAddress else {
             return
         }
-        detailView.tableView.mj_footer.resetNoMoreData()
+        detailView.tableView.mj_footer?.resetNoMoreData()
 //        detailView.tableView.mj_header.beginRefreshing()
         dataModel.getAllProcessingOrder(address: walletAddress, version: "")
     }
@@ -63,7 +63,7 @@ class OrderProcessingViewController: BaseViewController {
         if let version = self.tableViewManager.dataModel?.last?.version {
             dataModel.getAllProcessingOrder(address: walletAddress, version: version)
         } else {
-            detailView.tableView.mj_footer.endRefreshing()
+            detailView.tableView.mj_footer?.endRefreshing()
         }
     }
     var myContext = 0
@@ -149,13 +149,13 @@ extension OrderProcessingViewController {
             } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
                 print(error.localizedDescription)
                 // 数据为空
-                self.detailView.tableView.mj_footer.endRefreshingWithNoMoreData()
+                self.detailView.tableView.mj_footer?.endRefreshingWithNoMoreData()
             } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
                 print(error.localizedDescription)
                 // 数据返回状态异常
             }
             self.detailView.hideToastActivity()
-            self.detailView.tableView.mj_header.endRefreshing()
+            self.detailView.tableView.mj_header?.endRefreshing()
             return
         }
         let type = jsonData.value(forKey: "type") as! String
@@ -166,7 +166,7 @@ extension OrderProcessingViewController {
                 self.tableViewManager.dataModel = tempData
                            
                 self.detailView.tableView.reloadData()
-                self.detailView.tableView.mj_header.endRefreshing()
+                self.detailView.tableView.mj_header?.endRefreshing()
             }
         } else if type == "GetAllProcessingOrderMore" {
             guard let tempData = jsonData.value(forKey: "data") as? [MarketOrderDataModel] else {
@@ -188,7 +188,7 @@ extension OrderProcessingViewController {
                 self.tableViewManager.dataModel = tempData
                 self.detailView.tableView.reloadData()
             }
-            self.detailView.tableView.mj_footer.endRefreshing()
+            self.detailView.tableView.mj_footer?.endRefreshing()
         } else {
             self.detailView.toastView?.hide()
             if let indexPath = self.cancelIndexPath {

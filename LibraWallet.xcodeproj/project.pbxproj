@@ -263,7 +263,6 @@
 		3642EB5E23CC1EDD00C7B04A /* ImportIdentityWalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9B49B4235DBE8100354EF0 /* ImportIdentityWalletViewController.swift */; };
 		3642EB5F23CC1EDD00C7B04A /* AboutUsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9B4A04236048A000354EF0 /* AboutUsTableViewCell.swift */; };
 		3642EB6123CC1EDD00C7B04A /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D628AC823A086D100E222FB /* MessageUI.framework */; };
-		3642EB6223CC1EDD00C7B04A /* Pods_LibraWallet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4308B3ACDBB4EC274104FA26 /* Pods_LibraWallet.framework */; };
 		3642EB6423CC1EDD00C7B04A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9DA8E2AA2317ABC600E28D07 /* LaunchScreen.storyboard */; };
 		3642EB6523CC1EDD00C7B04A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9D7124362329EA1C009DED52 /* Localizable.strings */; };
 		3642EB6623CC1EDD00C7B04A /* ViolasToken.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9DC87793237B0F16006378C3 /* ViolasToken.plist */; };
@@ -584,6 +583,7 @@
 		9DFFA88123683C4400EA74F9 /* WalletTransactionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DFFA88023683C4400EA74F9 /* WalletTransactionsViewController.swift */; };
 		9DFFA88323683C5700EA74F9 /* WalletTransactionsTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DFFA88223683C5700EA74F9 /* WalletTransactionsTableViewManager.swift */; };
 		9DFFA88723683E1C00EA74F9 /* WalletTransactionsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DFFA88623683E1C00EA74F9 /* WalletTransactionsTableViewCell.swift */; };
+		CB52B783A96F9C03BDB8D5C5 /* Pods_LibraWallet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4308B3ACDBB4EC274104FA26 /* Pods_LibraWallet.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -618,6 +618,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		18E6EA31E7B59C79E46BF21C /* Pods-LibraWallet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LibraWallet.debug.xcconfig"; path = "Target Support Files/Pods-LibraWallet/Pods-LibraWallet.debug.xcconfig"; sourceTree = "<group>"; };
+		2EE93F6204832B9646AE9672 /* Pods-LibraWallet.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LibraWallet.release.xcconfig"; path = "Target Support Files/Pods-LibraWallet/Pods-LibraWallet.release.xcconfig"; sourceTree = "<group>"; };
 		3623AB5C23ED70CF004A01BF /* TokenMappingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMappingView.swift; sourceTree = "<group>"; };
 		3623AB5E23ED70E2004A01BF /* TokenMappingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMappingModel.swift; sourceTree = "<group>"; };
 		3623AB6023ED70F5004A01BF /* TokenMappingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMappingViewController.swift; sourceTree = "<group>"; };
@@ -921,8 +923,6 @@
 		9DFFA88023683C4400EA74F9 /* WalletTransactionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletTransactionsViewController.swift; sourceTree = "<group>"; };
 		9DFFA88223683C5700EA74F9 /* WalletTransactionsTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletTransactionsTableViewManager.swift; sourceTree = "<group>"; };
 		9DFFA88623683E1C00EA74F9 /* WalletTransactionsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletTransactionsTableViewCell.swift; sourceTree = "<group>"; };
-		A0BB048939C1729A911C1FC8 /* Pods-LibraWallet.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LibraWallet.release.xcconfig"; path = "Target Support Files/Pods-LibraWallet/Pods-LibraWallet.release.xcconfig"; sourceTree = "<group>"; };
-		B53FCCF097BEA491ED046F0A /* Pods-LibraWallet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LibraWallet.debug.xcconfig"; path = "Target Support Files/Pods-LibraWallet/Pods-LibraWallet.debug.xcconfig"; sourceTree = "<group>"; };
 		CC19B6BCD5C39DC5526FDDC4 /* Pods-LibraWalletUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LibraWalletUITests.debug.xcconfig"; path = "Target Support Files/Pods-LibraWalletUITests/Pods-LibraWalletUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		D2E0E83CD4617090AC4DEFF6 /* Pods-LibraWalletTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LibraWalletTests.debug.xcconfig"; path = "Target Support Files/Pods-LibraWalletTests/Pods-LibraWalletTests.debug.xcconfig"; sourceTree = "<group>"; };
 		F7658E656E8E8976B3E75152 /* Pods_LibraWalletUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LibraWalletUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -934,7 +934,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				3642EB6123CC1EDD00C7B04A /* MessageUI.framework in Frameworks */,
-				3642EB6223CC1EDD00C7B04A /* Pods_LibraWallet.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -944,6 +943,7 @@
 			files = (
 				9D628AC923A086D100E222FB /* MessageUI.framework in Frameworks */,
 				1A8251333880EBAB4D609292 /* Pods_LibraWallet.framework in Frameworks */,
+				CB52B783A96F9C03BDB8D5C5 /* Pods_LibraWallet.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1143,12 +1143,12 @@
 		8A31C9F53C56F3885EBFF128 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				B53FCCF097BEA491ED046F0A /* Pods-LibraWallet.debug.xcconfig */,
-				A0BB048939C1729A911C1FC8 /* Pods-LibraWallet.release.xcconfig */,
 				D2E0E83CD4617090AC4DEFF6 /* Pods-LibraWalletTests.debug.xcconfig */,
 				7378AE2C0E4A760533962991 /* Pods-LibraWalletTests.release.xcconfig */,
 				CC19B6BCD5C39DC5526FDDC4 /* Pods-LibraWalletUITests.debug.xcconfig */,
 				5186520DDD2B7E61F7417817 /* Pods-LibraWalletUITests.release.xcconfig */,
+				18E6EA31E7B59C79E46BF21C /* Pods-LibraWallet.debug.xcconfig */,
+				2EE93F6204832B9646AE9672 /* Pods-LibraWallet.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -3174,11 +3174,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3642EB6923CC1EDD00C7B04A /* Build configuration list for PBXNativeTarget "LibraWallet_Publish" */;
 			buildPhases = (
-				3642EA5E23CC1EDD00C7B04A /* [CP] Check Pods Manifest.lock */,
 				3642EA5F23CC1EDD00C7B04A /* Sources */,
 				3642EB6023CC1EDD00C7B04A /* Frameworks */,
 				3642EB6323CC1EDD00C7B04A /* Resources */,
-				3642EB6823CC1EDD00C7B04A /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -3354,45 +3352,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		3642EA5E23CC1EDD00C7B04A /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-LibraWallet-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		3642EB6823CC1EDD00C7B04A /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-LibraWallet/Pods-LibraWallet-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-LibraWallet/Pods-LibraWallet-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-LibraWallet/Pods-LibraWallet-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		3A87436535D6401C437311E8 /* [CP] Check Pods Manifest.lock */ = {
@@ -4098,7 +4057,6 @@
 /* Begin XCBuildConfiguration section */
 		3642EB6A23CC1EDD00C7B04A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B53FCCF097BEA491ED046F0A /* Pods-LibraWallet.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -4126,7 +4084,6 @@
 		};
 		3642EB6B23CC1EDD00C7B04A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A0BB048939C1729A911C1FC8 /* Pods-LibraWallet.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -4271,7 +4228,7 @@
 		};
 		9DA8E2C72317ABC600E28D07 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B53FCCF097BEA491ED046F0A /* Pods-LibraWallet.debug.xcconfig */;
+			baseConfigurationReference = 18E6EA31E7B59C79E46BF21C /* Pods-LibraWallet.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -4298,7 +4255,7 @@
 		};
 		9DA8E2C82317ABC600E28D07 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A0BB048939C1729A911C1FC8 /* Pods-LibraWallet.release.xcconfig */;
+			baseConfigurationReference = 2EE93F6204832B9646AE9672 /* Pods-LibraWallet.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;

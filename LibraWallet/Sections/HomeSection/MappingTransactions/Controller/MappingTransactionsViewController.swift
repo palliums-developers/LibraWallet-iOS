@@ -97,7 +97,7 @@ class MappingTransactionsViewController: BaseViewController {
 extension MappingTransactionsViewController {
     @objc func refreshData() {
         dataOffset = 0
-        detailView.tableView.mj_footer.resetNoMoreData()
+        detailView.tableView.mj_footer?.resetNoMoreData()
         transactionRequest(refresh: true)
     }
     @objc func getMoreData() {
@@ -144,7 +144,7 @@ extension MappingTransactionsViewController {
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
                     print(error.localizedDescription)
                     // 数据为空
-                    self?.detailView.tableView.mj_footer.endRefreshingWithNoMoreData()
+                    self?.detailView.tableView.mj_footer?.endRefreshingWithNoMoreData()
                     self?.detailView.makeToast(LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription, position: .center)
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
                     print(error.localizedDescription)
@@ -186,10 +186,10 @@ extension MappingTransactionsViewController {
                     self?.tableViewManager.models = tempData
                     self?.detailView.tableView.reloadData()
                 }
-                self?.detailView.tableView.mj_footer.endRefreshing()
+                self?.detailView.tableView.mj_footer?.endRefreshing()
             }
             self?.detailView.hideToastActivity()
-            self?.detailView.tableView.mj_header.endRefreshing()
+            self?.detailView.tableView.mj_header?.endRefreshing()
             self?.endLoading()
         })
     }

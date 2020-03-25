@@ -91,7 +91,7 @@ class OrderDetailViewController: BaseViewController {
             return
         }
         dataOffset = 1
-        detailView.tableView.mj_footer.resetNoMoreData()
+        detailView.tableView.mj_footer?.resetNoMoreData()
         dataModel.getOrderDetail(address: walletAddress,
                                  version: self.headerData?.version ?? "",
                                  page: dataOffset,
@@ -158,13 +158,13 @@ extension OrderDetailViewController {
             } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
                 print(error.localizedDescription)
                 // 数据为空
-                self.detailView.tableView.mj_footer.endRefreshingWithNoMoreData()
+                self.detailView.tableView.mj_footer?.endRefreshingWithNoMoreData()
             } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
                 print(error.localizedDescription)
                 // 数据返回状态异常
             }
             self.detailView.hideToastActivity()
-            self.detailView.tableView.mj_header.endRefreshing()
+            self.detailView.tableView.mj_header?.endRefreshing()
 //            self.endLoading()
 
             return
@@ -178,7 +178,7 @@ extension OrderDetailViewController {
                            
                 self.detailView.tableView.reloadData()
             }
-            self.detailView.tableView.mj_header.endRefreshing()
+            self.detailView.tableView.mj_header?.endRefreshing()
         } else {
             guard let tempData = jsonData.value(forKey: "data") as? [OrderDetailDataModel] else {
                 return
@@ -199,7 +199,7 @@ extension OrderDetailViewController {
                 self.tableViewManager.dataModel = tempData
                 self.detailView.tableView.reloadData()
             }
-            self.detailView.tableView.mj_footer.endRefreshing()
+            self.detailView.tableView.mj_footer?.endRefreshing()
         }
         self.detailView.hideToastActivity()
 //        self.endLoading()

@@ -27,7 +27,7 @@ struct MappingTransactionsMainModel: Codable {
 }
 class MappingTransactionsModel: NSObject {
     private var requests: [Cancellable] = []
-    @objc var dataDic: NSMutableDictionary = [:]
+    @objc dynamic var dataDic: NSMutableDictionary = [:]
     func getMappingTransactions(walletAddress: String, page: Int, pageSize: Int, requestType: String, requestStatus: Int) {
         let type = requestStatus == 0 ? "MappingTransactionsOrigin":"MappingTransactionsMore"
         let request = mainProvide.request(.GetMappingTransactions(walletAddress, page, pageSize, requestType)) {[weak self](result) in

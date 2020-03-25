@@ -17,7 +17,7 @@ struct SubmitScanLoginMainModel: Codable {
 }
 class ScanLoginModel: NSObject {
     private var requests: [Cancellable] = []
-    @objc var dataDic: NSMutableDictionary = [:]
+    @objc dynamic var dataDic: NSMutableDictionary = [:]
     private var encryptData: String?
     func submitScanLoginData(walletAddress: String, sessionID: String) {
         let semaphore = DispatchSemaphore.init(value: 1)

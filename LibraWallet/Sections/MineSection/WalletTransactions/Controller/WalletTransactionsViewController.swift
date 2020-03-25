@@ -109,7 +109,7 @@ class WalletTransactionsViewController: BaseViewController {
     var dataOffset: Int = 0
     @objc func refreshData() {
         dataOffset = 0
-        detailView.tableView.mj_footer.resetNoMoreData()
+        detailView.tableView.mj_footer?.resetNoMoreData()
         transactionRequest(refresh: true)
     }
     @objc func getMoreData() {
@@ -155,7 +155,7 @@ extension WalletTransactionsViewController {
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
                     print(error.localizedDescription)
                     // 数据为空
-                    self?.detailView.tableView.mj_footer.endRefreshingWithNoMoreData()
+                    self?.detailView.tableView.mj_footer?.endRefreshingWithNoMoreData()
                     self?.detailView.makeToast(LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription, position: .center)
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
                     print(error.localizedDescription)
@@ -197,7 +197,7 @@ extension WalletTransactionsViewController {
                     self?.tableViewManager.btcTransactions = tempData
                     self?.detailView.tableView.reloadData()
                 }
-                self?.detailView.tableView.mj_footer.endRefreshing()
+                self?.detailView.tableView.mj_footer?.endRefreshing()
             } else if type == "ViolasTransactionHistoryOrigin" {
                 guard let tempData = dataDic.value(forKey: "data") as? [ViolasDataModel] else {
                     return
@@ -230,7 +230,7 @@ extension WalletTransactionsViewController {
                     self?.tableViewManager.violasTransactions = tempData
                     self?.detailView.tableView.reloadData()
                 }
-                self?.detailView.tableView.mj_footer.endRefreshing()
+                self?.detailView.tableView.mj_footer?.endRefreshing()
             } else if type == "LibraTransactionHistoryOrigin" {
                 guard let tempData = dataDic.value(forKey: "data") as? [LibraDataModel] else {
                    return
@@ -264,7 +264,7 @@ extension WalletTransactionsViewController {
     //            self.detailView.tableView.mj_footer.endRefreshing()
             }
             self?.detailView.hideToastActivity()
-            self?.detailView.tableView.mj_header.endRefreshing()
+            self?.detailView.tableView.mj_header?.endRefreshing()
             self?.endLoading()
         })
     }

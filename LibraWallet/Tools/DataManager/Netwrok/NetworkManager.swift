@@ -59,8 +59,6 @@ enum mainRequest {
     
     /// 查询映射信息
     case GetMappingInfo(String)
-    /// 获取当前映射笔数
-    case GetMappingTransactionsCount(String, String)
     /// 获取当前已开启映射币（钱包地址）
     case GetMappingTokenList(String)
     /// 获取映射交易记录（地址、偏移量、数量、类型（0：violas，1：Libra，2：BTC）
@@ -81,7 +79,7 @@ extension mainRequest:TargetType {
             return URL(string:"https://tchain.api.btc.com/v3")!
         case .GetLibraAccountBalance(_),
              .GetLibraAccountSequenceNumber(_),
-             .GetLibraAccountTransactionList(_),
+             .GetLibraAccountTransactionList(_, _, _),
              .SendLibraTransaction(_):
             #if PUBLISH_VERSION
                 return URL(string:"https://api.violas.io/1.0")!
@@ -96,7 +94,6 @@ extension mainRequest:TargetType {
              .GetViolasTokenList,
              .GetViolasAccountEnableToken(_),
              .GetMappingInfo(_),
-             .GetMappingTransactionsCount(_, _),
              .GetMappingTokenList(_),
              .GetMappingTransactions(_, _, _, _),
              .SubmitScanLoginData(_, _):
@@ -140,7 +137,7 @@ extension mainRequest:TargetType {
             return "/libra/balance"
         case .GetLibraAccountSequenceNumber(_):
             return "/libra/seqnum"
-        case .GetLibraAccountTransactionList(_):
+        case .GetLibraAccountTransactionList(_, _, _):
             return "/libra/transaction"
         case .SendLibraTransaction(_):
             return "/libra/transaction"
@@ -168,9 +165,6 @@ extension mainRequest:TargetType {
             return "/orders"
         case .GetMappingInfo(_):
             return "/crosschain/info"
-        case .GetMappingTransactionsCount(_, _):
-            return "/crosschain/transactions/count"
-            #warning("测试待修改")
         case .GetMappingTokenList(_):
             return "/crosschain/modules"
         case .GetMappingTransactions(_, _, _, _):
@@ -189,11 +183,11 @@ extension mainRequest:TargetType {
              .SubmitScanLoginData(_, _):
             return .post
         case .GetBTCBalance(_),
-             .GetBTCTransactionHistory(_),
+             .GetBTCTransactionHistory(_, _, _),
              .GetBTCUnspentUTXO(_),
              .GetLibraAccountBalance(_),
              .GetLibraAccountSequenceNumber(_),
-             .GetLibraAccountTransactionList(_),
+             .GetLibraAccountTransactionList(_, _, _),
              .GetViolasAccountBalance(_, _),
              .GetViolasAccountSequenceNumber(_),
              .GetViolasAccountTransactionList(_, _, _, _),
@@ -205,7 +199,6 @@ extension mainRequest:TargetType {
              .GetOrderDetail(_, _),
              .GetAllDoneOrder(_, _),
              .GetMappingInfo(_),
-             .GetMappingTransactionsCount(_, _),
              .GetMappingTokenList(_),
              .GetMappingTransactions(_, _, _, _):
             return .get
@@ -216,7 +209,7 @@ extension mainRequest:TargetType {
     }
     var sampleData: Data {
         switch self {
-        case .GetLibraAccountTransactionList(_):
+        case .GetLibraAccountTransactionList(_, _, _):
             return "{\"code\":2000,\"message\":\"ok\",\"data\":[{\"version\":1,\"address\":\"f053480d94d09a00f77fec9975463bfd109ebeb0915d62822702f453cc87c809\",\"value\":100,\"sequence_number\":1,\"expiration_time\":1572771944},{\"version\":2,\"address\":\"address\",\"value\":100,\"sequence_number\":2,\"expiration_time\":1572771224}]}".data(using: String.Encoding.utf8)!
         default:
             return "{}".data(using: String.Encoding.utf8)!
@@ -324,10 +317,6 @@ extension mainRequest:TargetType {
             }
         case .GetMappingInfo(let type):
             return .requestParameters(parameters: ["type":type.lowercased()],
-                                      encoding: URLEncoding.queryString)
-        case .GetMappingTransactionsCount(let address, let type):
-            return .requestParameters(parameters: ["address": address,
-                                                   "type": type.lowercased()],
                                       encoding: URLEncoding.queryString)
         case .GetMappingTokenList(let walletAddress):
             return .requestParameters(parameters: ["address": walletAddress],

@@ -37,7 +37,7 @@ class OrderDoneViewController: UIViewController {
         guard let walletAddress = self.wallet?.walletAddress else {
             return
         }
-        detailView.tableView.mj_footer.resetNoMoreData()
+        detailView.tableView.mj_footer?.resetNoMoreData()
         dataModel.getAllDoneOrder(address: walletAddress, version: "")
     }
     @objc func getMoreReceive() {
@@ -47,7 +47,7 @@ class OrderDoneViewController: UIViewController {
         if let version = self.tableViewManager.dataModel?.last?.version {
             dataModel.getAllDoneOrder(address: walletAddress, version: version)
         } else {
-            detailView.tableView.mj_footer.endRefreshing()
+            detailView.tableView.mj_footer?.endRefreshing()
         }
     }
     var myContext = 0
@@ -97,13 +97,13 @@ extension OrderDoneViewController {
             } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
                 print(error.localizedDescription)
                 // 数据为空
-                self.detailView.tableView.mj_footer.endRefreshingWithNoMoreData()
+                self.detailView.tableView.mj_footer?.endRefreshingWithNoMoreData()
             } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
                 print(error.localizedDescription)
                 // 数据返回状态异常
             }
             self.detailView.hideToastActivity()
-            self.detailView.tableView.mj_header.endRefreshing()
+            self.detailView.tableView.mj_header?.endRefreshing()
             return
         }
         let type = jsonData.value(forKey: "type") as! String
@@ -114,7 +114,7 @@ extension OrderDoneViewController {
                 self.tableViewManager.dataModel = tempData
                            
                 self.detailView.tableView.reloadData()
-                self.detailView.tableView.mj_header.endRefreshing()
+                self.detailView.tableView.mj_header?.endRefreshing()
             }
         } else {
             guard let tempData = jsonData.value(forKey: "data") as? [MarketOrderDataModel] else {
@@ -136,7 +136,7 @@ extension OrderDoneViewController {
                 self.tableViewManager.dataModel = tempData
                 self.detailView.tableView.reloadData()
             }
-            self.detailView.tableView.mj_footer.endRefreshing()
+            self.detailView.tableView.mj_footer?.endRefreshing()
         }
         self.detailView.hideToastActivity()
     }

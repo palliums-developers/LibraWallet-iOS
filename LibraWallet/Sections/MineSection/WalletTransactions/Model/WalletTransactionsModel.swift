@@ -114,7 +114,7 @@ struct ViolasResponseModel: Codable {
 
 class WalletTransactionsModel: NSObject {
     private var requests: [Cancellable] = []
-    @objc var dataDic: NSMutableDictionary = [:]
+    @objc dynamic var dataDic: NSMutableDictionary = [:]
     private var transactionList: [ViolasDataModel]?
     private var supportTokens: [ViolasTokenModel]?
     /// 获取BTC交易记录
