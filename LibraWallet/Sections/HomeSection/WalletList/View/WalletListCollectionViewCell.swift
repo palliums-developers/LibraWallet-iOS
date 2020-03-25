@@ -30,8 +30,8 @@ class WalletListCollectionViewCell: UICollectionViewCell {
     //MARK: - 懒加载对象
     private lazy var coinImageView : UIImageView = {
         let imageView = UIImageView.init()
-        imageView.layer.cornerRadius = 19
-        imageView.layer.masksToBounds = true
+//        imageView.layer.cornerRadius = 19
+//        imageView.layer.masksToBounds = true
         return imageView
     }()
     var model: String? {
