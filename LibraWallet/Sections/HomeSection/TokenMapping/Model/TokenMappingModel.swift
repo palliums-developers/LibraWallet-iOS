@@ -51,8 +51,13 @@ class TokenMappingModel: NSObject {
 //        let model = getLocalModel(walletType: walletType)
 //        let data = setKVOData(type: "MappingInfo", data: model)
 //        self.setValue(data, forKey: "dataDic")
-        
-        let request = mainProvide.request(.GetMappingInfo(walletType.description)) {[weak self](result) in
+        var requestType = "violas"
+        if walletType == .BTC {
+            requestType = "btc"
+        } else if walletType == .Libra {
+            requestType = "libra"
+        }
+        let request = mainProvide.request(.GetMappingInfo(requestType)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -62,7 +67,7 @@ class TokenMappingModel: NSObject {
                         let data = setKVOData(error: LibraWalletError.error(json.message ?? ""), type: "MappingInfo")
                         self?.setValue(data, forKey: "dataDic")
                     } else {
-                        json.data?.pay_name = walletType.description
+                        json.data?.pay_name = requestType
                         let data = setKVOData(type: "MappingInfo", data: json.data)
                         self?.setValue(data, forKey: "dataDic")
                     }

@@ -335,6 +335,13 @@ class HomeModel: NSObject {
         } else {
             do {
                 let model = try JSONDecoder().decode(ScanLoginDataModel.self, from: content.data(using: .utf8)!)
+                guard model.type == 2 else {
+                    return QRCodeHandleResult.init(addressType: nil,
+                                                   originContent: content,
+                                                   address: nil,
+                                                   contract: nil,
+                                                   type: .others)
+                }
                 return QRCodeHandleResult.init(addressType: nil,
                                                originContent: content,
                                                address: model.session_id,

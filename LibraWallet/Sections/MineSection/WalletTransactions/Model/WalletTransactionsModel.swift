@@ -214,8 +214,13 @@ class WalletTransactionsModel: NSObject {
                     print(try response.mapString())
                     if json.code == 2000 {
                         guard json.data?.isEmpty == false else {
-                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: type)
-                            self?.setValue(data, forKey: "dataDic")
+                            if requestStatus == 0 {
+                                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .dataEmpty), type: type)
+                                self?.setValue(data, forKey: "dataDic")
+                            } else {
+                                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .noMoreData), type: type)
+                                self?.setValue(data, forKey: "dataDic")
+                            }
                             return
                         }
                         let result = self?.dealViolasTransactions(models: json.data!, walletAddress: address, tokenList: [ViolasTokenModel]())

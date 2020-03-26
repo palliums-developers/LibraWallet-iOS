@@ -295,6 +295,8 @@ wallet_mapping_info_alert_content = "获取映射信息失败，请稍后重试"
 wallet_mapping_info_alert_confirm_button_title = "确定";
 // 获取反向映射信息
 wallet_mapping_info_data_empty_alert_content = "尚未拥有任何映射币，请映射后再重试";
+// 扫码登录
+wallet_scan_login_alert_success_title = "登录成功";
 
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "安全提醒";

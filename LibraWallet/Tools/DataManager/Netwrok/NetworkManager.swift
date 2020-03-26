@@ -328,7 +328,7 @@ extension mainRequest:TargetType {
                                                    "type":type],
                                       encoding: URLEncoding.queryString)
         case .SubmitScanLoginData(let walletAddress, let sessionID):
-            return .requestParameters(parameters: ["address": walletAddress,
+            return .requestParameters(parameters: ["wallets": walletAddress,
                                                    "session_id": sessionID,
                                                    "type":2],
                                       encoding: JSONEncoding.default)

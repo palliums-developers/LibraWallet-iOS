@@ -157,6 +157,29 @@ extension WalletTransactionsViewController {
                     // 数据为空
                     self?.detailView.tableView.mj_footer?.endRefreshingWithNoMoreData()
                     self?.detailView.makeToast(LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription, position: .center)
+                    // 数据为空
+                    if self?.detailView.tableView.mj_header?.isRefreshing == true {
+                        self?.detailView.tableView.mj_header?.endRefreshing()
+                    } else {
+                        self?.detailView.hideToastActivity()
+                    }
+                    switch self?.wallet?.walletType {
+                    case .BTC:
+                        self?.tableViewManager.btcTransactions?.removeAll()
+                    case .Libra:
+                        self?.tableViewManager.libraTransactions?.removeAll()
+                    case .Violas:
+                        self?.tableViewManager.violasTransactions?.removeAll()
+                    case .none:
+                        print("钱包类型异常")
+                    }
+                    self?.detailView.tableView.reloadData()
+                    self?.endLoading()
+                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .noMoreData).localizedDescription {
+                    print(error.localizedDescription)
+                    if self?.detailView.tableView.mj_footer?.isRefreshing == true {
+                        self?.detailView.tableView.mj_footer?.endRefreshingWithNoMoreData()
+                    }
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
                     print(error.localizedDescription)
                     // 数据状态异常

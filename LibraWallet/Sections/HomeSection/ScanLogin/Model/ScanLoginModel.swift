@@ -71,6 +71,7 @@ class ScanLoginModel: NSObject {
         let wallets = DataBaseManager.DBManager.getLocalWallets()
         let identityWallets = wallets.first!
         let othersWallets = wallets.last!
+        
         let tempData = identityWallets.reduce("") {
             $0 + "{\"name\":\"\($1.walletName ?? "")\",\"identity\":\($1.walletIdentity ?? 0),\"type\":\"\($1.walletType!.description.lowercased())\",\"address\":\"\($1.walletAddress ?? "")\"},"
         }
@@ -82,6 +83,22 @@ class ScanLoginModel: NSObject {
         let tempData3 = tempData2.prefix(upTo: range)
         self.encryptData = "[" + tempData + tempData3 + "]"
         semaphore.signal()
+//        let tempData = identityWallets.map {
+//            ["name":"\($0.walletName ?? "")",
+//             "identity":"\($0.walletIdentity ?? 0)",
+//             "type":"\($0.walletType!.description.lowercased())",
+//             "address":"\($0.walletAddress ?? "")"]
+//        }
+//        let tempData2 = othersWallets.map {
+//            ["name":"\($0.walletName ?? "")",
+//            "identity":"\($0.walletIdentity ?? 0)",
+//            "type":"\($0.walletType!.description.lowercased())",
+//            "address":"\($0.walletAddress ?? "")"] as [String : Any]
+//        }
+//        let tempData3 = tempData + tempData2
+//        let json = try? JSONSerialization.data(withJSONObject: tempData3, options: JSONSerialization.WritingOptions.prettyPrinted)
+//        self.encryptData = String.init(data: json!, encoding: String.Encoding.utf8)
+//        semaphore.signal()
     }
     deinit {
         requests.forEach { cancellable in
