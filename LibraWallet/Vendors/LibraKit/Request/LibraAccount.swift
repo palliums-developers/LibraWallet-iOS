@@ -75,17 +75,17 @@ struct LibraAccount {
             let (sentEventsCount, lastData13) = cutData(originData: lastData12, length: 8)
             print("sentEventsCount = \(hw_getInt(sentEventsCount.bytes))")
             
-            let (sentEventsLength, lastData14) = cutData(originData: lastData13, length: 4)
-            print("sentEventsLength = \(hw_getInt(sentEventsLength.bytes))")
-            
-            let (sentEvents, lastData15) = cutData(originData: lastData14, length: hw_getInt(sentEventsLength.bytes))
-            print("sentEvents = \(sentEvents.toHexString())")
-            
-            let (sequenceNumber, _) = cutData(originData: lastData15, length: 8)
-            print("sequenceNumber = \(hw_getInt(sequenceNumber.bytes))")
+//            let (sentEventsLength, lastData14) = cutData(originData: lastData13, length: 4)
+//            print("sentEventsLength = \(hw_getInt(sentEventsLength.bytes))")
+//
+//            let (sentEvents, lastData15) = cutData(originData: lastData14, length: hw_getInt(sentEventsLength.bytes))
+//            print("sentEvents = \(sentEvents.toHexString())")
+//
+//            let (sequenceNumber, _) = cutData(originData: lastData15, length: 8)
+//            print("sequenceNumber = \(hw_getInt(sequenceNumber.bytes))")
             
             self.address = address.toHexString()
-            self.sequenceNumber = Int64(hw_getInt64(sequenceNumber.bytes))
+//            self.sequenceNumber = Int64(hw_getInt64(sequenceNumber.bytes))
             self.balance = Int64(hw_getInt64(balance.bytes) / 1000000)
             self.receiveCount = Int64(hw_getInt(receivedEventsCount.bytes))
             self.transferCount = Int64(hw_getInt(sentEventsCount.bytes))

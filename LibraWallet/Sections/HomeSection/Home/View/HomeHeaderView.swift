@@ -394,7 +394,9 @@ class HomeHeaderView: UIView {
             switch walletModel?.walletType {
             case .Libra:
                 assetUnitLabel.text = "libra"
-                assetLabel.text = "\(walletModel?.walletBalance ?? 0)"
+                assetLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (libraModel?.balance ?? 0)),
+                                                         scale: 4,
+                                                         unit: 1000000)
                 hideAddTokenButtonState = true
                 break
             case .Violas:
@@ -419,14 +421,14 @@ class HomeHeaderView: UIView {
     }
     var libraModel: BalanceLibraModel? {
         didSet {
-            if libraModel?.address == self.walletAddressLabel.text {
-                assetLabel.text = "\(libraModel?.balance ?? 0)"
-                self.walletModel?.changeWalletBalance(banlance: libraModel?.balance ?? 0)
-                assetUnitLabel.text = "libra"
-            }
+            assetLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (libraModel?.balance ?? 0)),
+                                                     scale: 4,
+                                                     unit: 1000000)
+            self.walletModel?.changeWalletBalance(banlance: libraModel?.balance ?? 0)
+            assetUnitLabel.text = "libra"
         }
     }
-    var violasModel: BalanceLibraModel? {
+    var violasModel: BalanceViolasModel? {
         didSet {
             if violasModel?.address == self.walletAddressLabel.text {
                 assetLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (violasModel?.balance ?? 0)),

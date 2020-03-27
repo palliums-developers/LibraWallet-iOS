@@ -273,9 +273,9 @@ struct Storage_StartupInfo {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  /// The latest committed LedgerInfo. Note that at start up storage can have more
-  /// transactions than the latest committed LedgerInfo indicates due to an incomplete
-  /// start up sync.
+  /// The latest committed LedgerInfo. Note that at start up storage can have
+  /// more transactions than the latest committed LedgerInfo indicates due to an
+  /// incomplete start up sync.
   var latestLedgerInfo: Types_LedgerInfoWithSignatures {
     get {return _storage._latestLedgerInfo ?? Types_LedgerInfoWithSignatures()}
     set {_uniqueStorage()._latestLedgerInfo = newValue}
@@ -307,8 +307,8 @@ struct Storage_StartupInfo {
   /// Clears the value of `committedTreeState`. Subsequent reads from it will return its default value.
   mutating func clearCommittedTreeState() {_uniqueStorage()._committedTreeState = nil}
 
-  /// The latest synced tree state when the number of transactions is more than ledger_info
-  /// indicates.
+  /// The latest synced tree state when the number of transactions is more than
+  /// ledger_info indicates.
   var syncedTreeState: Storage_TreeState {
     get {return _storage._syncedTreeState ?? Storage_TreeState()}
     set {_uniqueStorage()._syncedTreeState = newValue}
@@ -411,6 +411,80 @@ struct Storage_GetAccountStateRangeProofResponse {
   var hasProof: Bool {return _storage._proof != nil}
   /// Clears the value of `proof`. Subsequent reads from it will return its default value.
   mutating func clearProof() {_uniqueStorage()._proof = nil}
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+
+  fileprivate var _storage = _StorageClass.defaultInstance
+}
+
+struct Storage_BackupTransactionRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// The version of the first transaction.
+  var startVersion: UInt64 = 0
+
+  /// Number of transactions to request.
+  var numTransactions: UInt64 = 0
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+}
+
+struct Storage_BackupTransactionResponse {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var transaction: Types_Transaction {
+    get {return _storage._transaction ?? Types_Transaction()}
+    set {_uniqueStorage()._transaction = newValue}
+  }
+  /// Returns true if `transaction` has been explicitly set.
+  var hasTransaction: Bool {return _storage._transaction != nil}
+  /// Clears the value of `transaction`. Subsequent reads from it will return its default value.
+  mutating func clearTransaction() {_uniqueStorage()._transaction = nil}
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+
+  fileprivate var _storage = _StorageClass.defaultInstance
+}
+
+struct Storage_BackupTransactionInfoRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// The version of the first transaction info.
+  var startVersion: UInt64 = 0
+
+  /// Number of transaction infos to request.
+  var numTransactions: UInt64 = 0
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+}
+
+struct Storage_BackupTransactionInfoResponse {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var transactionInfo: Types_TransactionInfo {
+    get {return _storage._transactionInfo ?? Types_TransactionInfo()}
+    set {_uniqueStorage()._transactionInfo = newValue}
+  }
+  /// Returns true if `transactionInfo` has been explicitly set.
+  var hasTransactionInfo: Bool {return _storage._transactionInfo != nil}
+  /// Clears the value of `transactionInfo`. Subsequent reads from it will return its default value.
+  mutating func clearTransactionInfo() {_uniqueStorage()._transactionInfo = nil}
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -1301,6 +1375,198 @@ extension Storage_GetAccountStateRangeProofResponse: SwiftProtobuf.Message, Swif
         let _storage = _args.0
         let rhs_storage = _args.1
         if _storage._proof != rhs_storage._proof {return false}
+        return true
+      }
+      if !storagesAreEqual {return false}
+    }
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Storage_BackupTransactionRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".BackupTransactionRequest"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "start_version"),
+    2: .standard(proto: "num_transactions"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      switch fieldNumber {
+      case 1: try decoder.decodeSingularUInt64Field(value: &self.startVersion)
+      case 2: try decoder.decodeSingularUInt64Field(value: &self.numTransactions)
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if self.startVersion != 0 {
+      try visitor.visitSingularUInt64Field(value: self.startVersion, fieldNumber: 1)
+    }
+    if self.numTransactions != 0 {
+      try visitor.visitSingularUInt64Field(value: self.numTransactions, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Storage_BackupTransactionRequest, rhs: Storage_BackupTransactionRequest) -> Bool {
+    if lhs.startVersion != rhs.startVersion {return false}
+    if lhs.numTransactions != rhs.numTransactions {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Storage_BackupTransactionResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".BackupTransactionResponse"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "transaction"),
+  ]
+
+  fileprivate class _StorageClass {
+    var _transaction: Types_Transaction? = nil
+
+    static let defaultInstance = _StorageClass()
+
+    private init() {}
+
+    init(copying source: _StorageClass) {
+      _transaction = source._transaction
+    }
+  }
+
+  fileprivate mutating func _uniqueStorage() -> _StorageClass {
+    if !isKnownUniquelyReferenced(&_storage) {
+      _storage = _StorageClass(copying: _storage)
+    }
+    return _storage
+  }
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    _ = _uniqueStorage()
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      while let fieldNumber = try decoder.nextFieldNumber() {
+        switch fieldNumber {
+        case 1: try decoder.decodeSingularMessageField(value: &_storage._transaction)
+        default: break
+        }
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      if let v = _storage._transaction {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+      }
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Storage_BackupTransactionResponse, rhs: Storage_BackupTransactionResponse) -> Bool {
+    if lhs._storage !== rhs._storage {
+      let storagesAreEqual: Bool = withExtendedLifetime((lhs._storage, rhs._storage)) { (_args: (_StorageClass, _StorageClass)) in
+        let _storage = _args.0
+        let rhs_storage = _args.1
+        if _storage._transaction != rhs_storage._transaction {return false}
+        return true
+      }
+      if !storagesAreEqual {return false}
+    }
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Storage_BackupTransactionInfoRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".BackupTransactionInfoRequest"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "start_version"),
+    2: .standard(proto: "num_transactions"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      switch fieldNumber {
+      case 1: try decoder.decodeSingularUInt64Field(value: &self.startVersion)
+      case 2: try decoder.decodeSingularUInt64Field(value: &self.numTransactions)
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if self.startVersion != 0 {
+      try visitor.visitSingularUInt64Field(value: self.startVersion, fieldNumber: 1)
+    }
+    if self.numTransactions != 0 {
+      try visitor.visitSingularUInt64Field(value: self.numTransactions, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Storage_BackupTransactionInfoRequest, rhs: Storage_BackupTransactionInfoRequest) -> Bool {
+    if lhs.startVersion != rhs.startVersion {return false}
+    if lhs.numTransactions != rhs.numTransactions {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Storage_BackupTransactionInfoResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".BackupTransactionInfoResponse"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "transaction_info"),
+  ]
+
+  fileprivate class _StorageClass {
+    var _transactionInfo: Types_TransactionInfo? = nil
+
+    static let defaultInstance = _StorageClass()
+
+    private init() {}
+
+    init(copying source: _StorageClass) {
+      _transactionInfo = source._transactionInfo
+    }
+  }
+
+  fileprivate mutating func _uniqueStorage() -> _StorageClass {
+    if !isKnownUniquelyReferenced(&_storage) {
+      _storage = _StorageClass(copying: _storage)
+    }
+    return _storage
+  }
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    _ = _uniqueStorage()
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      while let fieldNumber = try decoder.nextFieldNumber() {
+        switch fieldNumber {
+        case 1: try decoder.decodeSingularMessageField(value: &_storage._transactionInfo)
+        default: break
+        }
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      if let v = _storage._transactionInfo {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+      }
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Storage_BackupTransactionInfoResponse, rhs: Storage_BackupTransactionInfoResponse) -> Bool {
+    if lhs._storage !== rhs._storage {
+      let storagesAreEqual: Bool = withExtendedLifetime((lhs._storage, rhs._storage)) { (_args: (_StorageClass, _StorageClass)) in
+        let _storage = _args.0
+        let rhs_storage = _args.1
+        if _storage._transactionInfo != rhs_storage._transactionInfo {return false}
         return true
       }
       if !storagesAreEqual {return false}

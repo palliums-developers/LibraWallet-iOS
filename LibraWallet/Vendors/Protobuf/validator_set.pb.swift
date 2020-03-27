@@ -28,7 +28,7 @@ struct Types_ValidatorSet {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  var validatorPublicKeys: [Types_ValidatorPublicKeys] = []
+  var validatorInfo: [Types_ValidatorInfo] = []
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -42,27 +42,27 @@ fileprivate let _protobuf_package = "types"
 extension Types_ValidatorSet: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".ValidatorSet"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .standard(proto: "validator_public_keys"),
+    1: .standard(proto: "validator_info"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
-      case 1: try decoder.decodeRepeatedMessageField(value: &self.validatorPublicKeys)
+      case 1: try decoder.decodeRepeatedMessageField(value: &self.validatorInfo)
       default: break
       }
     }
   }
 
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if !self.validatorPublicKeys.isEmpty {
-      try visitor.visitRepeatedMessageField(value: self.validatorPublicKeys, fieldNumber: 1)
+    if !self.validatorInfo.isEmpty {
+      try visitor.visitRepeatedMessageField(value: self.validatorInfo, fieldNumber: 1)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   static func ==(lhs: Types_ValidatorSet, rhs: Types_ValidatorSet) -> Bool {
-    if lhs.validatorPublicKeys != rhs.validatorPublicKeys {return false}
+    if lhs.validatorInfo != rhs.validatorInfo {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

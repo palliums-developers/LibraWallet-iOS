@@ -342,7 +342,7 @@ class MarketModel: NSObject {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BalanceLibraMainModel.self)
+                    let json = try response.map(BalanceViolasMainModel.self)
                     if json.code == 2000 {
                         let data = setKVOData(type: "UpdateViolasBalance", data: json.data)
                         self?.setValue(data, forKey: "dataDic")

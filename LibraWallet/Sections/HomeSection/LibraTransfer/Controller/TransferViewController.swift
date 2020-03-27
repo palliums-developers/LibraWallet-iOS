@@ -150,9 +150,10 @@ extension TransferViewController: TransferViewDelegate {
     func confirmTransfer(amount: Double, address: String, fee: Double) {
         let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
             self?.detailView.toastView?.show()
-            self?.dataModel.transfer(address: address,
-                                    amount: amount,
-                                    mnemonic: mnemonic)
+//            self?.dataModel.transfer(address: address,
+//                                    amount: amount,
+//                                    mnemonic: mnemonic)
+            self?.dataModel.sendLibraTransaction(sendAddress: (self?.wallet?.walletAddress)!, receiveAddress: address, amount: amount, fee: 0.1, mnemonic: mnemonic)
         }) { [weak self] (errorContent) in
             self?.view.makeToast(errorContent, position: .center)
         }

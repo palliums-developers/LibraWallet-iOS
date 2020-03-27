@@ -77,10 +77,8 @@ extension mainRequest:TargetType {
              .GetBTCUnspentUTXO(_),
              .SendBTCTransaction(_):
             return URL(string:"https://tchain.api.btc.com/v3")!
-        case .GetLibraAccountBalance(_),
-             .GetLibraAccountSequenceNumber(_),
-             .GetLibraAccountTransactionList(_, _, _),
-             .SendLibraTransaction(_):
+        case .GetLibraAccountSequenceNumber(_),
+             .GetLibraAccountTransactionList(_, _, _):
             #if PUBLISH_VERSION
                 return URL(string:"https://api.violas.io/1.0")!
             #else
@@ -116,6 +114,9 @@ extension mainRequest:TargetType {
 //                return URL(string:"http://18.220.66.235:38181/v1")!
                 return URL(string:"https://dex.violas.io/v1")!
             #endif
+        case .GetLibraAccountBalance(_),
+             .SendLibraTransaction(_):
+            return URL(string:"https://client.testnet.libra.org")!
         }
     }
     var path: String {
@@ -134,13 +135,13 @@ extension mainRequest:TargetType {
         case .SendBTCTransaction(_):
             return "/tools/tx-publish"
         case .GetLibraAccountBalance(_):
-            return "/libra/balance"
+            return ""
         case .GetLibraAccountSequenceNumber(_):
             return "/libra/seqnum"
         case .GetLibraAccountTransactionList(_, _, _):
             return "/libra/transaction"
         case .SendLibraTransaction(_):
-            return "/libra/transaction"
+            return ""
         case .GetViolasAccountBalance(_, _):
             return "/violas/balance"
         case .GetViolasAccountSequenceNumber(_):
@@ -180,12 +181,13 @@ extension mainRequest:TargetType {
              .SendLibraTransaction(_),
              .SendViolasTransaction(_),
              .SendBTCTransaction(_),
-             .SubmitScanLoginData(_, _):
+             .SubmitScanLoginData(_, _),
+             .GetLibraAccountBalance(_):
             return .post
         case .GetBTCBalance(_),
              .GetBTCTransactionHistory(_, _, _),
              .GetBTCUnspentUTXO(_),
-             .GetLibraAccountBalance(_),
+             
              .GetLibraAccountSequenceNumber(_),
              .GetLibraAccountTransactionList(_, _, _),
              .GetViolasAccountBalance(_, _),
@@ -237,8 +239,11 @@ extension mainRequest:TargetType {
             return .requestParameters(parameters: ["rawhex": signature],
                                       encoding: JSONEncoding.default)
         case .GetLibraAccountBalance(let address):
-            return .requestParameters(parameters: ["addr": address],
-                                      encoding: URLEncoding.queryString)
+            return .requestParameters(parameters: ["jsonrpc":"2.0",
+                                                   "method":"get_account_state",
+                                                   "id":"123",
+                                                   "params":["\(address)"]],
+                                      encoding: JSONEncoding.default)
         case .GetLibraAccountSequenceNumber(let address):
             return .requestParameters(parameters: ["addr": address],
                                       encoding: URLEncoding.queryString)
@@ -248,7 +253,10 @@ extension mainRequest:TargetType {
                                                    "offset":limit],
                                       encoding: URLEncoding.queryString)
         case .SendLibraTransaction(let signature):
-            return .requestParameters(parameters: ["signedtxn": signature],
+            return .requestParameters(parameters: ["jsonrpc":"2.0",
+                                                   "method":"submit",
+                                                   "id":"123",
+                                                   "params":["\(signature)"]],
                                       encoding: JSONEncoding.default)
         case .GetViolasAccountBalance(let address, let modules):
             return .requestParameters(parameters: ["addr": address,

@@ -351,11 +351,11 @@ class TransferView: UIView {
             let fee = Double(feeString!.replacingOccurrences(of: " Libra", with: ""))!
             #warning("暂时不用手续费")
             // 金额大于我的金额
-            guard (amount) <= Double(wallet?.walletBalance ?? 0) else {
-               self.makeToast(LibraWalletError.WalletTransfer(reason: .amountOverload).localizedDescription,
-                              position: .center)
-               return
-            }
+//            guard (amount) <= Double(wallet?.walletBalance ?? 0) else {
+//               self.makeToast(LibraWalletError.WalletTransfer(reason: .amountOverload).localizedDescription,
+//                              position: .center)
+//               return
+//            }
             // 地址是否为空
             guard let address = self.addressTextField.text, address.isEmpty == false else {
                self.makeToast(LibraWalletError.WalletTransfer(reason: .addressEmpty).localizedDescription,

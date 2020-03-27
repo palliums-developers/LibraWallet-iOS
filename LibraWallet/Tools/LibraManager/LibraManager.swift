@@ -37,7 +37,7 @@ struct LibraManager {
     /// 校验地址是否有效
     /// - Parameter address: 地址
     public static func isValidLibraAddress(address: String) -> Bool {
-        guard address.count == 64 else {
+        guard address.count == 32 else {
             // 位数异常
             return false
         }

@@ -12,7 +12,7 @@ import SnapKit
 import Toast_Swift
 import Localize_Swift
 /************* Libra节点 *******************/
-let libraMainURL = "ac.testnet.libra.org:8000"
+let libraMainURL = "ac.testnet.libra.org:8000"//"https://client.testnet.libra.org"
 
 let MarketAddress = "07e92f79c67fdd6b80ed9103636a49511363de8c873bc709966fffb2e3fcd095"
 func getProgramCode(content: String) -> Data {

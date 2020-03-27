@@ -260,7 +260,8 @@ struct Types_TransactionListWithProof {
     set {_uniqueStorage()._transactions = newValue}
   }
 
-  /// The list of corresponding Event objects (only present if fetch_events was set to true in req)
+  /// The list of corresponding Event objects (only present if fetch_events was
+  /// set to true in req)
   var eventsForVersions: Types_EventsForVersions {
     get {return _storage._eventsForVersions ?? Types_EventsForVersions()}
     set {_uniqueStorage()._eventsForVersions = newValue}

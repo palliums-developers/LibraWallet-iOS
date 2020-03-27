@@ -12,20 +12,21 @@ struct LibraTransaction {
 
     let request: RawTransaction
     
-    public init(receiveAddress: String, amount: Double, sendAddress: String, sequenceNumber: UInt64) {
+    public init(receiveAddress: String, amount: Double, sendAddress: String, sequenceNumber: UInt64, authenticatorKey: String) {
 
         let argument1 = TransactionArgument.init(code: .Address, value: receiveAddress)
         let argument2 = TransactionArgument.init(code: .U64, value: "\(Int(amount * 1000000))")
+        let argument3 = TransactionArgument.init(code: .U8Vector, value: authenticatorKey)
         
-//        let script = TransactionScript.init(code: getProgramCode(content: libraProgramCode), argruments: [argument1, argument2])
-        let script = TransactionScript.init(code: Data.init(hex: libraProgramCode), argruments: [argument1, argument2])
+        let script = TransactionScript.init(code: Data.init(hex: libraProgramCode), argruments: [argument1, argument2, argument3])
 
-        
+        let date = Int(UInt64(Date().timeIntervalSince1970) + 1000)
+        print(date)
         let raw = RawTransaction.init(senderAddres: sendAddress,
                                        sequenceNumber: sequenceNumber,
-                                       maxGasAmount: 280000,
+                                       maxGasAmount: 400000,
                                        gasUnitPrice: 0,
-                                       expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 1000),
+                                       expirationTime: date,
                                        programOrWrite: script.serialize())
         self.request = raw
     }
@@ -48,7 +49,7 @@ extension LibraTransaction {
 
         let data = "{\"flag\":\"libra\",\"type\":\"l2v\",\"to_address\":\"\(libraReceiveAddress)\",\"state\":\"start\"}".data(using: .utf8)!
 
-        let argument3 = TransactionArgument.init(code: .Bytes, value: data.toHexString())
+        let argument3 = TransactionArgument.init(code: .U8Vector, value: data.toHexString())
 
 //        let program = TransactionScript.init(code: getProgramCode(content: LibraTransferWithData), argruments: [argument1, argument2, argument3])
         let program = TransactionScript.init(code: Data.init(hex: LibraTransferWithData), argruments: [argument1, argument2, argument3])

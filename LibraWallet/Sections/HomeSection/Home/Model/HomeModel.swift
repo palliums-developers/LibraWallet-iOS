@@ -22,18 +22,42 @@ struct BalanceViolasModulesModel: Codable {
 struct BalanceLibraModel: Codable {
     /// 余额
     var balance: Int64?
+    /// 验证密钥
+    var authentication_key: String?
+    ///
+    var delegated_key_rotation_capability: Bool?
+    ///
+    var delegated_withdrawal_capability: Bool?
+    ///
+    var received_events_key: String?
+    ///
+    var sent_events_key: String?
+    ///
+    var sequence_number: Int64?
+}
+struct BalanceLibraMainModel: Codable {
+    /// 请求ID
+    var id: String?
+    /// JSON RPC版本
+    var jsonrpc: String?
+    /// 数据体
+    var result: BalanceLibraModel?
+}
+struct BalanceViolasModel: Codable {
+    /// 余额
+    var balance: Int64?
     /// 地址
     var address: String?
     /// 代币
     var modules: [BalanceViolasModulesModel]?
 }
-struct BalanceLibraMainModel: Codable {
+struct BalanceViolasMainModel: Codable {
     /// 错误代码
     var code: Int?
     /// 错误信息
     var message: String?
     /// 数据体
-    var data: BalanceLibraModel?
+    var data: BalanceViolasModel?
 }
 struct BalanceBTCModel: Codable {
     /// 地址
@@ -97,44 +121,46 @@ class HomeModel: NSObject {
     }
 
     func tempGetLibraBalance(walletID: Int64, address: String) {
-        let quene = DispatchQueue.init(label: "createWalletQuene")
-        quene.async {
-            let channel = Channel.init(address: libraMainURL, secure:  false)
-            
-            let client = AdmissionControl_AdmissionControlServiceClient.init(channel: channel)
-            do {
-                var request = Types_GetAccountStateRequest()
-                request.address = Data.init(hex: address)
-                
-                var requestItem = Types_RequestItem()
-                requestItem.getAccountStateRequest = request
-                
-                var Ledger = Types_UpdateToLatestLedgerRequest()
-                Ledger.requestedItems = [requestItem]
-                
-                let gaaa = try client.updateToLatestLedger(Ledger)
-                
-                guard let response = gaaa.responseItems.first else {
-                    return
-                }
-                let streamData = response.getAccountStateResponse.accountStateWithProof.blob.blob
-                
-                let balance = LibraAccount.init(accountData: streamData).balance
-                DispatchQueue.main.async(execute: {
-                    
-                    let model = BalanceLibraModel.init(balance: balance, address: address)
-                    let data = setKVOData(type: "UpdateLibraBalance", data: model)
-                    self.setValue(data, forKey: "dataDic")
-                })
-                self.updateLocalWalletData(walletID: walletID, balance: LibraAccount.init(accountData: streamData).balance ?? 0)
-            } catch {
-                print(error.localizedDescription)
-                DispatchQueue.main.async(execute: {
-                    let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "UpdateLibraBalance")
-                    self.setValue(data, forKey: "dataDic")
-                })
-            }
-        }
+//        let quene = DispatchQueue.init(label: "createWalletQuene")
+//        quene.async {
+//            let channel = Channel.init(address: libraMainURL, secure:  false)
+//
+//            let client = AdmissionControl_AdmissionControlServiceClient.init(channel: channel)
+//            do {
+//                var request = Types_GetAccountStateRequest()
+//                request.address = Data.init(hex: "1409fc67d04cddf259240703809b6d12")
+//                //21b2c824302901d6c1058dbeee4cf5b1e2c2883fae29512095d6396434a8c0d1
+////                1409fc67d04cddf259240703809b6d12
+//                var requestItem = Types_RequestItem()
+//                requestItem.getAccountStateRequest = request
+//
+//                var Ledger = Types_UpdateToLatestLedgerRequest()
+//                Ledger.requestedItems = [requestItem]
+//
+//                let gaaa = try client.updateToLatestLedger(Ledger)
+//
+//                guard let response = gaaa.responseItems.first else {
+//                    return
+//                }
+//                let streamData = response.getAccountStateResponse.accountStateWithProof.blob.blob
+//
+//                let balance = LibraAccount.init(accountData: streamData).balance
+//                DispatchQueue.main.async(execute: {
+//
+//                    let model = BalanceLibraModel.init(balance: balance, address: address)
+//                    let data = setKVOData(type: "UpdateLibraBalance", data: model)
+//                    self.setValue(data, forKey: "dataDic")
+//                })
+//                self.updateLocalWalletData(walletID: walletID, balance: LibraAccount.init(accountData: streamData).balance ?? 0)
+//            } catch {
+//                print(error.localizedDescription)
+//                DispatchQueue.main.async(execute: {
+//                    let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "UpdateLibraBalance")
+//                    self.setValue(data, forKey: "dataDic")
+//                })
+//            }
+//        }
+        self.getLibraBalance(walletID: 123, address: "")
     }
     
     func getBTCBalance(walletID: Int64, address: String) {
@@ -168,32 +194,32 @@ class HomeModel: NSObject {
         }
         self.requests.append(request)
     }
-//    func getLibraBalance(walletID: Int64, address: String) {
-//        let request = mainProvide.request(.GetLibraAccountBalance(address)) {[weak self](result) in
-//            switch  result {
-//            case let .success(response):
-//                do {
-//                    let json = try response.map(BalanceLibraMainModel.self)
-//                    let data = setKVOData(type: "GetLibraBalance", data: json.data)
-//                    self?.setValue(data, forKey: "dataDic")
-//                    // 刷新本地数据
-//                    self?.updateLocalWalletData(walletID: walletID, balance: json.data?.balance ?? 0)
-//                } catch {
-//                    print("解析异常\(error.localizedDescription)")
-//                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetLibraBalance")
-//                    self?.setValue(data, forKey: "dataDic")
-//                }
-//            case let .failure(error):
-//                guard error.errorCode != -999 else {
-//                    print("网络请求已取消")
-//                    return
-//                }
-//                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "GetLibraBalance")
-//                self?.setValue(data, forKey: "dataDic")
-//            }
-//        }
-//        self.requests.append(request)
-//    }
+    func getLibraBalance(walletID: Int64, address: String) {
+        let request = mainProvide.request(.GetLibraAccountBalance("1409fc67d04cddf259240703809b6d12")) {[weak self](result) in
+            switch  result {
+            case let .success(response):
+                do {
+                    let json = try response.map(BalanceLibraMainModel.self)
+                    let data = setKVOData(type: "UpdateLibraBalance", data: json.result)
+                    self?.setValue(data, forKey: "dataDic")
+                    // 刷新本地数据
+                    self?.updateLocalWalletData(walletID: walletID, balance: json.result?.balance ?? 0)
+                } catch {
+                    print("解析异常\(error.localizedDescription)")
+                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "UpdateLibraBalance")
+                    self?.setValue(data, forKey: "dataDic")
+                }
+            case let .failure(error):
+                guard error.errorCode != -999 else {
+                    print("网络请求已取消")
+                    return
+                }
+                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "UpdateLibraBalance")
+                self?.setValue(data, forKey: "dataDic")
+            }
+        }
+        self.requests.append(request)
+    }
     func getEnableViolasToken(walletID: Int64,  address: String) {
         do {
             let vtokens = try DataBaseManager.DBManager.getViolasTokens(walletID: walletID).filter({ item in
@@ -215,7 +241,7 @@ class HomeModel: NSObject {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BalanceLibraMainModel.self)
+                    let json = try response.map(BalanceViolasMainModel.self)
                     if json.code == 2000 {
                         let data = setKVOData(type: "UpdateViolasBalance", data: json.data)
                         self?.setValue(data, forKey: "dataDic")

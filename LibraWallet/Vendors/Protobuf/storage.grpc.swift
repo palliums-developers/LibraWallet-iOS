@@ -95,6 +95,38 @@ fileprivate final class Storage_StorageGetAccountStateRangeProofCallBase: Client
   override class var method: String { return "/storage.Storage/GetAccountStateRangeProof" }
 }
 
+internal protocol Storage_StorageBackupTransactionCall: ClientCallServerStreaming {
+  /// Do not call this directly, call `receive()` in the protocol extension below instead.
+  func _receive(timeout: DispatchTime) throws -> Storage_BackupTransactionResponse?
+  /// Call this to wait for a result. Nonblocking.
+  func receive(completion: @escaping (ResultOrRPCError<Storage_BackupTransactionResponse?>) -> Void) throws
+}
+
+internal extension Storage_StorageBackupTransactionCall {
+  /// Call this to wait for a result. Blocking.
+  func receive(timeout: DispatchTime = .distantFuture) throws -> Storage_BackupTransactionResponse? { return try self._receive(timeout: timeout) }
+}
+
+fileprivate final class Storage_StorageBackupTransactionCallBase: ClientCallServerStreamingBase<Storage_BackupTransactionRequest, Storage_BackupTransactionResponse>, Storage_StorageBackupTransactionCall {
+  override class var method: String { return "/storage.Storage/BackupTransaction" }
+}
+
+internal protocol Storage_StorageBackupTransactionInfoCall: ClientCallServerStreaming {
+  /// Do not call this directly, call `receive()` in the protocol extension below instead.
+  func _receive(timeout: DispatchTime) throws -> Storage_BackupTransactionInfoResponse?
+  /// Call this to wait for a result. Nonblocking.
+  func receive(completion: @escaping (ResultOrRPCError<Storage_BackupTransactionInfoResponse?>) -> Void) throws
+}
+
+internal extension Storage_StorageBackupTransactionInfoCall {
+  /// Call this to wait for a result. Blocking.
+  func receive(timeout: DispatchTime = .distantFuture) throws -> Storage_BackupTransactionInfoResponse? { return try self._receive(timeout: timeout) }
+}
+
+fileprivate final class Storage_StorageBackupTransactionInfoCallBase: ClientCallServerStreamingBase<Storage_BackupTransactionInfoRequest, Storage_BackupTransactionInfoResponse>, Storage_StorageBackupTransactionInfoCall {
+  override class var method: String { return "/storage.Storage/BackupTransactionInfo" }
+}
+
 
 /// Instantiate Storage_StorageServiceClient, then call methods of this protocol to make API calls.
 internal protocol Storage_StorageService: ServiceClient {
@@ -147,6 +179,16 @@ internal protocol Storage_StorageService: ServiceClient {
   func getAccountStateRangeProof(_ request: Storage_GetAccountStateRangeProofRequest) throws -> Storage_GetAccountStateRangeProofResponse
   /// Asynchronous. Unary.
   func getAccountStateRangeProof(_ request: Storage_GetAccountStateRangeProofRequest, completion: @escaping (Storage_GetAccountStateRangeProofResponse?, CallResult) -> Void) throws -> Storage_StorageGetAccountStateRangeProofCall
+
+  /// Asynchronous. Server-streaming.
+  /// Send the initial message.
+  /// Use methods on the returned object to get streamed responses.
+  func backupTransaction(_ request: Storage_BackupTransactionRequest, completion: ((CallResult) -> Void)?) throws -> Storage_StorageBackupTransactionCall
+
+  /// Asynchronous. Server-streaming.
+  /// Send the initial message.
+  /// Use methods on the returned object to get streamed responses.
+  func backupTransactionInfo(_ request: Storage_BackupTransactionInfoRequest, completion: ((CallResult) -> Void)?) throws -> Storage_StorageBackupTransactionInfoCall
 
 }
 
@@ -258,6 +300,22 @@ internal final class Storage_StorageServiceClient: ServiceClientBase, Storage_St
       .start(request: request, metadata: metadata, completion: completion)
   }
 
+  /// Asynchronous. Server-streaming.
+  /// Send the initial message.
+  /// Use methods on the returned object to get streamed responses.
+  internal func backupTransaction(_ request: Storage_BackupTransactionRequest, completion: ((CallResult) -> Void)?) throws -> Storage_StorageBackupTransactionCall {
+    return try Storage_StorageBackupTransactionCallBase(channel)
+      .start(request: request, metadata: metadata, completion: completion)
+  }
+
+  /// Asynchronous. Server-streaming.
+  /// Send the initial message.
+  /// Use methods on the returned object to get streamed responses.
+  internal func backupTransactionInfo(_ request: Storage_BackupTransactionInfoRequest, completion: ((CallResult) -> Void)?) throws -> Storage_StorageBackupTransactionInfoCall {
+    return try Storage_StorageBackupTransactionInfoCallBase(channel)
+      .start(request: request, metadata: metadata, completion: completion)
+  }
+
 }
 
 /// To build a server, implement a class that conforms to this protocol.
@@ -274,6 +332,8 @@ internal protocol Storage_StorageProvider: ServiceProvider {
   func getEpochChangeLedgerInfos(request: Storage_GetEpochChangeLedgerInfosRequest, session: Storage_StorageGetEpochChangeLedgerInfosSession) throws -> Types_ValidatorChangeProof
   func backupAccountState(request: Storage_BackupAccountStateRequest, session: Storage_StorageBackupAccountStateSession) throws -> ServerStatus?
   func getAccountStateRangeProof(request: Storage_GetAccountStateRangeProofRequest, session: Storage_StorageGetAccountStateRangeProofSession) throws -> Storage_GetAccountStateRangeProofResponse
+  func backupTransaction(request: Storage_BackupTransactionRequest, session: Storage_StorageBackupTransactionSession) throws -> ServerStatus?
+  func backupTransactionInfo(request: Storage_BackupTransactionInfoRequest, session: Storage_StorageBackupTransactionInfoSession) throws -> ServerStatus?
 }
 
 extension Storage_StorageProvider {
@@ -332,6 +392,16 @@ extension Storage_StorageProvider {
       return try Storage_StorageGetAccountStateRangeProofSessionBase(
         handler: handler,
         providerBlock: { try self.getAccountStateRangeProof(request: $0, session: $1 as! Storage_StorageGetAccountStateRangeProofSessionBase) })
+          .run()
+    case "/storage.Storage/BackupTransaction":
+      return try Storage_StorageBackupTransactionSessionBase(
+        handler: handler,
+        providerBlock: { try self.backupTransaction(request: $0, session: $1 as! Storage_StorageBackupTransactionSessionBase) })
+          .run()
+    case "/storage.Storage/BackupTransactionInfo":
+      return try Storage_StorageBackupTransactionInfoSessionBase(
+        handler: handler,
+        providerBlock: { try self.backupTransactionInfo(request: $0, session: $1 as! Storage_StorageBackupTransactionInfoSessionBase) })
           .run()
     default:
       throw HandleMethodError.unknownMethod
@@ -393,4 +463,42 @@ fileprivate final class Storage_StorageBackupAccountStateSessionBase: ServerSess
 internal protocol Storage_StorageGetAccountStateRangeProofSession: ServerSessionUnary {}
 
 fileprivate final class Storage_StorageGetAccountStateRangeProofSessionBase: ServerSessionUnaryBase<Storage_GetAccountStateRangeProofRequest, Storage_GetAccountStateRangeProofResponse>, Storage_StorageGetAccountStateRangeProofSession {}
+
+internal protocol Storage_StorageBackupTransactionSession: ServerSessionServerStreaming {
+  /// Send a message to the stream. Nonblocking.
+  func send(_ message: Storage_BackupTransactionResponse, completion: @escaping (Error?) -> Void) throws
+  /// Do not call this directly, call `send()` in the protocol extension below instead.
+  func _send(_ message: Storage_BackupTransactionResponse, timeout: DispatchTime) throws
+
+  /// Close the connection and send the status. Non-blocking.
+  /// This method should be called if and only if your request handler returns a nil value instead of a server status;
+  /// otherwise SwiftGRPC will take care of sending the status for you.
+  func close(withStatus status: ServerStatus, completion: (() -> Void)?) throws
+}
+
+internal extension Storage_StorageBackupTransactionSession {
+  /// Send a message to the stream and wait for the send operation to finish. Blocking.
+  func send(_ message: Storage_BackupTransactionResponse, timeout: DispatchTime = .distantFuture) throws { try self._send(message, timeout: timeout) }
+}
+
+fileprivate final class Storage_StorageBackupTransactionSessionBase: ServerSessionServerStreamingBase<Storage_BackupTransactionRequest, Storage_BackupTransactionResponse>, Storage_StorageBackupTransactionSession {}
+
+internal protocol Storage_StorageBackupTransactionInfoSession: ServerSessionServerStreaming {
+  /// Send a message to the stream. Nonblocking.
+  func send(_ message: Storage_BackupTransactionInfoResponse, completion: @escaping (Error?) -> Void) throws
+  /// Do not call this directly, call `send()` in the protocol extension below instead.
+  func _send(_ message: Storage_BackupTransactionInfoResponse, timeout: DispatchTime) throws
+
+  /// Close the connection and send the status. Non-blocking.
+  /// This method should be called if and only if your request handler returns a nil value instead of a server status;
+  /// otherwise SwiftGRPC will take care of sending the status for you.
+  func close(withStatus status: ServerStatus, completion: (() -> Void)?) throws
+}
+
+internal extension Storage_StorageBackupTransactionInfoSession {
+  /// Send a message to the stream and wait for the send operation to finish. Blocking.
+  func send(_ message: Storage_BackupTransactionInfoResponse, timeout: DispatchTime = .distantFuture) throws { try self._send(message, timeout: timeout) }
+}
+
+fileprivate final class Storage_StorageBackupTransactionInfoSessionBase: ServerSessionServerStreamingBase<Storage_BackupTransactionInfoRequest, Storage_BackupTransactionInfoResponse>, Storage_StorageBackupTransactionInfoSession {}
 

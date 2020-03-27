@@ -491,7 +491,7 @@ extension MarketViewController {
         } else if type == "UpdateViolasBalance" {
             // 获取余额
             self.detailView.toastView?.hide()
-            if let tempData = jsonData.value(forKey: "data") as? BalanceLibraModel {
+            if let tempData = jsonData.value(forKey: "data") as? BalanceViolasModel {
                 if let data = tempData.modules, data.isEmpty == false, let tempModule = data.first {
                     if let action = self.checkBalanceClosure {
                         action(Int64(tempModule.balance ?? 0))

@@ -74,7 +74,8 @@ extension AdmissionControl_AdmissionControlStatusCode: CaseIterable {
 
 #endif  // swift(>=4.2)
 
-/// The request for submitting a transaction to an upstream validator or full node.
+/// The request for submitting a transaction to an upstream validator or full
+/// node.
 struct AdmissionControl_AdmissionControlMsg {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
@@ -207,10 +208,10 @@ struct AdmissionControl_SubmitTransactionResponse {
     set {_uniqueStorage()._status = .acStatus(newValue)}
   }
 
-  var mempoolStatus: MempoolStatus_MempoolAddTransactionStatus {
+  var mempoolStatus: Types_MempoolStatus {
     get {
       if case .mempoolStatus(let v)? = _storage._status {return v}
-      return MempoolStatus_MempoolAddTransactionStatus()
+      return Types_MempoolStatus()
     }
     set {_uniqueStorage()._status = .mempoolStatus(newValue)}
   }
@@ -228,7 +229,7 @@ struct AdmissionControl_SubmitTransactionResponse {
   enum OneOf_Status: Equatable {
     case vmStatus(Types_VMStatus)
     case acStatus(AdmissionControl_AdmissionControlStatus)
-    case mempoolStatus(MempoolStatus_MempoolAddTransactionStatus)
+    case mempoolStatus(Types_MempoolStatus)
 
   #if !swift(>=4.1)
     static func ==(lhs: AdmissionControl_SubmitTransactionResponse.OneOf_Status, rhs: AdmissionControl_SubmitTransactionResponse.OneOf_Status) -> Bool {
@@ -488,7 +489,7 @@ extension AdmissionControl_SubmitTransactionResponse: SwiftProtobuf.Message, Swi
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._status = .acStatus(v)}
         case 3:
-          var v: MempoolStatus_MempoolAddTransactionStatus?
+          var v: Types_MempoolStatus?
           if let current = _storage._status {
             try decoder.handleConflictingOneOf()
             if case .mempoolStatus(let m) = current {v = m}
