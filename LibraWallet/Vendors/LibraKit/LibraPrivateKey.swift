@@ -54,7 +54,9 @@ struct LibraPrivateKey {
         // 追加签名
         signData += Data.init(bytes: sign, count: sign.count)
         
-        let result = transactionRaw + publicKeyData + signData
+        let signType = Data.init(Array<UInt8>(hex: "00000000"))
+        
+        let result = transactionRaw + signType + publicKeyData + signData
 
         return result
     }

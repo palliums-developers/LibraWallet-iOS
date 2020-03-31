@@ -104,7 +104,8 @@ class HomeModel: NSObject {
             // 更新本地数据
             switch wallet.walletType {
             case .Libra:
-                tempGetLibraBalance(walletID: walletID, address: address)
+//                tempGetLibraBalance(walletID: walletID, address: address)
+                getLibraBalance(walletID: walletID, address: address)
                 break
             case .Violas:
                 getEnableViolasToken(walletID: walletID, address: address)
@@ -120,7 +121,7 @@ class HomeModel: NSObject {
         }
     }
 
-    func tempGetLibraBalance(walletID: Int64, address: String) {
+//    func tempGetLibraBalance(walletID: Int64, address: String) {
 //        let quene = DispatchQueue.init(label: "createWalletQuene")
 //        quene.async {
 //            let channel = Channel.init(address: libraMainURL, secure:  false)
@@ -160,8 +161,8 @@ class HomeModel: NSObject {
 //                })
 //            }
 //        }
-        self.getLibraBalance(walletID: 123, address: "")
-    }
+//        self.getLibraBalance(walletID: 123, address: "")
+//    }
     
     func getBTCBalance(walletID: Int64, address: String) {
         let request = mainProvide.request(.GetBTCBalance(address)) {[weak self](result) in
@@ -195,11 +196,16 @@ class HomeModel: NSObject {
         self.requests.append(request)
     }
     func getLibraBalance(walletID: Int64, address: String) {
-        let request = mainProvide.request(.GetLibraAccountBalance("1409fc67d04cddf259240703809b6d12")) {[weak self](result) in
+        let request = mainProvide.request(.GetLibraAccountBalance(address)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
                     let json = try response.map(BalanceLibraMainModel.self)
+                    guard json.result != nil else {
+                        let data = setKVOData(type: "UpdateLibraBalance", data: BalanceLibraModel.init(balance: 0))
+                        self?.setValue(data, forKey: "dataDic")
+                        return
+                    }
                     let data = setKVOData(type: "UpdateLibraBalance", data: json.result)
                     self?.setValue(data, forKey: "dataDic")
                     // 刷新本地数据

@@ -156,7 +156,10 @@ class LibraSDKTests: XCTestCase {
         //        key shoulder focus dish donate inmate move weekend hold regret peanut link
         
 //        let mnemonic = ["key","shoulder","focus","dish","donate","inmate","move","weekend","hold","regret","peanut","link"]
-        let mnemonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
+//        LibraPublicKey= f47df986f4e7421a125e87e7b49137461254a67333a0d9b8dea9472724f0c67d
+//        authKey = 1e7d12e8a75683776012faf9987028061409fc67d04cddf259240703809b6d12
+//        let mnemonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
+        let mnemonic = ["grant", "security", "cluster", "pill", "visit", "wave", "skull", "chase", "vibrant", "embrace", "bronze", "tip"]
 
         do {
             let seed = try LibraMnemonic.seed(mnemonic: mnemonic)
@@ -182,7 +185,7 @@ class LibraSDKTests: XCTestCase {
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 76, 66, 82, 1, 0, 0, 0, 84, 0, 0,
             0, 0]
             print(BigUInt(20000).serialize().bytes)
-            print(LibraTypeTag.init(address: "0000000000000000000000000000000000000000000000000000000000000000", module: "LBR", name: "T", typeParams: [String]()).serialize().bytes)
+//            print(LibraTypeTag.init(address: "0000000000000000000000000000000000000000000000000000000000000000", module: "LBR", name: "T", typeParams: [String]()).serialize().bytes)
             print("success")
         } catch {
             print(error.localizedDescription)
