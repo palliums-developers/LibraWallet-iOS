@@ -8,7 +8,7 @@ target 'LibraWallet' do
   pod 'CryptoSwift'
   pod 'SwiftProtobuf'
   pod 'BigInt'
-  pod 'SwiftGRPC'
+#  pod 'SwiftGRPC'
   pod 'SnapKit'
   pod 'Toast-Swift'
   pod 'Hue'

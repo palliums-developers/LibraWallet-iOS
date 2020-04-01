@@ -7,8 +7,7 @@
 //
 
 import UIKit
-import SwiftGRPC
-import SwiftProtobuf
+
 class TransferViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()

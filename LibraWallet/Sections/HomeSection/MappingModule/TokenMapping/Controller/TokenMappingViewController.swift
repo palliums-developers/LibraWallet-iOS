@@ -139,7 +139,7 @@ extension TokenMappingViewController {
             } else if type == "SendBTCTransaction" {
                 self?.detailView.toastView?.hide()
                 self?.view.makeToast(localLanguage(keyString: "wallet_transfer_success_alert"), position: .center)
-            } else if type == "Transfer" {
+            } else if type == "SendLibraTransaction" {
                 self?.detailView.toastView?.hide()
                 self?.view.makeToast(localLanguage(keyString: "wallet_transfer_success_alert"), position: .center)
             } else if type == "SendVBTCTransaction" {
@@ -148,7 +148,7 @@ extension TokenMappingViewController {
             } else if type == "SendVLibraTransaction" {
                 self?.detailView.toastView?.hide()
                 self?.view.makeToast(localLanguage(keyString: "wallet_transfer_success_alert"), position: .center)
-            }  else if type == "GetWalletEnableCoin" {
+            } else if type == "GetWalletEnableCoin" {
                 if let tempData = dataDic.value(forKey: "data") as? Bool {
                     print(tempData)
                     if let action = self?.actionClosure {
@@ -274,7 +274,11 @@ extension TokenMappingViewController: TokenMappingHeaderViewDelegate {
                                             mappingContract: self.detailView.headerView.model?.module ?? "")
         case .Libra:
             print("Libra")
-            self.dataModel.transfer(address: address, amount: amount, mnemonic: mnemonic)
+//            self.dataModel.transfer(address: address, amount: amount, mnemonic: mnemonic)
+            self.dataModel.sendLibraTransaction(sendAddress: self.wallet?.walletAddress ?? "",
+                                                receiveAddress: address,
+                                                amount: amount,
+                                                fee: 0, mnemonic: mnemonic)
         case .Violas:
             print("Violas")
             self.detailView.toastView?.show()

@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SwiftGRPC
 import Moya
 struct ScanLoginDataModel: Codable {
     var type: Int?
