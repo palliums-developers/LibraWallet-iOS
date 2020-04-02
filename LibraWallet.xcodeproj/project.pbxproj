@@ -245,7 +245,6 @@
 		36F42E45242DCB7800DBBF8F /* ViolasPublicKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515B323A32C130069A909 /* ViolasPublicKey.swift */; };
 		36F42E46242DCB7800DBBF8F /* OrderDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628ABF239F72E100E222FB /* OrderDetailModel.swift */; };
 		36F42E47242DCB7800DBBF8F /* ServiceLegalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9B49FB236046CF00354EF0 /* ServiceLegalView.swift */; };
-		36F42E48242DCB7800DBBF8F /* LibraAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC902312328C6CC0097FD85 /* LibraAccount.swift */; };
 		36F42E49242DCB7800DBBF8F /* LibraWalletError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC902442328FCD00097FD85 /* LibraWalletError.swift */; };
 		36F42E4A242DCB7800DBBF8F /* LanguageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9B49F22360388C00354EF0 /* LanguageView.swift */; };
 		36F42E4B242DCB7800DBBF8F /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D08AD362330BA75004687E8 /* NetworkManager.swift */; };
@@ -520,7 +519,6 @@
 		9DC901EF23274E510097FD85 /* TransactionProgram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC901EE23274E510097FD85 /* TransactionProgram.swift */; };
 		9DC901F2232788C30097FD85 /* TransactionAccessPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC901F1232788C30097FD85 /* TransactionAccessPath.swift */; };
 		9DC901F82327A3B70097FD85 /* TransactionWriteSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC901F72327A3B60097FD85 /* TransactionWriteSet.swift */; };
-		9DC902322328C6CC0097FD85 /* LibraAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC902312328C6CC0097FD85 /* LibraAccount.swift */; };
 		9DC9023D2328E8290097FD85 /* CommonData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC9023C2328E8290097FD85 /* CommonData.swift */; };
 		9DC9023F2328EA480097FD85 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC9023E2328EA480097FD85 /* HomeView.swift */; };
 		9DC902412328EA640097FD85 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC902402328EA640097FD85 /* HomeViewController.swift */; };
@@ -826,7 +824,6 @@
 		9DC901EE23274E510097FD85 /* TransactionProgram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionProgram.swift; sourceTree = "<group>"; };
 		9DC901F1232788C30097FD85 /* TransactionAccessPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionAccessPath.swift; sourceTree = "<group>"; };
 		9DC901F72327A3B60097FD85 /* TransactionWriteSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionWriteSet.swift; sourceTree = "<group>"; };
-		9DC902312328C6CC0097FD85 /* LibraAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraAccount.swift; sourceTree = "<group>"; };
 		9DC9023C2328E8290097FD85 /* CommonData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonData.swift; sourceTree = "<group>"; };
 		9DC9023E2328EA480097FD85 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		9DC902402328EA640097FD85 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
@@ -2615,7 +2612,6 @@
 			isa = PBXGroup;
 			children = (
 				9DC901E5232628860097FD85 /* MakeTransaction */,
-				9DC902332328E27B0097FD85 /* Request */,
 				9DC487FC2320AF4E005FF254 /* LibraWallet.swift */,
 				9DC488042320DBCB005FF254 /* LibraPublicKey.swift */,
 				9DC4880A2320E6C1005FF254 /* LibraPrivateKey.swift */,
@@ -2783,14 +2779,6 @@
 				36F42E8A2431B56A00DBBF8F /* StructTag.swift */,
 			);
 			path = MakeTransaction;
-			sourceTree = "<group>";
-		};
-		9DC902332328E27B0097FD85 /* Request */ = {
-			isa = PBXGroup;
-			children = (
-				9DC902312328C6CC0097FD85 /* LibraAccount.swift */,
-			);
-			path = Request;
 			sourceTree = "<group>";
 		};
 		9DC902362328E7820097FD85 /* Sections */ = {
@@ -3549,7 +3537,6 @@
 				36F42E45242DCB7800DBBF8F /* ViolasPublicKey.swift in Sources */,
 				36F42E46242DCB7800DBBF8F /* OrderDetailModel.swift in Sources */,
 				36F42E47242DCB7800DBBF8F /* ServiceLegalView.swift in Sources */,
-				36F42E48242DCB7800DBBF8F /* LibraAccount.swift in Sources */,
 				36F42E49242DCB7800DBBF8F /* LibraWalletError.swift in Sources */,
 				36F42E4A242DCB7800DBBF8F /* LanguageView.swift in Sources */,
 				36F42E4B242DCB7800DBBF8F /* NetworkManager.swift in Sources */,
@@ -3815,7 +3802,6 @@
 				9DB515B423A32C130069A909 /* ViolasPublicKey.swift in Sources */,
 				9D628AC0239F72E100E222FB /* OrderDetailModel.swift in Sources */,
 				9D9B49FC236046CF00354EF0 /* ServiceLegalView.swift in Sources */,
-				9DC902322328C6CC0097FD85 /* LibraAccount.swift in Sources */,
 				9DC902452328FCD00097FD85 /* LibraWalletError.swift in Sources */,
 				9D9B49F32360388C00354EF0 /* LanguageView.swift in Sources */,
 				9D08AD372330BA75004687E8 /* NetworkManager.swift in Sources */,
