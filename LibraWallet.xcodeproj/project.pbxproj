@@ -2623,7 +2623,6 @@
 				9DC487FE2320AFB8005FF254 /* LibraError.swift */,
 				9DC488002320BE88005FF254 /* LibraNetwork.swift */,
 				9DC4880C2320EDF8005FF254 /* LibraUtils.swift */,
-				9DC4880E2320EE4C005FF254 /* LibraTransaction.swift */,
 				9DC488022320D6A1005FF254 /* LibraMnemonic.swift */,
 				9DC4884E2321F051005FF254 /* WordList.swift */,
 			);
@@ -2773,6 +2772,7 @@
 		9DC901E5232628860097FD85 /* MakeTransaction */ = {
 			isa = PBXGroup;
 			children = (
+				9DC4880E2320EE4C005FF254 /* LibraTransaction.swift */,
 				9DC901E6232628A40097FD85 /* RawTransaction.swift */,
 				9DC901E823262CB80097FD85 /* TransactionArgument.swift */,
 				9DC901EE23274E510097FD85 /* TransactionProgram.swift */,

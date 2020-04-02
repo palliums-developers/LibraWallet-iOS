@@ -14,7 +14,7 @@ class TransferModel: NSObject {
     
     private var sequenceNumber: Int64?
     fileprivate func getLibraSequenceNumber(sendAddress: String, semaphore: DispatchSemaphore) {
-        let request = mainProvide.request(.GetLibraAccountBalance("1409fc67d04cddf259240703809b6d12")) {[weak self](result) in
+        let request = mainProvide.request(.GetLibraAccountBalance(sendAddress)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -47,17 +47,13 @@ class TransferModel: NSObject {
         queue.async {
             semaphore.wait()
             do {
-                let wallet = try LibraManager.getWallet(mnemonic: mnemonic)
-
-                // 拼接交易
-                //1e7d12e8a75683776012faf998702806
-                // 首次必须
-                let request = LibraTransaction.init(receiveAddress: receiveAddress, amount: amount, sendAddress: wallet.publicKey.toAddress(), sequenceNumber: UInt64(self.sequenceNumber!), authenticatorKey: "")//d943f6333b7995da537a66133fc72d5f
-                //e92e6c91e33f0ec5fc70425c99c5df5cfa279f2615270daed6061313a48360f7
-//                d943f6333b7995da537a66133fc72d5f9b2842c5678ad43e2111840b13572f4d
-                // 签名交易
-                let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
-                self.makeViolasTransaction(signature: signature.toHexString())
+                let signature = try LibraManager.getNormalTransactionHex(sendAddress: sendAddress,
+                                                                         receiveAddress: receiveAddress,
+                                                                         amount: amount,
+                                                                         fee: fee,
+                                                                         mnemonic: mnemonic,
+                                                                         sequenceNumber: Int(self.sequenceNumber!))
+                self.makeViolasTransaction(signature: signature)
             } catch {
                 print(error.localizedDescription)
                 DispatchQueue.main.async(execute: {

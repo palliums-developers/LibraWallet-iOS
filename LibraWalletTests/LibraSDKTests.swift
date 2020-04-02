@@ -9,7 +9,6 @@
 import XCTest
 import CryptoSwift
 import BigInt
-import SwiftGRPC
 @testable import Violas
 class LibraSDKTests: XCTestCase {
 
@@ -250,5 +249,51 @@ class LibraSDKTests: XCTestCase {
         XCTAssertEqual(state, true)
         let state2 = DataBaseManager.DBManager.isExistTable(name: "Walet")
         XCTAssertEqual(state2, false)
+    }
+    func testMultiEdd25519() {
+//        struct MultiEdd25519PublicKey {
+//            var publicKeys: [String]
+//            var threshold: Int
+//        }
+//        do {
+//            let mnemonic1 = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
+//            let seed1 = try LibraMnemonic.seed(mnemonic: mnemonic1)
+//            let wallet1 = try LibraWallet.init(seed: seed1, depth: 0)
+//            print(wallet1.publicKey.raw.bytes.toHexString())
+//            //24e236320adcdf04306257212433bbcaa0d8ccc6037cae4440455146c9cf8bf6
+//            let mnemonic2 = ["grant", "security", "cluster", "pill", "visit", "wave", "skull", "chase", "vibrant", "embrace", "bronze", "tip"]
+//            let seed2 = try LibraMnemonic.seed(mnemonic: mnemonic2)
+//            let wallet2 = try LibraWallet.init(seed: seed2, depth: 0)
+//            print(wallet2.publicKey.raw.bytes.toHexString())
+//            //50b715879a727bbc561786b0dc9e6afcd5d8a443da6eb632952e692b83e8e7cb
+//            let multiPublicKey = wallet1.publicKey.raw + wallet2.publicKey.raw + BigUInt(2).serialize().bytes
+//            print(multiPublicKey.toHexString())
+//            let address = ("\(multiPublicKey.toHexString())1").bytes.sha3(SHA3.Variant.sha256).toHexString()
+//            //2374e18d17bcbbd476fcd42dcea36a69
+//            //001f30eab7908607cc897dda9c01ffa2
+//            print(address)
+//        } catch {
+//            print(error.localizedDescription)
+//        }
+//        do {
+//            let result = try LibraManager.splitAddress(address: "24e236320adcdf04306257212433bbcaa0d8ccc6037cae4440455146c9cf8bf6s")
+//            let result2 = try LibraManager.splitAddress(address: "24e236320adcdf04306257212433bbcaa0d8ccc6037cae4440455146c9cf8bf")
+//            let result3 = try LibraManager.splitAddress(address: "a0d8ccc6037cae4440455146c9cf8bf6")
+//        } catch {
+//            print(error)
+//        }
+//        let result = try? LibraManager.splitAddress(address: "24e236320adcdf04306257212433bbcaa0d8ccc6037cae4440455146c9cf8bf6s")
+        print(try? LibraManager.splitAddress(address: "24e236320adcdf04306257212433bbcaa0d8ccc6037cae4440455146c9cf8bf6s"))
+        print(try? LibraManager.splitAddress(address: "24e236320adcdf04306257212433bbcaa0d8ccc6037cae4440455146c9cf8bf"))
+        print(try? LibraManager.splitAddress(address: "a0d8ccc6037cae4440455146c9cf8bf6"))
+        print(try? LibraManager.splitAddress(address: "24e236320adcdf04306257212433bbcaa0d8ccc6037cae4440455146c9cf8bf6"))
+        
+        XCTAssertEqual(LibraManager.isValidLibraAddress(address: "24e236320adcdf04306257212433bbcaa0d8ccc6037cae4440455146c9cf8bf6s"), false)
+        XCTAssertEqual(LibraManager.isValidLibraAddress(address: "24e236320adcdf04306257212433bbcaa0d8ccc6037cae4440455146c9cf8bf"), false)
+        XCTAssertEqual(LibraManager.isValidLibraAddress(address: "a0d8ccc6037cae4440455146c9cf8bf"), false)
+
+
+        XCTAssertEqual(LibraManager.isValidLibraAddress(address: "a0d8ccc6037cae4440455146c9cf8bf6"), false)
+        XCTAssertEqual(LibraManager.isValidLibraAddress(address: "24e236320adcdf04306257212433bbcaa0d8ccc6037cae4440455146c9cf8bf6"), true)
     }
 }

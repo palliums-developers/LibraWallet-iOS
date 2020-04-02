@@ -278,7 +278,8 @@ extension TokenMappingViewController: TokenMappingHeaderViewDelegate {
             self.dataModel.sendLibraTransaction(sendAddress: self.wallet?.walletAddress ?? "",
                                                 receiveAddress: address,
                                                 amount: amount,
-                                                fee: 0, mnemonic: mnemonic)
+                                                fee: 0,
+                                                mnemonic: mnemonic)
         case .Violas:
             print("Violas")
             self.detailView.toastView?.show()

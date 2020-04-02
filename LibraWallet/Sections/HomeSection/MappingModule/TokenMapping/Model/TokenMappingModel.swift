@@ -394,17 +394,23 @@ extension TokenMappingModel {
         queue.async {
             semaphore.wait()
             do {
-                let wallet = try LibraManager.getWallet(mnemonic: mnemonic)
-                // 首次必须
-//                let request = LibraTransaction.init(receiveAddress: receiveAddress, amount: amount, sendAddress: wallet.publicKey.toAddress(), sequenceNumber: UInt64(self.sequenceNumber!), authenticatorKey: "")//d943f6333b7995da537a66133fc72d5f
-                let request = LibraTransaction.init(sendAddress: wallet.publicKey.toAddress(),
-                                                    amount: amount,
-                                                    fee: 0,
-                                                    sequenceNumber: UInt64(self.sequenceNumber!),
-                                                    libraReceiveAddress: sendAddress)
-                // 签名交易
-                let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
-                self.makeViolasTransaction(signature: signature.toHexString())
+//                let wallet = try LibraManager.getWallet(mnemonic: mnemonic)
+//                // 首次必须
+//                let request = LibraTransaction.init(sendAddress: sendAddress,
+//                                                    amount: amount,
+//                                                    fee: 0,
+//                                                    sequenceNumber: UInt64(self.sequenceNumber!),
+//                                                    libraReceiveAddress: receiveAddress)
+//                // 签名交易
+//                let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
+//                self.makeViolasTransaction(signature: signature.toHexString())
+                let signature = try LibraManager.getLibraToVLibraTransactionHex(sendAddress: sendAddress,
+                                                                                amount: amount,
+                                                                                fee: fee,
+                                                                                mnemonic: mnemonic,
+                                                                                sequenceNumber: Int(self.sequenceNumber!),
+                                                                                vlibraReceiveAddress: receiveAddress)
+                self.makeViolasTransaction(signature: signature)
             } catch {
                 print(error.localizedDescription)
                 DispatchQueue.main.async(execute: {

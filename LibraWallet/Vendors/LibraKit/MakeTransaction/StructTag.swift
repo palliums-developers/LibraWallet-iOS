@@ -7,7 +7,9 @@
 //
 
 import UIKit
-
+enum StructTagType {
+    case libraDefault
+}
 struct StructTag {
     fileprivate var address: String
     fileprivate var module: String
@@ -21,10 +23,13 @@ struct StructTag {
     }
 }
 extension StructTag {
-    func libraStructTag() {
-//        StructTag.init(address: "0000000000000000000000000000000000000000000000000000000000000000",
-//                              module: "LBR",
-//                              name: "T",
-//                              typeParams: [String]())
+    init(type: StructTagType) {
+        switch type {
+        case .libraDefault:
+            self.address = "00000000000000000000000000000000"
+            self.module = "LBR"
+            self.name = "T"
+            self.typeParams = [String]()
+        }
     }
 }
