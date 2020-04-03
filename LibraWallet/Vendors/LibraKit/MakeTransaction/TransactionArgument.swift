@@ -18,13 +18,13 @@ extension ArgumentsCode {
     public var raw: Data {
         switch self {
         case .U64:
-            return Data.init(hex: "00000000")
+            return Data.init(hex: "00")
         case .Address:
-            return Data.init(hex: "01000000")
+            return Data.init(hex: "01")
         case .U8Vector:
-            return Data.init(hex: "02000000")
+            return Data.init(hex: "02")
         case .Bool:
-            return Data.init(hex: "03000000")
+            return Data.init(hex: "03")
         }
     }
 }
@@ -50,7 +50,7 @@ struct TransactionArgument {
             result += data
         case .U8Vector:
             let data = Data.init(Array<UInt8>(hex: self.value))
-            result += getLengthData(length: data.bytes.count, appendBytesCount: 4)
+            result += uleb128Format(length: data.bytes.count)//getLengthData(length: data.bytes.count, appendBytesCount: 1)
             result += data
         case .Bool:
             result += getLengthData(length: Int(self.value)!, appendBytesCount: 1)

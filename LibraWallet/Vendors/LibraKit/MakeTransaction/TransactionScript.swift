@@ -13,7 +13,7 @@ class TransactionScript: NSObject {
         
     fileprivate let argruments: [TransactionArgument]
         
-    fileprivate let programPrefixData: Data = Data.init(hex: "02000000")
+    fileprivate let programPrefixData: Data = Data.init(hex: "02")
     
     init(code: Data, argruments: [TransactionArgument]) {
         
@@ -27,11 +27,11 @@ class TransactionScript: NSObject {
         // 追加类型
         result += programPrefixData
         // 追加code长度
-        result += getLengthData(length: self.code.bytes.count, appendBytesCount: 4)
+        result += uleb128Format(length: self.code.bytes.count)//getLengthData(length: self.code.bytes.count, appendBytesCount: 1)
         // 追加code数据
         result += self.code
         // 追加argument数量
-        result += getLengthData(length: argruments.count, appendBytesCount: 4)
+        result += uleb128Format(length: argruments.count)//getLengthData(length: argruments.count, appendBytesCount: 1)
         // 追加argument数组数据
         for argument in argruments {
             result += argument.serialize()

@@ -36,7 +36,9 @@ struct LibraPrivateKey {
         // 公钥数据
         var publicKeyData = Data()
         // 追加publicKey长度
-        publicKeyData += getLengthData(length: wallet.publicKey.raw.bytes.count, appendBytesCount: 4)
+//        publicKeyData += getLengthData(length: wallet.publicKey.raw.bytes.count, appendBytesCount: 1)
+        publicKeyData += uleb128Format(length: wallet.publicKey.raw.bytes.count)
+
 
         // 追加publicKey
         publicKeyData += wallet.publicKey.raw
@@ -44,13 +46,15 @@ struct LibraPrivateKey {
         // 签名数据
         var signData = Data()
         // 追加签名长度
-        signData += getLengthData(length: sign.count, appendBytesCount: 4)
+//        signData += getLengthData(length: sign.count, appendBytesCount: 1)
+        signData += uleb128Format(length: sign.count)
+
 
         // 追加签名
         signData += Data.init(bytes: sign, count: sign.count)
         
         //00000000普通，10000000多签
-        let signType = Data.init(Array<UInt8>(hex: "00000000"))
+        let signType = Data.init(Array<UInt8>(hex: "00"))
         
         let result = transactionRaw + signType + publicKeyData + signData
 

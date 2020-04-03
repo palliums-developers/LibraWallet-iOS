@@ -134,7 +134,6 @@
 		36F42DCD242DCB7800DBBF8F /* ScanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4887D2322320B005FF254 /* ScanView.swift */; };
 		36F42DCE242DCB7800DBBF8F /* AddAssetViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B4E77236BCE1700F4D99C /* AddAssetViewTableViewCell.swift */; };
 		36F42DCF242DCB7800DBBF8F /* WalletInvalidInMarketWarningAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5E370D23AC93C2004C31EF /* WalletInvalidInMarketWarningAlert.swift */; };
-		36F42DD0242DCB7800DBBF8F /* TransactionProgram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC901EE23274E510097FD85 /* TransactionProgram.swift */; };
 		36F42DD1242DCB7800DBBF8F /* MarketMyOrderHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628A90239DEA5300E222FB /* MarketMyOrderHeaderView.swift */; };
 		36F42DD2242DCB7800DBBF8F /* MarketMyOrderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628A97239E363800E222FB /* MarketMyOrderTableViewCell.swift */; };
 		36F42DD4242DCB7800DBBF8F /* TransactionAccessPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC901F1232788C30097FD85 /* TransactionAccessPath.swift */; };
@@ -514,7 +513,6 @@
 		9DC87794237B0F16006378C3 /* ViolasToken.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9DC87793237B0F16006378C3 /* ViolasToken.plist */; };
 		9DC901E7232628A40097FD85 /* RawTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC901E6232628A40097FD85 /* RawTransaction.swift */; };
 		9DC901E923262CB80097FD85 /* TransactionArgument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC901E823262CB80097FD85 /* TransactionArgument.swift */; };
-		9DC901EF23274E510097FD85 /* TransactionProgram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC901EE23274E510097FD85 /* TransactionProgram.swift */; };
 		9DC901F2232788C30097FD85 /* TransactionAccessPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC901F1232788C30097FD85 /* TransactionAccessPath.swift */; };
 		9DC901F82327A3B70097FD85 /* TransactionWriteSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC901F72327A3B60097FD85 /* TransactionWriteSet.swift */; };
 		9DC9023D2328E8290097FD85 /* CommonData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC9023C2328E8290097FD85 /* CommonData.swift */; };
@@ -818,7 +816,6 @@
 		9DC87793237B0F16006378C3 /* ViolasToken.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ViolasToken.plist; sourceTree = "<group>"; };
 		9DC901E6232628A40097FD85 /* RawTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawTransaction.swift; sourceTree = "<group>"; };
 		9DC901E823262CB80097FD85 /* TransactionArgument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionArgument.swift; sourceTree = "<group>"; };
-		9DC901EE23274E510097FD85 /* TransactionProgram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionProgram.swift; sourceTree = "<group>"; };
 		9DC901F1232788C30097FD85 /* TransactionAccessPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionAccessPath.swift; sourceTree = "<group>"; };
 		9DC901F72327A3B60097FD85 /* TransactionWriteSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionWriteSet.swift; sourceTree = "<group>"; };
 		9DC9023C2328E8290097FD85 /* CommonData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonData.swift; sourceTree = "<group>"; };
@@ -2768,7 +2765,6 @@
 				9DC4880E2320EE4C005FF254 /* LibraTransaction.swift */,
 				9DC901E6232628A40097FD85 /* RawTransaction.swift */,
 				9DC901E823262CB80097FD85 /* TransactionArgument.swift */,
-				9DC901EE23274E510097FD85 /* TransactionProgram.swift */,
 				9DC901F1232788C30097FD85 /* TransactionAccessPath.swift */,
 				9DC901F72327A3B60097FD85 /* TransactionWriteSet.swift */,
 				9D68D304237D49E5005B7593 /* TransactionScript.swift */,
@@ -3422,7 +3418,6 @@
 				36F42DCD242DCB7800DBBF8F /* ScanView.swift in Sources */,
 				36F42DCE242DCB7800DBBF8F /* AddAssetViewTableViewCell.swift in Sources */,
 				36F42DCF242DCB7800DBBF8F /* WalletInvalidInMarketWarningAlert.swift in Sources */,
-				36F42DD0242DCB7800DBBF8F /* TransactionProgram.swift in Sources */,
 				36F42DD1242DCB7800DBBF8F /* MarketMyOrderHeaderView.swift in Sources */,
 				36F42DD2242DCB7800DBBF8F /* MarketMyOrderTableViewCell.swift in Sources */,
 				36F42DD4242DCB7800DBBF8F /* TransactionAccessPath.swift in Sources */,
@@ -3685,7 +3680,6 @@
 				9DC4887E2322320B005FF254 /* ScanView.swift in Sources */,
 				9D5B4E78236BCE1700F4D99C /* AddAssetViewTableViewCell.swift in Sources */,
 				9D5E370E23AC93C2004C31EF /* WalletInvalidInMarketWarningAlert.swift in Sources */,
-				9DC901EF23274E510097FD85 /* TransactionProgram.swift in Sources */,
 				9D628A91239DEA5300E222FB /* MarketMyOrderHeaderView.swift in Sources */,
 				9D628A98239E363800E222FB /* MarketMyOrderTableViewCell.swift in Sources */,
 				9DC901F2232788C30097FD85 /* TransactionAccessPath.swift in Sources */,

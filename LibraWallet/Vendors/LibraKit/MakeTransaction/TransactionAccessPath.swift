@@ -15,7 +15,7 @@ extension TransactionWriteType {
     public var raw: Data {
         switch self {
         case .Delete:
-            return Data.init(hex: "00000000")
+            return Data.init(hex: "00")
         case .Write:
             return Data.init(hex: "0100000004000000CAFED00D")
         }

@@ -39,48 +39,55 @@ func getLengthData(length: Int, appendBytesCount: Int) -> Data {
     // 倒序输出
     let reversedAmount = newData.bytes.reversed()
     return Data() + reversedAmount
+//    return uleb128Format(length: length)
 }
 func uleb128Format(length: Int) -> Data {
+    if length == 0 {
+        return Data.init(hex: "00")
+    }
     let erjinzhi = String.init(BigUInt(length), radix: 2)
+    print(erjinzhi)
     let result = erjinzhi.count / 7
     let remainder = erjinzhi.count % 7
-    var tempArray = [String]()
-    for i in 0...result {
+    var tempString = String.init()
+    for i in (0...result).reversed() {
         if i == 0 {
+            // 倒叙到最后
             if remainder > 0 {
+                // 如果有余数
                 let startIndex = erjinzhi.index(erjinzhi.startIndex, offsetBy: 0)
                 let endIndex = erjinzhi.index(erjinzhi.startIndex, offsetBy: remainder)
                 let aaa = erjinzhi[startIndex..<endIndex]
-                print("\(i)=\(aaa)")
-                tempArray.append("\(aaa)")
+                // 补0
+                for _ in 0..<(8 - remainder) {
+                    tempString += "0"
+                }
+                tempString += aaa
             }
         } else {
+            //倒叙
             let startIndex = erjinzhi.index(erjinzhi.startIndex, offsetBy: remainder + ((i - 1) * 7))
             let endIndex = erjinzhi.index(erjinzhi.startIndex, offsetBy: remainder + ((i - 1) * 7) + 7)
             let aaa = erjinzhi[startIndex..<endIndex]
-            print("\(i)=\(aaa)")
-            tempArray.append("\(aaa)")
+            if remainder + ((i - 1) * 7) == 0 {
+                //循环到初始位置
+                tempString += "0" + aaa
+            } else {
+                tempString += "1" + aaa
+            }
         }
     }
     //0、1+1*7、1+2*7、1+3*7
     //1、1+7+6、1+2*7+6
     //1 0000000 0000000 0000000
-    print(tempArray)
-    var tempString = String.init()
-    for i in (0..<tempArray.count).reversed() {
-        if i == 0 {
-            if remainder > 0 {
-                for _ in 0..<(8 - remainder) {
-                    tempString += "0"
-                }
-                tempString += tempArray[i]
-            } else {
-                tempString += "0" + tempArray[i]
-            }
-        } else {
-            tempString += "1" + tempArray[i]
-        }
-    }
-    let convert = Int64.init(bitPattern: UInt64.init(tempString, radix: 2)!)
+    let convert = binary2dec(num: tempString)
+    print(BigUInt(convert).serialize().toHexString())
     return BigUInt(convert).serialize()
+}
+func binary2dec(num:String) -> Int {
+    var sum = 0
+    for c in num {
+        sum = sum * 2 + Int("\(c)")!
+    }
+    return sum
 }

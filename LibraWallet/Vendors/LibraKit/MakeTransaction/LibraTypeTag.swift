@@ -20,19 +20,19 @@ extension TypeTag {
     public var data: Data {
         switch self {
         case .Bool:
-            return Data.init(hex: "00000000")
+            return Data.init(hex: "00")
         case .U8:
-            return Data.init(hex: "01000000")
+            return Data.init(hex: "01")
         case .U64:
-            return Data.init(hex: "02000000")
+            return Data.init(hex: "02")
         case .U128:
-            return Data.init(hex: "03000000")
+            return Data.init(hex: "03")
         case .Address:
-            return Data.init(hex: "04000000")
+            return Data.init(hex: "04")
         case .Vector:
-            return Data.init(hex: "05000000")
+            return Data.init(hex: "05")
         case .Struct:
-            return Data.init(hex: "06000000")
+            return Data.init(hex: "06")
         }
     }
 }
@@ -80,18 +80,18 @@ struct LibraTypeTag {
             result += Data.init(Array<UInt8>(hex: self.value))
         case .Vector:
             let data = Data.init(Array<UInt8>(hex: self.value))
-            result += getLengthData(length: data.bytes.count, appendBytesCount: 4)
+            result += getLengthData(length: data.bytes.count, appendBytesCount: 1)
             result += data
         case .Struct:
             result += Data.init(Array<UInt8>(hex: self.value))
             //
-            result += getLengthData(length: self.module.data(using: String.Encoding.utf8)!.bytes.count, appendBytesCount: 4)
+            result += uleb128Format(length: self.module.data(using: String.Encoding.utf8)!.bytes.count)//getLengthData(length: self.module.data(using: String.Encoding.utf8)!.bytes.count, appendBytesCount: 4)
             result += self.module.data(using: String.Encoding.utf8)!
             //
-            result += getLengthData(length: self.name.data(using: String.Encoding.utf8)!.bytes.count, appendBytesCount: 4)
+            result += uleb128Format(length: self.name.data(using: String.Encoding.utf8)!.bytes.count)//getLengthData(length: self.name.data(using: String.Encoding.utf8)!.bytes.count, appendBytesCount: 4)
             result += self.name.data(using: String.Encoding.utf8)!
             // 追加argument数量
-            result += getLengthData(length: self.typeParams.count, appendBytesCount: 4)
+            result += uleb128Format(length: self.typeParams.count)//getLengthData(length: self.typeParams.count, appendBytesCount: 1)
         }
         return result
     }
