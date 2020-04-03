@@ -180,11 +180,6 @@ class LibraSDKTests: XCTestCase {
 //
 //            XCTAssertEqual(testWallet2.privateKey.raw.toHexString(), "a325fe7d27b1b49f191cc03525951fec41b6ffa2d4b3007bb1d9dd353b7e56a6")
             print("success")
-            let bytes = [6, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 76, 66, 82, 1, 0, 0, 0, 84, 0, 0,
-            0, 0]
-            print(BigUInt(20000).serialize().bytes)
-//            print(LibraTypeTag.init(address: "0000000000000000000000000000000000000000000000000000000000000000", module: "LBR", name: "T", typeParams: [String]()).serialize().bytes)
             print("success")
         } catch {
             print(error.localizedDescription)
@@ -251,49 +246,51 @@ class LibraSDKTests: XCTestCase {
         XCTAssertEqual(state2, false)
     }
     func testMultiEdd25519() {
-//        struct MultiEdd25519PublicKey {
-//            var publicKeys: [String]
-//            var threshold: Int
-//        }
-//        do {
-//            let mnemonic1 = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
-//            let seed1 = try LibraMnemonic.seed(mnemonic: mnemonic1)
-//            let wallet1 = try LibraWallet.init(seed: seed1, depth: 0)
-//            print(wallet1.publicKey.raw.bytes.toHexString())
-//            //24e236320adcdf04306257212433bbcaa0d8ccc6037cae4440455146c9cf8bf6
-//            let mnemonic2 = ["grant", "security", "cluster", "pill", "visit", "wave", "skull", "chase", "vibrant", "embrace", "bronze", "tip"]
-//            let seed2 = try LibraMnemonic.seed(mnemonic: mnemonic2)
-//            let wallet2 = try LibraWallet.init(seed: seed2, depth: 0)
-//            print(wallet2.publicKey.raw.bytes.toHexString())
-//            //50b715879a727bbc561786b0dc9e6afcd5d8a443da6eb632952e692b83e8e7cb
-//            let multiPublicKey = wallet1.publicKey.raw + wallet2.publicKey.raw + BigUInt(2).serialize().bytes
-//            print(multiPublicKey.toHexString())
-//            let address = ("\(multiPublicKey.toHexString())1").bytes.sha3(SHA3.Variant.sha256).toHexString()
-//            //2374e18d17bcbbd476fcd42dcea36a69
-//            //001f30eab7908607cc897dda9c01ffa2
-//            print(address)
-//        } catch {
-//            print(error.localizedDescription)
-//        }
-//        do {
-//            let result = try LibraManager.splitAddress(address: "24e236320adcdf04306257212433bbcaa0d8ccc6037cae4440455146c9cf8bf6s")
-//            let result2 = try LibraManager.splitAddress(address: "24e236320adcdf04306257212433bbcaa0d8ccc6037cae4440455146c9cf8bf")
-//            let result3 = try LibraManager.splitAddress(address: "a0d8ccc6037cae4440455146c9cf8bf6")
-//        } catch {
-//            print(error)
-//        }
-//        let result = try? LibraManager.splitAddress(address: "24e236320adcdf04306257212433bbcaa0d8ccc6037cae4440455146c9cf8bf6s")
-        print(try? LibraManager.splitAddress(address: "24e236320adcdf04306257212433bbcaa0d8ccc6037cae4440455146c9cf8bf6s"))
-        print(try? LibraManager.splitAddress(address: "24e236320adcdf04306257212433bbcaa0d8ccc6037cae4440455146c9cf8bf"))
-        print(try? LibraManager.splitAddress(address: "a0d8ccc6037cae4440455146c9cf8bf6"))
-        print(try? LibraManager.splitAddress(address: "24e236320adcdf04306257212433bbcaa0d8ccc6037cae4440455146c9cf8bf6"))
-        
-        XCTAssertEqual(LibraManager.isValidLibraAddress(address: "24e236320adcdf04306257212433bbcaa0d8ccc6037cae4440455146c9cf8bf6s"), false)
-        XCTAssertEqual(LibraManager.isValidLibraAddress(address: "24e236320adcdf04306257212433bbcaa0d8ccc6037cae4440455146c9cf8bf"), false)
-        XCTAssertEqual(LibraManager.isValidLibraAddress(address: "a0d8ccc6037cae4440455146c9cf8bf"), false)
+        struct MultiEdd25519PublicKey {
+            var publicKeys: [String]
+            var threshold: Int
+        }
+        do {
+            print(Data.init(hex: "11000000000000000000000000000000").bytes)
+            let mnemonic1 = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "begin", "host"]
+            let seed1 = try LibraMnemonic.seed(mnemonic: mnemonic1)
+            let wallet1 = try LibraWallet.init(seed: seed1, depth: 0)
+            print(wallet1.publicKey.raw.bytes.toHexString())
+            
+            let address1 = Data.init(hex: "\(wallet1.publicKey.raw.bytes.toHexString())0").bytes.sha3(SHA3.Variant.sha256).toHexString()
+            print("address1 = \(address1)")
+//            f2fef5f785ceac4cbd25eac2f248d2bb331321aefcce2ee794430d07d7a953a0
+            //24e236320adcdf04306257212433bbcaa0d8ccc6037cae4440455146c9cf8bf6
+            let mnemonic2 = ["grant", "security", "cluster", "pill", "visit", "wave", "skull", "chase", "vibrant", "embrace", "bronze", "tip"]
+            let seed2 = try LibraMnemonic.seed(mnemonic: mnemonic2)
+            let wallet2 = try LibraWallet.init(seed: seed2, depth: 0)
+            print(wallet2.publicKey.raw.bytes.toHexString())
+            let address2 = Data.init(hex: "\(wallet2.publicKey.raw.bytes.toHexString())0").bytes.sha3(SHA3.Variant.sha256).toHexString()
+            print("address2 = \(address2)")
+            //50b715879a727bbc561786b0dc9e6afcd5d8a443da6eb632952e692b83e8e7cb
+            let multiPublicKey = wallet1.publicKey.raw + wallet2.publicKey.raw + BigUInt(2).serialize().bytes
+            print(multiPublicKey.toHexString())
+            let address = Data.init(hex: "\(multiPublicKey.toHexString())1").bytes.sha3(SHA3.Variant.sha256).toHexString()
+            //2374e18d17bcbbd476fcd42dcea36a69
+            //001f30eab7908607cc897dda9c01ffa2
+            print(address)
 
-
-        XCTAssertEqual(LibraManager.isValidLibraAddress(address: "a0d8ccc6037cae4440455146c9cf8bf6"), false)
-        XCTAssertEqual(LibraManager.isValidLibraAddress(address: "24e236320adcdf04306257212433bbcaa0d8ccc6037cae4440455146c9cf8bf6"), true)
+            var sha3Data = Data.init(Array<UInt8>(hex: (LibraSignSalt.sha3(SHA3.Variant.sha256))))
+            
+            // 交易第二部分(追加带签名交易)
+            sha3Data.append(Data.init(hex: "Test Message").bytes, count: Data.init(hex: "Test Message").bytes.count)
+            
+            let signature1 = Ed25519.sign(message: sha3Data.sha3(.sha256).bytes, secretKey: wallet1.privateKey.raw.bytes)
+            
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    func testULEB128() {
+        XCTAssertEqual(uleb128Format(length: 128).toHexString(), "8001")
+        XCTAssertEqual(uleb128Format(length: 16384).toHexString(), "808001")
+        XCTAssertEqual(uleb128Format(length: 2097152).toHexString(), "80808001")
+        XCTAssertEqual(uleb128Format(length: 268435456).toHexString(), "8080808001")
+        XCTAssertEqual(uleb128Format(length: 9487).toHexString(), "8f4a")
     }
 }

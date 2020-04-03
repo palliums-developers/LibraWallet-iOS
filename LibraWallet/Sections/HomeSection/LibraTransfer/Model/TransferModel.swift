@@ -41,8 +41,8 @@ class TransferModel: NSObject {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
         queue.async {
-            semaphore.signal()
-           self.getLibraSequenceNumber(sendAddress: sendAddress, semaphore: semaphore)
+            semaphore.wait()
+            self.getLibraSequenceNumber(sendAddress: sendAddress, semaphore: semaphore)
         }
         queue.async {
             semaphore.wait()
@@ -63,14 +63,12 @@ class TransferModel: NSObject {
             }
             semaphore.signal()
         }
-//            semaphore.signal()
     }
     private func makeViolasTransaction(signature: String) {
         let request = mainProvide.request(.SendLibraTransaction(signature)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
-                    print(try? response.mapString())
                     let json = try response.map(ViolaSendTransactionMainModel.self)
                     if json.code == 2000 {
                        DispatchQueue.main.async(execute: {

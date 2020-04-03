@@ -81,7 +81,6 @@
 		36F42D94242DCB7800DBBF8F /* AddressManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9B499C235DA76100354EF0 /* AddressManagerViewController.swift */; };
 		36F42D95242DCB7800DBBF8F /* TransactionDetailWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D08AD4C2330D8F5004687E8 /* TransactionDetailWebView.swift */; };
 		36F42D96242DCB7800DBBF8F /* LBXScanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC48863232222CE005FF254 /* LBXScanView.swift */; };
-		36F42D97242DCB7800DBBF8F /* ViolasAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515B723A32CF50069A909 /* ViolasAccount.swift */; };
 		36F42D98242DCB7800DBBF8F /* RawTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC901E6232628A40097FD85 /* RawTransaction.swift */; };
 		36F42D99242DCB7800DBBF8F /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9B49E223602EF900354EF0 /* SettingView.swift */; };
 		36F42D9A242DCB7800DBBF8F /* AboutUsTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9B4A02236048A000354EF0 /* AboutUsTableViewHeader.swift */; };
@@ -461,7 +460,6 @@
 		9DB515B223A32BC50069A909 /* ViolasPrivateKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515B123A32BC50069A909 /* ViolasPrivateKey.swift */; };
 		9DB515B423A32C130069A909 /* ViolasPublicKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515B323A32C130069A909 /* ViolasPublicKey.swift */; };
 		9DB515B623A32C3A0069A909 /* ViolasHDWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515B523A32C3A0069A909 /* ViolasHDWallet.swift */; };
-		9DB515B823A32CF50069A909 /* ViolasAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515B723A32CF50069A909 /* ViolasAccount.swift */; };
 		9DB515BB23A32E4C0069A909 /* ViolasRawTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515BA23A32E4C0069A909 /* ViolasRawTransaction.swift */; };
 		9DB515BD23A32E8C0069A909 /* ViolasTransactionArgument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515BC23A32E8C0069A909 /* ViolasTransactionArgument.swift */; };
 		9DB515BF23A32EF80069A909 /* ViolasTransactionAccessPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515BE23A32EF80069A909 /* ViolasTransactionAccessPath.swift */; };
@@ -765,7 +763,6 @@
 		9DB515B123A32BC50069A909 /* ViolasPrivateKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasPrivateKey.swift; sourceTree = "<group>"; };
 		9DB515B323A32C130069A909 /* ViolasPublicKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasPublicKey.swift; sourceTree = "<group>"; };
 		9DB515B523A32C3A0069A909 /* ViolasHDWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasHDWallet.swift; sourceTree = "<group>"; };
-		9DB515B723A32CF50069A909 /* ViolasAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasAccount.swift; sourceTree = "<group>"; };
 		9DB515BA23A32E4C0069A909 /* ViolasRawTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasRawTransaction.swift; sourceTree = "<group>"; };
 		9DB515BC23A32E8C0069A909 /* ViolasTransactionArgument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasTransactionArgument.swift; sourceTree = "<group>"; };
 		9DB515BE23A32EF80069A909 /* ViolasTransactionAccessPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasTransactionAccessPath.swift; sourceTree = "<group>"; };
@@ -3013,7 +3010,6 @@
 				9DB515B123A32BC50069A909 /* ViolasPrivateKey.swift */,
 				9DB515B323A32C130069A909 /* ViolasPublicKey.swift */,
 				9DB515B523A32C3A0069A909 /* ViolasHDWallet.swift */,
-				9DB515B723A32CF50069A909 /* ViolasAccount.swift */,
 			);
 			path = ViolasKit;
 			sourceTree = "<group>";
@@ -3373,7 +3369,6 @@
 				36F42D94242DCB7800DBBF8F /* AddressManagerViewController.swift in Sources */,
 				36F42D95242DCB7800DBBF8F /* TransactionDetailWebView.swift in Sources */,
 				36F42D96242DCB7800DBBF8F /* LBXScanView.swift in Sources */,
-				36F42D97242DCB7800DBBF8F /* ViolasAccount.swift in Sources */,
 				36F42D98242DCB7800DBBF8F /* RawTransaction.swift in Sources */,
 				36F42D99242DCB7800DBBF8F /* SettingView.swift in Sources */,
 				36F42D9A242DCB7800DBBF8F /* AboutUsTableViewHeader.swift in Sources */,
@@ -3637,7 +3632,6 @@
 				9D9B49AA235DA76100354EF0 /* AddressManagerViewController.swift in Sources */,
 				9D08AD4D2330D8F5004687E8 /* TransactionDetailWebView.swift in Sources */,
 				9DC4886A232222CF005FF254 /* LBXScanView.swift in Sources */,
-				9DB515B823A32CF50069A909 /* ViolasAccount.swift in Sources */,
 				9DC901E7232628A40097FD85 /* RawTransaction.swift in Sources */,
 				9D9B49E323602EF900354EF0 /* SettingView.swift in Sources */,
 				9D9B4A07236048A000354EF0 /* AboutUsTableViewHeader.swift in Sources */,
