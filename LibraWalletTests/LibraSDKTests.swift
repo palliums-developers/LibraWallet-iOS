@@ -251,53 +251,67 @@ class LibraSDKTests: XCTestCase {
             var threshold: Int
         }
         do {
-            print(Data.init(hex: "11000000000000000000000000000000").bytes)
             let mnemonic1 = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "begin", "host"]
             let seed1 = try LibraMnemonic.seed(mnemonic: mnemonic1)
             let wallet1 = try LibraWallet.init(seed: seed1, depth: 0)
             print(wallet1.publicKey.raw.bytes.toHexString())
-            
-            let address1 = Data.init(hex: "\(wallet1.publicKey.raw.bytes.toHexString())0").bytes.sha3(SHA3.Variant.sha256).toHexString()
-            print("address1 = \(address1)")
 //            f2fef5f785ceac4cbd25eac2f248d2bb331321aefcce2ee794430d07d7a953a0
             //24e236320adcdf04306257212433bbcaa0d8ccc6037cae4440455146c9cf8bf6
             let mnemonic2 = ["grant", "security", "cluster", "pill", "visit", "wave", "skull", "chase", "vibrant", "embrace", "bronze", "tip"]
             let seed2 = try LibraMnemonic.seed(mnemonic: mnemonic2)
             let wallet2 = try LibraWallet.init(seed: seed2, depth: 0)
             print(wallet2.publicKey.raw.bytes.toHexString())
-            let address2 = Data.init(hex: "\(wallet2.publicKey.raw.bytes.toHexString())0").bytes.sha3(SHA3.Variant.sha256).toHexString()
-            print("address2 = \(address2)")
             //50b715879a727bbc561786b0dc9e6afcd5d8a443da6eb632952e692b83e8e7cb
-            let multiPublicKey = wallet1.publicKey.raw + wallet2.publicKey.raw + BigUInt(2).serialize().bytes
-            print(multiPublicKey.toHexString())
-            let address = Data.init(hex: "\(multiPublicKey.toHexString())1").bytes.sha3(SHA3.Variant.sha256).toHexString()
-            //2374e18d17bcbbd476fcd42dcea36a69
-            //001f30eab7908607cc897dda9c01ffa2
-            print(address)
+            
+            
+            let multiPublicKey = LibraMultiPublicKey.init(data: [wallet1.publicKey.raw, wallet2.publicKey.raw], threshold: 1)
+            print(multiPublicKey.toAddress())
 
-            var sha3Data = Data.init(Array<UInt8>(hex: (LibraSignSalt.sha3(SHA3.Variant.sha256))))
+//            var sha3Data = Data.init(Array<UInt8>(hex: (LibraSignSalt.sha3(SHA3.Variant.sha256))))
+//
+//            // 交易第二部分(追加带签名交易)
+//            sha3Data.append(Data.init(hex: "Test Message").bytes, count: Data.init(hex: "Test Message").bytes.count)
+//
+//            let signature1 = Ed25519.sign(message: sha3Data.sha3(.sha256).bytes, secretKey: wallet1.privateKey.raw.bytes)
+//            let signature2 = Ed25519.sign(message: sha3Data.sha3(.sha256).bytes, secretKey: wallet2.privateKey.raw.bytes)
             
-            // 交易第二部分(追加带签名交易)
-            sha3Data.append(Data.init(hex: "Test Message").bytes, count: Data.init(hex: "Test Message").bytes.count)
-            
-            let signature1 = Ed25519.sign(message: sha3Data.sha3(.sha256).bytes, secretKey: wallet1.privateKey.raw.bytes)
             
         } catch {
             print(error.localizedDescription)
         }
     }
+    func testMultiSign2() {
+        let publicKey1 = Data.init(Array<UInt8>(hex: "c413ea446039d0cd07715ddedb8169393e456b03d05ce67d50a4446ba5e067b0"))
+        let publicKey2 = Data.init(Array<UInt8>(hex: "005c135145c60db0253e164a6f9fa396ae7e376761538ac55b40747690e757de"))
+        let address = LibraMultiPublicKey.init(data: [publicKey1, publicKey2], threshold: 1).toAddress()
+        print("address = \(address)")
+        //de10d0352d3a40156d345e28fe3fb6af
+        print(Data.init(hex: "0220c413ea446039d0cd07715ddedb8169393e456b03d05ce67d50a4446ba5e067b020005c135145c60db0253e164a6f9fa396ae7e376761538ac55b40747690e757de011").bytes.sha3(SHA3.Variant.sha256).toHexString())
+        XCTAssertEqual(address, "de10d0352d3a40156d345e28fe3fb6af")
+    }
     func testULEB128() {
-//        XCTAssertEqual(uleb128Format(length: 128).toHexString(), "8001")
-//        XCTAssertEqual(uleb128Format(length: 16384).toHexString(), "808001")
-//        XCTAssertEqual(uleb128Format(length: 2097152).toHexString(), "80808001")
-//        XCTAssertEqual(uleb128Format(length: 268435456).toHexString(), "8080808001")
+        XCTAssertEqual(uleb128Format(length: 128).toHexString(), "8001")
+        XCTAssertEqual(uleb128Format(length: 16384).toHexString(), "808001")
+        XCTAssertEqual(uleb128Format(length: 2097152).toHexString(), "80808001")
+        XCTAssertEqual(uleb128Format(length: 268435456).toHexString(), "8080808001")
         XCTAssertEqual(uleb128Format(length: 9487).toHexString(), "8f4a")
-        XCTAssertEqual(uleb128Format(length: 205).toHexString(), "8f4a")
     }
     func testU64() {
         let testData = TransactionArgument.init(code: .U64, value: "9213671392124193148")
         print(testData.serialize().toHexString())
         print("move".data(using: String.Encoding.utf8)?.toHexString())
         print(BigUInt(86400).serialize().bytes)
+        for i in 0..<32 {
+            print(i)
+            aaa(index: i)
+        }
+    }
+    func aaa(index: Int) {
+        var bitmap = Data.init(Array<UInt8>(hex: "00000000"))
+        let bucket = index / 8
+//        # It's always invoked with index < 32, thus there is no need to check range.
+        let bucket_pos = index - (bucket * 8)
+        bitmap[bucket] |= 128 >> bucket_pos
+        print(bitmap.toHexString())
     }
 }

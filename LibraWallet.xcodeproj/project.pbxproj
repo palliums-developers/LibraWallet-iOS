@@ -296,6 +296,8 @@
 		36F42E81242DCB7800DBBF8F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D712442232F7662009DED52 /* Assets.xcassets */; };
 		36F42E89242E347300DBBF8F /* LibraTypeTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F42E88242E347300DBBF8F /* LibraTypeTag.swift */; };
 		36F42E8B2431B56A00DBBF8F /* StructTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F42E8A2431B56A00DBBF8F /* StructTag.swift */; };
+		36F42EB1243C80DE00DBBF8F /* LibraMultiPrivateKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F42EB0243C80DE00DBBF8F /* LibraMultiPrivateKey.swift */; };
+		36F42EB3243C80F700DBBF8F /* LibraMultiPublicKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F42EB2243C80F700DBBF8F /* LibraMultiPublicKey.swift */; };
 		79E14A1ECB7CE5CBF4ADDA48 /* Pods_LibraWallet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4308B3ACDBB4EC274104FA26 /* Pods_LibraWallet.framework */; };
 		84F942D4E0AB7CC3C4350654 /* Pods_LibraWalletTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68DEF872B52FD220FD8C8434 /* Pods_LibraWalletTests.framework */; };
 		9D08AD372330BA75004687E8 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D08AD362330BA75004687E8 /* NetworkManager.swift */; };
@@ -588,6 +590,8 @@
 		36F42E86242DCB7800DBBF8F /* LibraWallet_Publish.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LibraWallet_Publish.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		36F42E88242E347300DBBF8F /* LibraTypeTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraTypeTag.swift; sourceTree = "<group>"; };
 		36F42E8A2431B56A00DBBF8F /* StructTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StructTag.swift; sourceTree = "<group>"; };
+		36F42EB0243C80DE00DBBF8F /* LibraMultiPrivateKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraMultiPrivateKey.swift; sourceTree = "<group>"; };
+		36F42EB2243C80F700DBBF8F /* LibraMultiPublicKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraMultiPublicKey.swift; sourceTree = "<group>"; };
 		4308B3ACDBB4EC274104FA26 /* Pods_LibraWallet.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LibraWallet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5186520DDD2B7E61F7417817 /* Pods-LibraWalletUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LibraWalletUITests.release.xcconfig"; path = "Target Support Files/Pods-LibraWalletUITests/Pods-LibraWalletUITests.release.xcconfig"; sourceTree = "<group>"; };
 		537312D66569858E8F074AEA /* Pods-LibraWallet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LibraWallet.debug.xcconfig"; path = "Target Support Files/Pods-LibraWallet/Pods-LibraWallet.debug.xcconfig"; sourceTree = "<group>"; };
@@ -2609,6 +2613,8 @@
 				9DC487FC2320AF4E005FF254 /* LibraWallet.swift */,
 				9DC488042320DBCB005FF254 /* LibraPublicKey.swift */,
 				9DC4880A2320E6C1005FF254 /* LibraPrivateKey.swift */,
+				36F42EB0243C80DE00DBBF8F /* LibraMultiPrivateKey.swift */,
+				36F42EB2243C80F700DBBF8F /* LibraMultiPublicKey.swift */,
 				9D5C7C6623AA24390090385C /* LibraCommon.swift */,
 				9DC487FE2320AFB8005FF254 /* LibraError.swift */,
 				9DC488002320BE88005FF254 /* LibraNetwork.swift */,
@@ -3580,6 +3586,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				36F42EB3243C80F700DBBF8F /* LibraMultiPublicKey.swift in Sources */,
 				3623AB5F23ED70E2004A01BF /* TokenMappingModel.swift in Sources */,
 				9DA0263E236BFDEA0084905B /* WalletListFlowLayout.swift in Sources */,
 				9DBC267923408D55009650EA /* ed25519_sign.swift in Sources */,
@@ -3694,6 +3701,7 @@
 				9D1A42D92383C45C008978A7 /* VTokenViewModel.swift in Sources */,
 				9D9B49B1235DA76100354EF0 /* AddAddressView.swift in Sources */,
 				9DC06A2D2371786B00BCE1FE /* CheckBackupViewController.swift in Sources */,
+				36F42EB1243C80DE00DBBF8F /* LibraMultiPrivateKey.swift in Sources */,
 				9D9B49B9235DBE8100354EF0 /* ImportIdentityWalletView.swift in Sources */,
 				9DA8E2A22317ABC400E28D07 /* AppDelegate.swift in Sources */,
 				9D9B49C9235FFA8E00354EF0 /* MineModel.swift in Sources */,

@@ -54,13 +54,13 @@ struct LibraTypeTag {
         self.name = name
         self.typeParams = typeParams
     }
-    init(typeTag: TypeTag, value: String) {
-        self.typeTag = typeTag
-        self.value = value
+    init(structData: StructTag) {
+        self.typeTag = .Struct
         
-        self.module = ""
-        self.name = ""
-        self.typeParams = [""]
+        self.value = structData.address
+        self.module = structData.module
+        self.name = structData.name
+        self.typeParams = structData.typeParams
     }
     func serialize() -> Data {
         var result = Data()

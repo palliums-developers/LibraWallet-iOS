@@ -9,7 +9,6 @@
 import Foundation
 import CryptoSwift
 struct RawTransaction {
-    
     /// 发送地址
     fileprivate let senderAddress: String
     /// 发送序列号
@@ -41,19 +40,17 @@ struct RawTransaction {
         var result = Data()
         // senderAddress
         result += Data.init(Array<UInt8>(hex: self.senderAddress))
-        // sequenceNumber
+        // sequenceNumber(固定8个字节)
         result += getLengthData(length: Int(sequenceNumber), appendBytesCount: 8)
         // TransactionPayload
         result += self.payLoad
-        // maxGasAmount
+        // maxGasAmount(固定8个字节)
         result += getLengthData(length: Int(maxGasAmount), appendBytesCount: 8)
-        // gasUnitPrice
+        // gasUnitPrice(固定8个字节)
         result += getLengthData(length: Int(gasUnitPrice), appendBytesCount: 8)
-
-        result += LibraTypeTag.init(typeTag: .Struct, value: "00000000000000000000000000000000", module: "LBR", name: "T", typeParams: [String]()).serialize()
-        // expirationTime
-//        00000000000000000000000000000000
-//        00000000000000000000000000000000
+        // libraTypeTag
+        result += LibraTypeTag.init(structData: StructTag.init(type: .libraDefault)).serialize()
+        // expirationTime(固定8个字节)
         result += getLengthData(length: expirationTime, appendBytesCount: 8)
         return result
     }

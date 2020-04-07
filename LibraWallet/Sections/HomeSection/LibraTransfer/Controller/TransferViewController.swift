@@ -32,19 +32,22 @@ class TransferViewController: BaseViewController {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.barStyle = .default
     }
-    //子View
+    deinit {
+        print("TransferViewController销毁了")
+    }
+    /// 子View
     private lazy var detailView : TransferView = {
         let view = TransferView.init()
         view.delegate = self
         return view
     }()
+    /// 网络请求、数据模型
     lazy var dataModel: TransferModel = {
         let model = TransferModel.init()
         return model
     }()
     typealias successClosure = () -> Void
     var actionClosure: successClosure?
-    var myContext = 0
     var wallet: LibraWalletManager?
     
     var address: String? {
@@ -52,81 +55,14 @@ class TransferViewController: BaseViewController {
            self.detailView.addressTextField.text = address
         }
     }
+    /// 数据监听KVO
+    var observer: NSKeyValueObservation?
 }
-extension TransferViewController {
-    //MARK: - KVO
-    func initKVO() {
-        dataModel.addObserver(self, forKeyPath: "dataDic", options: NSKeyValueObservingOptions.new, context: &myContext)
-    }
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?)  {
-        
-        guard context == &myContext else {
-            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
-            return
-        }
-        guard (change?[NSKeyValueChangeKey.newKey]) != nil else {
-            return
-        }
-        guard let jsonData = (object! as AnyObject).value(forKey: "dataDic") as? NSDictionary else {
-            return
-        }
-        if let error = jsonData.value(forKey: "error") as? LibraWalletError {
-            if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
-                // 网络无法访问
-                print(error.localizedDescription)
-            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletTokenExpired).localizedDescription {
-                // 钱包不存在
-                print(error.localizedDescription)
-//                let vc = WalletCreateViewController()
-//                let navi = UINavigationController.init(rootViewController: vc)
-//                self.present(navi, animated: true, completion: nil)
-            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionExpired).localizedDescription {
-                // 版本太久
-                print(error.localizedDescription)
-            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
-                // 解析失败
-                print(error.localizedDescription)
-            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
-                print(error.localizedDescription)
-                // 数据为空
-            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
-                print(error.localizedDescription)
-                // 数据返回状态异常
-            }
-            self.detailView.toastView?.hide()
-            self.view.makeToast(error.localizedDescription, position: .center)
-            return
-        }
-        let type = jsonData.value(forKey: "type") as! String
-        
-        if type == "Transfer" {
-            self.detailView.toastView?.hide()
-            // 转账成功
-            self.view.makeToast(localLanguage(keyString: "wallet_transfer_success_alert"),
-                                position: .center)
-            if let action = self.actionClosure {
-                action()
-                self.navigationController?.popViewController(animated: true)
-            }
-        }
-        
-    }
-}
-extension TransferViewController: TransferViewDelegate {    
+//MARK: - 子View代理方法列表
+extension TransferViewController: TransferViewDelegate {
     func scanAddressQRcode() {
         let vc = ScanViewController()
         vc.actionClosure = { address in
-//            if address.hasPrefix("libra:") {
-//                let tempAddress = address.replacingOccurrences(of: "libra:", with: "")
-//
-//                guard LibraManager.isValidLibraAddress(address: tempAddress) else {
-//                    self.view.makeToast("不是有效的Libra地址", position: .center)
-//                    return
-//                }
-//                self.detailView.addressTextField.text = tempAddress
-//            } else {
-//                self.view.makeToast("不是有效的Libra地址", position: .center)
-//            }
             do {
                 let tempAddressModel = try handleScanContent(content: address)
                 self.detailView.addressTextField.text = tempAddressModel.address
@@ -157,5 +93,51 @@ extension TransferViewController: TransferViewDelegate {
             self?.view.makeToast(errorContent, position: .center)
         }
         self.present(alert, animated: true, completion: nil)
+    }
+}
+//MARK: - 网络请求数据处理中心
+extension TransferViewController {
+    //MARK: - KVO
+    func initKVO() {
+        self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
+            guard let dataDic = change.newValue, dataDic.count != 0 else {
+                self?.detailView.hideToastActivity()
+//                self?.endLoading()
+                return
+            }
+            let type = dataDic.value(forKey: "type") as! String
+            if let error = dataDic.value(forKey: "error") as? LibraWalletError {
+                if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
+                    // 网络无法访问
+                    print(error.localizedDescription)
+                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionExpired).localizedDescription {
+                    // 版本太久
+                    print(error.localizedDescription)
+                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
+                    // 解析失败
+                    print(error.localizedDescription)
+                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
+                    print(error.localizedDescription)
+                    // 数据为空
+                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
+                    print(error.localizedDescription)
+                    // 数据返回状态异常
+                }
+                self?.detailView.hideToastActivity()
+                self?.view.makeToast(error.localizedDescription, position: .center)
+                return
+            }
+            if type == "SendLibraTransaction" {
+                self?.detailView.toastView?.hide()
+                // 转账成功
+                self?.view.makeToast(localLanguage(keyString: "wallet_transfer_success_alert"),
+                                    position: .center)
+                if let action = self?.actionClosure {
+                    action()
+                    self?.navigationController?.popViewController(animated: true)
+                }
+            }
+            
+        })
     }
 }

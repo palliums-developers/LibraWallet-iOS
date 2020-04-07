@@ -8,8 +8,20 @@
 
 import UIKit
 import Moya
+struct LibraTransferErrorModel: Codable {
+    var code: Int?
+    var data: String?
+    var message: String?
+}
+struct LibraTransferMainModel: Codable {
+    var id: String?
+    var jsonrpc: String?
+    var result: String?
+    var error: LibraTransferErrorModel?
+}
+
 class TransferModel: NSObject {
-    @objc var dataDic: NSMutableDictionary = [:]
+    @objc dynamic var dataDic: NSMutableDictionary = [:]
     private var requests: [Cancellable] = []
     
     private var sequenceNumber: Int64?
@@ -22,16 +34,16 @@ class TransferModel: NSObject {
                     self?.sequenceNumber = json.result?.sequence_number
                     semaphore.signal()
                 } catch {
-                    print("解析异常\(error.localizedDescription)")
-                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "UpdateLibraBalance")
+                    print("GetLibraSequenceNumber_解析异常\(error.localizedDescription)")
+                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetLibraSequenceNumber")
                     self?.setValue(data, forKey: "dataDic")
                 }
             case let .failure(error):
                 guard error.errorCode != -999 else {
-                    print("网络请求已取消")
+                    print("GetLibraSequenceNumber_网络请求已取消")
                     return
                 }
-                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "UpdateLibraBalance")
+                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "GetLibraSequenceNumber")
                 self?.setValue(data, forKey: "dataDic")
             }
         }
@@ -57,7 +69,7 @@ class TransferModel: NSObject {
             } catch {
                 print(error.localizedDescription)
                 DispatchQueue.main.async(execute: {
-                    let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "SendViolasTransaction")
+                    let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "SendLibraTransaction")
                     self.setValue(data, forKey: "dataDic")
                 })
             }
@@ -69,20 +81,20 @@ class TransferModel: NSObject {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(ViolaSendTransactionMainModel.self)
-                    if json.code == 2000 {
+                    let json = try response.map(LibraTransferMainModel.self)
+                    if json.result == nil {
                        DispatchQueue.main.async(execute: {
-                           let data = setKVOData(type: "SendViolasTransaction")
+                           let data = setKVOData(type: "SendLibraTransaction")
                            self?.setValue(data, forKey: "dataDic")
                        })
                     } else {
-                        print("SendViolasTransaction_状态异常")
+                        print("SendLibraTransaction_状态异常")
                         DispatchQueue.main.async(execute: {
-                            if let message = json.message, message.isEmpty == false {
-                                let data = setKVOData(error: LibraWalletError.error(message), type: "SendViolasTransaction")
+                            if let message = json.error?.message, message.isEmpty == false {
+                                let data = setKVOData(error: LibraWalletError.error(message), type: "SendLibraTransaction")
                                 self?.setValue(data, forKey: "dataDic")
                             } else {
-                                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "SendViolasTransaction")
+                                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "SendLibraTransaction")
                                 self?.setValue(data, forKey: "dataDic")
                             }
                         })
@@ -90,7 +102,7 @@ class TransferModel: NSObject {
                 } catch {
                     print("解析异常\(error.localizedDescription)")
                     DispatchQueue.main.async(execute: {
-                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "SendViolasTransaction")
+                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "SendLibraTransaction")
                         self?.setValue(data, forKey: "dataDic")
                     })
                 }
@@ -100,7 +112,7 @@ class TransferModel: NSObject {
                     return
                 }
                 DispatchQueue.main.async(execute: {
-                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "SendViolasTransaction")
+                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "SendLibraTransaction")
                     self?.setValue(data, forKey: "dataDic")
                 })
                 

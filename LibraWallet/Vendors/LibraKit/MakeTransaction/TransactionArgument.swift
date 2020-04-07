@@ -50,7 +50,7 @@ struct TransactionArgument {
             result += data
         case .U8Vector:
             let data = Data.init(Array<UInt8>(hex: self.value))
-            result += uleb128Format(length: data.bytes.count)//getLengthData(length: data.bytes.count, appendBytesCount: 1)
+            result += uleb128Format(length: data.bytes.count)
             result += data
         case .Bool:
             result += getLengthData(length: Int(self.value)!, appendBytesCount: 1)

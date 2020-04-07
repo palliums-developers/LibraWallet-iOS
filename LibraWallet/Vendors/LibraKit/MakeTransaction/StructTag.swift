@@ -11,10 +11,10 @@ enum StructTagType {
     case libraDefault
 }
 struct StructTag {
-    fileprivate var address: String
-    fileprivate var module: String
-    fileprivate var name: String
-    fileprivate var typeParams: [String]
+    var address: String
+    var module: String
+    var name: String
+    var typeParams: [String]
     init(address: String, module: String, name: String, typeParams: [String]) {
         self.address = address
         self.module = module
