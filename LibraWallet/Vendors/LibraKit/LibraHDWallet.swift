@@ -1,5 +1,5 @@
 //
-//  LibraWallet.swift
+//  LibraHDWallet.swift
 //  LibraWallet
 //
 //  Created by palliums on 2019/9/5.
@@ -8,7 +8,7 @@
 
 import Foundation
 import CryptoSwift
-public final class LibraWallet {
+public final class LibraHDWallet {
     
     let seed: [UInt8]
     

@@ -34,7 +34,7 @@ class LibraWalletCoreTests: XCTestCase {
         do {
             let seed = try LibraMnemonic.seed(mnemonic: mnemonic)
             
-            let testWallet = try LibraWallet.init(seed: seed, depth: 0)
+            let testWallet = try LibraHDWallet.init(seed: seed, depth: 0)
             let walletAddress = testWallet.publicKey.toAddress()
             try KeychainManager.KeyManager.savePayPasswordToKeychain(walletAddress: walletAddress, password: "123456")
             let paymentPassword = try KeychainManager.KeyManager.getPayPasswordFromKeychain(walletAddress: walletAddress)
@@ -86,12 +86,12 @@ class LibraWalletCoreTests: XCTestCase {
         do {
             let seed = try LibraMnemonic.seed(mnemonic: mnemonic)
 
-            let libraWallet = try LibraWallet.init(seed: seed)
+            let libraWallet = try LibraHDWallet.init(seed: seed)
             LibraWalletManager.shared.initWallet(walletID: 0, walletBalance: 0, walletAddress: "", walletRootAddress: "", walletCreateTime: 0, walletName: "", walletCurrentUse: true, walletBiometricLock: false, walletIdentity: 0, walletType: .Libra, walletBackupState: false)
             
-            try LibraWalletManager.shared.saveMnemonicToKeychain(mnemonic: mnemonic, walletRootAddress: libraWallet.publicKey.toAddress())
+            try LibraWalletManager.shared.saveMnemonicToKeychain(mnemonic: mnemonic, walletRootAddress: LibraHDWallet.publicKey.toAddress())
 
-            let result = try LibraWalletManager.shared.getMnemonicFromKeychain(walletRootAddress: libraWallet.publicKey.toAddress())
+            let result = try LibraWalletManager.shared.getMnemonicFromKeychain(walletRootAddress: LibraHDWallet.publicKey.toAddress())
             XCTAssertEqual(result, mnemonic)
 
         } catch {

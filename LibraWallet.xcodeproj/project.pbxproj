@@ -202,7 +202,7 @@
 		36F42E17242DCB7800DBBF8F /* SupportCoinModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9B4A3723619AAC00354EF0 /* SupportCoinModel.swift */; };
 		36F42E18242DCB7800DBBF8F /* OrderDoneModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5C7C5F23A8A0040090385C /* OrderDoneModel.swift */; };
 		36F42E1A242DCB7800DBBF8F /* TokenMappingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB5C23ED70CF004A01BF /* TokenMappingView.swift */; };
-		36F42E1B242DCB7800DBBF8F /* LibraWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC487FC2320AF4E005FF254 /* LibraWallet.swift */; };
+		36F42E1B242DCB7800DBBF8F /* LibraHDWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC487FC2320AF4E005FF254 /* LibraHDWallet.swift */; };
 		36F42E1C242DCB7800DBBF8F /* MappingTransactionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB7F23FC0CB3004A01BF /* MappingTransactionsView.swift */; };
 		36F42E1D242DCB7800DBBF8F /* ViolasTransferModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D68D300237D260E005B7593 /* ViolasTransferModel.swift */; };
 		36F42E1F242DCB7800DBBF8F /* HomeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC902422328FC4A0097FD85 /* HomeModel.swift */; };
@@ -483,7 +483,7 @@
 		9DC06A452372A9F200BCE1FE /* MarketModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC06A442372A9F200BCE1FE /* MarketModel.swift */; };
 		9DC06A6B2373F40400BCE1FE /* BTCManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC06A6A2373F40400BCE1FE /* BTCManagerTests.swift */; };
 		9DC06A6E2373FEB900BCE1FE /* ViolasManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC06A6D2373FEB900BCE1FE /* ViolasManager.swift */; };
-		9DC487FD2320AF4E005FF254 /* LibraWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC487FC2320AF4E005FF254 /* LibraWallet.swift */; };
+		9DC487FD2320AF4E005FF254 /* LibraHDWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC487FC2320AF4E005FF254 /* LibraHDWallet.swift */; };
 		9DC487FF2320AFB8005FF254 /* LibraError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC487FE2320AFB8005FF254 /* LibraError.swift */; };
 		9DC488012320BE88005FF254 /* LibraNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488002320BE88005FF254 /* LibraNetwork.swift */; };
 		9DC488032320D6A1005FF254 /* LibraMnemonic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488022320D6A1005FF254 /* LibraMnemonic.swift */; };
@@ -788,7 +788,7 @@
 		9DC06A442372A9F200BCE1FE /* MarketModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketModel.swift; sourceTree = "<group>"; };
 		9DC06A6A2373F40400BCE1FE /* BTCManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTCManagerTests.swift; sourceTree = "<group>"; };
 		9DC06A6D2373FEB900BCE1FE /* ViolasManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasManager.swift; sourceTree = "<group>"; };
-		9DC487FC2320AF4E005FF254 /* LibraWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraWallet.swift; sourceTree = "<group>"; };
+		9DC487FC2320AF4E005FF254 /* LibraHDWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraHDWallet.swift; sourceTree = "<group>"; };
 		9DC487FE2320AFB8005FF254 /* LibraError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraError.swift; sourceTree = "<group>"; };
 		9DC488002320BE88005FF254 /* LibraNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraNetwork.swift; sourceTree = "<group>"; };
 		9DC488022320D6A1005FF254 /* LibraMnemonic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraMnemonic.swift; sourceTree = "<group>"; };
@@ -2610,7 +2610,7 @@
 			isa = PBXGroup;
 			children = (
 				9DC901E5232628860097FD85 /* MakeTransaction */,
-				9DC487FC2320AF4E005FF254 /* LibraWallet.swift */,
+				9DC487FC2320AF4E005FF254 /* LibraHDWallet.swift */,
 				9DC488042320DBCB005FF254 /* LibraPublicKey.swift */,
 				9DC4880A2320E6C1005FF254 /* LibraPrivateKey.swift */,
 				36F42EB0243C80DE00DBBF8F /* LibraMultiPrivateKey.swift */,
@@ -3492,7 +3492,7 @@
 				36F42E17242DCB7800DBBF8F /* SupportCoinModel.swift in Sources */,
 				36F42E18242DCB7800DBBF8F /* OrderDoneModel.swift in Sources */,
 				36F42E1A242DCB7800DBBF8F /* TokenMappingView.swift in Sources */,
-				36F42E1B242DCB7800DBBF8F /* LibraWallet.swift in Sources */,
+				36F42E1B242DCB7800DBBF8F /* LibraHDWallet.swift in Sources */,
 				36F42E1C242DCB7800DBBF8F /* MappingTransactionsView.swift in Sources */,
 				36F42E1D242DCB7800DBBF8F /* ViolasTransferModel.swift in Sources */,
 				36F42E1F242DCB7800DBBF8F /* HomeModel.swift in Sources */,
@@ -3757,7 +3757,7 @@
 				9D9B4A3823619AAC00354EF0 /* SupportCoinModel.swift in Sources */,
 				9D5C7C6023A8A0040090385C /* OrderDoneModel.swift in Sources */,
 				3623AB5D23ED70CF004A01BF /* TokenMappingView.swift in Sources */,
-				9DC487FD2320AF4E005FF254 /* LibraWallet.swift in Sources */,
+				9DC487FD2320AF4E005FF254 /* LibraHDWallet.swift in Sources */,
 				3623AB8023FC0CB3004A01BF /* MappingTransactionsView.swift in Sources */,
 				9D68D301237D260E005B7593 /* ViolasTransferModel.swift in Sources */,
 				9DC902432328FC4A0097FD85 /* HomeModel.swift in Sources */,

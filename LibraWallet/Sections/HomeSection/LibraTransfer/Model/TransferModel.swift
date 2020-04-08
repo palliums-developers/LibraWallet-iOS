@@ -54,13 +54,19 @@ class TransferModel: NSObject {
         let queue = DispatchQueue.init(label: "SendQueue")
         queue.async {
             semaphore.wait()
-            self.getLibraSequenceNumber(sendAddress: sendAddress, semaphore: semaphore)
+            self.getLibraSequenceNumber(sendAddress: "cd35f1a78093554f5dc9c61301f204e4", semaphore: semaphore)
         }
         queue.async {
             semaphore.wait()
             do {
-                let signature = try LibraManager.getNormalTransactionHex(sendAddress: sendAddress,
-                                                                         receiveAddress: receiveAddress,
+//                let signature = try LibraManager.getNormalTransactionHex(sendAddress: sendAddress,
+//                                                                         receiveAddress: receiveAddress,
+//                                                                         amount: amount,
+//                                                                         fee: fee,
+//                                                                         mnemonic: mnemonic,
+//                                                                         sequenceNumber: Int(self.sequenceNumber!))
+                let signature = try LibraManager.getMultiTransactionHex(sendAddress: "cd35f1a78093554f5dc9c61301f204e4",
+                                                                         receiveAddress: "7f4644ae2b51b65bd3c9d414aa853407",
                                                                          amount: amount,
                                                                          fee: fee,
                                                                          mnemonic: mnemonic,

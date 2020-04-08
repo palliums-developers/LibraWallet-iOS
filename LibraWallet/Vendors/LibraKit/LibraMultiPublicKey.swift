@@ -20,19 +20,17 @@ struct LibraMultiPublicKey {
     }
     func toMultiPublicKey() -> Data {
         var publicKeyData = Data()
-        publicKeyData += uleb128Format(length: self.raw.count)
-        publicKeyData += self.raw.reduce(Data(), {
-            $0 + uleb128Format(length: $1.count) + $1
-        })
+        for i in 0..<self.raw.count {
+            publicKeyData += self.raw[i]
+        }
         publicKeyData += BigUInt(self.threshold).serialize()
-        // 多签默认追加
-        publicKeyData += Data.init(hex: "1")
         return publicKeyData
     }
     func toAddress() -> String {
-        let publicKeyData = toMultiPublicKey()
+        var publicKeyData = toMultiPublicKey()
+        // 多签默认追加
+        publicKeyData += Data.init(hex: "1")
         let tempAddress = publicKeyData.bytes.sha3(SHA3.Variant.sha256).toHexString()
-        //0220c413ea446039d0cd07715ddedb8169393e456b03d05ce67d50a4446ba5e067b020005c135145c60db0253e164a6f9fa396ae7e376761538ac55b40747690e757de01
         let index = tempAddress.index(tempAddress.startIndex, offsetBy: 32)
         let address = tempAddress.suffix(from: index)
         let subStr: String = String(address)

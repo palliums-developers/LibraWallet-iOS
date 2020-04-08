@@ -27,44 +27,53 @@ struct LibraMultiPrivateKey {
         privateKeyData += BigUInt(self.threshold).serialize()
         return privateKeyData.toHexString()
     }
-
-    func signMultiTransaction(transaction: RawTransaction, privateKey: LibraMultiPrivateKey) throws -> Data {
-        // 待签名交易
-        let transactionRaw = transaction.serialize()
-        // 交易第一部分(盐sha3计算结果)
-
-        var sha3Data = Data.init(Array<UInt8>(hex: (LibraSignSalt.sha3(SHA3.Variant.sha256))))
-        
-        // 交易第二部分(追加带签名交易)
-        sha3Data.append(transactionRaw.bytes, count: transactionRaw.bytes.count)
-        // 签名数据
-        var signData = Data()
-//        // 追加签名长度
-//        signData += getLengthData(length: sign.count, appendBytesCount: 4)
-//
-//        // 追加签名
-//        signData += Data.init(bytes: sign, count: sign.count)
-        for i in 0..<privateKey.raw.count {
-            signData += (Ed25519.sign(message: sha3Data.sha3(.sha256).bytes, secretKey: privateKey.raw[i].bytes) + setBitmap(index: i))
+    public func extendedPublicKey() -> [Data] {
+        let publicKey = self.raw.map {
+            Ed25519.calcPublicKey(secretKey: $0.bytes)
         }
-        // 公钥数据
+        let publicKeys = publicKey.map {
+            LibraPublicKey.init(data: Data.init(bytes: $0, count: $0.count)).raw
+        }
+        return publicKeys
+    }
+//    func signMultiTransaction(transaction: RawTransaction, privateKey: LibraMultiPrivateKey) throws -> Data {
+    func signMultiTransaction(transaction: Data) throws -> Data {
+        // 交易第一部分-原始数据
+//        let transactionRaw = transaction.serialize()
+        let transactionRaw = transaction
+        // 交易第二部分-交易类型
+        let signType = Data.init(Array<UInt8>(hex: "01"))
+        // 交易第三部分-公钥
         var publicKeyData = Data()
         // 追加MultiPublicKey
-        publicKeyData += LibraMultiPublicKey.init(data: privateKey.raw, threshold: self.threshold).toMultiPublicKey()
-
-        let signType = Data.init(Array<UInt8>(hex: "10"))
-
-        let result = transactionRaw + signType + publicKeyData + signData
-
+        let multiPublickKey = LibraMultiPublicKey.init(data: self.extendedPublicKey(), threshold: self.threshold).toMultiPublicKey()
+        publicKeyData += uleb128Format(length: multiPublickKey.bytes.count)
+        publicKeyData += multiPublickKey
+        // 交易第四部分-签名
+        // 4.1待签数据追加盐
+        var sha3Data = Data.init(Array<UInt8>(hex: (LibraSignSalt.sha3(SHA3.Variant.sha256))))
+        // 4.2追加待签数据
+        sha3Data += transactionRaw
+        // 4.3签名数据
+        var signData = Data()
+        // 4.4追加签名数量1个字节
+//        signData += uleb128Format(length: self.threshold)
+        // 4.5追加签名
+        for i in 0..<self.threshold {
+            let sign = Ed25519.sign(message: sha3Data.sha3(.sha256).bytes, secretKey: self.raw[i].bytes)
+            signData += sign
+        }
+        signData += setBitmap(index: 0)
+        
+        let result = transactionRaw + signType + publicKeyData + uleb128Format(length: signData.count) + signData
         return result
     }
     func setBitmap(index: Int) -> Data {
         var bitmap = Data.init(Array<UInt8>(hex: "00000000"))
         let bucket = index / 8
-    //        # It's always invoked with index < 32, thus there is no need to check range.
+        // It's always invoked with index < 32, thus there is no need to check range.
         let bucket_pos = index - (bucket * 8)
         bitmap[bucket] |= 128 >> bucket_pos
-        print(bitmap.toHexString())
         return bitmap
     }
 }

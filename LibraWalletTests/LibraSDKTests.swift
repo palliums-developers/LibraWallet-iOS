@@ -91,7 +91,7 @@ class LibraSDKTests: XCTestCase {
         //有钱助词
         let mnemonic = ["net", "dice", "divide", "amount", "stamp", "flock", "brave", "nuclear", "fox", "aim", "father", "apology"]
         let seed = try! LibraMnemonic.seed(mnemonic: mnemonic)
-        let wallet = try! LibraWallet.init(seed: seed)
+        let wallet = try! LibraHDWallet.init(seed: seed)
 
 //
 //        let string3 = TransactionArgument.init(code: .Address, value:  "4fddcee027aa66e4e144d44dd218a345fb5af505284cb03368b7739e92dd6b3c")
@@ -163,7 +163,7 @@ class LibraSDKTests: XCTestCase {
         do {
             let seed = try LibraMnemonic.seed(mnemonic: mnemonic)
             
-            let testWallet = try LibraWallet.init(seed: seed, depth: 0)
+            let testWallet = try LibraHDWallet.init(seed: seed, depth: 0)
 //            let testMasterKey = try testWallet.getMasterKey()
             //24e236320adcdf04306257212433bbcaa0d8ccc6037cae4440455146c9cf8bf6
             print(testWallet.publicKey.raw.toHexString())
@@ -207,7 +207,7 @@ class LibraSDKTests: XCTestCase {
         do {
             let seed = try LibraMnemonic.seed(mnemonic: mnemonic)
             
-            let testWallet = try LibraWallet.init(seed: seed, depth: 0)
+            let testWallet = try LibraHDWallet.init(seed: seed, depth: 0)
             let walletAddress = testWallet.publicKey.toAddress()
 //            try KeychainManager.KeyManager.savePayPasswordToKeychain(walletAddress: walletAddress, password: "123456")
             let paymentPassword = try KeychainManager.KeyManager.getPayPasswordFromKeychain(walletAddress: walletAddress)
@@ -253,13 +253,13 @@ class LibraSDKTests: XCTestCase {
         do {
             let mnemonic1 = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "begin", "host"]
             let seed1 = try LibraMnemonic.seed(mnemonic: mnemonic1)
-            let wallet1 = try LibraWallet.init(seed: seed1, depth: 0)
+            let wallet1 = try LibraHDWallet.init(seed: seed1, depth: 0)
             print(wallet1.publicKey.raw.bytes.toHexString())
 //            f2fef5f785ceac4cbd25eac2f248d2bb331321aefcce2ee794430d07d7a953a0
             //24e236320adcdf04306257212433bbcaa0d8ccc6037cae4440455146c9cf8bf6
             let mnemonic2 = ["grant", "security", "cluster", "pill", "visit", "wave", "skull", "chase", "vibrant", "embrace", "bronze", "tip"]
             let seed2 = try LibraMnemonic.seed(mnemonic: mnemonic2)
-            let wallet2 = try LibraWallet.init(seed: seed2, depth: 0)
+            let wallet2 = try LibraHDWallet.init(seed: seed2, depth: 0)
             print(wallet2.publicKey.raw.bytes.toHexString())
             //50b715879a727bbc561786b0dc9e6afcd5d8a443da6eb632952e692b83e8e7cb
             
@@ -287,7 +287,7 @@ class LibraSDKTests: XCTestCase {
         print("address = \(address)")
         //de10d0352d3a40156d345e28fe3fb6af
         print(Data.init(hex: "0220c413ea446039d0cd07715ddedb8169393e456b03d05ce67d50a4446ba5e067b020005c135145c60db0253e164a6f9fa396ae7e376761538ac55b40747690e757de011").bytes.sha3(SHA3.Variant.sha256).toHexString())
-        XCTAssertEqual(address, "de10d0352d3a40156d345e28fe3fb6af")
+        XCTAssertEqual(address, "cd35f1a78093554f5dc9c61301f204e4")
     }
     func testULEB128() {
         XCTAssertEqual(uleb128Format(length: 128).toHexString(), "8001")
@@ -313,5 +313,15 @@ class LibraSDKTests: XCTestCase {
         let bucket_pos = index - (bucket * 8)
         bitmap[bucket] |= 128 >> bucket_pos
         print(bitmap.toHexString())
+    }
+    func testSign3() {
+        let privateData01 = Data.init(Array<UInt8>(hex: "f3cdd2183629867d6cfa24fb11c58ad515d5a4af014e96c00bb6ba13d3e5f80e"))
+        let privateData02 = Data.init(Array<UInt8>(hex: "c973d737cb40bcaf63a45a9736d7d7735e78148a06be185327304d6825e666ea"))
+        let privateKey01 = LibraPrivateKey.init(privateKey: privateData01.bytes)
+        let privateKey02 = LibraPrivateKey.init(privateKey: privateData02.bytes)
+        let address = LibraMultiPublicKey.init(data: [privateKey01.extendedPublicKey().raw, privateKey02.extendedPublicKey().raw], threshold: 1).toAddress()
+        print(address)
+//        let multiPrivateKey = LibraMultiPrivateKey.init(privateKeys: [privateData01, privateData02], threshold: 1)
+//        let sign = try? multiPrivateKey.signMultiTransaction(transaction: Data.init(Array<UInt8>(hex: "010203")), privateKey: multiPrivateKey)
     }
 }
