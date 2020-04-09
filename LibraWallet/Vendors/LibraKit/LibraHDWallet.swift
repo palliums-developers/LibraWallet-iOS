@@ -12,9 +12,9 @@ public final class LibraHDWallet {
     
     let seed: [UInt8]
     
-    let publicKey: LibraPublicKey
+    let publicKey: LibraHDPublicKey
     
-    let privateKey: LibraPrivateKey
+    let privateKey: LibraHDPrivateKey
     
     let depth: Int
     
@@ -24,7 +24,7 @@ public final class LibraHDWallet {
         
         self.depth = depth
         
-        self.privateKey = LibraPrivateKey.init(privateKey: privateKey)
+        self.privateKey = LibraHDPrivateKey.init(privateKey: privateKey)
         
         self.publicKey = self.privateKey.extendedPublicKey()
         

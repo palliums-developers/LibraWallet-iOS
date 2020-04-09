@@ -78,84 +78,12 @@ class LibraSDKTests: XCTestCase {
 //        _ = try! wallet.privateKey.signTransaction(transaction: raw, wallet: wallet)
 
     }
-    
-    func testDeserialize() {
-//        let testData = Data.init(hex: "010000002100000001217da6c6b3e19f1825cfb2676daecce3bf3de03cf26647c78df00b371b25cc978e00000020000000b8c39fc6910816ad21bc2be4f7e804539e7529b7b7d188c80f093e1e61f192cf00a8e6cf0000000000000700000000000000200000003b07b78954be13a5bc5cb2e0eaf48312a85d864091d5cb5faee296d5248d89df0400000000000000200000003f486909a2abd12a387797d9d1f78496c95b7d3878767a56dafe8f2260e5144d0400000000000000")
-//        let account = LibraAccount.init(accountData: testData)
-//        XCTAssertEqual(account.address, "b8c39fc6910816ad21bc2be4f7e804539e7529b7b7d188c80f093e1e61f192cf")
-//        XCTAssertEqual(account.sequenceNumber, 4)
-
-    }
-    
-    func testLibraKit() {
-        //有钱助词
-        let mnemonic = ["net", "dice", "divide", "amount", "stamp", "flock", "brave", "nuclear", "fox", "aim", "father", "apology"]
-        let seed = try! LibraMnemonic.seed(mnemonic: mnemonic)
-        let wallet = try! LibraHDWallet.init(seed: seed)
-
-//
-//        let string3 = TransactionArgument.init(code: .Address, value:  "4fddcee027aa66e4e144d44dd218a345fb5af505284cb03368b7739e92dd6b3c")
-//        let string4 = TransactionArgument.init(code: .U64, value: "\(9 * 1000000)")
-//        let program2 = TransactionProgram.init(code: getProgramCode(), argruments: [string3, string4], modules: []).serialize()
-//        print(string4.serialize().toHexString())
-//        let raw = RawTransaction.init(senderAddres: wallet.publicKey.toAddress(),
-//                                      sequenceNumber: 0,
-//                                      maxGasAmount: 140000,
-//                                      gasUnitPrice: 0,
-//                                      expirationTime: 0,
-//                                      programOrWrite: program2)
-//
-//
-//        let signResult = try! wallet.privateKey.signTransaction(transaction: raw, wallet: wallet).serializedData()
-//        print(signResult.toHexString())
-//        d3686886094923eace9e502f8198a185de5435ac974bffa6f155bdece325acbc
-        
-        
-//        f3895db4abc90322afcc4e7dea8eed40a506507b6f100caed41fac95aa58f64517ff6731a1a1b35e278db4cc5ccd13f792003306fbd803fafcfecadeed7a070a
-        
-    }
-    func testPrint() {
-//        let mnemonic = try! LibraMnemonic.generate(language: LibraMnemonic.Language.english)
-//        print(mnemonic)
-        
-        //02081eb1573be35048677d6540a7690f03e9269aa36f2ddfb9da9228fbb7f761
-        
-        
-        let mnemonic = ["legal","winner","thank","year","wave","sausage","worth","useful","legal","winner","thank","year","wave","sausage","worth","useful","legal","will"]
-        let seed = try! LibraMnemonic.seed(mnemonic: mnemonic)
-        let masterKey = try! HMAC.init(key: "LIBRA WALLET: master key salt$", variant: .sha3_256).authenticate(seed)
-        XCTAssertEqual(masterKey.toHexString(), "16274c9618ed59177ca948529c1884ba65c57984d562ec2b4e5aa1ee3e3903be")
-
-
-        
-//        let salt: Array<UInt8> = Array("LIBRA WALLET: derived key$".utf8)
-        let tempInfo = Data() + Array("LIBRA WALLET: derived key$".utf8) + Data.init(hex: "0000000000000000")
-        do {
-            //Data.init(hex: "16274c9618ed59177ca948529c1884ba65c57984d562ec2b4e5aa1ee3e3903be").bytes
-            
-            
-            let temp = try HKDF.init(password: seed,
-                                       salt:Array("LIBRA WALLET: master key salt$".utf8),
-                                       info: tempInfo.bytes,
-                                       keyLength: 32,
-                                       variant: .sha3_256).calculate()
-            
-            
-            
-            
-            
-            XCTAssertEqual(temp.toHexString(), "358a375f36d74c30b7f3299b62d712b307725938f8cc931100fbd10a434fc8b9")
-            
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
     func testNewWalletKit() {
 //        let mnemonic = ["legal","winner","thank","year","wave","sausage","worth","useful","legal","winner","thank","year","wave","sausage","worth","useful","legal","will"]
         //        key shoulder focus dish donate inmate move weekend hold regret peanut link
         
 //        let mnemonic = ["key","shoulder","focus","dish","donate","inmate","move","weekend","hold","regret","peanut","link"]
-//        LibraPublicKey= f47df986f4e7421a125e87e7b49137461254a67333a0d9b8dea9472724f0c67d
+//        LibraHDPublicKey= f47df986f4e7421a125e87e7b49137461254a67333a0d9b8dea9472724f0c67d
 //        authKey = 1e7d12e8a75683776012faf9987028061409fc67d04cddf259240703809b6d12
 //        let mnemonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
         let mnemonic = ["grant", "security", "cluster", "pill", "visit", "wave", "skull", "chase", "vibrant", "embrace", "bronze", "tip"]
@@ -265,7 +193,7 @@ class LibraSDKTests: XCTestCase {
             
             
             let multiPublicKey = LibraMultiPublicKey.init(data: [wallet1.publicKey.raw, wallet2.publicKey.raw], threshold: 1)
-            print(multiPublicKey.toAddress())
+            print(multiPublicKey.toLegacy())
 
 //            var sha3Data = Data.init(Array<UInt8>(hex: (LibraSignSalt.sha3(SHA3.Variant.sha256))))
 //
@@ -283,7 +211,7 @@ class LibraSDKTests: XCTestCase {
     func testMultiSign2() {
         let publicKey1 = Data.init(Array<UInt8>(hex: "c413ea446039d0cd07715ddedb8169393e456b03d05ce67d50a4446ba5e067b0"))
         let publicKey2 = Data.init(Array<UInt8>(hex: "005c135145c60db0253e164a6f9fa396ae7e376761538ac55b40747690e757de"))
-        let address = LibraMultiPublicKey.init(data: [publicKey1, publicKey2], threshold: 1).toAddress()
+        let address = LibraMultiPublicKey.init(data: [publicKey1, publicKey2], threshold: 1).toLegacy()
         print("address = \(address)")
         //de10d0352d3a40156d345e28fe3fb6af
         print(Data.init(hex: "0220c413ea446039d0cd07715ddedb8169393e456b03d05ce67d50a4446ba5e067b020005c135145c60db0253e164a6f9fa396ae7e376761538ac55b40747690e757de011").bytes.sha3(SHA3.Variant.sha256).toHexString())
@@ -314,14 +242,26 @@ class LibraSDKTests: XCTestCase {
         bitmap[bucket] |= 128 >> bucket_pos
         print(bitmap.toHexString())
     }
-    func testSign3() {
-        let privateData01 = Data.init(Array<UInt8>(hex: "f3cdd2183629867d6cfa24fb11c58ad515d5a4af014e96c00bb6ba13d3e5f80e"))
-        let privateData02 = Data.init(Array<UInt8>(hex: "c973d737cb40bcaf63a45a9736d7d7735e78148a06be185327304d6825e666ea"))
-        let privateKey01 = LibraPrivateKey.init(privateKey: privateData01.bytes)
-        let privateKey02 = LibraPrivateKey.init(privateKey: privateData02.bytes)
-        let address = LibraMultiPublicKey.init(data: [privateKey01.extendedPublicKey().raw, privateKey02.extendedPublicKey().raw], threshold: 1).toAddress()
-        print(address)
-//        let multiPrivateKey = LibraMultiPrivateKey.init(privateKeys: [privateData01, privateData02], threshold: 1)
-//        let sign = try? multiPrivateKey.signMultiTransaction(transaction: Data.init(Array<UInt8>(hex: "010203")), privateKey: multiPrivateKey)
+    func testMultiAddress() {
+        let wallet = LibraMultiHDWallet.init(privateKeys: ["f3cdd2183629867d6cfa24fb11c58ad515d5a4af014e96c00bb6ba13d3e5f80e", "c973d737cb40bcaf63a45a9736d7d7735e78148a06be185327304d6825e666ea"], threshold: 1)
+        XCTAssertEqual(wallet.publicKey.toLegacy(), "cd35f1a78093554f5dc9c61301f204e4")
+    }
+    func testLibraKit() {
+        let mnemonic1 = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "begin", "host"]
+        let mnemonic2 = ["grant", "security", "cluster", "pill", "visit", "wave", "skull", "chase", "vibrant", "embrace", "bronze", "tip"]
+        let mnemonic3 = ["net", "dice", "divide", "amount", "stamp", "flock", "brave", "nuclear", "fox", "aim", "father", "apology"]
+        do {
+            let seed1 = try LibraMnemonic.seed(mnemonic: mnemonic1)
+            let seed2 = try LibraMnemonic.seed(mnemonic: mnemonic2)
+            let seed3 = try LibraMnemonic.seed(mnemonic: mnemonic3)
+            let seedModel1 = SeedAndDepth.init(seed: seed1, depth: 0)
+            let seedModel2 = SeedAndDepth.init(seed: seed2, depth: 0)
+            let seedModel3 = SeedAndDepth.init(seed: seed3, depth: 0)
+            let wallet = try LibraMultiHDWallet.init(models: [seedModel1, seedModel2, seedModel3], threshold: 2)
+            print("Legacy = \(wallet.publicKey.toLegacy())")
+            print("Authentionkey = \(wallet.publicKey.toActive())")
+        } catch {
+            print(error.localizedDescription)
+        }
     }
 }

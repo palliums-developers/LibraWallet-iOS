@@ -127,19 +127,19 @@ extension LibraManager {
 //            let wallet = try LibraManager.getWallet(mnemonic: mnemonic)
             let privateData01 = Data.init(Array<UInt8>(hex: "f3cdd2183629867d6cfa24fb11c58ad515d5a4af014e96c00bb6ba13d3e5f80e"))
             let privateData02 = Data.init(Array<UInt8>(hex: "c973d737cb40bcaf63a45a9736d7d7735e78148a06be185327304d6825e666ea"))
-            let privateKey01 = LibraPrivateKey.init(privateKey: privateData01.bytes)
-            let privateKey02 = LibraPrivateKey.init(privateKey: privateData02.bytes)
+            let privateKey01 = LibraHDPrivateKey.init(privateKey: privateData01.bytes)
+            let privateKey02 = LibraHDPrivateKey.init(privateKey: privateData02.bytes)
             let (authenticatorKey, address) = try LibraManager.splitAddress(address: receiveAddress)
             // 拼接交易
             let request = LibraTransaction.init(receiveAddress: address,
                                                 amount: amount,
-                                                sendAddress: LibraMultiPublicKey.init(data: [privateKey01.extendedPublicKey().raw, privateKey02.extendedPublicKey().raw], threshold: 1).toAddress(),
+                                                sendAddress: LibraMultiPublicKey.init(data: [privateKey01.extendedPublicKey().raw, privateKey02.extendedPublicKey().raw], threshold: 1).toLegacy(),
                                                 sequenceNumber: UInt64(sequenceNumber),
                                                 authenticatorKey: authenticatorKey)
             // 签名交易
 //            let multiPrivate = LibraMultiPublicKey.init(data: [privateKey01.extendedPublicKey().raw, privateKey02.extendedPublicKey().raw], threshold: 1)
             let multiPrivate = LibraMultiPrivateKey.init(privateKeys: [privateKey01.raw, privateKey02.raw], threshold: 1)
-            let multiSignature = try multiPrivate.signMultiTransaction(transaction: request.request.serialize())
+            let multiSignature = try multiPrivate.signMultiTransaction(transaction: request.request)
             return multiSignature.toHexString()
         } catch {
             throw error

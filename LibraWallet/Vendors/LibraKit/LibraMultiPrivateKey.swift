@@ -8,16 +8,20 @@
 import CryptoSwift
 import BigInt
 struct LibraMultiPrivateKey {
-    
+    /// 私钥数组
     let raw: [Data]
-    
-    // 需要多少把解锁
+    /// 最少签名数
     let threshold: Int
-
+    /// 初始化
+    /// - Parameters:
+    ///   - privateKeys: 私钥数组
+    ///   - threshold: 最少签名数
     public init (privateKeys: [Data], threshold: Int) {
         self.raw = privateKeys
         self.threshold = threshold
     }
+    /// 获取私钥
+    /// - Returns: Hex私钥
     func toHexString() -> String {
         var privateKeyData = Data()
         privateKeyData += uleb128Format(length: self.raw.count)
@@ -27,28 +31,34 @@ struct LibraMultiPrivateKey {
         privateKeyData += BigUInt(self.threshold).serialize()
         return privateKeyData.toHexString()
     }
-    public func extendedPublicKey() -> [Data] {
+    /// 获取公钥
+    /// - Returns: 多签公钥
+    public func extendedPublicKey() -> LibraMultiPublicKey {
         let publicKey = self.raw.map {
             Ed25519.calcPublicKey(secretKey: $0.bytes)
         }
         let publicKeys = publicKey.map {
-            LibraPublicKey.init(data: Data.init(bytes: $0, count: $0.count)).raw
+            LibraHDPublicKey.init(data: Data.init(bytes: $0, count: $0.count)).raw
         }
-        return publicKeys
+        return LibraMultiPublicKey.init(data: publicKeys, threshold: threshold)
     }
-//    func signMultiTransaction(transaction: RawTransaction, privateKey: LibraMultiPrivateKey) throws -> Data {
-    func signMultiTransaction(transaction: Data) throws -> Data {
+    /// 签名交易
+    /// - Parameter transaction: 交易数据
+    /// - Returns: 返回序列化结果
+    func signMultiTransaction(transaction: RawTransaction) -> Data {
         // 交易第一部分-原始数据
-//        let transactionRaw = transaction.serialize()
-        let transactionRaw = transaction
+        let transactionRaw = transaction.serialize()
+        
         // 交易第二部分-交易类型
         let signType = Data.init(Array<UInt8>(hex: "01"))
+        
         // 交易第三部分-公钥
         var publicKeyData = Data()
         // 追加MultiPublicKey
-        let multiPublickKey = LibraMultiPublicKey.init(data: self.extendedPublicKey(), threshold: self.threshold).toMultiPublicKey()
+        let multiPublickKey = self.extendedPublicKey().toMultiPublicKey()
         publicKeyData += uleb128Format(length: multiPublickKey.bytes.count)
         publicKeyData += multiPublickKey
+        
         // 交易第四部分-签名
         // 4.1待签数据追加盐
         var sha3Data = Data.init(Array<UInt8>(hex: (LibraSignSalt.sha3(SHA3.Variant.sha256))))
