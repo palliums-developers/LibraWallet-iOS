@@ -179,43 +179,17 @@ class LibraSDKTests: XCTestCase {
             var threshold: Int
         }
         do {
-            let mnemonic1 = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "begin", "host"]
+//            let mnemonic1 = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "begin", "host"]
+            let mnemonic1 = ["grant", "security", "cluster", "pill", "visit", "wave", "skull", "chase", "vibrant", "embrace", "bronze", "tip"]
             let seed1 = try LibraMnemonic.seed(mnemonic: mnemonic1)
             let wallet1 = try LibraHDWallet.init(seed: seed1, depth: 0)
-            print(wallet1.publicKey.raw.bytes.toHexString())
+            print(wallet1.publicKey.toActive())
 //            f2fef5f785ceac4cbd25eac2f248d2bb331321aefcce2ee794430d07d7a953a0
             //24e236320adcdf04306257212433bbcaa0d8ccc6037cae4440455146c9cf8bf6
-            let mnemonic2 = ["grant", "security", "cluster", "pill", "visit", "wave", "skull", "chase", "vibrant", "embrace", "bronze", "tip"]
-            let seed2 = try LibraMnemonic.seed(mnemonic: mnemonic2)
-            let wallet2 = try LibraHDWallet.init(seed: seed2, depth: 0)
-            print(wallet2.publicKey.raw.bytes.toHexString())
-            //50b715879a727bbc561786b0dc9e6afcd5d8a443da6eb632952e692b83e8e7cb
-            
-            
-            let multiPublicKey = LibraMultiPublicKey.init(data: [wallet1.publicKey.raw, wallet2.publicKey.raw], threshold: 1)
-            print(multiPublicKey.toLegacy())
-
-//            var sha3Data = Data.init(Array<UInt8>(hex: (LibraSignSalt.sha3(SHA3.Variant.sha256))))
-//
-//            // 交易第二部分(追加带签名交易)
-//            sha3Data.append(Data.init(hex: "Test Message").bytes, count: Data.init(hex: "Test Message").bytes.count)
-//
-//            let signature1 = Ed25519.sign(message: sha3Data.sha3(.sha256).bytes, secretKey: wallet1.privateKey.raw.bytes)
-//            let signature2 = Ed25519.sign(message: sha3Data.sha3(.sha256).bytes, secretKey: wallet2.privateKey.raw.bytes)
-            
-            
+//            d943f6333b7995da537a66133fc72d5f9b2842c5678ad43e2111840b13572f4d
         } catch {
             print(error.localizedDescription)
         }
-    }
-    func testMultiSign2() {
-        let publicKey1 = Data.init(Array<UInt8>(hex: "c413ea446039d0cd07715ddedb8169393e456b03d05ce67d50a4446ba5e067b0"))
-        let publicKey2 = Data.init(Array<UInt8>(hex: "005c135145c60db0253e164a6f9fa396ae7e376761538ac55b40747690e757de"))
-        let address = LibraMultiPublicKey.init(data: [publicKey1, publicKey2], threshold: 1).toLegacy()
-        print("address = \(address)")
-        //de10d0352d3a40156d345e28fe3fb6af
-        print(Data.init(hex: "0220c413ea446039d0cd07715ddedb8169393e456b03d05ce67d50a4446ba5e067b020005c135145c60db0253e164a6f9fa396ae7e376761538ac55b40747690e757de011").bytes.sha3(SHA3.Variant.sha256).toHexString())
-        XCTAssertEqual(address, "cd35f1a78093554f5dc9c61301f204e4")
     }
     func testULEB128() {
         XCTAssertEqual(uleb128Format(length: 128).toHexString(), "8001")
@@ -224,26 +198,39 @@ class LibraSDKTests: XCTestCase {
         XCTAssertEqual(uleb128Format(length: 268435456).toHexString(), "8080808001")
         XCTAssertEqual(uleb128Format(length: 9487).toHexString(), "8f4a")
     }
-    func testU64() {
-        let testData = TransactionArgument.init(code: .U64, value: "9213671392124193148")
-        print(testData.serialize().toHexString())
-        print("move".data(using: String.Encoding.utf8)?.toHexString())
-        print(BigUInt(86400).serialize().bytes)
-        for i in 0..<32 {
-            print(i)
-            aaa(index: i)
-        }
-    }
-    func aaa(index: Int) {
-        var bitmap = Data.init(Array<UInt8>(hex: "00000000"))
-        let bucket = index / 8
-//        # It's always invoked with index < 32, thus there is no need to check range.
-        let bucket_pos = index - (bucket * 8)
-        bitmap[bucket] |= 128 >> bucket_pos
-        print(bitmap.toHexString())
+    func testBitmap() {
+//        let testData = TransactionArgument.init(code: .U64, value: "9213671392124193148")
+//        print(testData.serialize().toHexString())
+//        print("move".data(using: String.Encoding.utf8)?.toHexString())
+//        print(BigUInt(86400).serialize().bytes)
+//        var bitmap = Data.init(Array<UInt8>(hex: "00000000"))
+//        for i in 0..<32 {
+//            print(i)
+//            bitmap = LibraMultiPrivateKey.init(privateKeys: [Data()], threshold: 1).setBitmap(bitmap: bitmap, index: i)
+//            print(String.init(BigUInt(bitmap), radix: 2))
+//        }
+        
+        var tempBitmap = "00000000000000000000000000000000"
+        let range = tempBitmap.index(tempBitmap.startIndex, offsetBy: 0)...tempBitmap.index(tempBitmap.startIndex, offsetBy: 0)
+        tempBitmap.replaceSubrange(range, with: "1")
+        let range2 = tempBitmap.index(tempBitmap.startIndex, offsetBy: 2)...tempBitmap.index(tempBitmap.startIndex, offsetBy: 2)
+        tempBitmap.replaceSubrange(range2, with: "1")
+        print(tempBitmap)
+        let convert = binary2dec(num: tempBitmap)
+        //  101000 00000000 00000000 00000000
+        //1000000 00000000 00000000 00000000
+        print(BigUInt(convert).serialize().toHexString())
+        
+//        var tempData = Data.init(Array<UInt8>(hex: "00"))
+//        var tempData = 0000 | 1
+//        print(tempData)
     }
     func testMultiAddress() {
-        let wallet = LibraMultiHDWallet.init(privateKeys: ["f3cdd2183629867d6cfa24fb11c58ad515d5a4af014e96c00bb6ba13d3e5f80e", "c973d737cb40bcaf63a45a9736d7d7735e78148a06be185327304d6825e666ea"], threshold: 1)
+        let wallet = LibraMultiHDWallet.init(privateKeys: [MultiPrivateKeyModel.init(raw: Data.init(Array<UInt8>(hex: "f3cdd2183629867d6cfa24fb11c58ad515d5a4af014e96c00bb6ba13d3e5f80e")),
+                                                                                     sequence: 1),
+                                                           MultiPrivateKeyModel.init(raw: Data.init(Array<UInt8>(hex: "c973d737cb40bcaf63a45a9736d7d7735e78148a06be185327304d6825e666ea")),
+                                                           sequence: 2)],
+                                             threshold: 1)
         XCTAssertEqual(wallet.publicKey.toLegacy(), "cd35f1a78093554f5dc9c61301f204e4")
     }
     func testLibraKit() {
@@ -254,14 +241,40 @@ class LibraSDKTests: XCTestCase {
             let seed1 = try LibraMnemonic.seed(mnemonic: mnemonic1)
             let seed2 = try LibraMnemonic.seed(mnemonic: mnemonic2)
             let seed3 = try LibraMnemonic.seed(mnemonic: mnemonic3)
-            let seedModel1 = SeedAndDepth.init(seed: seed1, depth: 0)
-            let seedModel2 = SeedAndDepth.init(seed: seed2, depth: 0)
-            let seedModel3 = SeedAndDepth.init(seed: seed3, depth: 0)
-            let wallet = try LibraMultiHDWallet.init(models: [seedModel1, seedModel2, seedModel3], threshold: 2)
+            let seedModel1 = SeedAndDepth.init(seed: seed1, depth: 0, sequence: 0)
+            let seedModel2 = SeedAndDepth.init(seed: seed2, depth: 0, sequence: 1)
+            let seedModel3 = SeedAndDepth.init(seed: seed3, depth: 0, sequence: 2)
+            let multiPublicKey = LibraMultiPublicKey.init(data: [MultiPublicKeyModel.init(raw: Data.init(Array<UInt8>(hex: "2bd7d9fe82120842daa860606060661b222824c65af7bfb2843eeb7792a3b967")), sequence: 0),
+                                                                 MultiPublicKeyModel.init(raw: Data.init(Array<UInt8>(hex: "50b715879a727bbc561786b0dc9e6afcd5d8a443da6eb632952e692b83e8e7cb")), sequence: 1),
+                                                                 MultiPublicKeyModel.init(raw: Data.init(Array<UInt8>(hex: "e7e1b22eeb0a9ce0c49e3bf6cf23ebbb4d93d24c2064c46f6ceb9daa6ca2e217")), sequence: 2)],
+                                                          threshold: 2)
+            let wallet = try LibraMultiHDWallet.init(models: [seedModel1, seedModel3], threshold: 2, multiPublicKey: multiPublicKey)
+//            let wallet = try LibraMultiHDWallet.init(models: [seedModel1, seedModel2, seedModel3], threshold: 2)
             print("Legacy = \(wallet.publicKey.toLegacy())")
+            //bafc671e8a38c05706f83b5159bbd8a4
             print("Authentionkey = \(wallet.publicKey.toActive())")
+            //bf2128295b7a57e6e42390d56293760cbafc671e8a38c05706f83b5159bbd8a4
+            print("PublicKey = \(wallet.publicKey.toMultiPublicKey().toHexString())")
+            //2bd7d9fe82120842daa860606060661b222824c65af7bfb2843eeb7792a3b96750b715879a727bbc561786b0dc9e6afcd5d8a443da6eb632952e692b83e8e7cbe7e1b22eeb0a9ce0c49e3bf6cf23ebbb4d93d24c2064c46f6ceb9daa6ca2e21702
+            
+            let sign = try LibraManager.getMultiTransactionHex(sendAddress: multiPublicKey.toLegacy(),
+                                                               receiveAddress: "331321aefcce2ee794430d07d7a953a0",
+                                                               amount: 0.5,
+                                                               fee: 0,
+                                                               sequenceNumber: 8,
+                                                               wallet: wallet)
+            print(sign)
         } catch {
             print(error.localizedDescription)
         }
     }
+    func decTobin(number:Int) -> String {
+            var num = number
+            var str = ""
+            while num > 0 {
+                str = "\(num % 2)" + str
+                num /= 2
+            }
+            return str
+        }
 }

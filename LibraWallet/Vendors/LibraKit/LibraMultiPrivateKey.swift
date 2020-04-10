@@ -7,16 +7,20 @@
 //
 import CryptoSwift
 import BigInt
+struct MultiPrivateKeyModel {
+    var raw: Data
+    var sequence: Int
+}
 struct LibraMultiPrivateKey {
     /// 私钥数组
-    let raw: [Data]
+    let raw: [MultiPrivateKeyModel]
     /// 最少签名数
     let threshold: Int
     /// 初始化
     /// - Parameters:
     ///   - privateKeys: 私钥数组
     ///   - threshold: 最少签名数
-    public init (privateKeys: [Data], threshold: Int) {
+    public init (privateKeys: [MultiPrivateKeyModel], threshold: Int) {
         self.raw = privateKeys
         self.threshold = threshold
     }
@@ -26,7 +30,7 @@ struct LibraMultiPrivateKey {
         var privateKeyData = Data()
         privateKeyData += uleb128Format(length: self.raw.count)
         privateKeyData += self.raw.reduce(Data(), {
-            $0 + uleb128Format(length: $1.count) + $1
+            $0 + uleb128Format(length: $1.raw.count) + $1.raw
         })
         privateKeyData += BigUInt(self.threshold).serialize()
         return privateKeyData.toHexString()
@@ -34,18 +38,19 @@ struct LibraMultiPrivateKey {
     /// 获取公钥
     /// - Returns: 多签公钥
     public func extendedPublicKey() -> LibraMultiPublicKey {
-        let publicKey = self.raw.map {
-            Ed25519.calcPublicKey(secretKey: $0.bytes)
+        var tempPublicKeys = [MultiPublicKeyModel]()
+        for model in self.raw {
+            let data = Ed25519.calcPublicKey(secretKey: model.raw.bytes)
+            let publickKey = MultiPublicKeyModel.init(raw: Data.init(bytes: data, count: data.count),
+                                                      sequence: model.sequence)
+            tempPublicKeys.append(publickKey)
         }
-        let publicKeys = publicKey.map {
-            LibraHDPublicKey.init(data: Data.init(bytes: $0, count: $0.count)).raw
-        }
-        return LibraMultiPublicKey.init(data: publicKeys, threshold: threshold)
+        return LibraMultiPublicKey.init(data: tempPublicKeys, threshold: threshold)
     }
     /// 签名交易
     /// - Parameter transaction: 交易数据
     /// - Returns: 返回序列化结果
-    func signMultiTransaction(transaction: RawTransaction) -> Data {
+    func signMultiTransaction(transaction: RawTransaction, publicKey: LibraMultiPublicKey) -> Data {
         // 交易第一部分-原始数据
         let transactionRaw = transaction.serialize()
         
@@ -55,7 +60,8 @@ struct LibraMultiPrivateKey {
         // 交易第三部分-公钥
         var publicKeyData = Data()
         // 追加MultiPublicKey
-        let multiPublickKey = self.extendedPublicKey().toMultiPublicKey()
+        let multiPublickKey = publicKey.toMultiPublicKey()
+
         publicKeyData += uleb128Format(length: multiPublickKey.bytes.count)
         publicKeyData += multiPublickKey
         
@@ -66,24 +72,29 @@ struct LibraMultiPrivateKey {
         sha3Data += transactionRaw
         // 4.3签名数据
         var signData = Data()
-        // 4.4追加签名数量1个字节
-//        signData += uleb128Format(length: self.threshold)
-        // 4.5追加签名
+        // 4.4追加签名
+        var bitmap = "00000000000000000000000000000000"
         for i in 0..<self.threshold {
-            let sign = Ed25519.sign(message: sha3Data.sha3(.sha256).bytes, secretKey: self.raw[i].bytes)
+            let sign = Ed25519.sign(message: sha3Data.sha3(.sha256).bytes, secretKey: self.raw[i].raw.bytes)
             signData += sign
+            bitmap = setBitmap(bitmap: bitmap, index: self.raw[i].sequence)
         }
-        signData += setBitmap(index: 0)
-        
+        let convert = binary2dec(num: bitmap)
+        signData += BigUInt(convert).serialize()
+        print("bitmap = \(BigUInt(convert).serialize().toHexString())")
         let result = transactionRaw + signType + publicKeyData + uleb128Format(length: signData.count) + signData
         return result
     }
-    func setBitmap(index: Int) -> Data {
-        var bitmap = Data.init(Array<UInt8>(hex: "00000000"))
-        let bucket = index / 8
-        // It's always invoked with index < 32, thus there is no need to check range.
-        let bucket_pos = index - (bucket * 8)
-        bitmap[bucket] |= 128 >> bucket_pos
-        return bitmap
+    func setBitmap(bitmap: String, index: Int) -> String {
+//        var tempBitmap = bitmap
+//        let bucket = index / 8
+//        // It's always invoked with index < 32, thus there is no need to check range.
+//        let bucket_pos = index - (bucket * 8)
+//        tempBitmap[bucket] |= 128 >> bucket_pos
+//        return tempBitmap
+        var tempBitmap = bitmap
+        let range = tempBitmap.index(tempBitmap.startIndex, offsetBy: index)...tempBitmap.index(tempBitmap.startIndex, offsetBy: index)
+        tempBitmap.replaceSubrange(range, with: "1")
+        return tempBitmap
     }
 }

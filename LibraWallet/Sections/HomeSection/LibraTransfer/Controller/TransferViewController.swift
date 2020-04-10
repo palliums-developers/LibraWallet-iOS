@@ -124,6 +124,7 @@ extension TransferViewController {
                     // 数据返回状态异常
                 }
                 self?.detailView.hideToastActivity()
+                self?.detailView.toastView?.hide()
                 self?.view.makeToast(error.localizedDescription, position: .center)
                 return
             }

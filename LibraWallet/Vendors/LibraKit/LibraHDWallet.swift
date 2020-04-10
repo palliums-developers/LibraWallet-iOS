@@ -9,17 +9,20 @@
 import Foundation
 import CryptoSwift
 public final class LibraHDWallet {
-    
+    /// 助记词生成种子
     let seed: [UInt8]
-    
+    /// 公钥
     let publicKey: LibraHDPublicKey
-    
+    /// 私钥
     let privateKey: LibraHDPrivateKey
-    
+    /// 深度
     let depth: Int
-    
-    // 通过种子创建钱包
-    public init (seed: [UInt8], privateKey: [UInt8], depth: Int) {
+    /// 通过种子私钥创建钱包
+    /// - Parameters:
+    ///   - seed: 种子
+    ///   - privateKey: 私钥Data
+    ///   - depth: 深度
+    private init (seed: [UInt8], privateKey: [UInt8], depth: Int) {
         self.seed = seed
         
         self.depth = depth
@@ -29,6 +32,11 @@ public final class LibraHDWallet {
         self.publicKey = self.privateKey.extendedPublicKey()
         
     }
+    /// 通过种子创建钱包
+    /// - Parameters:
+    ///   - seed: 种子
+    ///   - depth: 深度
+    /// - Throws: 创建失败
     public convenience init(seed: [UInt8], depth: Int = 0) throws {
         
         let depthData = getLengthData(length: depth, appendBytesCount: 8)

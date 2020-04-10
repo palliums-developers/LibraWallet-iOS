@@ -18,7 +18,7 @@ struct LibraTransaction {
         let argument2 = TransactionArgument.init(code: .U64, value: "\(Int(amount * 1000000))")
         let argument3 = TransactionArgument.init(code: .U8Vector, value: authenticatorKey)
         
-        let script = TransactionScript.init(code: Data.init(hex: libraProgramCode), argruments: [argument1, argument3, argument2])
+        let script = TransactionScript.init(code: Data.init(hex: libraProgramCode), typeTags: [LibraTypeTag.init(structData: StructTag.init(type: .libraDefault))], argruments: [argument1, argument3, argument2])
 
         let date = Int(UInt64(Date().timeIntervalSince1970) + 3600)
         
@@ -51,7 +51,7 @@ extension LibraTransaction {
         let argument3 = TransactionArgument.init(code: .U8Vector, value: data.toHexString())
 
 //        let program = TransactionScript.init(code: getProgramCode(content: LibraTransferWithData), argruments: [argument1, argument2, argument3])
-        let program = TransactionScript.init(code: Data.init(hex: LibraTransferWithData), argruments: [argument1, argument2, argument3])
+        let program = TransactionScript.init(code: Data.init(hex: LibraTransferWithData), typeTags: [LibraTypeTag.init(structData: StructTag.init(type: .libraDefault))], argruments: [argument1, argument2, argument3])
 
         let raw = RawTransaction.init(senderAddres: sendAddress,
                                             sequenceNumber: sequenceNumber,
