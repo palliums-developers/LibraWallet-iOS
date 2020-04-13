@@ -11,18 +11,19 @@ import CryptoSwift
 struct ViolasTransaction {
     let request: ViolasRawTransaction
         
-    public init(receiveAddress: String, amount: Double, sendAddress: String, sequenceNumber: UInt64) {
+    public init(receiveAddress: String, amount: Double, sendAddress: String, sequenceNumber: UInt64, authenticatorKey: String) {
 
         let argument1 = ViolasTransactionArgument.init(code: .Address, value: receiveAddress)
         let argument2 = ViolasTransactionArgument.init(code: .U64, value: "\(Int(amount * 1000000))")
+        let argument3 = ViolasTransactionArgument.init(code: .U8Vector, value: authenticatorKey)
         
-        let script = ViolasTransactionScript.init(code: getProgramCode(content: ViolasProgramCode), argruments: [argument1, argument2])
+        let script = ViolasTransactionScript.init(code: Data.init(hex: libraProgramCode), typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .ViolasDefault))], argruments: [argument1, argument3, argument2])
         
         let raw = ViolasRawTransaction.init(senderAddres: sendAddress,
                                             sequenceNumber: sequenceNumber,
-                                            maxGasAmount: 280000,
+                                            maxGasAmount: 400000,
                                             gasUnitPrice: 0,
-                                            expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 1000),
+                                            expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
                                             programOrWrite: script.serialize())
         self.request = raw
     }
@@ -31,7 +32,7 @@ extension ViolasTransaction {
     // Violas注册稳定币
     public init(sendAddress: String, sequenceNumber: UInt64, code: Data) {
         
-        let program = ViolasTransactionScript.init(code: code, argruments: [])
+        let program = ViolasTransactionScript.init(code: code, typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .ViolasDefault))], argruments: [])
         
         let raw = ViolasRawTransaction.init(senderAddres: sendAddress,
                                             sequenceNumber: sequenceNumber,
@@ -49,7 +50,7 @@ extension ViolasTransaction {
         let argument1 = ViolasTransactionArgument.init(code: .Address, value: receiveAddress)
         let argument2 = ViolasTransactionArgument.init(code: .U64, value: "\(Int(amount * 1000000))")
         
-        let program = ViolasTransactionScript.init(code: code, argruments: [argument1, argument2])
+        let program = ViolasTransactionScript.init(code: code, typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .ViolasDefault))], argruments: [argument1, argument2])
         
         let raw = ViolasRawTransaction.init(senderAddres: sendAddress,
                                             sequenceNumber: sequenceNumber,
@@ -69,9 +70,9 @@ extension ViolasTransaction {
         
         let data = "{\"type\":\"wd_ex\",\"ver\":\"\(version)\"}".data(using: .utf8)!
         
-        let argument3 = ViolasTransactionArgument.init(code: .Bytes, value: data.toHexString())
+        let argument3 = ViolasTransactionArgument.init(code: .U8Vector, value: data.toHexString())
         
-        let program = ViolasTransactionScript.init(code: code, argruments: [argument1, argument2, argument3])
+        let program = ViolasTransactionScript.init(code: code, typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .ViolasDefault))], argruments: [argument1, argument2, argument3])
         
         let raw = ViolasRawTransaction.init(senderAddres: sendAddress,
                                             sequenceNumber: sequenceNumber,
@@ -100,9 +101,9 @@ extension ViolasTransaction {
 //        let argument3 = ViolasTransactionArgument.init(code: .Bytes, value: json.toHexString())
         let data = "{\"type\":\"sub_ex\",\"addr\":\"\(receiveTokenAddress)\",\"amount\":\(Int(exchangeAmount * 1000000)),\"fee\":0,\"exp\":1000}".data(using: .utf8)!
                
-        let argument3 = ViolasTransactionArgument.init(code: .Bytes, value: data.toHexString())
+        let argument3 = ViolasTransactionArgument.init(code: .U8Vector, value: data.toHexString())
         
-        let program = ViolasTransactionScript.init(code: code, argruments: [argument1, argument2, argument3])
+        let program = ViolasTransactionScript.init(code: code, typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .ViolasDefault))], argruments: [argument1, argument2, argument3])
         
         let raw = ViolasRawTransaction.init(senderAddres: sendAddress,
                                             sequenceNumber: sequenceNumber,
@@ -130,9 +131,9 @@ extension ViolasTransaction {
 
         let data = "{\"flag\":\"violas\",\"type\":\"v2b\",\"to_address\":\"\(btcReceiveAddress)\",\"state\":\"start\"}".data(using: .utf8)!
 
-        let argument3 = ViolasTransactionArgument.init(code: .Bytes, value: data.toHexString())
+        let argument3 = ViolasTransactionArgument.init(code: .U8Vector, value: data.toHexString())
 
-        let program = ViolasTransactionScript.init(code: code, argruments: [argument1, argument2, argument3])
+        let program = ViolasTransactionScript.init(code: code, typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .ViolasDefault))], argruments: [argument1, argument2, argument3])
 
         let raw = ViolasRawTransaction.init(senderAddres: sendAddress,
                                             sequenceNumber: sequenceNumber,
@@ -160,9 +161,9 @@ extension ViolasTransaction {
 
         let data = "{\"flag\":\"violas\",\"type\":\"v2l\",\"to_address\":\"\(libraReceiveAddress)\",\"state\":\"start\"}".data(using: .utf8)!
 
-        let argument3 = ViolasTransactionArgument.init(code: .Bytes, value: data.toHexString())
+        let argument3 = ViolasTransactionArgument.init(code: .U8Vector, value: data.toHexString())
 
-        let program = ViolasTransactionScript.init(code: code, argruments: [argument1, argument2, argument3])
+        let program = ViolasTransactionScript.init(code: code, typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .ViolasDefault))], argruments: [argument1, argument2, argument3])
 
         let raw = ViolasRawTransaction.init(senderAddres: sendAddress,
                                             sequenceNumber: sequenceNumber,

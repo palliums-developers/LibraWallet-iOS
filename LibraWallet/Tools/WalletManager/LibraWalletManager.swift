@@ -60,6 +60,8 @@ struct LibraWalletManager {
     private(set) var walletType: WalletType?
     /// 钱包备份状态
     private(set) var walletBackupState: Bool?
+    /// 授权Key
+    private(set) var walletAuthenticationKey: String?
 }
 extension LibraWalletManager {
     /// 创建Libra单例
@@ -73,7 +75,7 @@ extension LibraWalletManager {
     /// - Parameter walletBiometricLock: 钱包生物锁开启状态
     /// - Parameter walletIdentity: 账户类型身份钱包、其他钱包(0=身份钱包、1=其它导入钱包)
     /// - Parameter walletType: 钱包类型(0=Libra、1=Violas、2=BTC)
-    mutating func initWallet(walletID: Int64, walletBalance: Int64, walletAddress: String, walletRootAddress: String,  walletCreateTime: Int, walletName: String, walletCurrentUse: Bool, walletBiometricLock: Bool, walletIdentity: Int, walletType: WalletType, walletBackupState: Bool) {
+    mutating func initWallet(walletID: Int64, walletBalance: Int64, walletAddress: String, walletRootAddress: String,  walletCreateTime: Int, walletName: String, walletCurrentUse: Bool, walletBiometricLock: Bool, walletIdentity: Int, walletType: WalletType, walletBackupState: Bool, walletAuthenticationKey: String) {
         self.semaphore.wait()
         
         self.walletID = walletID
@@ -87,6 +89,7 @@ extension LibraWalletManager {
         self.walletIdentity = walletIdentity
         self.walletType = walletType
         self.walletBackupState = walletBackupState
+        self.walletAuthenticationKey = walletAuthenticationKey
         
         self.semaphore.signal()
     }

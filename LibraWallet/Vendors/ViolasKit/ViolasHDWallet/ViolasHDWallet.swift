@@ -12,9 +12,9 @@ public final class ViolasHDWallet {
     
     let seed: [UInt8]
     
-    let publicKey: ViolasPublicKey
+    let publicKey: ViolasHDPublicKey
     
-    let privateKey: ViolasPrivateKey
+    let privateKey: ViolasHDPrivateKey
     
     let depth: Int
     
@@ -24,14 +24,14 @@ public final class ViolasHDWallet {
         
         self.depth = depth
         
-        self.privateKey = ViolasPrivateKey.init(privateKey: privateKey)
+        self.privateKey = ViolasHDPrivateKey.init(privateKey: privateKey)
         
         self.publicKey = self.privateKey.extendedPublicKey()
         
     }
     public convenience init(seed: [UInt8], depth: Int = 0) throws {
         
-        let depthData = ViolasUtils.getLengthData(length: depth, appendBytesCount: 8)//getLengthData(length: depth, appendBytesCount: 8)
+        let depthData = ViolasUtils.getLengthData(length: depth, appendBytesCount: 8)
         
         let tempInfo = Data() + Array("LIBRA WALLET: derived key$".utf8) + depthData.bytes
         do {

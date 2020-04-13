@@ -15,7 +15,7 @@ struct DataBaseManager {
         /// 获取沙盒地址
         let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
         /// 拼接路径
-        let filePath = "\(path[0])" + "/" + "LibraWallet.sqlite3"
+        let filePath = "\(path[0])" + "/" + "PalliumsWallet.sqlite3"
         print(filePath)
         do {
             self.db = try Connection(filePath)
@@ -54,6 +54,8 @@ struct DataBaseManager {
             let walletType = Expression<Int>("wallet_type")
             // 钱包是否已备份
             let walletBackupState = Expression<Bool>("wallet_backup_state")
+            // 授权Key
+            let authenticationKey = Expression<String>("wallet_authentication_key")
             // 建表
             try db!.run(walletTable.create { t in
                 t.column(walletID, primaryKey: true)
@@ -67,6 +69,7 @@ struct DataBaseManager {
                 t.column(walletIdentity)
                 t.column(walletType)
                 t.column(walletBackupState)
+                t.column(authenticationKey)
             })
         } catch {
             let errorString = error.localizedDescription
@@ -102,7 +105,8 @@ struct DataBaseManager {
                     Expression<Bool>("wallet_biometric_lock") <- model.walletBiometricLock ?? false,
                     Expression<Int>("wallet_identity") <- model.walletIdentity ?? 999,
                     Expression<Int>("wallet_type") <- model.walletType!.value,
-                    Expression<Bool>("wallet_backup_state") <- model.walletBackupState ?? false)
+                    Expression<Bool>("wallet_backup_state") <- model.walletBackupState ?? false,
+                    Expression<String>("wallet_authentication_key") <- model.walletAuthenticationKey ?? "")
                 let rowid = try tempDB.run(insert)
                 print(rowid)
                 return true
@@ -163,6 +167,8 @@ struct DataBaseManager {
                     let walletIdentity = wallet[Expression<Int>("wallet_identity")]
                     // 钱包类型(0=Libra、1=Violas、2=BTC)
                     let walletType = wallet[Expression<Int>("wallet_type")]
+                    // 授权Key
+                    let authenticationKey = wallet[Expression<String>("wallet_authentication_key")]
                     
                     let type: WalletType
                     if walletType == 0 {
@@ -185,7 +191,8 @@ struct DataBaseManager {
                                                          walletBiometricLock: walletBiometricLock,
                                                          walletIdentity: walletIdentity,
                                                          walletType: type,
-                                                         walletBackupState: walletBackupState)
+                                                         walletBackupState: walletBackupState,
+                                                         walletAuthenticationKey: authenticationKey)
                     if walletIdentity == 0 {
                         originWallets.append(wallet)
                     } else {
@@ -238,6 +245,9 @@ struct DataBaseManager {
                     }
                     // 钱包是否已备份
                     let walletBackupState = wallet[Expression<Bool>("wallet_backup_state")]
+                    // 授权Key
+                    let authenticationKey = wallet[Expression<String>("wallet_authentication_key")]
+                    
                     LibraWalletManager.shared.initWallet(walletID: walletID,
                                                          walletBalance: walletBalance,
                                                          walletAddress: walletAddress,
@@ -248,7 +258,8 @@ struct DataBaseManager {
                                                          walletBiometricLock: walletBiometricLock,
                                                          walletIdentity: walletIdentity,
                                                          walletType: tempWalletType,
-                                                         walletBackupState: walletBackupState)
+                                                         walletBackupState: walletBackupState,
+                                                         walletAuthenticationKey: authenticationKey)
                     return LibraWalletManager.shared
                 }
                 throw LibraWalletError.error("获取当前使用钱包检索失败")
@@ -302,6 +313,8 @@ struct DataBaseManager {
                     }
                     // 钱包是否已备份
                     let walletBackupState = wallet[Expression<Bool>("wallet_backup_state")]
+                    // 授权Key
+                    let authenticationKey = wallet[Expression<String>("wallet_authentication_key")]
                     
                     let wallet = LibraWalletManager.init(walletID: walletID,
                                                          walletBalance: walletBalance,
@@ -313,7 +326,8 @@ struct DataBaseManager {
                                                          walletBiometricLock: walletBiometricLock,
                                                          walletIdentity: walletIdentity,
                                                          walletType: type,
-                                                         walletBackupState: walletBackupState)
+                                                         walletBackupState: walletBackupState,
+                                                         walletAuthenticationKey: authenticationKey)
                     if walletIdentity == 0 {
                         originWallets.append(wallet)
                     } else {

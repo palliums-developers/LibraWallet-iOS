@@ -10,14 +10,18 @@ import UIKit
 
 struct ViolasTransactionScript {
     fileprivate let code: Data
+    
+    fileprivate let typeTags: [ViolasTypeTag]
         
     fileprivate let argruments: [ViolasTransactionArgument]
         
-    fileprivate let programPrefixData: Data = Data.init(hex: "02000000")
+    fileprivate let programPrefixData: Data = Data.init(hex: "02")
     
-    init(code: Data, argruments: [ViolasTransactionArgument]) {
+    init(code: Data, typeTags: [ViolasTypeTag], argruments: [ViolasTransactionArgument]) {
         
         self.code = code
+        
+        self.typeTags = typeTags
         
         self.argruments = argruments
         
@@ -27,11 +31,17 @@ struct ViolasTransactionScript {
         // 追加类型
         result += programPrefixData
         // 追加code长度
-        result += ViolasUtils.getLengthData(length: self.code.bytes.count, appendBytesCount: 4)//getLengthData(length: self.code.bytes.count, appendBytesCount: 4)
+        result += ViolasUtils.uleb128Format(length: self.code.bytes.count)
         // 追加code数据
         result += self.code
+        // 追加TypeTag长度
+        result += ViolasUtils.uleb128Format(length: typeTags.count)
+        // 追加argument数组数据
+        for typeTag in typeTags {
+            result += typeTag.serialize()
+        }
         // 追加argument数量
-        result += ViolasUtils.getLengthData(length: argruments.count, appendBytesCount: 4)//getLengthData(length: argruments.count, appendBytesCount: 4)
+        result += ViolasUtils.uleb128Format(length: argruments.count)
         // 追加argument数组数据
         for argument in argruments {
             result += argument.serialize()

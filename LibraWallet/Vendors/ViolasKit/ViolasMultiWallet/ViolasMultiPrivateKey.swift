@@ -1,26 +1,27 @@
 //
-//  LibraMultiPrivateKey.swift
+//  ViolasMultiPrivateKey.swift
 //  LibraWallet
 //
-//  Created by wangyingdong on 2020/4/7.
+//  Created by wangyingdong on 2020/4/13.
 //  Copyright © 2020 palliums. All rights reserved.
 //
+
 import CryptoSwift
 import BigInt
-struct LibraMultiPrivateKeyModel {
+struct ViolasMultiPrivateKeyModel {
     var raw: Data
     var sequence: Int
 }
-struct LibraMultiPrivateKey {
+struct ViolasMultiPrivateKey {
     /// 私钥数组
-    let raw: [LibraMultiPrivateKeyModel]
+    let raw: [ViolasMultiPrivateKeyModel]
     /// 最少签名数
     let threshold: Int
     /// 初始化
     /// - Parameters:
     ///   - privateKeys: 私钥数组
     ///   - threshold: 最少签名数
-    public init (privateKeys: [LibraMultiPrivateKeyModel], threshold: Int) {
+    public init (privateKeys: [ViolasMultiPrivateKeyModel], threshold: Int) {
         self.raw = privateKeys
         self.threshold = threshold
     }
@@ -28,7 +29,7 @@ struct LibraMultiPrivateKey {
     /// - Returns: Hex私钥
     func toHexString() -> String {
         var privateKeyData = Data()
-        privateKeyData += LibraUtils.uleb128Format(length: self.raw.count)
+        privateKeyData += ViolasUtils.uleb128Format(length: self.raw.count)
         privateKeyData += self.raw.reduce(Data(), {
             $0 + LibraUtils.uleb128Format(length: $1.raw.count) + $1.raw
         })
@@ -37,15 +38,15 @@ struct LibraMultiPrivateKey {
     }
     /// 获取公钥
     /// - Returns: 多签公钥
-    public func extendedPublicKey() -> LibraMultiPublicKey {
-        var tempPublicKeys = [LibraMultiPublicKeyModel]()
+    public func extendedPublicKey() -> ViolasMultiPublicKey {
+        var tempPublicKeys = [ViolasMultiPublicKeyModel]()
         for model in self.raw {
             let data = Ed25519.calcPublicKey(secretKey: model.raw.bytes)
-            let publickKey = LibraMultiPublicKeyModel.init(raw: Data.init(bytes: data, count: data.count),
+            let publickKey = ViolasMultiPublicKeyModel.init(raw: Data.init(bytes: data, count: data.count),
                                                       sequence: model.sequence)
             tempPublicKeys.append(publickKey)
         }
-        return LibraMultiPublicKey.init(data: tempPublicKeys, threshold: threshold)
+        return ViolasMultiPublicKey.init(data: tempPublicKeys, threshold: threshold)
     }
     /// 签名交易
     /// - Parameter transaction: 交易数据
@@ -62,12 +63,12 @@ struct LibraMultiPrivateKey {
         // 追加MultiPublicKey
         let multiPublickKey = publicKey.toMultiPublicKey()
 
-        publicKeyData += LibraUtils.uleb128Format(length: multiPublickKey.bytes.count)
+        publicKeyData += ViolasUtils.uleb128Format(length: multiPublickKey.bytes.count)
         publicKeyData += multiPublickKey
         
         // 交易第四部分-签名
         // 4.1待签数据追加盐
-        var sha3Data = Data.init(Array<UInt8>(hex: (LibraSignSalt.sha3(SHA3.Variant.sha256))))
+        var sha3Data = Data.init(Array<UInt8>(hex: (ViolasSignSalt.sha3(SHA3.Variant.sha256))))
         // 4.2追加待签数据
         sha3Data += transactionRaw
         // 4.3签名数据
@@ -79,10 +80,10 @@ struct LibraMultiPrivateKey {
             signData += sign
             bitmap = setBitmap(bitmap: bitmap, index: self.raw[i].sequence)
         }
-        let convert = LibraUtils.binary2dec(num: bitmap)
+        let convert = ViolasUtils.binary2dec(num: bitmap)
         signData += BigUInt(convert).serialize()
         print("bitmap = \(BigUInt(convert).serialize().toHexString())")
-        let result = transactionRaw + signType + publicKeyData + LibraUtils.uleb128Format(length: signData.count) + signData//uleb128Format(length: signData.count) + signData
+        let result = transactionRaw + signType + publicKeyData + ViolasUtils.uleb128Format(length: signData.count) + signData//uleb128Format(length: signData.count) + signData
         return result
     }
     func setBitmap(bitmap: String, index: Int) -> String {

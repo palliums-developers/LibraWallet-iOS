@@ -91,8 +91,8 @@ extension AddWalletViewController: AddWalletViewDelegate {
 
                 let walletModel = LibraWalletManager.init(walletID: 999,
                                                           walletBalance: 0,
-                                                          walletAddress: wallet.publicKey.toAddress(),
-                                                          walletRootAddress: "Violas_" + wallet.publicKey.toAddress(),
+                                                          walletAddress: wallet.publicKey.toLegacy(),
+                                                          walletRootAddress: "Violas_" + wallet.publicKey.toLegacy(),
                                                           walletCreateTime: Int(NSDate().timeIntervalSince1970),
                                                           walletName: name,
                                                           walletCurrentUse: false,

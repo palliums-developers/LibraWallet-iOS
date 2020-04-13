@@ -37,7 +37,7 @@ struct ViolasManager {
     /// 校验地址是否有效
     /// - Parameter address: 地址
     public static func isValidViolasAddress(address: String) -> Bool {
-        guard address.count == 64 else {
+        guard address.count == 32 else {
             // 位数异常
             return false
         }
@@ -92,8 +92,9 @@ extension ViolasManager {
             // 拼接交易
             let request = ViolasTransaction.init(receiveAddress: receiveAddress,
                                                  amount: amount,
-                                                 sendAddress: wallet.publicKey.toAddress(),
-                                                 sequenceNumber: UInt64(sequenceNumber))
+                                                 sendAddress: wallet.publicKey.toLegacy(),
+                                                 sequenceNumber: UInt64(sequenceNumber),
+                                                 authenticatorKey: "")
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
             return signature.toHexString()
@@ -110,7 +111,7 @@ extension ViolasManager {
         do {
             let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
             // 拼接交易
-            let request = ViolasTransaction.init(sendAddress: wallet.publicKey.toAddress(),
+            let request = ViolasTransaction.init(sendAddress: wallet.publicKey.toLegacy(),
                                                  sequenceNumber: UInt64(sequenceNumber),
                                                  code: ViolasManager.getCodeData(move: ViolasPublishProgramCode, address: contact))
             // 签名交易

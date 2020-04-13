@@ -16,9 +16,9 @@ extension ViolasTransactionWriteType {
     public var raw: Data {
         switch self {
         case .Delete:
-            return Data.init(hex: "00000000")
+            return Data.init(hex: "00")
         case .Write:
-            return Data.init(hex: "0100000004000000CAFED00D")
+            return Data.init(hex: "0104000000CAFED00D")
         }
     }
 }
@@ -47,7 +47,7 @@ struct ViolasTransactionAccessPath {
         // 添加路径
 //        let pathData = Data.init(hex: self.path)
         let pathData =  Data.init(Array<UInt8>(hex: self.path))
-        result += ViolasUtils.getLengthData(length: pathData.bytes.count, appendBytesCount: 4)//getLengthData(length: pathData.bytes.count, appendBytesCount: 4)
+        result += ViolasUtils.getLengthData(length: pathData.bytes.count, appendBytesCount: 4)
 
         result += pathData
         // 追加类型

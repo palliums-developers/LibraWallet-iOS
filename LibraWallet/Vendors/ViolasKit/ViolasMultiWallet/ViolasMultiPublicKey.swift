@@ -1,24 +1,24 @@
 //
-//  LibraMultiPublicKey.swift
+//  ViolasMultiPublicKey.swift
 //  LibraWallet
 //
-//  Created by wangyingdong on 2020/4/7.
+//  Created by wangyingdong on 2020/4/13.
 //  Copyright © 2020 palliums. All rights reserved.
 //
 
 import CryptoSwift
 import BigInt
-struct LibraMultiPublicKeyModel {
+struct ViolasMultiPublicKeyModel {
     var raw: Data
     var sequence: Int
 }
-struct LibraMultiPublicKey {
+struct ViolasMultiPublicKey {
     /// 公钥数组
-    let raw: [LibraMultiPublicKeyModel]
+    let raw: [ViolasMultiPublicKeyModel]
     /// 需要多少把解锁
     let threshold: Int
     
-    public init (data: [LibraMultiPublicKeyModel], threshold: Int) {
+    public init (data: [ViolasMultiPublicKeyModel], threshold: Int) {
         self.raw = data
         self.threshold = threshold
     }

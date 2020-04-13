@@ -12,6 +12,11 @@
 		36178322243F1455003C6588 /* LibraMultiHDWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36178321243F1455003C6588 /* LibraMultiHDWallet.swift */; };
 		3617835B24440BDB003C6588 /* ViolasUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3617835A24440BDB003C6588 /* ViolasUtils.swift */; };
 		3617835D24440C1E003C6588 /* ViolasWordList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3617835C24440C1E003C6588 /* ViolasWordList.swift */; };
+		3617835F244465B7003C6588 /* ViolasMultiHDWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3617835E244465B7003C6588 /* ViolasMultiHDWallet.swift */; };
+		36178361244465CF003C6588 /* ViolasMultiPrivateKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36178360244465CF003C6588 /* ViolasMultiPrivateKey.swift */; };
+		36178363244465EB003C6588 /* ViolasMultiPublicKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36178362244465EB003C6588 /* ViolasMultiPublicKey.swift */; };
+		361783652444683B003C6588 /* ViolasTypeTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361783642444683B003C6588 /* ViolasTypeTag.swift */; };
+		361783672444684F003C6588 /* ViolasStructTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361783662444684F003C6588 /* ViolasStructTag.swift */; };
 		3623AB5D23ED70CF004A01BF /* TokenMappingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB5C23ED70CF004A01BF /* TokenMappingView.swift */; };
 		3623AB5F23ED70E2004A01BF /* TokenMappingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB5E23ED70E2004A01BF /* TokenMappingModel.swift */; };
 		3623AB6123ED70F5004A01BF /* TokenMappingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB6023ED70F5004A01BF /* TokenMappingViewController.swift */; };
@@ -30,7 +35,6 @@
 		3623AB8523FC0CE2004A01BF /* MappingTransactionsTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB8423FC0CE2004A01BF /* MappingTransactionsTableViewManager.swift */; };
 		3623AB8723FE96F7004A01BF /* HomeTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB8623FE96F7004A01BF /* HomeTableViewHeader.swift */; };
 		3642EB7123CC654500C7B04A /* Serialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3642EB7023CC654500C7B04A /* Serialization.swift */; };
-		364CB180240528C60083B41E /* ViolasTransactionModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364CB17F240528C60083B41E /* ViolasTransactionModule.swift */; };
 		365A89C023B9A7CE00C55A10 /* WYDTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 365A89BF23B9A7CE00C55A10 /* WYDTextField.swift */; };
 		36B43A7223BDE967008E2EEA /* LBXScanError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B43A7123BDE967008E2EEA /* LBXScanError.swift */; };
 		36DA3FCE23B5E5C6001D7733 /* UIButton + imageTitleLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36DA3FCD23B5E5C6001D7733 /* UIButton + imageTitleLocation.swift */; };
@@ -158,7 +162,7 @@
 		36F42DE6242DCB7800DBBF8F /* OrderDoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5C7C5923A871480090385C /* OrderDoneViewController.swift */; };
 		36F42DE7242DCB7800DBBF8F /* ViolasTransactionWriteSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515C023A32F3E0069A909 /* ViolasTransactionWriteSet.swift */; };
 		36F42DE9242DCB7800DBBF8F /* LBXScanWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC48868232222CE005FF254 /* LBXScanWrapper.swift */; };
-		36F42DEA242DCB7800DBBF8F /* ViolasPrivateKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515B123A32BC50069A909 /* ViolasPrivateKey.swift */; };
+		36F42DEA242DCB7800DBBF8F /* ViolasHDPrivateKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515B123A32BC50069A909 /* ViolasHDPrivateKey.swift */; };
 		36F42DEB242DCB7800DBBF8F /* ViolasTransactionArgument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515BC23A32E8C0069A909 /* ViolasTransactionArgument.swift */; };
 		36F42DEC242DCB7800DBBF8F /* LBXScanNetAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC48862232222CE005FF254 /* LBXScanNetAnimation.swift */; };
 		36F42DED242DCB7800DBBF8F /* MappingTokenListAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB7523FBFC79004A01BF /* MappingTokenListAlert.swift */; };
@@ -243,7 +247,7 @@
 		36F42E42242DCB7800DBBF8F /* SettingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9B49E7236031F700354EF0 /* SettingTableViewCell.swift */; };
 		36F42E43242DCB7800DBBF8F /* Serialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3642EB7023CC654500C7B04A /* Serialization.swift */; };
 		36F42E44242DCB7800DBBF8F /* LBXScanLineAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC48865232222CE005FF254 /* LBXScanLineAnimation.swift */; };
-		36F42E45242DCB7800DBBF8F /* ViolasPublicKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515B323A32C130069A909 /* ViolasPublicKey.swift */; };
+		36F42E45242DCB7800DBBF8F /* ViolasHDPublicKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515B323A32C130069A909 /* ViolasHDPublicKey.swift */; };
 		36F42E46242DCB7800DBBF8F /* OrderDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628ABF239F72E100E222FB /* OrderDetailModel.swift */; };
 		36F42E47242DCB7800DBBF8F /* ServiceLegalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9B49FB236046CF00354EF0 /* ServiceLegalView.swift */; };
 		36F42E49242DCB7800DBBF8F /* LibraWalletError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC902442328FCD00097FD85 /* LibraWalletError.swift */; };
@@ -278,7 +282,6 @@
 		36F42E67242DCB7800DBBF8F /* BaseTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9B49D22360268E00354EF0 /* BaseTabBarViewController.swift */; };
 		36F42E68242DCB7800DBBF8F /* OrderDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628ABD239F72CE00E222FB /* OrderDetailViewController.swift */; };
 		36F42E69242DCB7800DBBF8F /* SupportCoinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9B4A3323619A8E00354EF0 /* SupportCoinViewController.swift */; };
-		36F42E6A242DCB7800DBBF8F /* ViolasTransactionModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364CB17F240528C60083B41E /* ViolasTransactionModule.swift */; };
 		36F42E6B242DCB7800DBBF8F /* SettingTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9B49DC23602EB900354EF0 /* SettingTableViewManager.swift */; };
 		36F42E6C242DCB7800DBBF8F /* AddWalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9B4A452362967200354EF0 /* AddWalletViewController.swift */; };
 		36F42E6D242DCB7800DBBF8F /* MineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9B49CC235FFAAB00354EF0 /* MineView.swift */; };
@@ -461,8 +464,8 @@
 		9DB515AC23A32B530069A909 /* ViolasCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515AB23A32B530069A909 /* ViolasCommon.swift */; };
 		9DB515AE23A32B7C0069A909 /* ViolasNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515AD23A32B7C0069A909 /* ViolasNetwork.swift */; };
 		9DB515B023A32BA80069A909 /* ViolasError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515AF23A32BA80069A909 /* ViolasError.swift */; };
-		9DB515B223A32BC50069A909 /* ViolasPrivateKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515B123A32BC50069A909 /* ViolasPrivateKey.swift */; };
-		9DB515B423A32C130069A909 /* ViolasPublicKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515B323A32C130069A909 /* ViolasPublicKey.swift */; };
+		9DB515B223A32BC50069A909 /* ViolasHDPrivateKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515B123A32BC50069A909 /* ViolasHDPrivateKey.swift */; };
+		9DB515B423A32C130069A909 /* ViolasHDPublicKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515B323A32C130069A909 /* ViolasHDPublicKey.swift */; };
 		9DB515B623A32C3A0069A909 /* ViolasHDWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515B523A32C3A0069A909 /* ViolasHDWallet.swift */; };
 		9DB515BB23A32E4C0069A909 /* ViolasRawTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515BA23A32E4C0069A909 /* ViolasRawTransaction.swift */; };
 		9DB515BD23A32E8C0069A909 /* ViolasTransactionArgument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515BC23A32E8C0069A909 /* ViolasTransactionArgument.swift */; };
@@ -567,6 +570,11 @@
 		36178321243F1455003C6588 /* LibraMultiHDWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraMultiHDWallet.swift; sourceTree = "<group>"; };
 		3617835A24440BDB003C6588 /* ViolasUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasUtils.swift; sourceTree = "<group>"; };
 		3617835C24440C1E003C6588 /* ViolasWordList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasWordList.swift; sourceTree = "<group>"; };
+		3617835E244465B7003C6588 /* ViolasMultiHDWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasMultiHDWallet.swift; sourceTree = "<group>"; };
+		36178360244465CF003C6588 /* ViolasMultiPrivateKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasMultiPrivateKey.swift; sourceTree = "<group>"; };
+		36178362244465EB003C6588 /* ViolasMultiPublicKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasMultiPublicKey.swift; sourceTree = "<group>"; };
+		361783642444683B003C6588 /* ViolasTypeTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasTypeTag.swift; sourceTree = "<group>"; };
+		361783662444684F003C6588 /* ViolasStructTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasStructTag.swift; sourceTree = "<group>"; };
 		3623AB5C23ED70CF004A01BF /* TokenMappingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMappingView.swift; sourceTree = "<group>"; };
 		3623AB5E23ED70E2004A01BF /* TokenMappingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMappingModel.swift; sourceTree = "<group>"; };
 		3623AB6023ED70F5004A01BF /* TokenMappingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMappingViewController.swift; sourceTree = "<group>"; };
@@ -586,7 +594,6 @@
 		3623AB8623FE96F7004A01BF /* HomeTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewHeader.swift; sourceTree = "<group>"; };
 		3642EB6D23CC1EDD00C7B04A /* LibraWallet copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "LibraWallet copy-Info.plist"; path = "/Users/wangyingdong/Desktop/公司电脑桌面/柏链/LibraWallet/LibraWallet copy-Info.plist"; sourceTree = "<absolute>"; };
 		3642EB7023CC654500C7B04A /* Serialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Serialization.swift; sourceTree = "<group>"; };
-		364CB17F240528C60083B41E /* ViolasTransactionModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasTransactionModule.swift; sourceTree = "<group>"; };
 		365A89BF23B9A7CE00C55A10 /* WYDTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WYDTextField.swift; sourceTree = "<group>"; };
 		36B43A7123BDE967008E2EEA /* LBXScanError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LBXScanError.swift; sourceTree = "<group>"; };
 		36DA3FCD23B5E5C6001D7733 /* UIButton + imageTitleLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton + imageTitleLocation.swift"; sourceTree = "<group>"; };
@@ -768,8 +775,8 @@
 		9DB515AB23A32B530069A909 /* ViolasCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasCommon.swift; sourceTree = "<group>"; };
 		9DB515AD23A32B7C0069A909 /* ViolasNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasNetwork.swift; sourceTree = "<group>"; };
 		9DB515AF23A32BA80069A909 /* ViolasError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasError.swift; sourceTree = "<group>"; };
-		9DB515B123A32BC50069A909 /* ViolasPrivateKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasPrivateKey.swift; sourceTree = "<group>"; };
-		9DB515B323A32C130069A909 /* ViolasPublicKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasPublicKey.swift; sourceTree = "<group>"; };
+		9DB515B123A32BC50069A909 /* ViolasHDPrivateKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasHDPrivateKey.swift; sourceTree = "<group>"; };
+		9DB515B323A32C130069A909 /* ViolasHDPublicKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasHDPublicKey.swift; sourceTree = "<group>"; };
 		9DB515B523A32C3A0069A909 /* ViolasHDWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasHDWallet.swift; sourceTree = "<group>"; };
 		9DB515BA23A32E4C0069A909 /* ViolasRawTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasRawTransaction.swift; sourceTree = "<group>"; };
 		9DB515BC23A32E8C0069A909 /* ViolasTransactionArgument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasTransactionArgument.swift; sourceTree = "<group>"; };
@@ -896,6 +903,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3617836824446A58003C6588 /* ViolasHDWallet */ = {
+			isa = PBXGroup;
+			children = (
+				9DB515B523A32C3A0069A909 /* ViolasHDWallet.swift */,
+				9DB515B123A32BC50069A909 /* ViolasHDPrivateKey.swift */,
+				9DB515B323A32C130069A909 /* ViolasHDPublicKey.swift */,
+			);
+			path = ViolasHDWallet;
+			sourceTree = "<group>";
+		};
+		3617836924446A66003C6588 /* ViolasMultiWallet */ = {
+			isa = PBXGroup;
+			children = (
+				3617835E244465B7003C6588 /* ViolasMultiHDWallet.swift */,
+				36178360244465CF003C6588 /* ViolasMultiPrivateKey.swift */,
+				36178362244465EB003C6588 /* ViolasMultiPublicKey.swift */,
+			);
+			path = ViolasMultiWallet;
+			sourceTree = "<group>";
+		};
 		3623AB5823ED7062004A01BF /* TokenMapping */ = {
 			isa = PBXGroup;
 			children = (
@@ -2465,7 +2492,8 @@
 				9DB515BE23A32EF80069A909 /* ViolasTransactionAccessPath.swift */,
 				9DB515C023A32F3E0069A909 /* ViolasTransactionWriteSet.swift */,
 				9DB515C223A32F660069A909 /* ViolasTransactionScript.swift */,
-				364CB17F240528C60083B41E /* ViolasTransactionModule.swift */,
+				361783642444683B003C6588 /* ViolasTypeTag.swift */,
+				361783662444684F003C6588 /* ViolasStructTag.swift */,
 			);
 			path = ViolasTransaction;
 			sourceTree = "<group>";
@@ -3011,15 +3039,14 @@
 		9DF9BB5B2387CBCD00FA800D /* ViolasKit */ = {
 			isa = PBXGroup;
 			children = (
+				3617836824446A58003C6588 /* ViolasHDWallet */,
+				3617836924446A66003C6588 /* ViolasMultiWallet */,
 				9DB515B923A32DF90069A909 /* ViolasTransaction */,
-				9DB515A723A327640069A909 /* ViolasMnemonic.swift */,
 				9DB515AB23A32B530069A909 /* ViolasCommon.swift */,
 				9DB515AD23A32B7C0069A909 /* ViolasNetwork.swift */,
 				9DB515AF23A32BA80069A909 /* ViolasError.swift */,
-				9DB515B123A32BC50069A909 /* ViolasPrivateKey.swift */,
-				9DB515B323A32C130069A909 /* ViolasPublicKey.swift */,
-				9DB515B523A32C3A0069A909 /* ViolasHDWallet.swift */,
 				3617835A24440BDB003C6588 /* ViolasUtils.swift */,
+				9DB515A723A327640069A909 /* ViolasMnemonic.swift */,
 				3617835C24440C1E003C6588 /* ViolasWordList.swift */,
 			);
 			path = ViolasKit;
@@ -3454,7 +3481,7 @@
 				36F42DE6242DCB7800DBBF8F /* OrderDoneViewController.swift in Sources */,
 				36F42DE7242DCB7800DBBF8F /* ViolasTransactionWriteSet.swift in Sources */,
 				36F42DE9242DCB7800DBBF8F /* LBXScanWrapper.swift in Sources */,
-				36F42DEA242DCB7800DBBF8F /* ViolasPrivateKey.swift in Sources */,
+				36F42DEA242DCB7800DBBF8F /* ViolasHDPrivateKey.swift in Sources */,
 				36F42DEB242DCB7800DBBF8F /* ViolasTransactionArgument.swift in Sources */,
 				36F42DEC242DCB7800DBBF8F /* LBXScanNetAnimation.swift in Sources */,
 				36F42DED242DCB7800DBBF8F /* MappingTokenListAlert.swift in Sources */,
@@ -3539,7 +3566,7 @@
 				36F42E42242DCB7800DBBF8F /* SettingTableViewCell.swift in Sources */,
 				36F42E43242DCB7800DBBF8F /* Serialization.swift in Sources */,
 				36F42E44242DCB7800DBBF8F /* LBXScanLineAnimation.swift in Sources */,
-				36F42E45242DCB7800DBBF8F /* ViolasPublicKey.swift in Sources */,
+				36F42E45242DCB7800DBBF8F /* ViolasHDPublicKey.swift in Sources */,
 				36F42E46242DCB7800DBBF8F /* OrderDetailModel.swift in Sources */,
 				36F42E47242DCB7800DBBF8F /* ServiceLegalView.swift in Sources */,
 				36F42E49242DCB7800DBBF8F /* LibraWalletError.swift in Sources */,
@@ -3574,7 +3601,6 @@
 				36F42E67242DCB7800DBBF8F /* BaseTabBarViewController.swift in Sources */,
 				36F42E68242DCB7800DBBF8F /* OrderDetailViewController.swift in Sources */,
 				36F42E69242DCB7800DBBF8F /* SupportCoinViewController.swift in Sources */,
-				36F42E6A242DCB7800DBBF8F /* ViolasTransactionModule.swift in Sources */,
 				36F42E6B242DCB7800DBBF8F /* SettingTableViewManager.swift in Sources */,
 				36F42E6C242DCB7800DBBF8F /* AddWalletViewController.swift in Sources */,
 				36F42E6D242DCB7800DBBF8F /* MineView.swift in Sources */,
@@ -3695,6 +3721,7 @@
 				9DB515AE23A32B7C0069A909 /* ViolasNetwork.swift in Sources */,
 				9D9B4A06236048A000354EF0 /* AboutUsViewController.swift in Sources */,
 				9DC4887E2322320B005FF254 /* ScanView.swift in Sources */,
+				36178363244465EB003C6588 /* ViolasMultiPublicKey.swift in Sources */,
 				9D5B4E78236BCE1700F4D99C /* AddAssetViewTableViewCell.swift in Sources */,
 				9D5E370E23AC93C2004C31EF /* WalletInvalidInMarketWarningAlert.swift in Sources */,
 				9D628A91239DEA5300E222FB /* MarketMyOrderHeaderView.swift in Sources */,
@@ -3719,7 +3746,8 @@
 				9D5C7C5A23A871480090385C /* OrderDoneViewController.swift in Sources */,
 				9DB515C123A32F3E0069A909 /* ViolasTransactionWriteSet.swift in Sources */,
 				9DC4886F232222CF005FF254 /* LBXScanWrapper.swift in Sources */,
-				9DB515B223A32BC50069A909 /* ViolasPrivateKey.swift in Sources */,
+				9DB515B223A32BC50069A909 /* ViolasHDPrivateKey.swift in Sources */,
+				361783652444683B003C6588 /* ViolasTypeTag.swift in Sources */,
 				9DB515BD23A32E8C0069A909 /* ViolasTransactionArgument.swift in Sources */,
 				9DC48869232222CF005FF254 /* LBXScanNetAnimation.swift in Sources */,
 				3623AB7623FBFC79004A01BF /* MappingTokenListAlert.swift in Sources */,
@@ -3773,6 +3801,7 @@
 				3623AB8023FC0CB3004A01BF /* MappingTransactionsView.swift in Sources */,
 				9D68D301237D260E005B7593 /* ViolasTransferModel.swift in Sources */,
 				9DC902432328FC4A0097FD85 /* HomeModel.swift in Sources */,
+				361783672444684F003C6588 /* ViolasStructTag.swift in Sources */,
 				9D9B49F52360389200354EF0 /* LanguageTableViewCell.swift in Sources */,
 				9D9B49CF235FFADB00354EF0 /* MineTableViewManager.swift in Sources */,
 				9DE5CE3E2366F2470084608F /* WalletChangeNameViewController.swift in Sources */,
@@ -3807,7 +3836,7 @@
 				9D9B49E8236031F700354EF0 /* SettingTableViewCell.swift in Sources */,
 				3642EB7123CC654500C7B04A /* Serialization.swift in Sources */,
 				9DC4886C232222CF005FF254 /* LBXScanLineAnimation.swift in Sources */,
-				9DB515B423A32C130069A909 /* ViolasPublicKey.swift in Sources */,
+				9DB515B423A32C130069A909 /* ViolasHDPublicKey.swift in Sources */,
 				9D628AC0239F72E100E222FB /* OrderDetailModel.swift in Sources */,
 				9D9B49FC236046CF00354EF0 /* ServiceLegalView.swift in Sources */,
 				9DC902452328FCD00097FD85 /* LibraWalletError.swift in Sources */,
@@ -3822,12 +3851,14 @@
 				9D712441232F621B009DED52 /* LibraWalletTool.swift in Sources */,
 				9D626482235719A400A79B3D /* WelcomePageView.swift in Sources */,
 				9D9B4A2C23618B3200354EF0 /* WalletManagerHeaderView.swift in Sources */,
+				36178361244465CF003C6588 /* ViolasMultiPrivateKey.swift in Sources */,
 				9D9B4A522366954700354EF0 /* ImportWalletModel.swift in Sources */,
 				9DF49C08236BE34E00C77880 /* WalletListView.swift in Sources */,
 				9D5B4E65236ABB8700F4D99C /* TransferFeeSliderCustom.swift in Sources */,
 				9D9B4A3623619A9C00354EF0 /* SupportCoinView.swift in Sources */,
 				9D5D13C523692D3800A2C6AF /* HomeHeaderView.swift in Sources */,
 				36B43A7223BDE967008E2EEA /* LBXScanError.swift in Sources */,
+				3617835F244465B7003C6588 /* ViolasMultiHDWallet.swift in Sources */,
 				9DC4884923211180005FF254 /* LibraWalletManager.swift in Sources */,
 				9D9B49AB235DA76100354EF0 /* AddressManagerTableViewManager.swift in Sources */,
 				9D5B4E6E236BCBC200F4D99C /* AddAssetView.swift in Sources */,
@@ -3842,7 +3873,6 @@
 				9D9B49D32360268E00354EF0 /* BaseTabBarViewController.swift in Sources */,
 				9D628ABE239F72CE00E222FB /* OrderDetailViewController.swift in Sources */,
 				9D9B4A3423619A8E00354EF0 /* SupportCoinViewController.swift in Sources */,
-				364CB180240528C60083B41E /* ViolasTransactionModule.swift in Sources */,
 				36F42E89242E347300DBBF8F /* LibraTypeTag.swift in Sources */,
 				9D9B49DD23602EB900354EF0 /* SettingTableViewManager.swift in Sources */,
 				9D9B4A462362967200354EF0 /* AddWalletViewController.swift in Sources */,

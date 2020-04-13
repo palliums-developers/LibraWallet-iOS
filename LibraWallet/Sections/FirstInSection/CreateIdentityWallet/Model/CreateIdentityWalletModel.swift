@@ -49,7 +49,8 @@ class CreateIdentityWalletModel: NSObject {
                                                   walletBiometricLock: false,
                                                   walletIdentity: 0,
                                                   walletType: .BTC,
-                                                  walletBackupState: false)
+                                                  walletBackupState: false,
+                                                  walletAuthenticationKey: "")
         let result = DataBaseManager.DBManager.insertWallet(model: walletModel)
         if result == true {
             do {
@@ -68,15 +69,16 @@ class CreateIdentityWalletModel: NSObject {
             let wallet = try ViolasManager.getWallet(mnemonic: mnemonics)
             let walletModel = LibraWalletManager.init(walletID: 999,
                                                       walletBalance: 0,
-                                                      walletAddress: wallet.publicKey.toAddress(),
-                                                      walletRootAddress: "Violas_" + wallet.publicKey.toAddress(),
+                                                      walletAddress: wallet.publicKey.toLegacy(),
+                                                      walletRootAddress: "Violas_" + wallet.publicKey.toLegacy(),
                                                       walletCreateTime: Int(NSDate().timeIntervalSince1970),
                                                       walletName: name,
                                                       walletCurrentUse: true,
                                                       walletBiometricLock: false,
                                                       walletIdentity: 0,
                                                       walletType: .Violas,
-                                                      walletBackupState: false)
+                                                      walletBackupState: false,
+                                                      walletAuthenticationKey: wallet.publicKey.toActive())
             let result = DataBaseManager.DBManager.insertWallet(model: walletModel)
             if result == true {
                 do {
@@ -107,7 +109,8 @@ class CreateIdentityWalletModel: NSObject {
                                                       walletBiometricLock: false,
                                                       walletIdentity: 0,
                                                       walletType: .Libra,
-                                                      walletBackupState: false)
+                                                      walletBackupState: false,
+                                                      walletAuthenticationKey: wallet.publicKey.toActive())
             let result = DataBaseManager.DBManager.insertWallet(model: walletModel)
             if result == true {
                 do {

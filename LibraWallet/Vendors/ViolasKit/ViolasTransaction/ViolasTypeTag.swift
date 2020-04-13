@@ -1,13 +1,14 @@
 //
-//  LibraTypeTag.swift
+//  ViolasTypeTag.swift
 //  LibraWallet
 //
-//  Created by wangyingdong on 2020/3/27.
+//  Created by wangyingdong on 2020/4/13.
 //  Copyright © 2020 palliums. All rights reserved.
 //
 
 import UIKit
-enum LibraTypeTags {
+
+enum ViolasTypeTags {
     case Bool
     case U8
     case U64
@@ -16,7 +17,7 @@ enum LibraTypeTags {
     case Vector//Vector(Box<TypeTag>)
     case Struct
 }
-extension LibraTypeTags {
+extension ViolasTypeTags {
     public var data: Data {
         switch self {
         case .Bool:
@@ -36,7 +37,7 @@ extension LibraTypeTags {
         }
     }
 }
-struct LibraTypeTag {
+struct ViolasTypeTag {
     fileprivate let value: String
         
     fileprivate let module: String
@@ -45,16 +46,16 @@ struct LibraTypeTag {
     
     fileprivate let typeParams: [String]
     
-    fileprivate let typeTag: LibraTypeTags
+    fileprivate let typeTag: ViolasTypeTags
         
-    init(typeTag: LibraTypeTags, value: String, module: String, name: String, typeParams: [String]) {
+    init(typeTag: ViolasTypeTags, value: String, module: String, name: String, typeParams: [String]) {
         self.typeTag = typeTag
         self.value = value
         self.module = module
         self.name = name
         self.typeParams = typeParams
     }
-    init(structData: LibraStructTag) {
+    init(structData: ViolasStructTag) {
         self.typeTag = .Struct
         
         self.value = structData.address
@@ -69,29 +70,29 @@ struct LibraTypeTag {
         
         switch self.typeTag {
         case .Bool:
-            result += LibraUtils.getLengthData(length: Int(self.value)!, appendBytesCount: 1)
+            result += ViolasUtils.getLengthData(length: Int(self.value)!, appendBytesCount: 1)
         case .U8:
-            result += LibraUtils.getLengthData(length: Int(self.value)!, appendBytesCount: 1)
+            result += ViolasUtils.getLengthData(length: Int(self.value)!, appendBytesCount: 1)
         case .U64:
-            result += LibraUtils.getLengthData(length: Int(self.value)!, appendBytesCount: 8)
+            result += ViolasUtils.getLengthData(length: Int(self.value)!, appendBytesCount: 8)
         case .U128:
-            result += LibraUtils.getLengthData(length: Int(self.value)!, appendBytesCount: 16)
+            result += ViolasUtils.getLengthData(length: Int(self.value)!, appendBytesCount: 16)
         case .Address:
             result += Data.init(Array<UInt8>(hex: self.value))
         case .Vector:
             let data = Data.init(Array<UInt8>(hex: self.value))
-            result += LibraUtils.getLengthData(length: data.bytes.count, appendBytesCount: 1)
+            result += ViolasUtils.getLengthData(length: data.bytes.count, appendBytesCount: 1)
             result += data
         case .Struct:
             result += Data.init(Array<UInt8>(hex: self.value))
             //
-            result += LibraUtils.uleb128Format(length: self.module.data(using: String.Encoding.utf8)!.bytes.count)
+            result += ViolasUtils.uleb128Format(length: self.module.data(using: String.Encoding.utf8)!.bytes.count)
             result += self.module.data(using: String.Encoding.utf8)!
             //
-            result += LibraUtils.uleb128Format(length: self.name.data(using: String.Encoding.utf8)!.bytes.count)
+            result += ViolasUtils.uleb128Format(length: self.name.data(using: String.Encoding.utf8)!.bytes.count)
             result += self.name.data(using: String.Encoding.utf8)!
             // 追加argument数量
-            result += LibraUtils.uleb128Format(length: self.typeParams.count)
+            result += ViolasUtils.uleb128Format(length: self.typeParams.count)
         }
         return result
     }

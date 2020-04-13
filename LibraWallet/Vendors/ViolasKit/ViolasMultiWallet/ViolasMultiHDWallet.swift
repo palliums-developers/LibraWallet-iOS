@@ -1,34 +1,34 @@
 //
-//  LibraMultiHDWallet.swift
+//  ViolasMultiHDWallet.swift
 //  LibraWallet
 //
-//  Created by wangyingdong on 2020/4/9.
+//  Created by wangyingdong on 2020/4/13.
 //  Copyright © 2020 palliums. All rights reserved.
 //
-import Foundation
+
+import UIKit
 import CryptoSwift
-struct LibraSeedAndDepth {
+struct ViolasSeedAndDepth {
     var seed:[UInt8]
     var depth: Int
     var sequence: Int
 }
-
-struct LibraMultiHDWallet {
+struct ViolasMultiHDWallet {
     /// 公钥
-    let publicKey: LibraMultiPublicKey
+    let publicKey: ViolasMultiPublicKey
     /// 私钥
-    let privateKey: LibraMultiPrivateKey
+    let privateKey: ViolasMultiPrivateKey
     /// 最少签名数
     let threshold: Int
     /// 通过私钥初始化
     /// - Parameters:
     ///   - privateKeys: 私钥数组
     ///   - threshold: 最少签名数
-    init(privateKeys: [LibraMultiPrivateKeyModel], threshold: Int, multiPublicKey: LibraMultiPublicKey? = nil) {
+    init(privateKeys: [ViolasMultiPrivateKeyModel], threshold: Int, multiPublicKey: ViolasMultiPublicKey? = nil) {
 //        let tempPrivateKeyData = privateKeys.map {
 //            Data.init(Array<UInt8>(hex: $0))
 //        }
-        self.privateKey = LibraMultiPrivateKey.init(privateKeys: privateKeys, threshold: threshold)
+        self.privateKey = ViolasMultiPrivateKey.init(privateKeys: privateKeys, threshold: threshold)
         if let tempMultiPublicKey = multiPublicKey {
             self.publicKey = tempMultiPublicKey
         } else {
@@ -41,8 +41,8 @@ struct LibraMultiHDWallet {
     ///   - models: 助记词Seed数组
     ///   - threshold: 最少签名数
     /// - Throws: 初始化失败
-    init(models: [LibraSeedAndDepth], threshold: Int, multiPublicKey: LibraMultiPublicKey? = nil) throws {
-        var privateKeys = [LibraMultiPrivateKeyModel]()
+    init(models: [ViolasSeedAndDepth], threshold: Int, multiPublicKey: ViolasMultiPublicKey? = nil) throws {
+        var privateKeys = [ViolasMultiPrivateKeyModel]()
         for model in models {
             let depthData = LibraUtils.getLengthData(length: model.depth, appendBytesCount: 8)
             let tempInfo = Data() + Array("LIBRA WALLET: derived key$".utf8) + depthData.bytes
@@ -52,14 +52,14 @@ struct LibraMultiHDWallet {
                                          info: tempInfo.bytes,
                                          keyLength: 32,
                                          variant: .sha3_256).calculate()
-                let privateModel = LibraMultiPrivateKeyModel.init(raw: Data.init(bytes: privateKey, count: privateKey.count),
+                let privateModel = ViolasMultiPrivateKeyModel.init(raw: Data.init(bytes: privateKey, count: privateKey.count),
                                                              sequence: model.sequence)
                 privateKeys.append(privateModel)
             } catch {
                 throw error
             }
         }
-        self.privateKey = LibraMultiPrivateKey.init(privateKeys: privateKeys, threshold: threshold)
+        self.privateKey = ViolasMultiPrivateKey.init(privateKeys: privateKeys, threshold: threshold)
         if let tempMultiPublicKey = multiPublicKey {
             self.publicKey = tempMultiPublicKey
         } else {
