@@ -21,7 +21,7 @@ struct LibraHDPrivateKey {
         let publicKeyData = Data.init(bytes: publicKey, count: publicKey.count)
         return LibraHDPublicKey.init(data: publicKeyData)
     }
-    func signTransaction(transaction: RawTransaction, wallet: LibraHDWallet) throws -> Data {
+    func signTransaction(transaction: LibraRawTransaction, wallet: LibraHDWallet) throws -> Data {
         // 交易第一部分-待签名交易
         let transactionRaw = transaction.serialize()
         // 交易第二部分-交易类型（00普通，01多签）
@@ -29,7 +29,7 @@ struct LibraHDPrivateKey {
         // 交易第三部分-公钥
         var publicKeyData = Data()
         // 2.1追加publicKey长度
-        publicKeyData += uleb128Format(length: wallet.publicKey.raw.bytes.count)
+        publicKeyData += LibraUtils.uleb128Format(length: wallet.publicKey.raw.bytes.count)
         // 2.2追加publicKey
         publicKeyData += wallet.publicKey.raw
         // 交易第四部分-签名数据
@@ -42,7 +42,7 @@ struct LibraHDPrivateKey {
         
         var signData = Data()
         // 4.4追加签名长度
-        signData += uleb128Format(length: sign.count)
+        signData += LibraUtils.uleb128Format(length: sign.count)
         // 4.5追加签名
         signData += Data.init(bytes: sign, count: sign.count)
         // 最后拼接数据

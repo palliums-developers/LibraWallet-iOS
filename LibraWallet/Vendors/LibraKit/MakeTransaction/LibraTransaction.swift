@@ -10,19 +10,19 @@ import Foundation
 import CryptoSwift
 struct LibraTransaction {
 
-    let request: RawTransaction
+    let request: LibraRawTransaction
     
     public init(receiveAddress: String, amount: Double, sendAddress: String, sequenceNumber: UInt64, authenticatorKey: String) {
 
-        let argument1 = TransactionArgument.init(code: .Address, value: receiveAddress)
-        let argument2 = TransactionArgument.init(code: .U64, value: "\(Int(amount * 1000000))")
-        let argument3 = TransactionArgument.init(code: .U8Vector, value: authenticatorKey)
+        let argument1 = LibraTransactionArgument.init(code: .Address, value: receiveAddress)
+        let argument2 = LibraTransactionArgument.init(code: .U64, value: "\(Int(amount * 1000000))")
+        let argument3 = LibraTransactionArgument.init(code: .U8Vector, value: authenticatorKey)
         
-        let script = TransactionScript.init(code: Data.init(hex: libraProgramCode), typeTags: [LibraTypeTag.init(structData: StructTag.init(type: .libraDefault))], argruments: [argument1, argument3, argument2])
+        let script = LibraTransactionScript.init(code: Data.init(hex: libraProgramCode), typeTags: [LibraTypeTag.init(structData: LibraStructTag.init(type: .libraDefault))], argruments: [argument1, argument3, argument2])
 
         let date = Int(UInt64(Date().timeIntervalSince1970) + 3600)
         
-        let raw = RawTransaction.init(senderAddres: sendAddress,
+        let raw = LibraRawTransaction.init(senderAddres: sendAddress,
                                        sequenceNumber: sequenceNumber,
                                        maxGasAmount: 400000,
                                        gasUnitPrice: 0,
@@ -43,17 +43,16 @@ extension LibraTransaction {
     ///   - vlibraReceiveAddress: 接收VLibra地址
     public init(sendAddress: String, amount: Double, fee: Double, sequenceNumber: UInt64, vlibraReceiveAddress: String) {
         
-        let argument1 = TransactionArgument.init(code: .Address, value: "29223f25fe4b74d75ca87527aed560b2826f5da9382e2fb83f9ab740ac40b8f7")
-        let argument2 = TransactionArgument.init(code: .U64, value: "\(Int(amount * 1000000))")
+        let argument1 = LibraTransactionArgument.init(code: .Address, value: "29223f25fe4b74d75ca87527aed560b2826f5da9382e2fb83f9ab740ac40b8f7")
+        let argument2 = LibraTransactionArgument.init(code: .U64, value: "\(Int(amount * 1000000))")
 
         let data = "{\"flag\":\"libra\",\"type\":\"l2v\",\"to_address\":\"\(vlibraReceiveAddress)\",\"state\":\"start\"}".data(using: .utf8)!
 
-        let argument3 = TransactionArgument.init(code: .U8Vector, value: data.toHexString())
+        let argument3 = LibraTransactionArgument.init(code: .U8Vector, value: data.toHexString())
 
-//        let program = TransactionScript.init(code: getProgramCode(content: LibraTransferWithData), argruments: [argument1, argument2, argument3])
-        let program = TransactionScript.init(code: Data.init(hex: LibraTransferWithData), typeTags: [LibraTypeTag.init(structData: StructTag.init(type: .libraDefault))], argruments: [argument1, argument2, argument3])
+        let program = LibraTransactionScript.init(code: Data.init(hex: LibraTransferWithData), typeTags: [LibraTypeTag.init(structData: LibraStructTag.init(type: .libraDefault))], argruments: [argument1, argument2, argument3])
 
-        let raw = RawTransaction.init(senderAddres: sendAddress,
+        let raw = LibraRawTransaction.init(senderAddres: sendAddress,
                                             sequenceNumber: sequenceNumber,
                                             maxGasAmount: 560000,
                                             gasUnitPrice: 0,

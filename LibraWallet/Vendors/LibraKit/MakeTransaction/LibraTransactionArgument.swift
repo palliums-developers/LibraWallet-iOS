@@ -1,5 +1,5 @@
 //
-//  TransactionProgram.swift
+//  LibraTransactionArgument.swift
 //  LibraWallet
 //
 //  Created by palliums on 2019/9/9.
@@ -7,14 +7,14 @@
 //
 
 import Foundation
-enum ArgumentsCode {
+enum LibraArgumentsCode {
     case U64
     case Address
     case U8Vector
     #warning("待测试")
     case Bool
 }
-extension ArgumentsCode {
+extension LibraArgumentsCode {
     public var raw: Data {
         switch self {
         case .U64:
@@ -28,12 +28,12 @@ extension ArgumentsCode {
         }
     }
 }
-struct TransactionArgument {
-    fileprivate let code: ArgumentsCode
+struct LibraTransactionArgument {
+    fileprivate let code: LibraArgumentsCode
     
     fileprivate let value: String
     
-    init(code: ArgumentsCode, value: String) {
+    init(code: LibraArgumentsCode, value: String) {
         self.code = code
         self.value = value
     }
@@ -44,16 +44,16 @@ struct TransactionArgument {
         
         switch self.code {
         case .U64:
-            result += getLengthData(length: Int(self.value)!, appendBytesCount: 8)
+            result += LibraUtils.getLengthData(length: Int(self.value)!, appendBytesCount: 8)
         case .Address:
             let data = Data.init(Array<UInt8>(hex: self.value))
             result += data
         case .U8Vector:
             let data = Data.init(Array<UInt8>(hex: self.value))
-            result += uleb128Format(length: data.bytes.count)
+            result += LibraUtils.uleb128Format(length: data.bytes.count)
             result += data
         case .Bool:
-            result += getLengthData(length: Int(self.value)!, appendBytesCount: 1)
+            result += LibraUtils.getLengthData(length: Int(self.value)!, appendBytesCount: 1)
         }
         return result
     }

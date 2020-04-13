@@ -74,26 +74,24 @@ struct LibraMnemonic {
     private static func wordList(for language: Language) -> [String.SubSequence] {
         switch language {
         case .english:
-            return WordList.english
+            return LibraWordList.english
         case .japanese:
-            return WordList.japanese
+            return LibraWordList.japanese
         case .korean:
-            return WordList.korean
+            return LibraWordList.korean
         case .spanish:
-            return WordList.spanish
+            return LibraWordList.spanish
         case .simplifiedChinese:
-            return WordList.simplifiedChinese
+            return LibraWordList.simplifiedChinese
         case .traditionalChinese:
-            return WordList.traditionalChinese
+            return LibraWordList.traditionalChinese
         case .french:
-            return WordList.french
+            return LibraWordList.french
         case .italian:
-            return WordList.italian
+            return LibraWordList.italian
         }
     }
 }
-
 public enum MnemonicError: Error {
     case randomBytesError
 }
-

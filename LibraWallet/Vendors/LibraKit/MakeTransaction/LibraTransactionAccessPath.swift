@@ -1,5 +1,5 @@
 //
-//  TransactionAccessPath.swift
+//  LibraTransactionAccessPath.swift
 //  LibraWallet
 //
 //  Created by palliums on 2019/9/10.
@@ -7,11 +7,11 @@
 //
 
 import Foundation
-enum TransactionWriteType {
+enum LibraTransactionWriteType {
     case Delete
     case Write
 }
-extension TransactionWriteType {
+extension LibraTransactionWriteType {
     public var raw: Data {
         switch self {
         case .Delete:
@@ -21,14 +21,14 @@ extension TransactionWriteType {
         }
     }
 }
-struct TransactionAccessPath {
+struct LibraTransactionAccessPath {
     fileprivate let address: String
     
     fileprivate let path: String
     
-    fileprivate let writeType: TransactionWriteType
+    fileprivate let writeType: LibraTransactionWriteType
    
-    init(address: String, path: String, writeType: TransactionWriteType) {
+    init(address: String, path: String, writeType: LibraTransactionWriteType) {
         
         self.address = address
         
@@ -46,7 +46,7 @@ struct TransactionAccessPath {
         // 添加路径
 //        let pathData = Data.init(hex: self.path)
         let pathData =  Data.init(Array<UInt8>(hex: self.path))
-        result += getLengthData(length: pathData.bytes.count, appendBytesCount: 4)
+        result += LibraUtils.getLengthData(length: pathData.bytes.count, appendBytesCount: 4)
 
         result += pathData
         // 追加类型

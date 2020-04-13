@@ -7,10 +7,10 @@
 //
 
 import UIKit
-enum StructTagType {
+enum LibraStructTagType {
     case libraDefault
 }
-struct StructTag {
+struct LibraStructTag {
     var address: String
     var module: String
     var name: String
@@ -22,8 +22,8 @@ struct StructTag {
         self.typeParams = typeParams
     }
 }
-extension StructTag {
-    init(type: StructTagType) {
+extension LibraStructTag {
+    init(type: LibraStructTagType) {
         switch type {
         case .libraDefault:
             self.address = "00000000000000000000000000000000"

@@ -1,5 +1,5 @@
 //
-//  TransactionWriteSet.swift
+//  LibraTransactionWriteSet.swift
 //  LibraWallet
 //
 //  Created by palliums on 2019/9/10.
@@ -7,12 +7,12 @@
 //
 
 import Foundation
-struct TransactionWriteSet {
-    fileprivate let accessPaths: [TransactionAccessPath]
+struct LibraTransactionWriteSet {
+    fileprivate let accessPaths: [LibraTransactionAccessPath]
     
     fileprivate let writeHeaderData: Data = Data.init(hex: "01")
     
-    init(accessPaths: [TransactionAccessPath]) {
+    init(accessPaths: [LibraTransactionAccessPath]) {
         self.accessPaths = accessPaths
     }
     func serialize() -> Data {
@@ -20,7 +20,7 @@ struct TransactionWriteSet {
         // 追加类型
         result += writeHeaderData
         // 追加accessPaths数量
-        result += getLengthData(length: accessPaths.count, appendBytesCount: 4)
+        result += LibraUtils.getLengthData(length: accessPaths.count, appendBytesCount: 4)
         // 追加accessPaths数组数据
         for accessPath in accessPaths {
             result += accessPath.serialize()

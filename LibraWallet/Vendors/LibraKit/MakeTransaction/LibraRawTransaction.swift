@@ -1,5 +1,5 @@
 //
-//  RawTransaction.swift
+//  LibraRawTransaction.swift
 //  LibraWallet
 //
 //  Created by palliums on 2019/9/9.
@@ -8,7 +8,7 @@
 
 import Foundation
 import CryptoSwift
-struct RawTransaction {
+struct LibraRawTransaction {
     /// 发送地址
     fileprivate let senderAddress: String
     /// 发送序列号
@@ -41,17 +41,17 @@ struct RawTransaction {
         // senderAddress
         result += Data.init(Array<UInt8>(hex: self.senderAddress))
         // sequenceNumber(固定8个字节)
-        result += getLengthData(length: Int(sequenceNumber), appendBytesCount: 8)
+        result += LibraUtils.getLengthData(length: Int(sequenceNumber), appendBytesCount: 8)
         // TransactionPayload
         result += self.payLoad
         // maxGasAmount(固定8个字节)
-        result += getLengthData(length: Int(maxGasAmount), appendBytesCount: 8)
+        result += LibraUtils.getLengthData(length: Int(maxGasAmount), appendBytesCount: 8)
         // gasUnitPrice(固定8个字节)
-        result += getLengthData(length: Int(gasUnitPrice), appendBytesCount: 8)
+        result += LibraUtils.getLengthData(length: Int(gasUnitPrice), appendBytesCount: 8)
         // libraTypeTag
-        result += LibraTypeTag.init(structData: StructTag.init(type: .libraDefault)).serialize()
+        result += LibraTypeTag.init(structData: LibraStructTag.init(type: .libraDefault)).serialize()
         // expirationTime(固定8个字节)
-        result += getLengthData(length: expirationTime, appendBytesCount: 8)
+        result += LibraUtils.getLengthData(length: expirationTime, appendBytesCount: 8)
         return result
     }
 }

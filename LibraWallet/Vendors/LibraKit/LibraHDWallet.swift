@@ -39,7 +39,7 @@ public final class LibraHDWallet {
     /// - Throws: 创建失败
     public convenience init(seed: [UInt8], depth: Int = 0) throws {
         
-        let depthData = getLengthData(length: depth, appendBytesCount: 8)
+        let depthData = LibraUtils.getLengthData(length: depth, appendBytesCount: 8)
         
         let tempInfo = Data() + Array("LIBRA WALLET: derived key$".utf8) + depthData.bytes
         do {

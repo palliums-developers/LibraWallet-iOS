@@ -27,7 +27,7 @@ import Foundation
 
 // swiftlint:disable type_body_length
 // swiftlint:disable file_length
-class WordList {
+class LibraWordList {
     static var english: [String.SubSequence] = {
         let words =
             """

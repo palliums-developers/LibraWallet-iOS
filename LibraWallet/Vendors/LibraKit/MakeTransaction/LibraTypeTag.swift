@@ -54,7 +54,7 @@ struct LibraTypeTag {
         self.name = name
         self.typeParams = typeParams
     }
-    init(structData: StructTag) {
+    init(structData: LibraStructTag) {
         self.typeTag = .Struct
         
         self.value = structData.address
@@ -69,29 +69,29 @@ struct LibraTypeTag {
         
         switch self.typeTag {
         case .Bool:
-            result += getLengthData(length: Int(self.value)!, appendBytesCount: 1)
+            result += LibraUtils.getLengthData(length: Int(self.value)!, appendBytesCount: 1)
         case .U8:
-            result += getLengthData(length: Int(self.value)!, appendBytesCount: 1)
+            result += LibraUtils.getLengthData(length: Int(self.value)!, appendBytesCount: 1)
         case .U64:
-            result += getLengthData(length: Int(self.value)!, appendBytesCount: 8)
+            result += LibraUtils.getLengthData(length: Int(self.value)!, appendBytesCount: 8)
         case .U128:
-            result += getLengthData(length: Int(self.value)!, appendBytesCount: 16)
+            result += LibraUtils.getLengthData(length: Int(self.value)!, appendBytesCount: 16)
         case .Address:
             result += Data.init(Array<UInt8>(hex: self.value))
         case .Vector:
             let data = Data.init(Array<UInt8>(hex: self.value))
-            result += getLengthData(length: data.bytes.count, appendBytesCount: 1)
+            result += LibraUtils.getLengthData(length: data.bytes.count, appendBytesCount: 1)
             result += data
         case .Struct:
             result += Data.init(Array<UInt8>(hex: self.value))
             //
-            result += uleb128Format(length: self.module.data(using: String.Encoding.utf8)!.bytes.count)//getLengthData(length: self.module.data(using: String.Encoding.utf8)!.bytes.count, appendBytesCount: 4)
+            result += LibraUtils.uleb128Format(length: self.module.data(using: String.Encoding.utf8)!.bytes.count)
             result += self.module.data(using: String.Encoding.utf8)!
             //
-            result += uleb128Format(length: self.name.data(using: String.Encoding.utf8)!.bytes.count)//getLengthData(length: self.name.data(using: String.Encoding.utf8)!.bytes.count, appendBytesCount: 4)
+            result += LibraUtils.uleb128Format(length: self.name.data(using: String.Encoding.utf8)!.bytes.count)
             result += self.name.data(using: String.Encoding.utf8)!
             // 追加argument数量
-            result += uleb128Format(length: self.typeParams.count)//getLengthData(length: self.typeParams.count, appendBytesCount: 1)
+            result += LibraUtils.uleb128Format(length: self.typeParams.count)
         }
         return result
     }

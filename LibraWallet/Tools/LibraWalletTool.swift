@@ -50,7 +50,7 @@ func checkMnenoicInvalid(mnemonicArray: [String]) -> Bool {
     guard mnemonicArray.count != 0 else {
         return false
     }
-    let wordList: [String.SubSequence] =  WordList.english
+    let wordList: [String.SubSequence] =  LibraWordList.english
     for i in 0...mnemonicArray.count - 1 {
         let status = wordList.contains(Substring.init(mnemonicArray[i]))
         if status == false {

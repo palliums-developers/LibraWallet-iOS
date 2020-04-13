@@ -44,7 +44,7 @@ struct LibraMultiHDWallet {
     init(models: [SeedAndDepth], threshold: Int, multiPublicKey: LibraMultiPublicKey? = nil) throws {
         var privateKeys = [MultiPrivateKeyModel]()
         for model in models {
-            let depthData = getLengthData(length: model.depth, appendBytesCount: 8)
+            let depthData = LibraUtils.getLengthData(length: model.depth, appendBytesCount: 8)
             let tempInfo = Data() + Array("LIBRA WALLET: derived key$".utf8) + depthData.bytes
             do {
                 let privateKey = try HKDF.init(password: model.seed,

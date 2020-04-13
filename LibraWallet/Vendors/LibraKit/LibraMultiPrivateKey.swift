@@ -28,9 +28,9 @@ struct LibraMultiPrivateKey {
     /// - Returns: Hex私钥
     func toHexString() -> String {
         var privateKeyData = Data()
-        privateKeyData += uleb128Format(length: self.raw.count)
+        privateKeyData += LibraUtils.uleb128Format(length: self.raw.count)
         privateKeyData += self.raw.reduce(Data(), {
-            $0 + uleb128Format(length: $1.raw.count) + $1.raw
+            $0 + LibraUtils.uleb128Format(length: $1.raw.count) + $1.raw
         })
         privateKeyData += BigUInt(self.threshold).serialize()
         return privateKeyData.toHexString()
@@ -50,7 +50,7 @@ struct LibraMultiPrivateKey {
     /// 签名交易
     /// - Parameter transaction: 交易数据
     /// - Returns: 返回序列化结果
-    func signMultiTransaction(transaction: RawTransaction, publicKey: LibraMultiPublicKey) -> Data {
+    func signMultiTransaction(transaction: LibraRawTransaction, publicKey: LibraMultiPublicKey) -> Data {
         // 交易第一部分-原始数据
         let transactionRaw = transaction.serialize()
         
@@ -62,7 +62,7 @@ struct LibraMultiPrivateKey {
         // 追加MultiPublicKey
         let multiPublickKey = publicKey.toMultiPublicKey()
 
-        publicKeyData += uleb128Format(length: multiPublickKey.bytes.count)
+        publicKeyData += LibraUtils.uleb128Format(length: multiPublickKey.bytes.count)
         publicKeyData += multiPublickKey
         
         // 交易第四部分-签名
@@ -79,10 +79,10 @@ struct LibraMultiPrivateKey {
             signData += sign
             bitmap = setBitmap(bitmap: bitmap, index: self.raw[i].sequence)
         }
-        let convert = binary2dec(num: bitmap)
+        let convert = LibraUtils.binary2dec(num: bitmap)
         signData += BigUInt(convert).serialize()
         print("bitmap = \(BigUInt(convert).serialize().toHexString())")
-        let result = transactionRaw + signType + publicKeyData + uleb128Format(length: signData.count) + signData
+        let result = transactionRaw + signType + publicKeyData + LibraUtils.uleb128Format(length: signData.count) + signData//uleb128Format(length: signData.count) + signData
         return result
     }
     func setBitmap(bitmap: String, index: Int) -> String {
