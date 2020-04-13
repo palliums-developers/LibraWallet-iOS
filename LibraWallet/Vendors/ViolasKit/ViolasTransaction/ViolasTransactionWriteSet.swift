@@ -21,7 +21,7 @@ struct ViolasTransactionWriteSet {
         // 追加类型
         result += writeHeaderData
         // 追加accessPaths数量
-        result += getLengthData(length: accessPaths.count, appendBytesCount: 4)
+        result += ViolasUtils.getLengthData(length: accessPaths.count, appendBytesCount: 4)
         // 追加accessPaths数组数据
         for accessPath in accessPaths {
             result += accessPath.serialize()

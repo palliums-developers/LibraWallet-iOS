@@ -47,7 +47,7 @@ struct ViolasTransactionAccessPath {
         // 添加路径
 //        let pathData = Data.init(hex: self.path)
         let pathData =  Data.init(Array<UInt8>(hex: self.path))
-        result += getLengthData(length: pathData.bytes.count, appendBytesCount: 4)
+        result += ViolasUtils.getLengthData(length: pathData.bytes.count, appendBytesCount: 4)//getLengthData(length: pathData.bytes.count, appendBytesCount: 4)
 
         result += pathData
         // 追加类型

@@ -23,10 +23,10 @@ struct ViolasTransactionModule {
         // 追加类型
         result += programPrefixData
         // 追加code长度
-        result += getLengthData(length: self.code.bytes.count, appendBytesCount: 4)
+        result += ViolasUtils.getLengthData(length: self.code.bytes.count, appendBytesCount: 4)
         // 追加code数据
         result += self.code
-
+        
         return result
     }
 }

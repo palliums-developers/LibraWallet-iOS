@@ -27,11 +27,11 @@ struct ViolasTransactionScript {
         // 追加类型
         result += programPrefixData
         // 追加code长度
-        result += getLengthData(length: self.code.bytes.count, appendBytesCount: 4)
+        result += ViolasUtils.getLengthData(length: self.code.bytes.count, appendBytesCount: 4)//getLengthData(length: self.code.bytes.count, appendBytesCount: 4)
         // 追加code数据
         result += self.code
         // 追加argument数量
-        result += getLengthData(length: argruments.count, appendBytesCount: 4)
+        result += ViolasUtils.getLengthData(length: argruments.count, appendBytesCount: 4)//getLengthData(length: argruments.count, appendBytesCount: 4)
         // 追加argument数组数据
         for argument in argruments {
             result += argument.serialize()

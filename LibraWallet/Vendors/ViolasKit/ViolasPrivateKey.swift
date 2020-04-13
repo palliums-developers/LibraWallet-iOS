@@ -40,7 +40,7 @@ struct ViolasPrivateKey {
         // 公钥数据
         var publicKeyData = Data()
         // 追加publicKey长度
-        publicKeyData += getLengthData(length: wallet.publicKey.raw.bytes.count, appendBytesCount: 4)
+        publicKeyData += ViolasUtils.getLengthData(length: wallet.publicKey.raw.bytes.count, appendBytesCount: 4)//getLengthData(length: wallet.publicKey.raw.bytes.count, appendBytesCount: 4)
 
         // 追加publicKey
         publicKeyData += wallet.publicKey.raw
@@ -48,7 +48,7 @@ struct ViolasPrivateKey {
         // 签名数据
         var signData = Data()
         // 追加签名长度
-        signData += getLengthData(length: sign.count, appendBytesCount: 4)
+        signData += ViolasUtils.getLengthData(length: sign.count, appendBytesCount: 4)//getLengthData(length: sign.count, appendBytesCount: 4)
 
         // 追加签名
         signData += Data.init(bytes: sign, count: sign.count)

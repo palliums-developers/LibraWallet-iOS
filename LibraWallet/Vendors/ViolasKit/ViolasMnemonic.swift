@@ -74,21 +74,21 @@ struct ViolasMnemonic {
     private static func wordList(for language: Language) -> [String.SubSequence] {
         switch language {
         case .english:
-            return WordList.english
+            return ViolasWordList.english
         case .japanese:
-            return WordList.japanese
+            return ViolasWordList.japanese
         case .korean:
-            return WordList.korean
+            return ViolasWordList.korean
         case .spanish:
-            return WordList.spanish
+            return ViolasWordList.spanish
         case .simplifiedChinese:
-            return WordList.simplifiedChinese
+            return ViolasWordList.simplifiedChinese
         case .traditionalChinese:
-            return WordList.traditionalChinese
+            return ViolasWordList.traditionalChinese
         case .french:
-            return WordList.french
+            return ViolasWordList.french
         case .italian:
-            return WordList.italian
+            return ViolasWordList.italian
         }
     }
 }

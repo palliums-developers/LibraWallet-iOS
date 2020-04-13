@@ -45,15 +45,15 @@ struct ViolasRawTransaction {
         // senderAddress
         result += senderAddressData
         // sequenceNumber
-        result += getLengthData(length: Int(sequenceNumber), appendBytesCount: 8)
+        result += ViolasUtils.getLengthData(length: Int(sequenceNumber), appendBytesCount: 8)//getLengthData(length: Int(sequenceNumber), appendBytesCount: 8)
         // TransactionPayload
         result += self.programOrWrite
         // maxGasAmount
-        result += getLengthData(length: Int(maxGasAmount), appendBytesCount: 8)
+        result += ViolasUtils.getLengthData(length: Int(maxGasAmount), appendBytesCount: 8)//getLengthData(length: Int(maxGasAmount), appendBytesCount: 8)
         // gasUnitPrice
-        result += getLengthData(length: Int(gasUnitPrice), appendBytesCount: 8)
+        result += ViolasUtils.getLengthData(length: Int(gasUnitPrice), appendBytesCount: 8)//getLengthData(length: Int(gasUnitPrice), appendBytesCount: 8)
         // expirationTime
-        result += getLengthData(length: expirationTime, appendBytesCount: 8)
+        result += ViolasUtils.getLengthData(length: expirationTime, appendBytesCount: 8)//getLengthData(length: expirationTime, appendBytesCount: 8)
         return result
     }
 }
