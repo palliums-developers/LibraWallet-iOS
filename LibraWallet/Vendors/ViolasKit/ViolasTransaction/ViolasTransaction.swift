@@ -32,31 +32,35 @@ extension ViolasTransaction {
     // Violas注册稳定币
     public init(sendAddress: String, sequenceNumber: UInt64, code: Data) {
         
-        let program = ViolasTransactionScript.init(code: code, typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .ViolasDefault))], argruments: [])
-        
+        let program = ViolasTransactionScript.init(code: code,
+                                                   typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .ViolasDefault))],
+                                                   argruments: [ViolasTransactionArgument.init(code: ViolasArgumentsCode.U8Vector, value: "publish".data(using: .utf8)!.toHexString())])
+                
         let raw = ViolasRawTransaction.init(senderAddres: sendAddress,
                                             sequenceNumber: sequenceNumber,
-                                            maxGasAmount: 280000,
+                                            maxGasAmount: 400000,
                                             gasUnitPrice: 0,
-                                            expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 1000),
+                                            expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
                                             programOrWrite: program.serialize())
         self.request = raw
     }
-}
-extension ViolasTransaction {
-    // Violas转代币
+    // Violas转稳定币
     public init(sendAddress: String, receiveAddress: String, amount: Double, sequenceNumber: UInt64, code: Data) {
-        
+        // tokenIndex
+        let argument0 = ViolasTransactionArgument.init(code: .U64, value: "0")
+
         let argument1 = ViolasTransactionArgument.init(code: .Address, value: receiveAddress)
         let argument2 = ViolasTransactionArgument.init(code: .U64, value: "\(Int(amount * 1000000))")
         
-        let program = ViolasTransactionScript.init(code: code, typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .ViolasDefault))], argruments: [argument1, argument2])
+        let argument3 = ViolasTransactionArgument.init(code: .U8Vector, value: "")
+
+        let program = ViolasTransactionScript.init(code: code, typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .ViolasDefault))], argruments: [argument0, argument1, argument2, argument3])
         
         let raw = ViolasRawTransaction.init(senderAddres: sendAddress,
                                             sequenceNumber: sequenceNumber,
-                                            maxGasAmount: 280000,
+                                            maxGasAmount: 400000,
                                             gasUnitPrice: 0,
-                                            expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 1000),
+                                            expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
                                             programOrWrite: program.serialize())
         self.request = raw
     }

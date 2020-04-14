@@ -10,6 +10,7 @@ import UIKit
 
 enum ViolasStructTagType {
     case ViolasDefault
+    case Publish
 }
 struct ViolasStructTag {
     var address: String
@@ -31,6 +32,12 @@ extension ViolasStructTag {
             self.module = "LBR"
             self.name = "T"
             self.typeParams = [String]()
+        case .Publish:
+            self.address = ""
+            self.module = ""
+            self.name = "publish"
+            self.typeParams = [String]()
         }
+
     }
 }

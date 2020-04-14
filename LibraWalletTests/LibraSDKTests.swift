@@ -32,28 +32,35 @@ class LibraSDKTests: XCTestCase {
         }
     }
     func testLibra() {
-        // String
-//        let string = TransactionArgument.init(code: .String, value: "Hello, World!").serialize().toHexString().uppercased()
-//        XCTAssertEqual(string, "020000000D00000048656C6C6F2C20576F726C6421")
-//
-//        // u64
-//        let amount = TransactionArgument.init(code: .U64, value: "9213671392124193148").serialize().toHexString().uppercased()
-//        XCTAssertEqual(amount, "000000007CC9BDA45089DD7F")
-//        // String
-//        let address = TransactionArgument.init(code: .Address, value: "2c25991785343b23ae073a50e5fd809a2cd867526b3c1db2b0bf5d1924c693ed").serialize().toHexString().uppercased()
-//        XCTAssertEqual(address  , "01000000200000002C25991785343B23AE073A50E5FD809A2CD867526B3C1DB2B0BF5D1924C693ED")
-//
-        // Byte
-        let byte = TransactionArgument.init(code: .U8Vector, value: "cafed00d").serialize().toHexString().uppercased()
-        XCTAssertEqual(byte  , "0300000004000000CAFED00D")
-
-        let accessPath1 = TransactionAccessPath.init(address: "a71d76faa2d2d5c3224ec3d41deb293973564a791e55c6782ba76c2bf0495f9a", path: "01217da6c6b3e19f1825cfb2676daecce3bf3de03cf26647c78df00b371b25cc97", writeType: TransactionWriteType.Delete)
-        let accessPath2 = TransactionAccessPath.init(address: "c4c63f80c74b11263e421ebf8486a4e398d0dbc09fa7d4f62ccdb309f3aea81f", path: "01217da6c6b3e19f18", writeType: TransactionWriteType.Write)
-        let write = TransactionWriteSet.init(accessPaths: [accessPath1, accessPath2]).serialize().toHexString().uppercased()
-        XCTAssertEqual(write, "010000000200000020000000A71D76FAA2D2D5C3224EC3D41DEB293973564A791E55C6782BA76C2BF0495F9A2100000001217DA6C6B3E19F1825CFB2676DAECCE3BF3DE03CF26647C78DF00B371B25CC970000000020000000C4C63F80C74B11263E421EBF8486A4E398D0DBC09FA7D4F62CCDB309F3AEA81F0900000001217DA6C6B3E19F180100000004000000CAFED00D")
-//
-//
-//
+        //LibraTransactionArgument
+        // u64
+        let amount = LibraTransactionArgument.init(code: .U64, value: "9213671392124193148").serialize().toHexString().uppercased()
+        XCTAssertEqual(amount, "007CC9BDA45089DD7F")
+        // Address
+        let address = LibraTransactionArgument.init(code: .Address, value: "bafc671e8a38c05706f83b5159bbd8a4").serialize().toHexString()
+        XCTAssertEqual(address  , "01bafc671e8a38c05706f83b5159bbd8a4")
+        // U8Vector
+        let u8vector = LibraTransactionArgument.init(code: .U8Vector, value: "CAFED00D").serialize().toHexString().uppercased()
+        XCTAssertEqual(u8vector, "0204CAFED00D")
+        // Bool
+        let bool1 = LibraTransactionArgument.init(code: .Bool, value: "00").serialize().toHexString().uppercased()
+        XCTAssertEqual(bool1, "0300")
+        // Bool
+        let bool2 = LibraTransactionArgument.init(code: .Bool, value: "01").serialize().toHexString().uppercased()
+        XCTAssertEqual(bool2, "0301")
+        //LibraTransactionAccessPath
+        let accessPath1 = LibraTransactionAccessPath.init(address: "a71d76faa2d2d5c3224ec3d41deb293973564a791e55c6782ba76c2bf0495f9a",
+                                                          path: "01217da6c6b3e19f1825cfb2676daecce3bf3de03cf26647c78df00b371b25cc97",
+                                                          writeType: LibraTransactionWriteType.Deletion)
+        let accessPath2 = LibraTransactionAccessPath.init(address: "c4c63f80c74b11263e421ebf8486a4e398d0dbc09fa7d4f62ccdb309f3aea81f",
+                                                          path: "01217da6c6b3e19f18",
+                                                          writeType: LibraTransactionWriteType.Value,
+                                                          value: Data.init(Array<UInt8>(hex: "CAFED00D")))
+        let write = LibraTransactionWriteSet.init(accessPaths: [accessPath1, accessPath2]).serialize().toHexString().uppercased()
+        XCTAssertEqual(write, "0102A71D76FAA2D2D5C3224EC3D41DEB293973564A791E55C6782BA76C2BF0495F9A2101217DA6C6B3E19F1825CFB2676DAECCE3BF3DE03CF26647C78DF00B371B25CC9700C4C63F80C74B11263E421EBF8486A4E398D0DBC09FA7D4F62CCDB309F3AEA81F0901217DA6C6B3E19F180104CAFED00D")
+        let module = LibraTransactionModule.init(code: Data.init(Array<UInt8>(hex: "CAFED00D"))).serialize().toHexString().uppercased()
+        XCTAssertEqual(module, "03CAFED00D")
+        
 //        let string1 = TransactionArgument.init(code: .String, value: "CAFE D00D")
 //        let string2 = TransactionArgument.init(code: .String, value: "cafe d00d")
 //        let program = TransactionProgram.init(code: "move".data(using: String.Encoding.utf8)!, argruments: [string1, string2], modules: [Data.init(hex: "CA"), Data.init(hex: "FED0"), Data.init(hex: "0D")]).serialize().toHexString().uppercased()
@@ -192,11 +199,11 @@ class LibraSDKTests: XCTestCase {
         }
     }
     func testULEB128() {
-        XCTAssertEqual(uleb128Format(length: 128).toHexString(), "8001")
-        XCTAssertEqual(uleb128Format(length: 16384).toHexString(), "808001")
-        XCTAssertEqual(uleb128Format(length: 2097152).toHexString(), "80808001")
-        XCTAssertEqual(uleb128Format(length: 268435456).toHexString(), "8080808001")
-        XCTAssertEqual(uleb128Format(length: 9487).toHexString(), "8f4a")
+        XCTAssertEqual(LibraUtils.uleb128Format(length: 128).toHexString(), "8001")
+        XCTAssertEqual(LibraUtils.uleb128Format(length: 16384).toHexString(), "808001")
+        XCTAssertEqual(LibraUtils.uleb128Format(length: 2097152).toHexString(), "80808001")
+        XCTAssertEqual(LibraUtils.uleb128Format(length: 268435456).toHexString(), "8080808001")
+        XCTAssertEqual(LibraUtils.uleb128Format(length: 9487).toHexString(), "8f4a")
     }
     func testBitmap() {
 //        let testData = TransactionArgument.init(code: .U64, value: "9213671392124193148")
@@ -216,7 +223,7 @@ class LibraSDKTests: XCTestCase {
         let range2 = tempBitmap.index(tempBitmap.startIndex, offsetBy: 2)...tempBitmap.index(tempBitmap.startIndex, offsetBy: 2)
         tempBitmap.replaceSubrange(range2, with: "1")
         print(tempBitmap)
-        let convert = binary2dec(num: tempBitmap)
+        let convert = LibraUtils.binary2dec(num: tempBitmap)
         //  101000 00000000 00000000 00000000
         //1000000 00000000 00000000 00000000
         print(BigUInt(convert).serialize().toHexString())
@@ -226,9 +233,9 @@ class LibraSDKTests: XCTestCase {
 //        print(tempData)
     }
     func testMultiAddress() {
-        let wallet = LibraMultiHDWallet.init(privateKeys: [MultiPrivateKeyModel.init(raw: Data.init(Array<UInt8>(hex: "f3cdd2183629867d6cfa24fb11c58ad515d5a4af014e96c00bb6ba13d3e5f80e")),
+        let wallet = LibraMultiHDWallet.init(privateKeys: [LibraMultiPrivateKeyModel.init(raw: Data.init(Array<UInt8>(hex: "f3cdd2183629867d6cfa24fb11c58ad515d5a4af014e96c00bb6ba13d3e5f80e")),
                                                                                      sequence: 1),
-                                                           MultiPrivateKeyModel.init(raw: Data.init(Array<UInt8>(hex: "c973d737cb40bcaf63a45a9736d7d7735e78148a06be185327304d6825e666ea")),
+                                                           LibraMultiPrivateKeyModel.init(raw: Data.init(Array<UInt8>(hex: "c973d737cb40bcaf63a45a9736d7d7735e78148a06be185327304d6825e666ea")),
                                                            sequence: 2)],
                                              threshold: 1)
         XCTAssertEqual(wallet.publicKey.toLegacy(), "cd35f1a78093554f5dc9c61301f204e4")
@@ -241,12 +248,12 @@ class LibraSDKTests: XCTestCase {
             let seed1 = try LibraMnemonic.seed(mnemonic: mnemonic1)
             let seed2 = try LibraMnemonic.seed(mnemonic: mnemonic2)
             let seed3 = try LibraMnemonic.seed(mnemonic: mnemonic3)
-            let seedModel1 = SeedAndDepth.init(seed: seed1, depth: 0, sequence: 0)
-            let seedModel2 = SeedAndDepth.init(seed: seed2, depth: 0, sequence: 1)
-            let seedModel3 = SeedAndDepth.init(seed: seed3, depth: 0, sequence: 2)
-            let multiPublicKey = LibraMultiPublicKey.init(data: [MultiPublicKeyModel.init(raw: Data.init(Array<UInt8>(hex: "2bd7d9fe82120842daa860606060661b222824c65af7bfb2843eeb7792a3b967")), sequence: 0),
-                                                                 MultiPublicKeyModel.init(raw: Data.init(Array<UInt8>(hex: "50b715879a727bbc561786b0dc9e6afcd5d8a443da6eb632952e692b83e8e7cb")), sequence: 1),
-                                                                 MultiPublicKeyModel.init(raw: Data.init(Array<UInt8>(hex: "e7e1b22eeb0a9ce0c49e3bf6cf23ebbb4d93d24c2064c46f6ceb9daa6ca2e217")), sequence: 2)],
+            let seedModel1 = LibraSeedAndDepth.init(seed: seed1, depth: 0, sequence: 0)
+            let seedModel2 = LibraSeedAndDepth.init(seed: seed2, depth: 0, sequence: 1)
+            let seedModel3 = LibraSeedAndDepth.init(seed: seed3, depth: 0, sequence: 2)
+            let multiPublicKey = LibraMultiPublicKey.init(data: [LibraMultiPublicKeyModel.init(raw: Data.init(Array<UInt8>(hex: "2bd7d9fe82120842daa860606060661b222824c65af7bfb2843eeb7792a3b967")), sequence: 0),
+                                                                 LibraMultiPublicKeyModel.init(raw: Data.init(Array<UInt8>(hex: "50b715879a727bbc561786b0dc9e6afcd5d8a443da6eb632952e692b83e8e7cb")), sequence: 1),
+                                                                 LibraMultiPublicKeyModel.init(raw: Data.init(Array<UInt8>(hex: "e7e1b22eeb0a9ce0c49e3bf6cf23ebbb4d93d24c2064c46f6ceb9daa6ca2e217")), sequence: 2)],
                                                           threshold: 2)
             let wallet = try LibraMultiHDWallet.init(models: [seedModel1, seedModel3], threshold: 2, multiPublicKey: multiPublicKey)
 //            let wallet = try LibraMultiHDWallet.init(models: [seedModel1, seedModel2, seedModel3], threshold: 2)
@@ -268,13 +275,7 @@ class LibraSDKTests: XCTestCase {
             print(error.localizedDescription)
         }
     }
-    func decTobin(number:Int) -> String {
-            var num = number
-            var str = ""
-            while num > 0 {
-                str = "\(num % 2)" + str
-                num /= 2
-            }
-            return str
-        }
+    func testLibraKit2() {
+        
+    }
 }

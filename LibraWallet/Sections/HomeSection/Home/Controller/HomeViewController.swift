@@ -477,8 +477,8 @@ extension HomeViewController {
             } else if type == "UpdateViolasBalance" {
                 if let tempData = dataDic.value(forKey: "data") as? BalanceViolasModel {
                     self?.detailView.headerView.violasModel = tempData
+                    self?.tableViewManager.defaultModel?.balance = tempData.balance ?? 0
                     if let modules = tempData.modules, let dataModel = self?.tableViewManager.dataModel, modules.isEmpty == false, dataModel.isEmpty == false {
-                        self?.tableViewManager.defaultModel?.balance = tempData.balance ?? 0
                         self?.tableViewManager.dataModel = self?.dataModel.dealBalanceWithContract(modules: modules, violasTokens: dataModel)
                     }
                     self?.detailView.tableView.reloadData()

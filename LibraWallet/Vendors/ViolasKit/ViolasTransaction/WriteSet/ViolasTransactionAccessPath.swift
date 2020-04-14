@@ -18,7 +18,7 @@ extension ViolasTransactionWriteType {
         case .Delete:
             return Data.init(hex: "00")
         case .Write:
-            return Data.init(hex: "0104000000CAFED00D")
+            return Data.init(hex: "01")
         }
     }
 }
@@ -28,30 +28,35 @@ struct ViolasTransactionAccessPath {
     fileprivate let path: String
     
     fileprivate let writeType: ViolasTransactionWriteType
+    
+    fileprivate let value: Data?
    
-    init(address: String, path: String, writeType: ViolasTransactionWriteType) {
+    init(address: String, path: String, writeType: ViolasTransactionWriteType, value: Data? = nil) {
         
         self.address = address
         
         self.path = path
         
         self.writeType = writeType
+        
+        self.value = value
     }
     func serialize() -> Data {
         var result = Data()
         // 添加地址
 //        let addressData = Data.init(hex: )
         let addressData = Data.init(Array<UInt8>(hex: self.address))
-        
         result += addressData
         // 添加路径
-//        let pathData = Data.init(hex: self.path)
-        let pathData =  Data.init(Array<UInt8>(hex: self.path))
-        result += ViolasUtils.getLengthData(length: pathData.bytes.count, appendBytesCount: 4)
-
+        let pathData = Data.init(Array<UInt8>(hex: self.path))
+        result += ViolasUtils.uleb128Format(length: pathData.bytes.count)
         result += pathData
         // 追加类型
         result += self.writeType.raw
+        if let tempValue = self.value {
+            result += ViolasUtils.uleb128Format(length: tempValue.bytes.count)
+            result += tempValue
+        }
         return result
     }
 }

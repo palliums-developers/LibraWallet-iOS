@@ -16,11 +16,11 @@ let libraMainURL = "ac.testnet.libra.org:8000"//"https://client.testnet.libra.or
 
 let MarketAddress = "07e92f79c67fdd6b80ed9103636a49511363de8c873bc709966fffb2e3fcd095"
 func getProgramCode(content: String) -> Data {
-    let temp = stringValueDic(content)
-    let code = temp!["code"] as! [UInt8]
+//    let temp = stringValueDic(content)
+//    let code = temp!["code"] as! [UInt8]
 //    let dataArray = "\(code ?? "")".split(separator: ",")
     
-    let data = Data.init(bytes: code, count: code.count)
+    let data = Data.init(Array<UInt8>(hex: content))//Data.init(bytes: content, count: code.count)
     
     return data
 }

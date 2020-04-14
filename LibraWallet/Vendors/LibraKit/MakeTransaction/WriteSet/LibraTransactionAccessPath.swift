@@ -8,16 +8,16 @@
 
 import Foundation
 enum LibraTransactionWriteType {
-    case Delete
-    case Write
+    case Deletion
+    case Value
 }
 extension LibraTransactionWriteType {
     public var raw: Data {
         switch self {
-        case .Delete:
+        case .Deletion:
             return Data.init(hex: "00")
-        case .Write:
-            return Data.init(hex: "0100000004000000CAFED00D")
+        case .Value:
+            return Data.init(hex: "01")
         }
     }
 }
@@ -27,30 +27,35 @@ struct LibraTransactionAccessPath {
     fileprivate let path: String
     
     fileprivate let writeType: LibraTransactionWriteType
+    
+    fileprivate let value: Data?
    
-    init(address: String, path: String, writeType: LibraTransactionWriteType) {
+    init(address: String, path: String, writeType: LibraTransactionWriteType, value: Data? = nil) {
         
         self.address = address
         
         self.path = path
         
         self.writeType = writeType
+        
+        self.value = value
     }
     func serialize() -> Data {
         var result = Data()
         // 添加地址
 //        let addressData = Data.init(hex: )
         let addressData = Data.init(Array<UInt8>(hex: self.address))
-        
         result += addressData
         // 添加路径
-//        let pathData = Data.init(hex: self.path)
-        let pathData =  Data.init(Array<UInt8>(hex: self.path))
-        result += LibraUtils.getLengthData(length: pathData.bytes.count, appendBytesCount: 4)
-
+        let pathData = Data.init(Array<UInt8>(hex: self.path))
+        result += LibraUtils.uleb128Format(length: pathData.bytes.count)
         result += pathData
         // 追加类型
         result += self.writeType.raw
+        if let tempValue = self.value {
+            result += LibraUtils.uleb128Format(length: tempValue.bytes.count)
+            result += tempValue
+        }
         return result
     }
 }

@@ -58,9 +58,9 @@ extension ViolasManager {
         // 原始数据
         var code = getProgramCode(content: move)
         // 计算位置
-        let location = ViolasManager().getViolasTokenContractLocation(code: move, contract: "7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614")
+        let location = ViolasManager().getViolasTokenContractLocation(code: move, contract: "7257c2417e4d1038e1817c8f283ace2e")
         // 设置替换区间
-        let range = code.index(after: location)..<( code.endIndex - (code.endIndex - (location + 1) - 32))
+        let range = code.index(after: location)..<( code.endIndex - (code.endIndex - (location + 1) - 16))
         // 替换指定区间数据
         code.replaceSubrange(range, with: replaceData)
         print(code.toHexString())
