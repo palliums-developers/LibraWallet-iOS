@@ -37,7 +37,7 @@ struct ViolasManager {
     /// 校验地址是否有效
     /// - Parameter address: 地址
     public static func isValidViolasAddress(address: String) -> Bool {
-        guard address.count == 32 else {
+        guard (address.count == 32 || address.count == 64)  else {
             // 位数异常
             return false
         }
@@ -49,7 +49,22 @@ struct ViolasManager {
             return false
         }
     }
-    
+    /// 分割地址
+    /// - Parameter address: 原始地址
+    /// - Throws: 分割错误
+    /// - Returns: （授权KEY， 地址）
+    public static func splitAddress(address: String) throws -> (String, String) {
+        guard isValidViolasAddress(address: address) else {
+            throw LibraWalletError.error("Invalid Address")
+        }
+        if address.count == 64 {
+            let authenticatorKey = address.prefix(address.count / 2)
+            let shortAddress = address.suffix(address.count / 2)
+            return ("\(authenticatorKey)", "\(shortAddress)")
+        } else {
+            return ("", address)
+        }
+    }
 }
 extension ViolasManager {
     public static func getCodeData(move: String, address: String) -> Data {
@@ -63,7 +78,6 @@ extension ViolasManager {
         let range = code.index(after: location)..<( code.endIndex - (code.endIndex - (location + 1) - 16))
         // 替换指定区间数据
         code.replaceSubrange(range, with: replaceData)
-        print(code.toHexString())
         return code
     }
     /// 计算位置
@@ -89,12 +103,14 @@ extension ViolasManager {
     public static func getNormalTransactionHex(sendAddress: String, receiveAddress: String, amount: Double, fee: Double, mnemonic: [String], sequenceNumber: Int) throws -> String {
         do {
             let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
+            let (authenticatorKey, address) = try ViolasManager.splitAddress(address: receiveAddress)
+
             // 拼接交易
-            let request = ViolasTransaction.init(receiveAddress: receiveAddress,
+            let request = ViolasTransaction.init(receiveAddress: address,
                                                  amount: amount,
                                                  sendAddress: wallet.publicKey.toLegacy(),
                                                  sequenceNumber: UInt64(sequenceNumber),
-                                                 authenticatorKey: "")
+                                                 authenticatorKey: authenticatorKey)
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
             return signature.toHexString()

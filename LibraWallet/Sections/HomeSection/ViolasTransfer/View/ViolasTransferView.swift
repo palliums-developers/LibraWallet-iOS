@@ -350,11 +350,11 @@ class ViolasTransferView: UIView {
                return
             }
             // 是否有效地址
-            guard ViolasManager.isValidViolasAddress(address: address) else {
-                self.makeToast(LibraWalletError.WalletTransfer(reason: .addressInvalid).localizedDescription,
-                               position: .center)
-                return
-            }
+//            guard ViolasManager.isValidViolasAddress(address: address) else {
+//                self.makeToast(LibraWalletError.WalletTransfer(reason: .addressInvalid).localizedDescription,
+//                               position: .center)
+//                return
+//            }
             // 检查是否向自己转账
             guard address != self.wallet?.walletAddress else {
                 self.makeToast(LibraWalletError.WalletTransfer(reason: .transferToSelf).localizedDescription,

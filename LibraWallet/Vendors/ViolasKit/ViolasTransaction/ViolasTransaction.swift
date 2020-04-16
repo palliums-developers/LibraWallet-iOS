@@ -33,7 +33,7 @@ extension ViolasTransaction {
     public init(sendAddress: String, sequenceNumber: UInt64, code: Data) {
         
         let program = ViolasTransactionScript.init(code: code,
-                                                   typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .ViolasDefault))],
+                                                   typeTags: [ViolasTypeTag](),
                                                    argruments: [ViolasTransactionArgument.init(code: ViolasArgumentsCode.U8Vector, value: "publish".data(using: .utf8)!.toHexString())])
                 
         let raw = ViolasRawTransaction.init(senderAddres: sendAddress,
@@ -54,7 +54,9 @@ extension ViolasTransaction {
         
         let argument3 = ViolasTransactionArgument.init(code: .U8Vector, value: "")
 
-        let program = ViolasTransactionScript.init(code: code, typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .ViolasDefault))], argruments: [argument0, argument1, argument2, argument3])
+        let program = ViolasTransactionScript.init(code: code,
+                                                   typeTags: [ViolasTypeTag](),
+                                                   argruments: [argument0, argument1, argument2, argument3])
         
         let raw = ViolasRawTransaction.init(senderAddres: sendAddress,
                                             sequenceNumber: sequenceNumber,
@@ -62,6 +64,18 @@ extension ViolasTransaction {
                                             gasUnitPrice: 0,
                                             expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
                                             programOrWrite: program.serialize())
+        self.request = raw
+    }
+    public init(sendAddress: String, sequenceNumber: UInt64, code: Data, test: Bool) {
+        
+        let module = ViolasTransactionModule.init(code: code)
+                
+        let raw = ViolasRawTransaction.init(senderAddres: sendAddress,
+                                            sequenceNumber: sequenceNumber,
+                                            maxGasAmount: 400000,
+                                            gasUnitPrice: 0,
+                                            expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
+                                            programOrWrite: module.serialize())
         self.request = raw
     }
 }
