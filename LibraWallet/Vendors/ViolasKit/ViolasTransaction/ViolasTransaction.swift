@@ -45,9 +45,9 @@ extension ViolasTransaction {
         self.request = raw
     }
     // Violas转稳定币
-    public init(sendAddress: String, receiveAddress: String, amount: Double, sequenceNumber: UInt64, code: Data) {
+    public init(sendAddress: String, receiveAddress: String, amount: Double, sequenceNumber: UInt64, code: Data, tokenIndex: String) {
         // tokenIndex
-        let argument0 = ViolasTransactionArgument.init(code: .U64, value: "0")
+        let argument0 = ViolasTransactionArgument.init(code: .U64, value: tokenIndex)
 
         let argument1 = ViolasTransactionArgument.init(code: .Address, value: receiveAddress)
         let argument2 = ViolasTransactionArgument.init(code: .U64, value: "\(Int(amount * 1000000))")

@@ -128,26 +128,27 @@ class TokenMappingModel: NSObject {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(ViolasAccountEnableTokenResponseModel.self)
+                    let json = try response.map(ViolasAccountEnableTokenResponseMainModel.self)
                     if json.code != 2000 {
                         let data = setKVOData(error: LibraWalletError.error(json.message ?? ""), type: "GetWalletEnableCoin")
                         self?.setValue(data, forKey: "dataDic")
                     } else {
-                        guard let models = json.data, models.isEmpty == false else {
-                            let data = setKVOData(type: "GetWalletEnableCoin", data: false)
-                            self?.setValue(data, forKey: "dataDic")
-                            return
-                        }
-                        let tempResult = models.filter { item in
-                            item == contract
-                        }
-                        if tempResult.isEmpty == true {
-                            let data = setKVOData(type: "GetWalletEnableCoin", data: false)
-                            self?.setValue(data, forKey: "dataDic")
-                        } else {
-                            let data = setKVOData(type: "GetWalletEnableCoin", data: true)
-                            self?.setValue(data, forKey: "dataDic")
-                        }
+                        #warning("映射列表待处理")
+//                        guard let models = json.data, models.isEmpty == false else {
+//                            let data = setKVOData(type: "GetWalletEnableCoin", data: false)
+//                            self?.setValue(data, forKey: "dataDic")
+//                            return
+//                        }
+//                        let tempResult = models.filter { item in
+//                            item == contract
+//                        }
+//                        if tempResult.isEmpty == true {
+//                            let data = setKVOData(type: "GetWalletEnableCoin", data: false)
+//                            self?.setValue(data, forKey: "dataDic")
+//                        } else {
+//                            let data = setKVOData(type: "GetWalletEnableCoin", data: true)
+//                            self?.setValue(data, forKey: "dataDic")
+//                        }
                     }
                 } catch {
                     print("GetWalletEnableCoin_解析异常\(error.localizedDescription)")

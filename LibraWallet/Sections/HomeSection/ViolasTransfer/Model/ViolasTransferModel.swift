@@ -99,7 +99,7 @@ class ViolasTransferModel: NSObject {
             semaphore.signal()
         }
     }
-    func sendViolasTokenTransaction(sendAddress: String, receiveAddress: String, amount: Double, fee: Double, mnemonic: [String], contact: String) {
+    func sendViolasTokenTransaction(sendAddress: String, receiveAddress: String, amount: Double, fee: Double, mnemonic: [String], contact: String, tokenIndex: String) {
 //        "05599ef248e215849cc599f563b4883fc8aff31f1e43dff1e3ebe4de1370e054"
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
@@ -115,7 +115,8 @@ class ViolasTransferModel: NSObject {
                                                                                fee: fee,
                                                                                mnemonic: mnemonic,
                                                                                contact: contact,
-                                                                               sequenceNumber: self.sequenceNumber!)
+                                                                               sequenceNumber: self.sequenceNumber!,
+                                                                               tokenIndex: tokenIndex)
 //                let signature = try ViolasManager.getVBTCToBTCTransactionHex(sendAddress: sendAddress,
 //                                                                             amount: amount,
 //                                                                             fee: fee,

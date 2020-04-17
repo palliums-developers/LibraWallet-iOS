@@ -151,7 +151,7 @@ class LibraSDKTests: XCTestCase {
         XCTAssertEqual(wallet.publicKey.toLegacy(), "cd35f1a78093554f5dc9c61301f204e4")
     }
     func testLibraKit() {
-        let mnemonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "begin", "host"]
+        let mnemonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
         do {
             let seed = try ViolasMnemonic.seed(mnemonic: mnemonic)
             let wallet = try ViolasHDWallet.init(seed: seed, depth: 0)
@@ -173,21 +173,21 @@ class LibraSDKTests: XCTestCase {
 //            print("signature.toHexString() = \(signature.toHexString())")
             
             //CreateToken
-            let argument1 = ViolasTransactionArgument.init(code: .Address, value: "331321aefcce2ee794430d07d7a953a0")
-            let argument3 = ViolasTransactionArgument.init(code: .U8Vector, value: "331321aefcce2ee794430d07d7a953a0")
-
-            let script = ViolasTransactionScript.init(code: ViolasManager.getCodeData(move: testCode, address: "331321aefcce2ee794430d07d7a953a0"),
-                                                      typeTags: [ViolasTypeTag](),
-                                                      argruments: [argument1, argument3])
-
-            let raw = ViolasRawTransaction.init(senderAddres: walletAddress,
-                                                sequenceNumber: 16,
-                                                maxGasAmount: 400000,
-                                                gasUnitPrice: 0,
-                                                expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
-                                                programOrWrite: script.serialize())
-            let signature = try wallet.privateKey.signTransaction(transaction: raw, wallet: wallet)
-            print(signature.toHexString())
+//            let argument1 = ViolasTransactionArgument.init(code: .Address, value: "331321aefcce2ee794430d07d7a953a0")
+//            let argument3 = ViolasTransactionArgument.init(code: .U8Vector, value: "331321aefcce2ee794430d07d7a953a0")
+//
+//            let script = ViolasTransactionScript.init(code: ViolasManager.getCodeData(move: testCode, address: "331321aefcce2ee794430d07d7a953a0"),
+//                                                      typeTags: [ViolasTypeTag](),
+//                                                      argruments: [argument1, argument3])
+//
+//            let raw = ViolasRawTransaction.init(senderAddres: walletAddress,
+//                                                sequenceNumber: 16,
+//                                                maxGasAmount: 400000,
+//                                                gasUnitPrice: 0,
+//                                                expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
+//                                                programOrWrite: script.serialize())
+//            let signature = try wallet.privateKey.signTransaction(transaction: raw, wallet: wallet)
+//            print(signature.toHexString())
             // Mint
 //            let argument0 = ViolasTransactionArgument.init(code: .U64, value: "0")
 //
@@ -209,15 +209,16 @@ class LibraSDKTests: XCTestCase {
 //            let signature = try wallet.privateKey.signTransaction(transaction: raw, wallet: wallet)
 //            print(signature.toHexString())
             //Transfer
-            // 拼接交易
-//            let request = ViolasTransaction.init(sendAddress: "331321aefcce2ee794430d07d7a953a0",
-//                                                 receiveAddress: "fa279f2615270daed6061313a48360f7",
-//                                                 amount: 1,
-//                                                 sequenceNumber: 15,
-//                                                 code: ViolasManager.getCodeData(move: ViolasTransactionProgramCode, address: "331321aefcce2ee794430d07d7a953a0"))
-//            // 签名交易
-//            let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
-//            print(signature.toHexString())
+//             拼接交易
+            let request = ViolasTransaction.init(sendAddress: "fa279f2615270daed6061313a48360f7",
+                                                 receiveAddress: "7f4644ae2b51b65bd3c9d414aa853407",
+                                                 amount: 1,
+                                                 sequenceNumber: 16,
+                                                 code: ViolasManager.getCodeData(move: ViolasTransactionProgramCode, address: "e1be1ab8360a35a0259f1c93e3eac736"),
+                                                 tokenIndex: "0")
+            // 签名交易
+            let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
+            print(signature.toHexString())
         } catch {
             print(error.localizedDescription)
         }

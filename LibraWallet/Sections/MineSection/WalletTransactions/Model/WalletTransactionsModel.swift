@@ -263,7 +263,7 @@ class WalletTransactionsModel: NSObject {
                 do {
                     let json = try response.map(ViolasTokenMainModel.self)
                     if json.code == 2000 {
-                        guard let models = json.data, models.isEmpty == false else {
+                        guard let models = json.data?.currencies, models.isEmpty == false else {
                             let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: "GetWalletEnableCoin")
                             self?.setValue(data, forKey: "dataDic")
                             return
@@ -271,7 +271,7 @@ class WalletTransactionsModel: NSObject {
     //                    let result = self?.dealModelWithSelect(walletID: walletID, models: models)
     //                    let data = setKVOData(type: "UpdateViolasTokenList", data: result)
     //                    self?.setValue(data, forKey: "dataDic")
-                        self?.supportTokens = json.data
+                        self?.supportTokens = models
                     } else {
                         print("GetWalletEnableCoin_状态异常")
                         if let message = json.message, message.isEmpty == false {

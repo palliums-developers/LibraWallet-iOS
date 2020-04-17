@@ -152,7 +152,13 @@ extension ViolasTransferViewController: ViolasTransferViewDelegate {
             if self?.sendViolasTokenState == false {
                 self?.dataModel.sendViolasTransaction(sendAddress: (self?.wallet?.walletAddress)!, receiveAddress: address, amount: amount, fee: fee, mnemonic: mnemonic)
             } else {
-                self?.dataModel.sendViolasTokenTransaction(sendAddress: (self?.wallet?.walletAddress)!, receiveAddress: address, amount: amount, fee: fee, mnemonic: mnemonic, contact: self?.vtokenModel?.address ?? "")
+                self?.dataModel.sendViolasTokenTransaction(sendAddress: (self?.wallet?.walletAddress)!,
+                                                           receiveAddress: address,
+                                                           amount: amount,
+                                                           fee: fee,
+                                                           mnemonic: mnemonic,
+                                                           contact: self?.vtokenModel?.address ?? "",
+                                                           tokenIndex: "\(self?.vtokenModel?.id ?? 9999)")
             }
         }) { [weak self] (errorContent) in
             self?.view.makeToast(errorContent, position: .center)

@@ -310,7 +310,10 @@ extension HomeViewController: HomeHeaderViewDelegate {
         vc.hidesBottomBarWhenPushed = true
         vc.wallet = self.detailView.headerView.walletModel
         vc.needUpdateClosure = { result in
-            self.refreshData()
+//            self.refreshData()
+            self.detailView.makeToastActivity(.center)
+            self.dataModel.getLocalUserInfo()
+            print("刷新首页数据")
         }
         self.navigationController?.pushViewController(vc, animated: true)
     }
@@ -367,9 +370,6 @@ extension HomeViewController: HomeHeaderViewDelegate {
 //MARK: - TableviewManager代理方法列表
 extension HomeViewController: HomeTableViewManagerDelegate {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: ViolasTokenModel) {
-        guard indexPath.row != 0 else {
-            return
-        }
         let vc = VTokenMainViewController()
         vc.hidesBottomBarWhenPushed = true
         vc.wallet = self.detailView.headerView.walletModel

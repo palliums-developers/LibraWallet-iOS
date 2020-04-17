@@ -146,7 +146,7 @@ extension ViolasManager {
     ///   - mnemonic: 助记词
     ///   - contact: 合约地址
     ///   - sequenceNumber: 序列码
-    public static func getViolasTokenTransactionHex(sendAddress: String, receiveAddress: String, amount: Double, fee: Double, mnemonic: [String], contact: String, sequenceNumber: Int) throws -> String {
+    public static func getViolasTokenTransactionHex(sendAddress: String, receiveAddress: String, amount: Double, fee: Double, mnemonic: [String], contact: String, sequenceNumber: Int, tokenIndex: String) throws -> String {
         do {
             let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
             // 拼接交易
@@ -154,7 +154,8 @@ extension ViolasManager {
                                                  receiveAddress: receiveAddress,
                                                  amount: amount,
                                                  sequenceNumber: UInt64(sequenceNumber),
-                                                 code: ViolasManager.getCodeData(move: ViolasTransactionProgramCode, address: contact))
+                                                 code: ViolasManager.getCodeData(move: ViolasTransactionProgramCode, address: contact),
+                                                 tokenIndex: "0")
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
             return signature.toHexString()

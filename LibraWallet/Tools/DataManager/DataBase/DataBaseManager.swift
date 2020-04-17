@@ -606,8 +606,10 @@ struct DataBaseManager {
             print(error.localizedDescription)
             return false
         }
-    }
-    // MARK: 创建ViolasToken表
+    }    
+}
+// MARK: 创建ViolasToken表
+extension DataBaseManager {
     func createViolasTokenTable() {
         /// 判断是否存在表
         guard isExistTable(name: "ViolasToken") == false else {
@@ -631,6 +633,8 @@ struct DataBaseManager {
             let tokenAmount = Expression<Int64>("token_amount")
             // 代币启用状态
             let tokenEnable = Expression<Bool>("token_enable")
+            // 代币编号
+            let tokenNumber = Expression<Int64>("token_number")
             // 建表
             try db!.run(addressTable.create { t in
                 t.column(tokenID, primaryKey: true)
@@ -641,7 +645,8 @@ struct DataBaseManager {
                 t.column(tokenBindingWalletID)
                 t.column(tokenAmount)
                 t.column(tokenEnable)
-                t.unique([tokenBindingWalletID, tokenAddress])
+                t.column(tokenNumber)
+                t.unique([tokenBindingWalletID, tokenAddress, tokenNumber])
             })
         } catch {
             let errorString = error.localizedDescription
@@ -663,7 +668,8 @@ struct DataBaseManager {
                     Expression<String>("token_address") <- model.address ?? "",
                     Expression<Int64>("token_binding_wallet_id") <- walletID,
                     Expression<Int64>("token_amount") <- 0,
-                    Expression<Bool>("token_enable") <- model.enable ?? false)
+                    Expression<Bool>("token_enable") <- model.enable ?? false,
+                    Expression<Int64>("token_number") <- model.id ?? 0)
                 let rowid = try tempDB.run(insert)
                 print(rowid)
                 return true
@@ -675,11 +681,11 @@ struct DataBaseManager {
             return false
         }
     }
-    func isExistViolasToken(walletID: Int64, contract: String) -> Bool {
+    func isExistViolasToken(walletID: Int64, contract: String, tokenNumber: Int64) -> Bool {
         let walletTable = Table("ViolasToken")
         do {
             if let tempDB = self.db {
-                let transection = walletTable.filter(Expression<String>("token_address") == contract && Expression<Int64>("token_binding_wallet_id") == walletID)
+                let transection = walletTable.filter(Expression<String>("token_address") == contract && Expression<Int64>("token_binding_wallet_id") == walletID && Expression<Int64>("token_number") == tokenNumber)
                 let count = try tempDB.scalar(transection.count)
                 guard count != 0 else {
                     return false
@@ -711,6 +717,8 @@ struct DataBaseManager {
                     let balance = wallet[Expression<Int64>("token_amount")]
                     // 开启状态
                     let enable = wallet[Expression<Bool>("token_enable")]
+                    // 代币编号
+                    let tokenNumber = wallet[Expression<Int64>("token_number")]
                     
                     let wallet = ViolasTokenModel.init(name: tokenName,
                                                        description: tokenDescription,
@@ -718,7 +726,8 @@ struct DataBaseManager {
                                                        icon: tokenIcon,
                                                        enable: enable,
                                                        balance: balance,
-                                                       registerState: true)
+                                                       registerState: true,
+                                                       id: tokenNumber)
                     models.append(wallet)
                 }
                 return models
@@ -730,11 +739,11 @@ struct DataBaseManager {
             throw error
         }
     }
-    func deleteViolasToken(walletID: Int64, address: String) -> Bool {
+    func deleteViolasToken(walletID: Int64, address: String, tokenNumber: Int64) -> Bool {
         let violasTokenTable = Table("ViolasToken")
         do {
             if let tempDB = self.db {
-                let contract = violasTokenTable.filter(Expression<String>("token_address") == address && Expression<Int64>("token_binding_wallet_id") == walletID)
+                let contract = violasTokenTable.filter(Expression<String>("token_address") == address && Expression<Int64>("token_binding_wallet_id") == walletID && Expression<Int64>("token_number") == tokenNumber)
                 let rowid = try tempDB.run(contract.delete())
                 print(rowid)
                 return true
@@ -746,11 +755,11 @@ struct DataBaseManager {
             return false
         }
     }
-    func updateViolasTokenState(walletID: Int64, tokenAddress: String, state: Bool) -> Bool {
+    func updateViolasTokenState(walletID: Int64, tokenAddress: String, tokenNumber: Int64, state: Bool) -> Bool {
         let violasTokenTable = Table("ViolasToken")
         do {
             if let tempDB = self.db {
-                let item = violasTokenTable.filter(Expression<Int64>("token_binding_wallet_id") == walletID && Expression<String>("token_address") == tokenAddress)
+                let item = violasTokenTable.filter(Expression<Int64>("token_binding_wallet_id") == walletID && Expression<String>("token_address") == tokenAddress && Expression<Int64>("token_number") == tokenNumber)
                 try tempDB.run(item.update(Expression<Bool>("token_enable") <- state))
                 return true
             } else {
@@ -765,7 +774,7 @@ struct DataBaseManager {
         let violasTokenTable = Table("ViolasToken")
         do {
             if let tempDB = self.db {
-                let item = violasTokenTable.filter(Expression<Int64>("token_binding_wallet_id") == walletID && Expression<String>("token_address") == model.address ?? "")
+                let item = violasTokenTable.filter(Expression<Int64>("token_binding_wallet_id") == walletID && Expression<String>("token_address") == model.address ?? "" && Expression<Int64>("token_number") == model.id ?? 0)
                 try tempDB.run(item.update(Expression<Int64>("token_amount") <- model.balance ?? 0))
                 return true
             } else {

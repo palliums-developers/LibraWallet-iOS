@@ -48,10 +48,13 @@ struct MarketOrderModel: Codable {
     var buys: [MarketOrderDataModel]?
     var sells: [MarketOrderDataModel]?
 }
-struct ViolasAccountEnableTokenResponseModel: Codable {
+struct ViolasAccountEnableTokenResponseDataModel: Codable {
+    var is_published: Int?
+}
+struct ViolasAccountEnableTokenResponseMainModel: Codable {
     var code: Int?
     var message: String?
-    var data: [String]?
+    var data: ViolasAccountEnableTokenResponseDataModel?
 }
 struct MarketSupportCoinDataModel: Codable {
     var addr: String?
@@ -68,7 +71,7 @@ struct MarketResponseMainModel: Codable {
 class MarketModel: NSObject {
     private var requests: [Cancellable] = []
     @objc var dataDic: NSMutableDictionary = [:]
-    private var walletEnableTokens: [String]?
+    private var walletEnableTokens: Bool?
     private var marketEnableTokens: [MarketSupportCoinDataModel]?
     private var sequenceNumber: Int?
     func getSupportToken(address: String) {
@@ -135,16 +138,9 @@ class MarketModel: NSObject {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(ViolasAccountEnableTokenResponseModel.self)
+                    let json = try response.map(ViolasAccountEnableTokenResponseMainModel.self)
                     if json.code == 2000 {
-                        guard json.data?.isEmpty == false else {
-                            let data = setKVOData(error: LibraWalletError.WalletMarket(reason: .publishedListEmpty), type: "GetWalletEnableCoin")
-                            self?.setValue(data, forKey: "dataDic")
-                            return
-                        }
-    //                    let data = setKVOData(type: "GetSupportCoin", data: json.data)
-    //                    self?.setValue(data, forKey: "dataDic")
-                        self?.walletEnableTokens = json.data
+                        self?.walletEnableTokens = json.data?.is_published == 1 ? true:false
                     } else {
                         print("GetWalletEnableCoin_状态异常")
                         if let message = json.message, message.isEmpty == false {
@@ -172,21 +168,12 @@ class MarketModel: NSObject {
         }
         self.requests.append(request)
     }
-    private func rebuiltData(walletTokens: [String], marketTokens: [MarketSupportCoinDataModel]) -> [MarketSupportCoinDataModel] {
+    private func rebuiltData(walletTokens: Bool, marketTokens: [MarketSupportCoinDataModel]) -> [MarketSupportCoinDataModel] {
         var tempMarketTokens = [MarketSupportCoinDataModel]()
         for var item in marketTokens {
             #warning("崩溃隐患")
             let tempAddress = item.addr?.suffix(item.addr!.count - 2).description
-            for address in walletTokens {
-                
-                if tempAddress == address {
-                    item.enable = true
-                    break
-                } else {
-                    item.enable = false
-                }
-//                item.enable = item.addr == "0x07e92f79c67fdd6b80ed9103636a49511363de8c873bc709966fffb2e3fcd095" ? true:false
-            }
+            item.enable = walletTokens
             tempMarketTokens.append(item)
         }
         return tempMarketTokens
