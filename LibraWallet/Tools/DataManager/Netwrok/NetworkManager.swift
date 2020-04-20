@@ -12,9 +12,6 @@ import Localize_Swift
 let mainProvide = MoyaProvider<mainRequest>()
 //let mainProvide = MoyaProvider<mainRequest>(stubClosure: MoyaProvider.immediatelyStub)
 enum mainRequest {
-    /// 获取测试币
-    
-    case GetTestCoin(String, Int64)
     /// 获取Libra交易记录
     case GetTransactionHistory(String, Int64)
     /// 获取BTC余额记录
@@ -101,18 +98,16 @@ extension mainRequest:TargetType {
                 return URL(string:"http://52.27.228.84:4000/1.0")!
 //                return URL(string:"https://api.violas.io/1.0")!
             #endif
-        case .GetTestCoin(_, _):
-            return URL(string:"http://faucet.testnet.libra.org/")!
         case .GetMarketSupportCoin,
              .GetCurrentOrder(_, _, _),
              .GetAllProcessingOrder(_, _),
              .GetOrderDetail(_, _),
              .GetAllDoneOrder(_, _):
             #if PUBLISH_VERSION
-                return URL(string:"https://dex.violas.io/v1")!
+                return URL(string:"https://www.violas-dex.com/v1")!
             #else
 //                return URL(string:"http://18.220.66.235:38181/v1")!
-                return URL(string:"https://dex.violas.io/v1")!
+                return URL(string:"https://www.violas-dex.com/v1")!
             #endif
         case .GetLibraAccountBalance(_),
              .SendLibraTransaction(_):
@@ -121,9 +116,6 @@ extension mainRequest:TargetType {
     }
     var path: String {
         switch self {
-        // 获取测试币
-        case .GetTestCoin(_, _):
-            return ""
         case .GetTransactionHistory(_, _):
             return "/transactionHistory"
         case .GetBTCBalance(let address):
@@ -176,8 +168,7 @@ extension mainRequest:TargetType {
     }
     var method: Moya.Method {
         switch self {
-        case .GetTestCoin(_, _),
-             .GetTransactionHistory(_, _),
+        case .GetTransactionHistory(_, _),
              .SendLibraTransaction(_),
              .SendViolasTransaction(_),
              .SendBTCTransaction(_),
@@ -219,11 +210,6 @@ extension mainRequest:TargetType {
     }
     var task: Task {
         switch self {
-        // 获取测试币(暂废)
-        case .GetTestCoin(let address, let amount):
-            return .requestParameters(parameters: ["address": address,
-                                                   "amount": amount],
-                                      encoding: URLEncoding.queryString)
         case .GetTransactionHistory(let address, _):
             return .requestParameters(parameters: ["address": address],
                                       encoding: JSONEncoding.default)

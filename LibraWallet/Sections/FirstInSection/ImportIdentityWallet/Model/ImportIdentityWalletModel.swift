@@ -46,7 +46,8 @@ class ImportIdentityWalletModel: NSObject {
                                                   walletIdentity: 0,
                                                   walletType: .BTC,
                                                   walletBackupState: true,
-                                                  walletAuthenticationKey: "")
+                                                  walletAuthenticationKey: "",
+                                                  walletActiveState: true)
         let result = DataBaseManager.DBManager.insertWallet(model: walletModel)
         if result == true {
             do {
@@ -74,7 +75,8 @@ class ImportIdentityWalletModel: NSObject {
                                                       walletIdentity: 0,
                                                       walletType: .Violas,
                                                       walletBackupState: true,
-                                                      walletAuthenticationKey: wallet.publicKey.toActive())
+                                                      walletAuthenticationKey: wallet.publicKey.toActive(),
+                                                      walletActiveState: false)
             let result = DataBaseManager.DBManager.insertWallet(model: walletModel)
             if result == true {
                 do {
@@ -105,7 +107,8 @@ class ImportIdentityWalletModel: NSObject {
                                                       walletIdentity: 0,
                                                       walletType: .Libra,
                                                       walletBackupState: true,
-                                                      walletAuthenticationKey: wallet.publicKey.toActive())
+                                                      walletAuthenticationKey: wallet.publicKey.toActive(),
+                                                      walletActiveState: false)
             let result = DataBaseManager.DBManager.insertWallet(model: walletModel)
             if result == true {
                 do {

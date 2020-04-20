@@ -56,6 +56,8 @@ struct DataBaseManager {
             let walletBackupState = Expression<Bool>("wallet_backup_state")
             // 授权Key
             let authenticationKey = Expression<String>("wallet_authentication_key")
+            // 钱包激活状态
+            let walletActiveState = Expression<Bool>("wallet_active_state")
             // 建表
             try db!.run(walletTable.create { t in
                 t.column(walletID, primaryKey: true)
@@ -70,6 +72,7 @@ struct DataBaseManager {
                 t.column(walletType)
                 t.column(walletBackupState)
                 t.column(authenticationKey)
+                t.column(walletActiveState)
             })
         } catch {
             let errorString = error.localizedDescription
@@ -106,7 +109,8 @@ struct DataBaseManager {
                     Expression<Int>("wallet_identity") <- model.walletIdentity ?? 999,
                     Expression<Int>("wallet_type") <- model.walletType!.value,
                     Expression<Bool>("wallet_backup_state") <- model.walletBackupState ?? false,
-                    Expression<String>("wallet_authentication_key") <- model.walletAuthenticationKey ?? "")
+                    Expression<String>("wallet_authentication_key") <- model.walletAuthenticationKey ?? "",
+                    Expression<Bool>("wallet_active_state") <- model.walletActiveState ?? false)
                 let rowid = try tempDB.run(insert)
                 print(rowid)
                 return true
@@ -169,6 +173,8 @@ struct DataBaseManager {
                     let walletType = wallet[Expression<Int>("wallet_type")]
                     // 授权Key
                     let authenticationKey = wallet[Expression<String>("wallet_authentication_key")]
+                    // 钱包激活状态
+                    let walletActiveState = wallet[Expression<Bool>("wallet_active_state")]
                     
                     let type: WalletType
                     if walletType == 0 {
@@ -192,7 +198,8 @@ struct DataBaseManager {
                                                          walletIdentity: walletIdentity,
                                                          walletType: type,
                                                          walletBackupState: walletBackupState,
-                                                         walletAuthenticationKey: authenticationKey)
+                                                         walletAuthenticationKey: authenticationKey,
+                                                         walletActiveState: walletActiveState)
                     if walletIdentity == 0 {
                         originWallets.append(wallet)
                     } else {
@@ -247,6 +254,8 @@ struct DataBaseManager {
                     let walletBackupState = wallet[Expression<Bool>("wallet_backup_state")]
                     // 授权Key
                     let authenticationKey = wallet[Expression<String>("wallet_authentication_key")]
+                    // 钱包激活状态
+                    let walletActiveState = wallet[Expression<Bool>("wallet_active_state")]
                     
                     LibraWalletManager.shared.initWallet(walletID: walletID,
                                                          walletBalance: walletBalance,
@@ -259,7 +268,8 @@ struct DataBaseManager {
                                                          walletIdentity: walletIdentity,
                                                          walletType: tempWalletType,
                                                          walletBackupState: walletBackupState,
-                                                         walletAuthenticationKey: authenticationKey)
+                                                         walletAuthenticationKey: authenticationKey,
+                                                         walletActiveState: walletActiveState)
                     return LibraWalletManager.shared
                 }
                 throw LibraWalletError.error("获取当前使用钱包检索失败")
@@ -315,6 +325,8 @@ struct DataBaseManager {
                     let walletBackupState = wallet[Expression<Bool>("wallet_backup_state")]
                     // 授权Key
                     let authenticationKey = wallet[Expression<String>("wallet_authentication_key")]
+                    // 钱包激活状态
+                    let walletActiveState = wallet[Expression<Bool>("wallet_active_state")]
                     
                     let wallet = LibraWalletManager.init(walletID: walletID,
                                                          walletBalance: walletBalance,
@@ -327,7 +339,8 @@ struct DataBaseManager {
                                                          walletIdentity: walletIdentity,
                                                          walletType: type,
                                                          walletBackupState: walletBackupState,
-                                                         walletAuthenticationKey: authenticationKey)
+                                                         walletAuthenticationKey: authenticationKey,
+                                                         walletActiveState: walletActiveState)
                     if walletIdentity == 0 {
                         originWallets.append(wallet)
                     } else {
@@ -455,6 +468,21 @@ struct DataBaseManager {
         do {
             if let tempDB = self.db {
                 try tempDB.run(walletTable.update(Expression<Bool>("wallet_backup_state") <- true))
+                return true
+            } else {
+                return false
+            }
+        } catch {
+            print(error.localizedDescription)
+            return false
+        }
+    }
+    func updateWalletActiveState(walletID: Int64, state: Bool) -> Bool {
+        let walletTable = Table("Wallet")
+        do {
+            if let tempDB = self.db {
+                let contract = walletTable.filter(Expression<Int64>("wallet_id") == walletID)
+                try tempDB.run(contract.update(Expression<Bool>("wallet_active_state") <- state))
                 return true
             } else {
                 return false
