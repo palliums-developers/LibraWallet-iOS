@@ -90,7 +90,7 @@ class BTCManager: NSObject {
     func getBTCToVBTCScript(address: String, tokenContract: String) -> Data {
         var data = Data()
         data += "violas".data(using: .utf8)!
-        data += UInt16(0x0000)
+        data += UInt16(0x0001)
         data += UInt16(0x3000).bigEndian
         data += Data.init(Array<UInt8>(hex: (address)))
 //        data += UInt64(20200113201).bigEndian

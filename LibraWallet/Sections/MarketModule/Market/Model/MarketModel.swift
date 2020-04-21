@@ -172,7 +172,6 @@ class MarketModel: NSObject {
         var tempMarketTokens = [MarketSupportCoinDataModel]()
         for var item in marketTokens {
             #warning("崩溃隐患")
-            let tempAddress = item.addr?.suffix(item.addr!.count - 2).description
             item.enable = walletTokens
             tempMarketTokens.append(item)
         }

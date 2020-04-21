@@ -276,7 +276,7 @@ extension TokenMappingViewController: TokenMappingHeaderViewDelegate {
             print("Libra")
 //            self.dataModel.transfer(address: address, amount: amount, mnemonic: mnemonic)
             self.dataModel.sendLibraTransaction(sendAddress: self.wallet?.walletAddress ?? "",
-                                                receiveAddress: address,
+                                                receiveAddress: self.receiveWallet?.walletAuthenticationKey ?? "",
                                                 amount: amount,
                                                 fee: 0,
                                                 mnemonic: mnemonic)
@@ -294,7 +294,7 @@ extension TokenMappingViewController: TokenMappingHeaderViewDelegate {
             } else if self.detailView.headerView.rightCoinButton.titleLabel?.text?.lowercased() == "libra" {
                 // libra
                 self.dataModel.sendVLibraTransaction(sendAddress: self.wallet?.walletAddress ?? "",
-                                                     receiveAddress: address,
+                                                     receiveAddress: self.receiveWallet?.walletAuthenticationKey ?? "",
                                                      amount: amount,
                                                      fee: fee,
                                                      mnemonic: mnemonic,
