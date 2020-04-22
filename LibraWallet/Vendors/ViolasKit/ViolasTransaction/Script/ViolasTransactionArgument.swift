@@ -44,7 +44,7 @@ struct ViolasTransactionArgument {
         
         switch self.code {
         case .U64:
-            result += ViolasUtils.getLengthData(length: Int(self.value)!, appendBytesCount: 8)
+            result += ViolasUtils.getLengthData(length: Int(self.value) ?? 0, appendBytesCount: 8)
         case .Address:
             let data = Data.init(Array<UInt8>(hex: self.value))
             result += data

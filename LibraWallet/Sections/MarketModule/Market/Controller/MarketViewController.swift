@@ -84,7 +84,7 @@ class MarketViewController: UIViewController {
         }
         endLoading()
         if let headerView = self.detailView.tableView.headerView(forSection: 0) as? MarketExchangeHeaderView {
-            if let payContract = headerView.leftTokenModel?.addr, let exchangeContract = headerView.rightTokenModel?.addr, payContract.isEmpty == false, exchangeContract.isEmpty == false {
+            if let payContract = headerView.leftTokenModel?.id, let exchangeContract = headerView.rightTokenModel?.id, payContract.isEmpty == false, exchangeContract.isEmpty == false {
                 guard let walletAddress = self.wallet?.walletAddress else {
                     return
                 }
@@ -148,13 +148,13 @@ extension MarketViewController: MarketTableViewManagerDelegate {
         }
         self.detailView.toastView?.show()
         // 移除旧的监听
-        self.dataModel.removeDepthsLisening(payContract: rightModel.addr ?? "", exchangeContract: leftModel.addr ?? "")
+        self.dataModel.removeDepthsLisening(payContract: rightModel.id ?? "", exchangeContract: leftModel.id ?? "")
         // 请求交易所对应交易对数据
-        self.dataModel.getMarketData(address: walletAddress, payContract: leftModel.addr ?? "", exchangeContract: rightModel.addr ?? "")
+        self.dataModel.getMarketData(address: walletAddress, payContract: leftModel.id ?? "", exchangeContract: rightModel.id ?? "")
         // http请求
 //        self.dataModel.getCurrentOrder(address: walletAddress, baseAddress: leftModel.addr ?? "", exchangeAddress: rightModel.addr ?? "")
         // 添加对应交易对数据变化监听
-        self.dataModel.addDepthsLisening(payContract: leftModel.addr ?? "", exchangeContract: rightModel.addr ?? "")
+        self.dataModel.addDepthsLisening(payContract: leftModel.id ?? "", exchangeContract: rightModel.id ?? "")
     }
     
     func selectToken(button: UIButton, leftModelName: String, rightModelName: String, header: MarketExchangeHeaderView) {
@@ -203,7 +203,7 @@ extension MarketViewController: MarketTableViewManagerDelegate {
             let alert = TokenPickerViewAlert.init(successClosure: { (model) in
                 if button.tag == 20 {
                     // 移除之前监听
-                    if let payContract = header.leftTokenModel?.addr, let exchangeContract = header.rightTokenModel?.addr, payContract.isEmpty == false, exchangeContract.isEmpty == false {
+                    if let payContract = header.leftTokenModel?.id, let exchangeContract = header.rightTokenModel?.id, payContract.isEmpty == false, exchangeContract.isEmpty == false {
                         print("移除之前监听")
                         self.dataModel.removeDepthsLisening(payContract: payContract, exchangeContract: exchangeContract)
                     } else {
@@ -220,7 +220,7 @@ extension MarketViewController: MarketTableViewManagerDelegate {
                         return
                     }
                     // 移除之前监听
-                    if let payContract = header.leftTokenModel?.addr, let exchangeContract = header.rightTokenModel?.addr, payContract.isEmpty == false, exchangeContract.isEmpty == false {
+                    if let payContract = header.leftTokenModel?.id, let exchangeContract = header.rightTokenModel?.id, payContract.isEmpty == false, exchangeContract.isEmpty == false {
                         print("移除之前监听")
                         self.dataModel.removeDepthsLisening(payContract: payContract, exchangeContract: exchangeContract)
                     } else {
@@ -230,7 +230,7 @@ extension MarketViewController: MarketTableViewManagerDelegate {
                     header.rightTokenModel = model
                 }
                 // 添加监听
-                if let payContract = header.leftTokenModel?.addr, let exchangeContract = header.rightTokenModel?.addr, payContract.isEmpty == false, exchangeContract.isEmpty == false {
+                if let payContract = header.leftTokenModel?.id, let exchangeContract = header.rightTokenModel?.id, payContract.isEmpty == false, exchangeContract.isEmpty == false {
                     guard let walletAddress = self.wallet?.walletAddress else {
                         return
                     }
@@ -252,15 +252,15 @@ extension MarketViewController: MarketTableViewManagerDelegate {
         // 第一步，检查余额是否充足
         self.dataModel.getViolasBalance(walletID: LibraWalletManager.shared.walletID ?? 0,
                                         address: LibraWalletManager.shared.walletAddress ?? "",
-                                        vtoken: payToken.addr ?? "")
+                                        vtoken: payToken.id ?? "")
         self.checkBalanceClosure = { balance in
             if balance >= Int64(amount * 1000000) {
                 //第二步，余额充足，检查是否将要兑换的币已注册
                 guard receiveToken.enable == true else {
                     let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: LibraWalletError.WalletMarket(reason: .exchangeTokenPublishedInvalid).localizedDescription, preferredStyle: .alert)
                     alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_confirm_button_title"), style: .default){ [weak self] clickHandler in
-                        self?.showPublishPasswordAlert(payContract: payToken.addr ?? "",
-                                                      receiveContract: receiveToken.addr ?? "",
+                        self?.showPublishPasswordAlert(payContract: payToken.id ?? "",
+                                                      receiveContract: receiveToken.id ?? "",
                                                       amount: amount,
                                                       exchangeAmount: exchangeAmount,
                                                       name: receiveToken.name ?? "")
@@ -272,8 +272,8 @@ extension MarketViewController: MarketTableViewManagerDelegate {
                     self.present(alertContr, animated: true, completion: nil)
                     return
                 }
-                self.showPasswordAlert(payContract: payToken.addr ?? "",
-                                       receiveContract: receiveToken.addr ?? "",
+                self.showPasswordAlert(payContract: payToken.id ?? "",
+                                       receiveContract: receiveToken.id ?? "",
                                        amount: amount,
                                        exchangeAmount: exchangeAmount)
             } else {
@@ -309,9 +309,10 @@ extension MarketViewController: MarketTableViewManagerDelegate {
                                                                amount: amount,
                                                                fee: 0,
                                                                mnemonic: mnemonic,
-                                                               contact: payContract,
+                                                               contact: "e1be1ab8360a35a0259f1c93e3eac736",
                                                                exchangeTokenContract: receiveContract,
-                                                               exchangeTokenAmount: exchangeAmount)
+                                                               exchangeTokenAmount: exchangeAmount,
+                                                               tokenIndex: payContract)
             }
         }) { [weak self] errorContent in
             self?.view.makeToast(errorContent, position: .center)
@@ -328,9 +329,10 @@ extension MarketViewController: MarketTableViewManagerDelegate {
                                                            amount: amount,
                                                            fee: 0,
                                                            mnemonic: mnemonic,
-                                                           contact: payContract,
+                                                           contact: "e1be1ab8360a35a0259f1c93e3eac736",
                                                            exchangeTokenContract: receiveContract,
-                                                           exchangeTokenAmount: exchangeAmount)
+                                                           exchangeTokenAmount: exchangeAmount,
+                                                           tokenIndex: payContract)
         }) { [weak self] errorContent in
             self?.view.makeToast(errorContent, position: .center)
         }

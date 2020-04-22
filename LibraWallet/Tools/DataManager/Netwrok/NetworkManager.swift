@@ -104,10 +104,10 @@ extension mainRequest:TargetType {
              .GetOrderDetail(_, _),
              .GetAllDoneOrder(_, _):
             #if PUBLISH_VERSION
-                return URL(string:"https://www.violas-dex.com/v1")!
+                return URL(string:"https://dex.violas.io/v1")!
             #else
-//                return URL(string:"http://18.220.66.235:38181/v1")!
-                return URL(string:"https://www.violas-dex.com/v1")!
+                return URL(string:"http://18.220.66.235:38181/v1")!
+//                return URL(string:"https://dex.violas.io/v1")!
             #endif
         case .GetLibraAccountBalance(_),
              .SendLibraTransaction(_):

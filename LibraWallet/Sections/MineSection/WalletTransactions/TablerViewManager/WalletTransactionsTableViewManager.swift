@@ -34,7 +34,7 @@ extension WalletTransactionsTableViewManager: UITableViewDelegate {
         switch transactionType {
         case .Libra:
             if let data = libraTransactions, data.isEmpty == false {
-                content = data[indexPath.row].explorerLink ?? ""
+                content = "\(data[indexPath.row].version ?? 0)"
             }
         case .Violas:
             if let data = violasTransactions, data.isEmpty == false {

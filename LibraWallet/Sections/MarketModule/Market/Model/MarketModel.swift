@@ -57,9 +57,10 @@ struct ViolasAccountEnableTokenResponseMainModel: Codable {
     var data: ViolasAccountEnableTokenResponseDataModel?
 }
 struct MarketSupportCoinDataModel: Codable {
-    var addr: String?
+//    var addr: String?
     var name: String?
     var price: Double?
+    var id: String?
     // 自行添加
     var enable: Bool?
 }
@@ -249,7 +250,7 @@ class MarketModel: NSObject {
         }
         self.requests.append(request)
     }
-    func exchangeViolasTokenTransaction(sendAddress: String, amount: Double, fee: Double, mnemonic: [String], contact: String, exchangeTokenContract: String, exchangeTokenAmount: Double) {
+    func exchangeViolasTokenTransaction(sendAddress: String, amount: Double, fee: Double, mnemonic: [String], contact: String, exchangeTokenContract: String, exchangeTokenAmount: Double, tokenIndex: String) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
         queue.async {
@@ -265,7 +266,8 @@ class MarketModel: NSObject {
                                                                                    contact: contact,
                                                                                    exchangeTokenContract: exchangeTokenContract,
                                                                                    exchangeTokenAmount: exchangeTokenAmount,
-                                                                                   sequenceNumber: self.sequenceNumber!)
+                                                                                   sequenceNumber: self.sequenceNumber!,
+                                                                                   tokenIndex: tokenIndex)
                 self.makeViolasTransaction(signature:signature, type: "ExchangeDone")
             } catch {
                 print(error.localizedDescription)
