@@ -113,16 +113,15 @@ extension ViolasManager {
                                                            value: authenticatorKey)
             let argument2 = ViolasTransactionArgument.init(code: .U64,
                                                            value: "\(Int(amount * 1000000))")
-            let script = ViolasTransactionScript.init(code: Data.init(hex: libraProgramCode),
-                                                   typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .ViolasDefault))],
-                                                   argruments: [argument0, argument1, argument2])
+            let script = ViolasTransactionScript.init(code: Data.init(hex: ViolasScriptCode),
+                                                      typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .ViolasDefault))],
+                                                      argruments: [argument0, argument1, argument2])
             let rawTransaction = ViolasRawTransaction.init(senderAddres: sendAddress,
                                                            sequenceNumber: UInt64(sequenceNumber),
                                                            maxGasAmount: 400000,
                                                            gasUnitPrice: 0,
                                                            expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
                                                            programOrWrite: script.serialize())
-            
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
             return signature.toHexString()
@@ -144,7 +143,7 @@ extension ViolasManager {
             // 拼接交易
             let argument0 = ViolasTransactionArgument.init(code: .U8Vector,
                                                            value: "publish".data(using: .utf8)!.toHexString())
-            let script = ViolasTransactionScript.init(code: ViolasManager.getCodeData(move: ViolasPublishProgramCode, address: contact),
+            let script = ViolasTransactionScript.init(code: ViolasManager.getCodeData(move: ViolasPublishScriptCode, address: contact),
                                                       typeTags: [ViolasTypeTag](),
                                                       argruments: [argument0])
             let rawTransaction = ViolasRawTransaction.init(senderAddres: wallet.publicKey.toLegacy(),
@@ -180,7 +179,7 @@ extension ViolasManager {
             let argument2 = ViolasTransactionArgument.init(code: .U64,
                                                            value: "\(Int(amount * 1000000))")
             let argument3 = ViolasTransactionArgument.init(code: .U8Vector, value: "")
-            let script = ViolasTransactionScript.init(code: ViolasManager.getCodeData(move: ViolasTransactionProgramCode, address: contact),
+            let script = ViolasTransactionScript.init(code: ViolasManager.getCodeData(move: ViolasStableCoinScriptWithDataCode, address: contact),
                                                        typeTags: [ViolasTypeTag](),
                                                        argruments: [argument0, argument1, argument2, argument3])
             let rawTransaction = ViolasRawTransaction.init(senderAddres: sendAddress,
@@ -189,7 +188,6 @@ extension ViolasManager {
                                                 gasUnitPrice: 0,
                                                 expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
                                                 programOrWrite: script.serialize())
-
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
             return signature.toHexString()
@@ -224,7 +222,7 @@ extension ViolasManager {
             let data = "{\"type\":\"sub_ex\",\"tokenid\":\"\(exchangeTokenContract)\",\"amount\":\(Int(exchangeTokenAmount * 1000000)),\"fee\":0,\"exp\":1000}".data(using: .utf8)!
             let argument3 = ViolasTransactionArgument.init(code: .U8Vector,
                                                            value: data.toHexString())
-            let script = ViolasTransactionScript.init(code: ViolasManager.getCodeData(move: ViolasExchangeTokenProgramCode, address: contact),
+            let script = ViolasTransactionScript.init(code: ViolasManager.getCodeData(move: ViolasStableCoinScriptWithDataCode, address: contact),
                                                        typeTags: [ViolasTypeTag](),
                                                        argruments: [argument0, argument1, argument2, argument3])
             
@@ -265,15 +263,15 @@ extension ViolasManager {
             let data = "{\"type\":\"wd_ex\",\"ver\":\"\(version)\"}".data(using: .utf8)!
             let argument3 = ViolasTransactionArgument.init(code: .U8Vector,
                                                            value: data.toHexString())
-            let script = ViolasTransactionScript.init(code: ViolasManager.getCodeData(move: ViolasExchangeTokenProgramCode, address: contact),
+            let script = ViolasTransactionScript.init(code: ViolasManager.getCodeData(move: ViolasStableCoinScriptWithDataCode, address: contact),
                                                       typeTags: [ViolasTypeTag](),
                                                       argruments: [argument0, argument1, argument2, argument3])
             let rawTransaction = ViolasRawTransaction.init(senderAddres: sendAddress,
-                                                sequenceNumber: UInt64(sequenceNumber),
-                                                maxGasAmount: 400000,
-                                                gasUnitPrice: 0,
-                                                expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
-                                                programOrWrite: script.serialize())
+                                                           sequenceNumber: UInt64(sequenceNumber),
+                                                           maxGasAmount: 400000,
+                                                           gasUnitPrice: 0,
+                                                           expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
+                                                           programOrWrite: script.serialize())
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
             return signature.toHexString()
@@ -289,12 +287,6 @@ extension ViolasManager {
         do {
             let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
             // 拼接交易
-//            let request = ViolasTransaction.init(sendAddress: sendAddress,
-//                                                 amount: amount,
-//                                                 fee: fee,
-//                                                 sequenceNumber: UInt64(sequenceNumber),
-//                                                 code: ViolasManager.getCodeData(move: ViolasExchangeTokenProgramCode, address: contact),
-//                                                 btcReceiveAddress: btcAddress)
             let argument1 = ViolasTransactionArgument.init(code: .Address,
                                                            value: "fd0426fa9a3ba4fae760d0f614591c61bb53232a3b1138d5078efa11ef07c49c")
             let argument2 = ViolasTransactionArgument.init(code: .U64,
@@ -302,8 +294,8 @@ extension ViolasManager {
             let data = "{\"flag\":\"violas\",\"type\":\"v2b\",\"to_address\":\"\(btcAddress)\",\"state\":\"start\"}".data(using: .utf8)!
             let argument3 = ViolasTransactionArgument.init(code: .U8Vector,
                                                            value: data.toHexString())
-            let script = ViolasTransactionScript.init(code: ViolasManager.getCodeData(move: ViolasExchangeTokenProgramCode, address: contact),
-                                                       typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .ViolasDefault))],
+            let script = ViolasTransactionScript.init(code: ViolasManager.getCodeData(move: ViolasStableCoinScriptWithDataCode, address: contact),
+                                                       typeTags: [ViolasTypeTag](),
                                                        argruments: [argument1, argument2, argument3])
 
             let rawTransaction = ViolasRawTransaction.init(senderAddres: sendAddress,
@@ -330,8 +322,8 @@ extension ViolasManager {
             let data = "{\"flag\":\"violas\",\"type\":\"v2l\",\"to_address\":\"\(libraReceiveAddress)\",\"state\":\"start\"}".data(using: .utf8)!
             let argument3 = ViolasTransactionArgument.init(code: .U8Vector,
                                                            value: data.toHexString())
-            let script = ViolasTransactionScript.init(code: ViolasManager.getCodeData(move: ViolasExchangeTokenProgramCode, address: contact),
-                                                       typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .ViolasDefault))],
+            let script = ViolasTransactionScript.init(code: ViolasManager.getCodeData(move: ViolasStableCoinScriptWithDataCode, address: contact),
+                                                       typeTags: [ViolasTypeTag](),
                                                        argruments: [argument1, argument2, argument3])
             let rawTransaction = ViolasRawTransaction.init(senderAddres: sendAddress,
                                                            sequenceNumber: UInt64(sequenceNumber),

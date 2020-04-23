@@ -66,7 +66,6 @@ struct LibraTypeTag {
         var result = Data()
         // 追加类型
         result += self.typeTag.data
-        
         switch self.typeTag {
         case .Bool:
             result += LibraUtils.getLengthData(length: Int(self.value)!, appendBytesCount: 1)

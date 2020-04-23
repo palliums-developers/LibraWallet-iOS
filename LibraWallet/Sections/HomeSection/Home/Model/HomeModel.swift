@@ -20,9 +20,13 @@ struct BalanceViolasModulesModel: Codable {
     /// 代币ID
     var id: Int64?
 }
+struct BalanceLibraBalanceModel: Codable {
+    var amount: Int64?
+    var currency: String?
+}
 struct BalanceLibraModel: Codable {
     /// 余额
-    var balance: Int64?
+    var balance: BalanceLibraBalanceModel?
     /// 验证密钥
     var authentication_key: String?
     ///
@@ -160,14 +164,14 @@ class HomeModel: NSObject {
                 do {
                     let json = try response.map(BalanceLibraMainModel.self)
                     guard json.result != nil else {
-                        let data = setKVOData(type: "UpdateLibraBalance", data: BalanceLibraModel.init(balance: 0))
+                        let data = setKVOData(type: "UpdateLibraBalance", data: BalanceLibraModel.init(balance: BalanceLibraBalanceModel.init(amount: 0, currency: "LBR")))
                         self?.setValue(data, forKey: "dataDic")
                         return
                     }
                     let data = setKVOData(type: "UpdateLibraBalance", data: json.result)
                     self?.setValue(data, forKey: "dataDic")
                     // 刷新本地数据
-                    self?.updateLocalWalletData(walletID: walletID, balance: json.result?.balance ?? 0)
+                    self?.updateLocalWalletData(walletID: walletID, balance: json.result?.balance?.amount ?? 0)
                 } catch {
                     print("解析异常\(error.localizedDescription)")
                     let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "UpdateLibraBalance")

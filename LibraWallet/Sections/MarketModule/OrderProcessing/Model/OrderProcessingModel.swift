@@ -17,10 +17,10 @@ class OrderProcessingModel: NSObject {
     private var sequenceNumber: Int?
     private var orderModels: [MarketOrderDataModel]?
     private var priceModels: [MarketSupportCoinDataModel]?
-    func getAllProcessingOrder(address: String, version: String) {
+//    func getAllProcessingOrder(address: String, version: String) {
 //        let type = version.isEmpty == true ? "GetAllProcessingOrderOrigin":"GetAllProcessingOrderMore"
 //
-        let group = DispatchGroup.init()
+//        let group = DispatchGroup.init()
 //        let quene = DispatchQueue.init(label: "AllProcessingOrderQuene")
 //        quene.async(group: group, qos: .default, flags: [], execute: {
 //            self.getAllProcessingOrderList(address: address, version: version, group: group)
@@ -43,10 +43,9 @@ class OrderProcessingModel: NSObject {
 //                self.setValue(data, forKey: "dataDic")
 //            })
 //        }
-        self.getAllProcessingOrderList(address: address, version: version, group: group)
-    }
-    func getAllProcessingOrderList(address: String, version: String, group: DispatchGroup) {
-        group.enter()
+//        self.getAllProcessingOrderList(address: address, version: version, group: group)
+//    }
+    func getAllProcessingOrders(address: String, version: String) {
         let type = version.isEmpty == true ? "GetAllProcessingOrderOrigin":"GetAllProcessingOrderMore"
         let request = mainProvide.request(.GetAllProcessingOrder(address, version)) {[weak self](result) in
             switch  result {
@@ -60,7 +59,6 @@ class OrderProcessingModel: NSObject {
                     }
                     let data = setKVOData(type: type, data: json.orders)
                     self?.setValue(data, forKey: "dataDic")
-//                    self?.orderModels = json.orders
                 } catch {
                     print("\(type)_解析异常\(error.localizedDescription)")
                     let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: type)
@@ -74,54 +72,40 @@ class OrderProcessingModel: NSObject {
                 let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: type)
                 self?.setValue(data, forKey: "dataDic")
             }
-            group.leave()
         }
         self.requests.append(request)
     }
-    private func getCurrentPrice(group: DispatchGroup) {
-        group.enter()
-        let request = mainProvide.request(.GetMarketSupportCoin) {[weak self](result) in
-            switch  result {
-            case let .success(response):
-                do {
-                    let json = try response.map([MarketSupportCoinDataModel].self)
-                    guard json.isEmpty == false else {
-                        let data = setKVOData(error: LibraWalletError.WalletMarket(reason: .marketSupportTokenEmpty), type: "GetOrderPrices")
-                        self?.setValue(data, forKey: "dataDic")
-                        return
-                    }
-//                    let data = setKVOData(type: "GetSupportCoin", data: json)
+//    private func getCurrentPrice(group: DispatchGroup) {
+//        group.enter()
+//        let request = mainProvide.request(.GetMarketSupportCoin) {[weak self](result) in
+//            switch  result {
+//            case let .success(response):
+//                do {
+//                    let json = try response.map([MarketSupportCoinDataModel].self)
+//                    guard json.isEmpty == false else {
+//                        let data = setKVOData(error: LibraWalletError.WalletMarket(reason: .marketSupportTokenEmpty), type: "GetOrderPrices")
+//                        self?.setValue(data, forKey: "dataDic")
+//                        return
+//                    }
+////                    let data = setKVOData(type: "GetSupportCoin", data: json)
+////                    self?.setValue(data, forKey: "dataDic")
+//                    self?.priceModels = json
+//                } catch {
+//                    print("GetOrderPrices_解析异常\(error.localizedDescription)")
+//                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetOrderPrices")
 //                    self?.setValue(data, forKey: "dataDic")
-                    self?.priceModels = json
-                } catch {
-                    print("GetOrderPrices_解析异常\(error.localizedDescription)")
-                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetOrderPrices")
-                    self?.setValue(data, forKey: "dataDic")
-                }
-            case let .failure(error):
-                guard error.errorCode != -999 else {
-                    print("GetOrderPrices_网络请求已取消")
-                    return
-                }
-                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "GetOrderPrices")
-                self?.setValue(data, forKey: "dataDic")
-            }
-            group.leave()
-        }
-        self.requests.append(request)
-    }
-//    func rebuiltData(orderModel: [MarketOrderDataModel], priceModel: [MarketSupportCoinDataModel]) -> [MarketOrderDataModel] {
-//        var tempOrderModel = [MarketOrderDataModel]()
-//        for var item in orderModel {
-//            for model in priceModel {
-//                if model.addr == item.tokenGet {
-//                    item.price = model.price
-//                    break
 //                }
+//            case let .failure(error):
+//                guard error.errorCode != -999 else {
+//                    print("GetOrderPrices_网络请求已取消")
+//                    return
+//                }
+//                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "GetOrderPrices")
+//                self?.setValue(data, forKey: "dataDic")
 //            }
-//            tempOrderModel.append(item)
+//            group.leave()
 //        }
-//        return tempOrderModel
+//        self.requests.append(request)
 //    }
     func getViolasSequenceNumber(sendAddress: String, semaphore: DispatchSemaphore, queue: DispatchQueue) {
         semaphore.wait()

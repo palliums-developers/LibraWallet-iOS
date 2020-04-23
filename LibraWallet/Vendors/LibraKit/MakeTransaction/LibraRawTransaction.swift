@@ -48,11 +48,6 @@ struct LibraRawTransaction {
         result += LibraUtils.getLengthData(length: Int(maxGasAmount), appendBytesCount: 8)
         // gasUnitPrice(固定8个字节)
         result += LibraUtils.getLengthData(length: Int(gasUnitPrice), appendBytesCount: 8)
-        // libraTypeTag
-//        result += LibraTypeTag.init(structData: LibraStructTag.init(type: .libraDefault)).serialize()
-        let data = "LBR".data(using: .utf8)!
-        result += LibraUtils.uleb128Format(length: data.count)
-        result += data
         // expirationTime(固定8个字节)
         result += LibraUtils.getLengthData(length: expirationTime, appendBytesCount: 8)
         return result

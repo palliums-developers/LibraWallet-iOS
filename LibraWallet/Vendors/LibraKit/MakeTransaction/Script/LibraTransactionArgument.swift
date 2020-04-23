@@ -11,7 +11,6 @@ enum LibraArgumentsCode {
     case U64
     case Address
     case U8Vector
-    #warning("待测试")
     case Bool
 }
 extension LibraArgumentsCode {
@@ -39,9 +38,7 @@ struct LibraTransactionArgument {
     }
     func serialize() -> Data {
         var result = Data()
-        
         result += self.code.raw
-        
         switch self.code {
         case .U64:
             result += LibraUtils.getLengthData(length: Int(self.value)!, appendBytesCount: 8)

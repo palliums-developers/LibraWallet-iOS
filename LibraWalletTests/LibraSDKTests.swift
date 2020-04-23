@@ -168,7 +168,7 @@ class LibraSDKTests: XCTestCase {
             // Publish
 //            let request = ViolasTransaction.init(sendAddress: walletAddress,
 //                                                 sequenceNumber: 9,
-//                                                 code: ViolasManager.getCodeData(move: ViolasPublishProgramCode, address: "331321aefcce2ee794430d07d7a953a0"))
+//                                                 code: ViolasManager.getCodeData(move: ViolasPublishScriptCode, address: "331321aefcce2ee794430d07d7a953a0"))
 //            let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
 //            print("signature.toHexString() = \(signature.toHexString())")
             
@@ -210,15 +210,15 @@ class LibraSDKTests: XCTestCase {
 //            print(signature.toHexString())
             //Transfer
 //             拼接交易
-            let request = ViolasTransaction.init(sendAddress: "fa279f2615270daed6061313a48360f7",
-                                                 receiveAddress: "7f4644ae2b51b65bd3c9d414aa853407",
-                                                 amount: 1,
-                                                 sequenceNumber: 16,
-                                                 code: ViolasManager.getCodeData(move: ViolasTransactionProgramCode, address: "e1be1ab8360a35a0259f1c93e3eac736"),
-                                                 tokenIndex: "0")
+//            let request = ViolasTransaction.init(sendAddress: "fa279f2615270daed6061313a48360f7",
+//                                                 receiveAddress: "7f4644ae2b51b65bd3c9d414aa853407",
+//                                                 amount: 1,
+//                                                 sequenceNumber: 16,
+//                                                 code: ViolasManager.getCodeData(move: ViolasStableCoinScriptCode, address: "e1be1ab8360a35a0259f1c93e3eac736"),
+//                                                 tokenIndex: "0")
             // 签名交易
-            let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
-            print(signature.toHexString())
+//            let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
+//            print(signature.toHexString())
         } catch {
             print(error.localizedDescription)
         }

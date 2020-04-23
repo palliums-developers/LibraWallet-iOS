@@ -59,34 +59,25 @@ class BTCManagerTests: XCTestCase {
         let result4 = ViolasManager.isValidViolasAddress(address: str4)
         XCTAssertEqual(result4, false)
     }
-    func testCacul() {
-        let code = getProgramCode(content: ViolasTransactionProgramCode)
-        print(code.toHexString())
-        let range: Range = code.toHexString().range(of: "7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614")!
-        let location: Int = code.toHexString().distance(from: code.toHexString().startIndex, to: range.lowerBound)
-        print("location = \((location / 2) - 1)")
-        let location2 = ViolasManager().getViolasTokenContractLocation(code: ViolasTransactionProgramCode, contract: "7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614")
-        print(location2)
-    }
     func testCaculll() {
-        let code = getProgramCode(content: ViolasPublishProgramCode)
+        let code = getProgramCode(content: ViolasPublishScriptCode)
         print(code.toHexString())
         let range: Range = code.toHexString().range(of: "7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614")!
         let location: Int = code.toHexString().distance(from: code.toHexString().startIndex, to: range.lowerBound)
         print("location = \((location / 2) - 1)")
-        let location2 = ViolasManager().getViolasTokenContractLocation(code: ViolasPublishProgramCode, contract: "7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614")
+        let location2 = ViolasManager().getViolasTokenContractLocation(code: ViolasPublishScriptCode, contract: "7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614")
         print(location2)
         
-        let data = ViolasManager.getCodeData(move: ViolasPublishProgramCode, address: "238adce0d1b40db648145473a7ba42e42d637dfbe8f7dd007c49a85f0e3a5d89")
+        let data = ViolasManager.getCodeData(move: ViolasPublishScriptCode, address: "238adce0d1b40db648145473a7ba42e42d637dfbe8f7dd007c49a85f0e3a5d89")
         print(data.toHexString())
     }
     func testExchange() {
-        let code = getProgramCode(content: ViolasExchangeTokenProgramCode)
+        let code = getProgramCode(content: ViolasStableCoinScriptWithDataCode)
         print(code.toHexString())
         let range: Range = code.toHexString().range(of: "7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614")!
         let location: Int = code.toHexString().distance(from: code.toHexString().startIndex, to: range.lowerBound)
         print("location = \((location / 2) - 1)")
-        let location2 = ViolasManager().getViolasTokenContractLocation(code: ViolasExchangeTokenProgramCode, contract: "7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614")
+        let location2 = ViolasManager().getViolasTokenContractLocation(code: ViolasStableCoinScriptWithDataCode, contract: "7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614")
         print(location2)
     }
     func testPasswordLogic() {
