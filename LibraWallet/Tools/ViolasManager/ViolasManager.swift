@@ -121,7 +121,7 @@ extension ViolasManager {
                                                            maxGasAmount: 400000,
                                                            gasUnitPrice: 0,
                                                            expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
-                                                           programOrWrite: script.serialize())
+                                                           payLoad: script.serialize())
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
             return signature.toHexString()
@@ -151,7 +151,7 @@ extension ViolasManager {
                                                 maxGasAmount: 400000,
                                                 gasUnitPrice: 0,
                                                 expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
-                                                programOrWrite: script.serialize())
+                                                payLoad: script.serialize())
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
             return signature.toHexString()
@@ -187,7 +187,7 @@ extension ViolasManager {
                                                 maxGasAmount: 400000,
                                                 gasUnitPrice: 0,
                                                 expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
-                                                programOrWrite: script.serialize())
+                                                payLoad: script.serialize())
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
             return signature.toHexString()
@@ -231,7 +231,7 @@ extension ViolasManager {
                                                 maxGasAmount: 400000,
                                                 gasUnitPrice: 0,
                                                 expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
-                                                programOrWrite: script.serialize())
+                                                payLoad: script.serialize())
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
             return signature.toHexString()
@@ -271,7 +271,7 @@ extension ViolasManager {
                                                            maxGasAmount: 400000,
                                                            gasUnitPrice: 0,
                                                            expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
-                                                           programOrWrite: script.serialize())
+                                                           payLoad: script.serialize())
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
             return signature.toHexString()
@@ -299,11 +299,11 @@ extension ViolasManager {
                                                        argruments: [argument1, argument2, argument3])
 
             let rawTransaction = ViolasRawTransaction.init(senderAddres: sendAddress,
-                                                sequenceNumber: UInt64(sequenceNumber),
-                                                maxGasAmount: 400000,
-                                                gasUnitPrice: 0,
-                                                expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
-                                                programOrWrite: script.serialize())
+                                                           sequenceNumber: UInt64(sequenceNumber),
+                                                           maxGasAmount: 400000,
+                                                           gasUnitPrice: 0,
+                                                           expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
+                                                           payLoad: script.serialize())
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
             return signature.toHexString()
@@ -323,14 +323,14 @@ extension ViolasManager {
             let argument3 = ViolasTransactionArgument.init(code: .U8Vector,
                                                            value: data.toHexString())
             let script = ViolasTransactionScript.init(code: ViolasManager.getCodeData(move: ViolasStableCoinScriptWithDataCode, address: contact),
-                                                       typeTags: [ViolasTypeTag](),
-                                                       argruments: [argument1, argument2, argument3])
+                                                      typeTags: [ViolasTypeTag](),
+                                                      argruments: [argument1, argument2, argument3])
             let rawTransaction = ViolasRawTransaction.init(senderAddres: sendAddress,
                                                            sequenceNumber: UInt64(sequenceNumber),
                                                            maxGasAmount: 280000,
                                                            gasUnitPrice: 0,
                                                            expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 1000),
-                                                           programOrWrite: script.serialize())
+                                                           payLoad: script.serialize())
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
             return signature.toHexString()

@@ -22,7 +22,7 @@ struct ViolasRawTransaction {
     
     fileprivate let payLoad: Data
     
-    init(senderAddres: String, sequenceNumber: UInt64, maxGasAmount: Int64, gasUnitPrice: Int64, expirationTime: Int, programOrWrite: Data) {
+    init(senderAddres: String, sequenceNumber: UInt64, maxGasAmount: Int64, gasUnitPrice: Int64, expirationTime: Int, payLoad: Data) {
         
         self.senderAddress = senderAddres
         
@@ -34,7 +34,7 @@ struct ViolasRawTransaction {
         
         self.expirationTime = expirationTime
         
-        self.payLoad = programOrWrite
+        self.payLoad = payLoad
     }
     func serialize() -> Data {
         var result = Data()

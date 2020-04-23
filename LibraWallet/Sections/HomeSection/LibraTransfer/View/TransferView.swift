@@ -406,7 +406,9 @@ class TransferView: UIView {
             guard let model = wallet else {
                 return
             }
-            let balance = "\(model.walletBalance ?? 0)"
+            let balance = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.walletBalance ?? 0)),
+                                                 scale: 4,
+                                                 unit: 1000000)
             walletBalanceLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + balance + " Libra"
         }
     }

@@ -9,8 +9,6 @@
 import UIKit
 /// Violas签名盐
 let ViolasSignSalt  = "RawTransaction::libra_types::transaction@@$$LIBRA$$@@"
-//let violasSignSalt  = "RawTransaction@@$$LIBRA$$@@"
-
 /// Violas计算助记词盐
 let ViolasMnemonicSalt = "LIBRA WALLET: mnemonic salt prefix$LIBRA"
 //最新

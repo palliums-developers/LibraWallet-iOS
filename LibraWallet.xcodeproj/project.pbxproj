@@ -2592,10 +2592,10 @@
 		9DB515B923A32DF90069A909 /* ViolasTransaction */ = {
 			isa = PBXGroup;
 			children = (
+				9DB515BA23A32E4C0069A909 /* ViolasRawTransaction.swift */,
 				3617837124449FC4003C6588 /* Script */,
 				3617837224449FD8003C6588 /* WriteSet */,
 				3617837324449FE8003C6588 /* Module */,
-				9DB515BA23A32E4C0069A909 /* ViolasRawTransaction.swift */,
 			);
 			path = ViolasTransaction;
 			sourceTree = "<group>";
@@ -2901,10 +2901,10 @@
 		9DC901E5232628860097FD85 /* MakeTransaction */ = {
 			isa = PBXGroup;
 			children = (
+				9DC901E6232628A40097FD85 /* LibraRawTransaction.swift */,
 				3617836C24449B72003C6588 /* Script */,
 				3617836D24449B80003C6588 /* WriteSet */,
 				3617836E24449D71003C6588 /* Module */,
-				9DC901E6232628A40097FD85 /* LibraRawTransaction.swift */,
 			);
 			path = MakeTransaction;
 			sourceTree = "<group>";
