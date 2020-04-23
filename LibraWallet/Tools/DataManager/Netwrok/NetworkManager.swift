@@ -53,6 +53,8 @@ enum mainRequest {
     case GetOrderDetail(String, Int)
     /// 获取已完成订单
     case GetAllDoneOrder(String, String)
+    /// 取消订单（交易字节码，Version）
+    case CancelOrder(String, String)
     
     /// 查询映射信息
     case GetMappingInfo(String)
@@ -102,7 +104,8 @@ extension mainRequest:TargetType {
              .GetCurrentOrder(_, _, _),
              .GetAllProcessingOrder(_, _),
              .GetOrderDetail(_, _),
-             .GetAllDoneOrder(_, _):
+             .GetAllDoneOrder(_, _),
+             .CancelOrder(_, _):
             #if PUBLISH_VERSION
                 return URL(string:"https://dex.violas.io/v1")!
             #else
@@ -156,6 +159,8 @@ extension mainRequest:TargetType {
             return "/trades"
         case .GetAllDoneOrder(_, _):
             return "/orders"
+        case .CancelOrder(_, _):
+            return "/cancelOrder"
         case .GetMappingInfo(_):
             return "/crosschain/info"
         case .GetMappingTokenList(_):
@@ -173,7 +178,8 @@ extension mainRequest:TargetType {
              .SendViolasTransaction(_),
              .SendBTCTransaction(_),
              .SubmitScanLoginData(_, _),
-             .GetLibraAccountBalance(_):
+             .GetLibraAccountBalance(_),
+             .CancelOrder(_, _):
             return .post
         case .GetBTCBalance(_),
              .GetBTCTransactionHistory(_, _, _),
@@ -309,6 +315,10 @@ extension mainRequest:TargetType {
                                                        "version":version],
                                           encoding: URLEncoding.queryString)
             }
+        case .CancelOrder(let signature, let version):
+            return .requestParameters(parameters: ["version": version,
+                                                   "signedtxn":signature],
+                                      encoding: JSONEncoding.default)
         case .GetMappingInfo(let type):
             return .requestParameters(parameters: ["type":type.lowercased()],
                                       encoding: URLEncoding.queryString)

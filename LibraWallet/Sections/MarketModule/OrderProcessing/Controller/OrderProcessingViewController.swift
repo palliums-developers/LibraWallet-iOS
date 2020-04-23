@@ -157,6 +157,8 @@ extension OrderProcessingViewController {
             }
             self.detailView.hideToastActivity()
             self.detailView.tableView.mj_header?.endRefreshing()
+            self.detailView.makeToast(error.localizedDescription, position: .center)
+
             return
         }
         let type = jsonData.value(forKey: "type") as! String
