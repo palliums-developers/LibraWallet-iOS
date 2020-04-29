@@ -309,7 +309,7 @@ extension MarketViewController: MarketTableViewManagerDelegate {
                                                                amount: amount,
                                                                fee: 0,
                                                                mnemonic: mnemonic,
-                                                               contact: "e1be1ab8360a35a0259f1c93e3eac736",
+                                                               contact: ViolasMainContract,
                                                                exchangeTokenContract: receiveContract,
                                                                exchangeTokenAmount: exchangeAmount,
                                                                tokenIndex: payContract)
@@ -329,7 +329,7 @@ extension MarketViewController: MarketTableViewManagerDelegate {
                                                            amount: amount,
                                                            fee: 0,
                                                            mnemonic: mnemonic,
-                                                           contact: "e1be1ab8360a35a0259f1c93e3eac736",
+                                                           contact: ViolasMainContract,
                                                            exchangeTokenContract: receiveContract,
                                                            exchangeTokenAmount: exchangeAmount,
                                                            tokenIndex: payContract)

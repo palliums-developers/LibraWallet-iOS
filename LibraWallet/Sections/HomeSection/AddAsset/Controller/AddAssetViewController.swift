@@ -19,7 +19,7 @@ class AddAssetViewController: BaseViewController {
         // 加载数据
         self.initKVO(walletID: (wallet?.walletID)!, walletAddress: wallet?.walletAddress ?? "")
         #warning("测试")
-        self.addNavigationRightBar()
+//        self.addNavigationRightBar()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -229,7 +229,7 @@ extension AddAssetViewController {
             self?.detailView.toastView?.show()
             self?.dataModel.publishViolasToken(sendAddress: (self?.wallet?.walletAddress)!,
                                                mnemonic: mnemonic,
-                                               contact: "e1be1ab8360a35a0259f1c93e3eac736")
+                                               contact: ViolasMainContract)
             self?.actionClosure = { result in
                 
             }

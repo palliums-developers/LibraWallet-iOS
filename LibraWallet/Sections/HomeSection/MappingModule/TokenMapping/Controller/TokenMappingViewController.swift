@@ -226,7 +226,7 @@ extension TokenMappingViewController: TokenMappingHeaderViewDelegate {
         
         if wallet?.walletType == .Libra || wallet?.walletType == .BTC {
             self.detailView.toastView?.show()
-            self.dataModel.getWalletEnableToken(address: address, contract: "e1be1ab8360a35a0259f1c93e3eac736")
+            self.dataModel.getWalletEnableToken(address: address, contract: ViolasMainContract)
             self.actionClosure = { (result) in
                 if result == false {
                     // 接收映射钱包未注册映射币

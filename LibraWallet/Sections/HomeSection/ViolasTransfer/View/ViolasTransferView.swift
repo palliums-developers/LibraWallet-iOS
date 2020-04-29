@@ -283,6 +283,9 @@ class ViolasTransferView: UIView {
         return button
     }()
     @objc func buttonClick(button: UIButton) {
+        self.amountTextField.resignFirstResponder()
+        self.addressTextField.resignFirstResponder()
+        self.transferFeeSlider.resignFirstResponder()
         if button.tag == 10 {
             // 扫描地址
             self.delegate?.scanAddressQRcode()
@@ -350,20 +353,17 @@ class ViolasTransferView: UIView {
                return
             }
             // 是否有效地址
-//            guard ViolasManager.isValidViolasAddress(address: address) else {
-//                self.makeToast(LibraWalletError.WalletTransfer(reason: .addressInvalid).localizedDescription,
-//                               position: .center)
-//                return
-//            }
+            guard ViolasManager.isValidViolasAddress(address: address) else {
+                self.makeToast(LibraWalletError.WalletTransfer(reason: .addressInvalid).localizedDescription,
+                               position: .center)
+                return
+            }
             // 检查是否向自己转账
             guard address != self.wallet?.walletAddress else {
                 self.makeToast(LibraWalletError.WalletTransfer(reason: .transferToSelf).localizedDescription,
                                position: .center)
                 return
             }
-            self.amountTextField.resignFirstResponder()
-            self.addressTextField.resignFirstResponder()
-            self.transferFeeSlider.resignFirstResponder()
             // 确认提交
             self.delegate?.confirmTransfer(amount: amount, address: address, fee: fee)
         }

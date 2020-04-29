@@ -103,7 +103,7 @@ extension OrderProcessingViewController: OrderProcessingTableViewManagerDelegate
             self?.dataModel.cancelTransaction(sendAddress: walletAddress,
                                              fee: 0,
                                              mnemonic: mnemonic,
-                                             contact: "e1be1ab8360a35a0259f1c93e3eac736",
+                                             contact: ViolasMainContract,
                                              version: model.version ?? "",
                                              tokenIndex: model.tokenGive ?? "")
         }) { [weak self] (errorContent) in
