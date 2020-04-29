@@ -10,7 +10,7 @@ import UIKit
 import Moya
 class VTokenMainModel: NSObject {
     private var requests: [Cancellable] = []
-    @objc var dataDic: NSMutableDictionary = [:]
+    @objc dynamic var dataDic: NSMutableDictionary = [:]
     /// 获取Violas交易记录
     /// - Parameters:
     ///   - address: 地址
@@ -24,13 +24,16 @@ class VTokenMainModel: NSObject {
                 do {
                     let json = try response.map(ViolasResponseModel.self)
                     if json.code == 2000 {
-                       guard json.data?.isEmpty == false else {
-                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: type)
-                            self?.setValue(data, forKey: "dataDic")
+                        guard json.data?.isEmpty == false else {
+                            if requestStatus == 0 {
+                                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: type)
+                                self?.setValue(data, forKey: "dataDic")
+                            } else {
+                                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.noMoreData), type: type)
+                                    self?.setValue(data, forKey: "dataDic")
+                            }
                             return
                         }
-    //                    let data = setKVOData(type: type, data: json.data)
-    //                    self?.setValue(data, forKey: "dataDic")
                         let result = self?.dealViolasTransactions(models: json.data!, walletAddress: address, tokenName: tokenName)
                         let data = setKVOData(type: type, data: result)
                         self?.setValue(data, forKey: "dataDic")
@@ -61,7 +64,7 @@ class VTokenMainModel: NSObject {
         }
         self.requests.append(request)
     }
-    func dealViolasTransactions(models: [ViolasDataModel], walletAddress: String, tokenName: String) -> [ViolasDataModel] {
+    private func dealViolasTransactions(models: [ViolasDataModel], walletAddress: String, tokenName: String) -> [ViolasDataModel] {
         var tempModels = [ViolasDataModel]()
         for var item in models {
             if item.receiver == walletAddress {

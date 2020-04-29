@@ -12,8 +12,6 @@ class VTokenTableViewManager: NSObject {
     weak var delegate: WalletTransactionsTableViewManagerDelegate?
     /// Violas
     var violasTransactions: [ViolasDataModel]?
-    var transactionType: WalletType?
-    var tokenName: String?
     deinit {
         print("VTokenTableViewManager销毁了")
     }
@@ -24,7 +22,6 @@ extension VTokenTableViewManager: UITableViewDelegate {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
-        
 //        let data = self.dataModel![indexPath.row]
 //        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, address: data.address ?? "")
     }

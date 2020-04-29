@@ -157,7 +157,6 @@
 		36F42DDA242DCB7800DBBF8F /* QRCodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4885E23220E47005FF254 /* QRCodeGenerator.swift */; };
 		36F42DDC242DCB7800DBBF8F /* BackupMnemonicModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA02645236FFCF60084905B /* BackupMnemonicModel.swift */; };
 		36F42DDD242DCB7800DBBF8F /* LibraHDPrivateKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4880A2320E6C1005FF254 /* LibraHDPrivateKey.swift */; };
-		36F42DDE242DCB7800DBBF8F /* VTokenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D1A42D82383C45C008978A7 /* VTokenViewModel.swift */; };
 		36F42DDF242DCB7800DBBF8F /* AddAddressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9B49A9235DA76100354EF0 /* AddAddressView.swift */; };
 		36F42DE0242DCB7800DBBF8F /* CheckBackupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC06A2C2371786B00BCE1FE /* CheckBackupViewController.swift */; };
 		36F42DE2242DCB7800DBBF8F /* ImportIdentityWalletView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9B49B7235DBE8100354EF0 /* ImportIdentityWalletView.swift */; };
@@ -318,7 +317,6 @@
 		9D1A42D123829EC6008978A7 /* VTokenMainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D1A42D023829EC6008978A7 /* VTokenMainModel.swift */; };
 		9D1A42D32382A1FE008978A7 /* VTokenMainHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D1A42D22382A1FE008978A7 /* VTokenMainHeaderView.swift */; };
 		9D1A42D62383C43A008978A7 /* VTokenTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D1A42D52383C43A008978A7 /* VTokenTableViewManager.swift */; };
-		9D1A42D92383C45C008978A7 /* VTokenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D1A42D82383C45C008978A7 /* VTokenViewModel.swift */; };
 		9D1A614C233204E2009DDA07 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D1A614B233204E2009DDA07 /* BaseViewController.swift */; };
 		9D3954FE235D4C0F0068019F /* BTCManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3954FD235D4C0F0068019F /* BTCManager.swift */; };
 		9D56EA4823516C3C00A55F02 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D56EA4723516C3C00A55F02 /* KeychainManager.swift */; };
@@ -624,7 +622,6 @@
 		9D1A42D023829EC6008978A7 /* VTokenMainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VTokenMainModel.swift; sourceTree = "<group>"; };
 		9D1A42D22382A1FE008978A7 /* VTokenMainHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VTokenMainHeaderView.swift; sourceTree = "<group>"; };
 		9D1A42D52383C43A008978A7 /* VTokenTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VTokenTableViewManager.swift; sourceTree = "<group>"; };
-		9D1A42D82383C45C008978A7 /* VTokenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VTokenViewModel.swift; sourceTree = "<group>"; };
 		9D1A614B233204E2009DDA07 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		9D3954FD235D4C0F0068019F /* BTCManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BTCManager.swift; sourceTree = "<group>"; };
 		9D56EA4723516C3C00A55F02 /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
@@ -1271,7 +1268,6 @@
 			isa = PBXGroup;
 			children = (
 				9D1A42CB23829E84008978A7 /* Controller */,
-				9D1A42D72383C43D008978A7 /* ViewModel */,
 				9D1A42D42383C413008978A7 /* TableViewManager */,
 				9D1A42CA23829E79008978A7 /* Model */,
 				9D1A42C823829DA2008978A7 /* View */,
@@ -1310,14 +1306,6 @@
 				9D1A42D52383C43A008978A7 /* VTokenTableViewManager.swift */,
 			);
 			path = TableViewManager;
-			sourceTree = "<group>";
-		};
-		9D1A42D72383C43D008978A7 /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
-				9D1A42D82383C45C008978A7 /* VTokenViewModel.swift */,
-			);
-			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		9D1A6147233204B1009DDA07 /* Base */ = {
@@ -3565,7 +3553,6 @@
 				36F42DDA242DCB7800DBBF8F /* QRCodeGenerator.swift in Sources */,
 				36F42DDC242DCB7800DBBF8F /* BackupMnemonicModel.swift in Sources */,
 				36F42DDD242DCB7800DBBF8F /* LibraHDPrivateKey.swift in Sources */,
-				36F42DDE242DCB7800DBBF8F /* VTokenViewModel.swift in Sources */,
 				36F42DDF242DCB7800DBBF8F /* AddAddressView.swift in Sources */,
 				36F42DE0242DCB7800DBBF8F /* CheckBackupViewController.swift in Sources */,
 				36F42DE2242DCB7800DBBF8F /* ImportIdentityWalletView.swift in Sources */,
@@ -3830,7 +3817,6 @@
 				9DC4886023220E47005FF254 /* QRCodeGenerator.swift in Sources */,
 				9DA02646236FFCF60084905B /* BackupMnemonicModel.swift in Sources */,
 				9DC4880B2320E6C1005FF254 /* LibraHDPrivateKey.swift in Sources */,
-				9D1A42D92383C45C008978A7 /* VTokenViewModel.swift in Sources */,
 				9D9B49B1235DA76100354EF0 /* AddAddressView.swift in Sources */,
 				9DC06A2D2371786B00BCE1FE /* CheckBackupViewController.swift in Sources */,
 				36F42EB1243C80DE00DBBF8F /* LibraMultiPrivateKey.swift in Sources */,
