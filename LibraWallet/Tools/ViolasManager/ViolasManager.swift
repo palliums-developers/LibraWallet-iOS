@@ -288,6 +288,8 @@ extension ViolasManager {
         do {
             let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
             // 拼接交易
+            let argument0 = ViolasTransactionArgument.init(code: .U64,
+                                                           value: "3")
             let argument1 = ViolasTransactionArgument.init(code: .Address,
                                                            value: "cae5f8464c564aabb684ecbcc19153e9")
             let argument2 = ViolasTransactionArgument.init(code: .U64,
@@ -297,7 +299,7 @@ extension ViolasManager {
                                                            value: data.toHexString())
             let script = ViolasTransactionScript.init(code: ViolasManager.getCodeData(move: ViolasStableCoinScriptWithDataCode, address: contact),
                                                        typeTags: [ViolasTypeTag](),
-                                                       argruments: [argument1, argument2, argument3])
+                                                       argruments: [argument0, argument1, argument2, argument3])
 
             let rawTransaction = ViolasRawTransaction.init(senderAddres: sendAddress,
                                                            sequenceNumber: UInt64(sequenceNumber),

@@ -60,16 +60,47 @@ class ViolasTransferViewController: BaseViewController {
            self.detailView.addressTextField.text = address
         }
     }
+    var amount: Int64? {
+        didSet {
+            guard let tempAmount = amount else {
+                return
+            }
+            let amountContent = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: tempAmount),
+                                                       scale: 4,
+                                                       unit: 1000000)
+            self.detailView.amountTextField.text = "\(amountContent)"
+        }
+    }
 }
 extension ViolasTransferViewController: ViolasTransferViewDelegate {
     func scanAddressQRcode() {
         let vc = ScanViewController()
         vc.actionClosure = { address in
+//            do {
+//                let tempAddressModel = try handleScanContent(content: address)
+//                self.detailView.addressTextField.text = tempAddressModel.address
+//            } catch {
+//                self.detailView.makeToast(error.localizedDescription, position: .center)
+//            }
             do {
-                let tempAddressModel = try handleScanContent(content: address)
-                self.detailView.addressTextField.text = tempAddressModel.address
+                let result = try libraWalletTool.scanResultHandle(content: address, contracts: [])
+                if result.type == .transfer {
+                    switch result.addressType {
+                    case .Violas:
+                        self.detailView.addressTextField.text = result.address
+                        self.amount = result.amount
+                    default:
+                        self.detailView.addressTextField.text?.removeAll()
+                        self.detailView.amountTextField.text?.removeAll()
+                        self.view.makeToast(LibraWalletError.WalletScan(reason: LibraWalletError.ScanError.violasAddressInvalid).localizedDescription,
+                                            position: .center)
+                    }
+                } else {
+                    self.view.makeToast(LibraWalletError.WalletScan(reason: LibraWalletError.ScanError.violasAddressInvalid).localizedDescription,
+                                        position: .center)
+                }
             } catch {
-                self.detailView.makeToast(error.localizedDescription, position: .center)
+                self.view.makeToast(error.localizedDescription, position: .center)
             }
         }
         self.navigationController?.pushViewController(vc, animated: true)

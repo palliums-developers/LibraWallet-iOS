@@ -163,19 +163,19 @@ extension HomeViewController {
         let vc = ScanViewController()
         vc.actionClosure = { address in
             do {
-                let result = try self.dataModel.scanResultHandle(content: address, contracts: self.tableViewManager.dataModel)
+                let result = try libraWalletTool.scanResultHandle(content: address, contracts: self.tableViewManager.dataModel)
                 if result.type == .transfer {
                     switch result.addressType {
                     case .BTC:
-                        self.showBTCTransferViewController(address: result.address ?? "")
+                        self.showBTCTransferViewController(address: result.address ?? "", amount: result.amount)
                     case .Violas:
                         if let model = result.contract {
-                            self.showViolasTokenViewController(address: result.address ?? "", tokenModel: model)
+                            self.showViolasTokenViewController(address: result.address ?? "", tokenModel: model, amount: result.amount)
                         } else {
-                            self.showViolasTransferViewController(address: result.address ?? "")
+                            self.showViolasTransferViewController(address: result.address ?? "", amount: result.amount)
                         }
                     case .Libra:
-                        self.showLibraTransferViewController(address: result.address ?? "")
+                        self.showLibraTransferViewController(address: result.address ?? "", amount: result.amount)
                     default:
                         self.showScanContent(content: address)
                     }
@@ -195,7 +195,7 @@ extension HomeViewController {
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
-    func showBTCTransferViewController(address: String) {
+    func showBTCTransferViewController(address: String, amount: Int64?) {
         let vc = BTCTransferViewController()
         vc.actionClosure = {
         //            self.dataModel.getLocalUserInfo()
@@ -205,17 +205,18 @@ extension HomeViewController {
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
-    func showLibraTransferViewController(address: String) {
+    func showLibraTransferViewController(address: String, amount: Int64?) {
         let vc = TransferViewController()
         vc.actionClosure = {
 //            self.dataModel.getLocalUserInfo()
         }
         vc.wallet = self.detailView.headerView.walletModel
         vc.address = address
+        vc.amount = amount
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
-    func showViolasTransferViewController(address: String) {
+    func showViolasTransferViewController(address: String, amount: Int64?) {
         let vc = ViolasTransferViewController()
         vc.actionClosure = {
         //            self.dataModel.getLocalUserInfo()
@@ -223,11 +224,11 @@ extension HomeViewController {
         vc.wallet = self.detailView.headerView.walletModel
         vc.sendViolasTokenState = false
         vc.address = address
-//        vc.title = (self.detailView.headerView.walletModel?.walletType?.description ?? "") + localLanguage(keyString: "wallet_transfer_navigation_title")
+        vc.amount = amount
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
-    func showViolasTokenViewController(address: String, tokenModel: ViolasTokenModel) {
+    func showViolasTokenViewController(address: String, tokenModel: ViolasTokenModel, amount: Int64?) {
         let vc = ViolasTransferViewController()
         vc.actionClosure = {
         //            self.dataModel.getLocalUserInfo()
@@ -236,6 +237,7 @@ extension HomeViewController {
         vc.sendViolasTokenState = true
         vc.vtokenModel = tokenModel
         vc.address = address
+        vc.amount = amount
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
