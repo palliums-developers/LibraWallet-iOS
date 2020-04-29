@@ -70,6 +70,12 @@ enum mainRequest {
     
     /// 扫码登录
     case SubmitScanLoginData(String, String)
+    /// 激活Violas（临时）
+    case ActiveViolasAccount(String)
+    /// 激活Libra（临时）
+    case ActiveLibraAccount(String)
+    /// 获取Violas账户信息（临时）
+    case GetViolasAccountInfo(String)
 }
 extension mainRequest:TargetType {
     var baseURL: URL {
@@ -89,7 +95,10 @@ extension mainRequest:TargetType {
             
             
         case .GetLibraAccountSequenceNumber(_),
-             .GetLibraAccountTransactionList(_, _, _):
+             .GetLibraAccountTransactionList(_, _, _),
+             .ActiveLibraAccount(_),
+             .ActiveViolasAccount(_),
+             .GetViolasAccountInfo(_):
             #if PUBLISH_VERSION
                 return URL(string:"https://api.violas.io/1.0")!
             #else
@@ -189,6 +198,12 @@ extension mainRequest:TargetType {
             return "/crosschain/transactions"
         case .SubmitScanLoginData(_, _):
             return "/violas/singin"
+        case .ActiveLibraAccount(_):
+            return "/libra/mint"
+        case .ActiveViolasAccount(_):
+            return "/violas/mint"
+        case .GetViolasAccountInfo(_):
+            return "/violas/account/info"
         }
     }
     var method: Moya.Method {
@@ -224,7 +239,10 @@ extension mainRequest:TargetType {
              .GetAllDoneOrder(_, _),
              .GetMappingInfo(_),
              .GetMappingTokenList(_),
-             .GetMappingTransactions(_, _, _, _):
+             .GetMappingTransactions(_, _, _, _),
+             .ActiveViolasAccount(_),
+             .ActiveLibraAccount(_),
+             .GetViolasAccountInfo(_):
             return .get
         }
     }
@@ -373,6 +391,23 @@ extension mainRequest:TargetType {
                                                    "session_id": sessionID,
                                                    "type":2],
                                       encoding: JSONEncoding.default)
+        case .ActiveLibraAccount(let authKey):
+            let index = authKey.index(authKey.startIndex, offsetBy: 32)
+            let address = authKey.suffix(from: index)
+            let authPrefix = authKey.prefix(upTo: index)
+            return .requestParameters(parameters: ["address": address,
+                                                   "auth_key_perfix": authPrefix],
+                                      encoding: URLEncoding.queryString)
+        case .ActiveViolasAccount(let authKey):
+            let index = authKey.index(authKey.startIndex, offsetBy: 32)
+            let address = authKey.suffix(from: index)
+            let authPrefix = authKey.prefix(upTo: index)
+            return .requestParameters(parameters: ["address": address,
+                                                   "auth_key_perfix": authPrefix],
+                                      encoding: URLEncoding.queryString)
+        case .GetViolasAccountInfo(let address):
+            return .requestParameters(parameters: ["address": address],
+                                      encoding: URLEncoding.queryString)
         }
     }
     var headers: [String : String]? {

@@ -167,7 +167,7 @@ class TokenMappingModel: NSObject {
         self.requests.append(request)
     }
 //    var utxos: [BTCUnspentUTXOListModel]?
-    var utxos: [BlockCypherBTCUnspentUTXOTxsModel]?
+    var utxos: [BlockCypherBTCUnspentUTXODataModel]?
 //    private var sequenceNumber: Int?
     deinit {
         requests.forEach { cancellable in
@@ -203,7 +203,7 @@ extension TokenMappingModel {
 //                    }
 //                    let data = setKVOData(type: "GetUnspentUTXO", data: json.data?.list)
 //                    self?.setValue(data, forKey: "dataDic")
-                    self?.utxos = json.data?.txs
+                    self?.utxos = json.txrefs
                     semaphore.signal()
                 } catch {
                     print("GetUnspentUTXO_解析异常\(error.localizedDescription)")
@@ -238,7 +238,7 @@ extension TokenMappingModel {
                 semaphore.signal()
             }
         }
-    func selectUTXOMakeBTCToVBTCSignature(utxos: [BlockCypherBTCUnspentUTXOTxsModel], wallet: HDWallet, amount: Double, fee: Double, toAddress: String, mappingReceiveAddress: String, mappingContract: String) {
+    func selectUTXOMakeBTCToVBTCSignature(utxos: [BlockCypherBTCUnspentUTXODataModel], wallet: HDWallet, amount: Double, fee: Double, toAddress: String, mappingReceiveAddress: String, mappingContract: String) {
         let amountt: UInt64 = UInt64(amount * 100000000)
         let feee: UInt64 = UInt64(fee * 100000000)
 
@@ -246,8 +246,8 @@ extension TokenMappingModel {
         let lockingScript = Script.buildPublicKeyHashOut(pubKeyHash: wallet.pubKeys.first!.pubkeyHash)
         //
         let inputs = utxos.map { item in
-            UnspentTransaction.init(output: TransactionOutput.init(value: UInt64(NSDecimalNumber.init(string: item.value).doubleValue * 100000000), lockingScript: lockingScript),
-                                    outpoint: TransactionOutPoint.init(hash: Data(Data(hex: item.txid!)!.reversed()), index: item.output_no!))
+            UnspentTransaction.init(output: TransactionOutput.init(value: item.value!, lockingScript: lockingScript),
+                                    outpoint: TransactionOutPoint.init(hash: Data(Data(hex: item.tx_hash!)!.reversed()), index: item.tx_output_n!))
         }
         let select = UnspentTransactionSelector.select(from: inputs, targetValue: amountt + feee, feePerByte: 30)
         

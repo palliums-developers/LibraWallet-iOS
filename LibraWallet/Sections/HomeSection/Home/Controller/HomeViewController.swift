@@ -134,7 +134,7 @@ extension HomeViewController {
                     self.changeWalletButton.imagePosition(at: .right, space: 10, imageViewSize: CGSize.init(width: 13, height: 7))
 
 //                    self.dataModel.tempGetLibraBalance(walletID: wallet.walletID!, address: wallet.walletAddress ?? "")
-                    self.dataModel.getLibraBalance(walletID: wallet.walletID!, address: wallet.walletAddress ?? "")
+                    self.dataModel.getLibraBalance(walletID: wallet.walletID!, address: wallet.walletAddress ?? "", authKey: self.detailView.headerView.walletModel?.walletAuthenticationKey ?? "")
                     self.tableViewManager.dataModel?.removeAll()
                     self.detailView.tableView.reloadData()
                     self.detailView.headerView.hideAddTokenButtonState = true
@@ -142,7 +142,7 @@ extension HomeViewController {
                     self.changeWalletButton.setTitle("Violas " + localLanguage(keyString: "wallet_home_wallet_type_last_title"), for: UIControl.State.normal)
                     self.changeWalletButton.imagePosition(at: .right, space: 10, imageViewSize: CGSize.init(width: 13, height: 7))
 
-                    self.dataModel.getEnableViolasToken(walletID: wallet.walletID ?? 0, address: wallet.walletAddress ?? "")
+                    self.dataModel.getEnableViolasToken(walletID: wallet.walletID ?? 0, address: wallet.walletAddress ?? "", authKey: self.detailView.headerView.walletModel?.walletAuthenticationKey ?? "")
                     self.detailView.headerView.hideAddTokenButtonState = false
 
                 } else {
@@ -266,11 +266,13 @@ extension HomeViewController {
 //            self.dataModel.tempGetLibraBalance(walletID: self.detailView.headerView.walletModel?.walletID ?? 0,
 //                                               address: self.detailView.headerView.walletModel?.walletAddress ?? "")
             self.dataModel.getLibraBalance(walletID: self.detailView.headerView.walletModel?.walletID ?? 0,
-                                           address: self.detailView.headerView.walletModel?.walletAddress ?? "")
+                                           address: self.detailView.headerView.walletModel?.walletAddress ?? "",
+                                           authKey: self.detailView.headerView.walletModel?.walletAuthenticationKey ?? "")
         } else if self.detailView.headerView.walletModel?.walletType == .Violas {
             self.dataModel.getViolasBalance(walletID: self.detailView.headerView.walletModel?.walletID ?? 0,
                                             address: self.detailView.headerView.walletModel?.walletAddress ?? "",
-                                            vtokens: self.tableViewManager.dataModel!)
+                                            vtokens: self.tableViewManager.dataModel ?? [ViolasTokenModel](),
+                                            authKey: self.detailView.headerView.walletModel?.walletAuthenticationKey ?? "")
         } else {
             self.dataModel.getBTCBalance(walletID: self.detailView.headerView.walletModel?.walletID ?? 0,
                                          address: self.detailView.headerView.walletModel?.walletAddress ?? "")

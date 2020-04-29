@@ -115,6 +115,7 @@ extension VTokenMainViewController {
             }
             let type = dataDic.value(forKey: "type") as! String
             if let error = dataDic.value(forKey: "error") as? LibraWalletError {
+                #warning("修改好，样例")
                 if self?.detailView.tableView.mj_header?.isRefreshing == true {
                     self?.detailView.tableView.mj_header?.endRefreshing()
                 } else if self?.detailView.tableView.mj_footer?.isRefreshing == true {
