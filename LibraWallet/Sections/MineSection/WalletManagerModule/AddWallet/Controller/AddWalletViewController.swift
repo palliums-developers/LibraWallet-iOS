@@ -56,7 +56,7 @@ extension AddWalletViewController: AddWalletViewDelegate {
         let quene = DispatchQueue.init(label: "createWalletQuene")
         quene.async {
             let mnemonic = BTCManager().getMnemonic()
-            let wallet = BTCManager().getWallet(mnemonic: mnemonic)
+            let wallet = try! BTCManager().getWallet(mnemonic: mnemonic)
             let walletModel = LibraWalletManager.init(walletID: 999,
                                                       walletBalance: 0,
                                                       walletAddress: wallet.address.description,
@@ -99,7 +99,8 @@ extension AddWalletViewController: AddWalletViewDelegate {
                                                           walletBiometricLock: false,
                                                           walletIdentity: 1,
                                                           walletType: .Violas,
-                                                          walletBackupState: true)
+                                                          walletBackupState: true,
+                                                          walletAuthenticationKey: wallet.publicKey.toActive())
                 
                 let createModel = CreateWalletModel.init(password: password,
                                                          mnemonic: mnemonic,
@@ -133,7 +134,8 @@ extension AddWalletViewController: AddWalletViewDelegate {
                                                           walletBiometricLock: false,
                                                           walletIdentity: 1,
                                                           walletType: .Libra,
-                                                          walletBackupState: true)
+                                                          walletBackupState: true,
+                                                          walletAuthenticationKey: wallet.publicKey.toActive())
                 
                 let createModel = CreateWalletModel.init(password: password,
                                                          mnemonic: mnemonic,

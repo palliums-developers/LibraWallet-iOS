@@ -92,6 +92,26 @@ struct BalanceBTCMainModel: Codable {
     var err_no: Int?
     var data: BalanceBTCModel?
 }
+struct BlockCypherBTCBalanceMainModel: Codable {
+    /// 地址
+    var address: String?
+    /// 总接收
+    var total_received: Int?
+    /// 总支出
+    var total_sent: Int?
+    /// 当前余额
+    var balance: Int64?
+    /// 未确认余额
+    var unconfirmed_balance: Int64?
+    /// 总余额
+    var final_balance: Int64?
+    ///
+    var n_tx: Int64?
+    ///
+    var unconfirmed_n_tx: Int64?
+    ///
+    var final_n_tx: Int64?
+}
 class HomeModel: NSObject {
     private var requests: [Cancellable] = []
     @objc dynamic var dataDic: NSMutableDictionary = [:]
@@ -126,21 +146,47 @@ class HomeModel: NSObject {
         }
     }
     
+//    func getBTCBalance(walletID: Int64, address: String) {
+//        let request = mainProvide.request(.BlockCypherBTCBalance(address)) {[weak self](result) in
+//            switch  result {
+//            case let .success(response):
+//                do {
+//                    let json = try response.map(BalanceBTCMainModel.self)
+//                    guard json.err_no == 0 else {
+//                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "UpdateBTCBalance")
+//                        self?.setValue(data, forKey: "dataDic")
+//                        return
+//                    }
+//                    let data = setKVOData(type: "UpdateBTCBalance", data: json.data)
+//                    self?.setValue(data, forKey: "dataDic")
+//                    // 刷新本地数据
+//                    self?.updateLocalWalletData(walletID: walletID, balance: json.data?.balance ?? 0)
+//                } catch {
+//                    print("UpdateBTCBalance_解析异常\(error.localizedDescription)")
+//                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "UpdateBTCBalance")
+//                    self?.setValue(data, forKey: "dataDic")
+//                }
+//            case let .failure(error):
+//                guard error.errorCode != -999 else {
+//                    print("UpdateBTCBalance_网络请求已取消")
+//                    return
+//                }
+//                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "UpdateBTCBalance")
+//                self?.setValue(data, forKey: "dataDic")
+//            }
+//        }
+//        self.requests.append(request)
+//    }
     func getBTCBalance(walletID: Int64, address: String) {
-        let request = mainProvide.request(.GetBTCBalance(address)) {[weak self](result) in
+        let request = mainProvide.request(.BlockCypherBTCBalance(address)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BalanceBTCMainModel.self)
-                    guard json.err_no == 0 else {
-                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "UpdateBTCBalance")
-                        self?.setValue(data, forKey: "dataDic")
-                        return
-                    }
-                    let data = setKVOData(type: "UpdateBTCBalance", data: json.data)
+                    let json = try response.map(BlockCypherBTCBalanceMainModel.self)
+                    let data = setKVOData(type: "UpdateBTCBalance", data: json)
                     self?.setValue(data, forKey: "dataDic")
                     // 刷新本地数据
-                    self?.updateLocalWalletData(walletID: walletID, balance: json.data?.balance ?? 0)
+                    self?.updateLocalWalletData(walletID: walletID, balance: json.balance ?? 0)
                 } catch {
                     print("UpdateBTCBalance_解析异常\(error.localizedDescription)")
                     let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "UpdateBTCBalance")
@@ -157,6 +203,7 @@ class HomeModel: NSObject {
         }
         self.requests.append(request)
     }
+
     func getLibraBalance(walletID: Int64, address: String) {
         let request = mainProvide.request(.GetLibraAccountBalance(address)) {[weak self](result) in
             switch  result {

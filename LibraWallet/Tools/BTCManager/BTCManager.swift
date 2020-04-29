@@ -53,11 +53,16 @@ class BTCManager: NSObject {
     ///
     /// - Parameter mnemonic: 助词数组
     /// - Returns: 钱包对象
-    func getWallet(mnemonic: [String]) -> HDWallet {
-        let seed = try! Mnemonic.seed(mnemonic: mnemonic)
-//        let privateKey = HDPrivateKey.init(seed: seed, network: .testnetBTC).privateKey()
-        let wallet = HDWallet.init(seed: seed, externalIndex: 0, internalIndex: 0, network: .testnetBTC)
-        return wallet
+    func getWallet(mnemonic: [String]) throws -> HDWallet {
+        do {
+            let seed = try Mnemonic.seed(mnemonic: mnemonic)
+            //        let privateKey = HDPrivateKey.init(seed: seed, network: .testnetBTC).privateKey()
+            let wallet = HDWallet.init(seed: seed, externalIndex: 0, internalIndex: 0, network: .testnetBTC)
+            return wallet
+        } catch {
+            print(error.localizedDescription)
+            throw error
+        }
     }
     /// 根据钱包对象对应地址
     ///
@@ -90,7 +95,7 @@ class BTCManager: NSObject {
     func getBTCToVBTCScript(address: String, tokenContract: String) -> Data {
         var data = Data()
         data += "violas".data(using: .utf8)!
-        data += UInt16(0x0001)
+        data += UInt16(0x0001).bigEndian
         data += UInt16(0x3000).bigEndian
         data += Data.init(Array<UInt8>(hex: (address)))
 //        data += UInt64(20200113201).bigEndian

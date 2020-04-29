@@ -262,5 +262,8 @@ class LibraSDKTests: XCTestCase {
     func testLibraKitPublishModule() {
         print(BigUInt(86400).serialize().bytes)
         print("LBR".data(using: .utf8)?.bytes)
+        let data = Data.init(Array<UInt8>(hex: "76696f6c617301003000fa279f2615270daed6061313a48360f7000000005ea2b35be1be1ab8360a35a0259f1c93e3eac736"))
+        let string = String.init(data: data, encoding: String.Encoding.utf8)
+        print(string)
     }
 }

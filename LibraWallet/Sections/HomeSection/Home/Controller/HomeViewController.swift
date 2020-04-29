@@ -449,7 +449,7 @@ extension HomeViewController {
                     self?.changeWalletButton.imagePosition(at: .right, space: 10, imageViewSize: CGSize.init(width: 13, height: 7))
                 }
             } else if type == "UpdateBTCBalance" {
-                if let tempData = dataDic.value(forKey: "data") as? BalanceBTCModel {
+                if let tempData = dataDic.value(forKey: "data") as? BlockCypherBTCBalanceMainModel {
                     self?.detailView.headerView.btcModel = tempData
                     let defaultModel = ViolasTokenModel.init(name: "BTC",
                                                              description: "",

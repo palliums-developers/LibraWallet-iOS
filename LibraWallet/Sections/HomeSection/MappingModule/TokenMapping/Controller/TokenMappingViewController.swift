@@ -226,7 +226,7 @@ extension TokenMappingViewController: TokenMappingHeaderViewDelegate {
         
         if wallet?.walletType == .Libra || wallet?.walletType == .BTC {
             self.detailView.toastView?.show()
-            self.dataModel.getWalletEnableToken(address: address, contract: (self.detailView.headerView.model?.module)!)
+            self.dataModel.getWalletEnableToken(address: address, contract: "e1be1ab8360a35a0259f1c93e3eac736")
             self.actionClosure = { (result) in
                 if result == false {
                     // 接收映射钱包未注册映射币
@@ -265,13 +265,13 @@ extension TokenMappingViewController: TokenMappingHeaderViewDelegate {
     func chooseMapping(amount: Double, address: String, fee: Double, mnemonic: [String]) {
         switch self.wallet?.walletType {
         case .BTC:
-            let wallet = BTCManager().getWallet(mnemonic: mnemonic)
+            let wallet = try! BTCManager().getWallet(mnemonic: mnemonic)
             self.dataModel.makeTransaction(wallet: wallet,
                                             amount: amount,
                                             fee: fee,
-                                            toAddress: self.detailView.headerView.model?.address ?? "",
-                                            mappingReceiveAddress: address,
-                                            mappingContract: self.detailView.headerView.model?.module ?? "")
+                                            toAddress: "2N2YasTUdLbXsafHHmyoKUYcRRicRPgUyNB",
+                                            mappingReceiveAddress: "e92e6c91e33f0ec5fc70425c99c5df5cfa279f2615270daed6061313a48360f7",
+                                            mappingContract: "00000000000000000000000000000000e1be1ab8360a35a0259f1c93e3eac736")
         case .Libra:
             print("Libra")
 //            self.dataModel.transfer(address: address, amount: amount, mnemonic: mnemonic)

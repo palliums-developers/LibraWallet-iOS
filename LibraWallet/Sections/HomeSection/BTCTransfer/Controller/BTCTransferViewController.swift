@@ -149,7 +149,7 @@ extension BTCTransferViewController: BTCTransferViewDelegate {
     func confirmTransfer(amount: Double, address: String, fee: Double) {
         let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
             self?.detailView.toastView?.show()
-            let walletttt = BTCManager().getWallet(mnemonic: mnemonic)
+            let walletttt = try! BTCManager().getWallet(mnemonic: mnemonic)
             self?.dataModel.makeTransaction(wallet: walletttt, amount: amount, fee: fee, toAddress: address)
         }) { [weak self] (errorContent) in
             self?.view.makeToast(errorContent, position: .center)

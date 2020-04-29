@@ -22,6 +22,11 @@ enum mainRequest {
     case GetBTCUnspentUTXO(String)
     /// 发送BTC交易
     case SendBTCTransaction(String)
+    
+    case BlockCypherBTCBalance(String)
+    case BlockCypherBTCUnspentUTXO(String)
+    case BlockCypherBTCPushTransaction(String)
+    
     /// 获取Libra账户余额
     case GetLibraAccountBalance(String)
     /// 获取Libra账户Sequence Number
@@ -76,6 +81,13 @@ extension mainRequest:TargetType {
              .GetBTCUnspentUTXO(_),
              .SendBTCTransaction(_):
             return URL(string:"https://tchain.api.btc.com/v3")!
+            
+        case .BlockCypherBTCBalance(_),
+             .BlockCypherBTCUnspentUTXO,
+             .BlockCypherBTCPushTransaction:
+            return URL(string:"https://api.blockcypher.com/v1/btc/test3")!
+            
+            
         case .GetLibraAccountSequenceNumber(_),
              .GetLibraAccountTransactionList(_, _, _):
             #if PUBLISH_VERSION
@@ -129,6 +141,14 @@ extension mainRequest:TargetType {
             return "/address/\(address)/unspent"
         case .SendBTCTransaction(_):
             return "/tools/tx-publish"
+            
+        case .BlockCypherBTCBalance(let address):
+            return "/addrs/\(address)/balance"
+        case .BlockCypherBTCUnspentUTXO(let address):
+            return "/addrs/\(address)"
+        case .BlockCypherBTCPushTransaction(_):
+            return "/txs/push"
+            
         case .GetLibraAccountBalance(_):
             return ""
         case .GetLibraAccountSequenceNumber(_):
@@ -177,6 +197,7 @@ extension mainRequest:TargetType {
              .SendLibraTransaction(_),
              .SendViolasTransaction(_),
              .SendBTCTransaction(_),
+             .BlockCypherBTCPushTransaction(_),
              .SubmitScanLoginData(_, _),
              .GetLibraAccountBalance(_),
              .CancelOrder(_, _):
@@ -184,6 +205,10 @@ extension mainRequest:TargetType {
         case .GetBTCBalance(_),
              .GetBTCTransactionHistory(_, _, _),
              .GetBTCUnspentUTXO(_),
+             
+             .BlockCypherBTCBalance(_),
+             .BlockCypherBTCUnspentUTXO(_),
+             
              
              .GetLibraAccountSequenceNumber(_),
              .GetLibraAccountTransactionList(_, _, _),
@@ -230,6 +255,18 @@ extension mainRequest:TargetType {
         case .SendBTCTransaction(let signature):
             return .requestParameters(parameters: ["rawhex": signature],
                                       encoding: JSONEncoding.default)
+            
+        case .BlockCypherBTCBalance(_):
+            return .requestPlain
+        case .BlockCypherBTCUnspentUTXO(_):
+            return .requestParameters(parameters: ["unspentOnly": true,
+                                                   "includeScript":true],
+                                      encoding: URLEncoding.queryString)
+        case .BlockCypherBTCPushTransaction(let signature):
+            return .requestParameters(parameters: ["token": "64ff3535053045689add0ee65359c6a9",
+                                                   "tx": signature],
+                                      encoding: JSONEncoding.default)
+            
         case .GetLibraAccountBalance(let address):
             return .requestParameters(parameters: ["jsonrpc":"2.0",
                                                    "method":"get_account_state",
@@ -241,8 +278,8 @@ extension mainRequest:TargetType {
                                       encoding: URLEncoding.queryString)
         case .GetLibraAccountTransactionList(let address, let offset, let limit):
             return .requestParameters(parameters: ["addr": address,
-                                                   "limit": offset,
-                                                   "offset":limit],
+                                                   "limit": limit,
+                                                   "offset":offset],
                                       encoding: URLEncoding.queryString)
         case .SendLibraTransaction(let signature):
             return .requestParameters(parameters: ["jsonrpc":"2.0",

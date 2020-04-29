@@ -38,7 +38,7 @@ class CreateIdentityWalletModel: NSObject {
         }
     }
     func createBTCWallet(name: String, password: String, mnemonics: [String]) throws {
-        let wallet = BTCManager().getWallet(mnemonic: mnemonics)
+        let wallet = try! BTCManager().getWallet(mnemonic: mnemonics)
         let walletModel = LibraWalletManager.init(walletID: 999,
                                                   walletBalance: 0,
                                                   walletAddress: wallet.address.description,

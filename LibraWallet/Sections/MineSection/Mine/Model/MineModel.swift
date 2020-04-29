@@ -16,5 +16,6 @@ class MineModel: NSObject {
                  "icon":"mine_address_list"]],
                 [["name":localLanguage(keyString: "wallet_home_setting_title"),
                  "icon":"mine_setting"]]]
+        //,[["name":localLanguage(keyString: "ActiveAccount(Beta)"),"icon":"mine_setting"]]
     }
 }
