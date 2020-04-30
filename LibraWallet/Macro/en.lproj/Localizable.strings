@@ -255,7 +255,7 @@ wallet_manager_change_wallet_name_alert_confirm_button_title = "Keep";
 wallet_manager_change_wallet_name_success_title = "Change Success";
 // 注册代币
 wallet_add_asset_alert_title = "Tips";
-wallet_add_asset_alert_content = "Open Requires Gas Fee. Continue to Open?";
+wallet_add_asset_alert_content = "First Open Requires Gas Fee. Continue to Open?";
 wallet_add_asset_alert_cancel_button_title = "Cancel";
 wallet_add_asset_alert_confirm_button_title = "Confirm";
 wallet_add_asset_alert_success_title = "Open Success";

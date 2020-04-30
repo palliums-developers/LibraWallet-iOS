@@ -255,7 +255,7 @@ wallet_manager_change_wallet_name_alert_confirm_button_title = "保存";
 wallet_manager_change_wallet_name_success_title = "修改成功";
 // 注册代币
 wallet_add_asset_alert_title = "提醒";
-wallet_add_asset_alert_content = "开启需要消耗Gas费,请确保您的账户余额充足，是否立即开启";
+wallet_add_asset_alert_content = "首次开启需要消耗一定量Gas费,请确保您的账户余额充足，是否立即开启";
 wallet_add_asset_alert_cancel_button_title = "取消";
 wallet_add_asset_alert_confirm_button_title = "确定";
 wallet_add_asset_alert_success_title = "开启成功";
