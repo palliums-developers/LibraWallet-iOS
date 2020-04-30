@@ -266,4 +266,9 @@ class LibraSDKTests: XCTestCase {
         let string = String.init(data: data, encoding: String.Encoding.utf8)
         print(string)
     }
+    func testReadMV() {
+        let path = Bundle.main.path(forResource: "peer_to_peer_with_metadata", ofType: "mv")
+        let data = try! Data.init(contentsOf: URL.init(fileURLWithPath: path!))
+        print(data.toHexString())
+    }
 }
