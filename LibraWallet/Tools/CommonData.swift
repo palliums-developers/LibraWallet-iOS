@@ -253,8 +253,8 @@ extension LoadLocalLanguageProtocol {
 
 
 /************* 限制 *******************/
-let privateLegalURL = "https://violas.io/violas_service_html/Privacy_Policy.html"
-let useLegalURL = "https://violas.io/violas_service_html/Terms_of_Service.html"
+let privateLegalURL = "https://violas.io/violas_service_html/Privacy_Policy/"
+let useLegalURL = "https://violas.io/violas_service_html/Terms_of_Service/"
 let transferFeeMax = 0.001
 let transferFeeMin = 0.0001
 let transferBTCLeast = 0.0001
