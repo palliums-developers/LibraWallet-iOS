@@ -78,7 +78,7 @@ class ScanLoginModel: NSObject {
         let tempData2 = othersWallets.reduce("") {
             $0 + "{\"name\":\"\($1.walletName ?? "")\",\"identity\":\($1.walletIdentity ?? 0),\"type\":\"\($1.walletType!.description.lowercased())\",\"address\":\"\($1.walletAddress ?? "")\"},"
         }
-        let range = tempData2.index(tempData2.startIndex, offsetBy: tempData2.count - 1)
+        let range = tempData2.index(tempData2.startIndex, offsetBy: tempData2.count > 0 ? tempData2.count - 1:0)
         // 替换指定区间数据
         let tempData3 = tempData2.prefix(upTo: range)
         self.encryptData = "[" + tempData + tempData3 + "]"

@@ -31,6 +31,10 @@ target 'LibraWallet' do
   
   # Pods for LibraWallet
 
+  target 'LibraWallet_Publish' do
+    inherit! :search_paths
+    # Pods for testing
+  end
   target 'LibraWalletTests' do
     inherit! :search_paths
     # Pods for testing

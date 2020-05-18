@@ -51,7 +51,7 @@ struct ViolasMultiPrivateKey {
     /// 签名交易
     /// - Parameter transaction: 交易数据
     /// - Returns: 返回序列化结果
-    func signMultiTransaction(transaction: LibraRawTransaction, publicKey: LibraMultiPublicKey) -> Data {
+    func signMultiTransaction(transaction: ViolasRawTransaction, publicKey: ViolasMultiPublicKey) -> Data {
         // 交易第一部分-原始数据
         let transactionRaw = transaction.serialize()
         
