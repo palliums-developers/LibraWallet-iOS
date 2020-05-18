@@ -53,7 +53,7 @@ struct ViolasRawTransaction {
         // gasUnitPrice
         result += ViolasUtils.getLengthData(length: Int(gasUnitPrice), appendBytesCount: 8)
         // libraTypeTag
-//        result += ViolasTypeTag.init(structData: ViolasStructTag.init(type: .ViolasDefault)).serialize()
+        result += ViolasTypeTag.init(structData: ViolasStructTag.init(type: .ViolasDefault)).serialize()
         // expirationTime
         result += ViolasUtils.getLengthData(length: expirationTime, appendBytesCount: 8)
         return result

@@ -473,7 +473,7 @@ extension HomeViewController {
                                                              address: LibraWalletManager.shared.walletAddress ?? "",
                                                              icon: "",
                                                              enable: true,
-                                                             balance: (tempData.balance?.amount ?? 0),
+                                                             balance: (tempData.balance?[0].amount ?? 0),
                                                              registerState: true)
                     self?.tableViewManager.defaultModel = defaultModel
                     self?.detailView.tableView.reloadData()

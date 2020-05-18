@@ -28,7 +28,7 @@ target 'LibraWallet' do
   pod 'Socket.IO-Client-Swift'
   pod 'Device'
   pod 'JXSegmentedView'
-  
+  pod 'WalletConnectSwift'
   # Pods for LibraWallet
 
   target 'LibraWallet_Publish' do

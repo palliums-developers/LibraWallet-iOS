@@ -11,7 +11,6 @@ enum ViolasArgumentsCode {
     case U64
     case Address
     case U8Vector
-    #warning("待测试")
     case Bool
 }
 extension ViolasArgumentsCode {

@@ -35,7 +35,6 @@ class HomeHeaderView: UIView {
         addSubview(walletAddressLabel)
         addSubview(copyAddressButton)
         
-//        addSubview(mappingBackgroundButton)
         addSubview(lastTransactionBackgroundButton)
         addSubview(transferButton)
         addSubview(receiveButton)
@@ -49,6 +48,7 @@ class HomeHeaderView: UIView {
 //        lastTransactionBackgroundButton.addSubview(lastTransactionDateLabel)
         lastTransactionBackgroundButton.addSubview(lastTransactionDetailImageView)
         
+//        addSubview(mappingBackgroundButton)
 //        mappingBackgroundButton.addSubview(mappingTitleLabel)
 //        mappingBackgroundButton.addSubview(mappingDetailImageView)
 
@@ -395,7 +395,7 @@ class HomeHeaderView: UIView {
             switch walletModel?.walletType {
             case .Libra:
                 assetUnitLabel.text = "libra"
-                assetLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (libraModel?.balance?.amount ?? 0)),
+                assetLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (libraModel?.balance?[0].amount ?? 0)),
                                                          scale: 4,
                                                          unit: 1000000)
                 hideAddTokenButtonState = true
@@ -422,10 +422,10 @@ class HomeHeaderView: UIView {
     }
     var libraModel: BalanceLibraModel? {
         didSet {
-            assetLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (libraModel?.balance?.amount ?? 0)),
+            assetLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (libraModel?.balance?[0].amount ?? 0)),
                                                      scale: 4,
                                                      unit: 1000000)
-            self.walletModel?.changeWalletBalance(banlance: libraModel?.balance?.amount ?? 0)
+            self.walletModel?.changeWalletBalance(banlance: libraModel?.balance?[0].amount ?? 0)
             assetUnitLabel.text = "libra"
         }
     }
