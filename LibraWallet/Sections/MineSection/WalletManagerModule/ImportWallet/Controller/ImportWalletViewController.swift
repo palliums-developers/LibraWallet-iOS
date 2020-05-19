@@ -80,8 +80,7 @@ extension ImportWalletViewController: ImportWalletViewDelegate {
             let result = DataBaseManager.DBManager.insertWallet(model: walletModel)
             if result == true {
                 do {
-                    try LibraWalletManager().saveMnemonicToKeychain(mnemonic: mnemonicArray, walletRootAddress: walletModel.walletRootAddress ?? "")
-                    try LibraWalletManager().savePaymentPasswordToKeychain(password: password, walletRootAddress: walletModel.walletRootAddress ?? "")
+                    try LibraWalletManager().saveMnemonicToKeychain(mnemonic: mnemonicArray, password: password, walletRootAddress: walletModel.walletRootAddress ?? "")
                     DispatchQueue.main.async(execute: {
                         self.detailView.toastView.hide()
                         self.view.makeToast(localLanguage(keyString: "wallet_import_wallet_success_title"), duration: 1, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { [weak self](bool) in
@@ -134,8 +133,7 @@ extension ImportWalletViewController: ImportWalletViewDelegate {
                 }
                 let result = DataBaseManager.DBManager.insertWallet(model: walletModel)
                 if result == true {
-                    try LibraWalletManager().saveMnemonicToKeychain(mnemonic: mnemonicArray, walletRootAddress: walletModel.walletRootAddress ?? "")
-                    try LibraWalletManager().savePaymentPasswordToKeychain(password: password, walletRootAddress: walletModel.walletRootAddress ?? "")
+                    try LibraWalletManager().saveMnemonicToKeychain(mnemonic: mnemonicArray, password: password, walletRootAddress: walletModel.walletRootAddress ?? "")
                     DispatchQueue.main.async(execute: {
                         self.detailView.toastView.hide()
                         self.view.makeToast(localLanguage(keyString: "wallet_import_wallet_success_title"), duration: 1, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { [weak self](bool) in
@@ -186,8 +184,7 @@ extension ImportWalletViewController: ImportWalletViewDelegate {
                 }
                 let result = DataBaseManager.DBManager.insertWallet(model: walletModel)
                 if result == true {
-                    try LibraWalletManager().saveMnemonicToKeychain(mnemonic: mnemonicArray, walletRootAddress: walletModel.walletRootAddress ?? "")
-                    try LibraWalletManager().savePaymentPasswordToKeychain(password: password, walletRootAddress: walletModel.walletRootAddress ?? "")
+                    try LibraWalletManager().saveMnemonicToKeychain(mnemonic: mnemonicArray, password: password, walletRootAddress: walletModel.walletRootAddress ?? "")
                     DispatchQueue.main.async(execute: {
                         self.detailView.toastView.hide()
                         self.view.makeToast(localLanguage(keyString: "wallet_import_wallet_success_title"), duration: 1, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { [weak self](bool) in

@@ -88,15 +88,17 @@ extension LibraManager {
                                                           value: "\(Int(amount * 1000000))")
             let argument3 = LibraTransactionArgument.init(code: .U8Vector,
                                                           value: "")
+            let argument4 = LibraTransactionArgument.init(code: .U8Vector,
+                                                          value: "")
             let script = LibraTransactionScript.init(code: Data.init(hex: LibraScriptCodeWithData),
                                                      typeTags: [LibraTypeTag.init(structData: LibraStructTag.init(type: .libraDefault))],
-                                                     argruments: [argument0, argument1, argument2, argument3])
+                                                     argruments: [argument0, argument1, argument2, argument3, argument4])
             let rawTransaction = LibraRawTransaction.init(senderAddres: sendAddress,
-                                               sequenceNumber: UInt64(sequenceNumber),
-                                               maxGasAmount: 400000,
-                                               gasUnitPrice: 0,
-                                               expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
-                                               payLoad: script.serialize())
+                                                          sequenceNumber: UInt64(sequenceNumber),
+                                                          maxGasAmount: 400000,
+                                                          gasUnitPrice: 0,
+                                                          expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
+                                                          payLoad: script.serialize())
 
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)

@@ -75,6 +75,10 @@ wallet_manager_import_or_create_wallet_header_title = "创建/导入";
 /************* 钱包详情 *******************/
 wallet_manager_detail_delete_button_title = "删除";
 wallet_manager_detail_export_mnemonic_title = "导出助记词";
+wallet_manager_biological_face_id_title = "面容识别";
+wallet_manager_biological_finger_touch_id_title = "指纹识别";
+wallet_biometric_alert_fingerprint_describe = "確認指紋以進行身份驗證。";
+wallet_biometric_alert_face_id_describe = "確認面容以進行身份驗證。";
 
 /************* 钱包管理修改名称 *******************/
 wallet_manager_detail_change_wallet_name_title = "更换钱包名";
@@ -351,6 +355,7 @@ wallet_keychain_delete_mnemonic_failed_error ="删除助记词失败";
 wallet_keychain_search_sign_empty_error ="查询标示为空";
 // 加密相关
 wallet_crypto_password_empty_error = "待加密密码为空";
+wallet_crypto_password_invalid_error = "密码无效";
 wallet_crypto_mnemonic_empty_error = "待加密助记词为空";
 wallet_crypto_result_empty_error = "加密结果为空";
 wallet_crypto_result_to_base64_failed_error = "加密结果转Base64失败";
@@ -435,3 +440,6 @@ wallet_market_pay_amount_empty_error = "付出稳定币数量为空";
 wallet_market_exchange_amount_empty_error = "兑换稳定币数量为空";
 // 映射
 wallet_market_mapping_token_unpublish_error = "您将要映射的稳定币尚未开启，开启需要消耗一定数量Gas费，是否立即开启并映射？";
+// 生物识别
+wallet_biometric_touch_id_attempts_too_much_error = "由于尝试失败次数太多，指纹识别现在被锁定。";
+wallet_biometric_face_id_attempts_too_much_error = "由于尝试失败次数太多，面容识别现在被锁定。";

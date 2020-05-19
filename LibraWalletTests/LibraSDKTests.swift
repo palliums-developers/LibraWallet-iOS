@@ -96,17 +96,7 @@ class LibraSDKTests: XCTestCase {
             let seed = try LibraMnemonic.seed(mnemonic: mnemonic)
             
             let testWallet = try LibraHDWallet.init(seed: seed, depth: 0)
-            let walletAddress = testWallet.publicKey.toAddress()
-//            try KeychainManager.KeyManager.savePayPasswordToKeychain(walletAddress: walletAddress, password: "123456")
-            let paymentPassword = try KeychainManager.KeyManager.getPayPasswordFromKeychain(walletAddress: walletAddress)
-            XCTAssertEqual(paymentPassword, "123456")
-            
-            let result = KeychainManager.KeyManager.checkPayPasswordInvalid(walletAddress: walletAddress, password: "1234567")
-            XCTAssertEqual(result, false)
-            let result2 = KeychainManager.KeyManager.checkPayPasswordInvalid(walletAddress: walletAddress, password: "123456")
-            XCTAssertEqual(result2, true)
-            
-//            try KeychainManager.KeyManager.saveMnemonicStringToKeychain(walletAddress: walletAddress, mnemonic: mnemonic.joined(separator: " "))
+            let walletAddress = testWallet.publicKey.toAddress()            
             
             let menmonicString = try KeychainManager.KeyManager.getMnemonicStringFromKeychain(walletAddress: walletAddress)
             let mnemonicArray = menmonicString.split(separator: " ").compactMap { (item) -> String in
@@ -267,8 +257,19 @@ class LibraSDKTests: XCTestCase {
         print(string)
     }
     func testReadMV() {
-        let path = Bundle.main.path(forResource: "peer_to_peer_with_metadata", ofType: "mv")
-        let data = try! Data.init(contentsOf: URL.init(fileURLWithPath: path!))
-        print(data.toHexString())
+//        let path = Bundle.main.path(forResource: "peer_to_peer_with_metadata", ofType: "mv")
+//        let data = try! Data.init(contentsOf: URL.init(fileURLWithPath: path!))
+//        print(data.toHexString())
+        
+//        if var tempData = "123456".data(using: .utf8), tempData.bytes.count > 0 {
+//            print(tempData.bytes)
+//            let emptyDataCount = 32 - tempData.bytes.count
+//            if emptyDataCount > 0 {
+//                for _ in 0..<emptyDataCount  {
+//                    tempData.append(0x00)
+//                }
+//            }
+//            print(tempData.bytes)
+//        }
     }
 }

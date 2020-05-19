@@ -55,8 +55,7 @@ class CreateIdentityWalletModel: NSObject {
         let result = DataBaseManager.DBManager.insertWallet(model: walletModel)
         if result == true {
             do {
-                try LibraWalletManager().saveMnemonicToKeychain(mnemonic: mnemonics, walletRootAddress: walletModel.walletRootAddress ?? "")
-                try LibraWalletManager().savePaymentPasswordToKeychain(password: password, walletRootAddress: walletModel.walletRootAddress ?? "")
+                try LibraWalletManager().saveMnemonicToKeychain(mnemonic: mnemonics, password: password, walletRootAddress: walletModel.walletRootAddress ?? "")
             } catch {
                 print(error.localizedDescription)
                 //删除从数据库创建好钱包
@@ -84,8 +83,7 @@ class CreateIdentityWalletModel: NSObject {
             let result = DataBaseManager.DBManager.insertWallet(model: walletModel)
             if result == true {
                 do {
-                    try LibraWalletManager().saveMnemonicToKeychain(mnemonic: mnemonics, walletRootAddress: walletModel.walletRootAddress ?? "")
-                    try LibraWalletManager().savePaymentPasswordToKeychain(password: password, walletRootAddress: walletModel.walletRootAddress ?? "")
+                    try LibraWalletManager().saveMnemonicToKeychain(mnemonic: mnemonics, password: password, walletRootAddress: walletModel.walletRootAddress ?? "")
                 } catch {
                     print(error.localizedDescription)
                     //删除从数据库创建好钱包
@@ -117,8 +115,7 @@ class CreateIdentityWalletModel: NSObject {
             let result = DataBaseManager.DBManager.insertWallet(model: walletModel)
             if result == true {
                 do {
-                    try LibraWalletManager().saveMnemonicToKeychain(mnemonic: mnemonics, walletRootAddress: walletModel.walletRootAddress ?? "")
-                    try LibraWalletManager().savePaymentPasswordToKeychain(password: password, walletRootAddress: walletModel.walletRootAddress ?? "")
+                    try LibraWalletManager().saveMnemonicToKeychain(mnemonic: mnemonics, password: password, walletRootAddress: walletModel.walletRootAddress ?? "")
                 } catch {
                     print(error.localizedDescription)
                     //删除从数据库创建好钱包

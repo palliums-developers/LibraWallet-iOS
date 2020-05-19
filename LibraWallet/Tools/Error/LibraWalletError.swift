@@ -53,6 +53,8 @@ public enum LibraWalletError: Error {
     public enum CryptoError {
         /// 密码为空
         case passwordEmptyError
+        /// 密码无效
+        case passwordInvalidError
         /// 助记词为空
         case mnemonicEmptyError
         /// 加密结果为空
@@ -348,6 +350,8 @@ extension LibraWalletError.CryptoError {
         /// 密码为空
         case .passwordEmptyError:
             return localLanguage(keyString: "wallet_crypto_password_empty_error")
+        case .passwordInvalidError:
+            return localLanguage(keyString: "wallet_crypto_password_invalid_error")
         /// 助记词为空
         case .mnemonicEmptyError:
             return localLanguage(keyString: "wallet_crypto_mnemonic_empty_error")

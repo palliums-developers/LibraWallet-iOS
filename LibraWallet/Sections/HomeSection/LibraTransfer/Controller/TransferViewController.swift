@@ -109,16 +109,37 @@ extension TransferViewController: TransferViewDelegate {
         self.navigationController?.pushViewController(vc, animated: true)
     }
     func confirmTransfer(amount: Double, address: String, fee: Double) {
-        let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
-            self?.detailView.toastView?.show()
-//            self?.dataModel.transfer(address: address,
-//                                    amount: amount,
-//                                    mnemonic: mnemonic)
-            self?.dataModel.sendLibraTransaction(sendAddress: (self?.wallet?.walletAddress)!, receiveAddress: address, amount: amount, fee: 0.1, mnemonic: mnemonic)
-        }) { [weak self] (errorContent) in
-            self?.view.makeToast(errorContent, position: .center)
+        if LibraWalletManager.shared.walletBiometricLock == true {
+            KeychainManager().getPasswordWithBiometric(walletAddress: LibraWalletManager.shared.walletRootAddress ?? "") { [weak self](result, error) in
+                if result.isEmpty == false {
+                    do {
+                        let mnemonic = try LibraWalletManager.shared.getMnemonicFromKeychain(password: result, walletRootAddress: LibraWalletManager.shared.walletRootAddress ?? "")
+                        self?.detailView.toastView?.show()
+                        self?.dataModel.sendLibraTransaction(sendAddress: (self?.wallet?.walletAddress)!,
+                                                             receiveAddress: address,
+                                                             amount: amount,
+                                                             fee: 0.1,
+                                                             mnemonic: mnemonic)
+                    } catch {
+                        self?.detailView.makeToast(error.localizedDescription, position: .center)
+                    }
+                } else {
+                    self?.detailView.makeToast(error, position: .center)
+                }
+            }
+        } else {
+            let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
+                self?.detailView.toastView?.show()
+                self?.dataModel.sendLibraTransaction(sendAddress: (self?.wallet?.walletAddress)!,
+                                                     receiveAddress: address,
+                                                     amount: amount,
+                                                     fee: 0.1,
+                                                     mnemonic: mnemonic)
+            }) { [weak self] (errorContent) in
+                self?.view.makeToast(errorContent, position: .center)
+            }
+            self.present(alert, animated: true, completion: nil)
         }
-        self.present(alert, animated: true, completion: nil)
     }
 }
 //MARK: - 网络请求数据处理中心

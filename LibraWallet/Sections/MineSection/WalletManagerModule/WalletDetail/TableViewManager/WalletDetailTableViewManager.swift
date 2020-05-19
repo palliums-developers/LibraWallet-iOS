@@ -9,10 +9,11 @@
 import UIKit
 protocol WalletDetailTableViewManagerDelegate: NSObjectProtocol {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath)
+    func switchButtonValueChange(button: UISwitch)
 }
 class WalletDetailTableViewManager: NSObject {
     weak var delegate: WalletDetailTableViewManagerDelegate?
-    var dataModel: [[String: String]]?
+    var dataModel: [[[String: String]]]?
     var selectRow: Int?
     deinit {
         print("WalletManagerTableViewManager销毁了")
@@ -39,27 +40,36 @@ extension WalletDetailTableViewManager: UITableViewDelegate {
 }
 extension WalletDetailTableViewManager: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return dataModel?[section].count ?? 0
     }
     func numberOfSections(in tableView: UITableView) -> Int {
         return dataModel?.count ?? 0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let identifier = "CellNormal"
-        if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) {
+        let identifier = self.dataModel?[indexPath.section][indexPath.row]["CellIdentifier"] ?? "CellNormal"
+        if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? WalletDetailTableViewCell {
             if let data = dataModel, data.isEmpty == false {
-               (cell as! WalletDetailTableViewCell).model = data[indexPath.section]
+                cell.model = data[indexPath.section][indexPath.row]
+                if data[indexPath.section].count == 1 || data[indexPath.section].count == (indexPath.row + 1) {
+                    cell.spaceLabel.alpha = 0
+                }
             }
+            cell.delegate = self
             cell.selectionStyle = UITableViewCell.SelectionStyle.none
             return cell
         } else {
             let cell = WalletDetailTableViewCell.init(style: .default, reuseIdentifier: identifier)
             if let data = dataModel, data.isEmpty == false {
-                cell.model = data[indexPath.section]
-                }
+                cell.model = data[indexPath.section][indexPath.row]
+            }
+            cell.delegate = self
             cell.selectionStyle = UITableViewCell.SelectionStyle.none
             return cell
         }
     }
 }
-
+extension WalletDetailTableViewManager: WalletDetailTableViewCellDelegate {
+    func switchButtonValueChange(button: UISwitch) {
+        self.delegate?.switchButtonValueChange(button: button)
+    }
+}

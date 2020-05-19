@@ -120,38 +120,78 @@ extension AddAssetViewController: AddAssetTableViewManagerDelegate {
         }
     }
     func showPasswordAlert(model: ViolasTokenModel, indexPath: IndexPath) {
-        let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
-            self?.detailView.toastView?.show()
-            self?.dataModel.publishViolasToken(sendAddress: (self?.wallet?.walletAddress)!, mnemonic: mnemonic, contact: model.address ?? "")
-            self?.actionClosure = { result in
-                if result == true {
-                    print("开启成功插入")
-                    if DataBaseManager.DBManager.isExistViolasToken(walletID: self?.wallet?.walletID ?? 0, contract: model.address ?? "", tokenNumber: model.id ?? 9999) {
-                        //已存在改状态
-                        print("已存在改状态,\(model.address ?? "")")
-                        let cell = self?.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
-                        cell.switchButton.setOn(result, animated: true)
-                        _ = DataBaseManager.DBManager.updateViolasTokenState(walletID: self?.wallet?.walletID ?? 0, tokenAddress: model.address ?? "", tokenNumber: model.id ?? 9999, state: result)
-                    } else {
-                        //不存在插入
-                        print("不存在插入")
-                        _ = DataBaseManager.DBManager.insertViolasToken(walletID: self?.wallet?.walletID ?? 0, model: model)
-                    }
-                    if let action = self?.needUpdateClosure {
-                        action(true)
+        if LibraWalletManager.shared.walletBiometricLock == true {
+            KeychainManager().getPasswordWithBiometric(walletAddress: LibraWalletManager.shared.walletRootAddress ?? "") { [weak self](result, error) in
+                if result.isEmpty == false {
+                    do {
+                        let mnemonic = try LibraWalletManager.shared.getMnemonicFromKeychain(password: result, walletRootAddress: LibraWalletManager.shared.walletRootAddress ?? "")
+                        self?.detailView.toastView?.show()
+                        self?.dataModel.publishViolasToken(sendAddress: (self?.wallet?.walletAddress)!, mnemonic: mnemonic, contact: model.address ?? "")
+                        self?.actionClosure = { result in
+                            if result == true {
+                                print("开启成功插入")
+                                if DataBaseManager.DBManager.isExistViolasToken(walletID: self?.wallet?.walletID ?? 0, contract: model.address ?? "", tokenNumber: model.id ?? 9999) {
+                                    //已存在改状态
+                                    print("已存在改状态,\(model.address ?? "")")
+                                    let cell = self?.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
+                                    cell.switchButton.setOn(result, animated: true)
+                                    _ = DataBaseManager.DBManager.updateViolasTokenState(walletID: self?.wallet?.walletID ?? 0, tokenAddress: model.address ?? "", tokenNumber: model.id ?? 9999, state: result)
+                                } else {
+                                    //不存在插入
+                                    print("不存在插入")
+                                    _ = DataBaseManager.DBManager.insertViolasToken(walletID: self?.wallet?.walletID ?? 0, model: model)
+                                }
+                                if let action = self?.needUpdateClosure {
+                                    action(true)
+                                }
+                            } else {
+                                let cell = self?.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
+                                cell.switchButton.setOn(result, animated: true)
+                                print("开启失败")
+                            }
+                        }
+                    } catch {
+                        self?.detailView.makeToast(error.localizedDescription, position: .center)
                     }
                 } else {
-                    let cell = self?.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
-                    cell.switchButton.setOn(result, animated: true)
-                    print("开启失败")
+                    self?.detailView.makeToast(error, position: .center)
                 }
             }
-        }) { [weak self] (errorContent) in
-            let cell = self?.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
-            cell.switchButton.setOn(false, animated: true)
-            self?.view.makeToast(errorContent, position: .center)
+        } else {
+            let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
+                self?.detailView.toastView?.show()
+                self?.dataModel.publishViolasToken(sendAddress: (self?.wallet?.walletAddress)!, mnemonic: mnemonic, contact: model.address ?? "")
+                self?.actionClosure = { result in
+                    if result == true {
+                        print("开启成功插入")
+                        if DataBaseManager.DBManager.isExistViolasToken(walletID: self?.wallet?.walletID ?? 0, contract: model.address ?? "", tokenNumber: model.id ?? 9999) {
+                            //已存在改状态
+                            print("已存在改状态,\(model.address ?? "")")
+                            let cell = self?.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
+                            cell.switchButton.setOn(result, animated: true)
+                            _ = DataBaseManager.DBManager.updateViolasTokenState(walletID: self?.wallet?.walletID ?? 0, tokenAddress: model.address ?? "", tokenNumber: model.id ?? 9999, state: result)
+                        } else {
+                            //不存在插入
+                            print("不存在插入")
+                            _ = DataBaseManager.DBManager.insertViolasToken(walletID: self?.wallet?.walletID ?? 0, model: model)
+                        }
+                        if let action = self?.needUpdateClosure {
+                            action(true)
+                        }
+                    } else {
+                        let cell = self?.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
+                        cell.switchButton.setOn(result, animated: true)
+                        print("开启失败")
+                    }
+                }
+            }) { [weak self] (errorContent) in
+                let cell = self?.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
+                cell.switchButton.setOn(false, animated: true)
+                self?.view.makeToast(errorContent, position: .center)
+            }
+            self.present(alert, animated: true, completion: nil)
         }
-        self.present(alert, animated: true, completion: nil)
+        
     }
 }
 extension AddAssetViewController {
@@ -225,18 +265,39 @@ extension AddAssetViewController {
         self.navigationItem.rightBarButtonItems = [barButtonItem, backView]
     }
     @objc func addAddressMethod() {
-        let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
-            self?.detailView.toastView?.show()
-            self?.dataModel.publishViolasToken(sendAddress: (self?.wallet?.walletAddress)!,
-                                               mnemonic: mnemonic,
-                                               contact: ViolasMainContract)
-            self?.actionClosure = { result in
-                
+        if LibraWalletManager.shared.walletBiometricLock == true {
+            KeychainManager().getPasswordWithBiometric(walletAddress: LibraWalletManager.shared.walletRootAddress ?? "") { [weak self](result, error) in
+                if result.isEmpty == false {
+                    do {
+                        let mnemonic = try LibraWalletManager.shared.getMnemonicFromKeychain(password: result, walletRootAddress: LibraWalletManager.shared.walletRootAddress ?? "")
+                        self?.detailView.toastView?.show()
+                        self?.dataModel.publishViolasToken(sendAddress: (self?.wallet?.walletAddress)!,
+                                                           mnemonic: mnemonic,
+                                                           contact: ViolasMainContract)
+                        self?.actionClosure = { result in
+                        }
+                    } catch {
+                        self?.detailView.makeToast(error.localizedDescription, position: .center)
+                    }
+                } else {
+                    self?.detailView.makeToast(error, position: .center)
+                }
             }
-        }) { [weak self] (errorContent) in
-            self?.view.makeToast(errorContent, position: .center)
+        } else {
+            let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
+                self?.detailView.toastView?.show()
+                self?.dataModel.publishViolasToken(sendAddress: (self?.wallet?.walletAddress)!,
+                                                   mnemonic: mnemonic,
+                                                   contact: ViolasMainContract)
+                self?.actionClosure = { result in
+                    
+                }
+            }) { [weak self] (errorContent) in
+                self?.view.makeToast(errorContent, position: .center)
+            }
+            self.present(alert, animated: true, completion: nil)
         }
-        self.present(alert, animated: true, completion: nil)
+        
     }
 
 }
