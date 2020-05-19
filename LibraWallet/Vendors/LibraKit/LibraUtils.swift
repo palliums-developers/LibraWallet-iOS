@@ -72,5 +72,9 @@ struct LibraUtils {
         }
         return sum
     }
-
+//    static func getMoveContract() -> Data {
+//        let path = Bundle.main.path(forResource: "peer_to_peer_with_metadata", ofType: "mv")
+//        let data = try! Data.init(contentsOf: URL.init(fileURLWithPath: path!))
+//        print(data.toHexString())
+//    }
 }

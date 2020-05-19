@@ -260,16 +260,5 @@ class LibraSDKTests: XCTestCase {
 //        let path = Bundle.main.path(forResource: "peer_to_peer_with_metadata", ofType: "mv")
 //        let data = try! Data.init(contentsOf: URL.init(fileURLWithPath: path!))
 //        print(data.toHexString())
-        
-//        if var tempData = "123456".data(using: .utf8), tempData.bytes.count > 0 {
-//            print(tempData.bytes)
-//            let emptyDataCount = 32 - tempData.bytes.count
-//            if emptyDataCount > 0 {
-//                for _ in 0..<emptyDataCount  {
-//                    tempData.append(0x00)
-//                }
-//            }
-//            print(tempData.bytes)
-//        }
     }
 }

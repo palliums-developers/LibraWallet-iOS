@@ -38,7 +38,7 @@ struct BalanceLibraBalanceModel: Codable {
 }
 struct BalanceLibraModel: Codable {
     /// 余额
-    var balance: [BalanceLibraBalanceModel]?
+    var balances: [BalanceLibraBalanceModel]?
     /// 验证密钥
     var authentication_key: String?
     ///
@@ -266,7 +266,7 @@ class HomeModel: NSObject {
                             self?.activeLibraAccount(walletID: walletID, address: address, authKey: authKey)
                             self?.activeCount += 1
                         } else {
-                            let data = setKVOData(type: "UpdateLibraBalance", data: BalanceLibraModel.init(balance: [BalanceLibraBalanceModel.init(amount: 0, currency: "LBR")]))
+                            let data = setKVOData(type: "UpdateLibraBalance", data: BalanceLibraModel.init(balances: [BalanceLibraBalanceModel.init(amount: 0, currency: "LBR")]))
                             self?.setValue(data, forKey: "dataDic")
                             print("激活失败")
                         }
@@ -274,7 +274,7 @@ class HomeModel: NSObject {
                         let data = setKVOData(type: "UpdateLibraBalance", data: json.result)
                         self?.setValue(data, forKey: "dataDic")
                         // 刷新本地数据
-                        self?.updateLocalWalletData(walletID: walletID, balance: json.result?.balance?[0].amount ?? 0)
+                        self?.updateLocalWalletData(walletID: walletID, balance: json.result?.balances?[0].amount ?? 0)
                         _ = DataBaseManager.DBManager.updateWalletActiveState(walletID: walletID, state: true)
                     }
                 } catch {
