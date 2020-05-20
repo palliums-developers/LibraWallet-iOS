@@ -451,13 +451,14 @@ class HomeHeaderView: UIView {
 //            }
 //        }
 //    }
-    var btcModel: BlockCypherBTCBalanceMainModel? {
+    var btcModel: TrezorBTCBalanceMainModel? {
         didSet {
             if btcModel?.address == self.walletAddressLabel.text {
-                assetLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (btcModel?.balance ?? 0)),
-                                                         scale: 8,
-                                                         unit: 100000000)
-                self.walletModel?.changeWalletBalance(banlance: btcModel?.balance ?? 0)
+                let amount = getDecimalNumber(amount: NSDecimalNumber.init(string: btcModel?.balance ?? ""),
+                                              scale: 8,
+                                              unit: 100000000)
+                assetLabel.text = amount.stringValue
+                self.walletModel?.changeWalletBalance(banlance: NSDecimalNumber.init(string: btcModel?.balance ?? "").int64Value)
                 assetUnitLabel.text = "BTC"
             }
         }

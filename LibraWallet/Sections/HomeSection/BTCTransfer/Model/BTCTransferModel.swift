@@ -32,6 +32,10 @@ struct BTCSubmitTransactionModel: Codable {
     var err_msg: String?
     var data: String?
 }
+struct TrezorBTCSendTransactionMainModel: Codable {
+    var result: String?
+    var error: String?
+}
 struct BlockCypherBTCUnspentUTXOTxsModel: Codable {
 //    var txid: String?
 //    var output_no: UInt32?
@@ -52,21 +56,13 @@ struct BlockCypherBTCUnspentUTXODataModel: Codable {
     var confirmations: Int64?
     var confirmed: String?
     var double_spend: Bool?
-//    var txs: [BlockCypherBTCUnspentUTXOTxsModel]?
 }
-struct BlockCypherBTCUnspentUTXOMainModel: Codable {
-    var address: String?
-    var total_received: Int64?
-    var total_sent: Int64?
-    var balance: Int64?
-    var unconfirmed_balance: Int64?
-    var final_balance: Int64?
-    var n_tx: Int64?
-    var unconfirmed_n_tx: Int64?
-    var final_n_tx: Int64?
-    var txrefs: [BlockCypherBTCUnspentUTXODataModel]?
-//    var status: String?
-//    var data: BlockCypherBTCUnspentUTXODataModel?
+struct TrezorBTCUTXOMainModel: Codable {
+    var txid: String?
+    var vout: UInt32?
+    var value: String?
+    var confirmations: Int64?
+    var lockTime: Int64?
 }
 
 class BTCTransferModel: NSObject {
@@ -74,7 +70,7 @@ class BTCTransferModel: NSObject {
     private var requests: [Cancellable] = []
     
 //    var utxos: [BTCUnspentUTXOListModel]?
-    var utxos: [BlockCypherBTCUnspentUTXODataModel]?
+    var utxos: [TrezorBTCUTXOMainModel]?
     
 //    func getUnspentUTXO(address: String, semaphore: DispatchSemaphore) {
 //        semaphore.wait()
@@ -123,11 +119,11 @@ class BTCTransferModel: NSObject {
 //    }
     func getUnspentUTXO(address: String, semaphore: DispatchSemaphore) {
         semaphore.wait()
-        let request = mainProvide.request(.BlockCypherBTCUnspentUTXO(address)) {[weak self](result) in
+        let request = mainProvide.request(.TrezorBTCUnspentUTXO(address)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BlockCypherBTCUnspentUTXOMainModel.self)
+                    let json = try response.map([TrezorBTCUTXOMainModel].self)
 //                    guard json.isEmpty == false else {
 //                        DispatchQueue.main.async(execute: {
 //                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: "GetUnspentUTXO")
@@ -135,7 +131,7 @@ class BTCTransferModel: NSObject {
 //                        })
 //                        return
 //                    }
-                    self?.utxos = json.txrefs
+                    self?.utxos = json
                     semaphore.signal()
                 } catch {
                     print("GetUnspentUTXO_解析异常\(error.localizedDescription)")
@@ -204,7 +200,7 @@ class BTCTransferModel: NSObject {
 //
 //        self.sendBTCTransaction(signature: result!.serialized().toHexString())
 //    }
-    func selectUTXOMakeSignature(utxos: [BlockCypherBTCUnspentUTXODataModel], wallet: HDWallet, amount: Double, fee: Double, toAddress: String) {
+    func selectUTXOMakeSignature(utxos: [TrezorBTCUTXOMainModel], wallet: HDWallet, amount: Double, fee: Double, toAddress: String) {
         let amountt: UInt64 = UInt64(amount * 100000000)
         let feee: UInt64 = UInt64(fee * 100000000)
 //        let change: UInt64     =  balance - amountt - feee
@@ -214,8 +210,8 @@ class BTCTransferModel: NSObject {
         
         //
         let inputs = utxos.map { item in
-            UnspentTransaction.init(output: TransactionOutput.init(value: item.value!, lockingScript: lockingScript),
-                                    outpoint: TransactionOutPoint.init(hash: Data(Data(hex: item.tx_hash!)!.reversed()), index: item.tx_output_n!))
+            UnspentTransaction.init(output: TransactionOutput.init(value: NSDecimalNumber.init(string: item.value ?? "0").uint64Value, lockingScript: lockingScript),
+                                    outpoint: TransactionOutPoint.init(hash: Data(Data(hex: item.txid!)!.reversed()), index: item.vout!))
         }
         let select = UnspentTransactionSelector.select(from: inputs, targetValue: amountt + feee, feePerByte: 30)
         
@@ -237,13 +233,12 @@ class BTCTransferModel: NSObject {
         self.sendBTCTransaction(signature: result!.serialized().toHexString())
     }
     func sendBTCTransaction(signature: String) {
-        let request = mainProvide.request(.BlockCypherBTCPushTransaction(signature)) {[weak self](result) in
+        let request = mainProvide.request(.TrezorBTCPushTransaction(signature)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BTCSubmitTransactionModel.self)
-                    print(try response.mapString())
-                    guard json.err_no == 0 else {
+                    let json = try response.map(TrezorBTCSendTransactionMainModel.self)
+                    guard json.result?.isEmpty == false else {
                         DispatchQueue.main.async(execute: {
                             let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "SendBTCTransaction")
                             self?.setValue(data, forKey: "dataDic")

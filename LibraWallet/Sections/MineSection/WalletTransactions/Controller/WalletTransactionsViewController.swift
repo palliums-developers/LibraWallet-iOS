@@ -123,7 +123,7 @@ class WalletTransactionsViewController: BaseViewController {
             dataModel.getLibraTransactionHistory(address: (wallet?.walletAddress)!, page: dataOffset, pageSize: 10, requestStatus: requestState)
             break
         case .Violas:
-            dataModel.getViolasTransactionList(address: (wallet?.walletAddress)!, page: dataOffset, pageSize: 10, contract: "", requestStatus: requestState)
+            dataModel.getViolasTransactions(address: (wallet?.walletAddress)!, page: dataOffset, pageSize: 10, contract: "", requestStatus: requestState)
             break
         case .BTC:
             dataModel.getBTCTransactionHistory(address: (wallet?.walletAddress)!, page: dataOffset + 1, pageSize: 10, requestStatus: requestState)
@@ -192,13 +192,13 @@ extension WalletTransactionsViewController {
             }
             let type = dataDic.value(forKey: "type") as! String
             if type == "BTCTransactionHistoryOrigin" {
-                guard let tempData = dataDic.value(forKey: "data") as? [BTCTransaction] else {
+                guard let tempData = dataDic.value(forKey: "data") as? [TrezorBTCTransactionDataModel] else {
                     return
                 }
                 self?.tableViewManager.btcTransactions = tempData
                 self?.detailView.tableView.reloadData()
             } else if type == "BTCTransactionHistoryMore" {
-                guard let tempData = dataDic.value(forKey: "data") as? [BTCTransaction] else {
+                guard let tempData = dataDic.value(forKey: "data") as? [TrezorBTCTransactionDataModel] else {
                     return
                 }
                 if let oldData = self?.tableViewManager.btcTransactions, oldData.isEmpty == false {
@@ -210,7 +210,7 @@ extension WalletTransactionsViewController {
                         insertIndexPath.append(indexPath)
                     }
                     tempArray.addObjects(from: tempData)
-                    self?.tableViewManager.btcTransactions = tempArray as? [BTCTransaction]
+                    self?.tableViewManager.btcTransactions = tempArray as? [TrezorBTCTransactionDataModel]
                     self?.detailView.tableView.beginUpdates()
                     for index in 0..<tempData.count {
                         self?.detailView.tableView.insertSections(IndexSet.init(integer: oldData.count + index), with: UITableView.RowAnimation.bottom)

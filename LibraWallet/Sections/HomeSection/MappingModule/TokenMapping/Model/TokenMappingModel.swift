@@ -167,7 +167,7 @@ class TokenMappingModel: NSObject {
         self.requests.append(request)
     }
 //    var utxos: [BTCUnspentUTXOListModel]?
-    var utxos: [BlockCypherBTCUnspentUTXODataModel]?
+    var utxos: [TrezorBTCUTXOMainModel]?
 //    private var sequenceNumber: Int?
     deinit {
         requests.forEach { cancellable in
@@ -181,11 +181,11 @@ class TokenMappingModel: NSObject {
 extension TokenMappingModel {
     func getUnspentUTXO(address: String, semaphore: DispatchSemaphore) {
         semaphore.wait()
-        let request = mainProvide.request(.BlockCypherBTCUnspentUTXO(address)) {[weak self](result) in
+        let request = mainProvide.request(.TrezorBTCUnspentUTXO(address)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BlockCypherBTCUnspentUTXOMainModel.self)
+                    let json = try response.map([TrezorBTCUTXOMainModel].self)
 //                    guard json.err_no == 0 else {
 //                        DispatchQueue.main.async(execute: {
 //                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "GetUnspentUTXO")
@@ -203,7 +203,7 @@ extension TokenMappingModel {
 //                    }
 //                    let data = setKVOData(type: "GetUnspentUTXO", data: json.data?.list)
 //                    self?.setValue(data, forKey: "dataDic")
-                    self?.utxos = json.txrefs
+                    self?.utxos = json
                     semaphore.signal()
                 } catch {
                     print("GetUnspentUTXO_解析异常\(error.localizedDescription)")
@@ -238,7 +238,7 @@ extension TokenMappingModel {
                 semaphore.signal()
             }
         }
-    func selectUTXOMakeBTCToVBTCSignature(utxos: [BlockCypherBTCUnspentUTXODataModel], wallet: HDWallet, amount: Double, fee: Double, toAddress: String, mappingReceiveAddress: String, mappingContract: String) {
+    func selectUTXOMakeBTCToVBTCSignature(utxos: [TrezorBTCUTXOMainModel], wallet: HDWallet, amount: Double, fee: Double, toAddress: String, mappingReceiveAddress: String, mappingContract: String) {
         let amountt: UInt64 = UInt64(amount * 100000000)
         let feee: UInt64 = UInt64(fee * 100000000)
 
@@ -246,8 +246,8 @@ extension TokenMappingModel {
         let lockingScript = Script.buildPublicKeyHashOut(pubKeyHash: wallet.pubKeys.first!.pubkeyHash)
         //
         let inputs = utxos.map { item in
-            UnspentTransaction.init(output: TransactionOutput.init(value: item.value!, lockingScript: lockingScript),
-                                    outpoint: TransactionOutPoint.init(hash: Data(Data(hex: item.tx_hash!)!.reversed()), index: item.tx_output_n!))
+            UnspentTransaction.init(output: TransactionOutput.init(value: NSDecimalNumber.init(string: item.value ?? "0").uint64Value, lockingScript: lockingScript),
+                                    outpoint: TransactionOutPoint.init(hash: Data(Data(hex: item.txid!)!.reversed()), index: item.vout!))
         }
         let select = UnspentTransactionSelector.select(from: inputs, targetValue: amountt + feee, feePerByte: 30)
         

@@ -48,7 +48,7 @@ struct BTCTransaction: Codable {
     var inputs: [inputs]?
     var outputs: [outputs]?
     /// 交易金额
-    var transaction_value: Int?
+    var transaction_value: Int64?
     /// 交易类型(0:转账,1:收款)
     var transaction_type: Int?
 }
@@ -64,18 +64,55 @@ struct BTCResponseModel: Codable {
     var err_no: Int?
     var err_msg: String?
 }
-//struct transaction: Codable {
-//    var version: Int?
-//    var address: String?
-//    var value: Int?
-//    var sequence_number: Int?
-//    var expiration_time: Int?
-//}
-//struct LibraModel: Codable {
-//    var code: Int?
-//    var message: String?
-//    var data: [transaction]?
-//}
+struct TrezorBTCVinModel: Codable {
+    var txid: String?
+    var vout: Int64?
+    var sequence: Int64?
+    var n: Int64?
+    var addresses: [String]?
+    var isAddress: Bool?
+    var value: String?
+    var hex: String?
+}
+struct TrezorBTCVoutModel: Codable {
+    var value: String?
+    var n: Int64?
+    var hex: String?
+    var addresses: [String]?
+    var isAddress: Bool?
+}
+struct TrezorBTCTransactionDataModel: Codable {
+    var txid: String?
+    var version: Int64?
+    var blockHash: String?
+    var blockHeight: Int64?
+    var confirmations: Int?
+    var blockTime: Int?
+    var value: String?
+    var valueIn: String?
+    var fees: String?
+    var hex: String?
+    var vin: [TrezorBTCVinModel]?
+    var vout: [TrezorBTCVoutModel]?
+    
+    /// 交易金额
+    var transaction_value: Int64?
+    /// 交易类型(0:转账,1:收款)
+    var transaction_type: Int?
+}
+struct TrezorBTCTransactionMainModel: Codable {
+    var page: Int?
+    var totalPages: Int?
+    var itemsOnPage: Int?
+    var address: String?
+    var balance: String?
+    var totalReceived: String?
+    var totalSent: String?
+    var unconfirmedBalance: String?
+    var unconfirmedTxs: Int?
+    var txs: Int?
+    var transactions: [TrezorBTCTransactionDataModel]?
+}
 struct LibraDataModel: Codable {
     var amount: Int?
     var expiration_time: Int?
@@ -134,20 +171,13 @@ class WalletTransactionsModel: NSObject {
     ///   - pageSize: 数量
     func getBTCTransactionHistory(address: String, page: Int, pageSize: Int, requestStatus: Int) {
         let type = requestStatus == 0 ? "BTCTransactionHistoryOrigin":"BTCTransactionHistoryMore"
-        let request = mainProvide.request(.GetBTCTransactionHistory(address, page, pageSize)) {[weak self](result) in
+        let request = mainProvide.request(.TrezorBTCTransactions(address, page, pageSize)) {[weak self](result) in
                 switch  result {
                 case let .success(response):
                     do {
-                        let json = try response.map(BTCResponseModel.self)
+                        let json = try response.map(TrezorBTCTransactionMainModel.self)
                         print(json)
-                        guard json.err_no == 0 else {
-                            DispatchQueue.main.async(execute: {
-                                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: type)
-                                self?.setValue(data, forKey: "dataDic")
-                            })
-                            return
-                        }
-                        guard let models = json.data?.list, models.isEmpty == false else {
+                        guard let models = json.transactions, models.isEmpty == false else {
                             let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: type)
                             self?.setValue(data, forKey: "dataDic")
                             return
@@ -175,46 +205,12 @@ class WalletTransactionsModel: NSObject {
             }
             self.requests.append(request)
     }
-    func getViolasTransactionList(address: String, page: Int, pageSize: Int, contract: String, requestStatus: Int) {
-//        let type = requestStatus == 0 ? "ViolasTransactionHistoryOrigin":"ViolasTransactionHistoryMore"
-
-//        let group = DispatchGroup.init()
-//        let quene = DispatchQueue.init(label: "SupportTokenQuene")
-//        quene.async(group: group, qos: .default, flags: [], execute: {
-////            self.getMarketSupportToken(group: group)
-//            self.getViolasTransactionHistory(address: address, page: page, pageSize: pageSize, contract: contract, requestStatus: requestStatus, group: group)
-//        })
-//        quene.async(group: group, qos: .default, flags: [], execute: {
-//            self.getViolasTokenList(group: group)
-//        })
-//        group.notify(queue: quene) {
-//            print("回到该队列中执行")
-//            DispatchQueue.main.async(execute: {
-//                guard let walletTokens = self.transactionList else {
-//                    return
-//                }
-//                guard let tokenList = self.supportTokens else {
-//                    return
-//                }
-////                let tempResult = self.rebuiltData(walletTokens: walletTokens, marketTokens: marketTokens)
-//                let result = self.dealViolasTransactions(models: walletTokens, walletAddress: address, tokenList: tokenList)
-//
-////                let finalResult = self.dealModelWithSelect(walletID: walletID, models: tempResult)
-//
-//                let data = setKVOData(type: type, data: result)
-//                self.setValue(data, forKey: "dataDic")
-//            })
-//        }
-        let group = DispatchGroup.init()
-        self.getViolasTransactionHistory(address: address, page: page, pageSize: pageSize, contract: contract, requestStatus: requestStatus, group: group)
-    }
     /// 获取Violas交易记录
     /// - Parameters:
     ///   - address: 地址
     ///   - page: 页数
     ///   - pageSize: 数量
-    private func getViolasTransactionHistory(address: String, page: Int, pageSize: Int, contract: String, requestStatus: Int, group: DispatchGroup) {
-        group.enter()
+    func getViolasTransactions(address: String, page: Int, pageSize: Int, contract: String, requestStatus: Int) {
         let type = requestStatus == 0 ? "ViolasTransactionHistoryOrigin":"ViolasTransactionHistoryMore"
         let request = mainProvide.request(.GetViolasAccountTransactionList(address, page, pageSize, contract)) {[weak self](result) in
             switch  result {
@@ -261,7 +257,6 @@ class WalletTransactionsModel: NSObject {
                 let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.networkInvalid), type: type)
                 self?.setValue(data, forKey: "dataDic")
             }
-            group.leave()
         }
         self.requests.append(request)
     }
@@ -381,11 +376,11 @@ class WalletTransactionsModel: NSObject {
         requests.removeAll()
         print("WalletTransactionsModel销毁了")
     }
-    func dealTransactionAmount(models: [BTCTransaction], requestAddress: String) -> [BTCTransaction] {
-        var resultModels = [BTCTransaction]()
+    func dealTransactionAmount(models: [TrezorBTCTransactionDataModel], requestAddress: String) -> [TrezorBTCTransactionDataModel] {
+        var resultModels = [TrezorBTCTransactionDataModel]()
         for model in models {
             var tempModel = model
-            if let inputs = tempModel.inputs, inputs.isEmpty == false {
+            if let inputs = tempModel.vin, inputs.isEmpty == false {
 //                let inputFromMe = inputs.map {
 //                    $0.prev_addresses?.filter({
 //                        $0 == requestAddress
@@ -393,7 +388,7 @@ class WalletTransactionsModel: NSObject {
 //                }
                 var inputFromMe = false
                 for input in inputs {
-                    for address in input.prev_addresses ?? [""] {
+                    for address in input.addresses ?? [""] {
                         if address == requestAddress {
                             inputFromMe = true
                             break
@@ -406,22 +401,24 @@ class WalletTransactionsModel: NSObject {
                 if inputFromMe == false {
                     //收款
                     tempModel.transaction_type = 1
-                    let result = (tempModel.inputs_value ?? 0) - (tempModel.fee ?? 0)
-                    tempModel.transaction_value = result
+                    
+                    
+                    let result = NSDecimalNumber.init(string: tempModel.value ?? "0").subtracting(NSDecimalNumber.init(string: tempModel.fees ?? "0"))
+                    tempModel.transaction_value = result.int64Value
                 } else {
                     //转账
                     tempModel.transaction_type = 0
-                    var result = (tempModel.inputs_value ?? 0) - (tempModel.fee ?? 0)
-                    if let outputs = tempModel.outputs, outputs.isEmpty == false {
+                    var result = NSDecimalNumber.init(string: tempModel.value ?? "0").subtracting(NSDecimalNumber.init(string: tempModel.fees ?? "0"))
+                    if let outputs = tempModel.vout, outputs.isEmpty == false {
                         for output in outputs {
                             let outputsToMe = output.addresses?.filter({
                                 $0 == requestAddress
                             })
                             if outputsToMe?.isEmpty == false {
-                                result -= (output.value ?? 0)
+                                result = result.subtracting(NSDecimalNumber.init(string: output.value ?? "0"))
                             }
                         }
-                        tempModel.transaction_value = result
+                        tempModel.transaction_value = result.int64Value
                     }
                 }
             }

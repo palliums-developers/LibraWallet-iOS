@@ -140,17 +140,17 @@ class WalletTransactionsTableViewCell: UITableViewCell {
     }()
     //MARK: - 设置数据
     var tokenName: String?
-    var btcModel: BTCTransaction? {
+    var btcModel: TrezorBTCTransactionDataModel? {
         didSet {
             guard let model = btcModel else {
                 return
             }
             coinLabel.text = "BTC"
-            dateLabel.text = timestampToDateString(timestamp: model.block_time ?? 0, dateFormat: "yyyy-MM-dd HH:mm:ss")
+            dateLabel.text = timestampToDateString(timestamp: model.blockTime ?? 0, dateFormat: "yyyy-MM-dd HH:mm:ss")
             amountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.transaction_value ?? 0)),
                                                       scale: 8,
                                                       unit: 100000000)
-            addressLabel.text = model.inputs?.first?.prev_addresses?.first
+            addressLabel.text = model.vin?.first?.addresses?.first
             if model.transaction_type == 0 {
                 // 转账
                 typeLabel.textColor = UIColor.init(hex: "E54040")

@@ -13,7 +13,7 @@ protocol WalletTransactionsTableViewManagerDelegate: NSObjectProtocol {
 class WalletTransactionsTableViewManager: NSObject {
     weak var delegate: WalletTransactionsTableViewManagerDelegate?
     /// BTC
-    var btcTransactions: [BTCTransaction]?
+    var btcTransactions: [TrezorBTCTransactionDataModel]?
     /// Violas
     var violasTransactions: [ViolasDataModel]?
     /// Libra
@@ -42,7 +42,7 @@ extension WalletTransactionsTableViewManager: UITableViewDelegate {
             }
         case .BTC:
             if let data = btcTransactions, data.isEmpty == false {
-                content = data[indexPath.row].hash ?? ""
+                content = data[indexPath.row].txid ?? ""
             }
         default:
             break
