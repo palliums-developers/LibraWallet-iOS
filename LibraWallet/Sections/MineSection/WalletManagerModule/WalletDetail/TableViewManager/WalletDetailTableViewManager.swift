@@ -14,7 +14,7 @@ protocol WalletDetailTableViewManagerDelegate: NSObjectProtocol {
 class WalletDetailTableViewManager: NSObject {
     weak var delegate: WalletDetailTableViewManagerDelegate?
     var dataModel: [[[String: String]]]?
-    var selectRow: Int?
+    var walletModel: LibraWalletManager?
     deinit {
         print("WalletManagerTableViewManager销毁了")
     }
@@ -55,6 +55,7 @@ extension WalletDetailTableViewManager: UITableViewDataSource {
                 }
             }
             cell.delegate = self
+            cell.walletModel = self.walletModel
             cell.selectionStyle = UITableViewCell.SelectionStyle.none
             return cell
         } else {
@@ -63,6 +64,7 @@ extension WalletDetailTableViewManager: UITableViewDataSource {
                 cell.model = data[indexPath.section][indexPath.row]
             }
             cell.delegate = self
+            cell.walletModel = self.walletModel
             cell.selectionStyle = UITableViewCell.SelectionStyle.none
             return cell
         }

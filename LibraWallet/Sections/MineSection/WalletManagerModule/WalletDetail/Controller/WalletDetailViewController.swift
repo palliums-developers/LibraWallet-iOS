@@ -48,6 +48,7 @@ class WalletDetailViewController: BaseViewController {
     lazy var tableViewManager: WalletDetailTableViewManager = {
         let manager = WalletDetailTableViewManager.init()
         manager.delegate = self
+        manager.walletModel = self.walletModel
         return manager
     }()
     //子View

@@ -91,11 +91,11 @@ class WalletDetailTableViewCell: UITableViewCell {
         //#263C4E
         let button = UISwitch.init()
         button.onTintColor = DefaultGreenColor
-        if LibraWalletManager.shared.walletBiometricLock == true {
-            button.setOn(true, animated: true)
-        } else {
-            button.setOn(false, animated: true)
-        }
+//        if LibraWalletManager.shared.walletBiometricLock == true {
+//            button.setOn(true, animated: true)
+//        } else {
+//            button.setOn(false, animated: true)
+//        }
         button.addTarget(self, action: #selector(valueChange(button:)), for: UIControl.Event.valueChanged)
         return button
     }()
@@ -104,6 +104,15 @@ class WalletDetailTableViewCell: UITableViewCell {
         label.backgroundColor = UIColor.init(hex: "DEDFE0")
         return label
     }()
+    var walletModel: LibraWalletManager? {
+        didSet {
+            if walletModel?.walletBiometricLock == true {
+                switchButton.setOn(true, animated: true)
+            } else {
+                switchButton.setOn(false, animated: true)
+            }
+        }
+    }
     //MARK: - 设置数据
     var model: [String: String]? {
         didSet {
