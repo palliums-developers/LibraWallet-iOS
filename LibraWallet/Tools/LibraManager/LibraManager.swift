@@ -95,7 +95,7 @@ extension LibraManager {
                                                      argruments: [argument0, argument1, argument2, argument3, argument4])
             let rawTransaction = LibraRawTransaction.init(senderAddres: sendAddress,
                                                           sequenceNumber: UInt64(sequenceNumber),
-                                                          maxGasAmount: 400000,
+                                                          maxGasAmount: 1000000,
                                                           gasUnitPrice: 0,
                                                           expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
                                                           payLoad: script.serialize())
@@ -121,11 +121,11 @@ extension LibraManager {
                                                      typeTags: [LibraTypeTag.init(structData: LibraStructTag.init(type: .libraDefault))],
                                                      argruments: [argument1, argument3, argument2])
             let rawTransaction = LibraRawTransaction.init(senderAddres: sendAddress,
-                                               sequenceNumber: UInt64(sequenceNumber),
-                                               maxGasAmount: 400000,
-                                               gasUnitPrice: 0,
-                                               expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
-                                               payLoad: script.serialize())
+                                                          sequenceNumber: UInt64(sequenceNumber),
+                                                          maxGasAmount: 1000000,
+                                                          gasUnitPrice: 0,
+                                                          expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
+                                                          payLoad: script.serialize())
             // 签名交易
             let multiSignature = wallet.privateKey.signMultiTransaction(transaction: rawTransaction, publicKey: wallet.publicKey)
             return multiSignature.toHexString()
