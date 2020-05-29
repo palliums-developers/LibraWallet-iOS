@@ -403,12 +403,12 @@ class WalletTransactionsModel: NSObject {
                     tempModel.transaction_type = 1
                     
                     
-                    let result = NSDecimalNumber.init(string: tempModel.value ?? "0").subtracting(NSDecimalNumber.init(string: tempModel.fees ?? "0"))
+                    let result = NSDecimalNumber.init(string: tempModel.valueIn ?? "0").subtracting(NSDecimalNumber.init(string: tempModel.fees ?? "0"))
                     tempModel.transaction_value = result.int64Value
                 } else {
                     //转账
                     tempModel.transaction_type = 0
-                    var result = NSDecimalNumber.init(string: tempModel.value ?? "0").subtracting(NSDecimalNumber.init(string: tempModel.fees ?? "0"))
+                    var result = NSDecimalNumber.init(string: tempModel.valueIn ?? "0").subtracting(NSDecimalNumber.init(string: tempModel.fees ?? "0"))
                     if let outputs = tempModel.vout, outputs.isEmpty == false {
                         for output in outputs {
                             let outputsToMe = output.addresses?.filter({
