@@ -213,9 +213,16 @@ func helpCenterURL() -> String {
         return "https://help.sealpay.io/en/help.html"
     }
 }
-//    "https://hobawallet.io/Sealpay_HTML/help.html"
-//let PrivateLegalURL: String = "https://www.baidu.com"
-
+///************* 获取身份钱包 *******************/
+func setWalletConnectSession(session: Data) {
+    UserDefaults.standard.set(session, forKey: "WalletConnectSession")
+}
+func getWalletConnectSession() -> Data? {
+    return UserDefaults.standard.data(forKey: "WalletConnectSession")
+}
+func removeWalletConnectSession() {
+    UserDefaults.standard.removeObject(forKey: "WalletConnectSession")
+}
 
 /***************************************/
 //let defaultWithdrawFee: Int64 = 100000
@@ -242,15 +249,6 @@ func helpCenterURL() -> String {
 //    }
 //    return state
 //}
-protocol LoadLocalLanguageProtocol {
-    func loadLocalLanguage(keyString: String) -> String
-}
-extension LoadLocalLanguageProtocol {
-    func loadLocalLanguage(keyString: String) -> String {
-        return keyString.localized()
-    }
-}
-
 
 /************* 限制 *******************/
 let privateLegalURL = "https://violas.io/violas_service_html/Privacy_Policy/"

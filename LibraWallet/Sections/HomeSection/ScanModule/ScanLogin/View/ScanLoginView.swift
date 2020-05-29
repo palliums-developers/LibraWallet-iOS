@@ -7,9 +7,12 @@
 //
 
 import UIKit
+import AttributedTextView
 protocol ScanLoginViewDelegate: NSObjectProtocol {
     func cancelLogin()
     func confirmLogin(password: String)
+    func openUserAgreement()
+    func openPrivateAgreement()
 }
 class ScanLoginView: UIView {
     weak var delegate: ScanLoginViewDelegate?
@@ -18,7 +21,11 @@ class ScanLoginView: UIView {
         backgroundColor = UIColor.init(hex: "F7F7F9")
         addSubview(scanLoginIndicator)
         addSubview(scanLoginTitleLabel)
-//        addSubview(passwordTextField)
+        
+        addSubview(warnningWhiteBackgroundView)
+        warnningWhiteBackgroundView.addSubview(warnningContentLabel)
+        addSubview(lawLabel)
+        
         addSubview(confirmButton)
         addSubview(cancelButton)
     }
@@ -32,7 +39,7 @@ class ScanLoginView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         scanLoginIndicator.snp.makeConstraints { (make) in
-            make.top.equalTo(self).offset(177)
+            make.top.equalTo(self).offset(101)
             make.centerX.equalTo(self)
         }
         scanLoginTitleLabel.snp.makeConstraints { (make) in
@@ -41,20 +48,35 @@ class ScanLoginView: UIView {
             make.left.equalTo(self).offset(10)
             make.right.equalTo(self).offset(-10)
         }
-//        passwordTextField.snp.makeConstraints { (make) in
-//            make.bottom.equalTo(scanLoginTitleLabel.snp.bottom).offset(116)
-//            make.left.equalTo(self).offset(68)
-//            make.right.equalTo(self).offset(-68)
-//            make.height.equalTo(42)
-//        }
+        warnningWhiteBackgroundView.snp.makeConstraints { (make) in
+            make.left.equalTo(self).offset(22)
+            make.right.equalTo(self).offset(-22)
+            make.centerX.equalTo(self)
+            make.top.equalTo(scanLoginIndicator.snp.bottom).offset(91)
+            let height = libraWalletTool.ga_heightForComment(content: localLanguage(keyString: "wallet_wallet_connect_login_warnning_content"),
+                                                             fontSize: 14,
+                                                             width: mainWidth - 44 - 40)
+            make.height.equalTo(height + 16)
+        }
+        warnningContentLabel.snp.makeConstraints { (make) in
+            make.left.equalTo(warnningWhiteBackgroundView).offset(20)
+            make.right.equalTo(warnningWhiteBackgroundView.snp.right).offset(-20)
+            make.top.equalTo(warnningWhiteBackgroundView).offset(8)
+            make.bottom.equalTo(warnningWhiteBackgroundView.snp.bottom).offset(-8)
+        }
+        lawLabel.snp.makeConstraints { (make) in
+            make.left.right.equalTo(warnningWhiteBackgroundView)
+            make.top.equalTo(warnningWhiteBackgroundView.snp.bottom).offset(5)
+            make.height.equalTo(50)
+        }
         confirmButton.snp.makeConstraints { (make) in
-            make.top.equalTo(scanLoginIndicator.snp.bottom).offset(165)
+            make.top.equalTo(warnningWhiteBackgroundView.snp.bottom).offset(96)
             make.left.equalTo(self).offset(69)
             make.right.equalTo(self).offset(-69)
             make.height.equalTo(40)
         }
         cancelButton.snp.makeConstraints { (make) in
-            make.top.equalTo(confirmButton.snp.bottom).offset(50)
+            make.top.equalTo(confirmButton.snp.bottom).offset(20)
             make.left.equalTo(self).offset(69)
             make.right.equalTo(self).offset(-69)
             make.height.equalTo(40)
@@ -70,13 +92,13 @@ class ScanLoginView: UIView {
     lazy var scanLoginTitleLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.center
-        label.textColor = UIColor.init(hex: "3C3848")
-        label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
-        label.text = localLanguage(keyString: "wallet_scan_login_title")
+        label.textColor = UIColor.init(hex: "333333")
+        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        label.text = localLanguage(keyString: "wallet_wallet_connect_login_title")
         label.numberOfLines = 0
         return label
     }()
-    private lazy var walletWhiteBackgroundView: UIView = {
+    private lazy var warnningWhiteBackgroundView: UIView = {
         let view = UIView.init()
         view.backgroundColor = UIColor.white
         // 定义阴影颜色
@@ -89,26 +111,35 @@ class ScanLoginView: UIView {
         view.layer.shadowOpacity = 0.1
         return view
     }()
-//    lazy var passwordTextField: WYDTextField = {
-//        let textField = WYDTextField.init()
-//        textField.textAlignment = NSTextAlignment.left
-//        textField.textColor = UIColor.init(hex: "333333")
-//        textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_scan_login_password_textfield_placeholder"),
-//                                                             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "9E9CA4"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)])
-//        textField.delegate = self
-//        textField.keyboardType = .default
-//        textField.isSecureTextEntry = true
-//        textField.tintColor = DefaultGreenColor
-//        textField.layer.borderColor = UIColor.init(hex: "D8D7DA").cgColor
-//        textField.layer.borderWidth = 1
-//        let holderView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: 7, height: 48))
-//        textField.leftView = holderView
-//        textField.leftViewMode = .always
-//        return textField
-//    }()
+    lazy var warnningContentLabel: UILabel = {
+        let label = UILabel.init()
+        label.textAlignment = NSTextAlignment.left
+        label.textColor = UIColor.init(hex: "333333")
+        label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        label.text = localLanguage(keyString: "wallet_wallet_connect_login_warnning_content")
+        label.numberOfLines = 0
+        return label
+    }()
+    lazy var lawLabel: AttributedTextView = {
+        let textView = AttributedTextView.init()
+        textView.textAlignment = NSTextAlignment.left
+        textView.backgroundColor = UIColor.clear
+        textView.isEditable = false
+        textView.attributer = localLanguage(keyString: "wallet_wallet_connect_login_warnning_describe")
+            .color(UIColor.init(hex: "999999"))
+            .font(UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular))
+            .match(localLanguage(keyString: "wallet_private_agreement_title")).makeInteract({ _ in
+                self.delegate?.openPrivateAgreement()
+            })
+            .match(localLanguage(keyString: "wallet_user_agreement_title")).color(UIColor.init(hex: "333333")).makeInteract({ _ in
+                self.delegate?.openUserAgreement()
+            })
+        return textView
+    }()
+
     lazy var confirmButton: UIButton = {
         let button = UIButton.init(type: UIButton.ButtonType.custom)
-        button.setTitle(localLanguage(keyString: "wallet_scan_login_confirm_button_title"), for: UIControl.State.normal)
+        button.setTitle(localLanguage(keyString: "wallet_wallet_connect_login_confirm_button_title"), for: UIControl.State.normal)
         button.setTitleColor(UIColor.white, for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
@@ -191,4 +222,16 @@ extension ScanLoginView: UITextFieldDelegate {
         // 阴影的透明度，默认为0，不设置则不会显示阴影****
         textField.layer.shadowOpacity = 0
     }
+    
 }
+//wallet_wallet_connect_login_title = "网页ViolasPay钱包登录确认";
+//wallet_wallet_connect_logout_title = "网页ViolasPay钱包已登录";
+//wallet_wallet_connect_exchange_title = "网页ViolasPay钱包兑换确认";
+//wallet_wallet_connect_sign_title = "网页ViolasPay钱包请求签名";
+//wallet_wallet_connect_transfer_title = "网页ViolasPay钱包转账";
+//wallet_wallet_connect_transfer_receive_address_title = "转账地址";
+//wallet_wallet_connect_transfer_amount_title = "金额";
+//wallet_wallet_connect_transfer_confirm_button_title = "确认转账";
+//wallet_wallet_connect_login_confirm_button_title = "确认登录";
+//wallet_wallet_connect_exchange_confirm_button_title = "确认兑换";
+//wallet_wallet_connect_sign_button_title = "确认签名";

@@ -275,6 +275,13 @@ struct libraWalletTool {
                                             amount: amount,
                                             contract: contract?.first,
                                             type: .transfer)
+         } else if content.hasPrefix("wc:") {
+            return QRCodeHandleResult.init(addressType: nil,
+                                           originContent: content,
+                                           address: nil,
+                                           amount: nil,
+                                           contract: nil,
+                                           type: .walletConnect)
          } else {
              do {
                  let model = try JSONDecoder().decode(ScanLoginDataModel.self, from: content.data(using: .utf8)!)
@@ -303,17 +310,18 @@ struct libraWalletTool {
          }
      }
      struct QRCodeHandleResult {
-         var addressType: WalletType?
-         var originContent: String
-         var address: String?
-         var amount: Int64?
-         var contract: ViolasTokenModel?
-         var type: QRCodeType
+        var addressType: WalletType?
+        var originContent: String
+        var address: String?
+        var amount: Int64?
+        var contract: ViolasTokenModel?
+        var type: QRCodeType
      }
      enum QRCodeType {
-         case transfer
-         case login
-         case others
+        case transfer
+        case login
+        case others
+        case walletConnect
      }
      private static func handleAmount(content: String) -> (String, Int64?) {
          let contentArray = content.split(separator: "?")
@@ -328,4 +336,14 @@ struct libraWalletTool {
          }
          
      }
+}
+extension libraWalletTool {
+    static func ga_heightForComment(content: String, fontSize: CGFloat, width: CGFloat) -> CGFloat {
+        let rect = NSString(string: content).boundingRect(with: CGSize(width: width, height: CGFloat(MAXFLOAT)),
+                                                          options: .usesLineFragmentOrigin,
+                                                          attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: fontSize)],
+                                                          context: nil)
+        return ceil(rect.height)
+    }
+
 }

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+import BigInt
 struct LibraManager {
     /// 获取助词数组
     ///
@@ -177,5 +177,144 @@ extension LibraManager {
         } catch {
             throw error
         }
+    }
+}
+extension LibraManager {
+    public static func derializeTransaction(tx: String) -> WCDataModel {
+        let txData = Data.init(Array<UInt8>(hex: tx))
+        var WCTransferModel = WCDataModel.init(from: "",
+                                               receive: "",
+                                               amount: 0)
+        let (sendAddress, lastData0) = readData(data: txData, count: 16)
+        print("sendAddress = \(sendAddress.toHexString())")
+        WCTransferModel.from = sendAddress.toHexString()
+        let (sequenceNumberData, lastData1) = readData(data: lastData0, count: 8)
+        let tempSe = sequenceNumberData.bytes.reversed().map {
+            $0
+        }
+        let sequenceNumber = BigUInt.init(Data.init(bytes: tempSe, count: 8))
+        print("sequenceNumber = \(sequenceNumber)")
+        let (payloadType, lastData2) = readData(data: lastData1, count: 1)
+        print("payloadType = \(payloadType.toHexString())")
+        let (codeLength, lastData3) = getCount(data: lastData2)
+        print("codeLength = \(codeLength)")
+        let (codeData, lastData4) = readData(data: lastData3, count: codeLength)
+        print("codeData = \(codeData.toHexString())")
+        let (typeTagCount , lastData5) = getCount(data: lastData4)
+        print("typeTagCount = \(typeTagCount)")
+        let lastData6 = readTypeTags(data: lastData5, typeTagCount: typeTagCount)
+        let (argumentCount, lastData7) = getCount(data: lastData6)
+        print("argumentCount = \(argumentCount)")
+        let (model, lastData8) = readArgument(data: lastData7, argumentCount: argumentCount)
+        print(lastData8.toHexString())
+        print("success")
+        return WCDataModel.init(from: sendAddress.toHexString(),
+                                receive: model.receive,
+                                amount: model.amount)
+    }
+    private static func getCount(data: Data) -> (Int, Data) {
+        var nameCountData = [UInt8]()
+        for OneByte in data {
+            let erjinzhi = String.init(BigUInt.init(OneByte), radix: 2)
+            if erjinzhi.count < 8 {
+                nameCountData.append(OneByte)
+                break
+            } else {
+                if erjinzhi.hasPrefix("1") {
+                    nameCountData.append(OneByte)
+                } else {
+                    nameCountData.append(OneByte)
+                    break
+                }
+            }
+        }
+        let nameCount = ViolasUtils.uleb128FormatToInt(data: Data.init(nameCountData))
+        return (nameCount, data.suffix(data.count - nameCountData.count))
+    }
+    private static func readData(data: Data, count: Int) -> (Data, Data) {
+        let tempData = data.prefix(count)
+        let lastData = data.suffix(data.count - count)
+        return (tempData, lastData)
+    }
+    private static func readTypeTags(data: Data, typeTagCount: Int) -> (Data) {
+        var resultLastData = data
+        for _ in 0..<typeTagCount {
+            let (type, lastData0) = readData(data: resultLastData, count: 1)
+            switch type.toHexString() {
+            case "00":
+                print("00")
+            case "01":
+                print("01")
+            case "02":
+                print("02")
+            case "03":
+                print("03")
+            case "04":
+                print("04")
+            case "05":
+                print("05")
+            case "06":
+                print("06")
+            case "07":
+                //Struct
+                print("07")
+                let (addressData, lastData1) = readData(data: lastData0, count: 16)
+                print("address = \(addressData.toHexString())")
+                let (moduleCount, lastData2) = getCount(data: lastData1)
+                print("moduleCount = \(moduleCount)")
+                let (moduleData, lastData3) = readData(data: lastData2, count: moduleCount)
+                let module = String.init(data: moduleData, encoding: .utf8)!
+                print("module = \(module)")
+                let (nameCount, lastData4) = getCount(data: lastData3)
+                print("nameCount = \(nameCount)")
+                let (nameData, lastData5) = readData(data: lastData4, count: nameCount)
+                let name = String.init(data: nameData, encoding: .utf8)!
+                print("name = \(name)")
+                let (typeParamsCount, lastData6) = getCount(data: lastData5)
+                print("TypeParams = \(typeParamsCount)")
+                
+                resultLastData = lastData6
+            default:
+                print("invalid")
+            }
+        }
+        return resultLastData
+    }
+    private static func readArgument(data: Data, argumentCount: Int) -> (WCDataModel, Data) {
+        var resultLastData = data
+        var model = WCDataModel.init(from: "", receive: "", amount: 0)
+        for _ in 0..<argumentCount {
+            let (type, lastData0) = readData(data: resultLastData, count: 1)
+            switch type.toHexString() {
+            case "00":
+                print("00")
+            case "01":
+                let (amountData, lastData1) = readData(data: lastData0, count: 8)
+                let amount = amountData.reversed().map {
+                    $0
+                }
+                print("amount = \(BigUInt.init(Data.init(amount)))")
+                resultLastData = lastData1
+                model.amount = Int64(BigUInt.init(Data.init(amount)))
+            case "02":
+                print("02")
+            case "03":
+                let (addressData, lastData2) = readData(data: lastData0, count: 16)
+                print("receiveAddress = \(addressData.toHexString())")
+                resultLastData = lastData2
+                model.receive = addressData.toHexString()
+            case "04":
+                let (U8VectorCount, lastData2) = getCount(data: lastData0)
+                print("U8Count = \(U8VectorCount)")
+                let (U8VectorData, lastData3) = readData(data: lastData2, count: U8VectorCount)
+                print("U8Vector = \(U8VectorData.toHexString())")
+                resultLastData = lastData3
+            case "05":
+                print("05")
+            default:
+                print("others")
+            }
+        }
+        return (model, resultLastData)
     }
 }

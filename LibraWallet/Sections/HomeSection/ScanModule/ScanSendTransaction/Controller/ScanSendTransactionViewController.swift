@@ -1,17 +1,18 @@
 //
-//  ScanLoginViewController.swift
-//  SSO
+//  ScanSendTransactionViewController.swift
+//  LibraWallet
 //
-//  Created by wangyingdong on 2020/3/16.
+//  Created by wangyingdong on 2020/5/21.
 //  Copyright © 2020 palliums. All rights reserved.
 //
 
 import UIKit
 import Toast_Swift
-class ScanLoginViewController: UIViewController {
+class ScanSendTransactionViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.addSubview(detailView)
+        self.initKVO()
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -27,41 +28,38 @@ class ScanLoginViewController: UIViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         if needReject == true {
-            if let connect = WalletConnectManager.shared.connect {
-                connect(false)
-            }
             if let rejectC = self.reject {
                 rejectC()
             }
         }
     }
     deinit {
-        print("ScanLoginViewController销毁了")
+        print("ScanSendTransactionViewController销毁了")
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.barStyle = .default
     }
-    private lazy var detailView : ScanLoginView = {
-        let view = ScanLoginView.init()
+    private lazy var detailView : ScanSendTransactionView = {
+        let view = ScanSendTransactionView.init()
         view.delegate = self
         return view
     }()
-    lazy var dataModel: ScanLoginModel = {
-        let model = ScanLoginModel.init()
+    lazy var dataModel: ScanSendTransactionModel = {
+        let model = ScanSendTransactionModel.init()
         return model
     }()
-    var wallet: LibraWalletManager?
-    var vtokenModel: ViolasTokenModel?
     /// 数据监听KVO
     var observer: NSKeyValueObservation?
-    var sessionID: String?
-    private var reject: (() -> Void)?
-    private var confirm: ((String) -> Void)?
+    var model: WCRawTransaction? {
+        didSet {
+            self.detailView.model = model
+        }
+    }
+    var reject: (() -> Void)?
     var needReject: Bool? = true
-    var hasLogin: Bool?
 }
-extension ScanLoginViewController {
+extension ScanSendTransactionViewController {
     func initKVO() {
         self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
             guard let dataDic = change.newValue, dataDic.count != 0 else {
@@ -87,14 +85,15 @@ extension ScanLoginViewController {
                     print(error.localizedDescription)
                     // 数据返回状态异常
                 }
+                self?.detailView.toastView?.hide()
                 self?.detailView.hideToastActivity()
-//                self?.detailView.toastView?.hide(tag: 199)
                 self?.detailView.makeToast(error.localizedDescription, position: .center)
                 return
             }
-            if type == "ScanLogin" {
-//                self?.detailView.toastView?.hide(tag: 199)
+            if type == "SendViolasTransaction" {
+                self?.detailView.toastView?.hide()
                 self?.view.makeToast(localLanguage(keyString: "wallet_scan_login_alert_success_title"), duration: toastDuration, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
+                    self?.needReject = false
                     self?.dismiss(animated: true, completion: nil)
                 })
             }
@@ -102,43 +101,49 @@ extension ScanLoginViewController {
     }
 }
 
-extension ScanLoginViewController: ScanLoginViewDelegate {
-    func openUserAgreement() {
-        let vc = ServiceLegalViewController()
-        vc.needDismissViewController = true
-        let navi = UINavigationController.init(rootViewController: vc)
-        self.present(navi, animated: true, completion: nil)
-    }
-    
-    func openPrivateAgreement() {
-        let vc = PrivateLegalViewController()
-        vc.needDismissViewController = true
-        let navi = UINavigationController.init(rootViewController: vc)
-        self.present(navi, animated: true, completion: nil)
-    }
-    
+extension ScanSendTransactionViewController: ScanSendTransactionViewDelegate {
     func cancelLogin() {
-        self.dismiss(animated: true, completion:  {
-            if let connect = WalletConnectManager.shared.connect {
-                connect(false)
-            }
+        self.dismiss(animated: true, completion: {
             if let rejectC = self.reject {
-               rejectC()
+                rejectC()
             }
         })
         self.needReject = false
     }
     func confirmLogin(password: String) {
         NSLog("Password:\(password)")
-        self.detailView.toastView?.show()
-        if let connect = WalletConnectManager.shared.connect {
-            connect(true)
-        }
-        WalletConnectManager.shared.didConnectClosure = {
-            self.detailView.toastView?.hide()
-            self.view.makeToast(localLanguage(keyString: "wallet_scan_login_alert_success_title"), duration: toastDuration, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
-                self.dismiss(animated: true, completion: nil)
-            })
+        if let raw = self.model {
+            if LibraWalletManager.shared.walletBiometricLock == true {
+                KeychainManager().getPasswordWithBiometric(walletAddress: "Violas_" + (raw.from ?? "")) { [weak self](result, error) in
+                    if result.isEmpty == false {
+                        do {
+                            let mnemonic = try LibraWalletManager.shared.getMnemonicFromKeychain(password: result, walletRootAddress: LibraWalletManager.shared.walletRootAddress ?? "")
+                            self?.detailView.toastView?.show()
+                            self?   .dataModel.sendViolasTransaction(model: raw, mnemonic: mnemonic)
+                        } catch {
+                            self?.detailView.makeToast(error.localizedDescription, position: .center)
+                        }
+                        
+                    } else {
+                        self?.detailView.makeToast(error, position: .center)
+                    }
+                }
+            } else {
+                let alert = passowordAlert(rootAddress: "Violas_" + (raw.from ?? ""), mnemonic: { [weak self] (mnemonic) in
+                    self?.detailView.toastView?.show()
+                    self?.dataModel.sendViolasTransaction(model: raw, mnemonic: mnemonic)
+                }) { [weak self] (errorContent) in
+                    guard errorContent != "Cancel" else {
+                        self?.detailView.toastView?.hide()
+                        return
+                    }
+                    self?.view.makeToast(errorContent, position: .center)
+                }
+                self.present(alert, animated: true, completion: nil)
+
+            }
+        } else {
+            #warning("报错待处理")
         }
     }
 }

@@ -63,7 +63,7 @@ struct ViolasUtils {
         //1、1+7+6、1+2*7+6
         //1 0000000 0000000 0000000
         let convert = binary2dec(num: tempString)
-        print(BigUInt(convert).serialize().toHexString())
+//        print(BigUInt(convert).serialize().toHexString())
         return BigUInt(convert).serialize()
     }
     static func binary2dec(num:String) -> Int {
@@ -73,5 +73,25 @@ struct ViolasUtils {
         }
         return sum
     }
-
+    static func uleb128FormatToInt(data: Data) -> Int {
+        guard data.isEmpty == false else {
+            return 0
+        }
+        let erjinzhi = String.init(BigUInt.init(data), radix: 2)
+        var tempString = String.init()
+        if erjinzhi.count >= 8 {
+            let result = erjinzhi.count / 8
+            for i in (0..<result).reversed() {
+                //倒叙
+                let startIndex = erjinzhi.index(erjinzhi.startIndex, offsetBy: (i * 8))
+                let endIndex = erjinzhi.index(erjinzhi.startIndex, offsetBy: (i * 8) + 8)
+                let aaa = erjinzhi[startIndex..<endIndex]
+                tempString += (aaa.description.suffix(7))
+            }
+        } else {
+            tempString = erjinzhi
+        }
+        let convert = binary2dec(num: tempString)
+        return convert
+    }
 }
