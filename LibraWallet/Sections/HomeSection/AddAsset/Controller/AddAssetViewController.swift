@@ -90,12 +90,12 @@ extension AddAssetViewController: AddAssetTableViewManagerDelegate {
             // 已注册
             //判断数据库是否已存在
             print("已注册")
-            if DataBaseManager.DBManager.isExistViolasToken(walletID: wallet?.walletID ?? 0, contract: model.address ?? "") {
+            if DataBaseManager.DBManager.isExistViolasToken(walletID: wallet?.walletID ?? 0, contract: model.address ?? "", tokenNumber: model.id ?? 9999) {
                 //已存在改状态
                 print("已存在改状态,\(model.address ?? "")")
                 let cell = self.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
                 cell.switchButton.setOn(state, animated: true)
-                _ = DataBaseManager.DBManager.updateViolasTokenState(walletID: wallet?.walletID ?? 0, tokenAddress: model.address ?? "", state: state)
+                _ = DataBaseManager.DBManager.updateViolasTokenState(walletID: wallet?.walletID ?? 0, tokenAddress: model.address ?? "", tokenNumber: model.id ?? 9999, state: state)
             } else {
                 //不存在插入
                 print("不存在插入")
@@ -126,12 +126,12 @@ extension AddAssetViewController: AddAssetTableViewManagerDelegate {
             self?.actionClosure = { result in
                 if result == true {
                     print("开启成功插入")
-                    if DataBaseManager.DBManager.isExistViolasToken(walletID: self?.wallet?.walletID ?? 0, contract: model.address ?? "") {
+                    if DataBaseManager.DBManager.isExistViolasToken(walletID: self?.wallet?.walletID ?? 0, contract: model.address ?? "", tokenNumber: model.id ?? 9999) {
                         //已存在改状态
                         print("已存在改状态,\(model.address ?? "")")
                         let cell = self?.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
                         cell.switchButton.setOn(result, animated: true)
-                        _ = DataBaseManager.DBManager.updateViolasTokenState(walletID: self?.wallet?.walletID ?? 0, tokenAddress: model.address ?? "", state: result)
+                        _ = DataBaseManager.DBManager.updateViolasTokenState(walletID: self?.wallet?.walletID ?? 0, tokenAddress: model.address ?? "", tokenNumber: model.id ?? 9999, state: result)
                     } else {
                         //不存在插入
                         print("不存在插入")
@@ -229,7 +229,7 @@ extension AddAssetViewController {
             self?.detailView.toastView?.show()
             self?.dataModel.publishViolasToken(sendAddress: (self?.wallet?.walletAddress)!,
                                                mnemonic: mnemonic,
-                                               contact: "c026d690a00762e792b874154292b55b20793be9f11e7eaebfa42ff0872ae319")
+                                               contact: ViolasMainContract)
             self?.actionClosure = { result in
                 
             }

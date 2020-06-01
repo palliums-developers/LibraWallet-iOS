@@ -7,81 +7,126 @@
 //
 
 import UIKit
-import SwiftGRPC
 import Moya
+struct LibraTransferErrorModel: Codable {
+    var code: Int?
+    var data: String?
+    var message: String?
+}
+struct LibraTransferMainModel: Codable {
+    var id: String?
+    var jsonrpc: String?
+    var result: String?
+    var error: LibraTransferErrorModel?
+}
+
 class TransferModel: NSObject {
-    @objc var dataDic: NSMutableDictionary = [:]
+    @objc dynamic var dataDic: NSMutableDictionary = [:]
     private var requests: [Cancellable] = []
     
-    fileprivate func getSequenceNumber(client: AdmissionControl_AdmissionControlServiceClient, wallet: LibraWallet) throws -> UInt64 {
-        do {
-            var stateRequest = Types_GetAccountStateRequest()
-            stateRequest.address = Data.init(hex: wallet.publicKey.toAddress())
-            
-            var sequenceRequest = Types_RequestItem()
-            sequenceRequest.getAccountStateRequest = stateRequest
-            
-            var requests = Types_UpdateToLatestLedgerRequest()
-            requests.requestedItems = [sequenceRequest]
-            
-            let result = try client.updateToLatestLedger(requests)
+    private var sequenceNumber: Int64?
+    fileprivate func getLibraSequenceNumber(sendAddress: String, semaphore: DispatchSemaphore) {
+        let request = mainProvide.request(.GetLibraAccountBalance(sendAddress)) {[weak self](result) in
+            switch  result {
+            case let .success(response):
+                do {
+                    let json = try response.map(BalanceLibraMainModel.self)
+                    self?.sequenceNumber = json.result?.sequence_number
+                    semaphore.signal()
+                } catch {
+                    print("GetLibraSequenceNumber_解析异常\(error.localizedDescription)")
+                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetLibraSequenceNumber")
+                    self?.setValue(data, forKey: "dataDic")
+                }
+            case let .failure(error):
+                guard error.errorCode != -999 else {
+                    print("GetLibraSequenceNumber_网络请求已取消")
+                    return
+                }
+                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "GetLibraSequenceNumber")
+                self?.setValue(data, forKey: "dataDic")
+            }
+        }
+        self.requests.append(request)
+    }
+    func sendLibraTransaction(sendAddress: String, receiveAddress: String, amount: Double, fee: Double, mnemonic: [String]) {
+        let semaphore = DispatchSemaphore.init(value: 1)
+        let queue = DispatchQueue.init(label: "SendQueue")
+        queue.async {
+            semaphore.wait()
+//            self.getLibraSequenceNumber(sendAddress: "cd35f1a78093554f5dc9c61301f204e4", semaphore: semaphore)
+            self.getLibraSequenceNumber(sendAddress: sendAddress, semaphore: semaphore)
 
-            guard let response = result.responseItems.first else {
-                throw LibraWalletError.error("Data empty")
+        }
+        queue.async {
+            semaphore.wait()
+            do {
+                let signature = try LibraManager.getNormalTransactionHex(sendAddress: sendAddress,
+                                                                         receiveAddress: receiveAddress,
+                                                                         amount: amount,
+                                                                         fee: fee,
+                                                                         mnemonic: mnemonic,
+                                                                         sequenceNumber: Int(self.sequenceNumber!))
+//                let signature = try LibraManager.getMultiTransactionHex(sendAddress: "cd35f1a78093554f5dc9c61301f204e4",
+//                                                                         receiveAddress: "7f4644ae2b51b65bd3c9d414aa853407",
+//                                                                         amount: amount,
+//                                                                         fee: fee,
+//                                                                         mnemonic: mnemonic,
+//                                                                         sequenceNumber: Int(self.sequenceNumber!))
+                self.makeViolasTransaction(signature: signature)
+            } catch {
+                print(error.localizedDescription)
+                DispatchQueue.main.async(execute: {
+                    let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "SendLibraTransaction")
+                    self.setValue(data, forKey: "dataDic")
+                })
             }
-            let streamData = response.getAccountStateResponse.accountStateWithProof.blob.blob
-            
-            guard let sequenceNumber = LibraAccount.init(accountData: streamData).sequenceNumber else {
-                throw LibraWalletError.error("Sequence number error")
-            }
-            return UInt64(sequenceNumber)
-        } catch {
-            throw error
+            semaphore.signal()
         }
     }
-    func transfer(address: String, amount: Double, mnemonic: [String])  {
-        // 创建通道
-        let channel = Channel.init(address: libraMainURL, secure: false)
-        // 创建请求端
-        let client = AdmissionControl_AdmissionControlServiceClient.init(channel: channel)
-        
-        let queue = DispatchQueue.init(label: "TransferQueue")
-        queue.async {
-            do {
-                let wallet = try LibraManager.getWallet(mnemonic: mnemonic)
-                
-                // 获取SequenceNumber
-                let sequenceNumber = try self.getSequenceNumber(client: client, wallet: wallet)
-                // 拼接交易
-                let request = LibraTransaction.init(receiveAddress: address, amount: amount, sendAddress: wallet.publicKey.toAddress(), sequenceNumber: sequenceNumber)
-                // 签名交易
-                let aaa = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
-                print(aaa.toHexString())
-                // 拼接签名请求
-                var signedTransation = Types_SignedTransaction.init()
-                signedTransation.txnBytes = aaa
-                // 组装请求
-                var mission = AdmissionControl_SubmitTransactionRequest.init()
-                mission.transaction = signedTransation
-                // 发送请求
-                let response = try client.submitTransaction(mission)
-                if response.acStatus.code == AdmissionControl_AdmissionControlStatusCode.accepted {
+    private func makeViolasTransaction(signature: String) {
+        let request = mainProvide.request(.SendLibraTransaction(signature)) {[weak self](result) in
+            switch  result {
+            case let .success(response):
+                do {
+                    let json = try response.map(LibraTransferMainModel.self)
+                    if json.result == nil {
+                       DispatchQueue.main.async(execute: {
+                           let data = setKVOData(type: "SendLibraTransaction")
+                           self?.setValue(data, forKey: "dataDic")
+                       })
+                    } else {
+                        print("SendLibraTransaction_状态异常")
+                        DispatchQueue.main.async(execute: {
+                            if let message = json.error?.message, message.isEmpty == false {
+                                let data = setKVOData(error: LibraWalletError.error(message), type: "SendLibraTransaction")
+                                self?.setValue(data, forKey: "dataDic")
+                            } else {
+                                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "SendLibraTransaction")
+                                self?.setValue(data, forKey: "dataDic")
+                            }
+                        })
+                    }
+                } catch {
+                    print("解析异常\(error.localizedDescription)")
                     DispatchQueue.main.async(execute: {
-                        let data = setKVOData(type: "Transfer")
-                        self.setValue(data, forKey: "dataDic")
-                    })
-                } else {
-                    DispatchQueue.main.async(execute: {
-                        print(response.acStatus.message)
-                        let data = setKVOData(error: LibraWalletError.error("转账失败"), type: "Transfer")
-                        self.setValue(data, forKey: "dataDic")
+                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "SendLibraTransaction")
+                        self?.setValue(data, forKey: "dataDic")
                     })
                 }
-            } catch {
-//                print(error)
-                print(error.localizedDescription)
+            case let .failure(error):
+                guard error.errorCode != -999 else {
+                    print("网络请求已取消")
+                    return
+                }
+                DispatchQueue.main.async(execute: {
+                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "SendLibraTransaction")
+                    self?.setValue(data, forKey: "dataDic")
+                })
+                
             }
         }
-        
+        self.requests.append(request)
     }
+
 }

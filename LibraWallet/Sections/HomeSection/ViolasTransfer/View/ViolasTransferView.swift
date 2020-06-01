@@ -283,6 +283,9 @@ class ViolasTransferView: UIView {
         return button
     }()
     @objc func buttonClick(button: UIButton) {
+        self.amountTextField.resignFirstResponder()
+        self.addressTextField.resignFirstResponder()
+        self.transferFeeSlider.resignFirstResponder()
         if button.tag == 10 {
             // 扫描地址
             self.delegate?.scanAddressQRcode()
@@ -361,9 +364,6 @@ class ViolasTransferView: UIView {
                                position: .center)
                 return
             }
-            self.amountTextField.resignFirstResponder()
-            self.addressTextField.resignFirstResponder()
-            self.transferFeeSlider.resignFirstResponder()
             // 确认提交
             self.delegate?.confirmTransfer(amount: amount, address: address, fee: fee)
         }

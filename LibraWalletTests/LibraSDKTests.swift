@@ -9,7 +9,6 @@
 import XCTest
 import CryptoSwift
 import BigInt
-import SwiftGRPC
 @testable import Violas
 class LibraSDKTests: XCTestCase {
 
@@ -33,36 +32,34 @@ class LibraSDKTests: XCTestCase {
         }
     }
     func testLibra() {
-        // String
-//        let string = TransactionArgument.init(code: .String, value: "Hello, World!").serialize().toHexString().uppercased()
-//        XCTAssertEqual(string, "020000000D00000048656C6C6F2C20576F726C6421")
-//
-//        // u64
-//        let amount = TransactionArgument.init(code: .U64, value: "9213671392124193148").serialize().toHexString().uppercased()
-//        XCTAssertEqual(amount, "000000007CC9BDA45089DD7F")
-//        // String
-//        let address = TransactionArgument.init(code: .Address, value: "2c25991785343b23ae073a50e5fd809a2cd867526b3c1db2b0bf5d1924c693ed").serialize().toHexString().uppercased()
-//        XCTAssertEqual(address  , "01000000200000002C25991785343B23AE073A50E5FD809A2CD867526B3C1DB2B0BF5D1924C693ED")
-//
-        // Byte
-        let byte = TransactionArgument.init(code: .Bytes, value: "cafed00d").serialize().toHexString().uppercased()
-        XCTAssertEqual(byte  , "0300000004000000CAFED00D")
-
-        let accessPath1 = TransactionAccessPath.init(address: "a71d76faa2d2d5c3224ec3d41deb293973564a791e55c6782ba76c2bf0495f9a", path: "01217da6c6b3e19f1825cfb2676daecce3bf3de03cf26647c78df00b371b25cc97", writeType: TransactionWriteType.Delete)
-        let accessPath2 = TransactionAccessPath.init(address: "c4c63f80c74b11263e421ebf8486a4e398d0dbc09fa7d4f62ccdb309f3aea81f", path: "01217da6c6b3e19f18", writeType: TransactionWriteType.Write)
-        let write = TransactionWriteSet.init(accessPaths: [accessPath1, accessPath2]).serialize().toHexString().uppercased()
-        XCTAssertEqual(write, "010000000200000020000000A71D76FAA2D2D5C3224EC3D41DEB293973564A791E55C6782BA76C2BF0495F9A2100000001217DA6C6B3E19F1825CFB2676DAECCE3BF3DE03CF26647C78DF00B371B25CC970000000020000000C4C63F80C74B11263E421EBF8486A4E398D0DBC09FA7D4F62CCDB309F3AEA81F0900000001217DA6C6B3E19F180100000004000000CAFED00D")
-//
-//
-//
-//        let string1 = TransactionArgument.init(code: .String, value: "CAFE D00D")
-//        let string2 = TransactionArgument.init(code: .String, value: "cafe d00d")
-//        let program = TransactionProgram.init(code: "move".data(using: String.Encoding.utf8)!, argruments: [string1, string2], modules: [Data.init(hex: "CA"), Data.init(hex: "FED0"), Data.init(hex: "0D")]).serialize().toHexString().uppercased()
-//        XCTAssertEqual(program, "00000000040000006D6F766502000000020000000900000043414645204430304402000000090000006361666520643030640300000001000000CA02000000FED0010000000D")
-
-//        let string3 = TransactionArgument.init(code: .Address, value: "4fddcee027aa66e4e144d44dd218a345fb5af505284cb03368b7739e92dd6b3c")
-//        let string4 = TransactionArgument.init(code: .U64, value: "\(9 * 1000000)")
-//        let program2 = TransactionProgram.init(code: getProgramCode(), argruments: [string3, string4], modules: []).serialize()
+        //LibraTransactionArgument
+        // u64
+        let amount = LibraTransactionArgument.init(code: .U64, value: "9213671392124193148").serialize().toHexString().uppercased()
+        XCTAssertEqual(amount, "007CC9BDA45089DD7F")
+        // Address
+        let address = LibraTransactionArgument.init(code: .Address, value: "bafc671e8a38c05706f83b5159bbd8a4").serialize().toHexString()
+        XCTAssertEqual(address  , "01bafc671e8a38c05706f83b5159bbd8a4")
+        // U8Vector
+        let u8vector = LibraTransactionArgument.init(code: .U8Vector, value: "CAFED00D").serialize().toHexString().uppercased()
+        XCTAssertEqual(u8vector, "0204CAFED00D")
+        // Bool
+        let bool1 = LibraTransactionArgument.init(code: .Bool, value: "00").serialize().toHexString().uppercased()
+        XCTAssertEqual(bool1, "0300")
+        // Bool
+        let bool2 = LibraTransactionArgument.init(code: .Bool, value: "01").serialize().toHexString().uppercased()
+        XCTAssertEqual(bool2, "0301")
+        //LibraTransactionAccessPath
+        let accessPath1 = LibraTransactionAccessPath.init(address: "a71d76faa2d2d5c3224ec3d41deb293973564a791e55c6782ba76c2bf0495f9a",
+                                                          path: "01217da6c6b3e19f1825cfb2676daecce3bf3de03cf26647c78df00b371b25cc97",
+                                                          writeType: LibraTransactionWriteType.Deletion)
+        let accessPath2 = LibraTransactionAccessPath.init(address: "c4c63f80c74b11263e421ebf8486a4e398d0dbc09fa7d4f62ccdb309f3aea81f",
+                                                          path: "01217da6c6b3e19f18",
+                                                          writeType: LibraTransactionWriteType.Value,
+                                                          value: Data.init(Array<UInt8>(hex: "CAFED00D")))
+        let write = LibraTransactionWriteSet.init(accessPaths: [accessPath1, accessPath2]).serialize().toHexString().uppercased()
+        XCTAssertEqual(write, "0102A71D76FAA2D2D5C3224EC3D41DEB293973564A791E55C6782BA76C2BF0495F9A2101217DA6C6B3E19F1825CFB2676DAECCE3BF3DE03CF26647C78DF00B371B25CC9700C4C63F80C74B11263E421EBF8486A4E398D0DBC09FA7D4F62CCDB309F3AEA81F0901217DA6C6B3E19F180104CAFED00D")
+        let module = LibraTransactionModule.init(code: Data.init(Array<UInt8>(hex: "CAFED00D"))).serialize().toHexString().uppercased()
+        XCTAssertEqual(module, "03CAFED00D")
 //
 //        let raw = RawTransaction.init(senderAddres: "65e39e2e6b90ac215ec79e2b84690421d7286e6684b0e8e08a0b25dec640d849",
 //                                      sequenceNumber: 0,
@@ -79,101 +76,6 @@ class LibraSDKTests: XCTestCase {
 //        _ = try! wallet.privateKey.signTransaction(transaction: raw, wallet: wallet)
 
     }
-    
-    func testDeserialize() {
-//        let testData = Data.init(hex: "010000002100000001217da6c6b3e19f1825cfb2676daecce3bf3de03cf26647c78df00b371b25cc978e00000020000000b8c39fc6910816ad21bc2be4f7e804539e7529b7b7d188c80f093e1e61f192cf00a8e6cf0000000000000700000000000000200000003b07b78954be13a5bc5cb2e0eaf48312a85d864091d5cb5faee296d5248d89df0400000000000000200000003f486909a2abd12a387797d9d1f78496c95b7d3878767a56dafe8f2260e5144d0400000000000000")
-//        let account = LibraAccount.init(accountData: testData)
-//        XCTAssertEqual(account.address, "b8c39fc6910816ad21bc2be4f7e804539e7529b7b7d188c80f093e1e61f192cf")
-//        XCTAssertEqual(account.sequenceNumber, 4)
-
-    }
-    
-    func testLibraKit() {
-        //有钱助词
-        let mnemonic = ["net", "dice", "divide", "amount", "stamp", "flock", "brave", "nuclear", "fox", "aim", "father", "apology"]
-        let seed = try! LibraMnemonic.seed(mnemonic: mnemonic)
-        let wallet = try! LibraWallet.init(seed: seed)
-
-//
-//        let string3 = TransactionArgument.init(code: .Address, value:  "4fddcee027aa66e4e144d44dd218a345fb5af505284cb03368b7739e92dd6b3c")
-//        let string4 = TransactionArgument.init(code: .U64, value: "\(9 * 1000000)")
-//        let program2 = TransactionProgram.init(code: getProgramCode(), argruments: [string3, string4], modules: []).serialize()
-//        print(string4.serialize().toHexString())
-//        let raw = RawTransaction.init(senderAddres: wallet.publicKey.toAddress(),
-//                                      sequenceNumber: 0,
-//                                      maxGasAmount: 140000,
-//                                      gasUnitPrice: 0,
-//                                      expirationTime: 0,
-//                                      programOrWrite: program2)
-//
-//
-//        let signResult = try! wallet.privateKey.signTransaction(transaction: raw, wallet: wallet).serializedData()
-//        print(signResult.toHexString())
-//        d3686886094923eace9e502f8198a185de5435ac974bffa6f155bdece325acbc
-        
-        
-//        f3895db4abc90322afcc4e7dea8eed40a506507b6f100caed41fac95aa58f64517ff6731a1a1b35e278db4cc5ccd13f792003306fbd803fafcfecadeed7a070a
-        
-    }
-    func testPrint() {
-//        let mnemonic = try! LibraMnemonic.generate(language: LibraMnemonic.Language.english)
-//        print(mnemonic)
-        
-        //02081eb1573be35048677d6540a7690f03e9269aa36f2ddfb9da9228fbb7f761
-        
-        
-        let mnemonic = ["legal","winner","thank","year","wave","sausage","worth","useful","legal","winner","thank","year","wave","sausage","worth","useful","legal","will"]
-        let seed = try! LibraMnemonic.seed(mnemonic: mnemonic)
-        let masterKey = try! HMAC.init(key: "LIBRA WALLET: master key salt$", variant: .sha3_256).authenticate(seed)
-        XCTAssertEqual(masterKey.toHexString(), "16274c9618ed59177ca948529c1884ba65c57984d562ec2b4e5aa1ee3e3903be")
-
-
-        
-//        let salt: Array<UInt8> = Array("LIBRA WALLET: derived key$".utf8)
-        let tempInfo = Data() + Array("LIBRA WALLET: derived key$".utf8) + Data.init(hex: "0000000000000000")
-        do {
-            //Data.init(hex: "16274c9618ed59177ca948529c1884ba65c57984d562ec2b4e5aa1ee3e3903be").bytes
-            
-            
-            let temp = try HKDF.init(password: seed,
-                                       salt:Array("LIBRA WALLET: master key salt$".utf8),
-                                       info: tempInfo.bytes,
-                                       keyLength: 32,
-                                       variant: .sha3_256).calculate()
-            
-            
-            
-            
-            
-            XCTAssertEqual(temp.toHexString(), "358a375f36d74c30b7f3299b62d712b307725938f8cc931100fbd10a434fc8b9")
-            
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
-    func testNewWalletKit() {
-        let mnemonic = ["legal","winner","thank","year","wave","sausage","worth","useful","legal","winner","thank","year","wave","sausage","worth","useful","legal","will"]
-        do {
-            let seed = try LibraMnemonic.seed(mnemonic: mnemonic)
-            
-            let testWallet = try LibraWallet.init(seed: seed, depth: 0)
-            let testMasterKey = try testWallet.getMasterKey()
-            XCTAssertEqual(testMasterKey.toHexString(), "16274c9618ed59177ca948529c1884ba65c57984d562ec2b4e5aa1ee3e3903be")
-            
-            
-            XCTAssertEqual(testWallet.privateKey.raw.toHexString(), "358a375f36d74c30b7f3299b62d712b307725938f8cc931100fbd10a434fc8b9")
-            let testWallet2 = try LibraWallet.init(seed: seed, depth: 1)
-            
-            XCTAssertEqual(testWallet2.privateKey.raw.toHexString(), "a325fe7d27b1b49f191cc03525951fec41b6ffa2d4b3007bb1d9dd353b7e56a6")
-
-
-        } catch {
-            print(error.localizedDescription)
-        }
-        
-        
-
-    }
     func testED25519() {
         let mnemonic = ["net", "dice", "divide", "amount", "stamp", "flock", "brave", "nuclear", "fox", "aim", "father", "apology"]
         do {
@@ -188,12 +90,12 @@ class LibraSDKTests: XCTestCase {
             print(error)
         }
     }
-        func testKeychainReinstallGetPasswordAndMnemonic() {
+    func testKeychainReinstallGetPasswordAndMnemonic() {
         let mnemonic = ["legal","winner","thank","year","wave","sausage","worth","useful","legal","winner","thank","year","wave","sausage","worth","useful","legal","will"]
         do {
             let seed = try LibraMnemonic.seed(mnemonic: mnemonic)
             
-            let testWallet = try LibraWallet.init(seed: seed, depth: 0)
+            let testWallet = try LibraHDWallet.init(seed: seed, depth: 0)
             let walletAddress = testWallet.publicKey.toAddress()
 //            try KeychainManager.KeyManager.savePayPasswordToKeychain(walletAddress: walletAddress, password: "123456")
             let paymentPassword = try KeychainManager.KeyManager.getPayPasswordFromKeychain(walletAddress: walletAddress)
@@ -217,18 +119,156 @@ class LibraSDKTests: XCTestCase {
         }
 
     }
-    func testCommonData() {
-        //测试welcome
-//        let state = getWelcomeState()
-//        XCTAssertEqual(state, true)
-//        setWelcomeState(show: false)
-//        let state2 = getWelcomeState()
-//        XCTAssertEqual(state2, true)
-//        setWelcomeState(show: true)
-        // 测试数据库
-        let state = DataBaseManager.DBManager.isExistTable(name: "Wallet")
-        XCTAssertEqual(state, true)
-        let state2 = DataBaseManager.DBManager.isExistTable(name: "Walet")
-        XCTAssertEqual(state2, false)
+    func testULEB128() {
+        XCTAssertEqual(LibraUtils.uleb128Format(length: 128).toHexString(), "8001")
+        XCTAssertEqual(LibraUtils.uleb128Format(length: 16384).toHexString(), "808001")
+        XCTAssertEqual(LibraUtils.uleb128Format(length: 2097152).toHexString(), "80808001")
+        XCTAssertEqual(LibraUtils.uleb128Format(length: 268435456).toHexString(), "8080808001")
+        XCTAssertEqual(LibraUtils.uleb128Format(length: 9487).toHexString(), "8f4a")
+    }
+    func testBitmap() {
+        var tempBitmap = "00000000000000000000000000000000"
+        let range = tempBitmap.index(tempBitmap.startIndex, offsetBy: 0)...tempBitmap.index(tempBitmap.startIndex, offsetBy: 0)
+        tempBitmap.replaceSubrange(range, with: "1")
+        let range2 = tempBitmap.index(tempBitmap.startIndex, offsetBy: 2)...tempBitmap.index(tempBitmap.startIndex, offsetBy: 2)
+        tempBitmap.replaceSubrange(range2, with: "1")
+        print(tempBitmap)
+        let convert = LibraUtils.binary2dec(num: tempBitmap)
+        //  101000 00000000 00000000 00000000
+        //1000000 00000000 00000000 00000000
+        print(BigUInt(convert).serialize().toHexString())
+        
+//        var tempData = Data.init(Array<UInt8>(hex: "00"))
+//        var tempData = 0000 | 1
+//        print(tempData)
+    }
+    func testMultiAddress() {
+        let wallet = LibraMultiHDWallet.init(privateKeys: [LibraMultiPrivateKeyModel.init(raw: Data.init(Array<UInt8>(hex: "f3cdd2183629867d6cfa24fb11c58ad515d5a4af014e96c00bb6ba13d3e5f80e")),
+                                                                                     sequence: 1),
+                                                           LibraMultiPrivateKeyModel.init(raw: Data.init(Array<UInt8>(hex: "c973d737cb40bcaf63a45a9736d7d7735e78148a06be185327304d6825e666ea")),
+                                                           sequence: 2)],
+                                             threshold: 1)
+        XCTAssertEqual(wallet.publicKey.toLegacy(), "cd35f1a78093554f5dc9c61301f204e4")
+    }
+    func testLibraKit() {
+        let mnemonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
+        do {
+            let seed = try ViolasMnemonic.seed(mnemonic: mnemonic)
+            let wallet = try ViolasHDWallet.init(seed: seed, depth: 0)
+            let walletAddress = wallet.publicKey.toLegacy()
+            let active = wallet.publicKey.toActive()
+            //注册Module
+            // 拼接交易
+//            let request = ViolasTransaction.init(sendAddress: wallet.publicKey.toLegacy(),
+//                                                 sequenceNumber: 6,
+//                                                 code: ViolasManager.getCodeData(move: createTokenCode, address: "331321aefcce2ee794430d07d7a953a0"),
+//                                                 test: true)
+//            let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
+//            print("signature.toHexString() = \(signature.toHexString())")
+            // Publish
+//            let request = ViolasTransaction.init(sendAddress: walletAddress,
+//                                                 sequenceNumber: 9,
+//                                                 code: ViolasManager.getCodeData(move: ViolasPublishScriptCode, address: "331321aefcce2ee794430d07d7a953a0"))
+//            let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
+//            print("signature.toHexString() = \(signature.toHexString())")
+            
+            //CreateToken
+//            let argument1 = ViolasTransactionArgument.init(code: .Address, value: "331321aefcce2ee794430d07d7a953a0")
+//            let argument3 = ViolasTransactionArgument.init(code: .U8Vector, value: "331321aefcce2ee794430d07d7a953a0")
+//
+//            let script = ViolasTransactionScript.init(code: ViolasManager.getCodeData(move: testCode, address: "331321aefcce2ee794430d07d7a953a0"),
+//                                                      typeTags: [ViolasTypeTag](),
+//                                                      argruments: [argument1, argument3])
+//
+//            let raw = ViolasRawTransaction.init(senderAddres: walletAddress,
+//                                                sequenceNumber: 16,
+//                                                maxGasAmount: 400000,
+//                                                gasUnitPrice: 0,
+//                                                expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
+//                                                programOrWrite: script.serialize())
+//            let signature = try wallet.privateKey.signTransaction(transaction: raw, wallet: wallet)
+//            print(signature.toHexString())
+            // Mint
+//            let argument0 = ViolasTransactionArgument.init(code: .U64, value: "0")
+//
+//            let argument1 = ViolasTransactionArgument.init(code: .Address, value: "331321aefcce2ee794430d07d7a953a0")
+//            let argument2 = ViolasTransactionArgument.init(code: .U64, value: "\(Int(1 * 1000000))")
+//
+//            let argument3 = ViolasTransactionArgument.init(code: .U8Vector, value: "331321aefcce2ee794430d07d7a953a0")
+//
+//            let program = ViolasTransactionScript.init(code: ViolasManager.getCodeData(move: testMintCode, address: "331321aefcce2ee794430d07d7a953a0"),
+//                                                       typeTags: [ViolasTypeTag](),
+//                                                       argruments: [argument0, argument1, argument2, argument3])
+//
+//            let raw = ViolasRawTransaction.init(senderAddres: "331321aefcce2ee794430d07d7a953a0",
+//                                                sequenceNumber: 13,
+//                                                maxGasAmount: 400000,
+//                                                gasUnitPrice: 0,
+//                                                expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
+//                                                programOrWrite: program.serialize())
+//            let signature = try wallet.privateKey.signTransaction(transaction: raw, wallet: wallet)
+//            print(signature.toHexString())
+            //Transfer
+//             拼接交易
+//            let request = ViolasTransaction.init(sendAddress: "fa279f2615270daed6061313a48360f7",
+//                                                 receiveAddress: "7f4644ae2b51b65bd3c9d414aa853407",
+//                                                 amount: 1,
+//                                                 sequenceNumber: 16,
+//                                                 code: ViolasManager.getCodeData(move: ViolasStableCoinScriptCode, address: "e1be1ab8360a35a0259f1c93e3eac736"),
+//                                                 tokenIndex: "0")
+            // 签名交易
+//            let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
+//            print(signature.toHexString())
+        } catch {
+            print(error.localizedDescription)
+        }
+        
+    }
+    func testLibraKitMulti() {
+        let mnemonic1 = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "begin", "host"]
+        let mnemonic2 = ["grant", "security", "cluster", "pill", "visit", "wave", "skull", "chase", "vibrant", "embrace", "bronze", "tip"]
+        let mnemonic3 = ["net", "dice", "divide", "amount", "stamp", "flock", "brave", "nuclear", "fox", "aim", "father", "apology"]
+        do {
+            let seed1 = try LibraMnemonic.seed(mnemonic: mnemonic1)
+            let seed2 = try LibraMnemonic.seed(mnemonic: mnemonic2)
+            let seed3 = try LibraMnemonic.seed(mnemonic: mnemonic3)
+            let seedModel1 = LibraSeedAndDepth.init(seed: seed1, depth: 0, sequence: 0)
+            let seedModel2 = LibraSeedAndDepth.init(seed: seed2, depth: 0, sequence: 1)
+            let seedModel3 = LibraSeedAndDepth.init(seed: seed3, depth: 0, sequence: 2)
+            let multiPublicKey = LibraMultiPublicKey.init(data: [LibraMultiPublicKeyModel.init(raw: Data.init(Array<UInt8>(hex: "2bd7d9fe82120842daa860606060661b222824c65af7bfb2843eeb7792a3b967")), sequence: 0),
+                                                                 LibraMultiPublicKeyModel.init(raw: Data.init(Array<UInt8>(hex: "50b715879a727bbc561786b0dc9e6afcd5d8a443da6eb632952e692b83e8e7cb")), sequence: 1),
+                                                                 LibraMultiPublicKeyModel.init(raw: Data.init(Array<UInt8>(hex: "e7e1b22eeb0a9ce0c49e3bf6cf23ebbb4d93d24c2064c46f6ceb9daa6ca2e217")), sequence: 2)],
+                                                          threshold: 2)
+            let wallet = try LibraMultiHDWallet.init(models: [seedModel1, seedModel3], threshold: 2, multiPublicKey: multiPublicKey)
+//            let wallet = try LibraMultiHDWallet.init(models: [seedModel1, seedModel2, seedModel3], threshold: 2)
+            print("Legacy = \(wallet.publicKey.toLegacy())")
+            //bafc671e8a38c05706f83b5159bbd8a4
+            print("Authentionkey = \(wallet.publicKey.toActive())")
+            //bf2128295b7a57e6e42390d56293760cbafc671e8a38c05706f83b5159bbd8a4
+            print("PublicKey = \(wallet.publicKey.toMultiPublicKey().toHexString())")
+            //2bd7d9fe82120842daa860606060661b222824c65af7bfb2843eeb7792a3b96750b715879a727bbc561786b0dc9e6afcd5d8a443da6eb632952e692b83e8e7cbe7e1b22eeb0a9ce0c49e3bf6cf23ebbb4d93d24c2064c46f6ceb9daa6ca2e21702
+            
+            let sign = try LibraManager.getMultiTransactionHex(sendAddress: multiPublicKey.toLegacy(),
+                                                               receiveAddress: "331321aefcce2ee794430d07d7a953a0",
+                                                               amount: 0.5,
+                                                               fee: 0,
+                                                               sequenceNumber: 8,
+                                                               wallet: wallet)
+            print(sign)
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    func testLibraKitPublishModule() {
+        print(BigUInt(86400).serialize().bytes)
+        print("LBR".data(using: .utf8)?.bytes)
+        let data = Data.init(Array<UInt8>(hex: "76696f6c617301003000fa279f2615270daed6061313a48360f7000000005ea2b35be1be1ab8360a35a0259f1c93e3eac736"))
+        let string = String.init(data: data, encoding: String.Encoding.utf8)
+        print(string)
+    }
+    func testReadMV() {
+        let path = Bundle.main.path(forResource: "peer_to_peer_with_metadata", ofType: "mv")
+        let data = try! Data.init(contentsOf: URL.init(fileURLWithPath: path!))
+        print(data.toHexString())
     }
 }

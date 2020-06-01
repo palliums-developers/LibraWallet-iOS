@@ -53,7 +53,7 @@ class OrderProcessingViewController: BaseViewController {
         }
         detailView.tableView.mj_footer?.resetNoMoreData()
 //        detailView.tableView.mj_header.beginRefreshing()
-        dataModel.getAllProcessingOrder(address: walletAddress, version: "")
+        dataModel.getAllProcessingOrders(address: walletAddress, version: "")
     }
     @objc func getMoreReceive() {
         guard let walletAddress = self.wallet?.walletAddress else {
@@ -61,7 +61,7 @@ class OrderProcessingViewController: BaseViewController {
         }
 //        detailView.tableView.mj_footer.beginRefreshing()
         if let version = self.tableViewManager.dataModel?.last?.version {
-            dataModel.getAllProcessingOrder(address: walletAddress, version: version)
+            dataModel.getAllProcessingOrders(address: walletAddress, version: version)
         } else {
             detailView.tableView.mj_footer?.endRefreshing()
         }
@@ -103,8 +103,9 @@ extension OrderProcessingViewController: OrderProcessingTableViewManagerDelegate
             self?.dataModel.cancelTransaction(sendAddress: walletAddress,
                                              fee: 0,
                                              mnemonic: mnemonic,
-                                             contact: model.tokenGive ?? "",
-                                             version: model.version ?? "")
+                                             contact: ViolasMainContract,
+                                             version: model.version ?? "",
+                                             tokenIndex: model.tokenGive ?? "")
         }) { [weak self] (errorContent) in
             self?.view.makeToast(errorContent, position: .center)
         }
@@ -156,6 +157,8 @@ extension OrderProcessingViewController {
             }
             self.detailView.hideToastActivity()
             self.detailView.tableView.mj_header?.endRefreshing()
+            self.detailView.makeToast(error.localizedDescription, position: .center)
+
             return
         }
         let type = jsonData.value(forKey: "type") as! String
@@ -218,7 +221,7 @@ extension OrderProcessingViewController: JXSegmentedListContainerViewListDelegat
             return
         }
         self.detailView.makeToastActivity(.center)
-        dataModel.getAllProcessingOrder(address: walletAddress, version: "")
+        dataModel.getAllProcessingOrders(address: walletAddress, version: "")
         firstIn = false
     }
     /// 可选实现，列表消失的时候调用

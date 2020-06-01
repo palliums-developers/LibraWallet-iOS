@@ -133,7 +133,8 @@ extension HomeViewController {
                     self.changeWalletButton.setTitle("Libra " + localLanguage(keyString: "wallet_home_wallet_type_last_title"), for: UIControl.State.normal)
                     self.changeWalletButton.imagePosition(at: .right, space: 10, imageViewSize: CGSize.init(width: 13, height: 7))
 
-                    self.dataModel.tempGetLibraBalance(walletID: wallet.walletID!, address: wallet.walletAddress ?? "")
+//                    self.dataModel.tempGetLibraBalance(walletID: wallet.walletID!, address: wallet.walletAddress ?? "")
+                    self.dataModel.getLibraBalance(walletID: wallet.walletID!, address: wallet.walletAddress ?? "", authKey: self.detailView.headerView.walletModel?.walletAuthenticationKey ?? "")
                     self.tableViewManager.dataModel?.removeAll()
                     self.detailView.tableView.reloadData()
                     self.detailView.headerView.hideAddTokenButtonState = true
@@ -141,7 +142,7 @@ extension HomeViewController {
                     self.changeWalletButton.setTitle("Violas " + localLanguage(keyString: "wallet_home_wallet_type_last_title"), for: UIControl.State.normal)
                     self.changeWalletButton.imagePosition(at: .right, space: 10, imageViewSize: CGSize.init(width: 13, height: 7))
 
-                    self.dataModel.getEnableViolasToken(walletID: wallet.walletID ?? 0, address: wallet.walletAddress ?? "")
+                    self.dataModel.getEnableViolasToken(walletID: wallet.walletID ?? 0, address: wallet.walletAddress ?? "", authKey: self.detailView.headerView.walletModel?.walletAuthenticationKey ?? "")
                     self.detailView.headerView.hideAddTokenButtonState = false
 
                 } else {
@@ -162,19 +163,19 @@ extension HomeViewController {
         let vc = ScanViewController()
         vc.actionClosure = { address in
             do {
-                let result = try self.dataModel.scanResultHandle(content: address, contracts: self.tableViewManager.dataModel)
+                let result = try libraWalletTool.scanResultHandle(content: address, contracts: self.tableViewManager.dataModel)
                 if result.type == .transfer {
                     switch result.addressType {
                     case .BTC:
-                        self.showBTCTransferViewController(address: result.address ?? "")
+                        self.showBTCTransferViewController(address: result.address ?? "", amount: result.amount)
                     case .Violas:
                         if let model = result.contract {
-                            self.showViolasTokenViewController(address: result.address ?? "", tokenModel: model)
+                            self.showViolasTokenViewController(address: result.address ?? "", tokenModel: model, amount: result.amount)
                         } else {
-                            self.showViolasTransferViewController(address: result.address ?? "")
+                            self.showViolasTransferViewController(address: result.address ?? "", amount: result.amount)
                         }
                     case .Libra:
-                        self.showLibraTransferViewController(address: result.address ?? "")
+                        self.showLibraTransferViewController(address: result.address ?? "", amount: result.amount)
                     default:
                         self.showScanContent(content: address)
                     }
@@ -194,7 +195,7 @@ extension HomeViewController {
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
-    func showBTCTransferViewController(address: String) {
+    func showBTCTransferViewController(address: String, amount: Int64?) {
         let vc = BTCTransferViewController()
         vc.actionClosure = {
         //            self.dataModel.getLocalUserInfo()
@@ -204,17 +205,18 @@ extension HomeViewController {
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
-    func showLibraTransferViewController(address: String) {
+    func showLibraTransferViewController(address: String, amount: Int64?) {
         let vc = TransferViewController()
         vc.actionClosure = {
 //            self.dataModel.getLocalUserInfo()
         }
         vc.wallet = self.detailView.headerView.walletModel
         vc.address = address
+        vc.amount = amount
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
-    func showViolasTransferViewController(address: String) {
+    func showViolasTransferViewController(address: String, amount: Int64?) {
         let vc = ViolasTransferViewController()
         vc.actionClosure = {
         //            self.dataModel.getLocalUserInfo()
@@ -222,11 +224,11 @@ extension HomeViewController {
         vc.wallet = self.detailView.headerView.walletModel
         vc.sendViolasTokenState = false
         vc.address = address
-//        vc.title = (self.detailView.headerView.walletModel?.walletType?.description ?? "") + localLanguage(keyString: "wallet_transfer_navigation_title")
+        vc.amount = amount
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
-    func showViolasTokenViewController(address: String, tokenModel: ViolasTokenModel) {
+    func showViolasTokenViewController(address: String, tokenModel: ViolasTokenModel, amount: Int64?) {
         let vc = ViolasTransferViewController()
         vc.actionClosure = {
         //            self.dataModel.getLocalUserInfo()
@@ -235,6 +237,7 @@ extension HomeViewController {
         vc.sendViolasTokenState = true
         vc.vtokenModel = tokenModel
         vc.address = address
+        vc.amount = amount
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
@@ -260,12 +263,16 @@ extension HomeViewController {
     /// 下拉刷新
     @objc func refreshData() {
         if self.detailView.headerView.walletModel?.walletType == .Libra {
-            self.dataModel.tempGetLibraBalance(walletID: self.detailView.headerView.walletModel?.walletID ?? 0,
-                                               address: self.detailView.headerView.walletModel?.walletAddress ?? "")
+//            self.dataModel.tempGetLibraBalance(walletID: self.detailView.headerView.walletModel?.walletID ?? 0,
+//                                               address: self.detailView.headerView.walletModel?.walletAddress ?? "")
+            self.dataModel.getLibraBalance(walletID: self.detailView.headerView.walletModel?.walletID ?? 0,
+                                           address: self.detailView.headerView.walletModel?.walletAddress ?? "",
+                                           authKey: self.detailView.headerView.walletModel?.walletAuthenticationKey ?? "")
         } else if self.detailView.headerView.walletModel?.walletType == .Violas {
             self.dataModel.getViolasBalance(walletID: self.detailView.headerView.walletModel?.walletID ?? 0,
                                             address: self.detailView.headerView.walletModel?.walletAddress ?? "",
-                                            vtokens: self.tableViewManager.dataModel!)
+                                            vtokens: self.tableViewManager.dataModel ?? [ViolasTokenModel](),
+                                            authKey: self.detailView.headerView.walletModel?.walletAuthenticationKey ?? "")
         } else {
             self.dataModel.getBTCBalance(walletID: self.detailView.headerView.walletModel?.walletID ?? 0,
                                          address: self.detailView.headerView.walletModel?.walletAddress ?? "")
@@ -284,6 +291,95 @@ extension HomeViewController {
             self.changeWalletButton.setTitle("BTC " + localLanguage(keyString: "wallet_home_wallet_type_last_title"), for: UIControl.State.normal)
         }
         self.changeWalletButton.imagePosition(at: .right, space: 10, imageViewSize: CGSize.init(width: 13, height: 7))
+    }
+}
+
+//MARK: - 子View代理方法列表
+extension HomeViewController: HomeHeaderViewDelegate {
+    func checkWalletDetail() {
+        let vc = WalletDetailViewController()
+        vc.walletModel = self.detailView.headerView.walletModel
+        vc.canDelete = false
+        vc.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    func checkWalletTransactionList() {
+        let vc = WalletTransactionsViewController()
+        vc.wallet = self.detailView.headerView.walletModel
+        vc.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    func addCoinToWallet() {
+        let vc = AddAssetViewController()
+        vc.hidesBottomBarWhenPushed = true
+        vc.wallet = self.detailView.headerView.walletModel
+        vc.needUpdateClosure = { result in
+//            self.refreshData()
+            self.detailView.makeToastActivity(.center)
+            self.dataModel.getLocalUserInfo()
+            print("刷新首页数据")
+        }
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    func walletSend() {
+        // 更新本地数据
+        switch self.detailView.headerView.walletModel?.walletType {
+        case .Libra:
+            let vc = TransferViewController()
+            vc.actionClosure = {
+    //            self.dataModel.getLocalUserInfo()
+            }
+            vc.wallet = self.detailView.headerView.walletModel
+            vc.hidesBottomBarWhenPushed = true
+            self.navigationController?.pushViewController(vc, animated: true)
+            break
+        case .Violas:
+           let vc = ViolasTransferViewController()
+           vc.actionClosure = {
+    //            self.dataModel.getLocalUserInfo()
+           }
+           vc.wallet = self.detailView.headerView.walletModel
+           vc.sendViolasTokenState = false
+//           vc.title = (self.detailView.headerView.walletModel?.walletType?.description ?? "") + localLanguage(keyString: "wallet_transfer_navigation_title")
+
+           vc.hidesBottomBarWhenPushed = true
+           self.navigationController?.pushViewController(vc, animated: true)
+            break
+        case .BTC:
+           let vc = BTCTransferViewController()
+           vc.actionClosure = {
+    //            self.dataModel.getLocalUserInfo()
+           }
+           vc.wallet = self.detailView.headerView.walletModel
+           vc.hidesBottomBarWhenPushed = true
+           self.navigationController?.pushViewController(vc, animated: true)
+            break
+        default:
+            break
+        }
+    }
+    func walletReceive() {
+        let vc = WalletReceiveViewController()
+        vc.wallet = self.detailView.headerView.walletModel
+        vc.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    func mapping() {
+        let vc = TokenMappingViewController()
+        vc.hidesBottomBarWhenPushed = true
+        vc.wallet = self.detailView.headerView.walletModel
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+}
+//MARK: - TableviewManager代理方法列表
+extension HomeViewController: HomeTableViewManagerDelegate {
+    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: ViolasTokenModel) {
+        let vc = VTokenMainViewController()
+        vc.hidesBottomBarWhenPushed = true
+        vc.wallet = self.detailView.headerView.walletModel
+        vc.vtokenModel = model
+        vc.title = model.name ?? ""
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }
 //MARK: - 网络请求数据处理中心
@@ -357,7 +453,7 @@ extension HomeViewController {
                     self?.changeWalletButton.imagePosition(at: .right, space: 10, imageViewSize: CGSize.init(width: 13, height: 7))
                 }
             } else if type == "UpdateBTCBalance" {
-                if let tempData = dataDic.value(forKey: "data") as? BalanceBTCModel {
+                if let tempData = dataDic.value(forKey: "data") as? BlockCypherBTCBalanceMainModel {
                     self?.detailView.headerView.btcModel = tempData
                     let defaultModel = ViolasTokenModel.init(name: "BTC",
                                                              description: "",
@@ -374,19 +470,19 @@ extension HomeViewController {
                     self?.detailView.headerView.libraModel = tempData
                     let defaultModel = ViolasTokenModel.init(name: "lib",
                                                              description: "",
-                                                             address: tempData.address ?? "",
+                                                             address: LibraWalletManager.shared.walletAddress ?? "",
                                                              icon: "",
                                                              enable: true,
-                                                             balance: (tempData.balance ?? 0) * 1000000,
+                                                             balance: (tempData.balance?[0].amount ?? 0),
                                                              registerState: true)
                     self?.tableViewManager.defaultModel = defaultModel
                     self?.detailView.tableView.reloadData()
                 }
             } else if type == "UpdateViolasBalance" {
-                if let tempData = dataDic.value(forKey: "data") as? BalanceLibraModel {
+                if let tempData = dataDic.value(forKey: "data") as? BalanceViolasModel {
                     self?.detailView.headerView.violasModel = tempData
+                    self?.tableViewManager.defaultModel?.balance = tempData.balance ?? 0
                     if let modules = tempData.modules, let dataModel = self?.tableViewManager.dataModel, modules.isEmpty == false, dataModel.isEmpty == false {
-                        self?.tableViewManager.defaultModel?.balance = tempData.balance ?? 0
                         self?.tableViewManager.dataModel = self?.dataModel.dealBalanceWithContract(modules: modules, violasTokens: dataModel)
                     }
                     self?.detailView.tableView.reloadData()
@@ -410,93 +506,5 @@ extension HomeViewController {
         })
         self.detailView.makeToastActivity(.center)
         self.dataModel.getLocalUserInfo()
-    }
-}
-//MARK: - 子View代理方法列表
-extension HomeViewController: HomeHeaderViewDelegate {
-    func checkWalletDetail() {
-        let vc = WalletDetailViewController()
-        vc.walletModel = self.detailView.headerView.walletModel
-        vc.canDelete = false
-        vc.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(vc, animated: true)
-    }
-    func checkWalletTransactionList() {
-        let vc = WalletTransactionsViewController()
-        vc.wallet = self.detailView.headerView.walletModel
-        vc.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(vc, animated: true)
-    }
-    func addCoinToWallet() {
-        let vc = AddAssetViewController()
-        vc.hidesBottomBarWhenPushed = true
-        vc.wallet = self.detailView.headerView.walletModel
-        vc.needUpdateClosure = { result in
-            self.refreshData()
-        }
-        self.navigationController?.pushViewController(vc, animated: true)
-    }
-    func walletSend() {
-        // 更新本地数据
-        switch self.detailView.headerView.walletModel?.walletType {
-        case .Libra:
-            let vc = TransferViewController()
-            vc.actionClosure = {
-    //            self.dataModel.getLocalUserInfo()
-            }
-            vc.wallet = self.detailView.headerView.walletModel
-            vc.hidesBottomBarWhenPushed = true
-            self.navigationController?.pushViewController(vc, animated: true)
-            break
-        case .Violas:
-           let vc = ViolasTransferViewController()
-           vc.actionClosure = {
-    //            self.dataModel.getLocalUserInfo()
-           }
-           vc.wallet = self.detailView.headerView.walletModel
-           vc.sendViolasTokenState = false
-//           vc.title = (self.detailView.headerView.walletModel?.walletType?.description ?? "") + localLanguage(keyString: "wallet_transfer_navigation_title")
-
-           vc.hidesBottomBarWhenPushed = true
-           self.navigationController?.pushViewController(vc, animated: true)
-            break
-        case .BTC:
-           let vc = BTCTransferViewController()
-           vc.actionClosure = {
-    //            self.dataModel.getLocalUserInfo()
-           }
-           vc.wallet = self.detailView.headerView.walletModel
-           vc.hidesBottomBarWhenPushed = true
-           self.navigationController?.pushViewController(vc, animated: true)
-            break
-        default:
-            break
-        }
-    }
-    func walletReceive() {
-        let vc = WalletReceiveViewController()
-        vc.wallet = self.detailView.headerView.walletModel
-        vc.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(vc, animated: true)
-    }
-    func mapping() {
-        let vc = TokenMappingViewController()
-        vc.hidesBottomBarWhenPushed = true
-        vc.wallet = self.detailView.headerView.walletModel
-        self.navigationController?.pushViewController(vc, animated: true)
-    }
-}
-//MARK: - TableviewManager代理方法列表
-extension HomeViewController: HomeTableViewManagerDelegate {
-    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: ViolasTokenModel) {
-        guard indexPath.row != 0 else {
-            return
-        }
-        let vc = VTokenMainViewController()
-        vc.hidesBottomBarWhenPushed = true
-        vc.wallet = self.detailView.headerView.walletModel
-        vc.vtokenModel = model
-        vc.title = model.name ?? ""
-        self.navigationController?.pushViewController(vc, animated: true)
     }
 }

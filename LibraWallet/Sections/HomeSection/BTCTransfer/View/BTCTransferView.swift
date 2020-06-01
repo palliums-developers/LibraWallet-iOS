@@ -332,11 +332,11 @@ class BTCTransferView: UIView {
                 return
             }
             // 检查是否向自己转账
-            guard address != self.wallet?.walletAddress else {
-                self.makeToast(LibraWalletError.WalletTransfer(reason: .transferToSelf).localizedDescription,
-                               position: .center)
-                return
-            }
+//            guard address != self.wallet?.walletAddress else {
+//                self.makeToast(LibraWalletError.WalletTransfer(reason: .transferToSelf).localizedDescription,
+//                               position: .center)
+//                return
+//            }
             self.amountTextField.resignFirstResponder()
             self.addressTextField.resignFirstResponder()
             self.transferFeeSlider.resignFirstResponder()

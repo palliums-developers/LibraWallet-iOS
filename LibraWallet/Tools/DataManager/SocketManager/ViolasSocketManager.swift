@@ -45,8 +45,8 @@ struct ViolasSocketManager {
     #if PUBLISH_VERSION
         private let requestURL = "https://dex.violas.io"
     #else
-//        private let requestURL = "http://18.220.66.235:38181"
-        private let requestURL = "https://dex.violas.io"
+        private let requestURL = "http://18.220.66.235:38181"
+//        private let requestURL = "https://dex.violas.io"
     #endif
     /// 请求超时时间
     private var timeout = 30

@@ -35,7 +35,6 @@ class HomeHeaderView: UIView {
         addSubview(walletAddressLabel)
         addSubview(copyAddressButton)
         
-        addSubview(mappingBackgroundButton)
         addSubview(lastTransactionBackgroundButton)
         addSubview(transferButton)
         addSubview(receiveButton)
@@ -49,8 +48,9 @@ class HomeHeaderView: UIView {
 //        lastTransactionBackgroundButton.addSubview(lastTransactionDateLabel)
         lastTransactionBackgroundButton.addSubview(lastTransactionDetailImageView)
         
-        mappingBackgroundButton.addSubview(mappingTitleLabel)
-        mappingBackgroundButton.addSubview(mappingDetailImageView)
+//        addSubview(mappingBackgroundButton)
+//        mappingBackgroundButton.addSubview(mappingTitleLabel)
+//        mappingBackgroundButton.addSubview(mappingDetailImageView)
 
         // 添加语言变换通知
         NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
@@ -122,22 +122,23 @@ class HomeHeaderView: UIView {
             make.right.bottom.equalTo(whiteBackgroundView)
             make.height.equalTo(54)
         }
-        mappingBackgroundButton.snp.makeConstraints { (make) in
-            make.top.equalTo(whiteBackgroundView.snp.bottom).offset(13)
-            make.left.equalTo(self).offset(15)
-            make.right.equalTo(self).offset(-15)
-            make.height.equalTo(42)
-        }
-        mappingTitleLabel.snp.makeConstraints { (make) in
-            make.centerY.equalTo(mappingBackgroundButton)
-            make.left.equalTo(mappingBackgroundButton).offset(14)
-        }
-        mappingDetailImageView.snp.makeConstraints { (make) in
-            make.centerY.equalTo(mappingBackgroundButton)
-            make.right.equalTo(mappingBackgroundButton.snp.right).offset(-15)
-        }
+//        mappingBackgroundButton.snp.makeConstraints { (make) in
+//            make.top.equalTo(whiteBackgroundView.snp.bottom).offset(13)
+//            make.left.equalTo(self).offset(15)
+//            make.right.equalTo(self).offset(-15)
+//            make.height.equalTo(42)
+//        }
+//        mappingTitleLabel.snp.makeConstraints { (make) in
+//            make.centerY.equalTo(mappingBackgroundButton)
+//            make.left.equalTo(mappingBackgroundButton).offset(14)
+//        }
+//        mappingDetailImageView.snp.makeConstraints { (make) in
+//            make.centerY.equalTo(mappingBackgroundButton)
+//            make.right.equalTo(mappingBackgroundButton.snp.right).offset(-15)
+//        }
         lastTransactionBackgroundButton.snp.makeConstraints { (make) in
-            make.top.equalTo(mappingBackgroundButton.snp.bottom).offset(13)
+//            make.top.equalTo(mappingBackgroundButton.snp.bottom).offset(13)
+            make.top.equalTo(whiteBackgroundView.snp.bottom).offset(13)
             make.left.equalTo(self).offset(15)
             make.right.equalTo(self).offset(-15)
             make.height.equalTo(42)
@@ -394,7 +395,9 @@ class HomeHeaderView: UIView {
             switch walletModel?.walletType {
             case .Libra:
                 assetUnitLabel.text = "libra"
-                assetLabel.text = "\(walletModel?.walletBalance ?? 0)"
+                assetLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (libraModel?.balance?[0].amount ?? 0)),
+                                                         scale: 4,
+                                                         unit: 1000000)
                 hideAddTokenButtonState = true
                 break
             case .Violas:
@@ -419,14 +422,14 @@ class HomeHeaderView: UIView {
     }
     var libraModel: BalanceLibraModel? {
         didSet {
-            if libraModel?.address == self.walletAddressLabel.text {
-                assetLabel.text = "\(libraModel?.balance ?? 0)"
-                self.walletModel?.changeWalletBalance(banlance: libraModel?.balance ?? 0)
-                assetUnitLabel.text = "libra"
-            }
+            assetLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (libraModel?.balance?[0].amount ?? 0)),
+                                                     scale: 4,
+                                                     unit: 1000000)
+            self.walletModel?.changeWalletBalance(banlance: libraModel?.balance?[0].amount ?? 0)
+            assetUnitLabel.text = "libra"
         }
     }
-    var violasModel: BalanceLibraModel? {
+    var violasModel: BalanceViolasModel? {
         didSet {
             if violasModel?.address == self.walletAddressLabel.text {
                 assetLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (violasModel?.balance ?? 0)),
@@ -437,7 +440,18 @@ class HomeHeaderView: UIView {
             }
         }
     }
-    var btcModel: BalanceBTCModel? {
+//    var btcModel: BalanceBTCModel? {
+//        didSet {
+//            if btcModel?.address == self.walletAddressLabel.text {
+//                assetLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (btcModel?.balance ?? 0)),
+//                                                         scale: 8,
+//                                                         unit: 100000000)
+//                self.walletModel?.changeWalletBalance(banlance: btcModel?.balance ?? 0)
+//                assetUnitLabel.text = "BTC"
+//            }
+//        }
+//    }
+    var btcModel: BlockCypherBTCBalanceMainModel? {
         didSet {
             if btcModel?.address == self.walletAddressLabel.text {
                 assetLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (btcModel?.balance ?? 0)),

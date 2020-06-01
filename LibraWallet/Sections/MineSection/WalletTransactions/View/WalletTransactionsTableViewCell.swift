@@ -231,18 +231,20 @@ class WalletTransactionsTableViewCell: UITableViewCell {
                 return
             }
             coinLabel.text = "Libra"
-            dateLabel.text = model.date
-            amountLabel.text = model.amount
-            if model.event == "sent" {
+            dateLabel.text = timestampToDateString(timestamp: model.expiration_time ?? 0, dateFormat: "yyyy-MM-dd HH:mm:ss")
+            amountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.amount ?? 0)),
+                                          scale: 4,
+                                          unit: 1000000)
+            if model.transaction_type == 0 {
                 // 转账
                 typeLabel.textColor = UIColor.init(hex: "E54040")
                 typeLabel.text = localLanguage(keyString: "wallet_transactions_transfer_title")
-                addressLabel.text = model.toAddress
+                addressLabel.text = model.receiver
             } else {
                 // 收款
                 typeLabel.textColor = UIColor.init(hex: "13B788")
                 typeLabel.text = localLanguage(keyString: "wallet_transactions_receive_title")
-                addressLabel.text = model.fromAddress
+                addressLabel.text = model.sender
             }
         }
     }

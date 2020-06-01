@@ -8,7 +8,7 @@ target 'LibraWallet' do
   pod 'CryptoSwift'
   pod 'SwiftProtobuf'
   pod 'BigInt'
-  pod 'SwiftGRPC'
+#  pod 'SwiftGRPC'
   pod 'SnapKit'
   pod 'Toast-Swift'
   pod 'Hue'
@@ -28,9 +28,13 @@ target 'LibraWallet' do
   pod 'Socket.IO-Client-Swift'
   pod 'Device'
   pod 'JXSegmentedView'
-  
+  pod 'WalletConnectSwift'
   # Pods for LibraWallet
 
+  target 'LibraWallet_Publish' do
+    inherit! :search_paths
+    # Pods for testing
+  end
   target 'LibraWalletTests' do
     inherit! :search_paths
     # Pods for testing

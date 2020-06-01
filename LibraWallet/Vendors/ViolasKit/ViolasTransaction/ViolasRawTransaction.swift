@@ -20,9 +20,9 @@ struct ViolasRawTransaction {
     
     fileprivate let expirationTime: Int
     
-    fileprivate let programOrWrite: Data
+    fileprivate let payLoad: Data
     
-    init(senderAddres: String, sequenceNumber: UInt64, maxGasAmount: Int64, gasUnitPrice: Int64, expirationTime: Int, programOrWrite: Data) {
+    init(senderAddres: String, sequenceNumber: UInt64, maxGasAmount: Int64, gasUnitPrice: Int64, expirationTime: Int, payLoad: Data) {
         
         self.senderAddress = senderAddres
         
@@ -34,7 +34,7 @@ struct ViolasRawTransaction {
         
         self.expirationTime = expirationTime
         
-        self.programOrWrite = programOrWrite
+        self.payLoad = payLoad
     }
     func serialize() -> Data {
         var result = Data()
@@ -45,15 +45,17 @@ struct ViolasRawTransaction {
         // senderAddress
         result += senderAddressData
         // sequenceNumber
-        result += getLengthData(length: Int(sequenceNumber), appendBytesCount: 8)
+        result += ViolasUtils.getLengthData(length: Int(sequenceNumber), appendBytesCount: 8)
         // TransactionPayload
-        result += self.programOrWrite
+        result += self.payLoad
         // maxGasAmount
-        result += getLengthData(length: Int(maxGasAmount), appendBytesCount: 8)
+        result += ViolasUtils.getLengthData(length: Int(maxGasAmount), appendBytesCount: 8)
         // gasUnitPrice
-        result += getLengthData(length: Int(gasUnitPrice), appendBytesCount: 8)
+        result += ViolasUtils.getLengthData(length: Int(gasUnitPrice), appendBytesCount: 8)
+        // libraTypeTag
+        result += ViolasTypeTag.init(structData: ViolasStructTag.init(type: .ViolasDefault)).serialize()
         // expirationTime
-        result += getLengthData(length: expirationTime, appendBytesCount: 8)
+        result += ViolasUtils.getLengthData(length: expirationTime, appendBytesCount: 8)
         return result
     }
 }

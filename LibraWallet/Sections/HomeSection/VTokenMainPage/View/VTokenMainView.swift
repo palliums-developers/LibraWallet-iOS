@@ -25,10 +25,6 @@ class VTokenMainView: UIView {
     //MARK: - 布局
     override func layoutSubviews() {
         super.layoutSubviews()
-//        walletTitleLabel.snp.makeConstraints { (make) in
-//            make.top.equalTo(18)
-//            make.left.equalTo(20)
-//        }
         topBackgroundImageView.snp.makeConstraints { (make) in
             make.top.left.right.equalTo(self)
             make.height.equalTo(navigationBarHeight)
@@ -62,7 +58,6 @@ class VTokenMainView: UIView {
         let view = VTokenMainHeaderView.init()
         return view
     }()
-    //MARK: - 懒加载对象
     lazy var tableView: UITableView = {
         let tableView = UITableView.init()
         tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
@@ -77,14 +72,4 @@ class VTokenMainView: UIView {
         tableView.register(WalletTransactionsTableViewCell.classForCoder(), forCellReuseIdentifier: "CellNormal")
         return tableView
     }()
-    @objc func buttonClick(button: UIButton) {
-    }
-    var clickCount: Int = 0
-    var model: LibraWalletManager?
-    @objc func setText(){
-        walletTitleLabel.text = localLanguage(keyString: "wallet_home_title")
-//        walletTotalAmountTitleLabel.text = localLanguage(keyString: "wallet_home_total_amount_title")
-//        receiveButtonTitleLabel.text = localLanguage(keyString: "wallet_home_receive_button_title")
-//        sendButtonTitleLabel.text = localLanguage(keyString: "wallet_home_send_button_title")
-    }
 }

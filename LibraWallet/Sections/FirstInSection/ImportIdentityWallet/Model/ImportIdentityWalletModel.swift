@@ -34,7 +34,7 @@ class ImportIdentityWalletModel: NSObject {
         }
     }
     func importBTCWallet(name: String, password: String, mnemonics: [String]) throws {
-        let wallet = BTCManager().getWallet(mnemonic: mnemonics)
+        let wallet = try! BTCManager().getWallet(mnemonic: mnemonics)
         let walletModel = LibraWalletManager.init(walletID: 999,
                                                   walletBalance: 0,
                                                   walletAddress: wallet.address.description,
@@ -45,7 +45,9 @@ class ImportIdentityWalletModel: NSObject {
                                                   walletBiometricLock: false,
                                                   walletIdentity: 0,
                                                   walletType: .BTC,
-                                                  walletBackupState: true)
+                                                  walletBackupState: true,
+                                                  walletAuthenticationKey: "",
+                                                  walletActiveState: true)
         let result = DataBaseManager.DBManager.insertWallet(model: walletModel)
         if result == true {
             do {
@@ -64,15 +66,17 @@ class ImportIdentityWalletModel: NSObject {
             let wallet = try ViolasManager.getWallet(mnemonic: mnemonics)
             let walletModel = LibraWalletManager.init(walletID: 999,
                                                       walletBalance: 0,
-                                                      walletAddress: wallet.publicKey.toAddress(),
-                                                      walletRootAddress: "Violas_" + wallet.publicKey.toAddress(),
+                                                      walletAddress: wallet.publicKey.toLegacy(),
+                                                      walletRootAddress: "Violas_" + wallet.publicKey.toLegacy(),
                                                       walletCreateTime: Int(NSDate().timeIntervalSince1970),
                                                       walletName: name,
                                                       walletCurrentUse: true,
                                                       walletBiometricLock: false,
                                                       walletIdentity: 0,
                                                       walletType: .Violas,
-                                                      walletBackupState: true)
+                                                      walletBackupState: true,
+                                                      walletAuthenticationKey: wallet.publicKey.toActive(),
+                                                      walletActiveState: false)
             let result = DataBaseManager.DBManager.insertWallet(model: walletModel)
             if result == true {
                 do {
@@ -102,7 +106,9 @@ class ImportIdentityWalletModel: NSObject {
                                                       walletBiometricLock: false,
                                                       walletIdentity: 0,
                                                       walletType: .Libra,
-                                                      walletBackupState: true)
+                                                      walletBackupState: true,
+                                                      walletAuthenticationKey: wallet.publicKey.toActive(),
+                                                      walletActiveState: false)
             let result = DataBaseManager.DBManager.insertWallet(model: walletModel)
             if result == true {
                 do {

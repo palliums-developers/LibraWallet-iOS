@@ -60,6 +60,10 @@ struct LibraWalletManager {
     private(set) var walletType: WalletType?
     /// 钱包备份状态
     private(set) var walletBackupState: Bool?
+    /// 授权Key
+    private(set) var walletAuthenticationKey: String?
+    /// 钱包激活状态
+    private(set) var walletActiveState: Bool?
 }
 extension LibraWalletManager {
     /// 创建Libra单例
@@ -73,7 +77,10 @@ extension LibraWalletManager {
     /// - Parameter walletBiometricLock: 钱包生物锁开启状态
     /// - Parameter walletIdentity: 账户类型身份钱包、其他钱包(0=身份钱包、1=其它导入钱包)
     /// - Parameter walletType: 钱包类型(0=Libra、1=Violas、2=BTC)
-    mutating func initWallet(walletID: Int64, walletBalance: Int64, walletAddress: String, walletRootAddress: String,  walletCreateTime: Int, walletName: String, walletCurrentUse: Bool, walletBiometricLock: Bool, walletIdentity: Int, walletType: WalletType, walletBackupState: Bool) {
+    /// - Parameter walletBackupState: 钱包备份状态
+    /// - Parameter walletAuthenticationKey: 授权Key
+    /// - Parameter walletActiveState: 钱包激活状态
+    mutating func initWallet(walletID: Int64, walletBalance: Int64, walletAddress: String, walletRootAddress: String,  walletCreateTime: Int, walletName: String, walletCurrentUse: Bool, walletBiometricLock: Bool, walletIdentity: Int, walletType: WalletType, walletBackupState: Bool, walletAuthenticationKey: String, walletActiveState: Bool) {
         self.semaphore.wait()
         
         self.walletID = walletID
@@ -87,6 +94,8 @@ extension LibraWalletManager {
         self.walletIdentity = walletIdentity
         self.walletType = walletType
         self.walletBackupState = walletBackupState
+        self.walletAuthenticationKey = walletAuthenticationKey
+        self.walletActiveState = walletActiveState
         
         self.semaphore.signal()
     }
@@ -128,12 +137,20 @@ extension LibraWalletManager {
         self.walletBiometricLock = wallet.walletBiometricLock
         self.walletIdentity = wallet.walletIdentity
         self.walletType = wallet.walletType
+        self.walletBackupState = wallet.walletBackupState
+        self.walletAuthenticationKey = wallet.walletAuthenticationKey
+        self.walletActiveState = wallet.walletActiveState
         
         self.semaphore.signal()
     }
     mutating func changeWalletBackupState(state: Bool) {
         self.semaphore.wait()
         self.walletBackupState = state
+        self.semaphore.signal()
+    }
+    mutating func changeWalletActiveState(state: Bool) {
+        self.semaphore.wait()
+        self.walletActiveState = state
         self.semaphore.signal()
     }
 }

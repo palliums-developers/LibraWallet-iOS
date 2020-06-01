@@ -49,67 +49,26 @@ class ViolasTransferViewController: BaseViewController {
     }()
     typealias successClosure = () -> Void
     var actionClosure: successClosure?
-    var myContext = 0
     var wallet: LibraWalletManager?
+    
     var sendViolasTokenState: Bool?
     var vtokenModel: ViolasTokenModel?
+    /// 数据监听KVO
+    private var observer: NSKeyValueObservation?
     var address: String? {
         didSet {
            self.detailView.addressTextField.text = address
         }
     }
-}
-extension ViolasTransferViewController {
-    func initKVO() {
-        dataModel.addObserver(self, forKeyPath: "dataDic", options: NSKeyValueObservingOptions.new, context: &myContext)
-    }
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?)  {
-        
-        guard context == &myContext else {
-            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
-            return
-        }
-        guard (change?[NSKeyValueChangeKey.newKey]) != nil else {
-            return
-        }
-        guard let jsonData = (object! as AnyObject).value(forKey: "dataDic") as? NSDictionary else {
-            return
-        }
-        if let error = jsonData.value(forKey: "error") as? LibraWalletError {
-            if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
-                // 网络无法访问
-                print(error.localizedDescription)
-            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletTokenExpired).localizedDescription {
-                // 钱包不存在
-                print(error.localizedDescription)
-                let vc = WalletCreateViewController()
-                let navi = UINavigationController.init(rootViewController: vc)
-                self.present(navi, animated: true, completion: nil)
-            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionExpired).localizedDescription {
-                // 版本太久
-                print(error.localizedDescription)
-            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
-                // 解析失败
-                print(error.localizedDescription)
-            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
-                print(error.localizedDescription)
-                // 数据为空
-            } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
-                print(error.localizedDescription)
-                // 数据返回状态异常
+    var amount: Int64? {
+        didSet {
+            guard let tempAmount = amount else {
+                return
             }
-            self.detailView.toastView?.hide()
-            self.view.makeToast(error.localizedDescription, position: .center)
-            return
-        }
-        let type = jsonData.value(forKey: "type") as! String
-        if type == "SendViolasTransaction" {
-            self.detailView.toastView?.hide()
-            self.view.makeToast(localLanguage(keyString: "wallet_transfer_success_alert"), position: .center)
-            if let action = self.actionClosure {
-                action()
-                self.navigationController?.popViewController(animated: true)
-            }
+            let amountContent = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: tempAmount),
+                                                       scale: 4,
+                                                       unit: 1000000)
+            self.detailView.amountTextField.text = "\(amountContent)"
         }
     }
 }
@@ -117,21 +76,31 @@ extension ViolasTransferViewController: ViolasTransferViewDelegate {
     func scanAddressQRcode() {
         let vc = ScanViewController()
         vc.actionClosure = { address in
-//            if address.hasPrefix("violas:") {
-//                let tempAddress = address.replacingOccurrences(of: "violas:", with: "")
-//                guard ViolasManager.isValidViolasAddress(address: tempAddress) else {
-//                    self.view.makeToast("不是有效的Violas地址", position: .center)
-//                    return
-//                }
-//                self.detailView.addressTextField.text = tempAddress
-//            } else {
-//                self.view.makeToast("不是有效的Violas地址", position: .center)
+//            do {
+//                let tempAddressModel = try handleScanContent(content: address)
+//                self.detailView.addressTextField.text = tempAddressModel.address
+//            } catch {
+//                self.detailView.makeToast(error.localizedDescription, position: .center)
 //            }
             do {
-                let tempAddressModel = try handleScanContent(content: address)
-                self.detailView.addressTextField.text = tempAddressModel.address
+                let result = try libraWalletTool.scanResultHandle(content: address, contracts: [])
+                if result.type == .transfer {
+                    switch result.addressType {
+                    case .Violas:
+                        self.detailView.addressTextField.text = result.address
+                        self.amount = result.amount
+                    default:
+                        self.detailView.addressTextField.text?.removeAll()
+                        self.detailView.amountTextField.text?.removeAll()
+                        self.view.makeToast(LibraWalletError.WalletScan(reason: LibraWalletError.ScanError.violasAddressInvalid).localizedDescription,
+                                            position: .center)
+                    }
+                } else {
+                    self.view.makeToast(LibraWalletError.WalletScan(reason: LibraWalletError.ScanError.violasAddressInvalid).localizedDescription,
+                                        position: .center)
+                }
             } catch {
-                self.detailView.makeToast(error.localizedDescription, position: .center)
+                self.view.makeToast(error.localizedDescription, position: .center)
             }
         }
         self.navigationController?.pushViewController(vc, animated: true)
@@ -150,13 +119,67 @@ extension ViolasTransferViewController: ViolasTransferViewDelegate {
         let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
             self?.detailView.toastView?.show()
             if self?.sendViolasTokenState == false {
-                self?.dataModel.sendViolasTransaction(sendAddress: (self?.wallet?.walletAddress)!, receiveAddress: address, amount: amount, fee: fee, mnemonic: mnemonic)
+                self?.dataModel.sendViolasTransaction(sendAddress: (self?.wallet?.walletAddress)!,
+                                                      receiveAddress: address,
+                                                      amount: amount,
+                                                      fee: fee,
+                                                      mnemonic: mnemonic)
             } else {
-                self?.dataModel.sendViolasTokenTransaction(sendAddress: (self?.wallet?.walletAddress)!, receiveAddress: address, amount: amount, fee: fee, mnemonic: mnemonic, contact: self?.vtokenModel?.address ?? "")
+                self?.dataModel.sendViolasTokenTransaction(sendAddress: (self?.wallet?.walletAddress)!,
+                                                           receiveAddress: address,
+                                                           amount: amount,
+                                                           fee: fee,
+                                                           mnemonic: mnemonic,
+                                                           tokenIndex: "\(self?.vtokenModel?.id ?? 9999)")
             }
         }) { [weak self] (errorContent) in
+            guard errorContent != "Cancel" else {
+                self?.detailView.toastView?.hide()
+                return
+            }
             self?.view.makeToast(errorContent, position: .center)
         }
         self.present(alert, animated: true, completion: nil)
+    }
+}
+extension ViolasTransferViewController {
+    func initKVO() {
+        self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
+            guard let dataDic = change.newValue, dataDic.count != 0 else {
+                self?.detailView.hideToastActivity()
+//                self?.endLoading()
+                return
+            }
+            let type = dataDic.value(forKey: "type") as! String
+            if let error = dataDic.value(forKey: "error") as? LibraWalletError {
+                if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
+                    // 网络无法访问
+                    print(error.localizedDescription)
+                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionExpired).localizedDescription {
+                    // 版本太久
+                    print(error.localizedDescription)
+                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
+                    // 解析失败
+                    print(error.localizedDescription)
+                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
+                    print(error.localizedDescription)
+                    // 数据为空
+                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
+                    print(error.localizedDescription)
+                    // 数据返回状态异常
+                }
+                self?.detailView.hideToastActivity()
+                self?.view.makeToast(error.localizedDescription, position: .center)
+                return
+            }
+            if type == "SendViolasTransaction" {
+                self?.detailView.toastView?.hide()
+                self?.view.makeToast(localLanguage(keyString: "wallet_transfer_success_alert"), position: .center)
+                if let action = self?.actionClosure {
+                    action()
+                    self?.navigationController?.popViewController(animated: true)
+                }
+            }
+        })
     }
 }

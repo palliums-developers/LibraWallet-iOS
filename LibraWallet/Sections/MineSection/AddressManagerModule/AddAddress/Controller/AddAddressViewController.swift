@@ -126,10 +126,26 @@ extension AddAddressViewController: AddAddressViewDelegate {
         let vc = ScanViewController()
         vc.actionClosure = { address in
             do {
-                let tempAddressModel = try handleScanContent(content: address)
-                self.detailView.addressTextField.text = tempAddressModel.address
+                let result = try libraWalletTool.scanResultHandle(content: address, contracts: [])
+                if result.type == .transfer {
+                    switch result.addressType {
+                    case .Violas:
+                        self.detailView.addressTextField.text = result.address
+                    case .Libra:
+                        self.detailView.addressTextField.text = result.address
+                    case .BTC:
+                        self.detailView.addressTextField.text = result.address
+                    default:
+                        self.detailView.addressTextField.text?.removeAll()
+                        self.view.makeToast(LibraWalletError.WalletScan(reason: LibraWalletError.ScanError.handleInvalid).localizedDescription,
+                                            position: .center)
+                    }
+                } else {
+                    self.view.makeToast(LibraWalletError.WalletScan(reason: LibraWalletError.ScanError.handleInvalid).localizedDescription,
+                                        position: .center)
+                }
             } catch {
-                self.detailView.makeToast(error.localizedDescription, position: .center)
+                self.view.makeToast(error.localizedDescription, position: .center)
             }
        }
         self.navigationController?.pushViewController(vc, animated: true)

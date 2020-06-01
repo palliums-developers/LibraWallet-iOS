@@ -58,7 +58,7 @@ extension ImportWalletViewController: ImportWalletViewDelegate {
         self.detailView.toastView.show()
         let quene = DispatchQueue.init(label: "createWalletQuene")
         quene.async {
-            let wallet = BTCManager().getWallet(mnemonic: mnemonicArray)
+            let wallet = try! BTCManager().getWallet(mnemonic: mnemonicArray)
             let walletModel = LibraWalletManager.init(walletID: 999,
                                                       walletBalance: 0,
                                                       walletAddress: wallet.address.description,
@@ -115,15 +115,16 @@ extension ImportWalletViewController: ImportWalletViewDelegate {
 
                 let walletModel = LibraWalletManager.init(walletID: 999,
                                                           walletBalance: 0,
-                                                          walletAddress: wallet.publicKey.toAddress(),
-                                                          walletRootAddress: "Violas_" + wallet.publicKey.toAddress(),
+                                                          walletAddress: wallet.publicKey.toLegacy(),
+                                                          walletRootAddress: "Violas_" + wallet.publicKey.toLegacy(),
                                                           walletCreateTime: Int(NSDate().timeIntervalSince1970),
                                                           walletName: name,
                                                           walletCurrentUse: false,
                                                           walletBiometricLock: false,
                                                           walletIdentity: 1,
                                                           walletType: .Violas,
-                                                          walletBackupState: true)
+                                                          walletBackupState: true,
+                                                          walletAuthenticationKey: wallet.publicKey.toActive())
                 guard DataBaseManager.DBManager.isExistAddressInWallet(address: walletModel.walletRootAddress ?? "") == false else {
                     DispatchQueue.main.async(execute: {
                         self.detailView.toastView.hide()
@@ -174,7 +175,8 @@ extension ImportWalletViewController: ImportWalletViewDelegate {
                                                           walletBiometricLock: false,
                                                           walletIdentity: 1,
                                                           walletType: .Libra,
-                                                          walletBackupState: true)
+                                                          walletBackupState: true,
+                                                          walletAuthenticationKey: wallet.publicKey.toActive())
                 guard DataBaseManager.DBManager.isExistAddressInWallet(address: walletModel.walletRootAddress ?? "") == false else {
                     DispatchQueue.main.async(execute: {
                         self.detailView.toastView.hide()

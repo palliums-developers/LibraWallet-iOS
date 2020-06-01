@@ -50,7 +50,7 @@ func checkMnenoicInvalid(mnemonicArray: [String]) -> Bool {
     guard mnemonicArray.count != 0 else {
         return false
     }
-    let wordList: [String.SubSequence] =  WordList.english
+    let wordList: [String.SubSequence] =  LibraWordList.english
     for i in 0...mnemonicArray.count - 1 {
         let status = wordList.contains(Substring.init(mnemonicArray[i]))
         if status == false {
@@ -115,45 +115,7 @@ func passowordAlert(rootAddress: String, message: String? = localLanguage(keyStr
     })
     return alertContr
 }
-struct ScanAddressModel {
-    let address: String?
-    let addressType: WalletType?
-    let addressTokenName: String?
-}
-func handleScanContent(content: String) throws -> ScanAddressModel {
-    if content.hasPrefix("bitcoin:") {
-        let tempAddress = content.replacingOccurrences(of: "bitcoin:", with: "")
-        return ScanAddressModel.init(address: tempAddress,
-                                     addressType: .BTC,
-                                     addressTokenName: "")
-    } else if content.hasPrefix("libra:") {
-        let tempAddress = content.replacingOccurrences(of: "libra:", with: "")
-        return ScanAddressModel.init(address: tempAddress,
-                                     addressType: .Libra,
-                                     addressTokenName: "")
-    } else if content.hasPrefix("violas:") {
-        let tempAddress = content.replacingOccurrences(of: "violas:", with: "")
-        return ScanAddressModel.init(address: tempAddress,
-                                     addressType: .Violas,
-                                     addressTokenName: "")
-    } else if content.hasPrefix("violas-") {
-        let coinAddress = content.split(separator: ":").last?.description
-        
-        let addressPrifix = content.split(separator: ":").first?.description
 
-        let coinName = addressPrifix?.split(separator: "-")
-        guard coinName?.count == 2 else {
-            throw LibraWalletError.error("Token名称为空")
-        }
-        return ScanAddressModel.init(address: coinAddress,
-                                     addressType: .Violas,
-                                     addressTokenName: coinName?.last?.description)
-    } else {
-        return ScanAddressModel.init(address: content,
-                                     addressType: nil,
-                                     addressTokenName: nil)
-    }
-}
 func handlePassword(password: String) -> Bool {
     guard (password.count >= PasswordMinLimit) && (password.count <= PasswordMaxLimit) else {
         return false
@@ -212,4 +174,122 @@ func getDecimalNumber(amount: NSDecimalNumber, scale: Int16, unit: Int) -> NSDec
                                                    raiseOnDivideByZero: false)
     let number = amount.dividing(by: NSDecimalNumber.init(value: unit), withBehavior: numberConfig)
     return number
+}
+struct libraWalletTool {
+    public static func scanResultHandle(content: String, contracts: [ViolasTokenModel]?) throws -> QRCodeHandleResult {
+         if content.hasPrefix("bitcoin:") {
+            let (contentPrefix, amount) = self.handleAmount(content: content)
+             let tempAddress = contentPrefix.replacingOccurrences(of: "bitcoin:", with: "")
+             guard BTCManager.isValidBTCAddress(address: tempAddress) else {
+                 throw LibraWalletError.WalletScan(reason: .btcAddressInvalid)
+             }
+             return QRCodeHandleResult.init(addressType: .BTC,
+                                            originContent: content,
+                                            address: tempAddress,
+                                            amount: amount,
+                                            contract: nil,
+                                            type: .transfer)
+         } else if content.hasPrefix("libra:") {
+             let (contentPrefix, amount) = handleAmount(content: content)
+             let tempAddress = contentPrefix.replacingOccurrences(of: "libra:", with: "")
+             guard LibraManager.isValidLibraAddress(address: tempAddress) else {
+                throw LibraWalletError.WalletScan(reason: .libraAddressInvalid)
+             }
+             return QRCodeHandleResult.init(addressType: .Libra,
+                                            originContent: content,
+                                            address: tempAddress,
+                                            amount: amount,
+                                            contract: nil,
+                                            type: .transfer)
+         } else if content.hasPrefix("violas:") {
+             let (contentPrefix, amount) = handleAmount(content: content)
+             let tempAddress = contentPrefix.replacingOccurrences(of: "violas:", with: "")
+             guard ViolasManager.isValidViolasAddress(address: tempAddress) else {
+                 throw LibraWalletError.WalletScan(reason: .violasAddressInvalid)
+             }
+             return QRCodeHandleResult.init(addressType: .Violas,
+                                            originContent: content,
+                                            address: tempAddress,
+                                            amount: amount,
+                                            contract: nil,
+                                            type: .transfer)
+         } else if content.hasPrefix("violas-") {
+             let (contentPrefix, amount) = handleAmount(content: content)
+             let coinAddress = contentPrefix.split(separator: ":").last?.description
+             let addressPrifix = contentPrefix.split(separator: ":").first?.description
+             let coinNames = addressPrifix?.split(separator: "-")
+             guard coinNames?.count == 2 else {
+                 print("token名称为空")
+                 throw LibraWalletError.WalletScan(reason: .violasTokenNameEmpty)
+             }
+             let contract = contracts?.filter({ item in
+                 item.name?.lowercased() == coinNames?.last?.description.lowercased()
+             })
+             guard (contract?.count ?? 0) > 0 else {
+                 // 不支持或未开启
+                 print("不支持或未开启")
+                 throw LibraWalletError.WalletScan(reason: .violasTokenContractInvalid)
+             }
+             guard ViolasManager.isValidViolasAddress(address: coinAddress ?? "") else {
+                 throw LibraWalletError.WalletScan(reason: .violasAddressInvalid)
+             }
+             return QRCodeHandleResult.init(addressType: .Violas,
+                                            originContent: content,
+                                            address: coinAddress,
+                                            amount: amount,
+                                            contract: contract?.first,
+                                            type: .transfer)
+         } else {
+             do {
+                 let model = try JSONDecoder().decode(ScanLoginDataModel.self, from: content.data(using: .utf8)!)
+                 guard model.type == 2 else {
+                     return QRCodeHandleResult.init(addressType: nil,
+                                                    originContent: content,
+                                                    address: nil,
+                                                    amount: nil,
+                                                    contract: nil,
+                                                    type: .others)
+                 }
+                 return QRCodeHandleResult.init(addressType: nil,
+                                                originContent: content,
+                                                address: model.session_id,
+                                                amount: nil,
+                                                contract: nil,
+                                                type: .login)
+             } catch {
+                 return QRCodeHandleResult.init(addressType: nil,
+                                                originContent: content,
+                                                address: nil,
+                                                amount: nil,
+                                                contract: nil,
+                                                type: .others)
+             }
+         }
+     }
+     struct QRCodeHandleResult {
+         var addressType: WalletType?
+         var originContent: String
+         var address: String?
+         var amount: Int64?
+         var contract: ViolasTokenModel?
+         var type: QRCodeType
+     }
+     enum QRCodeType {
+         case transfer
+         case login
+         case others
+     }
+     private static func handleAmount(content: String) -> (String, Int64?) {
+         let contentArray = content.split(separator: "?")
+         if contentArray.count == 2 {
+             let amountContent = contentArray[1].split(separator: "&")
+             let amountString = amountContent[0].replacingOccurrences(of: "amount=", with: "")
+             let amount = NSDecimalNumber.init(string: amountString)
+             
+             return (contentArray.first!.description, amount.int64Value)
+         } else {
+             return (content, nil)
+         }
+         
+     }
 }

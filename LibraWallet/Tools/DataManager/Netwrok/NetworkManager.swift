@@ -12,9 +12,6 @@ import Localize_Swift
 let mainProvide = MoyaProvider<mainRequest>()
 //let mainProvide = MoyaProvider<mainRequest>(stubClosure: MoyaProvider.immediatelyStub)
 enum mainRequest {
-    /// 获取测试币
-    
-    case GetTestCoin(String, Int64)
     /// 获取Libra交易记录
     case GetTransactionHistory(String, Int64)
     /// 获取BTC余额记录
@@ -25,6 +22,11 @@ enum mainRequest {
     case GetBTCUnspentUTXO(String)
     /// 发送BTC交易
     case SendBTCTransaction(String)
+    
+    case BlockCypherBTCBalance(String)
+    case BlockCypherBTCUnspentUTXO(String)
+    case BlockCypherBTCPushTransaction(String)
+    
     /// 获取Libra账户余额
     case GetLibraAccountBalance(String)
     /// 获取Libra账户Sequence Number
@@ -56,6 +58,8 @@ enum mainRequest {
     case GetOrderDetail(String, Int)
     /// 获取已完成订单
     case GetAllDoneOrder(String, String)
+    /// 取消订单（交易字节码，Version）
+    case CancelOrder(String, String)
     
     /// 查询映射信息
     case GetMappingInfo(String)
@@ -66,6 +70,12 @@ enum mainRequest {
     
     /// 扫码登录
     case SubmitScanLoginData(String, String)
+    /// 激活Violas（临时）
+    case ActiveViolasAccount(String)
+    /// 激活Libra（临时）
+    case ActiveLibraAccount(String)
+    /// 获取Violas账户信息（临时）
+    case GetViolasAccountInfo(String)
 }
 extension mainRequest:TargetType {
     var baseURL: URL {
@@ -77,10 +87,18 @@ extension mainRequest:TargetType {
              .GetBTCUnspentUTXO(_),
              .SendBTCTransaction(_):
             return URL(string:"https://tchain.api.btc.com/v3")!
-        case .GetLibraAccountBalance(_),
-             .GetLibraAccountSequenceNumber(_),
+            
+        case .BlockCypherBTCBalance(_),
+             .BlockCypherBTCUnspentUTXO,
+             .BlockCypherBTCPushTransaction:
+            return URL(string:"https://api.blockcypher.com/v1/btc/test3")!
+            
+            
+        case .GetLibraAccountSequenceNumber(_),
              .GetLibraAccountTransactionList(_, _, _),
-             .SendLibraTransaction(_):
+             .ActiveLibraAccount(_),
+             .ActiveViolasAccount(_),
+             .GetViolasAccountInfo(_):
             #if PUBLISH_VERSION
                 return URL(string:"https://api.violas.io/1.0")!
             #else
@@ -103,26 +121,25 @@ extension mainRequest:TargetType {
                 return URL(string:"http://52.27.228.84:4000/1.0")!
 //                return URL(string:"https://api.violas.io/1.0")!
             #endif
-        case .GetTestCoin(_, _):
-            return URL(string:"http://faucet.testnet.libra.org/")!
         case .GetMarketSupportCoin,
              .GetCurrentOrder(_, _, _),
              .GetAllProcessingOrder(_, _),
              .GetOrderDetail(_, _),
-             .GetAllDoneOrder(_, _):
+             .GetAllDoneOrder(_, _),
+             .CancelOrder(_, _):
             #if PUBLISH_VERSION
                 return URL(string:"https://dex.violas.io/v1")!
             #else
-//                return URL(string:"http://18.220.66.235:38181/v1")!
-                return URL(string:"https://dex.violas.io/v1")!
+                return URL(string:"http://18.220.66.235:38181/v1")!
+//                return URL(string:"https://dex.violas.io/v1")!
             #endif
+        case .GetLibraAccountBalance(_),
+             .SendLibraTransaction(_):
+            return URL(string:"https://client.testnet.libra.org")!
         }
     }
     var path: String {
         switch self {
-        // 获取测试币
-        case .GetTestCoin(_, _):
-            return ""
         case .GetTransactionHistory(_, _):
             return "/transactionHistory"
         case .GetBTCBalance(let address):
@@ -133,14 +150,22 @@ extension mainRequest:TargetType {
             return "/address/\(address)/unspent"
         case .SendBTCTransaction(_):
             return "/tools/tx-publish"
+            
+        case .BlockCypherBTCBalance(let address):
+            return "/addrs/\(address)/balance"
+        case .BlockCypherBTCUnspentUTXO(let address):
+            return "/addrs/\(address)"
+        case .BlockCypherBTCPushTransaction(_):
+            return "/txs/push"
+            
         case .GetLibraAccountBalance(_):
-            return "/libra/balance"
+            return ""
         case .GetLibraAccountSequenceNumber(_):
             return "/libra/seqnum"
         case .GetLibraAccountTransactionList(_, _, _):
             return "/libra/transaction"
         case .SendLibraTransaction(_):
-            return "/libra/transaction"
+            return ""
         case .GetViolasAccountBalance(_, _):
             return "/violas/balance"
         case .GetViolasAccountSequenceNumber(_):
@@ -163,6 +188,8 @@ extension mainRequest:TargetType {
             return "/trades"
         case .GetAllDoneOrder(_, _):
             return "/orders"
+        case .CancelOrder(_, _):
+            return "/cancelOrder"
         case .GetMappingInfo(_):
             return "/crosschain/info"
         case .GetMappingTokenList(_):
@@ -171,21 +198,33 @@ extension mainRequest:TargetType {
             return "/crosschain/transactions"
         case .SubmitScanLoginData(_, _):
             return "/violas/singin"
+        case .ActiveLibraAccount(_):
+            return "/libra/mint"
+        case .ActiveViolasAccount(_):
+            return "/violas/mint"
+        case .GetViolasAccountInfo(_):
+            return "/violas/account/info"
         }
     }
     var method: Moya.Method {
         switch self {
-        case .GetTestCoin(_, _),
-             .GetTransactionHistory(_, _),
+        case .GetTransactionHistory(_, _),
              .SendLibraTransaction(_),
              .SendViolasTransaction(_),
              .SendBTCTransaction(_),
-             .SubmitScanLoginData(_, _):
+             .BlockCypherBTCPushTransaction(_),
+             .SubmitScanLoginData(_, _),
+             .GetLibraAccountBalance(_),
+             .CancelOrder(_, _):
             return .post
         case .GetBTCBalance(_),
              .GetBTCTransactionHistory(_, _, _),
              .GetBTCUnspentUTXO(_),
-             .GetLibraAccountBalance(_),
+             
+             .BlockCypherBTCBalance(_),
+             .BlockCypherBTCUnspentUTXO(_),
+             
+             
              .GetLibraAccountSequenceNumber(_),
              .GetLibraAccountTransactionList(_, _, _),
              .GetViolasAccountBalance(_, _),
@@ -200,7 +239,10 @@ extension mainRequest:TargetType {
              .GetAllDoneOrder(_, _),
              .GetMappingInfo(_),
              .GetMappingTokenList(_),
-             .GetMappingTransactions(_, _, _, _):
+             .GetMappingTransactions(_, _, _, _),
+             .ActiveViolasAccount(_),
+             .ActiveLibraAccount(_),
+             .GetViolasAccountInfo(_):
             return .get
         }
     }
@@ -217,11 +259,6 @@ extension mainRequest:TargetType {
     }
     var task: Task {
         switch self {
-        // 获取测试币(暂废)
-        case .GetTestCoin(let address, let amount):
-            return .requestParameters(parameters: ["address": address,
-                                                   "amount": amount],
-                                      encoding: URLEncoding.queryString)
         case .GetTransactionHistory(let address, _):
             return .requestParameters(parameters: ["address": address],
                                       encoding: JSONEncoding.default)
@@ -236,19 +273,37 @@ extension mainRequest:TargetType {
         case .SendBTCTransaction(let signature):
             return .requestParameters(parameters: ["rawhex": signature],
                                       encoding: JSONEncoding.default)
-        case .GetLibraAccountBalance(let address):
-            return .requestParameters(parameters: ["addr": address],
+            
+        case .BlockCypherBTCBalance(_):
+            return .requestPlain
+        case .BlockCypherBTCUnspentUTXO(_):
+            return .requestParameters(parameters: ["unspentOnly": true,
+                                                   "includeScript":true],
                                       encoding: URLEncoding.queryString)
+        case .BlockCypherBTCPushTransaction(let signature):
+            return .requestParameters(parameters: ["token": "64ff3535053045689add0ee65359c6a9",
+                                                   "tx": signature],
+                                      encoding: JSONEncoding.default)
+            
+        case .GetLibraAccountBalance(let address):
+            return .requestParameters(parameters: ["jsonrpc":"2.0",
+                                                   "method":"get_account_state",
+                                                   "id":"123",
+                                                   "params":["\(address)"]],
+                                      encoding: JSONEncoding.default)
         case .GetLibraAccountSequenceNumber(let address):
             return .requestParameters(parameters: ["addr": address],
                                       encoding: URLEncoding.queryString)
         case .GetLibraAccountTransactionList(let address, let offset, let limit):
             return .requestParameters(parameters: ["addr": address,
-                                                   "limit": offset,
-                                                   "offset":limit],
+                                                   "limit": limit,
+                                                   "offset":offset],
                                       encoding: URLEncoding.queryString)
         case .SendLibraTransaction(let signature):
-            return .requestParameters(parameters: ["signedtxn": signature],
+            return .requestParameters(parameters: ["jsonrpc":"2.0",
+                                                   "method":"submit",
+                                                   "id":"123",
+                                                   "params":["\(signature)"]],
                                       encoding: JSONEncoding.default)
         case .GetViolasAccountBalance(let address, let modules):
             return .requestParameters(parameters: ["addr": address,
@@ -315,6 +370,10 @@ extension mainRequest:TargetType {
                                                        "version":version],
                                           encoding: URLEncoding.queryString)
             }
+        case .CancelOrder(let signature, let version):
+            return .requestParameters(parameters: ["version": version,
+                                                   "signedtxn":signature],
+                                      encoding: JSONEncoding.default)
         case .GetMappingInfo(let type):
             return .requestParameters(parameters: ["type":type.lowercased()],
                                       encoding: URLEncoding.queryString)
@@ -332,6 +391,23 @@ extension mainRequest:TargetType {
                                                    "session_id": sessionID,
                                                    "type":2],
                                       encoding: JSONEncoding.default)
+        case .ActiveLibraAccount(let authKey):
+            let index = authKey.index(authKey.startIndex, offsetBy: 32)
+            let address = authKey.suffix(from: index)
+            let authPrefix = authKey.prefix(upTo: index)
+            return .requestParameters(parameters: ["address": address,
+                                                   "auth_key_perfix": authPrefix],
+                                      encoding: URLEncoding.queryString)
+        case .ActiveViolasAccount(let authKey):
+            let index = authKey.index(authKey.startIndex, offsetBy: 32)
+            let address = authKey.suffix(from: index)
+            let authPrefix = authKey.prefix(upTo: index)
+            return .requestParameters(parameters: ["address": address,
+                                                   "auth_key_perfix": authPrefix],
+                                      encoding: URLEncoding.queryString)
+        case .GetViolasAccountInfo(let address):
+            return .requestParameters(parameters: ["address": address],
+                                      encoding: URLEncoding.queryString)
         }
     }
     var headers: [String : String]? {

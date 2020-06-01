@@ -21,63 +21,16 @@ struct ViolaSendTransactionMainModel: Codable {
     var code: Int?
     /// 错误信息
     var message: String?
-
 }
 class ViolasTransferModel: NSObject {
-    @objc var dataDic: NSMutableDictionary = [:]
+    @objc dynamic var dataDic: NSMutableDictionary = [:]
     private var requests: [Cancellable] = []
     private var sequenceNumber: Int?
-    
-    func getViolasSequenceNumber(sendAddress: String, semaphore: DispatchSemaphore, queue: DispatchQueue) {
-        semaphore.wait()
-        let request = mainProvide.request(.GetViolasAccountSequenceNumber(sendAddress)) {[weak self](result) in
-            switch  result {
-            case let .success(response):
-                do {
-                    let json = try response.map(ViolaSequenceNumberMainModel.self)
-                    if json.code == 2000 {
-   //                    let data = setKVOData(type: "GetViolasSequenceNumber", data: json.data)
-   //                    self?.setValue(data, forKey: "dataDic")
-                       self?.sequenceNumber = json.data
-                       semaphore.signal()
-                    } else {
-                        print("GetViolasSequenceNumber_状态异常")
-                        DispatchQueue.main.async(execute: {
-                            if let message = json.message, message.isEmpty == false {
-                                let data = setKVOData(error: LibraWalletError.error(message), type: "GetViolasSequenceNumber")
-                                self?.setValue(data, forKey: "dataDic")
-                            } else {
-                                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "GetViolasSequenceNumber")
-                                self?.setValue(data, forKey: "dataDic")
-                            }
-                        })
-                    }
-                } catch {
-                    print("解析异常\(error.localizedDescription)")
-                    DispatchQueue.main.async(execute: {
-                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetViolasSequenceNumber")
-                        self?.setValue(data, forKey: "dataDic")
-                    })
-                    
-                }
-            case let .failure(error):
-                guard error.errorCode != -999 else {
-                    print("网络请求已取消")
-                    return
-                }
-                DispatchQueue.main.async(execute: {
-                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "GetViolasSequenceNumber")
-                    self?.setValue(data, forKey: "dataDic")
-                })
-            }
-        }
-        self.requests.append(request)
-    }
     func sendViolasTransaction(sendAddress: String, receiveAddress: String, amount: Double, fee: Double, mnemonic: [String]) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
         queue.async {
-            self.getViolasSequenceNumber(sendAddress: sendAddress, semaphore: semaphore, queue: queue)
+            self.getViolasSequenceNumber(sendAddress: sendAddress, semaphore: semaphore)
         }
         queue.async {
             semaphore.wait()
@@ -99,12 +52,11 @@ class ViolasTransferModel: NSObject {
             semaphore.signal()
         }
     }
-    func sendViolasTokenTransaction(sendAddress: String, receiveAddress: String, amount: Double, fee: Double, mnemonic: [String], contact: String) {
-//        "05599ef248e215849cc599f563b4883fc8aff31f1e43dff1e3ebe4de1370e054"
+    func sendViolasTokenTransaction(sendAddress: String, receiveAddress: String, amount: Double, fee: Double, mnemonic: [String], tokenIndex: String) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
         queue.async {
-            self.getViolasSequenceNumber(sendAddress: sendAddress, semaphore: semaphore, queue: queue)
+            self.getViolasSequenceNumber(sendAddress: sendAddress, semaphore: semaphore)
         }
         queue.async {
             semaphore.wait()
@@ -114,15 +66,8 @@ class ViolasTransferModel: NSObject {
                                                                                amount: amount,
                                                                                fee: fee,
                                                                                mnemonic: mnemonic,
-                                                                               contact: contact,
-                                                                               sequenceNumber: self.sequenceNumber!)
-//                let signature = try ViolasManager.getVBTCToBTCTransactionHex(sendAddress: sendAddress,
-//                                                                             amount: amount,
-//                                                                             fee: fee,
-//                                                                             mnemonic: mnemonic,
-//                                                                             contact: contact,
-//                                                                             sequenceNumber: self.sequenceNumber!,
-//                                                                             btcAddress: "n1dqi6pwdS46ucUh5eJ9KmHS11JgnQLWwc")
+                                                                               sequenceNumber: self.sequenceNumber!,
+                                                                               tokenIndex: tokenIndex)
                 self.makeViolasTransaction(signature: signature)
             } catch {
                 print(error.localizedDescription)
@@ -133,7 +78,49 @@ class ViolasTransferModel: NSObject {
             }
             semaphore.signal()
         }
-        
+    }
+    private func getViolasSequenceNumber(sendAddress: String, semaphore: DispatchSemaphore) {
+        semaphore.wait()
+        let request = mainProvide.request(.GetViolasAccountSequenceNumber(sendAddress)) {[weak self](result) in
+            switch  result {
+            case let .success(response):
+                do {
+                    let json = try response.map(ViolaSequenceNumberMainModel.self)
+                    if json.code == 2000 {
+                       self?.sequenceNumber = json.data
+                       semaphore.signal()
+                    } else {
+                        print("GetViolasSequenceNumber_状态异常")
+                        DispatchQueue.main.async(execute: {
+                            if let message = json.message, message.isEmpty == false {
+                                let data = setKVOData(error: LibraWalletError.error(message), type: "GetViolasSequenceNumber")
+                                self?.setValue(data, forKey: "dataDic")
+                            } else {
+                                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "GetViolasSequenceNumber")
+                                self?.setValue(data, forKey: "dataDic")
+                            }
+                        })
+                    }
+                } catch {
+                    print("GetViolasSequenceNumber_解析异常\(error.localizedDescription)")
+                    DispatchQueue.main.async(execute: {
+                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetViolasSequenceNumber")
+                        self?.setValue(data, forKey: "dataDic")
+                    })
+                    
+                }
+            case let .failure(error):
+                guard error.errorCode != -999 else {
+                    print("GetViolasSequenceNumber_网络请求已取消")
+                    return
+                }
+                DispatchQueue.main.async(execute: {
+                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "GetViolasSequenceNumber")
+                    self?.setValue(data, forKey: "dataDic")
+                })
+            }
+        }
+        self.requests.append(request)
     }
     private func makeViolasTransaction(signature: String) {
         let request = mainProvide.request(.SendViolasTransaction(signature)) {[weak self](result) in
@@ -159,7 +146,7 @@ class ViolasTransferModel: NSObject {
                         })
                     }
                 } catch {
-                    print("解析异常\(error.localizedDescription)")
+                    print("SendViolasTransaction_解析异常\(error.localizedDescription)")
                     DispatchQueue.main.async(execute: {
                         let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "SendViolasTransaction")
                         self?.setValue(data, forKey: "dataDic")
@@ -167,7 +154,7 @@ class ViolasTransferModel: NSObject {
                 }
             case let .failure(error):
                 guard error.errorCode != -999 else {
-                    print("网络请求已取消")
+                    print("SendViolasTransaction_网络请求已取消")
                     return
                 }
                 DispatchQueue.main.async(execute: {
