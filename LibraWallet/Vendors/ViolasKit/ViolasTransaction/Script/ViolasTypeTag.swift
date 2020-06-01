@@ -81,7 +81,7 @@ struct ViolasTypeTag {
             result += Data.init(Array<UInt8>(hex: self.value))
         case .Vector:
             let data = Data.init(Array<UInt8>(hex: self.value))
-            result += ViolasUtils.getLengthData(length: data.bytes.count, appendBytesCount: 1)
+            result += ViolasUtils.uleb128Format(length: data.bytes.count)
             result += data
         case .Struct:
             result += Data.init(Array<UInt8>(hex: self.value))

@@ -96,17 +96,7 @@ class LibraSDKTests: XCTestCase {
             let seed = try LibraMnemonic.seed(mnemonic: mnemonic)
             
             let testWallet = try LibraHDWallet.init(seed: seed, depth: 0)
-            let walletAddress = testWallet.publicKey.toAddress()
-//            try KeychainManager.KeyManager.savePayPasswordToKeychain(walletAddress: walletAddress, password: "123456")
-            let paymentPassword = try KeychainManager.KeyManager.getPayPasswordFromKeychain(walletAddress: walletAddress)
-            XCTAssertEqual(paymentPassword, "123456")
-            
-            let result = KeychainManager.KeyManager.checkPayPasswordInvalid(walletAddress: walletAddress, password: "1234567")
-            XCTAssertEqual(result, false)
-            let result2 = KeychainManager.KeyManager.checkPayPasswordInvalid(walletAddress: walletAddress, password: "123456")
-            XCTAssertEqual(result2, true)
-            
-//            try KeychainManager.KeyManager.saveMnemonicStringToKeychain(walletAddress: walletAddress, mnemonic: mnemonic.joined(separator: " "))
+            let walletAddress = testWallet.publicKey.toAddress()            
             
             let menmonicString = try KeychainManager.KeyManager.getMnemonicStringFromKeychain(walletAddress: walletAddress)
             let mnemonicArray = menmonicString.split(separator: " ").compactMap { (item) -> String in
@@ -120,11 +110,18 @@ class LibraSDKTests: XCTestCase {
 
     }
     func testULEB128() {
-        XCTAssertEqual(LibraUtils.uleb128Format(length: 128).toHexString(), "8001")
+//        XCTAssertEqual(LibraUtils.uleb128Format(length: 128).toHexString(), "8001")
         XCTAssertEqual(LibraUtils.uleb128Format(length: 16384).toHexString(), "808001")
-        XCTAssertEqual(LibraUtils.uleb128Format(length: 2097152).toHexString(), "80808001")
-        XCTAssertEqual(LibraUtils.uleb128Format(length: 268435456).toHexString(), "8080808001")
-        XCTAssertEqual(LibraUtils.uleb128Format(length: 9487).toHexString(), "8f4a")
+//        XCTAssertEqual(LibraUtils.uleb128Format(length: 2097152).toHexString(), "80808001")
+//        XCTAssertEqual(LibraUtils.uleb128Format(length: 268435456).toHexString(), "8080808001")
+//        XCTAssertEqual(LibraUtils.uleb128Format(length: 9487).toHexString(), "8f4a")
+        print(ViolasUtils.uleb128FormatToInt(data: LibraUtils.uleb128Format(length: 16384)))
+        
+        XCTAssertEqual(ViolasUtils.uleb128FormatToInt(data: LibraUtils.uleb128Format(length: 128)), 128)
+        XCTAssertEqual(ViolasUtils.uleb128FormatToInt(data: LibraUtils.uleb128Format(length: 16384)), 16384)
+        XCTAssertEqual(ViolasUtils.uleb128FormatToInt(data: LibraUtils.uleb128Format(length: 2097152)), 2097152)
+        XCTAssertEqual(ViolasUtils.uleb128FormatToInt(data: LibraUtils.uleb128Format(length: 268435456)), 268435456)
+        XCTAssertEqual(ViolasUtils.uleb128FormatToInt(data: LibraUtils.uleb128Format(length: 9487)), 9487)
     }
     func testBitmap() {
         var tempBitmap = "00000000000000000000000000000000"
@@ -260,15 +257,21 @@ class LibraSDKTests: XCTestCase {
         }
     }
     func testLibraKitPublishModule() {
-        print(BigUInt(86400).serialize().bytes)
-        print("LBR".data(using: .utf8)?.bytes)
-        let data = Data.init(Array<UInt8>(hex: "76696f6c617301003000fa279f2615270daed6061313a48360f7000000005ea2b35be1be1ab8360a35a0259f1c93e3eac736"))
-        let string = String.init(data: data, encoding: String.Encoding.utf8)
-        print(string)
+        print(BigUInt(20000).serialize().bytes)
+        print("LBR".data(using: .utf8)?.bytes.toHexString())
+        print("T".data(using: .utf8)?.bytes.toHexString())
+//        let data = Data.init(Array<UInt8>(hex: "76696f6c617301003000fa279f2615270daed6061313a48360f7000000005ea2b35be1be1ab8360a35a0259f1c93e3eac736"))
+//        let string = String.init(data: data, encoding: String.Encoding.utf8)
+//        print(string)
+        print(LibraUtils.getLengthData(length: Int(20000), appendBytesCount: 8).bytes)
     }
     func testReadMV() {
-        let path = Bundle.main.path(forResource: "peer_to_peer_with_metadata", ofType: "mv")
-        let data = try! Data.init(contentsOf: URL.init(fileURLWithPath: path!))
-        print(data.toHexString())
+//        let path = Bundle.main.path(forResource: "peer_to_peer_with_metadata", ofType: "mv")
+//        let data = try! Data.init(contentsOf: URL.init(fileURLWithPath: path!))
+//        print(data.toHexString())
+    }
+    func testDe() {
+        let model = LibraManager.derializeTransaction(tx: "793fdd2c245229230fd52aca841875b3080000000000000002f401a11ceb0b010007014600000002000000034800000011000000045900000004000000055d0000001c00000007790000004900000008c20000001000000009d200000022000000000000010001010100020203000003040101010006020602050a0200010501010405030a020a0205050a02030a020a020109000c4c696272614163636f756e74166372656174655f746573746e65745f6163636f756e74066578697374731d7061795f66726f6d5f73656e6465725f776974685f6d6574616461746100000000000000000000000000000000010105010e000a001101200305000508000a000b0138000a000a020b030b04380102010700000000000000000000000000000000034c42520154000503fa279f2615270daed6061313a48360f704000100e1f505000000000400040040420f00000000000000000000000000034c4252eb27cf5e0000000000200825e33e0e828cb8869cf5ca22bb5360cc5edeba621a1cde8f13ed179ce8135f402f957968ff0d3d2c780ee003dbd23ea38d8dee62a64f2de376eb969a0049fad35e24410031346ef0f22fce5dd50f98511a542ccb95e473ba864d1123ab35630c")
+        print(model)
     }
 }

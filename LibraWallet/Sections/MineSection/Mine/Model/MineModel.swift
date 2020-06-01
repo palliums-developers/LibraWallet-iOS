@@ -16,6 +16,13 @@ class MineModel: NSObject {
                  "icon":"mine_address_list"]],
                 [["name":localLanguage(keyString: "wallet_home_setting_title"),
                  "icon":"mine_setting"]]]
-        //,[["name":localLanguage(keyString: "ActiveAccount(Beta)"),"icon":"mine_setting"]]
+//        return [[["name":localLanguage(keyString: "wallet_mine_manager_wallet_title"),
+//                 "icon":"mine_wallet"]],
+//                [["name":localLanguage(keyString: "wallet_home_address_manager_title"),
+//                 "icon":"mine_address_list"]],
+//                [["name":localLanguage(keyString: "wallet_home_setting_title"),
+//                 "icon":"mine_setting"]],
+//                [["name":localLanguage(keyString: "ActiveAccount(Beta)"),"icon":"mine_setting"]]]
+        
     }
 }

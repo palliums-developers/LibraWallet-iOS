@@ -64,8 +64,7 @@ extension CheckBackupViewController: CheckBackupViewDelegate {
                     #warning("缺少更新失败操作")
 //                    let insertResult = DataBaseManager.DBManager.insertWallet(model: tempWallet!.wallet!)
                     do {
-                        try LibraWalletManager().saveMnemonicToKeychain(mnemonic: tempWallet!.mnemonic!, walletRootAddress: tempWallet?.wallet?.walletRootAddress ?? "")
-                        try LibraWalletManager().savePaymentPasswordToKeychain(password: tempWallet!.password!, walletRootAddress: tempWallet?.wallet?.walletRootAddress ?? "")
+                        try LibraWalletManager().saveMnemonicToKeychain(mnemonic: tempWallet!.mnemonic!, password: tempWallet!.password!, walletRootAddress: tempWallet?.wallet?.walletRootAddress ?? "")
                         self.view.makeToast(localLanguage(keyString: localLanguage(keyString: "wallet_create_wallet_success_title")), duration: 1, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { [weak self](bool) in
                             self?.jumpToWalletManagerController()
                         })

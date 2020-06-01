@@ -7,7 +7,6 @@
 //
 
 import UIKit
-
 class ViolasTransferViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -116,30 +115,62 @@ extension ViolasTransferViewController: ViolasTransferViewDelegate {
         self.navigationController?.pushViewController(vc, animated: true)
     }
     func confirmTransfer(amount: Double, address: String, fee: Double) {
-        let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
-            self?.detailView.toastView?.show()
-            if self?.sendViolasTokenState == false {
-                self?.dataModel.sendViolasTransaction(sendAddress: (self?.wallet?.walletAddress)!,
-                                                      receiveAddress: address,
-                                                      amount: amount,
-                                                      fee: fee,
-                                                      mnemonic: mnemonic)
-            } else {
-                self?.dataModel.sendViolasTokenTransaction(sendAddress: (self?.wallet?.walletAddress)!,
-                                                           receiveAddress: address,
-                                                           amount: amount,
-                                                           fee: fee,
-                                                           mnemonic: mnemonic,
-                                                           tokenIndex: "\(self?.vtokenModel?.id ?? 9999)")
+        if LibraWalletManager.shared.walletBiometricLock == true {
+            KeychainManager().getPasswordWithBiometric(walletAddress: LibraWalletManager.shared.walletRootAddress ?? "") { [weak self](result, error) in
+                if result.isEmpty == false {
+                    do {
+                        let mnemonic = try LibraWalletManager.shared.getMnemonicFromKeychain(password: result, walletRootAddress: LibraWalletManager.shared.walletRootAddress ?? "")
+                        self?.detailView.toastView?.show()
+                        if self?.sendViolasTokenState == false {
+                            self?.dataModel.sendViolasTransaction(sendAddress: (self?.wallet?.walletAddress)!,
+                                                                  receiveAddress: address,
+                                                                  amount: amount,
+                                                                  fee: fee,
+                                                                  mnemonic: mnemonic)
+                        } else {
+                            self?.dataModel.sendViolasTokenTransaction(sendAddress: (self?.wallet?.walletAddress)!,
+                                                                       receiveAddress: address,
+                                                                       amount: amount,
+                                                                       fee: fee,
+                                                                       mnemonic: mnemonic,
+                                                                       tokenIndex: "\(self?.vtokenModel?.id ?? 9999)")
+                        }
+                    } catch {
+                        self?.detailView.makeToast(error.localizedDescription, position: .center)
+                    }
+                    
+                } else {
+                    self?.detailView.makeToast(error,
+                                              position: .center)
+                }
             }
-        }) { [weak self] (errorContent) in
-            guard errorContent != "Cancel" else {
-                self?.detailView.toastView?.hide()
-                return
+        } else {
+            let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
+                self?.detailView.toastView?.show()
+                if self?.sendViolasTokenState == false {
+                    self?.dataModel.sendViolasTransaction(sendAddress: (self?.wallet?.walletAddress)!,
+                                                          receiveAddress: address,
+                                                          amount: amount,
+                                                          fee: fee,
+                                                          mnemonic: mnemonic)
+                } else {
+                    self?.dataModel.sendViolasTokenTransaction(sendAddress: (self?.wallet?.walletAddress)!,
+                                                               receiveAddress: address,
+                                                               amount: amount,
+                                                               fee: fee,
+                                                               mnemonic: mnemonic,
+                                                               tokenIndex: "\(self?.vtokenModel?.id ?? 9999)")
+                }
+            }) { [weak self] (errorContent) in
+                guard errorContent != "Cancel" else {
+                    self?.detailView.toastView?.hide()
+                    return
+                }
+                self?.view.makeToast(errorContent, position: .center)
             }
-            self?.view.makeToast(errorContent, position: .center)
+            self.present(alert, animated: true, completion: nil)
+
         }
-        self.present(alert, animated: true, completion: nil)
     }
 }
 extension ViolasTransferViewController {

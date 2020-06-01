@@ -12,8 +12,6 @@ import Localize_Swift
 let mainProvide = MoyaProvider<mainRequest>()
 //let mainProvide = MoyaProvider<mainRequest>(stubClosure: MoyaProvider.immediatelyStub)
 enum mainRequest {
-    /// 获取Libra交易记录
-    case GetTransactionHistory(String, Int64)
     /// 获取BTC余额记录
     case GetBTCBalance(String)
     /// 获取BTC交易记录
@@ -23,9 +21,10 @@ enum mainRequest {
     /// 发送BTC交易
     case SendBTCTransaction(String)
     
-    case BlockCypherBTCBalance(String)
-    case BlockCypherBTCUnspentUTXO(String)
-    case BlockCypherBTCPushTransaction(String)
+    case TrezorBTCBalance(String)
+    case TrezorBTCUnspentUTXO(String)
+    case TrezorBTCTransactions(String, Int, Int)
+    case TrezorBTCPushTransaction(String)
     
     /// 获取Libra账户余额
     case GetLibraAccountBalance(String)
@@ -80,18 +79,17 @@ enum mainRequest {
 extension mainRequest:TargetType {
     var baseURL: URL {
         switch self {
-        case .GetTransactionHistory(_, _):
-            return URL(string:"https://libraservice2.kulap.io")!
         case .GetBTCBalance(_),
              .GetBTCTransactionHistory(_, _, _),
              .GetBTCUnspentUTXO(_),
              .SendBTCTransaction(_):
             return URL(string:"https://tchain.api.btc.com/v3")!
-            
-        case .BlockCypherBTCBalance(_),
-             .BlockCypherBTCUnspentUTXO,
-             .BlockCypherBTCPushTransaction:
-            return URL(string:"https://api.blockcypher.com/v1/btc/test3")!
+            //https://tbtc1.trezor.io/api/
+        case .TrezorBTCBalance(_),
+             .TrezorBTCUnspentUTXO(_),
+             .TrezorBTCTransactions(_, _, _),
+             .TrezorBTCPushTransaction:
+            return URL(string:"https://tbtc1.trezor.io/api")!
             
             
         case .GetLibraAccountSequenceNumber(_),
@@ -140,8 +138,6 @@ extension mainRequest:TargetType {
     }
     var path: String {
         switch self {
-        case .GetTransactionHistory(_, _):
-            return "/transactionHistory"
         case .GetBTCBalance(let address):
             return "/address/\(address)"
         case .GetBTCTransactionHistory(let address, _, _):
@@ -151,13 +147,14 @@ extension mainRequest:TargetType {
         case .SendBTCTransaction(_):
             return "/tools/tx-publish"
             
-        case .BlockCypherBTCBalance(let address):
-            return "/addrs/\(address)/balance"
-        case .BlockCypherBTCUnspentUTXO(let address):
-            return "/addrs/\(address)"
-        case .BlockCypherBTCPushTransaction(_):
-            return "/txs/push"
-            
+        case .TrezorBTCBalance(let address):
+            return "/v2/address/\(address)"
+        case .TrezorBTCUnspentUTXO(let address):
+            return "/v2/utxo/\(address)"
+        case .TrezorBTCTransactions(let address, _, _):
+            return "/v2/address/\(address)"
+        case .TrezorBTCPushTransaction(let signature):
+            return "/v2/sendtx/\(signature)"
         case .GetLibraAccountBalance(_):
             return ""
         case .GetLibraAccountSequenceNumber(_):
@@ -208,11 +205,9 @@ extension mainRequest:TargetType {
     }
     var method: Moya.Method {
         switch self {
-        case .GetTransactionHistory(_, _),
-             .SendLibraTransaction(_),
+        case .SendLibraTransaction(_),
              .SendViolasTransaction(_),
              .SendBTCTransaction(_),
-             .BlockCypherBTCPushTransaction(_),
              .SubmitScanLoginData(_, _),
              .GetLibraAccountBalance(_),
              .CancelOrder(_, _):
@@ -221,9 +216,10 @@ extension mainRequest:TargetType {
              .GetBTCTransactionHistory(_, _, _),
              .GetBTCUnspentUTXO(_),
              
-             .BlockCypherBTCBalance(_),
-             .BlockCypherBTCUnspentUTXO(_),
-             
+             .TrezorBTCBalance(_),
+             .TrezorBTCUnspentUTXO(_),
+             .TrezorBTCTransactions(_, _, _),
+             .TrezorBTCPushTransaction(_),
              
              .GetLibraAccountSequenceNumber(_),
              .GetLibraAccountTransactionList(_, _, _),
@@ -259,9 +255,6 @@ extension mainRequest:TargetType {
     }
     var task: Task {
         switch self {
-        case .GetTransactionHistory(let address, _):
-            return .requestParameters(parameters: ["address": address],
-                                      encoding: JSONEncoding.default)
         case .GetBTCBalance(_):
             return .requestPlain
         case .GetBTCTransactionHistory(_, let page, let pageSize):
@@ -274,16 +267,17 @@ extension mainRequest:TargetType {
             return .requestParameters(parameters: ["rawhex": signature],
                                       encoding: JSONEncoding.default)
             
-        case .BlockCypherBTCBalance(_):
+        case .TrezorBTCBalance(_):
             return .requestPlain
-        case .BlockCypherBTCUnspentUTXO(_):
-            return .requestParameters(parameters: ["unspentOnly": true,
-                                                   "includeScript":true],
+        case .TrezorBTCUnspentUTXO(_):
+            return .requestPlain
+        case .TrezorBTCTransactions(_, let page, let pageSize):
+            return .requestParameters(parameters: ["page": page,
+                                                   "pageSize": pageSize,
+                                                   "details":"txs"],
                                       encoding: URLEncoding.queryString)
-        case .BlockCypherBTCPushTransaction(let signature):
-            return .requestParameters(parameters: ["token": "64ff3535053045689add0ee65359c6a9",
-                                                   "tx": signature],
-                                      encoding: JSONEncoding.default)
+        case .TrezorBTCPushTransaction(_):
+            return .requestPlain
             
         case .GetLibraAccountBalance(let address):
             return .requestParameters(parameters: ["jsonrpc":"2.0",

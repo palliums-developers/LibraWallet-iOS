@@ -75,6 +75,8 @@ wallet_manager_import_or_create_wallet_header_title = "Create/Import";
 /************* 钱包详情 *******************/
 wallet_manager_detail_delete_button_title = "Remove";
 wallet_manager_detail_export_mnemonic_title = "Export Mnemonic Words";
+wallet_manager_biological_face_id_title = "Face ID";
+wallet_manager_biological_finger_touch_id_title = "Touch ID";
 
 /************* 钱包管理修改名称 *******************/
 wallet_manager_detail_change_wallet_name_title = "Change Wallet Name";
@@ -199,10 +201,20 @@ wallet_mapping_transactions_state_ongoing_title = "progressing";
 wallet_mapping_transactions_state_success_title = "Success";
 wallet_mapping_transactions_state_failed_title = "Failed";
 
-/************* 扫码登录 *******************/
-wallet_scan_login_title = "Web ViolasPay wallet login confirmation";
-wallet_scan_login_password_textfield_placeholder = "Type in password";
-wallet_scan_login_confirm_button_title = "Confirm";
+/************* WalletConnect *******************/
+wallet_wallet_connect_login_title = "Web ViolasPay Wallet Sign In";
+wallet_wallet_connect_logout_title = "Web ViolasPay Logged";
+wallet_wallet_connect_exchange_title = "Web ViolasPay Wallet Exchange";
+wallet_wallet_connect_sign_title = "网页ViolasPay钱包请求签名";
+wallet_wallet_connect_transfer_title = "Web ViolasPay Wallet Transfer";
+wallet_wallet_connect_transfer_receive_address_title = "Receive Address";
+wallet_wallet_connect_transfer_amount_title = "Amount";
+wallet_wallet_connect_login_warnning_content = "Web ViolasPay wallet apply to access your wallet address, Are you sure to disclose the wallet address to this website?";
+wallet_wallet_connect_login_warnning_describe = "*The usage behavior also applies to《User Agreement》and《Private Agreement》";
+wallet_wallet_connect_transfer_confirm_button_title = "Transfer";
+wallet_wallet_connect_login_confirm_button_title = "Sign In";
+wallet_wallet_connect_exchange_confirm_button_title = "Exchange";
+wallet_wallet_connect_sign_button_title = "Confirm Signature";
 wallet_scan_login_cancel_button_title = "Cancel";
 
 /************* 弹出提示 *******************/
@@ -297,6 +309,8 @@ wallet_mapping_info_alert_confirm_button_title = "Sure";
 wallet_mapping_info_data_empty_alert_content = "Don’t have any mapping coins yet, please try again after mapping";
 // 扫码登录
 wallet_scan_login_alert_success_title = "Login Successful";
+// WalletConnect
+wallet_connect_connect_time_invalid_title = "Connection failed, please try again later";
 
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "Safety Warning";
@@ -351,6 +365,7 @@ wallet_keychain_delete_mnemonic_failed_error ="Delete Mnemonic Words Error";
 wallet_keychain_search_sign_empty_error ="Search Returns Empty Error";
 // 加密相关
 wallet_crypto_password_empty_error = "Empty Wallet Access Code";
+wallet_crypto_password_invalid_error = "Password Invalid";
 wallet_crypto_mnemonic_empty_error = "Empty Mnemonic Words";
 wallet_crypto_result_empty_error = "Empty Result of Encryption";
 wallet_crypto_result_to_base64_failed_error = "Fail to Decode Encryption Binary into Base64 Text";
@@ -435,3 +450,6 @@ wallet_market_pay_amount_empty_error = "Pay amount empty";
 wallet_market_exchange_amount_empty_error = "Exchange amount empty";
 // 映射
 wallet_market_mapping_token_unpublish_error = "The stable token you are going to mapping has not yet been published. It will consume a certain amount of gas fee to open it. Whether to open and exchange it immediately?";
+// 生物识别
+wallet_biometric_touch_id_attempts_too_much_error = "Touch ID is locked now, because of too many failed attempts.";
+wallet_biometric_face_id_attempts_too_much_error = "Face ID is locked now, because of too many failed attempts.";

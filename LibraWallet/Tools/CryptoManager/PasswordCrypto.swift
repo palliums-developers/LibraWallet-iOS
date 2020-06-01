@@ -11,18 +11,19 @@ import CryptoSwift
 struct PasswordCrypto {
     /// 加密密码
     /// - Parameter password: 密码
-    func encryptPassword(password: String) throws -> String {
+    static func encryptPassword(content: String, password: String) throws -> String {
         do {
             // 检查密码是否为空
             guard password.isEmpty == false else {
                 throw LibraWalletError.WalletCrypto(reason: .passwordEmptyError)
             }
-            let passwordData = password.data(using: .utf8)!
-            //加密密钥: AES_256=32个字节(Hex) = 0000000000000000000000000000000000000000000000000000000000000000
-            let key: Array<UInt8> =  [0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00]
+            let contentData = content.data(using: .utf8)!
+            //加密密钥: AES_256=32个字节(Hex) = 密码不够补0
+//            let key: Array<UInt8> =  [0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00]
+            let key: Array<UInt8> = try getPasswordKeyData(password: password)
             //偏移量(Hex):30313030313030313030313030313038
             let iv: Array<UInt8> = [0x30, 0x31, 0x30, 0x30, 0x31, 0x30, 0x30, 0x31, 0x30, 0x30, 0x31, 0x30, 0x30, 0x31, 0x30, 0x38]
-            let result = try AES(key: key, blockMode: CBC(iv: iv), padding: .pkcs7).encrypt(passwordData.bytes)
+            let result = try AES(key: key, blockMode: CBC(iv: iv), padding: .pkcs7).encrypt(contentData.bytes)
             // 检查AES256加密后数据是否为空
             guard result.isEmpty == false else {
                 throw LibraWalletError.WalletCrypto(reason: .encryptResultEmptyError)
@@ -42,7 +43,7 @@ struct PasswordCrypto {
     }
     /// 解密密码
     /// - Parameter cryptString: 加密后Base64字符串
-    func decryptPassword(cryptoString: String) throws -> String {
+    static func decryptPassword(cryptoString: String, password: String) throws -> String {
         do {
             // 检查加密字符串是否为空
             guard cryptoString.isEmpty == false else {
@@ -50,8 +51,8 @@ struct PasswordCrypto {
             }
             // Base64解密数据
             let cryptoData = Array.init(base64: cryptoString)
-            // 加密密钥: AES_256=32个字节(Hex) = 0000000000000000000000000000000000000000000000000000000000000000
-            let key: Array<UInt8> =  [0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00]
+            // 加密密钥: AES_256=32个字节(Hex) = 密码不够补0
+            let key: Array<UInt8> = try getPasswordKeyData(password: password)
             // 偏移量(Hex):30313030313030313030313030313038
             let iv: Array<UInt8> = [0x30, 0x31, 0x30, 0x30, 0x31, 0x30, 0x30, 0x31, 0x30, 0x30, 0x31, 0x30, 0x30, 0x31, 0x30, 0x38]
             let result = try AES(key: key, blockMode: CBC(iv: iv), padding: .pkcs7).decrypt(cryptoData)
@@ -70,18 +71,18 @@ struct PasswordCrypto {
             throw error
         }
     }
-    /// 检查密码是否有效
-    /// - Parameter password: 密码
-    /// - Parameter encryptString: 加密后字符串
-    func isValidPassword(password: String, encryptString: String) -> Bool {
-        do {
-            let result = try encryptPassword(password: password)
-            guard encryptString == result else {
-                return false
+    private static func getPasswordKeyData(password: String) throws -> Array<UInt8> {
+        if var tempData = password.data(using: .utf8), tempData.bytes.count > 0 {
+            print(tempData.bytes)
+            let emptyDataCount = 32 - tempData.bytes.count
+            if emptyDataCount > 0 {
+                for _ in 0..<emptyDataCount  {
+                    tempData.append(0x00)
+                }
             }
-            return true
-        } catch {
-            return false
+            return tempData.bytes
+        } else {
+            throw LibraWalletError.WalletCrypto(reason: .passwordInvalidError)
         }
     }
 }

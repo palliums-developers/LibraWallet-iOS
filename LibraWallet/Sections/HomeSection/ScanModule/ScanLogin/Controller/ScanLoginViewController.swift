@@ -12,7 +12,6 @@ class ScanLoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.addSubview(detailView)
-        self.initKVO()
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -23,6 +22,17 @@ class ScanLoginViewController: UIViewController {
                 make.top.bottom.equalTo(self.view)
             }
             make.left.right.equalTo(self.view)
+        }
+    }
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if needReject == true {
+            if let connect = WalletConnectManager.shared.connect {
+                connect(false)
+            }
+            if let rejectC = self.reject {
+                rejectC()
+            }
         }
     }
     deinit {
@@ -46,6 +56,10 @@ class ScanLoginViewController: UIViewController {
     /// 数据监听KVO
     var observer: NSKeyValueObservation?
     var sessionID: String?
+    private var reject: (() -> Void)?
+    private var confirm: ((String) -> Void)?
+    var needReject: Bool? = true
+    var hasLogin: Bool?
 }
 extension ScanLoginViewController {
     func initKVO() {
@@ -89,12 +103,42 @@ extension ScanLoginViewController {
 }
 
 extension ScanLoginViewController: ScanLoginViewDelegate {
+    func openUserAgreement() {
+        let vc = ServiceLegalViewController()
+        vc.needDismissViewController = true
+        let navi = UINavigationController.init(rootViewController: vc)
+        self.present(navi, animated: true, completion: nil)
+    }
+    
+    func openPrivateAgreement() {
+        let vc = PrivateLegalViewController()
+        vc.needDismissViewController = true
+        let navi = UINavigationController.init(rootViewController: vc)
+        self.present(navi, animated: true, completion: nil)
+    }
+    
     func cancelLogin() {
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true, completion:  {
+            if let connect = WalletConnectManager.shared.connect {
+                connect(false)
+            }
+            if let rejectC = self.reject {
+               rejectC()
+            }
+        })
+        self.needReject = false
     }
     func confirmLogin(password: String) {
         NSLog("Password:\(password)")
-        self.dataModel.submitScanLoginData(walletAddress: self.wallet?.walletAddress ?? "",
-                                           sessionID: self.sessionID ?? "")
+        self.detailView.toastView?.show()
+        if let connect = WalletConnectManager.shared.connect {
+            connect(true)
+        }
+        WalletConnectManager.shared.didConnectClosure = {
+            self.detailView.toastView?.hide()
+            self.view.makeToast(localLanguage(keyString: "wallet_scan_login_alert_success_title"), duration: toastDuration, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
+                self.dismiss(animated: true, completion: nil)
+            })
+        }
     }
 }

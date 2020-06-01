@@ -8,7 +8,9 @@
 
 import Foundation
 enum LibraArgumentsCode {
+    case U8
     case U64
+    case U128
     case Address
     case U8Vector
     case Bool
@@ -16,14 +18,18 @@ enum LibraArgumentsCode {
 extension LibraArgumentsCode {
     public var raw: Data {
         switch self {
-        case .U64:
+        case .U8:
             return Data.init(hex: "00")
-        case .Address:
+        case .U64:
             return Data.init(hex: "01")
-        case .U8Vector:
+        case .U128:
             return Data.init(hex: "02")
-        case .Bool:
+        case .Address:
             return Data.init(hex: "03")
+        case .U8Vector:
+            return Data.init(hex: "04")
+        case .Bool:
+            return Data.init(hex: "05")
         }
     }
 }
@@ -40,7 +46,11 @@ struct LibraTransactionArgument {
         var result = Data()
         result += self.code.raw
         switch self.code {
+        case .U8:
+            result += LibraUtils.getLengthData(length: Int(self.value)!, appendBytesCount: 8)
         case .U64:
+            result += LibraUtils.getLengthData(length: Int(self.value)!, appendBytesCount: 8)
+        case .U128:
             result += LibraUtils.getLengthData(length: Int(self.value)!, appendBytesCount: 8)
         case .Address:
             let data = Data.init(Array<UInt8>(hex: self.value))

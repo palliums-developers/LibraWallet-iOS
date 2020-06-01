@@ -395,7 +395,7 @@ class HomeHeaderView: UIView {
             switch walletModel?.walletType {
             case .Libra:
                 assetUnitLabel.text = "libra"
-                assetLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (libraModel?.balance?[0].amount ?? 0)),
+                assetLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (libraModel?.balances?[0].amount ?? 0)),
                                                          scale: 4,
                                                          unit: 1000000)
                 hideAddTokenButtonState = true
@@ -422,10 +422,10 @@ class HomeHeaderView: UIView {
     }
     var libraModel: BalanceLibraModel? {
         didSet {
-            assetLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (libraModel?.balance?[0].amount ?? 0)),
+            assetLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (libraModel?.balances?[0].amount ?? 0)),
                                                      scale: 4,
                                                      unit: 1000000)
-            self.walletModel?.changeWalletBalance(banlance: libraModel?.balance?[0].amount ?? 0)
+            self.walletModel?.changeWalletBalance(banlance: libraModel?.balances?[0].amount ?? 0)
             assetUnitLabel.text = "libra"
         }
     }
@@ -451,13 +451,14 @@ class HomeHeaderView: UIView {
 //            }
 //        }
 //    }
-    var btcModel: BlockCypherBTCBalanceMainModel? {
+    var btcModel: TrezorBTCBalanceMainModel? {
         didSet {
             if btcModel?.address == self.walletAddressLabel.text {
-                assetLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (btcModel?.balance ?? 0)),
-                                                         scale: 8,
-                                                         unit: 100000000)
-                self.walletModel?.changeWalletBalance(banlance: btcModel?.balance ?? 0)
+                let amount = getDecimalNumber(amount: NSDecimalNumber.init(string: btcModel?.balance ?? ""),
+                                              scale: 8,
+                                              unit: 100000000)
+                assetLabel.text = amount.stringValue
+                self.walletModel?.changeWalletBalance(banlance: NSDecimalNumber.init(string: btcModel?.balance ?? "").int64Value)
                 assetUnitLabel.text = "BTC"
             }
         }

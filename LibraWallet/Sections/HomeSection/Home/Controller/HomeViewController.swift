@@ -179,11 +179,8 @@ extension HomeViewController {
                     default:
                         self.showScanContent(content: address)
                     }
-                } else if result.type == .login {
-                    let vc = ScanLoginViewController()
-                    vc.wallet = LibraWalletManager.shared
-                    vc.sessionID = result.address
-                    self.present(vc, animated: true, completion: nil)
+                } else if result.type == .walletConnect {
+                    self.showWalletConnect(wcURL: result.originContent)
                 } else {
                     self.showScanContent(content: address)
                 }
@@ -246,6 +243,27 @@ extension HomeViewController {
         vc.hidesBottomBarWhenPushed = true
         vc.content = content
         self.navigationController?.pushViewController(vc, animated: true)
+    }
+    func showWalletConnect(wcURL: String) {
+        if WalletConnectManager.shared.state == true {
+            print("已登录")
+        } else {
+            // 未登录
+            self.detailView.toastView?.show()
+            WalletConnectManager.shared.allowConnect = {
+                self.detailView.toastView?.hide()
+                let vc = ScanLoginViewController()
+                vc.wallet = LibraWalletManager.shared
+                vc.sessionID = wcURL
+                self.present(vc, animated: true, completion: nil)
+            }
+            WalletConnectManager.shared.connectToServer(url: wcURL)
+            WalletConnectManager.shared.connectInvalid = {
+                self.detailView.toastView?.hide()
+                self.detailView.makeToast(localLanguage(keyString: "wallet_connect_connect_time_invalid_title"), position: .center)
+            }
+        }
+        
     }
 }
 //MARK: - APP初次进入处理
@@ -453,14 +471,17 @@ extension HomeViewController {
                     self?.changeWalletButton.imagePosition(at: .right, space: 10, imageViewSize: CGSize.init(width: 13, height: 7))
                 }
             } else if type == "UpdateBTCBalance" {
-                if let tempData = dataDic.value(forKey: "data") as? BlockCypherBTCBalanceMainModel {
+                if let tempData = dataDic.value(forKey: "data") as? TrezorBTCBalanceMainModel {
                     self?.detailView.headerView.btcModel = tempData
+                    let amount = getDecimalNumber(amount: NSDecimalNumber.init(string: tempData.balance ?? ""),
+                                                  scale: 2,
+                                                  unit: 100)
                     let defaultModel = ViolasTokenModel.init(name: "BTC",
                                                              description: "",
                                                              address: tempData.address ?? "",
                                                              icon: "",
                                                              enable: true,
-                                                             balance: (tempData.balance ?? 0) / 100,
+                                                             balance: amount.int64Value,
                                                              registerState: true)
                     self?.tableViewManager.defaultModel = defaultModel
                     self?.detailView.tableView.reloadData()
@@ -473,7 +494,7 @@ extension HomeViewController {
                                                              address: LibraWalletManager.shared.walletAddress ?? "",
                                                              icon: "",
                                                              enable: true,
-                                                             balance: (tempData.balance?[0].amount ?? 0),
+                                                             balance: (tempData.balances?[0].amount ?? 0),
                                                              registerState: true)
                     self?.tableViewManager.defaultModel = defaultModel
                     self?.detailView.tableView.reloadData()

@@ -7,14 +7,22 @@
 //
 
 import UIKit
-
+protocol WalletDetailTableViewCellDelegate: NSObjectProtocol {
+    func switchButtonValueChange(button: UISwitch)
+}
 class WalletDetailTableViewCell: UITableViewCell {
+    weak var delegate: WalletDetailTableViewCellDelegate?
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.backgroundColor = UIColor.white
         contentView.addSubview(titleLabel)
-        contentView.addSubview(detailLabel)
-        contentView.addSubview(detailIndicatorImageView)
+        if reuseIdentifier == "CellNormal" {
+            contentView.addSubview(detailLabel)
+            contentView.addSubview(detailIndicatorImageView)
+        } else {
+            contentView.addSubview(switchButton)
+        }
+        contentView.addSubview(spaceLabel)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -29,14 +37,27 @@ class WalletDetailTableViewCell: UITableViewCell {
             make.left.equalTo(contentView).offset(17)
             make.centerY.equalTo(contentView).offset(-10).priority(250)
         }
-        detailLabel.snp.makeConstraints { (make) in
-            make.centerY.equalTo(contentView).offset(10)
-            make.left.equalTo(contentView).offset(17)
-            make.right.equalTo(detailIndicatorImageView.snp.left).offset(-9)
+        if self.reuseIdentifier == "CellNormal" {
+            detailLabel.snp.makeConstraints { (make) in
+                make.centerY.equalTo(contentView).offset(10)
+                make.left.equalTo(contentView).offset(17)
+                make.right.equalTo(detailIndicatorImageView.snp.left).offset(-9)
+            }
+            detailIndicatorImageView.snp.makeConstraints { (make) in
+                make.centerY.equalTo(contentView)
+                make.right.equalTo(contentView.snp.right).offset(-16)
+            }
+        } else {
+            switchButton.snp.makeConstraints { (make) in
+                make.centerY.equalTo(contentView)
+                make.right.equalTo(contentView.snp.right).offset(-20)
+            }
         }
-        detailIndicatorImageView.snp.makeConstraints { (make) in
-            make.centerY.equalTo(contentView)
-            make.right.equalTo(contentView.snp.right).offset(-16)
+        spaceLabel.snp.makeConstraints { (make) in
+            make.bottom.equalTo(contentView.snp.bottom)
+            make.left.equalTo(contentView).offset(15)
+            make.right.equalTo(contentView.snp.right).offset(-17)
+            make.height.equalTo(1)
         }
 //        detailLabel.setContentCompressionResistancePriority(UILayoutPriority.fittingSizeLevel, for: NSLayoutConstraint.Axis.horizontal)
 //        //抱紧内容
@@ -66,6 +87,32 @@ class WalletDetailTableViewCell: UITableViewCell {
         imageView.isUserInteractionEnabled = true
         return imageView
     }()
+    lazy var switchButton: UISwitch = {
+        //#263C4E
+        let button = UISwitch.init()
+        button.onTintColor = DefaultGreenColor
+//        if LibraWalletManager.shared.walletBiometricLock == true {
+//            button.setOn(true, animated: true)
+//        } else {
+//            button.setOn(false, animated: true)
+//        }
+        button.addTarget(self, action: #selector(valueChange(button:)), for: UIControl.Event.valueChanged)
+        return button
+    }()
+    lazy var spaceLabel: UILabel = {
+        let label = UILabel.init()
+        label.backgroundColor = UIColor.init(hex: "DEDFE0")
+        return label
+    }()
+    var walletModel: LibraWalletManager? {
+        didSet {
+            if walletModel?.walletBiometricLock == true {
+                switchButton.setOn(true, animated: true)
+            } else {
+                switchButton.setOn(false, animated: true)
+            }
+        }
+    }
     //MARK: - 设置数据
     var model: [String: String]? {
         didSet {
@@ -83,4 +130,9 @@ class WalletDetailTableViewCell: UITableViewCell {
             }
         }
     }
+    @objc func valueChange(button: UISwitch) {
+        print(button.state)
+        self.delegate?.switchButtonValueChange(button: button)
+    }
+
 }

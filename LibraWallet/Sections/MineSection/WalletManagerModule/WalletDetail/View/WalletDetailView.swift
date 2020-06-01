@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import BiometricAuthentication
 protocol WalletDetailViewDelegate: NSObjectProtocol {
     func deleteButtonClick()
 }
@@ -37,7 +38,11 @@ class WalletDetailView: UIView {
         super.layoutSubviews()
         tableView.snp.makeConstraints { (make) in
             make.top.left.right.equalTo(self)
-            make.height.equalTo((60+10) * 2)
+            if BioMetricAuthenticator.canAuthenticate() == true {
+                make.height.equalTo((60+10) * 3)
+            } else {
+                make.height.equalTo((60+10) * 2)
+            }
         }
         guard self.subviews.contains(deleteButton) == true else {
             return
@@ -62,6 +67,9 @@ class WalletDetailView: UIView {
             // Fallback on earlier versions
         }
         tableView.backgroundColor = UIColor.init(hex:"F7F7F9")
+        tableView.register(WalletDetailTableViewCell.classForCoder(), forCellReuseIdentifier: "CellNormal")
+        tableView.register(WalletDetailTableViewCell.classForCoder(), forCellReuseIdentifier: "CellSwitch")
+
         return tableView
     }()
     lazy var deleteButton: UIButton = {

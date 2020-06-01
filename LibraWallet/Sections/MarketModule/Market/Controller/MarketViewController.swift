@@ -282,29 +282,120 @@ extension MarketViewController: MarketTableViewManagerDelegate {
         }
     }
     func showPublishPasswordAlert(payContract: String, receiveContract: String, amount: Double, exchangeAmount: Double, name: String) {
-        let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] mnemonic in
-            guard let walletAddress = self?.wallet?.walletAddress else {
-                return
-            }
-            self?.detailView.toastView?.show()
-            self?.dataModel.publishTokenForTransaction(sendAddress: walletAddress,
-                                                       mnemonic: mnemonic,
-                                                       contact: receiveContract)
-            self?.publishTokenClosure = {
-                // 更新列表数据
-                if let headerView = self?.detailView.tableView.headerView(forSection: 0) as? MarketExchangeHeaderView {
-                    headerView.rightTokenModel?.enable = true
+        if LibraWalletManager.shared.walletBiometricLock == true {
+            KeychainManager().getPasswordWithBiometric(walletAddress: LibraWalletManager.shared.walletRootAddress ?? "") { [weak self](result, error) in
+                if result.isEmpty == false {
+                    do {
+                        let mnemonic = try LibraWalletManager.shared.getMnemonicFromKeychain(password: result, walletRootAddress: LibraWalletManager.shared.walletRootAddress ?? "")
+                        guard let walletAddress = self?.wallet?.walletAddress else {
+                            return
+                        }
+                        self?.detailView.toastView?.show()
+                        self?.dataModel.publishTokenForTransaction(sendAddress: walletAddress,
+                                                                   mnemonic: mnemonic,
+                                                                   contact: receiveContract)
+                        self?.publishTokenClosure = {
+                            // 更新列表数据
+                            if let headerView = self?.detailView.tableView.headerView(forSection: 0) as? MarketExchangeHeaderView {
+                                headerView.rightTokenModel?.enable = true
+                            }
+                            // 插入本地数据库
+                            let violasToken = ViolasTokenModel.init(name: name,
+                                                                    description: "",
+                                                                    address: Data.init(Array<UInt8>(hex: receiveContract)).toHexString(),
+                                                                    icon: "",
+                                                                    enable: true,
+                                                                    balance: Int64(exchangeAmount * 1000000),
+                                                                    registerState: true)
+                            _ = DataBaseManager.DBManager.insertViolasToken(walletID: self?.wallet?.walletID ?? 0, model: violasToken)
+                            // 发送交易
+                            self?.dataModel.exchangeViolasTokenTransaction(sendAddress: walletAddress,
+                                                                           amount: amount,
+                                                                           fee: 0,
+                                                                           mnemonic: mnemonic,
+                                                                           contact: ViolasMainContract,
+                                                                           exchangeTokenContract: receiveContract,
+                                                                           exchangeTokenAmount: exchangeAmount,
+                                                                           tokenIndex: payContract)
+                        }
+                    } catch {
+                        self?.detailView.makeToast(error.localizedDescription, position: .center)
+                    }
+                } else {
+                    self?.detailView.makeToast(error, position: .center)
                 }
-                // 插入本地数据库
-                let violasToken = ViolasTokenModel.init(name: name,
-                                                        description: "",
-                                                        address: Data.init(Array<UInt8>(hex: receiveContract)).toHexString(),
-                                                        icon: "",
-                                                        enable: true,
-                                                        balance: Int64(exchangeAmount * 1000000),
-                                                        registerState: true)
-                _ = DataBaseManager.DBManager.insertViolasToken(walletID: self?.wallet?.walletID ?? 0, model: violasToken)
-                // 发送交易
+            }
+        } else {
+            let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] mnemonic in
+                guard let walletAddress = self?.wallet?.walletAddress else {
+                    return
+                }
+                self?.detailView.toastView?.show()
+                self?.dataModel.publishTokenForTransaction(sendAddress: walletAddress,
+                                                           mnemonic: mnemonic,
+                                                           contact: receiveContract)
+                self?.publishTokenClosure = {
+                    // 更新列表数据
+                    if let headerView = self?.detailView.tableView.headerView(forSection: 0) as? MarketExchangeHeaderView {
+                        headerView.rightTokenModel?.enable = true
+                    }
+                    // 插入本地数据库
+                    let violasToken = ViolasTokenModel.init(name: name,
+                                                            description: "",
+                                                            address: Data.init(Array<UInt8>(hex: receiveContract)).toHexString(),
+                                                            icon: "",
+                                                            enable: true,
+                                                            balance: Int64(exchangeAmount * 1000000),
+                                                            registerState: true)
+                    _ = DataBaseManager.DBManager.insertViolasToken(walletID: self?.wallet?.walletID ?? 0, model: violasToken)
+                    // 发送交易
+                    self?.dataModel.exchangeViolasTokenTransaction(sendAddress: walletAddress,
+                                                                   amount: amount,
+                                                                   fee: 0,
+                                                                   mnemonic: mnemonic,
+                                                                   contact: ViolasMainContract,
+                                                                   exchangeTokenContract: receiveContract,
+                                                                   exchangeTokenAmount: exchangeAmount,
+                                                                   tokenIndex: payContract)
+                }
+            }) { [weak self] errorContent in
+                self?.view.makeToast(errorContent, position: .center)
+            }
+            self.present(alert, animated: true, completion: nil)
+
+        }
+    }
+    func showPasswordAlert(payContract: String, receiveContract: String, amount: Double, exchangeAmount: Double) {
+        if LibraWalletManager.shared.walletBiometricLock == true {
+            KeychainManager().getPasswordWithBiometric(walletAddress: LibraWalletManager.shared.walletRootAddress ?? "") { [weak self](result, error) in
+                if result.isEmpty == false {
+                    do {
+                        let mnemonic = try LibraWalletManager.shared.getMnemonicFromKeychain(password: result, walletRootAddress: LibraWalletManager.shared.walletRootAddress ?? "")
+                        guard let walletAddress = self?.wallet?.walletAddress else {
+                            return
+                        }
+                        self?.detailView.toastView?.show()
+                        self?.dataModel.exchangeViolasTokenTransaction(sendAddress: walletAddress,
+                                                                       amount: amount,
+                                                                       fee: 0,
+                                                                       mnemonic: mnemonic,
+                                                                       contact: ViolasMainContract,
+                                                                       exchangeTokenContract: receiveContract,
+                                                                       exchangeTokenAmount: exchangeAmount,
+                                                                       tokenIndex: payContract)
+                    } catch {
+                        self?.detailView.makeToast(error.localizedDescription, position: .center)
+                    }
+                } else {
+                    self?.detailView.makeToast(error, position: .center)
+                }
+            }
+        } else {
+            let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] mnemonic in
+                guard let walletAddress = self?.wallet?.walletAddress else {
+                    return
+                }
+                self?.detailView.toastView?.show()
                 self?.dataModel.exchangeViolasTokenTransaction(sendAddress: walletAddress,
                                                                amount: amount,
                                                                fee: 0,
@@ -313,30 +404,11 @@ extension MarketViewController: MarketTableViewManagerDelegate {
                                                                exchangeTokenContract: receiveContract,
                                                                exchangeTokenAmount: exchangeAmount,
                                                                tokenIndex: payContract)
+            }) { [weak self] errorContent in
+                self?.view.makeToast(errorContent, position: .center)
             }
-        }) { [weak self] errorContent in
-            self?.view.makeToast(errorContent, position: .center)
+            self.present(alert, animated: true, completion: nil)
         }
-        self.present(alert, animated: true, completion: nil)
-    }
-    func showPasswordAlert(payContract: String, receiveContract: String, amount: Double, exchangeAmount: Double) {
-        let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] mnemonic in
-            guard let walletAddress = self?.wallet?.walletAddress else {
-                return
-            }
-            self?.detailView.toastView?.show()
-            self?.dataModel.exchangeViolasTokenTransaction(sendAddress: walletAddress,
-                                                           amount: amount,
-                                                           fee: 0,
-                                                           mnemonic: mnemonic,
-                                                           contact: ViolasMainContract,
-                                                           exchangeTokenContract: receiveContract,
-                                                           exchangeTokenAmount: exchangeAmount,
-                                                           tokenIndex: payContract)
-        }) { [weak self] errorContent in
-            self?.view.makeToast(errorContent, position: .center)
-        }
-        self.present(alert, animated: true, completion: nil)
     }
     func showOrderCenter() {
         let vc = OrderCenterViewController()

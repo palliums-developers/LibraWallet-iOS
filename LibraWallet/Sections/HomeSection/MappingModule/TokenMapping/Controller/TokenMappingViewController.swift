@@ -319,27 +319,58 @@ extension TokenMappingViewController: TokenMappingHeaderViewDelegate {
         self.present(alertContr, animated: true, completion: nil)
     }
     private func showNeedPublishWalletPasswordAlert() {
-        let alert = passowordAlert(rootAddress: (self.receiveWallet?.walletRootAddress)!, message: localLanguage(keyString: "wallet_type_in_watting_publish_wallet_password_content"), mnemonic: { [weak self] (mnemonic) in
-            self?.dataModel.publishViolasToken(sendAddress: (self?.receiveWallet?.walletAddress)!, mnemonic: mnemonic, contact: (self?.detailView.headerView.model?.module)!)
-        }) { [weak self] (errorContent) in
-            guard errorContent != "Cancel" else {
-                self?.detailView.toastView?.hide()
-                return
+        if LibraWalletManager.shared.walletBiometricLock == true {
+            KeychainManager().getPasswordWithBiometric(walletAddress: LibraWalletManager.shared.walletRootAddress ?? "") { [weak self](result, error) in
+                if result.isEmpty == false {
+                    do {
+                        let mnemonic = try LibraWalletManager.shared.getMnemonicFromKeychain(password: result, walletRootAddress: LibraWalletManager.shared.walletRootAddress ?? "")
+                        self?.dataModel.publishViolasToken(sendAddress: (self?.receiveWallet?.walletAddress)!, mnemonic: mnemonic, contact: (self?.detailView.headerView.model?.module)!)
+                    } catch {
+                        self?.detailView.makeToast(error.localizedDescription, position: .center)
+                    }
+                } else {
+                    self?.detailView.makeToast(error, position: .center)
+                }
             }
-            self?.view.makeToast(errorContent, position: .center)
+        } else {
+            let alert = passowordAlert(rootAddress: (self.receiveWallet?.walletRootAddress)!, message: localLanguage(keyString: "wallet_type_in_watting_publish_wallet_password_content"), mnemonic: { [weak self] (mnemonic) in
+                self?.dataModel.publishViolasToken(sendAddress: (self?.receiveWallet?.walletAddress)!, mnemonic: mnemonic, contact: (self?.detailView.headerView.model?.module)!)
+            }) { [weak self] (errorContent) in
+                guard errorContent != "Cancel" else {
+                    self?.detailView.toastView?.hide()
+                    return
+                }
+                self?.view.makeToast(errorContent, position: .center)
+            }
+            self.present(alert, animated: true, completion: nil)
         }
-        self.present(alert, animated: true, completion: nil)
+        
     }
     private func showMappingWalletPasswordAlert(amount: Double, address: String, fee: Double) {
-        let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
-            self?.chooseMapping(amount: amount, address: address, fee: fee, mnemonic: mnemonic)
-        }) { [weak self] (errorContent) in
-            guard errorContent != "Cancel" else {
-                self?.detailView.toastView?.hide()
-                return
+        if LibraWalletManager.shared.walletBiometricLock == true {
+            KeychainManager().getPasswordWithBiometric(walletAddress: LibraWalletManager.shared.walletRootAddress ?? "") { [weak self](result, error) in
+                if result.isEmpty == false {
+                    do {
+                        let mnemonic = try LibraWalletManager.shared.getMnemonicFromKeychain(password: result, walletRootAddress: LibraWalletManager.shared.walletRootAddress ?? "")
+                        self?.chooseMapping(amount: amount, address: address, fee: fee, mnemonic: mnemonic)
+                    } catch {
+                        self?.detailView.makeToast(error.localizedDescription, position: .center)
+                    }
+                } else {
+                    self?.detailView.makeToast(error, position: .center)
+                }
             }
-            self?.view.makeToast(errorContent, position: .center)
+        } else {
+            let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
+                self?.chooseMapping(amount: amount, address: address, fee: fee, mnemonic: mnemonic)
+            }) { [weak self] (errorContent) in
+                guard errorContent != "Cancel" else {
+                    self?.detailView.toastView?.hide()
+                    return
+                }
+                self?.view.makeToast(errorContent, position: .center)
+            }
+            self.present(alert, animated: true, completion: nil)
         }
-        self.present(alert, animated: true, completion: nil)
     }
 }

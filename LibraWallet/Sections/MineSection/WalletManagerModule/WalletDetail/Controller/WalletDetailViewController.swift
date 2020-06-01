@@ -8,6 +8,7 @@
 
 import UIKit
 import Toast_Swift
+import BiometricAuthentication
 class WalletDetailViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,6 +48,7 @@ class WalletDetailViewController: BaseViewController {
     lazy var tableViewManager: WalletDetailTableViewManager = {
         let manager = WalletDetailTableViewManager.init()
         manager.delegate = self
+        manager.walletModel = self.walletModel
         return manager
     }()
     //子View
@@ -79,25 +81,130 @@ extension WalletDetailViewController: WalletDetailTableViewManagerDelegate {
             }
             self.navigationController?.pushViewController(vc, animated: true)
         } else {
-            let alert = passowordAlert(rootAddress: (self.walletModel?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
-//                let vc = WalletMnemonicViewController()
-//                vc.rootAddress = self?.walletModel?.walletRootAddress
-//                self?.navigationController?.pushViewController(vc, animated: true)
-                if self?.walletModel?.walletBackupState == true {
-                    let vc = BackupMnemonicController()
-                    vc.JustShow = true
-                    vc.tempWallet = CreateWalletModel.init(password: "", mnemonic: mnemonic, wallet: self?.walletModel)
-                    self?.navigationController?.pushViewController(vc, animated: true)
-                } else {
-                    let vc = BackupWarningViewController()
-                    vc.FirstInApp = false
-                    vc.tempWallet = CreateWalletModel.init(password: "", mnemonic: mnemonic, wallet: self?.walletModel)
-                    self?.navigationController?.pushViewController(vc, animated: true)
+            if LibraWalletManager.shared.walletBiometricLock == true {
+                KeychainManager().getPasswordWithBiometric(walletAddress: LibraWalletManager.shared.walletRootAddress ?? "") { [weak self](result, error) in
+                    if result.isEmpty == false {
+                        do {
+                            let mnemonic = try LibraWalletManager.shared.getMnemonicFromKeychain(password: result, walletRootAddress: LibraWalletManager.shared.walletRootAddress ?? "")
+                            if self?.walletModel?.walletBackupState == true {
+                                let vc = BackupMnemonicController()
+                                vc.JustShow = true
+                                vc.tempWallet = CreateWalletModel.init(password: "", mnemonic: mnemonic, wallet: self?.walletModel)
+                                self?.navigationController?.pushViewController(vc, animated: true)
+                            } else {
+                                let vc = BackupWarningViewController()
+                                vc.FirstInApp = false
+                                vc.tempWallet = CreateWalletModel.init(password: "", mnemonic: mnemonic, wallet: self?.walletModel)
+                                self?.navigationController?.pushViewController(vc, animated: true)
+                            }
+                        } catch {
+                            self?.detailView.makeToast(error.localizedDescription, position: .center)
+                        }
+                    } else {
+                        self?.detailView.makeToast(error, position: .center)
+                    }
                 }
-            }) { [weak self] (errorContent) in
-                self?.view.makeToast(errorContent, position: .center)
+            } else {
+                let alert = passowordAlert(rootAddress: (self.walletModel?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
+                    if self?.walletModel?.walletBackupState == true {
+                        let vc = BackupMnemonicController()
+                        vc.JustShow = true
+                        vc.tempWallet = CreateWalletModel.init(password: "", mnemonic: mnemonic, wallet: self?.walletModel)
+                        self?.navigationController?.pushViewController(vc, animated: true)
+                    } else {
+                        let vc = BackupWarningViewController()
+                        vc.FirstInApp = false
+                        vc.tempWallet = CreateWalletModel.init(password: "", mnemonic: mnemonic, wallet: self?.walletModel)
+                        self?.navigationController?.pushViewController(vc, animated: true)
+                    }
+                }) { [weak self] (errorContent) in
+                    self?.view.makeToast(errorContent, position: .center)
+                }
+                self.present(alert, animated: true, completion: nil)
             }
+
+        }
+    }
+    func switchButtonValueChange(button: UISwitch) {
+        if button.isOn == true {
+            let alert = passowordCheckAlert(rootAddress: LibraWalletManager.shared.walletRootAddress ?? "", passwordContent: { (password) in
+                KeychainManager().addBiometric(walletAddress: LibraWalletManager.shared.walletRootAddress ?? "", password: password, success: { (result, error) in
+                    if result == "Success" {
+                        let result = DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: LibraWalletManager.shared.walletID!, state: button.isOn)
+                        guard result == true else {
+                            button.setOn(!button.isOn, animated: true)
+                            return
+                        }
+                        LibraWalletManager.shared.changeWalletBiometricLock(state: button.isOn)
+                    } else {
+                        self.detailView.makeToast(error, position: .center)
+                        button.setOn(!button.isOn, animated: true)
+                    }
+                })
+            }, errorContent: { (error) in
+                if error != "Cancel" {
+                    self.detailView.makeToast(error, position: .center)
+                }
+                button.setOn(!button.isOn, animated: true)
+            })
             self.present(alert, animated: true, completion: nil)
+        } else {
+            var str = localLanguage(keyString: "wallet_biometric_alert_face_id_describe")
+            if BioMetricAuthenticator.shared.touchIDAvailable() {
+                str = localLanguage(keyString: "wallet_biometric_alert_fingerprint_describe")
+            }
+            BioMetricAuthenticator.authenticateWithBioMetrics(reason: str) { (result) in
+                switch result {
+                case .success( _):
+                    KeychainManager().removeBiometric(walletAddress: LibraWalletManager.shared.walletRootAddress ?? "", password: "", success: { (result, error) in
+                        if result == "Success" {
+                            let result = DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: LibraWalletManager.shared.walletID!, state: button.isOn)
+                            guard result == true else {
+                                button.setOn(!button.isOn, animated: true)
+                                return
+                            }
+                            LibraWalletManager.shared.changeWalletBiometricLock(state: button.isOn)
+                        } else {
+                            self.detailView.makeToast(error, position: .center)
+                            button.setOn(!button.isOn, animated: true)
+                        }
+                    })
+                    print("success")
+                case .failure(let error):
+                    button.setOn(!button.isOn, animated: true)
+                    switch error {
+                    // device does not support biometric (face id or touch id) authentication
+                    case .biometryNotAvailable:
+                        print("biometryNotAvailable")
+                    // No biometry enrolled in this device, ask user to register fingerprint or face
+                    case .biometryNotEnrolled:
+                        print("biometryNotEnrolled")
+                    case .fallback:
+                        //                    self.txtUsername.becomeFirstResponder() // enter username password manually
+                        print("fallback")
+                    // Biometry is locked out now, because there were too many failed attempts.
+                    // Need to enter device passcode to unlock.
+                    case .biometryLockedout:
+                        print("biometryLockedout")
+                        if BioMetricAuthenticator.shared.touchIDAvailable() {
+                            self.detailView.makeToast(localLanguage(keyString: "wallet_biometric_touch_id_attempts_too_much_error"),
+                                                      position: .center)
+                        } else {
+                            self.detailView.makeToast(localLanguage(keyString: "wallet_biometric_face_id_attempts_too_much_error"),
+                                                      position: .center)
+                        }
+                    // do nothing on canceled by system or user
+                    case .canceledBySystem, .canceledByUser:
+                        print("cancel")
+                        break
+                        
+                    // show error for any other reason
+                    default:
+                        print(error.localizedDescription)
+                    }
+                }
+            }
+            
         }
     }
 }

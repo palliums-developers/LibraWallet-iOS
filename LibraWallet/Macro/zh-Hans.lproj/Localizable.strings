@@ -75,6 +75,10 @@ wallet_manager_import_or_create_wallet_header_title = "创建/导入";
 /************* 钱包详情 *******************/
 wallet_manager_detail_delete_button_title = "删除";
 wallet_manager_detail_export_mnemonic_title = "导出助记词";
+wallet_manager_biological_face_id_title = "面容识别";
+wallet_manager_biological_finger_touch_id_title = "指纹识别";
+wallet_biometric_alert_fingerprint_describe = "確認指紋以進行身份驗證。";
+wallet_biometric_alert_face_id_describe = "確認面容以進行身份驗證。";
 
 /************* 钱包管理修改名称 *******************/
 wallet_manager_detail_change_wallet_name_title = "更换钱包名";
@@ -199,10 +203,20 @@ wallet_mapping_transactions_state_ongoing_title = "进行中";
 wallet_mapping_transactions_state_success_title = "成功";
 wallet_mapping_transactions_state_failed_title = "失败";
 
-/************* 扫码登录 *******************/
-wallet_scan_login_title = "网页ViolasPay登录确认";
-wallet_scan_login_password_textfield_placeholder = "请输入密码";
-wallet_scan_login_confirm_button_title = "确定登录";
+/************* WalletConnect *******************/
+wallet_wallet_connect_login_title = "网页ViolasPay钱包登录确认";
+wallet_wallet_connect_logout_title = "网页ViolasPay钱包已登录";
+wallet_wallet_connect_exchange_title = "网页ViolasPay钱包兑换确认";
+wallet_wallet_connect_sign_title = "网页ViolasPay钱包请求签名";
+wallet_wallet_connect_transfer_title = "网页ViolasPay钱包转账";
+wallet_wallet_connect_transfer_receive_address_title = "转账地址";
+wallet_wallet_connect_transfer_amount_title = "金额";
+wallet_wallet_connect_login_warnning_content = "网页ViolasPay正在申请访问你的钱包地址,你确认将钱包地址公开给此网站吗?";
+wallet_wallet_connect_login_warnning_describe = "*其使用行为同样适用《用户协议》和《隐私协议》";
+wallet_wallet_connect_transfer_confirm_button_title = "确认转账";
+wallet_wallet_connect_login_confirm_button_title = "确认登录";
+wallet_wallet_connect_exchange_confirm_button_title = "确认兑换";
+wallet_wallet_connect_sign_button_title = "确认签名";
 wallet_scan_login_cancel_button_title = "取消";
 
 /************* 弹出提示 *******************/
@@ -283,7 +297,7 @@ wallet_market_order_center_cancel_order_alert_content = "您确定要取消当�
 // 用户协议与隐私保护
 wallet_user_and_private_agreement_title = "用户协议与隐私政策";
 wallet_user_agreement_title = "《用户协议》";
-wallet_private_agreement_title = "《隐私保护》";
+wallet_private_agreement_title = "《隐私协议》";
 wallet_private_and_use_legal_cancel_button_title = "Disagree";
 wallet_private_and_use_legal_confirm_button_title = "Agree";
 wallet_private_and_use_legal_content = "感谢您选择了SSO APP\n我们极度重视您的用户隐私。您在使用我们的服务时，我们可能会收集和使用您的相关信息。在使用我们的产品前，请务必审慎阅读《隐私政策》和《服务协议》内的所有内容，来了解我们如何收集、使用、储存和分享这些信息，以及我们为您提供的访问、更新、控制和保护这些信息的方式。";
@@ -297,6 +311,8 @@ wallet_mapping_info_alert_confirm_button_title = "确定";
 wallet_mapping_info_data_empty_alert_content = "尚未拥有任何映射币，请映射后再重试";
 // 扫码登录
 wallet_scan_login_alert_success_title = "登录成功";
+// WalletConnect
+wallet_connect_connect_time_invalid_title = "连接失败，请稍后重试";
 
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "安全提醒";
@@ -351,6 +367,7 @@ wallet_keychain_delete_mnemonic_failed_error ="删除助记词失败";
 wallet_keychain_search_sign_empty_error ="查询标示为空";
 // 加密相关
 wallet_crypto_password_empty_error = "待加密密码为空";
+wallet_crypto_password_invalid_error = "密码无效";
 wallet_crypto_mnemonic_empty_error = "待加密助记词为空";
 wallet_crypto_result_empty_error = "加密结果为空";
 wallet_crypto_result_to_base64_failed_error = "加密结果转Base64失败";
@@ -435,3 +452,6 @@ wallet_market_pay_amount_empty_error = "付出稳定币数量为空";
 wallet_market_exchange_amount_empty_error = "兑换稳定币数量为空";
 // 映射
 wallet_market_mapping_token_unpublish_error = "您将要映射的稳定币尚未开启，开启需要消耗一定数量Gas费，是否立即开启并映射？";
+// 生物识别
+wallet_biometric_touch_id_attempts_too_much_error = "由于尝试失败次数太多，指纹识别现在被锁定。";
+wallet_biometric_face_id_attempts_too_much_error = "由于尝试失败次数太多，面容识别现在被锁定。";
