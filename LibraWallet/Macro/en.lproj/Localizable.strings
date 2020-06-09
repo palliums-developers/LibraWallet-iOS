@@ -18,7 +18,7 @@ wallet_home_receive_button_title = "Receive";
 wallet_home_last_transaction_date_title = "Transactions";
 wallet_home_wallet_asset_title = "Assets";
 wallet_home_wallet_total_asset_title = "Total Assets";
-wallet_home_mapping_title = "Mapping";
+wallet_home_exchange_title = "Exchange";
 
 /************* 个人中心 *******************/
 wallet_mine_manager_wallet_title = "Manage Wallet";
@@ -217,6 +217,26 @@ wallet_wallet_connect_login_confirm_button_title = "Sign In";
 wallet_wallet_connect_exchange_confirm_button_title = "Exchange";
 wallet_wallet_connect_sign_button_title = "Confirm Signature";
 wallet_scan_login_cancel_button_title = "Cancel";
+
+/************* 币详情 *******************/
+wallet_coin_detail_transaction_total_transactions_title = "Total";
+wallet_coin_detail_transaction_transfer_transactions_title = "Transfer";
+wallet_coin_detail_transaction_rreceive_transactions_title = "Receive";
+
+/************* 交易记录详情 *******************/
+wallet_transaction_detail_transfer_success_title = "Transfer Successful";
+wallet_transaction_detail_receive_success_title = "Receive Successful";
+wallet_transaction_detail_uncheck_title = "Processing";
+wallet_transaction_detail_publish_success_title = "Stablecoin Publish Successful";
+wallet_transaction_detail_mint_authority_success_title = "Mint Approval Successful";
+wallet_transaction_detail_active_success_title = "Wallet Active Successful";
+wallet_transaction_detail_transaction_failed_title = "Transaction Failed";
+wallet_transaction_detail_amount_title = "Amount:";
+wallet_transaction_detail_gas_title = "Gas Fee:";
+wallet_transaction_detail_transfer_address_title = "Transfer:";
+wallet_transaction_detail_receive_address_title = "Receiver:";
+wallet_transaction_detail_version_title = "No.";
+wallet_transaction_detail_explorer_check_title = "Browser for more detailed information >";
 
 /************* 弹出提示 *******************/
 // 转账弹出提示

@@ -9,6 +9,8 @@
 import UIKit
 protocol WalletTransactionsTableViewManagerDelegate: NSObjectProtocol {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, address: String)
+    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, violasTransaction: ViolasDataModel)
+
 }
 class WalletTransactionsTableViewManager: NSObject {
     weak var delegate: WalletTransactionsTableViewManagerDelegate?
@@ -39,6 +41,7 @@ extension WalletTransactionsTableViewManager: UITableViewDelegate {
         case .Violas:
             if let data = violasTransactions, data.isEmpty == false {
                 content = "\(data[indexPath.row].version ?? 0)"
+                self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, violasTransaction: data[indexPath.row])
             }
         case .BTC:
             if let data = btcTransactions, data.isEmpty == false {
@@ -47,7 +50,7 @@ extension WalletTransactionsTableViewManager: UITableViewDelegate {
         default:
             break
         }
-        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, address: content)
+//        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, address: content)
     }
 }
 extension WalletTransactionsTableViewManager: UITableViewDataSource {

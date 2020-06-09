@@ -22,12 +22,12 @@ class TransactionDetailViewController: BaseViewController {
      override func viewWillLayoutSubviews() {
          super.viewWillLayoutSubviews()
          self.detailView.snp.makeConstraints { (make) in
-             if #available(iOS 11.0, *) {
-                 make.bottom.equalTo(self.view.safeAreaLayoutGuide)
-             } else {
-                 make.bottom.equalTo(self.view)
-             }
-            make.top.left.right.equalTo(self.view)
+//             if #available(iOS 11.0, *) {
+//                 make.bottom.equalTo(self.view.safeAreaLayoutGuide)
+//             } else {
+//                 make.bottom.equalTo(self.view)
+//             }
+            make.top.left.right.bottom.equalTo(self.view)
          }
      }
      deinit {
@@ -47,6 +47,17 @@ class TransactionDetailViewController: BaseViewController {
     // 子View
     lazy var detailView : TransactionDetailView = {
         let view = TransactionDetailView.init()
+        view.tableView.delegate = self.tableViewManager
+        view.tableView.dataSource = self.tableViewManager
         return view
     }()
+    var violasTransaction: ViolasDataModel? {
+        didSet {
+            guard let model = violasTransaction else {
+                return
+            }
+            self.detailView.violasTransaction = model
+            self.tableViewManager.models = self.dataModel.getViolasTransactionsData(transaction: model)
+        }
+    }
 }

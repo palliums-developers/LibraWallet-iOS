@@ -48,7 +48,7 @@ class HomeTableViewHeader: UITableViewHeaderFooterView {
         label.text = localLanguage(keyString: "wallet_home_wallet_asset_title")
         return label
     }()
-     private lazy var addCoinButton : UIButton = {
+    private lazy var addCoinButton : UIButton = {
         let button = UIButton.init()
         button.setImage(UIImage.init(named: "home_add_token"), for: UIControl.State.normal)
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)

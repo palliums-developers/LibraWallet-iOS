@@ -18,7 +18,7 @@ wallet_home_receive_button_title = "收款";
 wallet_home_last_transaction_date_title = "交易记录";
 wallet_home_wallet_asset_title = "资产";
 wallet_home_wallet_total_asset_title = "总资产";
-wallet_home_mapping_title = "币币兑换";
+wallet_home_exchange_title = "兑换";
 
 /************* 个人中心 *******************/
 wallet_mine_manager_wallet_title = "钱包管理";
@@ -219,6 +219,26 @@ wallet_wallet_connect_login_confirm_button_title = "确认登录";
 wallet_wallet_connect_exchange_confirm_button_title = "确认兑换";
 wallet_wallet_connect_sign_button_title = "确认签名";
 wallet_scan_login_cancel_button_title = "取消";
+
+/************* 币详情 *******************/
+wallet_coin_detail_transaction_total_transactions_title = "全部";
+wallet_coin_detail_transaction_transfer_transactions_title = "转出";
+wallet_coin_detail_transaction_rreceive_transactions_title = "转入";
+
+/************* 交易记录详情 *******************/
+wallet_transaction_detail_transfer_success_title = "转账成功";
+wallet_transaction_detail_receive_success_title = "收款成功";
+wallet_transaction_detail_uncheck_title = "交易中";
+wallet_transaction_detail_publish_success_title = "稳定币激活成功";
+wallet_transaction_detail_mint_authority_success_title = "铸币授权成功";
+wallet_transaction_detail_active_success_title = "钱包激活成功";
+wallet_transaction_detail_transaction_failed_title = "交易失败";
+wallet_transaction_detail_amount_title = "金额：";
+wallet_transaction_detail_gas_title = "矿工费：";
+wallet_transaction_detail_transfer_address_title = "付款地址";
+wallet_transaction_detail_receive_address_title = "收款地址";
+wallet_transaction_detail_version_title = "交易号";
+wallet_transaction_detail_explorer_check_title = "浏览器查询更详细信息 >";
 
 /************* 弹出提示 *******************/
 // 转账弹出提示

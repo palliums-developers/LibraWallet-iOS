@@ -74,7 +74,7 @@ class WalletMainViewFooterView: UIView {
     lazy var exchangeButton: UIButton = {
         let button = UIButton.init(type: UIButton.ButtonType.custom)
         // 设置字体
-        button.setTitle(localLanguage(keyString: "wallet_home_receive_button_title"), for: UIControl.State.normal)
+        button.setTitle(localLanguage(keyString: "wallet_home_exchange_title"), for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.medium)
         button.setTitleColor(UIColor.init(hex: "7038FD"), for: UIControl.State.normal)
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)

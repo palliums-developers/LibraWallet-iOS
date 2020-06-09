@@ -80,9 +80,9 @@ class WalletMainViewController: BaseViewController {
     private lazy var segmentedDataSource : JXSegmentedTitleDataSource = {
         let data = JXSegmentedTitleDataSource.init()
         //配置数据源相关配置属性
-        data.titles = [localLanguage(keyString: "全部"),
-                      localLanguage(keyString: "转入"),
-                      localLanguage(keyString: "转出")]
+        data.titles = [localLanguage(keyString: "wallet_coin_detail_transaction_total_transactions_title"),
+                      localLanguage(keyString: "wallet_coin_detail_transaction_rreceive_transactions_title"),
+                      localLanguage(keyString: "wallet_coin_detail_transaction_transfer_transactions_title")]
         data.isTitleColorGradientEnabled = true
         data.titleNormalColor = UIColor.init(hex: "C2C2C2")
         data.titleNormalFont = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)

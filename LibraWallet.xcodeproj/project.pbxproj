@@ -47,6 +47,7 @@
 		3650F0BA248A46280086F578 /* TransactionDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3650F0B9248A46280086F578 /* TransactionDetailModel.swift */; };
 		3650F0BC248A46360086F578 /* TransactionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3650F0BB248A46360086F578 /* TransactionDetailView.swift */; };
 		3650F0BF248A46F20086F578 /* TransactionDetailTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3650F0BE248A46F20086F578 /* TransactionDetailTableViewManager.swift */; };
+		3650F0C1248F2A850086F578 /* TransactionDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3650F0C0248F2A850086F578 /* TransactionDetailTableViewCell.swift */; };
 		365A89C023B9A7CE00C55A10 /* WYDTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 365A89BF23B9A7CE00C55A10 /* WYDTextField.swift */; };
 		3667A79B2475011F0000F119 /* WalletConnectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3667A79A2475011F0000F119 /* WalletConnectManager.swift */; };
 		36B43A7223BDE967008E2EEA /* LBXScanError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B43A7123BDE967008E2EEA /* LBXScanError.swift */; };
@@ -639,6 +640,7 @@
 		3650F0B9248A46280086F578 /* TransactionDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionDetailModel.swift; sourceTree = "<group>"; };
 		3650F0BB248A46360086F578 /* TransactionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionDetailView.swift; sourceTree = "<group>"; };
 		3650F0BE248A46F20086F578 /* TransactionDetailTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionDetailTableViewManager.swift; sourceTree = "<group>"; };
+		3650F0C0248F2A850086F578 /* TransactionDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionDetailTableViewCell.swift; sourceTree = "<group>"; };
 		365A89BF23B9A7CE00C55A10 /* WYDTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WYDTextField.swift; sourceTree = "<group>"; };
 		3667A79A2475011F0000F119 /* WalletConnectManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectManager.swift; sourceTree = "<group>"; };
 		36B43A7123BDE967008E2EEA /* LBXScanError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LBXScanError.swift; sourceTree = "<group>"; };
@@ -1272,6 +1274,7 @@
 			isa = PBXGroup;
 			children = (
 				3650F0BB248A46360086F578 /* TransactionDetailView.swift */,
+				3650F0C0248F2A850086F578 /* TransactionDetailTableViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -4044,6 +4047,7 @@
 				9DC06A3F2372A9B100BCE1FE /* MarketViewController.swift in Sources */,
 				9D9B49AA235DA76100354EF0 /* AddressManagerViewController.swift in Sources */,
 				9D08AD4D2330D8F5004687E8 /* TransactionDetailWebView.swift in Sources */,
+				3650F0C1248F2A850086F578 /* TransactionDetailTableViewCell.swift in Sources */,
 				9DC4886A232222CF005FF254 /* LBXScanView.swift in Sources */,
 				9DC901E7232628A40097FD85 /* LibraRawTransaction.swift in Sources */,
 				9D9B49E323602EF900354EF0 /* SettingView.swift in Sources */,

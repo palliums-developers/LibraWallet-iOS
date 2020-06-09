@@ -66,7 +66,7 @@ class WalletTransactionsTableViewCell: UITableViewCell {
     //MARK: - 懒加载对象
     private lazy var transactionTypeImageView: UIImageView = {
         let view = UIImageView.init()
-        view.image = UIImage.init(named: "libra_icon")
+        view.image = UIImage.init(named: "wallet_icon_default")
         return view
     }()
     lazy var dateLabel: UILabel = {

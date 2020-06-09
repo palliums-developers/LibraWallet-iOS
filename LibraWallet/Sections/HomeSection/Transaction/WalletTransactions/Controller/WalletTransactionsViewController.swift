@@ -282,6 +282,8 @@ extension WalletTransactionsViewController {
     }
 }
 extension WalletTransactionsViewController: WalletTransactionsTableViewManagerDelegate {
+
+    
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, address: String) {
         switch self.wallet?.walletType {
         case .BTC:
@@ -302,6 +304,12 @@ extension WalletTransactionsViewController: WalletTransactionsTableViewManagerDe
         case .none:
             print("钱包类型异常")
         }
+    }
+    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, violasTransaction: ViolasDataModel) {
+        let vc = TransactionDetailViewController()
+        //            vc.requestURL = address
+        vc.violasTransaction = violasTransaction
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }
 extension WalletTransactionsViewController: JXSegmentedListContainerViewListDelegate {
