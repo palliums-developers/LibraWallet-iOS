@@ -8,13 +8,12 @@
 
 import UIKit
 protocol HomeTableViewManagerDelegate: NSObjectProtocol {
-        func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: ViolasTokenModel)
-
+    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: LibraWalletManager)
 }
 class HomeTableViewManager: NSObject {
     weak var delegate: HomeTableViewManagerDelegate?
     /// 数据
-    var dataModel: [ViolasTokenModel]?
+    var dataModel: [LibraWalletManager]?
     /// 资产第一个
     var defaultModel: ViolasTokenModel?
     var selectRow: Int?
@@ -24,34 +23,14 @@ class HomeTableViewManager: NSObject {
 }
 extension HomeTableViewManager: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 45
+        return 72
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
         guard let model = self.dataModel else {
             return
         }
-        
-//        let data = self.dataModel![indexPath.row]
-//        guard let linkURL = data.explorerLink else {
-//            return
-//        }
-        
         self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, model: model[indexPath.row])
-    }
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let identifier = "Header"
-        if let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier) as? HomeTableViewHeader {
-            header.model = self.defaultModel
-            return header
-        } else {
-            let header = HomeTableViewHeader.init(reuseIdentifier: identifier)
-            header.model = self.defaultModel
-            return header
-        }
-    }
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 45
     }
 }
 extension HomeTableViewManager: UITableViewDataSource {
@@ -64,12 +43,14 @@ extension HomeTableViewManager: UITableViewDataSource {
             if let data = dataModel, data.isEmpty == false {
                 cell.model = data[indexPath.row]
             }
+            cell.selectionStyle = .none
             return cell
         } else {
             let cell = HomeTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
             if let data = dataModel, data.isEmpty == false {
                 cell.model = data[indexPath.row]
             }
+            cell.selectionStyle = .none
             return cell
         }
     }

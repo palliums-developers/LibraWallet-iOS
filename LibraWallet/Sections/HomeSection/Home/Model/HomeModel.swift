@@ -134,37 +134,37 @@ class HomeModel: NSObject {
     private var activeCount: Int = 0
     func getLocalUserInfo() {
         do {
-            let wallet = try DataBaseManager.DBManager.getCurrentUseWallet()
+            let wallet = try DataBaseManager.DBManager.getLocalWallets()
             let data = setKVOData(type: "LoadCurrentUseWallet", data: wallet)
             self.setValue(data, forKey: "dataDic")
-            guard let address = wallet.walletAddress else {
-                return
-            }
-            guard let walletID = wallet.walletID else {
-                return
-            }
-            guard let authKey = wallet.walletAuthenticationKey else {
-                return
-            }
-            // 更新本地数据
-            switch wallet.walletType {
-            case .Libra:
-//                tempGetLibraBalance(walletID: walletID, address: address)
-                getLibraBalance(walletID: walletID, address: address, authKey: authKey)
-                break
-            case .Violas:
-                if wallet.walletActiveState == false {
-                    getViolasAccountInfo(walletID: walletID, address: address, authKey: authKey)
-                } else {
-                    getEnableViolasToken(walletID: walletID, address: address, authKey: authKey)
-                }
-                break
-            case .BTC:
-                getBTCBalance(walletID: walletID, address: address)
-                break
-            default:
-                break
-            }
+//            guard let address = wallet.walletAddress else {
+//                return
+//            }
+//            guard let walletID = wallet.walletID else {
+//                return
+//            }
+//            guard let authKey = wallet.walletAuthenticationKey else {
+//                return
+//            }
+//            // 更新本地数据
+//            switch wallet.walletType {
+//            case .Libra:
+////                tempGetLibraBalance(walletID: walletID, address: address)
+//                getLibraBalance(walletID: walletID, address: address, authKey: authKey)
+//                break
+//            case .Violas:
+//                if wallet.walletActiveState == false {
+//                    getViolasAccountInfo(walletID: walletID, address: address, authKey: authKey)
+//                } else {
+//                    getEnableViolasToken(walletID: walletID, address: address, authKey: authKey)
+//                }
+//                break
+//            case .BTC:
+//                getBTCBalance(walletID: walletID, address: address)
+//                break
+//            default:
+//                break
+//            }
         } catch {
             
         }

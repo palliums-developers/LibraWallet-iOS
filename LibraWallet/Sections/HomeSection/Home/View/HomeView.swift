@@ -11,7 +11,7 @@ import Localize_Swift
 class HomeView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.backgroundColor = UIColor.init(hex: "F7F7F9")
+//        self.backgroundColor = UIColor.init(hex: "F7F7F9")
 //        addSubview(walletTitleLabel)
         addSubview(topBackgroundImageView)
         addSubview(headerView)
@@ -35,13 +35,13 @@ class HomeView: UIView {
 //        }
         topBackgroundImageView.snp.makeConstraints { (make) in
             make.top.left.right.equalTo(self)
-            make.height.equalTo((196 * ratio))
+            make.height.equalTo((234 * ratio))
         }
         headerView.snp.makeConstraints { (make) in
-            make.top.equalTo(topBackgroundImageView.snp.bottom).offset(-((196 * ratio) - Int(navigationBarHeight)))
+            make.top.equalTo(self).offset(navigationBarHeight)
             make.left.right.equalTo(self)
 //            make.height.equalTo(356)
-            make.height.equalTo(314)
+            make.height.equalTo(138)
         }
         tableView.snp.makeConstraints { (make) in
             make.top.equalTo(headerView.snp.bottom)
@@ -78,7 +78,7 @@ class HomeView: UIView {
         } else {
             // Fallback on earlier versions
         }
-        tableView.backgroundColor = UIColor.init(hex: "F7F7F9")//defaultBackgroundColor
+        tableView.backgroundColor = UIColor.white
         tableView.register(HomeTableViewCell.classForCoder(), forCellReuseIdentifier: "CellNormal")
         tableView.register(HomeTableViewHeader.classForCoder(), forHeaderFooterViewReuseIdentifier: "Header")
         return tableView
@@ -97,5 +97,20 @@ class HomeView: UIView {
 //        walletTotalAmountTitleLabel.text = localLanguage(keyString: "wallet_home_total_amount_title")
 //        receiveButtonTitleLabel.text = localLanguage(keyString: "wallet_home_receive_button_title")
 //        sendButtonTitleLabel.text = localLanguage(keyString: "wallet_home_send_button_title")
+    }
+}
+extension UIView {
+
+    /// 部分圆角
+    ///
+    /// - Parameters:
+    ///   - corners: 需要实现为圆角的角，可传入多个
+    ///   - radii: 圆角半径
+    func corner(byRoundingCorners corners: UIRectCorner, radii: CGFloat) {
+        let maskPath = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radii, height: radii))
+        let maskLayer = CAShapeLayer()
+        maskLayer.frame = self.bounds
+        maskLayer.path = maskPath.cgPath
+        self.layer.mask = maskLayer
     }
 }

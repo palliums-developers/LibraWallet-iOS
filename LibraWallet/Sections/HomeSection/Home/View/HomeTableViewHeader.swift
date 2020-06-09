@@ -11,10 +11,9 @@ import UIKit
 class HomeTableViewHeader: UITableViewHeaderFooterView {
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
-        contentView.backgroundColor = UIColor.init(hex: "F7F7F9")
-        contentView.addSubview(whiteBackgroundView)
-        whiteBackgroundView.addSubview(coinNameLabel)
-        whiteBackgroundView.addSubview(coinAmountLabel)
+        contentView.backgroundColor = UIColor.white
+        contentView.addSubview(coinNameLabel)
+        contentView.addSubview(addCoinButton)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -25,19 +24,13 @@ class HomeTableViewHeader: UITableViewHeaderFooterView {
     //pragma MARK: 布局
     override func layoutSubviews() {
         super.layoutSubviews()
-        whiteBackgroundView.snp.makeConstraints { (make) in
-            make.top.bottom.equalTo(contentView)
-            make.left.equalTo(contentView).offset(15)
-            make.right.equalTo(contentView).offset(-15)
-
-        }
         coinNameLabel.snp.makeConstraints { (make) in
-            make.centerY.equalTo(whiteBackgroundView)
-            make.left.equalTo(whiteBackgroundView).offset(14)
+            make.centerY.equalTo(contentView).offset(9)
+            make.left.equalTo(contentView).offset(28)
         }
-        coinAmountLabel.snp.makeConstraints { (make) in
-            make.centerY.equalTo(whiteBackgroundView)
-            make.right.equalTo(whiteBackgroundView.snp.right).offset(-14)
+        addCoinButton.snp.makeConstraints { (make) in
+            make.centerY.equalTo(contentView).offset(9)
+            make.right.equalTo(contentView.snp.right).offset(-28)
         }
     }
     //MARK: - 懒加载对象
@@ -50,26 +43,22 @@ class HomeTableViewHeader: UITableViewHeaderFooterView {
     lazy var coinNameLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
-        label.textColor = UIColor.init(hex: "3D3949")
+        label.textColor = UIColor.init(hex: "7D71AA")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: UIFont.Weight.regular)
-        label.text = "---"
+        label.text = localLanguage(keyString: "wallet_home_wallet_asset_title")
         return label
     }()
-    lazy var coinAmountLabel: UILabel = {
-        let label = UILabel.init()
-        label.textAlignment = NSTextAlignment.right
-        label.textColor = UIColor.init(hex: "3D3949")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: UIFont.Weight.regular)
-        label.text = "---"
-        return label
+     private lazy var addCoinButton : UIButton = {
+        let button = UIButton.init()
+        button.setImage(UIImage.init(named: "home_add_token"), for: UIControl.State.normal)
+        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
+        button.tag = 60
+        button.backgroundColor = UIColor.white
+        return button
     }()
-    //MARK: - 设置数据
-    var model: ViolasTokenModel? {
-        didSet {
-            coinNameLabel.text = model?.name
-            coinAmountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model?.balance ?? 0)),
-                                                          scale: 4,
-                                                          unit: 1000000)
+    @objc func buttonClick(button: UIButton) {
+        if button.tag == 10 {
+            
         }
     }
 }

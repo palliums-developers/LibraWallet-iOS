@@ -11,7 +11,7 @@ import SQLite
 struct DataBaseManager {
     static var DBManager = DataBaseManager()
     var db: Connection?
-    mutating func creatLibraDB() {
+    mutating func creatLocalDataBase() {
         /// 获取沙盒地址
         let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
         /// 拼接路径
@@ -20,67 +20,7 @@ struct DataBaseManager {
         do {
             self.db = try Connection(filePath)
         } catch {
-            print("createDataError")
-        }
-    }
-    func createWalletTable() {
-        /// 判断是否存在表
-        guard isExistTable(name: "Wallet") == false else {
-            return
-        }
-        do {
-            let walletTable = Table("Wallet")
-            // 设置字段
-            let walletID = Expression<Int64>("wallet_id")
-            // 钱包金额
-            let walletBalance = Expression<Int64>("wallet_balance")
-            // 钱包地址
-            let walletAddress = Expression<String>("wallet_address")
-            // Libra_、Violas_或BTC_ 前缀 + 钱包0层地址
-            let walletRootAddress = Expression<String>("wallet_root_address")
-            // 钱包创建时间
-            let walletCreateTime = Expression<Int>("wallet_creat_time")
-            // 钱包名字
-            let walletName = Expression<String>("wallet_name")
-            // 钱包助记词
-//            let walletMnemonic = Expression<String>("wallet_mnemonic")
-            // 当前使用钱包
-            let walletCurrentUse = Expression<Bool>("wallet_current_use")
-            // 是否使用生物解锁
-            let walletBiometricLock = Expression<Bool>("wallet_biometric_lock")
-            // 账户类型身份钱包、其他钱包(0=身份钱包、1=其它导入钱包)
-            let walletIdentity = Expression<Int>("wallet_identity")
-            // 钱包类型(0=Libra、1=Violas、2=BTC)
-            let walletType = Expression<Int>("wallet_type")
-            // 钱包是否已备份
-            let walletBackupState = Expression<Bool>("wallet_backup_state")
-            // 授权Key
-            let authenticationKey = Expression<String>("wallet_authentication_key")
-            // 钱包激活状态
-            let walletActiveState = Expression<Bool>("wallet_active_state")
-            // 建表
-            try db!.run(walletTable.create { t in
-                t.column(walletID, primaryKey: true)
-                t.column(walletAddress)
-                t.column(walletRootAddress, unique: true)
-                t.column(walletBalance)
-                t.column(walletCreateTime)
-                t.column(walletName)
-                t.column(walletCurrentUse)
-                t.column(walletBiometricLock)
-                t.column(walletIdentity)
-                t.column(walletType)
-                t.column(walletBackupState)
-                t.column(authenticationKey)
-                t.column(walletActiveState)
-            })
-        } catch {
-            let errorString = error.localizedDescription
-            if errorString.hasSuffix("already exists") == true {
-                return
-            } else {
-                print(errorString)
-            }
+            print("CreateDataBaseError")
         }
     }
     func isExistTable(name: String) -> Bool {
@@ -93,6 +33,76 @@ struct DataBaseManager {
             return false
         }
     }
+
+}
+extension DataBaseManager {
+    func createWalletTable() {
+        /// 判断是否存在表
+        guard isExistTable(name: "Wallet") == false else {
+            return
+        }
+        guard let dataBase = self.db else {
+            return
+        }
+        do {
+            let walletTable = Table("Wallet")
+            // 钱包序号
+            let walletID = Expression<Int64>("wallet_id")
+            // 钱包金额（最小单位为基准）
+            let walletBalance = Expression<Int64>("wallet_balance")
+            // 钱包地址
+            let walletAddress = Expression<String>("wallet_address")
+            // 0=Libra、1=Violas、2=BTC前缀 + 钱包0层地址(例0_fa279f2615270daed6061313a48360f7)
+            let walletRootAddress = Expression<String>("wallet_root_address")
+            // 钱包创建时间
+            let walletCreateTime = Expression<Double>("wallet_creat_time")
+            // 钱包名字
+            let walletName = Expression<String>("wallet_name")
+            // 当前WalletConnect订阅钱包
+            let walletSubscription = Expression<Bool>("wallet_subscription")
+            // 是否使用生物解锁
+            let walletBiometricLock = Expression<Bool>("wallet_biometric_lock")
+            // 钱包创建类型(0导入、1创建)
+            let walletCreateType = Expression<Int>("wallet_create_type")
+            // 钱包类型(0=Libra、1=Violas、2=BTC)
+            let walletType = Expression<Int>("wallet_type")
+            // 钱包当前使用层数
+            let walletIndex = Expression<Int>("wallet_index")
+            // 钱包是否已备份
+            let walletBackupState = Expression<Bool>("wallet_backup_state")
+            // 授权Key
+            let authenticationKey = Expression<String>("wallet_authentication_key")
+            // 钱包激活状态
+            let walletActiveState = Expression<Bool>("wallet_active_state")
+            // 钱包标志
+            let walletIcon = Expression<String>("wallet_icon")
+            // 建表
+            try dataBase.run(walletTable.create { t in
+                t.column(walletID, primaryKey: true)
+                t.column(walletAddress)
+                t.column(walletRootAddress, unique: true)
+                t.column(walletBalance)
+                t.column(walletCreateTime)
+                t.column(walletName)
+                t.column(walletSubscription)
+                t.column(walletBiometricLock)
+                t.column(walletCreateType)
+                t.column(walletType)
+                t.column(walletIndex)
+                t.column(walletBackupState)
+                t.column(authenticationKey)
+                t.column(walletActiveState)
+                t.column(walletIcon)
+            })
+        } catch {
+            let errorString = error.localizedDescription
+            if errorString.hasSuffix("already exists") == true {
+                return
+            } else {
+                print(errorString)
+            }
+        }
+    }
     func insertWallet(model: LibraWalletManager) -> Bool {
         let homeTable = Table("Wallet")
         do {
@@ -102,15 +112,17 @@ struct DataBaseManager {
                     Expression<String>("wallet_address") <- model.walletAddress ?? "",
                     Expression<String>("wallet_root_address") <- model.walletRootAddress ?? "",
 
-                    Expression<Int>("wallet_creat_time") <- model.walletCreateTime ?? 0,
+                    Expression<Double>("wallet_creat_time") <- model.walletCreateTime ?? 0,
                     Expression<String>("wallet_name") <- model.walletName ?? "",
-                    Expression<Bool>("wallet_current_use") <- model.walletCurrentUse ?? true,
+                    Expression<Bool>("wallet_subscription") <- model.walletSubscription ?? true,
                     Expression<Bool>("wallet_biometric_lock") <- model.walletBiometricLock ?? false,
-                    Expression<Int>("wallet_identity") <- model.walletIdentity ?? 999,
+                    Expression<Int>("wallet_create_type") <- model.walletCreateType ?? 999,
                     Expression<Int>("wallet_type") <- model.walletType!.value,
+                    Expression<Int>("wallet_index") <- model.walletIndex ?? 0,
                     Expression<Bool>("wallet_backup_state") <- model.walletBackupState ?? false,
                     Expression<String>("wallet_authentication_key") <- model.walletAuthenticationKey ?? "",
-                    Expression<Bool>("wallet_active_state") <- model.walletActiveState ?? false)
+                    Expression<Bool>("wallet_active_state") <- model.walletActiveState ?? false,
+                    Expression<String>("wallet_icon") <- model.walletIcon ?? "wallet_icon_default")
                 let rowid = try tempDB.run(insert)
                 print(rowid)
                 return true
@@ -140,13 +152,11 @@ struct DataBaseManager {
             return false
         }
     }
-    func getLocalWallets() -> [[LibraWalletManager]] {
+    func getLocalWallets() -> [LibraWalletManager] {
         let walletTable = Table("Wallet")
         do {
             // 身份钱包
-            var allWallets = [[LibraWalletManager]]()
-            var originWallets = [LibraWalletManager]()
-            var importWallets = [LibraWalletManager]()
+            var allWallets = [LibraWalletManager]()
             if let tempDB = self.db {
                 for wallet in try tempDB.prepare(walletTable) {
                     // 钱包ID
@@ -158,24 +168,24 @@ struct DataBaseManager {
                     // Libra_、Violas_或BTC_ 前缀 + 钱包0层地址
                     let walletRootAddress = wallet[Expression<String>("wallet_root_address")]
                     // 钱包创建时间
-                    let walletCreateTime = wallet[Expression<Int>("wallet_creat_time")]
+                    let walletCreateTime = wallet[Expression<Double>("wallet_creat_time")]
                     // 钱包名字
                     let walletName = wallet[Expression<String>("wallet_name")]
-                    // 钱包助记词
-//                    let walletMnemonic = wallet[Expression<String>("wallet_mnemonic")]
-                    // 当前使用用户
-                    let walletCurrentUse = wallet[Expression<Bool>("wallet_current_use")]
+                    // 当前WalletConnect订阅钱包
+                    let walletSubscription = wallet[Expression<Bool>("wallet_subscription")]
                     // 账户是否开启生物锁定
                     let walletBiometricLock = wallet[Expression<Bool>("wallet_biometric_lock")]
-                    // 账户类型身份钱包、其他钱包(0=身份钱包、1=其它导入钱包)
-                    let walletIdentity = wallet[Expression<Int>("wallet_identity")]
+                    // 钱包创建类型(0导入、1创建)
+                    let walletCreateType = wallet[Expression<Int>("wallet_create_type")]
                     // 钱包类型(0=Libra、1=Violas、2=BTC)
                     let walletType = wallet[Expression<Int>("wallet_type")]
+                    // 钱包当前使用层数
+                    let walletIndex = wallet[Expression<Int>("wallet_index")]
                     // 授权Key
                     let authenticationKey = wallet[Expression<String>("wallet_authentication_key")]
                     // 钱包激活状态
                     let walletActiveState = wallet[Expression<Bool>("wallet_active_state")]
-                    
+
                     let type: WalletType
                     if walletType == 0 {
                         type = .Libra
@@ -186,108 +196,104 @@ struct DataBaseManager {
                     }
                     // 钱包是否已备份
                     let walletBackupState = wallet[Expression<Bool>("wallet_backup_state")]
-                    
+                    // 钱包标志
+                    let walletIcon = wallet[Expression<String>("wallet_icon")]
+
                     let wallet = LibraWalletManager.init(walletID: walletID,
                                                          walletBalance: walletBalance,
                                                          walletAddress: walletAddress,
                                                          walletRootAddress: walletRootAddress,
                                                          walletCreateTime: walletCreateTime,
                                                          walletName: walletName,
-                                                         walletCurrentUse: walletCurrentUse,
+                                                         walletSubscription: walletSubscription,
                                                          walletBiometricLock: walletBiometricLock,
-                                                         walletIdentity: walletIdentity,
+                                                         walletCreateType: walletCreateType,
                                                          walletType: type,
+                                                         walletIndex: walletIndex,
                                                          walletBackupState: walletBackupState,
                                                          walletAuthenticationKey: authenticationKey,
-                                                         walletActiveState: walletActiveState)
-                    if walletIdentity == 0 {
-                        originWallets.append(wallet)
-                    } else {
-                        importWallets.append(wallet)
-                    }
+                                                         walletActiveState: walletActiveState,
+                                                         walletIcon: walletIcon)
+                    allWallets.append(wallet)
                 }
-                allWallets.append(originWallets)
-                allWallets.append(importWallets)
                 return allWallets
             } else {
                 return allWallets
             }
         } catch {
             print(error.localizedDescription)
-            return [[LibraWalletManager]]()
+            return [LibraWalletManager]()
         }
     }
-    func getCurrentUseWallet() throws -> LibraWalletManager {
-        let walletTable = Table("Wallet").filter(Expression<Bool>("wallet_current_use") == true)
-        do {
-            if let tempDB = self.db {
-                for wallet in try tempDB.prepare(walletTable) {
-                    // 钱包ID
-                    let walletID = wallet[Expression<Int64>("wallet_id")]
-                    // 钱包金额
-                    let walletBalance = wallet[Expression<Int64>("wallet_balance")]
-                    // 钱包地址
-                    let walletAddress = wallet[Expression<String>("wallet_address")]
-                    // Libra_、Violas_或BTC_ 前缀 + 钱包0层地址
-                    let walletRootAddress = wallet[Expression<String>("wallet_root_address")]
-                    // 钱包创建时间
-                    let walletCreateTime = wallet[Expression<Int>("wallet_creat_time")]
-                    // 钱包名字
-                    let walletName = wallet[Expression<String>("wallet_name")]
-                    // 钱包助记词
-//                    let walletMnemonic = wallet[Expression<String>("wallet_mnemonic")]
-                    // 当前使用用户
-                    let walletCurrentUse = wallet[Expression<Bool>("wallet_current_use")]
-                    // 账户是否开启生物锁定
-                    let walletBiometricLock = wallet[Expression<Bool>("wallet_biometric_lock")]
-                    // 账户类型身份钱包、其他钱包(0=身份钱包、1=其它导入钱包)
-                    let walletIdentity = wallet[Expression<Int>("wallet_identity")]
-                    // 钱包类型(0=Libra、1=Violas、2=BTC)
-                    let walletType = wallet[Expression<Int>("wallet_type")]
-                    var tempWalletType = WalletType.Libra
-                    if walletType == 1 {
-                        tempWalletType = WalletType.Violas
-                    } else if walletType == 2 {
-                        tempWalletType = WalletType.BTC
-                    }
-                    // 钱包是否已备份
-                    let walletBackupState = wallet[Expression<Bool>("wallet_backup_state")]
-                    // 授权Key
-                    let authenticationKey = wallet[Expression<String>("wallet_authentication_key")]
-                    // 钱包激活状态
-                    let walletActiveState = wallet[Expression<Bool>("wallet_active_state")]
-                    
-                    LibraWalletManager.shared.initWallet(walletID: walletID,
-                                                         walletBalance: walletBalance,
-                                                         walletAddress: walletAddress,
-                                                         walletRootAddress: walletRootAddress,
-                                                         walletCreateTime: walletCreateTime,
-                                                         walletName: walletName,
-                                                         walletCurrentUse: walletCurrentUse,
-                                                         walletBiometricLock: walletBiometricLock,
-                                                         walletIdentity: walletIdentity,
-                                                         walletType: tempWalletType,
-                                                         walletBackupState: walletBackupState,
-                                                         walletAuthenticationKey: authenticationKey,
-                                                         walletActiveState: walletActiveState)
-                    return LibraWalletManager.shared
-                }
-                throw LibraWalletError.error("获取当前使用钱包检索失败")
-            } else {
-                throw LibraWalletError.error("读取数据库失败")
-            }
-        } catch {
-            print(error.localizedDescription)
-            throw error
-        }
-    }
-    func getWalletWithType(walletType: WalletType) -> [[LibraWalletManager]] {
+//    func getCurrentUseWallet() throws -> LibraWalletManager {
+//        let walletTable = Table("Wallet").filter(Expression<Bool>("wallet_current_use") == true)
+//        do {
+//            if let tempDB = self.db {
+//                for wallet in try tempDB.prepare(walletTable) {
+//                    // 钱包ID
+//                    let walletID = wallet[Expression<Int64>("wallet_id")]
+//                    // 钱包金额
+//                    let walletBalance = wallet[Expression<Int64>("wallet_balance")]
+//                    // 钱包地址
+//                    let walletAddress = wallet[Expression<String>("wallet_address")]
+//                    // Libra_、Violas_或BTC_ 前缀 + 钱包0层地址
+//                    let walletRootAddress = wallet[Expression<String>("wallet_root_address")]
+//                    // 钱包创建时间
+//                    let walletCreateTime = wallet[Expression<Double>("wallet_creat_time")]
+//                    // 钱包名字
+//                    let walletName = wallet[Expression<String>("wallet_name")]
+//                    // 钱包助记词
+////                    let walletMnemonic = wallet[Expression<String>("wallet_mnemonic")]
+//                    // 当前使用用户
+//                    let walletCurrentUse = wallet[Expression<Bool>("wallet_current_use")]
+//                    // 账户是否开启生物锁定
+//                    let walletBiometricLock = wallet[Expression<Bool>("wallet_biometric_lock")]
+//                    // 账户类型身份钱包、其他钱包(0=身份钱包、1=其它导入钱包)
+//                    let walletIdentity = wallet[Expression<Int>("wallet_identity")]
+//                    // 钱包类型(0=Libra、1=Violas、2=BTC)
+//                    let walletType = wallet[Expression<Int>("wallet_type")]
+//                    var tempWalletType = WalletType.Libra
+//                    if walletType == 1 {
+//                        tempWalletType = WalletType.Violas
+//                    } else if walletType == 2 {
+//                        tempWalletType = WalletType.BTC
+//                    }
+//                    // 钱包是否已备份
+//                    let walletBackupState = wallet[Expression<Bool>("wallet_backup_state")]
+//                    // 授权Key
+//                    let authenticationKey = wallet[Expression<String>("wallet_authentication_key")]
+//                    // 钱包激活状态
+//                    let walletActiveState = wallet[Expression<Bool>("wallet_active_state")]
+//                    
+//                    LibraWalletManager.shared.initWallet(walletID: walletID,
+//                                                         walletBalance: walletBalance,
+//                                                         walletAddress: walletAddress,
+//                                                         walletRootAddress: walletRootAddress,
+//                                                         walletCreateTime: walletCreateTime,
+//                                                         walletName: walletName,
+//                                                         walletCurrentUse: walletCurrentUse,
+//                                                         walletBiometricLock: walletBiometricLock,
+//                                                         walletIdentity: walletIdentity,
+//                                                         walletType: tempWalletType,
+//                                                         walletBackupState: walletBackupState,
+//                                                         walletAuthenticationKey: authenticationKey,
+//                                                         walletActiveState: walletActiveState)
+//                    return LibraWalletManager.shared
+//                }
+//                throw LibraWalletError.error("获取当前使用钱包检索失败")
+//            } else {
+//                throw LibraWalletError.error("读取数据库失败")
+//            }
+//        } catch {
+//            print(error.localizedDescription)
+//            throw error
+//        }
+//    }
+    func getWalletWithType(walletType: WalletType) -> [LibraWalletManager] {
         let walletTable = Table("Wallet").filter(Expression<Int>("wallet_type") == walletType.value)
         do {
             // 身份钱包
-            var allWallets = [[LibraWalletManager]]()
-            var originWallets = [LibraWalletManager]()
-            var importWallets = [LibraWalletManager]()
+            var allWallets = [LibraWalletManager]()
             if let tempDB = self.db {
                 for wallet in try tempDB.prepare(walletTable) {
                     // 钱包ID
@@ -299,19 +305,23 @@ struct DataBaseManager {
                     // Libra_、Violas_或BTC_ 前缀 + 钱包0层地址
                     let walletRootAddress = wallet[Expression<String>("wallet_root_address")]
                     // 钱包创建时间
-                    let walletCreateTime = wallet[Expression<Int>("wallet_creat_time")]
+                    let walletCreateTime = wallet[Expression<Double>("wallet_creat_time")]
                     // 钱包名字
                     let walletName = wallet[Expression<String>("wallet_name")]
-                    // 钱包助记词
-//                    let walletMnemonic = wallet[Expression<String>("wallet_mnemonic")]
-                    // 当前使用用户
-                    let walletCurrentUse = wallet[Expression<Bool>("wallet_current_use")]
+                    // 当前WalletConnect订阅钱包
+                    let walletSubscription = wallet[Expression<Bool>("wallet_subscription")]
                     // 账户是否开启生物锁定
                     let walletBiometricLock = wallet[Expression<Bool>("wallet_biometric_lock")]
-                    // 账户类型身份钱包、其他钱包(0=身份钱包、1=其它导入钱包)
-                    let walletIdentity = wallet[Expression<Int>("wallet_identity")]
+                    // 钱包创建类型(0导入、1创建)
+                    let walletCreateType = wallet[Expression<Int>("wallet_create_type")]
                     // 钱包类型(0=Libra、1=Violas、2=BTC)
                     let walletType = wallet[Expression<Int>("wallet_type")]
+                    // 钱包当前使用层数
+                    let walletIndex = wallet[Expression<Int>("wallet_index")]
+                    // 授权Key
+                    let authenticationKey = wallet[Expression<String>("wallet_authentication_key")]
+                    // 钱包激活状态
+                    let walletActiveState = wallet[Expression<Bool>("wallet_active_state")]
                     
                     let type: WalletType
                     if walletType == 0 {
@@ -323,10 +333,8 @@ struct DataBaseManager {
                     }
                     // 钱包是否已备份
                     let walletBackupState = wallet[Expression<Bool>("wallet_backup_state")]
-                    // 授权Key
-                    let authenticationKey = wallet[Expression<String>("wallet_authentication_key")]
-                    // 钱包激活状态
-                    let walletActiveState = wallet[Expression<Bool>("wallet_active_state")]
+                    // 钱包标志
+                    let walletIcon = wallet[Expression<String>("wallet_icon")]
                     
                     let wallet = LibraWalletManager.init(walletID: walletID,
                                                          walletBalance: walletBalance,
@@ -334,28 +342,24 @@ struct DataBaseManager {
                                                          walletRootAddress: walletRootAddress,
                                                          walletCreateTime: walletCreateTime,
                                                          walletName: walletName,
-                                                         walletCurrentUse: walletCurrentUse,
+                                                         walletSubscription: walletSubscription,
                                                          walletBiometricLock: walletBiometricLock,
-                                                         walletIdentity: walletIdentity,
+                                                         walletCreateType: walletCreateType,
                                                          walletType: type,
+                                                         walletIndex: walletIndex,
                                                          walletBackupState: walletBackupState,
                                                          walletAuthenticationKey: authenticationKey,
-                                                         walletActiveState: walletActiveState)
-                    if walletIdentity == 0 {
-                        originWallets.append(wallet)
-                    } else {
-                        importWallets.append(wallet)
-                    }
+                                                         walletActiveState: walletActiveState,
+                                                         walletIcon: walletIcon)
+                    allWallets.append(wallet)
                 }
-                allWallets.append(originWallets)
-                allWallets.append(importWallets)
                 return allWallets
             } else {
                 return allWallets
             }
         } catch {
             print(error.localizedDescription)
-            return [[LibraWalletManager]]()
+            return [LibraWalletManager]()
         }
     }
     func updateDefaultViolasWallet() -> Bool {
@@ -511,6 +515,8 @@ struct DataBaseManager {
             return false
         }
     }
+}
+extension DataBaseManager {
     func createTransferAddressListTable() {
         /// 判断是否存在表
         guard isExistTable(name: "TransferAddress") == false else {
@@ -634,7 +640,7 @@ struct DataBaseManager {
             print(error.localizedDescription)
             return false
         }
-    }    
+    }
 }
 // MARK: 创建ViolasToken表
 extension DataBaseManager {

@@ -53,25 +53,25 @@ extension WalletListController: WalletListTableViewManagerDelegate {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: LibraWalletManager) {
         print(indexPath.row)
         
-        // 去除旧的选中
-        let oldIndex = viewModel.tableViewManager.dataModelLocation!
-        var oldModel = viewModel.tableViewManager.dataModel![oldIndex.section][oldIndex.row]
-        oldModel.changeWalletCurrentUse(state: false)
-        let oldChangeResult = DataBaseManager.DBManager.updateWalletCurrentUseState(walletID: oldModel.walletID!, state: false)
-        guard oldChangeResult == true else {
-            return
-        }
-        // 添加新的选中
-        let result = DataBaseManager.DBManager.updateWalletCurrentUseState(walletID: model.walletID!, state: true)
-        guard result == true else {
-            return
-        }
-        viewModel.tableViewManager.dataModelLocation = indexPath
-
-        if let action = self.actionClosure {
-            LibraWalletManager.shared.changeDefaultWallet(wallet: model)
-            action(.update, model)
-        }
-        self.navigationController?.popViewController(animated: true)
+//        // 去除旧的选中
+//        let oldIndex = viewModel.tableViewManager.dataModelLocation!
+//        var oldModel = viewModel.tableViewManager.dataModel![oldIndex.section][oldIndex.row]
+//        oldModel.changeWalletCurrentUse(state: false)
+//        let oldChangeResult = DataBaseManager.DBManager.updateWalletCurrentUseState(walletID: oldModel.walletID!, state: false)
+//        guard oldChangeResult == true else {
+//            return
+//        }
+//        // 添加新的选中
+//        let result = DataBaseManager.DBManager.updateWalletCurrentUseState(walletID: model.walletID!, state: true)
+//        guard result == true else {
+//            return
+//        }
+//        viewModel.tableViewManager.dataModelLocation = indexPath
+//
+//        if let action = self.actionClosure {
+//            LibraWalletManager.shared.changeDefaultWallet(wallet: model)
+//            action(.update, model)
+//        }
+//        self.navigationController?.popViewController(animated: true)
     }
 }

@@ -60,12 +60,12 @@ extension LocalWalletTableViewManager: UITableViewDataSource {
         if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? LocalWalletTableViewCell {
             if let data = dataModel, let origin = originModel, data.isEmpty == false, origin.isEmpty == false {
                 cell.model = data[indexPath.section][indexPath.row]
-                if data[indexPath.section][indexPath.row].walletCurrentUse == true {
-                    self.dataModelLocation = indexPath
-                    if data.last?.count == origin.last?.count {
-                        self.originModelLocation = indexPath
-                    }
-                }
+//                if data[indexPath.section][indexPath.row].walletCurrentUse == true {
+//                    self.dataModelLocation = indexPath
+//                    if data.last?.count == origin.last?.count {
+//                        self.originModelLocation = indexPath
+//                    }
+//                }
             }
             cell.selectionStyle = .none
             return cell
@@ -73,12 +73,12 @@ extension LocalWalletTableViewManager: UITableViewDataSource {
             let cell = LocalWalletTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
             if let data = dataModel, let origin = originModel, data.isEmpty == false, origin.isEmpty == false {
                 cell.model = data[indexPath.section][indexPath.row]
-                if data[indexPath.section][indexPath.row].walletCurrentUse == true {
-                    self.dataModelLocation = indexPath
-                    if data.last?.count == origin.last?.count {
-                        self.originModelLocation = indexPath
-                    }
-                }
+//                if data[indexPath.section][indexPath.row].walletCurrentUse == true {
+//                    self.dataModelLocation = indexPath
+//                    if data.last?.count == origin.last?.count {
+//                        self.originModelLocation = indexPath
+//                    }
+//                }
             }
             cell.selectionStyle = .none
             return cell

@@ -16,7 +16,8 @@ wallet_home_current_balance_title = "Balance";
 wallet_home_transfer_button_title = "Transfer";
 wallet_home_receive_button_title = "Receive";
 wallet_home_last_transaction_date_title = "Transactions";
-wallet_home_wallet_asset_title = "Asset";
+wallet_home_wallet_asset_title = "Assets";
+wallet_home_wallet_total_asset_title = "Total Assets";
 wallet_home_mapping_title = "Mapping";
 
 /************* 个人中心 *******************/

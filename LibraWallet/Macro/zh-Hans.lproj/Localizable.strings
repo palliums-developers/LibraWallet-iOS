@@ -17,6 +17,7 @@ wallet_home_transfer_button_title = "转账";
 wallet_home_receive_button_title = "收款";
 wallet_home_last_transaction_date_title = "交易记录";
 wallet_home_wallet_asset_title = "资产";
+wallet_home_wallet_total_asset_title = "总资产";
 wallet_home_mapping_title = "币币兑换";
 
 /************* 个人中心 *******************/

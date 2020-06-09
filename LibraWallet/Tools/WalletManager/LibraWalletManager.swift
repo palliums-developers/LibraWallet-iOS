@@ -47,23 +47,27 @@ struct LibraWalletManager {
     /// Libra_ 或者Violas_ 前缀 + 钱包0层地址
     private(set) var walletRootAddress: String?
     /// 钱包创建时间
-    private(set) var walletCreateTime: Int?
+    private(set) var walletCreateTime: Double?
     /// 钱包名字
     private(set) var walletName: String?
-    /// 钱包当前使用状态
-    private(set) var walletCurrentUse: Bool?
+    /// 当前WalletConnect订阅钱包
+    private(set) var walletSubscription: Bool?
     /// 钱包生物锁开启状态
     private(set) var walletBiometricLock: Bool?
-    /// 账户类型身份钱包、其他钱包(0=身份钱包、1=其它导入钱包)
-    private(set) var walletIdentity: Int?
+    /// 钱包创建类型(0导入、1创建)
+    private(set) var walletCreateType: Int?
     /// 钱包类型(0=Libra、1=Violas、2=BTC)
     private(set) var walletType: WalletType?
+    /// 钱包当前使用层数
+    private(set) var walletIndex: Int?
     /// 钱包备份状态
     private(set) var walletBackupState: Bool?
     /// 授权Key
     private(set) var walletAuthenticationKey: String?
     /// 钱包激活状态
     private(set) var walletActiveState: Bool?
+    /// 钱包标志
+    private(set) var walletIcon: String?
 }
 extension LibraWalletManager {
     /// 创建Libra单例
@@ -80,7 +84,7 @@ extension LibraWalletManager {
     /// - Parameter walletBackupState: 钱包备份状态
     /// - Parameter walletAuthenticationKey: 授权Key
     /// - Parameter walletActiveState: 钱包激活状态
-    mutating func initWallet(walletID: Int64, walletBalance: Int64, walletAddress: String, walletRootAddress: String,  walletCreateTime: Int, walletName: String, walletCurrentUse: Bool, walletBiometricLock: Bool, walletIdentity: Int, walletType: WalletType, walletBackupState: Bool, walletAuthenticationKey: String, walletActiveState: Bool) {
+    mutating func initWallet(walletID: Int64, walletBalance: Int64, walletAddress: String, walletRootAddress: String,  walletCreateTime: Double, walletName: String, walletSubscription: Bool, walletBiometricLock: Bool, walletCreateType: Int, walletType: WalletType, walletIndex: Int, walletBackupState: Bool, walletAuthenticationKey: String, walletActiveState: Bool, walletIcon: String) {
         self.semaphore.wait()
         
         self.walletID = walletID
@@ -89,13 +93,15 @@ extension LibraWalletManager {
         self.walletRootAddress = walletRootAddress
         self.walletCreateTime = walletCreateTime
         self.walletName = walletName
-        self.walletCurrentUse = walletCurrentUse
+        self.walletSubscription = walletSubscription
         self.walletBiometricLock = walletBiometricLock
-        self.walletIdentity = walletIdentity
+        self.walletCreateType = walletCreateType
         self.walletType = walletType
+        self.walletIndex = walletIndex
         self.walletBackupState = walletBackupState
         self.walletAuthenticationKey = walletAuthenticationKey
         self.walletActiveState = walletActiveState
+        self.walletIcon = walletIcon
         
         self.semaphore.signal()
     }
@@ -119,9 +125,9 @@ extension LibraWalletManager {
         self.walletBiometricLock = state
         self.semaphore.signal()
     }
-    mutating func changeWalletCurrentUse(state: Bool) {
+    mutating func changeWalletSubscriptionUse(state: Bool) {
         self.semaphore.wait()
-        self.walletCurrentUse = state
+        self.walletSubscription = state
         self.semaphore.signal()
     }
     mutating func changeDefaultWallet(wallet: LibraWalletManager) {
@@ -133,10 +139,11 @@ extension LibraWalletManager {
         self.walletRootAddress = wallet.walletRootAddress
         self.walletCreateTime = wallet.walletCreateTime
         self.walletName = wallet.walletName
-        self.walletCurrentUse = true
+        self.walletSubscription = wallet.walletSubscription
         self.walletBiometricLock = wallet.walletBiometricLock
-        self.walletIdentity = wallet.walletIdentity
+        self.walletCreateType = wallet.walletCreateType
         self.walletType = wallet.walletType
+        self.walletIndex = wallet.walletIndex
         self.walletBackupState = wallet.walletBackupState
         self.walletAuthenticationKey = wallet.walletAuthenticationKey
         self.walletActiveState = wallet.walletActiveState

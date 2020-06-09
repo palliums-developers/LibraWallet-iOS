@@ -60,15 +60,17 @@ extension AddWalletViewController: AddWalletViewDelegate {
             let walletModel = LibraWalletManager.init(walletID: 999,
                                                       walletBalance: 0,
                                                       walletAddress: wallet.address.description,
-                                                      walletRootAddress: "BTC_" + wallet.address.description,
-                                                      walletCreateTime: Int(NSDate().timeIntervalSince1970),
+                                                      walletRootAddress: "2_" + wallet.address.description,
+                                                      walletCreateTime: NSDate().timeIntervalSince1970,
                                                       walletName: name,
-                                                      walletCurrentUse: false,
+                                                      walletSubscription: false,
                                                       walletBiometricLock: false,
-                                                      walletIdentity: 1,
+                                                      walletCreateType: 1,
                                                       walletType: .BTC,
-                                                      walletBackupState: true)
-            
+                                                      walletIndex: 0,
+                                                      walletBackupState: true,
+                                                      walletAuthenticationKey: "",
+                                                      walletActiveState: true)
             let createModel = CreateWalletModel.init(password: password,
                                                      mnemonic: mnemonic,
                                                      wallet: walletModel)
@@ -88,20 +90,20 @@ extension AddWalletViewController: AddWalletViewDelegate {
             do {
                 let mnemonic = try ViolasManager.getLibraMnemonic()
                 let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
-
                 let walletModel = LibraWalletManager.init(walletID: 999,
                                                           walletBalance: 0,
                                                           walletAddress: wallet.publicKey.toLegacy(),
-                                                          walletRootAddress: "Violas_" + wallet.publicKey.toLegacy(),
-                                                          walletCreateTime: Int(NSDate().timeIntervalSince1970),
+                                                          walletRootAddress: "1_" + wallet.publicKey.toLegacy(),
+                                                          walletCreateTime: NSDate().timeIntervalSince1970,
                                                           walletName: name,
-                                                          walletCurrentUse: false,
+                                                          walletSubscription: false,
                                                           walletBiometricLock: false,
-                                                          walletIdentity: 1,
+                                                          walletCreateType: 1,
                                                           walletType: .Violas,
+                                                          walletIndex: 0,
                                                           walletBackupState: true,
-                                                          walletAuthenticationKey: wallet.publicKey.toActive())
-                
+                                                          walletAuthenticationKey: wallet.publicKey.toActive(),
+                                                          walletActiveState: false)
                 let createModel = CreateWalletModel.init(password: password,
                                                          mnemonic: mnemonic,
                                                          wallet: walletModel)
@@ -126,17 +128,18 @@ extension AddWalletViewController: AddWalletViewDelegate {
                 let wallet = try LibraManager.getWallet(mnemonic: mnemonic)
                 let walletModel = LibraWalletManager.init(walletID: 999,
                                                           walletBalance: 0,
-                                                          walletAddress: wallet.publicKey.toAddress(),
-                                                          walletRootAddress: "Libra_" + wallet.publicKey.toAddress(),
-                                                          walletCreateTime: Int(NSDate().timeIntervalSince1970),
+                                                          walletAddress: wallet.publicKey.toLegacy(),
+                                                          walletRootAddress: "0_" + wallet.publicKey.toLegacy(),
+                                                          walletCreateTime: NSDate().timeIntervalSince1970,
                                                           walletName: name,
-                                                          walletCurrentUse: false,
+                                                          walletSubscription: false,
                                                           walletBiometricLock: false,
-                                                          walletIdentity: 1,
+                                                          walletCreateType: 1,
                                                           walletType: .Libra,
+                                                          walletIndex: 0,
                                                           walletBackupState: true,
-                                                          walletAuthenticationKey: wallet.publicKey.toActive())
-                
+                                                          walletAuthenticationKey: wallet.publicKey.toActive(),
+                                                          walletActiveState: false)
                 let createModel = CreateWalletModel.init(password: password,
                                                          mnemonic: mnemonic,
                                                          wallet: walletModel)

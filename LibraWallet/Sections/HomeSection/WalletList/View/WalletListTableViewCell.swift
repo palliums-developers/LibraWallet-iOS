@@ -92,7 +92,7 @@ class WalletListTableViewCell: UITableViewCell {
             }
             nameLabel.text = model?.walletName
             addressLabel.text = model?.walletAddress
-            selectIndicatorImageView.alpha = model?.walletCurrentUse == true ? 1:0
+//            selectIndicatorImageView.alpha = model?.walletCurrentUse == true ? 1:0
         }
     }
 }

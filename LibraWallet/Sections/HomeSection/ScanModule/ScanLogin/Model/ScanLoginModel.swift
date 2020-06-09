@@ -22,15 +22,15 @@ class ScanLoginModel: NSObject {
     func submitScanLoginData(walletAddress: String, sessionID: String) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let quene = DispatchQueue.init(label: "SendQueue")
-        quene.async {
-            semaphore.wait()
-            self.getAllWallet(semaphore: semaphore)
-        }
-        quene.async {
-            semaphore.wait()
-            self.submitScanLoginDataRequest(walletAddress: self.encryptData!, sessionID: sessionID)
-            semaphore.signal()
-        }
+//        quene.async {
+//            semaphore.wait()
+//            self.getAllWallet(semaphore: semaphore)
+//        }
+//        quene.async {
+//            semaphore.wait()
+//            self.submitScanLoginDataRequest(walletAddress: self.encryptData!, sessionID: sessionID)
+//            semaphore.signal()
+//        }
     }
     private func submitScanLoginDataRequest(walletAddress: String, sessionID: String) {
         let request = mainProvide.request(.SubmitScanLoginData(walletAddress, sessionID)) {[weak self](result) in
@@ -72,17 +72,17 @@ class ScanLoginModel: NSObject {
         let identityWallets = wallets.first!
         let othersWallets = wallets.last!
         
-        let tempData = identityWallets.reduce("") {
-            $0 + "{\"name\":\"\($1.walletName ?? "")\",\"identity\":\($1.walletIdentity ?? 0),\"type\":\"\($1.walletType!.description.lowercased())\",\"address\":\"\($1.walletAddress ?? "")\"},"
-        }
-        let tempData2 = othersWallets.reduce("") {
-            $0 + "{\"name\":\"\($1.walletName ?? "")\",\"identity\":\($1.walletIdentity ?? 0),\"type\":\"\($1.walletType!.description.lowercased())\",\"address\":\"\($1.walletAddress ?? "")\"},"
-        }
-        let range = tempData2.index(tempData2.startIndex, offsetBy: tempData2.count > 0 ? tempData2.count - 1:0)
-        // 替换指定区间数据
-        let tempData3 = tempData2.prefix(upTo: range)
-        self.encryptData = "[" + tempData + tempData3 + "]"
-        semaphore.signal()
+//        let tempData = identityWallets.reduce("") {
+//            $0 + "{\"name\":\"\($1.walletName ?? "")\",\"identity\":\($1.walletIdentity ?? 0),\"type\":\"\($1.walletType!.description.lowercased())\",\"address\":\"\($1.walletAddress ?? "")\"},"
+//        }
+//        let tempData2 = othersWallets.reduce("") {
+//            $0 + "{\"name\":\"\($1.walletName ?? "")\",\"identity\":\($1.walletIdentity ?? 0),\"type\":\"\($1.walletType!.description.lowercased())\",\"address\":\"\($1.walletAddress ?? "")\"},"
+//        }
+//        let range = tempData2.index(tempData2.startIndex, offsetBy: tempData2.count > 0 ? tempData2.count - 1:0)
+//        // 替换指定区间数据
+//        let tempData3 = tempData2.prefix(upTo: range)
+//        self.encryptData = "[" + tempData + tempData3 + "]"
+//        semaphore.signal()
 //        let tempData = identityWallets.map {
 //            ["name":"\($0.walletName ?? "")",
 //             "identity":"\($0.walletIdentity ?? 0)",

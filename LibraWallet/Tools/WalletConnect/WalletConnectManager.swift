@@ -64,9 +64,7 @@ class WalletConnectManager: NSObject {
         let wallets = DataBaseManager.DBManager.getWalletWithType(walletType: WalletType.Violas)
         var address = [String]()
         for item in wallets {
-            for item0 in item {
-                address.append(item0.walletAddress ?? "")
-            }
+            address.append(item.walletAddress ?? "")
         }
         let walletInfo = Session.WalletInfo(approved: state,
                                             accounts: address,
@@ -208,13 +206,11 @@ class GetAccountHandler: RequestHandler {
             }
             let localWallets = DataBaseManager.DBManager.getLocalWallets()
             var tempWallets = [tempData]()
-            for typeWallets in localWallets {
-                for wallets in typeWallets {
-                    tempWallets.append(tempData.init(walletType: wallets.walletIdentity,
-                                                     coinType: wallets.walletType?.description.lowercased(),
-                                                     name: wallets.walletName,
-                                                     address: wallets.walletAddress))
-                }
+            for wallets in localWallets {
+                tempWallets.append(tempData.init(walletType: wallets.walletCreateType,
+                                                 coinType: wallets.walletType?.description.lowercased(),
+                                                 name: wallets.walletName,
+                                                 address: wallets.walletAddress))
             }
             let resultData = try? JSONEncoder().encode(tempWallets)
             let strJson = String.init(data: resultData!, encoding: .utf8)
