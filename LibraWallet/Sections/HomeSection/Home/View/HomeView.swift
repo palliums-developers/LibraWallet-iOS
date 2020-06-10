@@ -16,6 +16,7 @@ class HomeView: UIView {
         addSubview(topBackgroundImageView)
         addSubview(headerView)
         addSubview(tableView)
+        addSubview(importOrCreateView)
         // 添加语言变换通知
         NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
     }
@@ -29,10 +30,6 @@ class HomeView: UIView {
     //MARK: - 布局
     override func layoutSubviews() {
         super.layoutSubviews()
-//        walletTitleLabel.snp.makeConstraints { (make) in
-//            make.top.equalTo(18)
-//            make.left.equalTo(20)
-//        }
         topBackgroundImageView.snp.makeConstraints { (make) in
             make.top.left.right.equalTo(self)
             make.height.equalTo((234 * ratio))
@@ -47,6 +44,12 @@ class HomeView: UIView {
             make.top.equalTo(headerView.snp.bottom)
             make.left.right.bottom.equalTo(self)
         }
+        importOrCreateView.snp.makeConstraints { (make) in
+            make.left.right.equalTo(self)
+            make.top.equalTo(headerView.snp.bottom).offset(-64)
+            make.bottom.equalTo(self)
+        }
+        importOrCreateView.corner(byRoundingCorners: [UIRectCorner.topLeft, UIRectCorner.topRight], radii: 24)
     }
     //MARK: - 懒加载对象
     lazy var walletTitleLabel: UILabel = {
@@ -83,6 +86,11 @@ class HomeView: UIView {
         tableView.register(HomeTableViewHeader.classForCoder(), forHeaderFooterViewReuseIdentifier: "Header")
         return tableView
     }()
+    lazy var importOrCreateView: HomeWithoutWalletView = {
+        let view = HomeWithoutWalletView.init()
+        view.alpha = 0
+        return view
+    }()
     var model: LibraWalletManager? {
         didSet {
             headerView.walletModel = model
@@ -97,6 +105,12 @@ class HomeView: UIView {
 //        walletTotalAmountTitleLabel.text = localLanguage(keyString: "wallet_home_total_amount_title")
 //        receiveButtonTitleLabel.text = localLanguage(keyString: "wallet_home_receive_button_title")
 //        sendButtonTitleLabel.text = localLanguage(keyString: "wallet_home_send_button_title")
+    }
+    func hideCreateView() {
+        self.importOrCreateView.alpha = 0
+    }
+    func showCreateView() {
+        self.importOrCreateView.alpha = 1
     }
 }
 extension UIView {

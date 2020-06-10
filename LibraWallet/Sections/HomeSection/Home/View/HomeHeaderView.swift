@@ -113,7 +113,7 @@ class HomeHeaderView: UIView {
         label.text = localLanguage(keyString: "wallet_home_wallet_asset_title")
         return label
     }()
-     private lazy var addCoinButton : UIButton = {
+    private lazy var addCoinButton : UIButton = {
         let button = UIButton.init()
         button.setImage(UIImage.init(named: "home_add_token"), for: UIControl.State.normal)
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
@@ -121,6 +121,7 @@ class HomeHeaderView: UIView {
         button.backgroundColor = UIColor.white
         return button
     }()
+
     @objc func buttonClick(button: UIButton) {
         if button.tag == 10 {
             // WalletConnect

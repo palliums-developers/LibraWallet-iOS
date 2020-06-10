@@ -48,41 +48,31 @@ extension CheckBackupViewController: CheckBackupViewDelegate {
         do {
             try self.viewModel.checkIsAllValid()
             if FirstInApp == true {
-                #warning("缺少更新失败操作")
-                let result = DataBaseManager.DBManager.updateDefaultViolasWalletBackupState()
-                print("更新钱包备份状态-\(result)")
-                self.view.makeToast(localLanguage(keyString: "wallet_check_mnemonic_success_title"), duration: 0.5, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
-                    let tabbar = BaseTabBarViewController.init()
-                    UIApplication.shared.keyWindow?.rootViewController = tabbar
-                    UIApplication.shared.keyWindow?.makeKeyAndVisible()
-                })
-            } else {
-                let result = DataBaseManager.DBManager.isExistAddressInWallet(address: tempWallet!.wallet!.walletRootAddress!)//insertWallet(model: tempWallet!.wallet!)
-                self.view.hideToastActivity()
-                if result == false {
-                    // 不存在
-                    #warning("缺少更新失败操作")
-//                    let insertResult = DataBaseManager.DBManager.insertWallet(model: tempWallet!.wallet!)
-                    do {
-                        try LibraWalletManager().saveMnemonicToKeychain(mnemonic: tempWallet!.mnemonic!, password: tempWallet!.password!, walletRootAddress: tempWallet?.wallet?.walletRootAddress ?? "")
-                        self.view.makeToast(localLanguage(keyString: localLanguage(keyString: "wallet_create_wallet_success_title")), duration: 1, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { [weak self](bool) in
-                            self?.jumpToWalletManagerController()
-                        })
-                    } catch {
-                        print(error.localizedDescription)
-                        //删除从数据库创建好钱包
-                        _ = DataBaseManager.DBManager.deleteWalletFromTable(model: tempWallet!.wallet!)
+                if let wallets = self.tempWallet?.wallet, wallets.isEmpty == false {
+                    for wallet in wallets {
+                        let result = DataBaseManager.DBManager.updateWalletBackupState(wallet: wallet)
+                        print("\(wallet.walletAddress)钱包更新备份状态-\(result)")
                     }
                 } else {
-                    // 已存在
-                    #warning("缺少更新失败操作")
-//                    let updateBackupResult = DataBaseManager.DBManager.updateWalletBackupState(walletID: tempWallet!.wallet!.walletID!, state: true)
-                    LibraWalletManager.shared.changeWalletBackupState(state: true)
-
-                    self.view.makeToast(localLanguage(keyString: localLanguage(keyString: "wallet_check_mnemonic_success_title")), duration: 1, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { [weak self](bool) in
-                        self?.jumpToWalletManagerController()
-                    })
+                    print("无法更新备份状态")
                 }
+                self.view.makeToast(localLanguage(keyString: "wallet_check_mnemonic_success_title"), duration: 0.5, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
+//                    let tabbar = BaseTabBarViewController.init()
+//                    UIApplication.shared.keyWindow?.rootViewController = tabbar
+//                    UIApplication.shared.keyWindow?.makeKeyAndVisible()
+                    self.dismiss(animated: true, completion: nil)
+                })
+            } else {
+                self.view.hideToastActivity()
+                if let wallets = self.tempWallet?.wallet, wallets.isEmpty == false {
+                    for wallet in wallets {
+                        let result = DataBaseManager.DBManager.updateWalletBackupState(wallet: wallet)
+                        print("\(wallet.walletAddress)钱包更新备份状态-\(result)")
+                    }
+                } else {
+                    print("无法更新备份状态")
+                }
+                self.jumpToWalletManagerController()
             }
         } catch {
             self.view.makeToast(error.localizedDescription,

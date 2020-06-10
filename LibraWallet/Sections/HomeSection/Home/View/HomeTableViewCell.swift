@@ -92,7 +92,7 @@ class HomeTableViewCell: UITableViewCell {
     //MARK: - 设置数据
     var model: LibraWalletManager? {
         didSet {
-            coinNameLabel.text = model?.walletType?.description
+            coinNameLabel.text = model?.walletType.description
             coinAmountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model?.walletBalance ?? 0)),
                                                           scale: 4,
                                                           unit: 1000000)

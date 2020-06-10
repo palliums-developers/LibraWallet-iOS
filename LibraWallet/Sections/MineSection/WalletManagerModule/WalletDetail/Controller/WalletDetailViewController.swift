@@ -17,7 +17,7 @@ class WalletDetailViewController: BaseViewController {
         // 加载子View
         self.view.addSubview(detailView)
         // 加载数据
-        self.loadLocalData(model: self.walletModel!)
+        self.loadLocalData()
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -33,8 +33,8 @@ class WalletDetailViewController: BaseViewController {
     deinit {
         print("WalletDetailViewController销毁了")
     }
-    func loadLocalData(model: LibraWalletManager) {
-        self.tableViewManager.dataModel = dataModel.loadLocalConfig(model: model)
+    func loadLocalData() {
+        self.tableViewManager.dataModel = dataModel.loadLocalConfig()
         self.detailView.tableView.reloadData()
     }
     typealias nextActionClosure = (ControllerAction, LibraWalletManager?) -> Void
@@ -64,22 +64,22 @@ class WalletDetailViewController: BaseViewController {
 }
 extension WalletDetailViewController: WalletDetailTableViewManagerDelegate {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath) {
-        if indexPath.section == 0 {
-            let vc = WalletChangeNameViewController()
-            vc.account = walletModel
-            vc.actionClosure = { (action, wallet) in
-                if action == .update {
-                    //更新管理页面
-                    self.loadLocalData(model: wallet)
-                    self.walletModel = wallet
-                    self.detailView.tableView.reloadData()
-                    //更新钱包列表页面
-                    if let action = self.actionClosure {
-                        action(.update, wallet)
-                    }
-                }
-            }
-            self.navigationController?.pushViewController(vc, animated: true)
+        if indexPath.row == 0 {
+//            let vc = WalletChangeNameViewController()
+//            vc.account = walletModel
+//            vc.actionClosure = { (action, wallet) in
+//                if action == .update {
+//                    //更新管理页面
+//                    self.loadLocalData()
+//                    self.walletModel = wallet
+//                    self.detailView.tableView.reloadData()
+//                    //更新钱包列表页面
+//                    if let action = self.actionClosure {
+//                        action(.update, wallet)
+//                    }
+//                }
+//            }
+//            self.navigationController?.pushViewController(vc, animated: true)
         } else {
             if LibraWalletManager.shared.walletBiometricLock == true {
                 KeychainManager().getPasswordWithBiometric(walletAddress: LibraWalletManager.shared.walletRootAddress ?? "") { [weak self](result, error) in
@@ -126,86 +126,86 @@ extension WalletDetailViewController: WalletDetailTableViewManagerDelegate {
         }
     }
     func switchButtonValueChange(button: UISwitch) {
-        if button.isOn == true {
-            let alert = passowordCheckAlert(rootAddress: LibraWalletManager.shared.walletRootAddress ?? "", passwordContent: { (password) in
-                KeychainManager().addBiometric(walletAddress: LibraWalletManager.shared.walletRootAddress ?? "", password: password, success: { (result, error) in
-                    if result == "Success" {
-                        let result = DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: LibraWalletManager.shared.walletID!, state: button.isOn)
-                        guard result == true else {
-                            button.setOn(!button.isOn, animated: true)
-                            return
-                        }
-                        LibraWalletManager.shared.changeWalletBiometricLock(state: button.isOn)
-                    } else {
-                        self.detailView.makeToast(error, position: .center)
-                        button.setOn(!button.isOn, animated: true)
-                    }
-                })
-            }, errorContent: { (error) in
-                if error != "Cancel" {
-                    self.detailView.makeToast(error, position: .center)
-                }
-                button.setOn(!button.isOn, animated: true)
-            })
-            self.present(alert, animated: true, completion: nil)
-        } else {
-            var str = localLanguage(keyString: "wallet_biometric_alert_face_id_describe")
-            if BioMetricAuthenticator.shared.touchIDAvailable() {
-                str = localLanguage(keyString: "wallet_biometric_alert_fingerprint_describe")
-            }
-            BioMetricAuthenticator.authenticateWithBioMetrics(reason: str) { (result) in
-                switch result {
-                case .success( _):
-                    KeychainManager().removeBiometric(walletAddress: LibraWalletManager.shared.walletRootAddress ?? "", password: "", success: { (result, error) in
-                        if result == "Success" {
-                            let result = DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: LibraWalletManager.shared.walletID!, state: button.isOn)
-                            guard result == true else {
-                                button.setOn(!button.isOn, animated: true)
-                                return
-                            }
-                            LibraWalletManager.shared.changeWalletBiometricLock(state: button.isOn)
-                        } else {
-                            self.detailView.makeToast(error, position: .center)
-                            button.setOn(!button.isOn, animated: true)
-                        }
-                    })
-                    print("success")
-                case .failure(let error):
-                    button.setOn(!button.isOn, animated: true)
-                    switch error {
-                    // device does not support biometric (face id or touch id) authentication
-                    case .biometryNotAvailable:
-                        print("biometryNotAvailable")
-                    // No biometry enrolled in this device, ask user to register fingerprint or face
-                    case .biometryNotEnrolled:
-                        print("biometryNotEnrolled")
-                    case .fallback:
-                        //                    self.txtUsername.becomeFirstResponder() // enter username password manually
-                        print("fallback")
-                    // Biometry is locked out now, because there were too many failed attempts.
-                    // Need to enter device passcode to unlock.
-                    case .biometryLockedout:
-                        print("biometryLockedout")
-                        if BioMetricAuthenticator.shared.touchIDAvailable() {
-                            self.detailView.makeToast(localLanguage(keyString: "wallet_biometric_touch_id_attempts_too_much_error"),
-                                                      position: .center)
-                        } else {
-                            self.detailView.makeToast(localLanguage(keyString: "wallet_biometric_face_id_attempts_too_much_error"),
-                                                      position: .center)
-                        }
-                    // do nothing on canceled by system or user
-                    case .canceledBySystem, .canceledByUser:
-                        print("cancel")
-                        break
-                        
-                    // show error for any other reason
-                    default:
-                        print(error.localizedDescription)
-                    }
-                }
-            }
-            
-        }
+//        if button.isOn == true {
+//            let alert = passowordCheckAlert(rootAddress: LibraWalletManager.shared.walletRootAddress ?? "", passwordContent: { (password) in
+//                KeychainManager().addBiometric(walletAddress: LibraWalletManager.shared.walletRootAddress ?? "", password: password, success: { (result, error) in
+//                    if result == "Success" {
+//                        let result = DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: LibraWalletManager.shared.walletID!, state: button.isOn)
+//                        guard result == true else {
+//                            button.setOn(!button.isOn, animated: true)
+//                            return
+//                        }
+//                        LibraWalletManager.shared.changeWalletBiometricLock(state: button.isOn)
+//                    } else {
+//                        self.detailView.makeToast(error, position: .center)
+//                        button.setOn(!button.isOn, animated: true)
+//                    }
+//                })
+//            }, errorContent: { (error) in
+//                if error != "Cancel" {
+//                    self.detailView.makeToast(error, position: .center)
+//                }
+//                button.setOn(!button.isOn, animated: true)
+//            })
+//            self.present(alert, animated: true, completion: nil)
+//        } else {
+//            var str = localLanguage(keyString: "wallet_biometric_alert_face_id_describe")
+//            if BioMetricAuthenticator.shared.touchIDAvailable() {
+//                str = localLanguage(keyString: "wallet_biometric_alert_fingerprint_describe")
+//            }
+//            BioMetricAuthenticator.authenticateWithBioMetrics(reason: str) { (result) in
+//                switch result {
+//                case .success( _):
+//                    KeychainManager().removeBiometric(walletAddress: LibraWalletManager.shared.walletRootAddress ?? "", password: "", success: { (result, error) in
+//                        if result == "Success" {
+//                            let result = DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: LibraWalletManager.shared.walletID!, state: button.isOn)
+//                            guard result == true else {
+//                                button.setOn(!button.isOn, animated: true)
+//                                return
+//                            }
+//                            LibraWalletManager.shared.changeWalletBiometricLock(state: button.isOn)
+//                        } else {
+//                            self.detailView.makeToast(error, position: .center)
+//                            button.setOn(!button.isOn, animated: true)
+//                        }
+//                    })
+//                    print("success")
+//                case .failure(let error):
+//                    button.setOn(!button.isOn, animated: true)
+//                    switch error {
+//                    // device does not support biometric (face id or touch id) authentication
+//                    case .biometryNotAvailable:
+//                        print("biometryNotAvailable")
+//                    // No biometry enrolled in this device, ask user to register fingerprint or face
+//                    case .biometryNotEnrolled:
+//                        print("biometryNotEnrolled")
+//                    case .fallback:
+//                        //                    self.txtUsername.becomeFirstResponder() // enter username password manually
+//                        print("fallback")
+//                    // Biometry is locked out now, because there were too many failed attempts.
+//                    // Need to enter device passcode to unlock.
+//                    case .biometryLockedout:
+//                        print("biometryLockedout")
+//                        if BioMetricAuthenticator.shared.touchIDAvailable() {
+//                            self.detailView.makeToast(localLanguage(keyString: "wallet_biometric_touch_id_attempts_too_much_error"),
+//                                                      position: .center)
+//                        } else {
+//                            self.detailView.makeToast(localLanguage(keyString: "wallet_biometric_face_id_attempts_too_much_error"),
+//                                                      position: .center)
+//                        }
+//                    // do nothing on canceled by system or user
+//                    case .canceledBySystem, .canceledByUser:
+//                        print("cancel")
+//                        break
+//                        
+//                    // show error for any other reason
+//                    default:
+//                        print(error.localizedDescription)
+//                    }
+//                }
+//            }
+//            
+//        }
     }
 }
 extension WalletDetailViewController: WalletDetailViewDelegate {

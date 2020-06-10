@@ -208,7 +208,7 @@ class GetAccountHandler: RequestHandler {
             var tempWallets = [tempData]()
             for wallets in localWallets {
                 tempWallets.append(tempData.init(walletType: wallets.walletCreateType,
-                                                 coinType: wallets.walletType?.description.lowercased(),
+                                                 coinType: wallets.walletType.description.lowercased(),
                                                  name: wallets.walletName,
                                                  address: wallets.walletAddress))
             }

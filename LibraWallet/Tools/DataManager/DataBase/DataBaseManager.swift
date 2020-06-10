@@ -52,8 +52,6 @@ extension DataBaseManager {
             let walletBalance = Expression<Int64>("wallet_balance")
             // 钱包地址
             let walletAddress = Expression<String>("wallet_address")
-            // 0=Libra、1=Violas、2=BTC前缀 + 钱包0层地址(例0_fa279f2615270daed6061313a48360f7)
-            let walletRootAddress = Expression<String>("wallet_root_address")
             // 钱包创建时间
             let walletCreateTime = Expression<Double>("wallet_creat_time")
             // 钱包名字
@@ -76,11 +74,16 @@ extension DataBaseManager {
             let walletActiveState = Expression<Bool>("wallet_active_state")
             // 钱包标志
             let walletIcon = Expression<String>("wallet_icon")
+            // 钱包合约地址
+            let walletContract = Expression<String>("wallet_contract")
+            // 钱包合约名称
+            let walletModule = Expression<String>("wallet_module")
+            // 钱包合约名称
+            let walletModuleName = Expression<String>("wallet_module_name")
             // 建表
             try dataBase.run(walletTable.create { t in
                 t.column(walletID, primaryKey: true)
                 t.column(walletAddress)
-                t.column(walletRootAddress, unique: true)
                 t.column(walletBalance)
                 t.column(walletCreateTime)
                 t.column(walletName)
@@ -93,6 +96,10 @@ extension DataBaseManager {
                 t.column(authenticationKey)
                 t.column(walletActiveState)
                 t.column(walletIcon)
+                t.column(walletContract)
+                t.column(walletModule)
+                t.column(walletModuleName)
+                t.unique([walletAddress, walletContract, walletType])
             })
         } catch {
             let errorString = error.localizedDescription
@@ -104,25 +111,27 @@ extension DataBaseManager {
         }
     }
     func insertWallet(model: LibraWalletManager) -> Bool {
+        
         let homeTable = Table("Wallet")
         do {
             if let tempDB = self.db {
                 let insert = homeTable.insert(
-                    Expression<Int64>("wallet_balance") <- model.walletBalance ?? 0,
-                    Expression<String>("wallet_address") <- model.walletAddress ?? "",
-                    Expression<String>("wallet_root_address") <- model.walletRootAddress ?? "",
-
-                    Expression<Double>("wallet_creat_time") <- model.walletCreateTime ?? 0,
-                    Expression<String>("wallet_name") <- model.walletName ?? "",
-                    Expression<Bool>("wallet_subscription") <- model.walletSubscription ?? true,
-                    Expression<Bool>("wallet_biometric_lock") <- model.walletBiometricLock ?? false,
-                    Expression<Int>("wallet_create_type") <- model.walletCreateType ?? 999,
-                    Expression<Int>("wallet_type") <- model.walletType!.value,
-                    Expression<Int>("wallet_index") <- model.walletIndex ?? 0,
-                    Expression<Bool>("wallet_backup_state") <- model.walletBackupState ?? false,
-                    Expression<String>("wallet_authentication_key") <- model.walletAuthenticationKey ?? "",
-                    Expression<Bool>("wallet_active_state") <- model.walletActiveState ?? false,
-                    Expression<String>("wallet_icon") <- model.walletIcon ?? "wallet_icon_default")
+                    Expression<Int64>("wallet_balance") <- model.walletBalance,
+                    Expression<String>("wallet_address") <- model.walletAddress,
+                    Expression<Double>("wallet_creat_time") <- model.walletCreateTime,
+                    Expression<String>("wallet_name") <- model.walletName,
+                    Expression<Bool>("wallet_subscription") <- model.walletSubscription,
+                    Expression<Bool>("wallet_biometric_lock") <- model.walletBiometricLock,
+                    Expression<Int>("wallet_create_type") <- model.walletCreateType,
+                    Expression<Int>("wallet_type") <- model.walletType.value,
+                    Expression<Int>("wallet_index") <- model.walletIndex,
+                    Expression<Bool>("wallet_backup_state") <- model.walletBackupState,
+                    Expression<String>("wallet_authentication_key") <- model.walletAuthenticationKey,
+                    Expression<Bool>("wallet_active_state") <- model.walletActiveState,
+                    Expression<String>("wallet_icon") <- model.walletIcon,
+                    Expression<String>("wallet_contract") <- model.walletContract,
+                    Expression<String>("wallet_module") <- model.walletModule,
+                    Expression<String>("wallet_module_name") <- model.walletModuleName)
                 let rowid = try tempDB.run(insert)
                 print(rowid)
                 return true
@@ -134,11 +143,11 @@ extension DataBaseManager {
             return false
         }
     }
-    func isExistAddressInWallet(address: String) -> Bool {
+    func isExistWalletInWallet(wallet: LibraWalletManager) -> Bool {
         let walletTable = Table("Wallet")
         do {
             if let tempDB = self.db {
-                let transection = walletTable.filter(Expression<String>("wallet_root_address") == address)
+                let transection = walletTable.filter(Expression<String>("wallet_address") == wallet.walletAddress && Expression<String>("wallet_contract") == wallet.walletContract && Expression<Int>("wallet_type") == wallet.walletType.value)
                 let count = try tempDB.scalar(transection.count)
                 guard count != 0 else {
                     return false
@@ -165,8 +174,6 @@ extension DataBaseManager {
                     let walletBalance = wallet[Expression<Int64>("wallet_balance")]
                     // 钱包地址
                     let walletAddress = wallet[Expression<String>("wallet_address")]
-                    // Libra_、Violas_或BTC_ 前缀 + 钱包0层地址
-                    let walletRootAddress = wallet[Expression<String>("wallet_root_address")]
                     // 钱包创建时间
                     let walletCreateTime = wallet[Expression<Double>("wallet_creat_time")]
                     // 钱包名字
@@ -198,11 +205,16 @@ extension DataBaseManager {
                     let walletBackupState = wallet[Expression<Bool>("wallet_backup_state")]
                     // 钱包标志
                     let walletIcon = wallet[Expression<String>("wallet_icon")]
+                    // 钱包合约地址
+                    let walletContract = wallet[Expression<String>("wallet_contract")]
+                    // 钱包合约名称
+                    let walletModule = wallet[Expression<String>("wallet_module")]
+                    // 钱包合约名称
+                    let walletModuleName = wallet[Expression<String>("wallet_module_name")]
 
                     let wallet = LibraWalletManager.init(walletID: walletID,
                                                          walletBalance: walletBalance,
                                                          walletAddress: walletAddress,
-                                                         walletRootAddress: walletRootAddress,
                                                          walletCreateTime: walletCreateTime,
                                                          walletName: walletName,
                                                          walletSubscription: walletSubscription,
@@ -213,7 +225,10 @@ extension DataBaseManager {
                                                          walletBackupState: walletBackupState,
                                                          walletAuthenticationKey: authenticationKey,
                                                          walletActiveState: walletActiveState,
-                                                         walletIcon: walletIcon)
+                                                         walletIcon: walletIcon,
+                                                         walletContract: walletContract,
+                                                         walletModule: walletModule,
+                                                         walletModuleName: walletModuleName)
                     allWallets.append(wallet)
                 }
                 return allWallets
@@ -225,70 +240,6 @@ extension DataBaseManager {
             return [LibraWalletManager]()
         }
     }
-//    func getCurrentUseWallet() throws -> LibraWalletManager {
-//        let walletTable = Table("Wallet").filter(Expression<Bool>("wallet_current_use") == true)
-//        do {
-//            if let tempDB = self.db {
-//                for wallet in try tempDB.prepare(walletTable) {
-//                    // 钱包ID
-//                    let walletID = wallet[Expression<Int64>("wallet_id")]
-//                    // 钱包金额
-//                    let walletBalance = wallet[Expression<Int64>("wallet_balance")]
-//                    // 钱包地址
-//                    let walletAddress = wallet[Expression<String>("wallet_address")]
-//                    // Libra_、Violas_或BTC_ 前缀 + 钱包0层地址
-//                    let walletRootAddress = wallet[Expression<String>("wallet_root_address")]
-//                    // 钱包创建时间
-//                    let walletCreateTime = wallet[Expression<Double>("wallet_creat_time")]
-//                    // 钱包名字
-//                    let walletName = wallet[Expression<String>("wallet_name")]
-//                    // 钱包助记词
-////                    let walletMnemonic = wallet[Expression<String>("wallet_mnemonic")]
-//                    // 当前使用用户
-//                    let walletCurrentUse = wallet[Expression<Bool>("wallet_current_use")]
-//                    // 账户是否开启生物锁定
-//                    let walletBiometricLock = wallet[Expression<Bool>("wallet_biometric_lock")]
-//                    // 账户类型身份钱包、其他钱包(0=身份钱包、1=其它导入钱包)
-//                    let walletIdentity = wallet[Expression<Int>("wallet_identity")]
-//                    // 钱包类型(0=Libra、1=Violas、2=BTC)
-//                    let walletType = wallet[Expression<Int>("wallet_type")]
-//                    var tempWalletType = WalletType.Libra
-//                    if walletType == 1 {
-//                        tempWalletType = WalletType.Violas
-//                    } else if walletType == 2 {
-//                        tempWalletType = WalletType.BTC
-//                    }
-//                    // 钱包是否已备份
-//                    let walletBackupState = wallet[Expression<Bool>("wallet_backup_state")]
-//                    // 授权Key
-//                    let authenticationKey = wallet[Expression<String>("wallet_authentication_key")]
-//                    // 钱包激活状态
-//                    let walletActiveState = wallet[Expression<Bool>("wallet_active_state")]
-//                    
-//                    LibraWalletManager.shared.initWallet(walletID: walletID,
-//                                                         walletBalance: walletBalance,
-//                                                         walletAddress: walletAddress,
-//                                                         walletRootAddress: walletRootAddress,
-//                                                         walletCreateTime: walletCreateTime,
-//                                                         walletName: walletName,
-//                                                         walletCurrentUse: walletCurrentUse,
-//                                                         walletBiometricLock: walletBiometricLock,
-//                                                         walletIdentity: walletIdentity,
-//                                                         walletType: tempWalletType,
-//                                                         walletBackupState: walletBackupState,
-//                                                         walletAuthenticationKey: authenticationKey,
-//                                                         walletActiveState: walletActiveState)
-//                    return LibraWalletManager.shared
-//                }
-//                throw LibraWalletError.error("获取当前使用钱包检索失败")
-//            } else {
-//                throw LibraWalletError.error("读取数据库失败")
-//            }
-//        } catch {
-//            print(error.localizedDescription)
-//            throw error
-//        }
-//    }
     func getWalletWithType(walletType: WalletType) -> [LibraWalletManager] {
         let walletTable = Table("Wallet").filter(Expression<Int>("wallet_type") == walletType.value)
         do {
@@ -302,8 +253,6 @@ extension DataBaseManager {
                     let walletBalance = wallet[Expression<Int64>("wallet_balance")]
                     // 钱包地址
                     let walletAddress = wallet[Expression<String>("wallet_address")]
-                    // Libra_、Violas_或BTC_ 前缀 + 钱包0层地址
-                    let walletRootAddress = wallet[Expression<String>("wallet_root_address")]
                     // 钱包创建时间
                     let walletCreateTime = wallet[Expression<Double>("wallet_creat_time")]
                     // 钱包名字
@@ -336,10 +285,16 @@ extension DataBaseManager {
                     // 钱包标志
                     let walletIcon = wallet[Expression<String>("wallet_icon")]
                     
+                    // 钱包合约地址
+                    let walletContract = wallet[Expression<String>("wallet_contract")]
+                    // 钱包合约名称
+                    let walletModule = wallet[Expression<String>("wallet_module")]
+                    // 钱包合约名称
+                    let walletModuleName = wallet[Expression<String>("wallet_module_name")]
+
                     let wallet = LibraWalletManager.init(walletID: walletID,
                                                          walletBalance: walletBalance,
                                                          walletAddress: walletAddress,
-                                                         walletRootAddress: walletRootAddress,
                                                          walletCreateTime: walletCreateTime,
                                                          walletName: walletName,
                                                          walletSubscription: walletSubscription,
@@ -350,7 +305,10 @@ extension DataBaseManager {
                                                          walletBackupState: walletBackupState,
                                                          walletAuthenticationKey: authenticationKey,
                                                          walletActiveState: walletActiveState,
-                                                         walletIcon: walletIcon)
+                                                         walletIcon: walletIcon,
+                                                         walletContract: walletContract,
+                                                         walletModule: walletModule,
+                                                         walletModuleName: walletModuleName)
                     allWallets.append(wallet)
                 }
                 return allWallets
@@ -380,7 +338,7 @@ extension DataBaseManager {
         let transectionAddressHistoryTable = Table("Wallet")
         do {
             if let tempDB = self.db {
-                let contract = transectionAddressHistoryTable.filter(Expression<Int64>("wallet_id") == model.walletID!)
+                let contract = transectionAddressHistoryTable.filter(Expression<Int64>("wallet_id") == model.walletID)
                 let rowid = try tempDB.run(contract.delete())
                 print(rowid)
                 return true
@@ -467,8 +425,8 @@ extension DataBaseManager {
             return false
         }
     }
-    func updateDefaultViolasWalletBackupState() -> Bool {
-        let walletTable = Table("Wallet").filter(Expression<Int>("wallet_identity") == 0)
+    func updateWalletBackupState(wallet: LibraWalletManager) -> Bool {
+        let walletTable = Table("Wallet").filter(Expression<Int64>("wallet_id") == wallet.walletID)
         do {
             if let tempDB = self.db {
                 try tempDB.run(walletTable.update(Expression<Bool>("wallet_backup_state") <- true))
@@ -513,6 +471,17 @@ extension DataBaseManager {
         } catch {
             print(error.localizedDescription)
             return false
+        }
+    }
+    func deleteHDWallet() {
+        let walletTable = Table("Wallet")
+        do {
+            if let tempDB = self.db {
+                let rowid = try tempDB.run(walletTable.delete())
+                print(rowid)
+            }
+        } catch {
+            print(error.localizedDescription)
         }
     }
 }

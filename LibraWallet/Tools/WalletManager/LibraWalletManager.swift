@@ -35,39 +35,43 @@ extension WalletType {
     }
 }
 struct LibraWalletManager {
-    static var shared = LibraWalletManager()
+//    static var shared = LibraWalletManager()
     
     private let semaphore = DispatchSemaphore.init(value: 1)
     /// 钱包ID
-    private(set) var walletID: Int64?
+    private(set) var walletID: Int64
     /// 钱包余额
-    private(set) var walletBalance: Int64?
+    private(set) var walletBalance: Int64
     /// 钱包地址
-    private(set) var walletAddress: String?
-    /// Libra_ 或者Violas_ 前缀 + 钱包0层地址
-    private(set) var walletRootAddress: String?
+    private(set) var walletAddress: String
     /// 钱包创建时间
-    private(set) var walletCreateTime: Double?
+    private(set) var walletCreateTime: Double
     /// 钱包名字
-    private(set) var walletName: String?
+    private(set) var walletName: String
     /// 当前WalletConnect订阅钱包
-    private(set) var walletSubscription: Bool?
+    private(set) var walletSubscription: Bool
     /// 钱包生物锁开启状态
-    private(set) var walletBiometricLock: Bool?
+    private(set) var walletBiometricLock: Bool
     /// 钱包创建类型(0导入、1创建)
-    private(set) var walletCreateType: Int?
+    private(set) var walletCreateType: Int
     /// 钱包类型(0=Libra、1=Violas、2=BTC)
-    private(set) var walletType: WalletType?
+    private(set) var walletType: WalletType
     /// 钱包当前使用层数
-    private(set) var walletIndex: Int?
+    private(set) var walletIndex: Int
     /// 钱包备份状态
-    private(set) var walletBackupState: Bool?
+    private(set) var walletBackupState: Bool
     /// 授权Key
-    private(set) var walletAuthenticationKey: String?
+    private(set) var walletAuthenticationKey: String
     /// 钱包激活状态
-    private(set) var walletActiveState: Bool?
+    private(set) var walletActiveState: Bool
     /// 钱包标志
-    private(set) var walletIcon: String?
+    private(set) var walletIcon: String
+    // 钱包合约地址
+    private(set) var walletContract: String
+    // 钱包合约名称
+    private(set) var walletModule: String
+    // 钱包合约名称
+    private(set) var walletModuleName: String
 }
 extension LibraWalletManager {
     /// 创建Libra单例
@@ -84,13 +88,12 @@ extension LibraWalletManager {
     /// - Parameter walletBackupState: 钱包备份状态
     /// - Parameter walletAuthenticationKey: 授权Key
     /// - Parameter walletActiveState: 钱包激活状态
-    mutating func initWallet(walletID: Int64, walletBalance: Int64, walletAddress: String, walletRootAddress: String,  walletCreateTime: Double, walletName: String, walletSubscription: Bool, walletBiometricLock: Bool, walletCreateType: Int, walletType: WalletType, walletIndex: Int, walletBackupState: Bool, walletAuthenticationKey: String, walletActiveState: Bool, walletIcon: String) {
+    mutating func initWallet(walletID: Int64, walletBalance: Int64, walletAddress: String,  walletCreateTime: Double, walletName: String, walletSubscription: Bool, walletBiometricLock: Bool, walletCreateType: Int, walletType: WalletType, walletIndex: Int, walletBackupState: Bool, walletAuthenticationKey: String, walletActiveState: Bool, walletIcon: String, walletContract: String, walletModule: String, walletModuleName: String) {
         self.semaphore.wait()
         
         self.walletID = walletID
         self.walletBalance = walletBalance
         self.walletAddress = walletAddress
-        self.walletRootAddress = walletRootAddress
         self.walletCreateTime = walletCreateTime
         self.walletName = walletName
         self.walletSubscription = walletSubscription
@@ -102,6 +105,9 @@ extension LibraWalletManager {
         self.walletAuthenticationKey = walletAuthenticationKey
         self.walletActiveState = walletActiveState
         self.walletIcon = walletIcon
+        self.walletContract = walletContract
+        self.walletModule = walletModule
+        self.walletModuleName = walletModuleName
         
         self.semaphore.signal()
     }
@@ -136,7 +142,6 @@ extension LibraWalletManager {
         self.walletID = wallet.walletID
         self.walletBalance = wallet.walletBalance
         self.walletAddress = wallet.walletAddress
-        self.walletRootAddress = wallet.walletRootAddress
         self.walletCreateTime = wallet.walletCreateTime
         self.walletName = wallet.walletName
         self.walletSubscription = wallet.walletSubscription
@@ -147,6 +152,9 @@ extension LibraWalletManager {
         self.walletBackupState = wallet.walletBackupState
         self.walletAuthenticationKey = wallet.walletAuthenticationKey
         self.walletActiveState = wallet.walletActiveState
+        self.walletContract = wallet.walletContract
+        self.walletModule = wallet.walletModule
+        self.walletModuleName = wallet.walletModuleName
         
         self.semaphore.signal()
     }
@@ -162,7 +170,7 @@ extension LibraWalletManager {
     }
 }
 extension LibraWalletManager {
-    func saveMnemonicToKeychain(mnemonic: [String], password: String, walletRootAddress: String) throws {
+    static func saveMnemonicToKeychain(mnemonic: [String], password: String) throws {
         guard mnemonic.isEmpty == false else {
             throw LibraWalletError.WalletCrypto(reason: .mnemonicEmptyError)
         }
@@ -171,18 +179,18 @@ extension LibraWalletManager {
             // 加密密码
             let encryptMnemonicString = try PasswordCrypto.encryptPassword(content: mnemonicString, password: password)
             // 保存加密字符串到KeyChain
-            try KeychainManager.KeyManager.saveMnemonicStringToKeychain(walletAddress: walletRootAddress, mnemonic: encryptMnemonicString)
+            try KeychainManager.KeyManager.saveMnemonicStringToKeychain(walletAddress: "PalliumsWallet", mnemonic: encryptMnemonicString)
         } catch {
             throw error
         }
     }
-    func getMnemonicFromKeychain(password: String, walletRootAddress: String) throws -> [String] {
-        guard walletRootAddress.isEmpty == false else {
-            throw LibraWalletError.WalletKeychain(reason: .searchStringEmptyError)
-        }
+    static func getMnemonicFromKeychain(password: String) throws -> [String] {
+//        guard walletRootAddress.isEmpty == false else {
+//            throw LibraWalletError.WalletKeychain(reason: .searchStringEmptyError)
+//        }
         do {
             // 取出加密后助记词字符串
-            let menmonicString = try KeychainManager.KeyManager.getMnemonicStringFromKeychain(walletAddress: walletRootAddress)
+            let menmonicString = try KeychainManager.KeyManager.getMnemonicStringFromKeychain(walletAddress: "PalliumsWallet")
 
             // 解密密文
             let decryptMnemonicString = try PasswordCrypto.decryptPassword(cryptoString: menmonicString, password: password)

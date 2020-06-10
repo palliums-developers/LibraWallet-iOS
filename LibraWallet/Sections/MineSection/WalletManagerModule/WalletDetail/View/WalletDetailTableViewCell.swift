@@ -69,7 +69,7 @@ class WalletDetailTableViewCell: UITableViewCell {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "3C3848")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: UIFont.Weight.semibold)
+        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: UIFont.Weight.regular)
         label.text = "---"
         return label
     }()
@@ -91,11 +91,6 @@ class WalletDetailTableViewCell: UITableViewCell {
         //#263C4E
         let button = UISwitch.init()
         button.onTintColor = DefaultGreenColor
-//        if LibraWalletManager.shared.walletBiometricLock == true {
-//            button.setOn(true, animated: true)
-//        } else {
-//            button.setOn(false, animated: true)
-//        }
         button.addTarget(self, action: #selector(valueChange(button:)), for: UIControl.Event.valueChanged)
         return button
     }()
@@ -134,5 +129,11 @@ class WalletDetailTableViewCell: UITableViewCell {
         print(button.state)
         self.delegate?.switchButtonValueChange(button: button)
     }
-
+    var hideSpcaeLineState: Bool? {
+        didSet {
+            if hideSpcaeLineState == true {
+                spaceLabel.alpha = 0
+            }
+        }
+    }
 }

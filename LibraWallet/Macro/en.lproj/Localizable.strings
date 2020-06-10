@@ -58,8 +58,8 @@ wallet_add_wallet_btc_title = "Create a Bitcoin Wallet";
 wallet_add_wallet_libra_title = "Create a Libra Wallet";
 wallet_add_wallet_violas_title = "Create a Violas Wallet";
 wallet_add_wallet_nickname_textfield_placeholder = "Input Wallet Name";
-wallet_add_wallet_password_textfield_placeholder = "Set Wallet Access Code";
-wallet_add_wallet_password_confirm_textfield_placeholder = "Confirm Wallet Access Code";
+wallet_add_wallet_password_textfield_placeholder = "Enter wallet access code";
+wallet_add_wallet_password_confirm_textfield_placeholder = "Enter wallet access code again";
 wallet_add_wallet_confirm_button_title = "Create";
 
 /************* 已存在身份钱包导入钱包 *******************/
@@ -124,8 +124,8 @@ wallet_create_choose_type_import_button_title = "Import Wallet";
 
 /************* 创建钱包页面 *******************/
 wallet_create_name_textfield_placeholder = "Input Nickname";
-wallet_create_password_textfield_placeholder = "Set Wallet Access Code";
-wallet_create_password_confirm_textfield_placeholder = "Confirm Wallet Access Code";
+wallet_create_password_textfield_placeholder = "Enter wallet access code";
+wallet_create_password_confirm_textfield_placeholder = "Enter wallet access code again";
 wallet_create_confirm_button_title = "Create";
 
 /************* 市场 *******************/

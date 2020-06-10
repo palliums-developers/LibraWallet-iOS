@@ -30,10 +30,12 @@ class HomeViewController: UIViewController {
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationController?.navigationBar.isTranslucent = true
-        let result = DataBaseManager.DBManager.isExistAddressInWallet(address: self.detailView.model?.walletRootAddress ?? "")
-        if result == false {
+        if getIdentityWalletState() == true {
+            self.detailView.hideCreateView()
             self.detailView.makeToastActivity(.center)
             self.dataModel.getLocalUserInfo()
+        } else {
+            self.detailView.showCreateView()
         }
         self.navigationController?.navigationBar.barStyle = .black
     }
@@ -70,6 +72,7 @@ class HomeViewController: UIViewController {
         view.tableView.dataSource = self.tableViewManager
         view.headerView.delegate = self
         view.tableView.mj_header = MJRefreshNormalHeader.init(refreshingTarget: self, refreshingAction:  #selector(refreshData))
+        view.importOrCreateView.delegate = self
         return view
     }()
     /// 钱包切换按钮
@@ -222,7 +225,7 @@ extension HomeViewController {
             WalletConnectManager.shared.allowConnect = {
                 self.detailView.toastView?.hide()
                 let vc = ScanLoginViewController()
-                vc.wallet = LibraWalletManager.shared
+//                vc.wallet = LibraWalletManager.shared
                 vc.sessionID = wcURL
                 self.present(vc, animated: true, completion: nil)
             }
@@ -352,6 +355,31 @@ extension HomeViewController: HomeHeaderViewDelegate {
 //        vc.wallet = self.detailView.headerView.walletModel
 //        self.navigationController?.pushViewController(vc, animated: true)
 //    }
+}
+extension HomeViewController: HomeWithoutWalletViewDelegate {
+    func createWallet() {
+        let vc = AddWalletViewController()
+        vc.successCreateClosure = {
+            self.detailView.hideCreateView()
+            self.dataModel.getLocalUserInfo()
+        }
+        let navi = BaseNavigationViewController.init(rootViewController: vc)
+        self.present(navi, animated: true, completion: nil)
+//        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    func importWallet() {
+//        let vc = ImportWalletViewController()
+//        vc.hidesBottomBarWhenPushed = true
+//        self.navigationController?.pushViewController(vc, animated: true)
+//        DataBaseManager.DBManager.deleteHDWallet()
+        let vc = ImportWalletViewController()
+        vc.successImportClosure = {
+            self.detailView.hideCreateView()
+            self.dataModel.getLocalUserInfo()
+        }
+        let navi = BaseNavigationViewController.init(rootViewController: vc)
+        self.present(navi, animated: true, completion: nil)
+    }
 }
 //MARK: - TableviewManager代理方法列表
 extension HomeViewController: HomeTableViewManagerDelegate {
@@ -483,18 +511,18 @@ extension HomeViewController {
                     self?.detailView.tableView.reloadData()
                 }
             } else if type == "UpdateLibraBalance" {
-                if let tempData = dataDic.value(forKey: "data") as? BalanceLibraModel {
-                    self?.detailView.headerView.libraModel = tempData
-                    let defaultModel = ViolasTokenModel.init(name: "lib",
-                                                             description: "",
-                                                             address: LibraWalletManager.shared.walletAddress ?? "",
-                                                             icon: "",
-                                                             enable: true,
-                                                             balance: (tempData.balances?[0].amount ?? 0),
-                                                             registerState: true)
-                    self?.tableViewManager.defaultModel = defaultModel
-                    self?.detailView.tableView.reloadData()
-                }
+//                if let tempData = dataDic.value(forKey: "data") as? BalanceLibraModel {
+//                    self?.detailView.headerView.libraModel = tempData
+//                    let defaultModel = ViolasTokenModel.init(name: "lib",
+//                                                             description: "",
+//                                                             address: LibraWalletManager.shared.walletAddress ?? "",
+//                                                             icon: "",
+//                                                             enable: true,
+//                                                             balance: (tempData.balances?[0].amount ?? 0),
+//                                                             registerState: true)
+//                    self?.tableViewManager.defaultModel = defaultModel
+//                    self?.detailView.tableView.reloadData()
+//                }
             } else if type == "UpdateViolasBalance" {
                 if let tempData = dataDic.value(forKey: "data") as? BalanceViolasModel {
                     self?.detailView.headerView.violasModel = tempData

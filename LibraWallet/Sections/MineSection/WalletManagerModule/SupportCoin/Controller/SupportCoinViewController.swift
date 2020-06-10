@@ -61,12 +61,11 @@ extension SupportCoinViewController: SupportCoinTableViewManagerDelegate {
         let importAction = UIAlertAction.init(title: localLanguage(keyString: "wallet_add_wallet_alert_import_action_title"), style: UIAlertAction.Style.default) { (UIAlertAction) in
 
             let vc = ImportWalletViewController()
-            vc.type = name
+//            vc.type = name
             self.navigationController?.pushViewController(vc, animated: true)
         }
         let createAction = UIAlertAction.init(title: localLanguage(keyString: "wallet_add_wallet_alert_create_action_title"), style: UIAlertAction.Style.default) { (UIAlertAction) in
             let vc = AddWalletViewController()
-            vc.type = name
             self.navigationController?.pushViewController(vc, animated: true)
         }
         let cancelAction = UIAlertAction.init(title: localLanguage(keyString: "wallet_add_wallet_alert_cancel_action_title"), style: UIAlertAction.Style.cancel) { (UIAlertAction) in

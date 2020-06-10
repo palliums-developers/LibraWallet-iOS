@@ -8,16 +8,12 @@
 
 import UIKit
 protocol AddWalletViewDelegate: NSObjectProtocol {
-    func confirmAddWallet(name: String, password: String)
+    func confirmAddWallet(password: String)
 }
 class AddWalletView: UIView {
     weak var delegate: AddWalletViewDelegate?
     override init(frame: CGRect) {
         super.init(frame: frame)
-        addSubview(coinTypeIcon)
-        addSubview(nameLabel)
-        addSubview(nameTextField)
-        addSubview(nameSpaceLabel)
         addSubview(passwordTextField)
         addSubview(passwordSpaceLabel)
         addSubview(passwordConfirmTextField)
@@ -30,37 +26,16 @@ class AddWalletView: UIView {
     deinit {
         print("AddWalletView销毁了")
     }
-    //MARK: - 布局
+    // MARK: - 布局
     override func layoutSubviews() {
         super.layoutSubviews()
-        coinTypeIcon.snp.makeConstraints { (make) in
-            make.top.equalTo(self).offset(46)
-            make.centerX.equalTo(self)
-            make.size.equalTo(CGSize.init(width: 65, height: 65))
-        }
-        nameLabel.snp.makeConstraints { (make) in
-            make.centerX.equalTo(self)
-            make.top.equalTo(coinTypeIcon.snp.bottom).offset(18)
-        }
-        nameTextField.snp.makeConstraints { (make) in
-            make.centerX.equalTo(self)
-            make.height.equalTo(51)
-            make.bottom.equalTo(nameSpaceLabel.snp.top)
-            make.left.right.equalTo(nameSpaceLabel)
-        }
-        nameSpaceLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(nameLabel.snp.bottom).offset(82)
-            make.left.equalTo(self).offset(35)
-            make.right.equalTo(self).offset(-35)
-            make.height.equalTo(1)
-        }
         passwordTextField.snp.makeConstraints { (make) in
-            make.top.equalTo(nameSpaceLabel.snp.bottom)
             make.bottom.equalTo(passwordSpaceLabel.snp.top)
             make.left.right.equalTo(passwordSpaceLabel)
+            make.height.equalTo(51)
         }
         passwordSpaceLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(nameSpaceLabel.snp.bottom).offset(51)
+            make.top.equalTo(self).offset(79)
             make.left.equalTo(self).offset(35)
             make.right.equalTo(self).offset(-35)
             make.height.equalTo(1)
@@ -83,37 +58,7 @@ class AddWalletView: UIView {
             make.height.equalTo(40)
         }
     }
-    //MARK: - 懒加载对象
-    private lazy var coinTypeIcon : UIImageView = {
-        let imageView = UIImageView.init()
-        return imageView
-    }()
-    lazy var nameLabel: UILabel = {
-        let label = UILabel.init()
-        label.textAlignment = NSTextAlignment.left
-        label.textColor = UIColor.init(hex: "0E0051")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: UIFont.Weight.semibold)
-        label.text = "---"
-        return label
-    }()
-    lazy var nameTextField: UITextField = {
-        let textField = UITextField.init()
-        textField.textAlignment = NSTextAlignment.left
-        textField.textColor = UIColor.init(hex: "3C3848")
-        textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_add_wallet_nickname_textfield_placeholder"),
-                                                             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "BDBCC0"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16)])
-        textField.delegate = self
-        textField.keyboardType = .default
-        textField.tintColor = DefaultGreenColor
-        textField.tag = 10
-        return textField
-    }()
-    lazy var nameSpaceLabel: UILabel = {
-        //#263C4E
-        let label = UILabel.init()
-        label.backgroundColor = UIColor.init(hex: "DEDFE0")
-        return label
-    }()
+    // MARK: - 懒加载对象
     lazy var passwordTextField: UITextField = {
         let textField = UITextField.init()
         textField.textAlignment = NSTextAlignment.left
@@ -125,6 +70,8 @@ class AddWalletView: UIView {
         textField.isSecureTextEntry = true
         textField.tintColor = DefaultGreenColor
         textField.tag = 20
+        textField.rightView = showPasswordButton
+        textField.rightViewMode = .always
         return textField
     }()
     lazy var passwordSpaceLabel: UILabel = {
@@ -147,10 +94,16 @@ class AddWalletView: UIView {
         return textField
     }()
     lazy var passwordConfirmSpaceLabel: UILabel = {
-        //#263C4E
         let label = UILabel.init()
         label.backgroundColor = UIColor.init(hex: "DEDFE0")
         return label
+    }()
+    lazy var showPasswordButton: UIButton = {
+        let button = UIButton.init(type: UIButton.ButtonType.custom)
+        button.setImage(UIImage.init(named: "eyes_close_black"), for: UIControl.State.normal)
+        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
+        button.tag = 20
+        return button
     }()
     lazy var confirmButton: UIButton = {
         let button = UIButton.init(type: UIButton.ButtonType.custom)
@@ -169,64 +122,49 @@ class AddWalletView: UIView {
         return toast
     }
     @objc func buttonClick(button: UIButton) {
-        guard let name = nameTextField.text else {
-            // 名字拆包失败
-            self.makeToast(LibraWalletError.WalletAddWallet(reason: .walletNameInvalidError).localizedDescription,
-                           position: .center)
-            return
-        }
-        guard name.isEmpty == false else {
-            // 名字为空
-            self.makeToast(LibraWalletError.WalletAddWallet(reason: .walletNameEmptyError).localizedDescription,
-                           position: .center)
-            return
-        }
-        guard let password = passwordTextField.text, password.isEmpty == false else {
-            // 密码为空
-            self.makeToast(LibraWalletError.WalletAddWallet(reason: .passwordEmptyError).localizedDescription,
-                           position: .center)
-            return
-        }
-        guard handlePassword(password: password) else {
-            // 密码规则
-            self.makeToast(LibraWalletError.WalletAddWallet(reason: .passwordInvalidError).localizedDescription,
-                           position: .center)
-            return
-        }
-        guard let passwordConfirm = passwordConfirmTextField.text, passwordConfirm.isEmpty == false else {
-            // 确认密码为空
-            self.makeToast(LibraWalletError.WalletAddWallet(reason: .passwordConfirmEmptyError).localizedDescription,
-                           position: .center)
-            return
-        }
-        guard handlePassword(password: passwordConfirm) else {
-            // 密码规则
-            self.makeToast(LibraWalletError.WalletAddWallet(reason: .passwordCofirmInvalidError).localizedDescription,
-                           position: .center)
-            return
-        }
-        guard password == passwordConfirm else {
-            // 密码不一致
-            self.makeToast(LibraWalletError.WalletAddWallet(reason: .passwordCheckFailed).localizedDescription,
-                           position: .center)
-            return
-        }
-        self.nameTextField.resignFirstResponder()
-        self.passwordTextField.resignFirstResponder()
-        self.passwordConfirmTextField.resignFirstResponder()
-        self.delegate?.confirmAddWallet(name: name, password: password)
-    }
-    var type: String? {
-        didSet {
-            if type == "BTC" {
-                coinTypeIcon.image = UIImage.init(named: "btc_icon")
-                nameLabel.text = localLanguage(keyString: "wallet_add_wallet_btc_title")
-            } else if type == "Lib" {
-                coinTypeIcon.image = UIImage.init(named: "libra_icon")
-                nameLabel.text = localLanguage(keyString: "wallet_add_wallet_libra_title")
+        if button.tag == 10 {
+            guard let password = passwordTextField.text, password.isEmpty == false else {
+                // 密码为空
+                self.makeToast(LibraWalletError.WalletAddWallet(reason: .passwordEmptyError).localizedDescription,
+                               position: .center)
+                return
+            }
+            guard handlePassword(password: password) else {
+                // 密码规则
+                self.makeToast(LibraWalletError.WalletAddWallet(reason: .passwordInvalidError).localizedDescription,
+                               position: .center)
+                return
+            }
+            guard let passwordConfirm = passwordConfirmTextField.text, passwordConfirm.isEmpty == false else {
+                // 确认密码为空
+                self.makeToast(LibraWalletError.WalletAddWallet(reason: .passwordConfirmEmptyError).localizedDescription,
+                               position: .center)
+                return
+            }
+            guard handlePassword(password: passwordConfirm) else {
+                // 密码规则
+                self.makeToast(LibraWalletError.WalletAddWallet(reason: .passwordCofirmInvalidError).localizedDescription,
+                               position: .center)
+                return
+            }
+            guard password == passwordConfirm else {
+                // 密码不一致
+                self.makeToast(LibraWalletError.WalletAddWallet(reason: .passwordCheckFailed).localizedDescription,
+                               position: .center)
+                return
+            }
+            self.passwordTextField.resignFirstResponder()
+            self.passwordConfirmTextField.resignFirstResponder()
+            self.delegate?.confirmAddWallet(password: password)
+        } else {
+            if button.imageView?.image == UIImage.init(named: "eyes_close_black") {
+                self.passwordTextField.isSecureTextEntry = false
+                self.passwordConfirmTextField.isSecureTextEntry = false
+                button.setImage(UIImage.init(named: "eyes_open_black"), for: UIControl.State.normal)
             } else {
-                coinTypeIcon.image = UIImage.init(named: "violas_icon")
-                nameLabel.text = localLanguage(keyString: "wallet_add_wallet_violas_title")
+                self.passwordTextField.isSecureTextEntry = true
+                self.passwordConfirmTextField.isSecureTextEntry = true
+                button.setImage(UIImage.init(named: "eyes_close_black"), for: UIControl.State.normal)
             }
         }
     }
@@ -236,12 +174,26 @@ extension AddWalletView: UITextFieldDelegate {
         guard let content = textField.text else {
             return true
         }
-        
         let textLength = content.count + string.count - range.length
         if tag == 10 {
             return textLength <= NameMaxLimit
         } else {
             return textLength <= PasswordMaxLimit
+        }
+    }
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        if textField.tag == 20 {
+            self.passwordSpaceLabel.backgroundColor = UIColor.init(hex: "7038FD")
+            self.passwordConfirmSpaceLabel.backgroundColor = UIColor.init(hex: "DEDFE0")
+        } else {
+            self.passwordSpaceLabel.backgroundColor = UIColor.init(hex: "DEDFE0")
+            self.passwordConfirmSpaceLabel.backgroundColor = UIColor.init(hex: "7038FD")
+        }
+    }
+    func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
+        if self.passwordTextField.isEditing == false && self.passwordConfirmTextField.isEditing == false {
+            self.passwordSpaceLabel.backgroundColor = UIColor.init(hex: "DEDFE0")
+            self.passwordConfirmSpaceLabel.backgroundColor = UIColor.init(hex: "DEDFE0")
         }
     }
 }
