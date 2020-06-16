@@ -80,19 +80,19 @@ extension LibraManager {
             let wallet = try LibraManager.getWallet(mnemonic: mnemonic)
             let (authenticatorKey, address) = try LibraManager.splitAddress(address: receiveAddress)
             // 拼接交易
+//            let argument0 = LibraTransactionArgument.init(code: .U8Vector,
+//                                                          value: "")
             let argument0 = LibraTransactionArgument.init(code: .Address,
                                                           value: address)
-            let argument1 = LibraTransactionArgument.init(code: .U8Vector,
-                                                          value: authenticatorKey)
-            let argument2 = LibraTransactionArgument.init(code: .U64,
+            let argument1 = LibraTransactionArgument.init(code: .U64,
                                                           value: "\(Int(amount * 1000000))")
-            let argument3 = LibraTransactionArgument.init(code: .U8Vector,
+            let argument2 = LibraTransactionArgument.init(code: .U8Vector,
                                                           value: "")
-            let argument4 = LibraTransactionArgument.init(code: .U8Vector,
+            let argument3 = LibraTransactionArgument.init(code: .U8Vector,
                                                           value: "")
             let script = LibraTransactionScript.init(code: Data.init(hex: LibraScriptCodeWithData),
                                                      typeTags: [LibraTypeTag.init(structData: LibraStructTag.init(type: .libraDefault))],
-                                                     argruments: [argument0, argument1, argument2, argument3, argument4])
+                                                     argruments: [argument0, argument1, argument2, argument3])
             let rawTransaction = LibraRawTransaction.init(senderAddres: sendAddress,
                                                           sequenceNumber: UInt64(sequenceNumber),
                                                           maxGasAmount: 1000000,
@@ -171,6 +171,33 @@ extension LibraManager {
                                                 gasUnitPrice: 0,
                                                 expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
                                                 payLoad: script.serialize())
+            // 签名交易
+            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            return signature.toHexString()
+        } catch {
+            throw error
+        }
+    }
+}
+extension LibraManager {
+    /// 获取注册稳定币交易Hex
+    /// - Parameters:
+    ///   - mnemonic: 助记词
+    ///   - contact: 合约地址
+    ///   - sequenceNumber: 序列码
+    public static func getLibraPublishTokenTransactionHex(mnemonic: [String], sequenceNumber: Int, module: String) throws -> String {
+        do {
+            let wallet = try LibraManager.getWallet(mnemonic: mnemonic)
+            // 拼接交易
+            let script = LibraTransactionScript.init(code: Data.init(hex: LibraPublishScriptCode),
+                                                     typeTags: [LibraTypeTag.init(structData: LibraStructTag.init(type: .normal(module)))],
+                                                     argruments: [])
+            let rawTransaction = LibraRawTransaction.init(senderAddres: wallet.publicKey.toLegacy(),
+                                                          sequenceNumber: UInt64(sequenceNumber),
+                                                          maxGasAmount: 400000,
+                                                          gasUnitPrice: 0,
+                                                          expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
+                                                          payLoad: script.serialize())
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
             return signature.toHexString()

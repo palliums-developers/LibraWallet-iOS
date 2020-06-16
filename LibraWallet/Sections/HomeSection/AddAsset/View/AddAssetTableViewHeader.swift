@@ -76,10 +76,10 @@ class AddAssetTableViewHeader: UITableViewHeaderFooterView {
         label.text = "---"
         return label
     }()
-    var model: LibraWalletManager? {
+    var model: Token? {
         didSet {
             nameLabel.text = "vtoken"
-            detailLabel.text = model?.walletType?.description
+            detailLabel.text = model?.tokenType.description
             let url = URL(string: "")
             iconImageView.kf.setImage(with: url, placeholder: UIImage.init(named: "violas_icon"))
         }

@@ -9,6 +9,8 @@
 import UIKit
 enum LibraStructTagType {
     case libraDefault
+    case coin1
+    case normal(String)
 }
 struct LibraStructTag {
     var address: String
@@ -30,6 +32,17 @@ extension LibraStructTag {
             self.module = "LBR"
             self.name = "T"
             self.typeParams = [String]()
+        case .coin1:
+            self.address = "00000000000000000000000000000000"
+            self.module = "Coin1"
+            self.name = "T"
+            self.typeParams = [String]()
+        case .normal(let module):
+            self.address = "00000000000000000000000000000000"
+            self.module = module
+            self.name = "T"
+            self.typeParams = [String]()
         }
+        
     }
 }

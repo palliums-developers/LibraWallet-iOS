@@ -28,12 +28,13 @@ enum mainRequest {
     
     /// 获取Libra账户余额
     case GetLibraAccountBalance(String)
-    /// 获取Libra账户Sequence Number
-    case GetLibraAccountSequenceNumber(String)
     /// 获取Libra账户交易记录(地址、偏移量、数量)
     case GetLibraAccountTransactionList(String, Int, Int)
     /// 发送Libra交易
     case SendLibraTransaction(String)
+    /// 获取Libra稳定币列表
+    case GetLibraTokenList
+    
     /// 获取Violas账户余额（钱包地址,代币地址（逗号分隔））
     case GetViolasAccountBalance(String, String)
     /// 获取Violas账户Sequence Number
@@ -91,12 +92,9 @@ extension mainRequest:TargetType {
              .TrezorBTCPushTransaction:
             return URL(string:"https://tbtc1.trezor.io/api")!
             
-            
-        case .GetLibraAccountSequenceNumber(_),
-             .GetLibraAccountTransactionList(_, _, _),
+        case .GetLibraAccountTransactionList(_, _, _),
              .ActiveLibraAccount(_),
-             .ActiveViolasAccount(_),
-             .GetViolasAccountInfo(_):
+             .ActiveViolasAccount(_):
             #if PUBLISH_VERSION
                 return URL(string:"https://api.violas.io/1.0")!
             #else
@@ -107,7 +105,6 @@ extension mainRequest:TargetType {
              .GetViolasAccountSequenceNumber(_),
              .GetViolasAccountTransactionList(_, _, _, _),
              .SendViolasTransaction(_),
-             .GetViolasTokenList,
              .GetViolasAccountEnableToken(_),
              .GetMappingInfo(_),
              .GetMappingTokenList(_),
@@ -131,8 +128,12 @@ extension mainRequest:TargetType {
                 return URL(string:"http://18.220.66.235:38181/v1")!
 //                return URL(string:"https://dex.violas.io/v1")!
             #endif
+        case .GetViolasAccountInfo(_),
+             .GetViolasTokenList:
+            return URL(string:"http://47.240.8.80:50001")!
         case .GetLibraAccountBalance(_),
-             .SendLibraTransaction(_):
+             .SendLibraTransaction(_),
+             .GetLibraTokenList:
             return URL(string:"https://client.testnet.libra.org")!
         }
     }
@@ -157,11 +158,11 @@ extension mainRequest:TargetType {
             return "/v2/sendtx/\(signature)"
         case .GetLibraAccountBalance(_):
             return ""
-        case .GetLibraAccountSequenceNumber(_):
-            return "/libra/seqnum"
         case .GetLibraAccountTransactionList(_, _, _):
             return "/libra/transaction"
         case .SendLibraTransaction(_):
+            return ""
+        case .GetLibraTokenList:
             return ""
         case .GetViolasAccountBalance(_, _):
             return "/violas/balance"
@@ -172,7 +173,7 @@ extension mainRequest:TargetType {
         case .SendViolasTransaction(_):
             return "/violas/transaction"
         case .GetViolasTokenList:
-            return "/violas/currency"
+            return ""
         case .GetMarketSupportCoin:
             return "/tokens"
         case .GetViolasAccountEnableToken(_):
@@ -200,17 +201,20 @@ extension mainRequest:TargetType {
         case .ActiveViolasAccount(_):
             return "/violas/mint"
         case .GetViolasAccountInfo(_):
-            return "/violas/account/info"
+            return ""
         }
     }
     var method: Moya.Method {
         switch self {
         case .SendLibraTransaction(_),
+             .GetLibraTokenList,
              .SendViolasTransaction(_),
              .SendBTCTransaction(_),
              .SubmitScanLoginData(_, _),
              .GetLibraAccountBalance(_),
-             .CancelOrder(_, _):
+             .CancelOrder(_, _),
+             .GetViolasAccountInfo(_),
+             .GetViolasTokenList:
             return .post
         case .GetBTCBalance(_),
              .GetBTCTransactionHistory(_, _, _),
@@ -221,12 +225,10 @@ extension mainRequest:TargetType {
              .TrezorBTCTransactions(_, _, _),
              .TrezorBTCPushTransaction(_),
              
-             .GetLibraAccountSequenceNumber(_),
              .GetLibraAccountTransactionList(_, _, _),
              .GetViolasAccountBalance(_, _),
              .GetViolasAccountSequenceNumber(_),
              .GetViolasAccountTransactionList(_, _, _, _),
-             .GetViolasTokenList,
              .GetMarketSupportCoin,
              .GetViolasAccountEnableToken(_),
              .GetCurrentOrder(_, _, _),
@@ -237,8 +239,7 @@ extension mainRequest:TargetType {
              .GetMappingTokenList(_),
              .GetMappingTransactions(_, _, _, _),
              .ActiveViolasAccount(_),
-             .ActiveLibraAccount(_),
-             .GetViolasAccountInfo(_):
+             .ActiveLibraAccount(_):
             return .get
         }
     }
@@ -285,9 +286,6 @@ extension mainRequest:TargetType {
                                                    "id":"123",
                                                    "params":["\(address)"]],
                                       encoding: JSONEncoding.default)
-        case .GetLibraAccountSequenceNumber(let address):
-            return .requestParameters(parameters: ["addr": address],
-                                      encoding: URLEncoding.queryString)
         case .GetLibraAccountTransactionList(let address, let offset, let limit):
             return .requestParameters(parameters: ["addr": address,
                                                    "limit": limit,
@@ -298,6 +296,12 @@ extension mainRequest:TargetType {
                                                    "method":"submit",
                                                    "id":"123",
                                                    "params":["\(signature)"]],
+                                      encoding: JSONEncoding.default)
+        case .GetLibraTokenList:
+            return .requestParameters(parameters: ["jsonrpc":"2.0",
+                                                   "method":"get_currencies",
+                                                   "id":"123",
+                                                   "params":[]],
                                       encoding: JSONEncoding.default)
         case .GetViolasAccountBalance(let address, let modules):
             return .requestParameters(parameters: ["addr": address,
@@ -323,7 +327,11 @@ extension mainRequest:TargetType {
             return .requestParameters(parameters: ["signedtxn": signature],
                                       encoding: JSONEncoding.default)
         case .GetViolasTokenList:
-            return .requestPlain
+            return .requestParameters(parameters: ["jsonrpc":"2.0",
+                                                   "method":"get_currencies",
+                                                   "id":"123",
+                                                   "params":[]],
+                                      encoding: JSONEncoding.default)
         case .GetMarketSupportCoin:
             return .requestPlain
         case .GetViolasAccountEnableToken(let address):
@@ -400,8 +408,11 @@ extension mainRequest:TargetType {
                                                    "auth_key_perfix": authPrefix],
                                       encoding: URLEncoding.queryString)
         case .GetViolasAccountInfo(let address):
-            return .requestParameters(parameters: ["address": address],
-                                      encoding: URLEncoding.queryString)
+            return .requestParameters(parameters: ["jsonrpc":"2.0",
+                                                   "method":"get_account_state",
+                                                   "id":"123",
+                                                   "params":["\(address)"]],
+                                      encoding: JSONEncoding.default)
         }
     }
     var headers: [String : String]? {

@@ -299,7 +299,7 @@
 		36CA3A1A247271A300559679 /* HomeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5D13C423692D3800A2C6AF /* HomeHeaderView.swift */; };
 		36CA3A1B247271A300559679 /* LBXScanError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B43A7123BDE967008E2EEA /* LBXScanError.swift */; };
 		36CA3A1C247271A300559679 /* ViolasMultiHDWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3617835E244465B7003C6588 /* ViolasMultiHDWallet.swift */; };
-		36CA3A1D247271A300559679 /* LibraWalletManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4884823211180005FF254 /* LibraWalletManager.swift */; };
+		36CA3A1D247271A300559679 /* WalletManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4884823211180005FF254 /* WalletManager.swift */; };
 		36CA3A1E247271A300559679 /* AddressManagerTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9B499D235DA76100354EF0 /* AddressManagerTableViewManager.swift */; };
 		36CA3A1F247271A300559679 /* AddAssetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B4E6D236BCBC200F4D99C /* AddAssetView.swift */; };
 		36CA3A20247271A300559679 /* HomeTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B4E5F2369788500F4D99C /* HomeTableViewManager.swift */; };
@@ -332,7 +332,6 @@
 		36CA3A3D247271A300559679 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		36CA3A3F247271A300559679 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9DA8E2AA2317ABC600E28D07 /* LaunchScreen.storyboard */; };
 		36CA3A40247271A300559679 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9D7124362329EA1C009DED52 /* Localizable.strings */; };
-		36CA3A41247271A300559679 /* ViolasToken.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9DC87793237B0F16006378C3 /* ViolasToken.plist */; };
 		36CA3A42247271A300559679 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D712442232F7662009DED52 /* Assets.xcassets */; };
 		36DA3FCE23B5E5C6001D7733 /* UIButton + imageTitleLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36DA3FCD23B5E5C6001D7733 /* UIButton + imageTitleLocation.swift */; };
 		36E95D8B242A084B0004B86D /* ScanLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E95D86242A084B0004B86D /* ScanLoginViewController.swift */; };
@@ -533,7 +532,7 @@
 		9DC488072320E419005FF254 /* LibraSDKTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488062320E419005FF254 /* LibraSDKTests.swift */; };
 		9DC4880B2320E6C1005FF254 /* LibraHDPrivateKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4880A2320E6C1005FF254 /* LibraHDPrivateKey.swift */; };
 		9DC4880D2320EDF8005FF254 /* LibraUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4880C2320EDF8005FF254 /* LibraUtils.swift */; };
-		9DC4884923211180005FF254 /* LibraWalletManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4884823211180005FF254 /* LibraWalletManager.swift */; };
+		9DC4884923211180005FF254 /* WalletManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4884823211180005FF254 /* WalletManager.swift */; };
 		9DC4884B232111E9005FF254 /* TransferViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4884A232111E9005FF254 /* TransferViewController.swift */; };
 		9DC4884F2321F051005FF254 /* LibraWordList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4884E2321F051005FF254 /* LibraWordList.swift */; };
 		9DC4885523220D6D005FF254 /* WalletReceiveViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4885423220D6D005FF254 /* WalletReceiveViewController.swift */; };
@@ -553,7 +552,6 @@
 		9DC8778D237958EB006378C3 /* LibraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC8778C237958EB006378C3 /* LibraManager.swift */; };
 		9DC8778F23796884006378C3 /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC8778E23796884006378C3 /* ToastView.swift */; };
 		9DC87791237A49A9006378C3 /* ImportIdentityWalletModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC87790237A49A9006378C3 /* ImportIdentityWalletModel.swift */; };
-		9DC87794237B0F16006378C3 /* ViolasToken.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9DC87793237B0F16006378C3 /* ViolasToken.plist */; };
 		9DC901E7232628A40097FD85 /* LibraRawTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC901E6232628A40097FD85 /* LibraRawTransaction.swift */; };
 		9DC901E923262CB80097FD85 /* LibraTransactionArgument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC901E823262CB80097FD85 /* LibraTransactionArgument.swift */; };
 		9DC901F2232788C30097FD85 /* LibraTransactionAccessPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC901F1232788C30097FD85 /* LibraTransactionAccessPath.swift */; };
@@ -868,7 +866,7 @@
 		9DC488062320E419005FF254 /* LibraSDKTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraSDKTests.swift; sourceTree = "<group>"; };
 		9DC4880A2320E6C1005FF254 /* LibraHDPrivateKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraHDPrivateKey.swift; sourceTree = "<group>"; };
 		9DC4880C2320EDF8005FF254 /* LibraUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraUtils.swift; sourceTree = "<group>"; };
-		9DC4884823211180005FF254 /* LibraWalletManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraWalletManager.swift; sourceTree = "<group>"; };
+		9DC4884823211180005FF254 /* WalletManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletManager.swift; sourceTree = "<group>"; };
 		9DC4884A232111E9005FF254 /* TransferViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferViewController.swift; sourceTree = "<group>"; };
 		9DC4884E2321F051005FF254 /* LibraWordList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraWordList.swift; sourceTree = "<group>"; };
 		9DC4885423220D6D005FF254 /* WalletReceiveViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletReceiveViewController.swift; sourceTree = "<group>"; };
@@ -888,7 +886,6 @@
 		9DC8778C237958EB006378C3 /* LibraManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraManager.swift; sourceTree = "<group>"; };
 		9DC8778E23796884006378C3 /* ToastView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
 		9DC87790237A49A9006378C3 /* ImportIdentityWalletModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportIdentityWalletModel.swift; sourceTree = "<group>"; };
-		9DC87793237B0F16006378C3 /* ViolasToken.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ViolasToken.plist; sourceTree = "<group>"; };
 		9DC901E6232628A40097FD85 /* LibraRawTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraRawTransaction.swift; sourceTree = "<group>"; };
 		9DC901E823262CB80097FD85 /* LibraTransactionArgument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraTransactionArgument.swift; sourceTree = "<group>"; };
 		9DC901F1232788C30097FD85 /* LibraTransactionAccessPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraTransactionAccessPath.swift; sourceTree = "<group>"; };
@@ -1689,7 +1686,7 @@
 		9D6264702356F91A00A79B3D /* WalletManager */ = {
 			isa = PBXGroup;
 			children = (
-				9DC4884823211180005FF254 /* LibraWalletManager.swift */,
+				9DC4884823211180005FF254 /* WalletManager.swift */,
 			);
 			path = WalletManager;
 			sourceTree = "<group>";
@@ -1741,7 +1738,6 @@
 			children = (
 				9DA8E2AA2317ABC600E28D07 /* LaunchScreen.storyboard */,
 				9D712442232F7662009DED52 /* Assets.xcassets */,
-				9DC87793237B0F16006378C3 /* ViolasToken.plist */,
 			);
 			path = Resource;
 			sourceTree = "<group>";
@@ -3563,7 +3559,6 @@
 			files = (
 				36CA3A3F247271A300559679 /* LaunchScreen.storyboard in Resources */,
 				36CA3A40247271A300559679 /* Localizable.strings in Resources */,
-				36CA3A41247271A300559679 /* ViolasToken.plist in Resources */,
 				36CA3A42247271A300559679 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3574,7 +3569,6 @@
 			files = (
 				9DA8E2AC2317ABC600E28D07 /* LaunchScreen.storyboard in Resources */,
 				9D7124342329EA1C009DED52 /* Localizable.strings in Resources */,
-				9DC87794237B0F16006378C3 /* ViolasToken.plist in Resources */,
 				9D712443232F7662009DED52 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3963,7 +3957,7 @@
 				36CA3A1A247271A300559679 /* HomeHeaderView.swift in Sources */,
 				36CA3A1B247271A300559679 /* LBXScanError.swift in Sources */,
 				36CA3A1C247271A300559679 /* ViolasMultiHDWallet.swift in Sources */,
-				36CA3A1D247271A300559679 /* LibraWalletManager.swift in Sources */,
+				36CA3A1D247271A300559679 /* WalletManager.swift in Sources */,
 				36CA3A1E247271A300559679 /* AddressManagerTableViewManager.swift in Sources */,
 				36CA3A1F247271A300559679 /* AddAssetView.swift in Sources */,
 				36CA3A20247271A300559679 /* HomeTableViewManager.swift in Sources */,
@@ -4253,7 +4247,7 @@
 				36B43A7223BDE967008E2EEA /* LBXScanError.swift in Sources */,
 				3617835F244465B7003C6588 /* ViolasMultiHDWallet.swift in Sources */,
 				3650F0BF248A46F20086F578 /* TransactionDetailTableViewManager.swift in Sources */,
-				9DC4884923211180005FF254 /* LibraWalletManager.swift in Sources */,
+				9DC4884923211180005FF254 /* WalletManager.swift in Sources */,
 				36B466B6247656E400CFF438 /* ScanSendTransactionModel.swift in Sources */,
 				9D9B49AB235DA76100354EF0 /* AddressManagerTableViewManager.swift in Sources */,
 				9D5B4E6E236BCBC200F4D99C /* AddAssetView.swift in Sources */,

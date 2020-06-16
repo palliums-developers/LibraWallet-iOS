@@ -9,7 +9,7 @@
 import UIKit
 import Kingfisher
 protocol AddAssetViewTableViewCellDelegate: NSObjectProtocol {
-    func switchButtonChange(model: ViolasTokenModel, state: Bool, indexPath: IndexPath)
+    func switchButtonChange(model: AssetsModel, state: Bool, indexPath: IndexPath)
 }
 class AddAssetViewTableViewCell: UITableViewCell {
     weak var delegate: AddAssetViewTableViewCellDelegate?
@@ -90,7 +90,7 @@ class AddAssetViewTableViewCell: UITableViewCell {
         return button
     }()
     @objc func valueChange(button: UISwitch) {
-        guard var tempModel = self.model else {
+        guard var tempModel = self.token else {
             return
         }
         guard let tempIndexPath = self.indexPath else {
@@ -100,15 +100,14 @@ class AddAssetViewTableViewCell: UITableViewCell {
         self.delegate?.switchButtonChange(model: tempModel, state: button.isOn, indexPath: tempIndexPath)
     }
     //MARK: - 设置数据
-    var model: ViolasTokenModel? {
+    var token: AssetsModel? {
         didSet {
-//            let state = model?.registerState == true ? localLanguage(keyString: "wallet_add_token_registered_title"):""
-            nameLabel.text = (model?.name ?? "")
-            detailLabel.text = model?.description
+            nameLabel.text = token?.name
+            detailLabel.text = token?.description
             
-            let url = URL(string: model?.icon ?? "")
+            let url = URL(string: token?.icon ?? "")
             iconImageView.kf.setImage(with: url, placeholder: UIImage.init(named: "default_placeholder"))
-            switchButton.setOn(model?.enable ?? false, animated: false)
+            switchButton.setOn(token?.enable ?? false, animated: false)
         }
     }
     var indexPath: IndexPath?

@@ -102,7 +102,7 @@ func passowordAlert(rootAddress: String, message: String? = localLanguage(keyStr
 //                errorContent(LibraWalletError.WalletCheckPassword(reason: .passwordCheckFailed).localizedDescription)
 //                return
 //            }
-            let tempMenmonic = try LibraWalletManager.getMnemonicFromKeychain(password: password)
+            let tempMenmonic = try WalletManager.getMnemonicFromKeychain(password: password)
             mnemonic(tempMenmonic)
         } catch {
             errorContent(error.localizedDescription)
@@ -135,7 +135,7 @@ func passowordCheckAlert(rootAddress: String, message: String? = localLanguage(k
         }
         NSLog("Password:\(password)")
         do {
-            let result = try LibraWalletManager.getMnemonicFromKeychain(password: password)
+            let result = try WalletManager.getMnemonicFromKeychain(password: password)
             guard result.isEmpty == false else {
                 errorContent(LibraWalletError.WalletCheckPassword(reason: .passwordCheckFailed).localizedDescription)
                 return

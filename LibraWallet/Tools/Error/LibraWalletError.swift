@@ -254,6 +254,11 @@ public enum LibraWalletError: Error {
         case mappingCoinDataEmpty
     }
     case WalletMapping(reason: MappingError)
+    public enum DataBaseError {
+        /// 数据打开失败
+        case openDataBaseError
+    }
+    case WalletDataBase(reason: DataBaseError)
 }
 extension LibraWalletError: LocalizedError {
     public var errorDescription: String? {
@@ -287,6 +292,8 @@ extension LibraWalletError: LocalizedError {
         case .WalletMarket(let reason):
             return reason.localizedDescription
         case .WalletMapping(let reason):
+            return reason.localizedDescription
+        case .WalletDataBase(reason: let reason):
             return reason.localizedDescription
         }
     }
@@ -600,6 +607,16 @@ extension LibraWalletError.MappingError {
             return localLanguage(keyString: "wallet_mapping_info_alert_content")
         case .mappingCoinDataEmpty:
             return localLanguage(keyString: "wallet_mapping_info_data_empty_alert_content")
+        }
+    }
+}
+extension LibraWalletError.DataBaseError {
+    var localizedDescription: String {
+        switch self {
+        /// 暂未映射
+        case .openDataBaseError:
+            #warning("待翻译")
+            return localLanguage(keyString: "DataBase Invalid")
         }
     }
 }
