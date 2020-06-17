@@ -69,7 +69,7 @@ class WalletManagerViewController: BaseViewController {
     }
 }
 extension WalletManagerViewController: WalletManagerTableViewManagerDelegate {
-    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: LibraWalletManager) {
+    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: Token) {
         if managerWallet == true {
             let vc = WalletDetailViewController()
             vc.walletModel = model

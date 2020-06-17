@@ -12,7 +12,7 @@ struct ViolasRawTransaction {
     
     fileprivate let senderAddress: String
     
-    fileprivate let sequenceNumber: UInt64
+    fileprivate let sequenceNumber: Int
     
     fileprivate let maxGasAmount: Int64
     
@@ -22,7 +22,9 @@ struct ViolasRawTransaction {
     
     fileprivate let payLoad: Data
     
-    init(senderAddres: String, sequenceNumber: UInt64, maxGasAmount: Int64, gasUnitPrice: Int64, expirationTime: Int, payLoad: Data) {
+    fileprivate let module: String
+    
+    init(senderAddres: String, sequenceNumber: Int, maxGasAmount: Int64, gasUnitPrice: Int64, expirationTime: Int, payLoad: Data, module: String) {
         
         self.senderAddress = senderAddres
         
@@ -35,25 +37,32 @@ struct ViolasRawTransaction {
         self.expirationTime = expirationTime
         
         self.payLoad = payLoad
+        
+        self.module = module
     }
     func serialize() -> Data {
         var result = Data()
-        // senderAddressCount
-        let senderAddressData = Data.init(Array<UInt8>(hex: self.senderAddress))
         // senderAddress
-        result += senderAddressData
+        result += Data.init(Array<UInt8>(hex: self.senderAddress))
         // sequenceNumber
-        result += ViolasUtils.getLengthData(length: Int(sequenceNumber), appendBytesCount: 8)
+        result += ViolasUtils.getLengthData(length: sequenceNumber, appendBytesCount: 8)
         // TransactionPayload
         result += self.payLoad
         // maxGasAmount
         result += ViolasUtils.getLengthData(length: Int(maxGasAmount), appendBytesCount: 8)
         // gasUnitPrice
         result += ViolasUtils.getLengthData(length: Int(gasUnitPrice), appendBytesCount: 8)
-        // libraTypeTag
-        result += ViolasTypeTag.init(structData: ViolasStructTag.init(type: .ViolasDefault)).serialize()
+        // ViolasTypeTag
+        result += getModuleType(module: module)
         // expirationTime
         result += ViolasUtils.getLengthData(length: expirationTime, appendBytesCount: 8)
         return result
+    }
+    func getModuleType(module: String) -> Data {
+        var data = Data()
+        let LBRData = module.data(using: .utf8)!
+        data += ViolasUtils.uleb128Format(length: LBRData.count)
+        data += LBRData
+        return data
     }
 }

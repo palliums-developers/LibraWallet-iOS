@@ -11,7 +11,7 @@ import UIKit
 class TransferViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = (self.wallet?.walletType?.description ?? "") + " " + localLanguage(keyString: "wallet_transfer_navigation_title")
+        self.title = (self.wallet?.tokenType.description ?? "") + " " + localLanguage(keyString: "wallet_transfer_navigation_title")
         
         self.view.addSubview(detailView)
         self.detailView.wallet = self.wallet
@@ -48,7 +48,7 @@ class TransferViewController: BaseViewController {
     }()
     typealias successClosure = () -> Void
     var actionClosure: successClosure?
-    var wallet: LibraWalletManager?
+    var wallet: Token?
     
     var address: String? {
         didSet {
@@ -109,17 +109,18 @@ extension TransferViewController: TransferViewDelegate {
         self.navigationController?.pushViewController(vc, animated: true)
     }
     func confirmTransfer(amount: Double, address: String, fee: Double) {
-        if LibraWalletManager.shared.walletBiometricLock == true {
-            KeychainManager().getPasswordWithBiometric(walletAddress: LibraWalletManager.shared.walletRootAddress ?? "") { [weak self](result, error) in
+        if WalletManager.shared.walletBiometricLock == true {
+            KeychainManager().getPasswordWithBiometric(walletAddress: "") { [weak self](result, error) in
                 if result.isEmpty == false {
                     do {
-                        let mnemonic = try LibraWalletManager.shared.getMnemonicFromKeychain(password: result, walletRootAddress: LibraWalletManager.shared.walletRootAddress ?? "")
+                        let mnemonic = try WalletManager.getMnemonicFromKeychain(password: result)
                         self?.detailView.toastView?.show()
-                        self?.dataModel.sendLibraTransaction(sendAddress: (self?.wallet?.walletAddress)!,
+                        self?.dataModel.sendLibraTransaction(sendAddress: self?.wallet?.tokenAddress ?? "",
                                                              receiveAddress: address,
                                                              amount: amount,
                                                              fee: 0.1,
-                                                             mnemonic: mnemonic)
+                                                             mnemonic: mnemonic,
+                                                             module: self?.wallet?.tokenModule ?? "")
                     } catch {
                         self?.detailView.makeToast(error.localizedDescription, position: .center)
                     }
@@ -128,13 +129,14 @@ extension TransferViewController: TransferViewDelegate {
                 }
             }
         } else {
-            let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
+            let alert = passowordAlert(rootAddress: "", mnemonic: { [weak self] (mnemonic) in
                 self?.detailView.toastView?.show()
-                self?.dataModel.sendLibraTransaction(sendAddress: (self?.wallet?.walletAddress)!,
+                self?.dataModel.sendLibraTransaction(sendAddress: self?.wallet?.tokenAddress ?? "",
                                                      receiveAddress: address,
                                                      amount: amount,
                                                      fee: 0.1,
-                                                     mnemonic: mnemonic)
+                                                     mnemonic: mnemonic,
+                                                     module: self?.wallet?.tokenModule ?? "")
             }) { [weak self] (errorContent) in
                 self?.view.makeToast(errorContent, position: .center)
             }
@@ -149,7 +151,7 @@ extension TransferViewController {
         self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
             guard let dataDic = change.newValue, dataDic.count != 0 else {
                 self?.detailView.hideToastActivity()
-//                self?.endLoading()
+                self?.detailView.toastView?.hide()
                 return
             }
             let type = dataDic.value(forKey: "type") as! String

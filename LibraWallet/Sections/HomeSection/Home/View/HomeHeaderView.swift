@@ -139,7 +139,7 @@ class HomeHeaderView: UIView {
     func showAssets() {
         self.assetLabel.text = "$ \(assetsModel!)"
     }
-    var walletModel: LibraWalletManager? {
+    var walletModel: Token? {
         didSet {
 //            walletNameLabel.text = "address"
 //            walletAddressLabel.text = walletModel?.walletAddress

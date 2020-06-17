@@ -401,12 +401,12 @@ class TransferView: UIView {
         let fee8 = NSString.init(format: "%.8f", fee)
         self.transferFeeLabel.text = "\(fee8) Libra"
     }
-    var wallet: LibraWalletManager? {
+    var wallet: Token? {
         didSet {
             guard let model = wallet else {
                 return
             }
-            let balance = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.walletBalance ?? 0)),
+            let balance = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.tokenBalance ?? 0)),
                                                  scale: 4,
                                                  unit: 1000000)
             walletBalanceLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + balance + " Libra"

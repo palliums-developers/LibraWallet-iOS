@@ -8,15 +8,12 @@
 
 import UIKit
 protocol HomeTableViewManagerDelegate: NSObjectProtocol {
-    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: LibraWalletManager)
+    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: Token)
 }
 class HomeTableViewManager: NSObject {
     weak var delegate: HomeTableViewManagerDelegate?
     /// 数据
-    var dataModel: [LibraWalletManager]?
-    /// 资产第一个
-    var defaultModel: ViolasTokenModel?
-    var selectRow: Int?
+    var dataModel: [Token]?
     deinit {
         print("HomeTableViewManager销毁了")
     }

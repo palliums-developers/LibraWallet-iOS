@@ -50,7 +50,7 @@ class WalletManagerViewModel: NSObject {
         }
         let type = jsonData.value(forKey: "type") as! String
         if type == "LoadLocalWallets" {
-            if let tempData = jsonData.value(forKey: "data") as? [[LibraWalletManager]] {
+            if let tempData = jsonData.value(forKey: "data") as? [[Token]] {
                 self.tableViewManager.dataModel = tempData
                 self.detailView.tableView.reloadData()
             }

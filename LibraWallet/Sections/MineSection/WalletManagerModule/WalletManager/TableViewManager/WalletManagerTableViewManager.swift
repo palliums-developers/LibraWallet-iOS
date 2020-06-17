@@ -8,11 +8,11 @@
 
 import UIKit
 protocol WalletManagerTableViewManagerDelegate: NSObjectProtocol {
-    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: LibraWalletManager)
+    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: Token)
 }
 class WalletManagerTableViewManager: NSObject {
     weak var delegate: WalletManagerTableViewManagerDelegate?
-    var dataModel: [[LibraWalletManager]]?
+    var dataModel: [[Token]]?
     let headerTitleArray = [localLanguage(keyString: "wallet_manager_identity_wallet_header_title"), localLanguage(keyString: "wallet_manager_import_or_create_wallet_header_title")]
     deinit {
         print("WalletManagerTableViewManager销毁了")

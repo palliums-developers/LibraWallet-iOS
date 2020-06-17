@@ -324,7 +324,7 @@ class ViolasTransferView: UIView {
                                                                raiseOnOverflow: false,
                                                                raiseOnUnderflow: false,
                                                                raiseOnDivideByZero: false)
-                let balance = NSDecimalNumber.init(value: wallet?.walletBalance ?? 0).dividing(by: NSDecimalNumber.init(value: 1000000), withBehavior: numberConfig)
+                let balance = NSDecimalNumber.init(value: wallet?.tokenBalance ?? 0).dividing(by: NSDecimalNumber.init(value: 1000000), withBehavior: numberConfig)
                 // 平台币
                 guard (amount) <= balance.doubleValue else {
                    self.makeToast(LibraWalletError.WalletTransfer(reason: .amountOverload).localizedDescription,
@@ -359,7 +359,7 @@ class ViolasTransferView: UIView {
                 return
             }
             // 检查是否向自己转账
-            guard address != self.wallet?.walletAddress else {
+            guard address != self.wallet?.tokenAddress else {
                 self.makeToast(LibraWalletError.WalletTransfer(reason: .transferToSelf).localizedDescription,
                                position: .center)
                 return
@@ -388,13 +388,13 @@ class ViolasTransferView: UIView {
         let fee8 = NSString.init(format: "%.8f", fee)
         self.transferFeeLabel.text = "\(fee8) vtoken"
     }
-    var wallet: LibraWalletManager? {
+    var wallet: Token? {
         didSet {
             guard let model = wallet else {
                 return
             }
             
-            let balance = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.walletBalance ?? 0)),
+            let balance = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.tokenBalance ?? 0)),
                                                  scale: 4,
                                                  unit: 1000000)
             walletBalanceLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + balance + " vtoken"

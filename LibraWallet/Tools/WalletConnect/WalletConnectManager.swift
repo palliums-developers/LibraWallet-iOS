@@ -61,13 +61,13 @@ class WalletConnectManager: NSObject {
         }
     }
     private func walletInfo(state: Bool) -> Session.WalletInfo {
-        let wallets = DataBaseManager.DBManager.getWalletWithType(walletType: WalletType.Violas)
-        var address = [String]()
-        for item in wallets {
-            address.append(item.walletAddress ?? "")
-        }
+//        let wallets = DataBaseManager.DBManager.getWalletWithType(walletType: tokenType.Violas)
+//        var address = [String]()
+//        for item in wallets {
+//            address.append(item.walletAddress ?? "")
+//        }
         let walletInfo = Session.WalletInfo(approved: state,
-                                            accounts: address,
+                                            accounts: [""],//address
                                             chainId: 4,
                                             peerId: UUID().uuidString,
                                             peerMeta: walletMeta)
@@ -199,18 +199,18 @@ class GetAccountHandler: RequestHandler {
     func handle(request: Request) {
         do {
             struct tempData: Codable {
-                var walletType: Int?
+                var walletType: Int64?
                 var coinType: String?
                 var name: String?
                 var address: String?
             }
-            let localWallets = DataBaseManager.DBManager.getLocalWallets()
+            let localWallets = try DataBaseManager.DBManager.getTokens()
             var tempWallets = [tempData]()
             for wallets in localWallets {
-                tempWallets.append(tempData.init(walletType: wallets.walletCreateType,
-                                                 coinType: wallets.walletType.description.lowercased(),
-                                                 name: wallets.walletName,
-                                                 address: wallets.walletAddress))
+                tempWallets.append(tempData.init(walletType: wallets.tokenType.value,
+                                                 coinType: wallets.tokenType.description.lowercased(),
+                                                 name: wallets.tokenName,
+                                                 address: wallets.tokenAddress))
             }
             let resultData = try? JSONEncoder().encode(tempWallets)
             let strJson = String.init(data: resultData!, encoding: .utf8)

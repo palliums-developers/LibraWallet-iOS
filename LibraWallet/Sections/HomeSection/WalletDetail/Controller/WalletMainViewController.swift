@@ -117,10 +117,10 @@ class WalletMainViewController: BaseViewController {
     }()
     /// 数据监听KVO
     private var observer: NSKeyValueObservation?
-    var wallet: LibraWalletManager? {
+    var wallet: Token? {
         didSet {
             // 页面标题
-            self.title = wallet?.walletType?.description
+            self.title = wallet?.tokenType.description
             self.headerView.wallet = wallet
         }
     }
@@ -135,16 +135,28 @@ class WalletMainViewController: BaseViewController {
 }
 extension WalletMainViewController: WalletMainViewFooterViewDelegate {
     func walletTransfer() {
-        let vc = ViolasTransferViewController()
-        vc.actionClosure = {
-        //            self.dataModel.getLocalUserInfo()
+        if wallet?.tokenType == .Violas {
+            let vc = ViolasTransferViewController()
+            vc.actionClosure = {
+            //            self.dataModel.getLocalUserInfo()
+            }
+            vc.wallet = self.wallet
+            vc.sendViolasTokenState = false
+            vc.vtokenModel = self.vtokenModel
+//            vc.title = (vtokenModel?.name ?? "") + localLanguage(keyString: "wallet_transfer_navigation_title")
+            vc.hidesBottomBarWhenPushed = true
+            self.navigationController?.pushViewController(vc, animated: true)
+        } else if wallet?.tokenType == .Libra {
+            let vc = TransferViewController()
+            vc.actionClosure = {
+            //            self.dataModel.getLocalUserInfo()
+            }
+            vc.wallet = self.wallet
+            vc.title = (vtokenModel?.name ?? "") + localLanguage(keyString: "wallet_transfer_navigation_title")
+            vc.hidesBottomBarWhenPushed = true
+            self.navigationController?.pushViewController(vc, animated: true)
         }
-        vc.wallet = self.wallet
-        vc.sendViolasTokenState = true
-        vc.vtokenModel = self.vtokenModel
-        vc.title = (vtokenModel?.name ?? "") + localLanguage(keyString: "wallet_transfer_navigation_title")
-        vc.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(vc, animated: true)
+
     }
     func walletReceive() {
         let vc = WalletReceiveViewController()

@@ -73,9 +73,10 @@ extension MineViewController: MineTableViewManagerDelegate {
         if indexPath.section == 0 {
             
             if indexPath.row == 0 {
-                let vc = WalletManagerViewController()
+                let vc = WalletDetailViewController()
                 vc.hidesBottomBarWhenPushed = true
-                vc.managerWallet = true
+//                vc.managerWallet = true
+                vc.canDelete = true
                 self.navigationController?.pushViewController(vc, animated: true)
             }
         } else if indexPath.section == 1 {
@@ -93,7 +94,7 @@ extension MineViewController: MineTableViewManagerDelegate {
         } else if indexPath.section == 3 {
             if indexPath.row == 0 {
                 let vc = ActiveAccountViewController()
-                vc.authKey = LibraWalletManager.shared.walletAuthenticationKey
+//                vc.authKey = LibraWalletManager.shared.walletAuthenticationKey
                 vc.hidesBottomBarWhenPushed = true
                 self.navigationController?.pushViewController(vc, animated: true)
             }

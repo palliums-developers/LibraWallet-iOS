@@ -90,13 +90,12 @@ class AddAssetViewTableViewCell: UITableViewCell {
         return button
     }()
     @objc func valueChange(button: UISwitch) {
-        guard var tempModel = self.token else {
+        guard let tempModel = self.token else {
             return
         }
         guard let tempIndexPath = self.indexPath else {
             return
         }
-        tempModel.enable = button.isOn
         self.delegate?.switchButtonChange(model: tempModel, state: button.isOn, indexPath: tempIndexPath)
     }
     //MARK: - 设置数据
@@ -104,9 +103,17 @@ class AddAssetViewTableViewCell: UITableViewCell {
         didSet {
             nameLabel.text = token?.name
             detailLabel.text = token?.description
+            if let iconName = token?.icon, iconName.isEmpty == false {
+                if iconName.hasPrefix("http") {
+                    let url = URL(string: token?.icon ?? "")
+                    iconImageView.kf.setImage(with: url, placeholder: UIImage.init(named: "default_placeholder"))
+                } else {
+                    iconImageView.image = UIImage.init(named: iconName)
+                }
+            } else {
+                iconImageView.image = UIImage.init(named: "wallet_icon_default")
+            }
             
-            let url = URL(string: token?.icon ?? "")
-            iconImageView.kf.setImage(with: url, placeholder: UIImage.init(named: "default_placeholder"))
             switchButton.setOn(token?.enable ?? false, animated: false)
         }
     }

@@ -50,7 +50,7 @@ class AddWalletViewController: BaseViewController {
 extension AddWalletViewController: AddWalletViewDelegate {
     func confirmAddWallet(password: String) {
         self.detailView.toastView.show()
-        self.dataModel.createWallet(walletName: "PalliumsWallet", password: password)
+        self.dataModel.createWallet(password: password)
     }
 }
 //MARK: - 网络请求数据处理中心
@@ -100,7 +100,7 @@ extension AddWalletViewController {
                             self?.navigationController?.pushViewController(vc, animated: true)
                         })
                     })
-                    print(tempData)
+//                    print(tempData)
                 }
             }
         })

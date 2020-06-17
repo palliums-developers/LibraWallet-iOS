@@ -90,13 +90,13 @@ class HomeTableViewCell: UITableViewCell {
         return label
     }()
     //MARK: - 设置数据
-    var model: LibraWalletManager? {
+    var model: Token? {
         didSet {
-            coinNameLabel.text = model?.walletType.description
-            coinAmountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model?.walletBalance ?? 0)),
+            coinNameLabel.text = model?.tokenName
+            coinAmountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model?.tokenBalance ?? 0)),
                                                           scale: 4,
                                                           unit: 1000000)
-            if let iconName = model?.walletIcon, iconName.isEmpty == false {
+            if let iconName = model?.tokenIcon, iconName.isEmpty == false {
                 if iconName.hasPrefix("http") {
                     let url = URL(string: iconName)
                     coinIconImageView.kf.setImage(with: url, placeholder: UIImage.init(named: "wallet_icon_default"))

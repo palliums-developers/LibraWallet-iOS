@@ -29,7 +29,7 @@ class CheckBackupViewController: BaseViewController {
     deinit {
         print("CheckBackupViewController销毁了")
     }
-    typealias nextActionClosure = (ControllerAction, LibraWalletManager) -> Void
+    typealias nextActionClosure = (ControllerAction, Token) -> Void
     var actionClosure: nextActionClosure?
     lazy var viewModel: CheckBackupViewModel = {
         let viewModel = CheckBackupViewModel.init()
@@ -50,8 +50,8 @@ extension CheckBackupViewController: CheckBackupViewDelegate {
             if FirstInApp == true {
                 if let wallets = self.tempWallet?.wallet, wallets.isEmpty == false {
                     for wallet in wallets {
-                        let result = DataBaseManager.DBManager.updateWalletBackupState(wallet: wallet)
-                        print("\(wallet.walletAddress)钱包更新备份状态-\(result)")
+                        let result = DataBaseManager.DBManager.updateWalletBackupState(wallet: WalletManager.shared)
+                        print("\(wallet.tokenAddress)钱包更新备份状态-\(result)")
                     }
                 } else {
                     print("无法更新备份状态")
@@ -66,8 +66,8 @@ extension CheckBackupViewController: CheckBackupViewDelegate {
                 self.view.hideToastActivity()
                 if let wallets = self.tempWallet?.wallet, wallets.isEmpty == false {
                     for wallet in wallets {
-                        let result = DataBaseManager.DBManager.updateWalletBackupState(wallet: wallet)
-                        print("\(wallet.walletAddress)钱包更新备份状态-\(result)")
+                        let result = DataBaseManager.DBManager.updateWalletBackupState(wallet: WalletManager.shared)
+                        print("\(wallet.tokenAddress)钱包更新备份状态-\(result)")
                     }
                 } else {
                     print("无法更新备份状态")

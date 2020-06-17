@@ -10,26 +10,26 @@ import UIKit
 struct CreateWalletModel {
     var password: String?
     var mnemonic: [String]?
-    var wallet: [LibraWalletManager]?
+    var wallet: [Token]?
 }
 class AddWalletModel: NSObject {
     @objc dynamic var dataDic: NSMutableDictionary = [:]
-    func createWallet(walletName: String, password: String){
+    func createWallet(password: String){
         let quene = DispatchQueue.init(label: "createWalletQuene")
         quene.async {
             do {
                 // 1.生成助记词
                 let mnemonic = try LibraMnemonic.generate(strength: .default, language: .english)
                 // 2.1创建Violas钱包
-                let violasWallet = try self.createViolasWallet(name: walletName, password: password, mnemonics: mnemonic)
+                let violasWallet = try self.createViolasWallet(mnemonics: mnemonic)
                 // 2.2创建BTC钱包
-                let btcWallet = try self.createBTCWallet(name: walletName, password: password, mnemonics: mnemonic)
+                let btcWallet = try self.createBTCWallet(mnemonics: mnemonic)
                 // 2.3创建Libra钱包
-                let libraWallet = try self.createLibraWallet(name: walletName, password: password, mnemonics: mnemonic)
+                let libraWallet = try self.createLibraWallet(mnemonics: mnemonic)
                 // 3.设置已创建钱包状态
                 setIdentityWalletState(show: true)
                 // 4.加密助记词到Keychain
-                try LibraWalletManager.saveMnemonicToKeychain(mnemonic: mnemonic, password: password)
+                try WalletManager.saveMnemonicToKeychain(mnemonic: mnemonic, password: password)
                 let tempWallet = CreateWalletModel.init(password: password,
                                                         mnemonic: mnemonic,
                                                         wallet: [violasWallet, btcWallet, libraWallet])
@@ -50,84 +50,71 @@ class AddWalletModel: NSObject {
             }
         }
     }
-    func createBTCWallet(name: String, password: String, mnemonics: [String]) throws -> LibraWalletManager {
+    func createBTCWallet(mnemonics: [String]) throws -> Token {
         do {
             let wallet = try BTCManager().getWallet(mnemonic: mnemonics)
-            let walletModel = LibraWalletManager.init(walletID: 999,
-                                                      walletBalance: 0,
-                                                      walletAddress: wallet.address.description,
-                                                      walletCreateTime: NSDate().timeIntervalSince1970,
-                                                      walletName: name,
-                                                      walletSubscription: false,
-                                                      walletBiometricLock: false,
-                                                      walletCreateType: 1,
-                                                      walletType: .BTC,
-                                                      walletIndex: 0,
-                                                      walletBackupState: false,
-                                                      walletAuthenticationKey: "",
-                                                      walletActiveState: true,
-                                                      walletIcon: "btc_icon",
-                                                      walletContract: "",
-                                                      walletModule: "",
-                                                      walletModuleName: "")
-            let result = DataBaseManager.DBManager.insertWallet(model: walletModel)
+            let token = Token.init(tokenID: 999,
+                                   tokenName: "BTC",
+                                   tokenBalance: 0,
+                                   tokenAddress: wallet.address.description,
+                                   tokenType: .BTC,
+                                   tokenIndex: 0,
+                                   tokenAuthenticationKey: "",
+                                   tokenActiveState: true,
+                                   tokenIcon: "btc_icon",
+                                   tokenContract: "",
+                                   tokenModule: "",
+                                   tokenModuleName: "",
+                                   tokenEnable: true)
+            let result = DataBaseManager.DBManager.insertToken(token: token)
             print("BTC钱包创建结果：\(result)")
-            return walletModel
+            return token
         } catch {
             throw error
         }
     }
-    func createViolasWallet(name: String, password: String, mnemonics: [String]) throws -> LibraWalletManager {
+    func createViolasWallet(mnemonics: [String]) throws -> Token {
         do {
             let wallet = try ViolasManager.getWallet(mnemonic: mnemonics)
-            let walletModel = LibraWalletManager.init(walletID: 999,
-                                                      walletBalance: 0,
-                                                      walletAddress: wallet.publicKey.toLegacy(),
-                                                      walletCreateTime: NSDate().timeIntervalSince1970,
-                                                      walletName: name,
-                                                      walletSubscription: false,
-                                                      walletBiometricLock: false,
-                                                      walletCreateType: 1,
-                                                      walletType: .Violas,
-                                                      walletIndex: 0,
-                                                      walletBackupState: false,
-                                                      walletAuthenticationKey: wallet.publicKey.toActive(),
-                                                      walletActiveState: false,
-                                                      walletIcon: "violas_icon",
-                                                      walletContract: "00000000000000000000000000000000",
-                                                      walletModule: "LBR",
-                                                      walletModuleName: "T")
-            let result = DataBaseManager.DBManager.insertWallet(model: walletModel)
+            let token = Token.init(tokenID: 999,
+                                   tokenName: "Violas",
+                                   tokenBalance: 0,
+                                   tokenAddress: wallet.publicKey.toLegacy(),
+                                   tokenType: .Violas,
+                                   tokenIndex: 0,
+                                   tokenAuthenticationKey: wallet.publicKey.toActive(),
+                                   tokenActiveState: false,
+                                   tokenIcon: "violas_icon",
+                                   tokenContract: "00000000000000000000000000000000",
+                                   tokenModule: "LBR",
+                                   tokenModuleName: "T",
+                                   tokenEnable: true)
+            let result = DataBaseManager.DBManager.insertToken(token: token)
             print("Violas钱包创建结果：\(result)")
-            return walletModel
+            return token
         } catch {
             throw error
         }
     }
-    func createLibraWallet(name: String, password: String, mnemonics: [String]) throws -> LibraWalletManager {
+    func createLibraWallet(mnemonics: [String]) throws -> Token {
         do {
-
             let wallet = try LibraManager.getWallet(mnemonic: mnemonics)
-            let walletModel = LibraWalletManager.init(walletID: 999,
-                                                      walletBalance: 0,
-                                                      walletAddress: wallet.publicKey.toLegacy(),
-                                                      walletCreateTime: NSDate().timeIntervalSince1970,
-                                                      walletName: name,
-                                                      walletSubscription: false,
-                                                      walletBiometricLock: false,
-                                                      walletCreateType: 1,
-                                                      walletType: .Libra,
-                                                      walletIndex: 0,
-                                                      walletBackupState: false,
-                                                      walletAuthenticationKey: wallet.publicKey.toActive(),
-                                                      walletActiveState: false,
-                                                      walletIcon: "libra_icon",
-                                                      walletContract: "00000000000000000000000000000000",
-                                                      walletModule: "LBR",
-                                                      walletModuleName: "T")
-            let result = DataBaseManager.DBManager.insertWallet(model: walletModel)
+            let token = Token.init(tokenID: 999,
+                                   tokenName: "LBR",
+                                   tokenBalance: 0,
+                                   tokenAddress: wallet.publicKey.toLegacy(),
+                                   tokenType: .Libra,
+                                   tokenIndex: 0,
+                                   tokenAuthenticationKey: wallet.publicKey.toActive(),
+                                   tokenActiveState: false,
+                                   tokenIcon: "libra_icon",
+                                   tokenContract: "00000000000000000000000000000000",
+                                   tokenModule: "LBR",
+                                   tokenModuleName: "T",
+                                   tokenEnable: true)
+            let result = DataBaseManager.DBManager.insertToken(token: token)
             print("Libra钱包创建结果：\(result)")
-            return walletModel
+            return token
         } catch {
             throw error
         }

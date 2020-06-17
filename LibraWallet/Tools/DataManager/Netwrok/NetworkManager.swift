@@ -104,7 +104,6 @@ extension mainRequest:TargetType {
         case .GetViolasAccountBalance(_, _),
              .GetViolasAccountSequenceNumber(_),
              .GetViolasAccountTransactionList(_, _, _, _),
-             .SendViolasTransaction(_),
              .GetViolasAccountEnableToken(_),
              .GetMappingInfo(_),
              .GetMappingTokenList(_),
@@ -126,10 +125,11 @@ extension mainRequest:TargetType {
                 return URL(string:"https://dex.violas.io/v1")!
             #else
                 return URL(string:"http://18.220.66.235:38181/v1")!
-//                return URL(string:"https://dex.violas.io/v1")!
+            //                return URL(string:"https://dex.violas.io/v1")!
             #endif
         case .GetViolasAccountInfo(_),
-             .GetViolasTokenList:
+             .GetViolasTokenList,
+             .SendViolasTransaction(_):
             return URL(string:"http://47.240.8.80:50001")!
         case .GetLibraAccountBalance(_),
              .SendLibraTransaction(_),
@@ -171,7 +171,7 @@ extension mainRequest:TargetType {
         case .GetViolasAccountTransactionList(_, _, _, _):
             return "/violas/transaction"
         case .SendViolasTransaction(_):
-            return "/violas/transaction"
+            return ""
         case .GetViolasTokenList:
             return ""
         case .GetMarketSupportCoin:
@@ -324,7 +324,10 @@ extension mainRequest:TargetType {
                                           encoding: URLEncoding.queryString)
             }
         case .SendViolasTransaction(let signature):
-            return .requestParameters(parameters: ["signedtxn": signature],
+            return .requestParameters(parameters: ["jsonrpc":"2.0",
+                                                   "method":"submit",
+                                                   "id":"123",
+                                                   "params":["\(signature)"]],
                                       encoding: JSONEncoding.default)
         case .GetViolasTokenList:
             return .requestParameters(parameters: ["jsonrpc":"2.0",

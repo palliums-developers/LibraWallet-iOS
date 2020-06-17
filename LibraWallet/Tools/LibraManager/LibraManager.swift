@@ -75,10 +75,10 @@ extension LibraManager {
     ///   - fee: 手续费
     ///   - mnemonic: 助记词
     ///   - sequenceNumber: 序列码
-    public static func getNormalTransactionHex(sendAddress: String, receiveAddress: String, amount: Double, fee: Double, mnemonic: [String], sequenceNumber: Int) throws -> String {
+    public static func getNormalTransactionHex(sendAddress: String, receiveAddress: String, amount: Double, fee: Double, mnemonic: [String], sequenceNumber: Int, module: String) throws -> String {
         do {
             let wallet = try LibraManager.getWallet(mnemonic: mnemonic)
-            let (authenticatorKey, address) = try LibraManager.splitAddress(address: receiveAddress)
+            let (_, address) = try LibraManager.splitAddress(address: receiveAddress)
             // 拼接交易
 //            let argument0 = LibraTransactionArgument.init(code: .U8Vector,
 //                                                          value: "")
@@ -86,19 +86,22 @@ extension LibraManager {
                                                           value: address)
             let argument1 = LibraTransactionArgument.init(code: .U64,
                                                           value: "\(Int(amount * 1000000))")
+            // metadata
             let argument2 = LibraTransactionArgument.init(code: .U8Vector,
                                                           value: "")
+            // metadata_signature
             let argument3 = LibraTransactionArgument.init(code: .U8Vector,
                                                           value: "")
             let script = LibraTransactionScript.init(code: Data.init(hex: LibraScriptCodeWithData),
-                                                     typeTags: [LibraTypeTag.init(structData: LibraStructTag.init(type: .libraDefault))],
+                                                     typeTags: [LibraTypeTag.init(structData: LibraStructTag.init(type: .Normal(module)))],
                                                      argruments: [argument0, argument1, argument2, argument3])
             let rawTransaction = LibraRawTransaction.init(senderAddres: sendAddress,
-                                                          sequenceNumber: UInt64(sequenceNumber),
+                                                          sequenceNumber: sequenceNumber,
                                                           maxGasAmount: 1000000,
                                                           gasUnitPrice: 0,
                                                           expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
-                                                          payLoad: script.serialize())
+                                                          payLoad: script.serialize(),
+                                                          module: module)
 
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
@@ -107,33 +110,61 @@ extension LibraManager {
             throw error
         }
     }
-    public static func getMultiTransactionHex(sendAddress: String, receiveAddress: String, amount: Double, fee: Double, sequenceNumber: Int, wallet: LibraMultiHDWallet) throws -> String {
+//    public static func getMultiTransactionHex(sendAddress: String, receiveAddress: String, amount: Double, fee: Double, sequenceNumber: Int, wallet: LibraMultiHDWallet, module: String) throws -> String {
+//        do {
+//            let (authenticatorKey, address) = try LibraManager.splitAddress(address: receiveAddress)
+//            // 拼接交易
+//            let argument1 = LibraTransactionArgument.init(code: .Address,
+//                                                          value: address)
+//            let argument2 = LibraTransactionArgument.init(code: .U64,
+//                                                          value: "\(Int(amount * 1000000))")
+//            let argument3 = LibraTransactionArgument.init(code: .U8Vector,
+//                                                          value: authenticatorKey)
+//            let script = LibraTransactionScript.init(code: Data.init(hex: libraScriptCode),
+//                                                     typeTags: [LibraTypeTag.init(structData: LibraStructTag.init(type: .libraDefault))],
+//                                                     argruments: [argument1, argument3, argument2])
+//            let rawTransaction = LibraRawTransaction.init(senderAddres: sendAddress,
+//                                                          sequenceNumber: sequenceNumber,
+//                                                          maxGasAmount: 1000000,
+//                                                          gasUnitPrice: 0,
+//                                                          expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
+//                                                          payLoad: script.serialize(),
+//                                                          module: module)
+//            // 签名交易
+//            let multiSignature = wallet.privateKey.signMultiTransaction(transaction: rawTransaction, publicKey: wallet.publicKey)
+//            return multiSignature.toHexString()
+//        } catch {
+//            throw error
+//        }
+//    }
+}
+extension LibraManager {
+    /// 获取注册稳定币交易Hex
+    /// - Parameters:
+    ///   - mnemonic: 助记词
+    ///   - contact: 合约地址
+    ///   - sequenceNumber: 序列码
+    public static func getLibraPublishTokenTransactionHex(mnemonic: [String], sequenceNumber: Int) throws -> String {
         do {
-            let (authenticatorKey, address) = try LibraManager.splitAddress(address: receiveAddress)
+            let wallet = try LibraManager.getWallet(mnemonic: mnemonic)
             // 拼接交易
-            let argument1 = LibraTransactionArgument.init(code: .Address,
-                                                          value: address)
-            let argument2 = LibraTransactionArgument.init(code: .U64,
-                                                          value: "\(Int(amount * 1000000))")
-            let argument3 = LibraTransactionArgument.init(code: .U8Vector,
-                                                          value: authenticatorKey)
-            let script = LibraTransactionScript.init(code: Data.init(hex: libraScriptCode),
-                                                     typeTags: [LibraTypeTag.init(structData: LibraStructTag.init(type: .libraDefault))],
-                                                     argruments: [argument1, argument3, argument2])
-            let rawTransaction = LibraRawTransaction.init(senderAddres: sendAddress,
-                                                          sequenceNumber: UInt64(sequenceNumber),
-                                                          maxGasAmount: 1000000,
+            let script = LibraTransactionScript.init(code: Data.init(hex: LibraPublishScriptCode),
+                                                     typeTags: [LibraTypeTag.init(structData: LibraStructTag.init(type: .Normal("LBR")))],
+                                                     argruments: [])
+            let rawTransaction = LibraRawTransaction.init(senderAddres: wallet.publicKey.toLegacy(),
+                                                          sequenceNumber: sequenceNumber,
+                                                          maxGasAmount: 400000,
                                                           gasUnitPrice: 0,
                                                           expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
-                                                          payLoad: script.serialize())
+                                                          payLoad: script.serialize(),
+                                                          module: "LBR")
             // 签名交易
-            let multiSignature = wallet.privateKey.signMultiTransaction(transaction: rawTransaction, publicKey: wallet.publicKey)
-            return multiSignature.toHexString()
+            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            return signature.toHexString()
         } catch {
             throw error
         }
     }
-
 }
 extension LibraManager {
     /// 获取Libra映射VLibra交易Hex
@@ -147,7 +178,7 @@ extension LibraManager {
     ///   - libraReceiveAddress: 接收地址
     /// - Throws: 报错
     /// - Returns: 返回结果
-    public static func getLibraToVLibraTransactionHex(sendAddress: String, amount: Double, fee: Double, mnemonic: [String], sequenceNumber: Int, vlibraReceiveAddress: String) throws -> String {
+    public static func getLibraToVLibraTransactionHex(sendAddress: String, amount: Double, fee: Double, mnemonic: [String], sequenceNumber: Int, vlibraReceiveAddress: String, module: String) throws -> String {
         do {
             let wallet = try LibraManager.getWallet(mnemonic: mnemonic)
             // 拼接交易
@@ -166,11 +197,12 @@ extension LibraManager {
                                                       argruments: [argument0, argument1, argument2, argument3])
 
             let rawTransaction = LibraRawTransaction.init(senderAddres: sendAddress,
-                                                sequenceNumber: UInt64(sequenceNumber),
+                                                sequenceNumber: sequenceNumber,
                                                 maxGasAmount: 560000,
                                                 gasUnitPrice: 0,
                                                 expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
-                                                payLoad: script.serialize())
+                                                payLoad: script.serialize(),
+                                                module: module)
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
             return signature.toHexString()
@@ -179,33 +211,7 @@ extension LibraManager {
         }
     }
 }
-extension LibraManager {
-    /// 获取注册稳定币交易Hex
-    /// - Parameters:
-    ///   - mnemonic: 助记词
-    ///   - contact: 合约地址
-    ///   - sequenceNumber: 序列码
-    public static func getLibraPublishTokenTransactionHex(mnemonic: [String], sequenceNumber: Int, module: String) throws -> String {
-        do {
-            let wallet = try LibraManager.getWallet(mnemonic: mnemonic)
-            // 拼接交易
-            let script = LibraTransactionScript.init(code: Data.init(hex: LibraPublishScriptCode),
-                                                     typeTags: [LibraTypeTag.init(structData: LibraStructTag.init(type: .normal(module)))],
-                                                     argruments: [])
-            let rawTransaction = LibraRawTransaction.init(senderAddres: wallet.publicKey.toLegacy(),
-                                                          sequenceNumber: UInt64(sequenceNumber),
-                                                          maxGasAmount: 400000,
-                                                          gasUnitPrice: 0,
-                                                          expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
-                                                          payLoad: script.serialize())
-            // 签名交易
-            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
-            return signature.toHexString()
-        } catch {
-            throw error
-        }
-    }
-}
+
 extension LibraManager {
     public static func derializeTransaction(tx: String) -> WCDataModel {
         let txData = Data.init(Array<UInt8>(hex: tx))

@@ -51,7 +51,7 @@ class ImportWalletViewController: BaseViewController {
 extension ImportWalletViewController: ImportWalletViewDelegate {
     func confirmImportWallet(password: String, mnemonics: [String]) {
         self.detailView.toastView.show()
-        self.dataModel.importWallet(walletName: "PalliumsWallet", password: password, mnemonics: mnemonics)
+        self.dataModel.importWallet(password: password, mnemonics: mnemonics)
     }
 //    func jumpToWalletManagerController() {
 //        if let vc = UIApplication.shared.keyWindow?.rootViewController, vc.children.isEmpty == false {
@@ -115,7 +115,7 @@ extension ImportWalletViewController {
                         }
                         self?.dismiss(animated: true, completion: nil)
                     })
-                    print(tempData)
+//                    print(tempData)
                 }
             }
             self?.detailView.toastView.hide()

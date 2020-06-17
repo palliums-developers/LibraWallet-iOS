@@ -120,13 +120,13 @@ class WalletMainViewHeaderView: UIView {
         self.makeToast(localLanguage(keyString: "wallet_copy_address_success_title"),
                        position: .center)
     }
-    var wallet: LibraWalletManager? {
+    var wallet: Token? {
         didSet {
-            self.amountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (wallet?.walletBalance ?? 0)),
+            self.amountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (wallet?.tokenBalance ?? 0)),
                                                                                           scale: 4,
                                                                                           unit: 1000000)
 //            self.amountValueLabel.text = vtokenModel?.name
-            self.walletAddressLabel.text = wallet?.walletAddress
+            self.walletAddressLabel.text = wallet?.tokenAddress
         }
     }
 }

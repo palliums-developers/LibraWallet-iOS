@@ -91,7 +91,7 @@ class HomeView: UIView {
         view.alpha = 0
         return view
     }()
-    var model: LibraWalletManager? {
+    var model: Token? {
         didSet {
             headerView.walletModel = model
         }

@@ -12,14 +12,14 @@ class AddAssetViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = localLanguage(keyString: "wallet_assert_add_navigation_title")
-
+        
         self.view.backgroundColor = UIColor.white
         // 加载子View
         self.view.addSubview(self.detailView)
         // 加载数据
         self.initKVO()
         #warning("测试")
-        self.addNavigationRightBar()
+        //        self.addNavigationRightBar()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -98,9 +98,11 @@ extension AddAssetViewController: AddAssetTableViewManagerDelegate {
             if DataBaseManager.DBManager.isExistViolasToken(tokenAddress: wallet?.first?.tokenAddress ?? "", tokenModule: model.name ?? "", tokenType: model.type!) {
                 //已存在改状态
                 print("已存在改状态,\(wallet?.first?.tokenAddress ?? "")")
-                let cell = self.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
-                cell.switchButton.setOn(state, animated: true)
-                _ = DataBaseManager.DBManager.updateViolasTokenState(tokenAddress: wallet?.first?.tokenAddress ?? "", tokenModule: model.name ?? "", tokenType: model.type!, state: state)
+                let changeState = DataBaseManager.DBManager.updateViolasTokenState(tokenAddress: wallet?.first?.tokenAddress ?? "", tokenModule: model.name ?? "", tokenType: model.type!, state: state)
+                if changeState == false {
+                    let cell = self.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
+                    cell.switchButton.setOn(!state, animated: true)
+                }
             } else {
                 //不存在插入
                 print("不存在插入")
@@ -112,12 +114,16 @@ extension AddAssetViewController: AddAssetTableViewManagerDelegate {
                                        tokenIndex: 0,
                                        tokenAuthenticationKey: wallet?.first?.tokenAuthenticationKey ?? "",
                                        tokenActiveState: true,
-                                       tokenIcon: "",
+                                       tokenIcon: model.icon ?? "",
                                        tokenContract: "00000000000000000000000000000000",
                                        tokenModule: model.name ?? "",
                                        tokenModuleName: "T",
                                        tokenEnable: true)
-                _ = DataBaseManager.DBManager.insertToken(token: token)
+                let changeState = DataBaseManager.DBManager.insertToken(token: token)
+                if changeState == false {
+                    let cell = self.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
+                    cell.switchButton.setOn(!state, animated: true)
+                }
             }
         } else {
             // 未注册
@@ -146,99 +152,65 @@ extension AddAssetViewController: AddAssetTableViewManagerDelegate {
                 if result.isEmpty == false {
                     do {
                         let mnemonic = try WalletManager.getMnemonicFromKeychain(password: result)
-                        self?.detailView.toastView?.show()
-                        self?.dataModel.publishViolasToken(sendAddress: wallet.tokenAddress, mnemonic: mnemonic, module: model.name ?? "", type: wallet.tokenType)
-                        self?.actionClosure = { result in
-                            if result == true {
-                                print("开启成功插入")
-                                if DataBaseManager.DBManager.isExistViolasToken(tokenAddress: wallet.tokenAddress, tokenModule: model.name ?? "", tokenType: model.type!) {
-                                    //已存在改状态
-                                    print("已存在改状态,\(wallet.tokenAddress)")
-                                    let cell = self?.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
-                                    cell.switchButton.setOn(result, animated: true)
-                                    _ = DataBaseManager.DBManager.updateViolasTokenState(tokenAddress: wallet.tokenAddress, tokenModule: model.name ?? "", tokenType: model.type!, state: result)
-                                } else {
-                                    //不存在插入
-                                    print("不存在插入")
-                                    let token = Token.init(tokenID: 999,
-                                                           tokenName: model.name ?? "",
-                                                           tokenBalance: 0,
-                                                           tokenAddress: wallet.tokenAddress,
-                                                           tokenType: model.type!,
-                                                           tokenIndex: 0,
-                                                           tokenAuthenticationKey: wallet.tokenAuthenticationKey,
-                                                           tokenActiveState: true,
-                                                           tokenIcon: "",
-                                                           tokenContract: "00000000000000000000000000000000",
-                                                           tokenModule: model.name ?? "",
-                                                           tokenModuleName: "T",
-                                                           tokenEnable: true)
-                                    _ = DataBaseManager.DBManager.insertToken(token: token)
-                                }
-                                if let action = self?.needUpdateClosure {
-                                    action(true)
-                                }
-                            } else {
-                                let cell = self?.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
-                                cell.switchButton.setOn(result, animated: true)
-                                print("开启失败")
-                            }
-                        }
+                        self?.ActiveToken(wallet: wallet,
+                                          indexPath: indexPath,
+                                          model: model,
+                                          mnemonic: mnemonic)
                     } catch {
-                        self?.detailView.makeToast(error.localizedDescription, position: .center)
+                        self?.detailView.makeToast(error.localizedDescription,
+                                                   position: .center)
                     }
                 } else {
-                    self?.detailView.makeToast(error, position: .center)
+                    self?.detailView.makeToast(error,
+                                               position: .center)
                 }
             }
         } else {
             let alert = passowordAlert(rootAddress: "", mnemonic: { [weak self] (mnemonic) in
-                self?.detailView.toastView?.show()
-                self?.dataModel.publishViolasToken(sendAddress: wallet.tokenAddress, mnemonic: mnemonic, module: model.name ?? "", type: wallet.tokenType)
-                self?.actionClosure = { result in
-                    if result == true {
-                        print("开启成功插入")
-                        if DataBaseManager.DBManager.isExistViolasToken(tokenAddress: wallet.tokenAddress, tokenModule: model.name ?? "", tokenType: model.type!) {
-                            //已存在改状态
-                            print("已存在改状态,\(wallet.tokenAddress)")
-                            let cell = self?.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
-                            cell.switchButton.setOn(result, animated: true)
-                            _ = DataBaseManager.DBManager.updateViolasTokenState(tokenAddress: wallet.tokenAddress, tokenModule: model.name ?? "", tokenType: model.type!, state: result)
-                        } else {
-                            //不存在插入
-                            print("不存在插入")
-                            let token = Token.init(tokenID: 999,
-                                                   tokenName: model.name ?? "",
-                                                   tokenBalance: 0,
-                                                   tokenAddress: wallet.tokenAddress,
-                                                   tokenType: model.type!,
-                                                   tokenIndex: 0,
-                                                   tokenAuthenticationKey: wallet.tokenAuthenticationKey,
-                                                   tokenActiveState: true,
-                                                   tokenIcon: "",
-                                                   tokenContract: "00000000000000000000000000000000",
-                                                   tokenModule: model.name ?? "",
-                                                   tokenModuleName: "T",
-                                                   tokenEnable: true)
-                            _ = DataBaseManager.DBManager.insertToken(token: token)
-                        }
-                        if let action = self?.needUpdateClosure {
-                            action(true)
-                        }
-                    } else {
-                        let cell = self?.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
-                        cell.switchButton.setOn(result, animated: true)
-                        print("开启失败")
-                    }
-                }
+                self?.ActiveToken(wallet: wallet,
+                                  indexPath: indexPath,
+                                  model: model,
+                                  mnemonic: mnemonic)
             }) { [weak self] (errorContent) in
                 let cell = self?.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
                 cell.switchButton.setOn(false, animated: true)
-                self?.view.makeToast(errorContent, position: .center)
+                self?.view.makeToast(errorContent,
+                                     position: .center)
             }
             self.present(alert, animated: true, completion: nil)
         }
-        
+    }
+}
+extension AddAssetViewController {
+    func ActiveToken(wallet: Token, indexPath: IndexPath, model: AssetsModel, mnemonic: [String]) {
+        self.detailView.toastView?.show()
+        self.dataModel.publishViolasToken(sendAddress: wallet.tokenAddress, mnemonic: mnemonic, type: wallet.tokenType)
+        self.actionClosure = { result in
+            if result == true {
+                print("开启成功插入")
+                let token = Token.init(tokenID: 999,
+                                       tokenName: model.name ?? "",
+                                       tokenBalance: 0,
+                                       tokenAddress: wallet.tokenAddress,
+                                       tokenType: model.type!,
+                                       tokenIndex: 0,
+                                       tokenAuthenticationKey: wallet.tokenAuthenticationKey,
+                                       tokenActiveState: true,
+                                       tokenIcon: model.icon ?? "",
+                                       tokenContract: "00000000000000000000000000000000",
+                                       tokenModule: model.name ?? "",
+                                       tokenModuleName: "T",
+                                       tokenEnable: true)
+                _ = DataBaseManager.DBManager.insertToken(token: token)
+                if let action = self.needUpdateClosure {
+                    action(true)
+                }
+            } else {
+                let cell = self.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
+                cell.switchButton.setOn(result, animated: true)
+                print("开启失败")
+            }
+        }
     }
 }
 extension AddAssetViewController {
@@ -252,45 +224,7 @@ extension AddAssetViewController {
         self.navigationItem.rightBarButtonItems = [barButtonItem, backView]
     }
     @objc func addAddressMethod() {
-        let mnemonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
-
-//        let sig = try! LibraManager.getLibraPublishTokenTransactionHex(mnemonic: mnemonic, sequenceNumber: 0)
-//        print(sig)
-//        if WalletManager.shared.walletBiometricLock == true {
-//            KeychainManager().getPasswordWithBiometric(walletAddress: "") { [weak self](result, error) in
-//                if result.isEmpty == false {
-//                    do {
-//                        let mnemonic = try LibraWalletManager.shared.getMnemonicFromKeychain(password: result, walletRootAddress: LibraWalletManager.shared.walletRootAddress ?? "")
-//                        self?.detailView.toastView?.show()
-//                        self?.dataModel.publishViolasToken(sendAddress: (self?.wallet?.walletAddress)!,
-//                                                           mnemonic: mnemonic,
-//                                                           contact: ViolasMainContract)
-//                        self?.actionClosure = { result in
-//                        }
-//                    } catch {
-//                        self?.detailView.makeToast(error.localizedDescription, position: .center)
-//                    }
-//                } else {
-//                    self?.detailView.makeToast(error, position: .center)
-//                }
-//            }
-//        } else {
-//            let alert = passowordAlert(rootAddress: "", mnemonic: { [weak self] (mnemonic) in
-//                self?.detailView.toastView?.show()
-//                self?.dataModel.publishViolasToken(sendAddress: (self?.wallet?.walletAddress)!,
-//                                                   mnemonic: mnemonic,
-//                                                   contact: ViolasMainContract)
-//                self?.actionClosure = { result in
-//
-//                }
-//            }) { [weak self] (errorContent) in
-//                self?.view.makeToast(errorContent, position: .center)
-//            }
-//            self.present(alert, animated: true, completion: nil)
-//        }
-        
     }
-
 }
 //MARK: - 网络请求数据处理中心
 extension AddAssetViewController {
@@ -298,7 +232,7 @@ extension AddAssetViewController {
         self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
             guard let dataDic = change.newValue, dataDic.count != 0 else {
                 self?.detailView.hideToastActivity()
-//                self?.endLoading()
+                self?.detailView.toastView?.hide()
                 return
             }
             let type = dataDic.value(forKey: "type") as! String
@@ -320,7 +254,10 @@ extension AddAssetViewController {
                     // 数据返回状态异常
                 }
                 self?.detailView.hideToastActivity()
-                self?.detailView.tableView.mj_header?.endRefreshing()
+                self?.detailView.toastView?.hide()
+                if let action = self?.actionClosure {
+                    action(false)
+                }
                 return
             }
             if type == "GetTokenList" {
@@ -329,7 +266,7 @@ extension AddAssetViewController {
                     self?.detailView.tableView.reloadData()
                     self?.detailView.hideToastActivity()
                 }
-            } else if type == "SendViolasTransaction" {
+            } else if type == "SendLibraTransaction" || type == "SendViolasTransaction" {
                 self?.detailView.toastView?.hide()
                 if let action = self?.actionClosure {
                     action(true)
@@ -338,9 +275,12 @@ extension AddAssetViewController {
                                            position: .center)
             }
             self?.detailView.hideToastActivity()
-            self?.detailView.tableView.mj_header?.endRefreshing()
+            self?.detailView.toastView?.hide()
         })
         self.detailView.makeToastActivity(.center)
-        self.dataModel.getSupportToken(walletAddress: "fa279f2615270daed6061313a48360f7", localTokens: self.tokens!)
+        let wallet = tokens?.filter({
+            $0.tokenType == .Violas
+        })
+        self.dataModel.getSupportToken(walletAddress: wallet?.first?.tokenAddress ?? "", localTokens: self.tokens!)
     }
 }

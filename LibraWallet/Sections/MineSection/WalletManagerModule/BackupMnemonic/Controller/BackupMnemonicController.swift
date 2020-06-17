@@ -30,7 +30,7 @@ class BackupMnemonicController: BaseViewController {
     deinit {
         print("BackupMnemonicController销毁了")
     }
-    typealias nextActionClosure = (ControllerAction, LibraWalletManager) -> Void
+    typealias nextActionClosure = (ControllerAction, Token) -> Void
     var actionClosure: nextActionClosure?
     lazy var viewModel: BackupMnemonicViewModel = {
         let viewModel = BackupMnemonicViewModel.init()

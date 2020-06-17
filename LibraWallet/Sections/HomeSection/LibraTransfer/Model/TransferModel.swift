@@ -49,7 +49,7 @@ class TransferModel: NSObject {
         }
         self.requests.append(request)
     }
-    func sendLibraTransaction(sendAddress: String, receiveAddress: String, amount: Double, fee: Double, mnemonic: [String]) {
+    func sendLibraTransaction(sendAddress: String, receiveAddress: String, amount: Double, fee: Double, mnemonic: [String], module: String) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
         queue.async {
@@ -66,7 +66,8 @@ class TransferModel: NSObject {
                                                                          amount: amount,
                                                                          fee: fee,
                                                                          mnemonic: mnemonic,
-                                                                         sequenceNumber: Int(self.sequenceNumber!))
+                                                                         sequenceNumber: Int(self.sequenceNumber!),
+                                                                         module: module)
 //                let signature = try LibraManager.getMultiTransactionHex(sendAddress: "cd35f1a78093554f5dc9c61301f204e4",
 //                                                                         receiveAddress: "7f4644ae2b51b65bd3c9d414aa853407",
 //                                                                         amount: amount,
