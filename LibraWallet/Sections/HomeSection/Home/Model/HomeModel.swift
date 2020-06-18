@@ -241,9 +241,9 @@ class HomeModel: NSObject {
                     } else {
                         let data = setKVOData(type: "UpdateLibraBalance", data: json.result?.balances)
                         self?.setValue(data, forKey: "dataDic")
-                        // 刷新本地数据
-                        self?.updateLocalTokenBalance(tokens: tokens, type: .Libra, tokenBalances: json.result?.balances ?? [LibraBalanceModel.init(amount: 0, currency: "LBR")])
                     }
+                    // 刷新本地数据
+                    self?.updateLocalTokenBalance(tokens: tokens, type: .Libra, tokenBalances: json.result?.balances ?? [LibraBalanceModel.init(amount: 0, currency: "LBR")])
                 } catch {
                     print("解析异常\(error.localizedDescription)")
                     let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "UpdateLibraBalance")
@@ -302,9 +302,9 @@ class HomeModel: NSObject {
                     } else {
                         let data = setKVOData(type: "UpdateViolasBalance", data: json.result?.balances)
                         self?.setValue(data, forKey: "dataDic")
-                        // 刷新本地数据
-                        self?.updateLocalTokenBalance(tokens: tokens, type: .Violas, tokenBalances: json.result?.balances ?? [ViolasBalanceModel.init(amount: 0, currency: "LBR")])
                     }
+                    // 刷新本地数据
+                    self?.updateLocalTokenBalance(tokens: tokens, type: .Violas, tokenBalances: json.result?.balances ?? [ViolasBalanceModel.init(amount: 0, currency: "LBR")])
                 } catch {
                     print("UpdateViolasBalance_解析异常\(error.localizedDescription)")
                     let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "UpdateViolasBalance")

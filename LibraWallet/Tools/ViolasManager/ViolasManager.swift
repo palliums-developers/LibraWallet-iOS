@@ -143,16 +143,16 @@ extension ViolasManager {
     ///   - mnemonic: 助记词
     ///   - contact: 合约地址
     ///   - sequenceNumber: 序列码
-    public static func getPublishTokenTransactionHex(mnemonic: [String], sequenceNumber: Int) throws -> String {
+    public static func getPublishTokenTransactionHex(mnemonic: [String], sequenceNumber: Int, module: String) throws -> String {
         do {
             let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
             // 拼接交易
             let script = ViolasTransactionScript.init(code: Data.init(hex: ViolasPublishScriptCode),
-                                                      typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .Normal("LBR")))],
+                                                      typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .Normal(module)))],
                                                       argruments: [])
             let rawTransaction = ViolasRawTransaction.init(senderAddres: wallet.publicKey.toLegacy(),
                                                            sequenceNumber: sequenceNumber,
-                                                           maxGasAmount: 400000,
+                                                           maxGasAmount: 1000000,
                                                            gasUnitPrice: 0,
                                                            expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
                                                            payLoad: script.serialize(),

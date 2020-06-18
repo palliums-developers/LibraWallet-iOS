@@ -184,7 +184,7 @@ extension AddAssetViewController: AddAssetTableViewManagerDelegate {
 extension AddAssetViewController {
     func ActiveToken(wallet: Token, indexPath: IndexPath, model: AssetsModel, mnemonic: [String]) {
         self.detailView.toastView?.show()
-        self.dataModel.publishViolasToken(sendAddress: wallet.tokenAddress, mnemonic: mnemonic, type: wallet.tokenType)
+        self.dataModel.publishViolasToken(sendAddress: wallet.tokenAddress, mnemonic: mnemonic, type: wallet.tokenType, module: model.name ?? "")
         self.actionClosure = { result in
             if result == true {
                 print("开启成功插入")

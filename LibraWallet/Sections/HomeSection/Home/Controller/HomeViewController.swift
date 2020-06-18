@@ -375,12 +375,17 @@ extension HomeViewController {
                             tempTokens.append(model)
                             continue
                         }
+                        var changeState = false
                         for token in tempData {
                             if token.currency == model.tokenModule {
                                 model.changeTokenBalance(banlance: token.amount ?? 0)
                                 tempTokens.append(model)
+                                changeState = true
                                 continue
                             }
+                        }
+                        if changeState == false {
+                            tempTokens.append(model)
                         }
                     }
                     self?.tableViewManager.dataModel = tempTokens
@@ -397,12 +402,17 @@ extension HomeViewController {
                             tempTokens.append(model)
                             continue
                         }
+                        var changeState = false
                         for token in tempData {
                             if token.currency == model.tokenModule {
                                 model.changeTokenBalance(banlance: token.amount ?? 0)
                                 tempTokens.append(model)
+                                changeState = true
                                 continue
                             }
+                        }
+                        if changeState == false {
+                            tempTokens.append(model)
                         }
                     }
                     self?.tableViewManager.dataModel = tempTokens

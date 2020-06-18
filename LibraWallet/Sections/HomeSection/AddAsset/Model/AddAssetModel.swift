@@ -301,21 +301,21 @@ class AddAssetModel: NSObject {
 //        return tempDataArray
 //    }
     // MARK: 开启ViolasToken
-    func publishViolasToken(sendAddress: String, mnemonic: [String], type: WalletType) {
+    func publishViolasToken(sendAddress: String, mnemonic: [String], type: WalletType, module: String) {
         if type == .Libra {
-            getLibraSequenceNumber(sendAddress: sendAddress, mnemonic: mnemonic, type: type)
+            getLibraSequenceNumber(sendAddress: sendAddress, mnemonic: mnemonic, type: type, module: module)
             
         } else if type == .Violas  {
-            getViolasSequenceNumber(sendAddress: sendAddress, mnemonic: mnemonic, type: type)
+            getViolasSequenceNumber(sendAddress: sendAddress, mnemonic: mnemonic, type: type, module: module)
         }
     }
-    private func getViolasSequenceNumber(sendAddress: String, mnemonic: [String], type: WalletType) {
+    private func getViolasSequenceNumber(sendAddress: String, mnemonic: [String], type: WalletType, module: String) {
         let request = mainProvide.request(.GetViolasAccountInfo(sendAddress)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
                     let json = try response.map(BalanceViolasMainModel.self)
-                    self?.makeTransaction(sendAddress: sendAddress, mnemonic: mnemonic, sequenceNumber: Int(json.result?.sequence_number ?? 0), type: type)
+                    self?.makeTransaction(sendAddress: sendAddress, mnemonic: mnemonic, sequenceNumber: Int(json.result?.sequence_number ?? 0), type: type, module: module)
                 } catch {
                     print("GetViolasSequenceNumber__解析异常\(error.localizedDescription)")
                     let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetLibraSequenceNumber")
@@ -332,13 +332,13 @@ class AddAssetModel: NSObject {
         }
         self.requests.append(request)
     }
-    private func getLibraSequenceNumber(sendAddress: String, mnemonic: [String], type: WalletType) {
+    private func getLibraSequenceNumber(sendAddress: String, mnemonic: [String], type: WalletType, module: String) {
         let request = mainProvide.request(.GetLibraAccountBalance(sendAddress)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
                     let json = try response.map(BalanceLibraMainModel.self)
-                    self?.makeTransaction(sendAddress: sendAddress, mnemonic: mnemonic, sequenceNumber: Int(json.result?.sequence_number ?? 0), type: type)
+                    self?.makeTransaction(sendAddress: sendAddress, mnemonic: mnemonic, sequenceNumber: Int(json.result?.sequence_number ?? 0), type: type, module: module)
                 } catch {
                     print("GetLibraSequenceNumber_解析异常\(error.localizedDescription)")
                     let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetLibraSequenceNumber")
@@ -355,15 +355,17 @@ class AddAssetModel: NSObject {
         }
         self.requests.append(request)
     }
-    private func makeTransaction(sendAddress: String, mnemonic: [String], sequenceNumber: Int, type: WalletType) {
+    private func makeTransaction(sendAddress: String, mnemonic: [String], sequenceNumber: Int, type: WalletType, module: String) {
         do {
             if type == .Libra {
-                let signature = try LibraManager.getLibraPublishTokenTransactionHex(mnemonic: mnemonic,
-                                                                                    sequenceNumber: sequenceNumber)
+                let signature = try LibraManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
+                                                                               sequenceNumber: sequenceNumber,
+                                                                               module: module)
                 makeLibraTransaction(signature: signature)
             } else if type == .Violas  {
                 let signature = try ViolasManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
-                                                                                sequenceNumber: sequenceNumber)
+                                                                                sequenceNumber: sequenceNumber,
+                                                                                module: module)
                 makeViolasTransaction(signature: signature)
             }
         } catch {

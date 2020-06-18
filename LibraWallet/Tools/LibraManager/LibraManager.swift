@@ -144,12 +144,12 @@ extension LibraManager {
     ///   - mnemonic: 助记词
     ///   - contact: 合约地址
     ///   - sequenceNumber: 序列码
-    public static func getLibraPublishTokenTransactionHex(mnemonic: [String], sequenceNumber: Int) throws -> String {
+    public static func getPublishTokenTransactionHex(mnemonic: [String], sequenceNumber: Int, module: String) throws -> String {
         do {
             let wallet = try LibraManager.getWallet(mnemonic: mnemonic)
             // 拼接交易
             let script = LibraTransactionScript.init(code: Data.init(hex: LibraPublishScriptCode),
-                                                     typeTags: [LibraTypeTag.init(structData: LibraStructTag.init(type: .Normal("LBR")))],
+                                                     typeTags: [LibraTypeTag.init(structData: LibraStructTag.init(type: .Normal(module)))],
                                                      argruments: [])
             let rawTransaction = LibraRawTransaction.init(senderAddres: wallet.publicKey.toLegacy(),
                                                           sequenceNumber: sequenceNumber,
