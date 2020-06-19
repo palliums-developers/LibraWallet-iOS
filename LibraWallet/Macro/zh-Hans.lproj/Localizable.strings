@@ -233,6 +233,7 @@ wallet_transaction_detail_publish_success_title = "稳定币激活成功";
 wallet_transaction_detail_mint_authority_success_title = "铸币授权成功";
 wallet_transaction_detail_active_success_title = "钱包激活成功";
 wallet_transaction_detail_transaction_failed_title = "交易失败";
+wallet_transaction_detail_unknow_success_title = "交易成功";
 wallet_transaction_detail_amount_title = "金额：";
 wallet_transaction_detail_gas_title = "矿工费：";
 wallet_transaction_detail_transfer_address_title = "付款地址";

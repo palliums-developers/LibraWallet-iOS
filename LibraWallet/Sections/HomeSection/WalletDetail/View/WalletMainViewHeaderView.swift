@@ -68,9 +68,10 @@ class WalletMainViewHeaderView: UIView {
         return view
     }()
     private lazy var walletIndicatorImageView: UIImageView = {
-        let view = UIImageView.init()
-        view.image = UIImage.init(named: "libra_icon")
-        return view
+        let imageView = UIImageView.init()
+        imageView.layer.cornerRadius = 7
+        imageView.layer.masksToBounds = true
+        return imageView
     }()
     lazy var walletTypeLabel: UILabel = {
         let label = UILabel.init()
@@ -124,8 +125,17 @@ class WalletMainViewHeaderView: UIView {
             self.amountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (wallet?.tokenBalance ?? 0)),
                                                                                           scale: 4,
                                                                                           unit: 1000000)
-//            self.amountValueLabel.text = vtokenModel?.name
             self.walletAddressLabel.text = wallet?.tokenAddress
+            switch wallet?.tokenType {
+            case .BTC:
+                self.walletIndicatorImageView.image = UIImage.init(named: "btc_icon")
+            case .Libra:
+                self.walletIndicatorImageView.image = UIImage.init(named: "libra_icon")
+            case .Violas:
+                self.walletIndicatorImageView.image = UIImage.init(named: "violas_icon")
+            default:
+                self.walletIndicatorImageView.image = UIImage.init(named: "wallet_icon_default")
+            }
         }
     }
 }

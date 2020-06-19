@@ -106,7 +106,7 @@ class AddAssetViewTableViewCell: UITableViewCell {
             if let iconName = token?.icon, iconName.isEmpty == false {
                 if iconName.hasPrefix("http") {
                     let url = URL(string: token?.icon ?? "")
-                    iconImageView.kf.setImage(with: url, placeholder: UIImage.init(named: "default_placeholder"))
+                    iconImageView.kf.setImage(with: url, placeholder: UIImage.init(named: "wallet_icon_default"))
                 } else {
                     iconImageView.image = UIImage.init(named: iconName)
                 }

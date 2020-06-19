@@ -231,6 +231,7 @@ wallet_transaction_detail_publish_success_title = "Stablecoin Publish Successful
 wallet_transaction_detail_mint_authority_success_title = "Mint Approval Successful";
 wallet_transaction_detail_active_success_title = "Wallet Active Successful";
 wallet_transaction_detail_transaction_failed_title = "Transaction Failed";
+wallet_transaction_detail_unknow_success_title = "Transaction Successful";
 wallet_transaction_detail_amount_title = "Amount:";
 wallet_transaction_detail_gas_title = "Gas Fee:";
 wallet_transaction_detail_transfer_address_title = "Transfer:";
