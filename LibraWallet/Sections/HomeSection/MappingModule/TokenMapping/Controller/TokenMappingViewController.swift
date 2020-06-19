@@ -205,22 +205,22 @@ extension TokenMappingViewController: TokenMappingHeaderViewDelegate {
         self.dataModel.getMappingTokenList(walletAddress: self.wallet?.tokenAddress ?? "")
     }
     func chooseAddress() {
-        let vc = LocalWalletViewController()
-        vc.actionClosure = { (action, wallet) in
-            self.detailView.headerView.exchangeToAddressTextField.text = wallet.tokenAddress
-            self.receiveWallet = wallet
-        }
-        if self.wallet?.tokenType == .BTC || self.wallet?.tokenType == .Libra {
-            vc.walletType = .Violas
-        } else {
-            if self.detailView.headerView.rightCoinButton.titleLabel?.text?.lowercased() == "btc" {
-                vc.walletType = .BTC
-            } else {
-                vc.walletType = .Libra
-            }
-        }
-        vc.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(vc, animated: true)
+//        let vc = LocalWalletViewController()
+//        vc.actionClosure = { (action, wallet) in
+//            self.detailView.headerView.exchangeToAddressTextField.text = wallet.tokenAddress
+//            self.receiveWallet = wallet
+//        }
+//        if self.wallet?.tokenType == .BTC || self.wallet?.tokenType == .Libra {
+//            vc.walletType = .Violas
+//        } else {
+//            if self.detailView.headerView.rightCoinButton.titleLabel?.text?.lowercased() == "btc" {
+//                vc.walletType = .BTC
+//            } else {
+//                vc.walletType = .Libra
+//            }
+//        }
+//        vc.hidesBottomBarWhenPushed = true
+//        self.navigationController?.pushViewController(vc, animated: true)
     }
     func confirmTransfer(amount: Double, address: String, fee: Double) {
         

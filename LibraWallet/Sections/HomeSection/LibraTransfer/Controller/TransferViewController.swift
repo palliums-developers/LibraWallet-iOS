@@ -109,38 +109,21 @@ extension TransferViewController: TransferViewDelegate {
         self.navigationController?.pushViewController(vc, animated: true)
     }
     func confirmTransfer(amount: Double, address: String, fee: Double) {
-        if WalletManager.shared.walletBiometricLock == true {
-            KeychainManager().getPasswordWithBiometric(walletAddress: "") { [weak self](result, error) in
-                if result.isEmpty == false {
-                    do {
-                        let mnemonic = try WalletManager.getMnemonicFromKeychain(password: result)
-                        self?.detailView.toastView?.show()
-                        self?.dataModel.sendLibraTransaction(sendAddress: self?.wallet?.tokenAddress ?? "",
-                                                             receiveAddress: address,
-                                                             amount: amount,
-                                                             fee: 0.1,
-                                                             mnemonic: mnemonic,
-                                                             module: self?.wallet?.tokenModule ?? "")
-                    } catch {
-                        self?.detailView.makeToast(error.localizedDescription, position: .center)
-                    }
-                } else {
-                    self?.detailView.makeToast(error, position: .center)
-                }
+        WalletManager.unlockWallet(controller: self, successful: { [weak self] (mnemonic) in
+            self?.detailView.toastView?.show()
+            self?.dataModel.sendLibraTransaction(sendAddress: self?.wallet?.tokenAddress ?? "",
+                                                 receiveAddress: address,
+                                                 amount: amount,
+                                                 fee: 0.1,
+                                                 mnemonic: mnemonic,
+                                                 module: self?.wallet?.tokenModule ?? "")
+        }) { [weak self] (error) in
+            guard error != "Cancel" else {
+                self?.detailView.toastView?.hide()
+                return
             }
-        } else {
-            let alert = passowordAlert(rootAddress: "", mnemonic: { [weak self] (mnemonic) in
-                self?.detailView.toastView?.show()
-                self?.dataModel.sendLibraTransaction(sendAddress: self?.wallet?.tokenAddress ?? "",
-                                                     receiveAddress: address,
-                                                     amount: amount,
-                                                     fee: 0.1,
-                                                     mnemonic: mnemonic,
-                                                     module: self?.wallet?.tokenModule ?? "")
-            }) { [weak self] (errorContent) in
-                self?.view.makeToast(errorContent, position: .center)
-            }
-            self.present(alert, animated: true, completion: nil)
+            self?.detailView.makeToast(error,
+                                       position: .center)
         }
     }
 }

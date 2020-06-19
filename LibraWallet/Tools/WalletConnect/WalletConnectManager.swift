@@ -66,6 +66,7 @@ class WalletConnectManager: NSObject {
 //        for item in wallets {
 //            address.append(item.walletAddress ?? "")
 //        }
+        #warning("待处理")
         let walletInfo = Session.WalletInfo(approved: state,
                                             accounts: [""],//address
                                             chainId: 4,

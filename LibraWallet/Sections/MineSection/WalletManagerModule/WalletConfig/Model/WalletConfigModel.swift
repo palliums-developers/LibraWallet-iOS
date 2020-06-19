@@ -1,5 +1,5 @@
 //
-//  WalletDetailModel.swift
+//  WalletConfigModel.swift
 //  LibraWallet
 //
 //  Created by palliums on 2019/10/28.
@@ -8,7 +8,7 @@
 
 import UIKit
 import BiometricAuthentication
-class WalletDetailModel: NSObject {
+class WalletConfigModel: NSObject {
     func loadLocalConfig() -> [[String: String]] {
         var data = [[String: String]]()
         data.append(["Title": localLanguage(keyString: "wallet_manager_detail_export_mnemonic_title"),
@@ -28,6 +28,6 @@ class WalletDetailModel: NSObject {
         return data
     }
     deinit {
-        print("WalletDetailModel销毁了")
+        print("WalletConfigModel销毁了")
     }
 }

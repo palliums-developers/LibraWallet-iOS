@@ -83,8 +83,8 @@ extension CheckBackupViewController: CheckBackupViewDelegate {
         if let vc = UIApplication.shared.keyWindow?.rootViewController, vc.children.isEmpty == false {
             if let mineControllers = vc.children.last?.children, mineControllers.isEmpty == false {
                 for con in mineControllers {
-                    if con.isKind(of: WalletManagerViewController.classForCoder()) {
-                        (con as! WalletManagerViewController).needRefresh = true
+                    if con.isKind(of: WalletConfigViewController.classForCoder()) {
+//                        (con as! WalletDetailViewController).needRefresh = true
                         self.navigationController?.popToViewController(con, animated: true)
                         return
                     }

@@ -13,6 +13,8 @@ class ImportWalletModel: NSObject {
         let quene = DispatchQueue.init(label: "createWalletQuene")
         quene.async {
             do {
+                // 创建钱包
+                try self.createWallet(mnemonic: mnemonics)
                 // 1.1创建Violas钱包
                 let violasWallet = try self.createViolasWallet(mnemonics: mnemonics)
                 // 1.2创建BTC钱包
@@ -41,6 +43,22 @@ class ImportWalletModel: NSObject {
                 })
                 
             }
+        }
+    }
+    private func createWallet(mnemonic: [String]) throws {
+        do {
+            let wallet = WalletManager.init(walletID: 999,
+                                            walletName: "PalliumsWallet",
+                                            walletCreateTime: NSDate().timeIntervalSince1970,
+                                            walletBiometricLock: false,
+                                            walletCreateType: 0,
+                                            walletBackupState: true,
+                                            walletSubscription: false,
+                                            walletMnemonicHash: mnemonic.joined(separator: " ").md5(),
+                                            walletUseState: true)
+            try DataBaseManager.DBManager.insertWallet(model: wallet)
+        } catch {
+            throw error
         }
     }
     private func createBTCWallet(mnemonics: [String]) throws -> Token {
@@ -102,9 +120,9 @@ class ImportWalletModel: NSObject {
                                    tokenAuthenticationKey: wallet.publicKey.toActive(),
                                    tokenActiveState: false,
                                    tokenIcon: "libra_icon",
-                                   tokenContract: "00000000000000000000000000000000",
+                                   tokenContract: "00000000000000000000000000000001",
                                    tokenModule: "LBR",
-                                   tokenModuleName: "T",
+                                   tokenModuleName: "LBR",
                                    tokenEnable: true)
             let result = DataBaseManager.DBManager.insertToken(token: token)
             print("Libra钱包导入结果：\(result)")

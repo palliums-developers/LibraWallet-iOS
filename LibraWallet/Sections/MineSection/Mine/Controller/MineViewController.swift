@@ -72,7 +72,7 @@ extension MineViewController: MineTableViewManagerDelegate {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath) {
         if indexPath.section == 0 {
             if indexPath.row == 0 {
-                let vc = WalletDetailViewController()
+                let vc = WalletConfigViewController()
                 vc.hidesBottomBarWhenPushed = true
                 vc.canDelete = true
                 self.navigationController?.pushViewController(vc, animated: true)

@@ -159,45 +159,29 @@ extension BTCTransferViewController: BTCTransferViewDelegate {
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func confirmWithdraw() {
-        self.view.makeToastActivity(.center)
+//    func confirmWithdraw() {
+//        self.view.makeToastActivity(.center)
 //        self.dataModel.transfer(address: self.detailView.addressTextField.text!,
 //                                amount: Double(self.detailView.amountTextField.text!)!,
 //                                rootAddress: (self.wallet?.walletRootAddress)!)
 //        self.dataModel.getViolasSequenceNumber(address: (self.wallet?.walletAddress)!)
 
-    }
+//    }
     func confirmTransfer(amount: Double, address: String, fee: Double) {
-//        if LibraWalletManager.shared.walletBiometricLock == true {
-//            KeychainManager().getPasswordWithBiometric(walletAddress: LibraWalletManager.shared.walletRootAddress ?? "") { [weak self](result, error) in
-//                if result.isEmpty == false {
-//                    do {
-//                        let mnemonic = try LibraWalletManager.shared.getMnemonicFromKeychain(password: result, walletRootAddress: LibraWalletManager.shared.walletRootAddress ?? "")
-//                        self?.detailView.toastView?.show()
-//                        let walletttt = try! BTCManager().getWallet(mnemonic: mnemonic)
-//                        self?.dataModel.makeTransaction(wallet: walletttt,
-//                                                        amount: amount,
-//                                                        fee: fee,
-//                                                        toAddress: address)
-//                    } catch {
-//                        self?.detailView.makeToast(error.localizedDescription, position: .center)
-//                    }
-//                } else {
-//                    self?.detailView.makeToast(error, position: .center)
-//                }
-//            }
-//        } else {
-//            let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
-//                self?.detailView.toastView?.show()
-//                let walletttt = try! BTCManager().getWallet(mnemonic: mnemonic)
-//                self?.dataModel.makeTransaction(wallet: walletttt,
-//                                                amount: amount,
-//                                                fee: fee,
-//                                                toAddress: address)
-//            }) { [weak self] (errorContent) in
-//                self?.view.makeToast(errorContent, position: .center)
-//            }
-//            self.present(alert, animated: true, completion: nil)
-//        }
+        WalletManager.unlockWallet(controller: self, successful: { [weak self] (mnemonic) in
+            self?.detailView.toastView?.show()
+            let walletttt = try! BTCManager().getWallet(mnemonic: mnemonic)
+            self?.dataModel.makeTransaction(wallet: walletttt,
+                                            amount: amount,
+                                            fee: fee,
+                                            toAddress: address)
+        }) { [weak self] (error) in
+            guard error != "Cancel" else {
+                self?.detailView.toastView?.hide()
+                return
+            }
+            self?.detailView.makeToast(error,
+                                       position: .center)
+        }
     }
 }

@@ -68,35 +68,17 @@ extension ScanSignTransactionViewController: ScanSignTransactionViewDelegate {
     func confirmLogin(password: String) {
         NSLog("Password:\(password)")
         if let raw = self.model {
-//            if LibraWalletManager.shared.walletBiometricLock == true {
-                KeychainManager().getPasswordWithBiometric(walletAddress: "Violas_" + (raw.address ?? "")) { [weak self](result, error) in
-                    if result.isEmpty == false {
-                        do {
-                            let mnemonic = try WalletManager.getMnemonicFromKeychain(password: result)
-                            self?.detailView.toastView?.show()
-                            self?.dataModel.signMessage(message: raw.message ?? "", mnemonic: mnemonic)
-                        } catch {
-                            self?.detailView.makeToast(error.localizedDescription, position: .center)
-                        }
-                        
-                    } else {
-                        self?.detailView.makeToast(error, position: .center)
-                    }
+            WalletManager.unlockWallet(controller: self, successful: { [weak self] (mnemonic) in
+                self?.detailView.toastView?.show()
+                self?.dataModel.signMessage(message: raw.message ?? "", mnemonic: mnemonic)
+            }) { [weak self] (error) in
+                guard error != "Cancel" else {
+                    self?.detailView.toastView?.hide()
+                    return
                 }
-//            } else {
-//                let alert = passowordAlert(rootAddress: "Violas_" + (raw.address ?? ""), mnemonic: { [weak self] (mnemonic) in
-//                    self?.detailView.toastView?.show()
-//                    self?.dataModel.signMessage(message: raw.message ?? "", mnemonic: mnemonic)
-//                }) { [weak self] (errorContent) in
-//                    guard errorContent != "Cancel" else {
-//                        self?.detailView.toastView?.hide()
-//                        return
-//                    }
-//                    self?.view.makeToast(errorContent, position: .center)
-//                }
-//                self.present(alert, animated: true, completion: nil)
-//
-//            }
+                self?.detailView.makeToast(error,
+                                           position: .center)
+            }
         } else {
             #warning("报错待处理")
         }

@@ -158,8 +158,16 @@ extension WalletMainViewController: WalletMainViewFooterViewDelegate {
             vc.title = (vtokenModel?.name ?? "") + localLanguage(keyString: "wallet_transfer_navigation_title")
             vc.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController(vc, animated: true)
+        } else if wallet?.tokenType == .BTC {
+            let vc = BTCTransferViewController()
+            vc.actionClosure = {
+                //            self.dataModel.getLocalUserInfo()
+            }
+            vc.wallet = self.wallet
+            vc.hidesBottomBarWhenPushed = true
+            self.navigationController?.pushViewController(vc, animated: true)
         }
-
+        
     }
     func walletReceive() {
         let vc = WalletReceiveViewController()

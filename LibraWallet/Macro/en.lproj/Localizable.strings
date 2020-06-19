@@ -74,7 +74,7 @@ wallet_manager_identity_wallet_header_title = "Identity Wallet";
 wallet_manager_import_or_create_wallet_header_title = "Create/Import";
 
 /************* 钱包详情 *******************/
-wallet_manager_detail_delete_button_title = "Remove";
+wallet_manager_detail_delete_button_title = "Delete";
 wallet_manager_detail_export_mnemonic_title = "Export Mnemonic Words";
 wallet_manager_biological_face_id_title = "Face ID";
 wallet_manager_biological_finger_touch_id_title = "Touch ID";

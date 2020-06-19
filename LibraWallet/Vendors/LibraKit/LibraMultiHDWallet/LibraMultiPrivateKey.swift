@@ -73,7 +73,7 @@ struct LibraMultiPrivateKey {
         // 4.3签名数据
         var signData = Data()
         // 4.4追加签名
-        var bitmap = "00000000000000000000000000000000"
+        var bitmap = "00000000000000000000000000000001"
         for i in 0..<self.threshold {
             let sign = Ed25519.sign(message: sha3Data.sha3(.sha256).bytes, secretKey: self.raw[i].raw.bytes)
             signData += sign

@@ -1,5 +1,5 @@
 //
-//  WalletDetailView.swift
+//  WalletConfigView.swift
 //  LibraWallet
 //
 //  Created by palliums on 2019/10/28.
@@ -8,11 +8,11 @@
 
 import UIKit
 import BiometricAuthentication
-protocol WalletDetailViewDelegate: NSObjectProtocol {
+protocol WalletConfigViewDelegate: NSObjectProtocol {
     func deleteButtonClick()
 }
-class WalletDetailView: UIView {
-    weak var delegate: WalletDetailViewDelegate?
+class WalletConfigView: UIView {
+    weak var delegate: WalletConfigViewDelegate?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -67,8 +67,8 @@ class WalletDetailView: UIView {
             // Fallback on earlier versions
         }
         tableView.backgroundColor = UIColor.init(hex:"F7F7F9")
-        tableView.register(WalletDetailTableViewCell.classForCoder(), forCellReuseIdentifier: "CellNormal")
-        tableView.register(WalletDetailTableViewCell.classForCoder(), forCellReuseIdentifier: "CellSwitch")
+        tableView.register(WalletConfigTableViewCell.classForCoder(), forCellReuseIdentifier: "CellNormal")
+        tableView.register(WalletConfigTableViewCell.classForCoder(), forCellReuseIdentifier: "CellSwitch")
 
         return tableView
     }()

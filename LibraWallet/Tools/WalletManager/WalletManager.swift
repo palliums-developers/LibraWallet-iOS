@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import UIKit
+import BiometricAuthentication
 enum WalletType {
     case Violas
     case Libra
@@ -66,6 +68,7 @@ extension WalletManager {
         self.walletName = walletName
         self.walletCreateTime = walletCreateTime
         self.walletCreateType = walletCreateType
+        self.walletBiometricLock = walletBiometricLock
         self.walletBackupState = walletBackupState
         self.walletSubscription = walletSubscription
         self.walletMnemonicHash = walletMnemonicHash
@@ -192,7 +195,7 @@ extension WalletManager {
             // 加密密码
             let encryptMnemonicString = try PasswordCrypto.encryptPassword(content: mnemonicString, password: password)
             // 保存加密字符串到KeyChain
-            try KeychainManager.KeyManager.saveMnemonicStringToKeychain(walletAddress: "PalliumsWallet", mnemonic: encryptMnemonicString)
+            try KeychainManager.KeyManager.saveMnemonicStringToKeychain(mnemonic: encryptMnemonicString)
         } catch {
             throw error
         }
@@ -203,7 +206,7 @@ extension WalletManager {
 //        }
         do {
             // 取出加密后助记词字符串
-            let menmonicString = try KeychainManager.KeyManager.getMnemonicStringFromKeychain(walletAddress: "PalliumsWallet")
+            let menmonicString = try KeychainManager.KeyManager.getMnemonicStringFromKeychain()
 
             // 解密密文
             let decryptMnemonicString = try PasswordCrypto.decryptPassword(cryptoString: menmonicString, password: password)
@@ -221,5 +224,105 @@ extension WalletManager {
     }
     func createLibraWallet() throws -> Bool {
         return false
+    }
+}
+extension WalletManager {
+    static func unlockWallet(controller: UIViewController, successful: @escaping (([String])->Void), failed: @escaping((String)->Void)) {
+        if WalletManager.shared.walletBiometricLock == true {
+            KeychainManager().getPasswordWithBiometric() { (result, error) in
+                if result.isEmpty == false {
+                    do {
+                        let mnemonic = try WalletManager.getMnemonicFromKeychain(password: result)
+                        successful(mnemonic)
+                    } catch {
+                        failed(error.localizedDescription)
+                    }
+                } else {
+                    failed(error)
+                }
+            }
+        } else {
+            let alert = passowordAlert(rootAddress: "", mnemonic: { (mnemonic) in
+                successful(mnemonic)
+            }) { (errorContent) in
+                failed(errorContent)
+            }
+            controller.present(alert, animated: true, completion: nil)
+        }
+    }
+    static func ChangeBiometricState(controller: UIViewController, state: Bool, successful: @escaping (([String])->Void), failed: @escaping((String)->Void)) {
+        if state == false {
+            // 关闭
+            var str = localLanguage(keyString: "wallet_biometric_alert_face_id_describe")
+            if BioMetricAuthenticator.shared.touchIDAvailable() {
+                str = localLanguage(keyString: "wallet_biometric_alert_fingerprint_describe")
+            }
+            BioMetricAuthenticator.authenticateWithBioMetrics(reason: str) { (result) in
+                switch result {
+                case .success( _):
+                    KeychainManager().removeBiometric(password: "", success: { (result, error) in
+                        if result == "Success" {
+                            let result = DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: WalletManager.shared.walletID!, state: state)
+                            guard result == true else {
+                                failed("Failed Insert DataBase")
+                                return
+                            }
+                            WalletManager.shared.changeWalletBiometricLock(state: state)
+                        } else {
+                            failed(error)
+                        }
+                    })
+                case .failure(let error):
+                    switch error {
+                    // device does not support biometric (face id or touch id) authentication
+                    case .biometryNotAvailable:
+                        print("biometryNotAvailable")
+                    // No biometry enrolled in this device, ask user to register fingerprint or face
+                    case .biometryNotEnrolled:
+                        print("biometryNotEnrolled")
+                    case .fallback:
+                        //                    self.txtUsername.becomeFirstResponder() // enter username password manually
+                        print("fallback")
+                        // Biometry is locked out now, because there were too many failed attempts.
+                    // Need to enter device passcode to unlock.
+                    case .biometryLockedout:
+                        print("biometryLockedout")
+                        if BioMetricAuthenticator.shared.touchIDAvailable() {
+                            failed(localLanguage(keyString: "wallet_biometric_touch_id_attempts_too_much_error"))
+                        } else {
+                            failed(localLanguage(keyString: "wallet_biometric_face_id_attempts_too_much_error"))
+                        }
+                    // do nothing on canceled by system or user
+                    case .canceledBySystem, .canceledByUser:
+                        print("cancel")
+                        break
+                        
+                    // show error for any other reason
+                    default:
+                        print(error.localizedDescription)
+                    }
+                    failed(error.localizedDescription)
+                }
+            }
+        } else {
+            // 打开
+            let alert = passowordCheckAlert(rootAddress: "", passwordContent: { (password) in
+                KeychainManager().addBiometric(password: password, success: { (result, error) in
+                    if result == "Success" {
+                        let result = DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: WalletManager.shared.walletID!, state: state)
+                        guard result == true else {
+                            failed("Failed Insert DataBase")
+                            return
+                        }
+                        WalletManager.shared.changeWalletBiometricLock(state: state)
+                    } else {
+                        failed(error)
+                    }
+                })
+            }, errorContent: { (error) in
+                failed(error)
+            })
+            controller.present(alert, animated: true, completion: nil)
+        }
     }
 }

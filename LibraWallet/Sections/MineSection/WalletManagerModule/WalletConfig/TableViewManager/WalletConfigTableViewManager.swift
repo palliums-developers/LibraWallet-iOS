@@ -1,5 +1,5 @@
 //
-//  WalletDetailTableViewManager.swift
+//  WalletConfigTableViewManager.swift
 //  LibraWallet
 //
 //  Created by palliums on 2019/10/28.
@@ -7,25 +7,24 @@
 //
 
 import UIKit
-protocol WalletDetailTableViewManagerDelegate: NSObjectProtocol {
+protocol WalletConfigTableViewManagerDelegate: NSObjectProtocol {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath)
     func switchButtonValueChange(button: UISwitch)
 }
-class WalletDetailTableViewManager: NSObject {
-    weak var delegate: WalletDetailTableViewManagerDelegate?
+class WalletConfigTableViewManager: NSObject {
+    weak var delegate: WalletConfigTableViewManagerDelegate?
     var dataModel: [[String: String]]?
-    var walletModel: Token?
     deinit {
-        print("WalletManagerTableViewManager销毁了")
+        print("WalletConfigTableViewManager销毁了")
     }
 }
-extension WalletDetailTableViewManager: UITableViewDelegate {
+extension WalletConfigTableViewManager: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
-                
+        
         self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath)
     }
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -38,34 +37,32 @@ extension WalletDetailTableViewManager: UITableViewDelegate {
         return 10
     }
 }
-extension WalletDetailTableViewManager: UITableViewDataSource {
+extension WalletConfigTableViewManager: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dataModel?.count ?? 0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let identifier = self.dataModel?[indexPath.row]["CellIdentifier"] ?? "CellNormal"
-        if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? WalletDetailTableViewCell {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? WalletConfigTableViewCell {
             if let data = dataModel, data.isEmpty == false {
                 cell.model = data[indexPath.row]
                 cell.hideSpcaeLineState = (data.count - 1) == indexPath.row ? true:false
             }
             cell.delegate = self
-//            cell.walletModel = self.walletModel
             cell.selectionStyle = UITableViewCell.SelectionStyle.none
             return cell
         } else {
-            let cell = WalletDetailTableViewCell.init(style: .default, reuseIdentifier: identifier)
+            let cell = WalletConfigTableViewCell.init(style: .default, reuseIdentifier: identifier)
             if let data = dataModel, data.isEmpty == false {
                 cell.model = data[indexPath.row]
             }
             cell.delegate = self
-//            cell.walletModel = self.walletModel
             cell.selectionStyle = UITableViewCell.SelectionStyle.none
             return cell
         }
     }
 }
-extension WalletDetailTableViewManager: WalletDetailTableViewCellDelegate {
+extension WalletConfigTableViewManager: WalletConfigTableViewCellDelegate {
     func switchButtonValueChange(button: UISwitch) {
         self.delegate?.switchButtonValueChange(button: button)
     }

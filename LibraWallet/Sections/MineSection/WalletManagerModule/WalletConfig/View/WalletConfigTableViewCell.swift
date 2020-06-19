@@ -1,5 +1,5 @@
 //
-//  WalletDetailTableViewCell.swift
+//  WalletConfigTableViewCell.swift
 //  LibraWallet
 //
 //  Created by palliums on 2019/10/28.
@@ -7,11 +7,11 @@
 //
 
 import UIKit
-protocol WalletDetailTableViewCellDelegate: NSObjectProtocol {
+protocol WalletConfigTableViewCellDelegate: NSObjectProtocol {
     func switchButtonValueChange(button: UISwitch)
 }
-class WalletDetailTableViewCell: UITableViewCell {
-    weak var delegate: WalletDetailTableViewCellDelegate?
+class WalletConfigTableViewCell: UITableViewCell {
+    weak var delegate: WalletConfigTableViewCellDelegate?
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.backgroundColor = UIColor.white
@@ -28,7 +28,7 @@ class WalletDetailTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
-        print("WalletDetailTableViewCell销毁了")
+        print("WalletConfigTableViewCell销毁了")
     }
     //MARK: - 布局
     override func layoutSubviews() {
@@ -92,6 +92,7 @@ class WalletDetailTableViewCell: UITableViewCell {
         let button = UISwitch.init()
         button.onTintColor = DefaultGreenColor
         button.addTarget(self, action: #selector(valueChange(button:)), for: UIControl.Event.valueChanged)
+        button.setOn(WalletManager.shared.walletBiometricLock ?? false, animated: true)
         return button
     }()
     lazy var spaceLabel: UILabel = {
@@ -99,15 +100,6 @@ class WalletDetailTableViewCell: UITableViewCell {
         label.backgroundColor = UIColor.init(hex: "DEDFE0")
         return label
     }()
-    var walletModel: WalletManager? {
-        didSet {
-            if walletModel?.walletBiometricLock == true {
-                switchButton.setOn(true, animated: true)
-            } else {
-                switchButton.setOn(false, animated: true)
-            }
-        }
-    }
     //MARK: - 设置数据
     var model: [String: String]? {
         didSet {
@@ -116,7 +108,7 @@ class WalletDetailTableViewCell: UITableViewCell {
             }
             self.titleLabel.text =  data["Title"]
             if let content = data["Content"], content.isEmpty == false {
-                self.detailLabel.text =  content
+                self.detailLabel.text = content
             } else {
                 titleLabel.snp.remakeConstraints { (make) in
                     make.left.equalTo(contentView).offset(17)
