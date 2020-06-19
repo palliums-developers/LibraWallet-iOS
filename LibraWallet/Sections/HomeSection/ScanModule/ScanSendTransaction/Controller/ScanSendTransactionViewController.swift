@@ -113,35 +113,35 @@ extension ScanSendTransactionViewController: ScanSendTransactionViewDelegate {
     func confirmLogin(password: String) {
         NSLog("Password:\(password)")
         if let raw = self.model {
-            if LibraWalletManager.shared.walletBiometricLock == true {
-                KeychainManager().getPasswordWithBiometric(walletAddress: "Violas_" + (raw.from ?? "")) { [weak self](result, error) in
-                    if result.isEmpty == false {
-                        do {
-                            let mnemonic = try LibraWalletManager.shared.getMnemonicFromKeychain(password: result, walletRootAddress: LibraWalletManager.shared.walletRootAddress ?? "")
-                            self?.detailView.toastView?.show()
-                            self?   .dataModel.sendViolasTransaction(model: raw, mnemonic: mnemonic)
-                        } catch {
-                            self?.detailView.makeToast(error.localizedDescription, position: .center)
-                        }
-                        
-                    } else {
-                        self?.detailView.makeToast(error, position: .center)
-                    }
-                }
-            } else {
-                let alert = passowordAlert(rootAddress: "Violas_" + (raw.from ?? ""), mnemonic: { [weak self] (mnemonic) in
-                    self?.detailView.toastView?.show()
-                    self?.dataModel.sendViolasTransaction(model: raw, mnemonic: mnemonic)
-                }) { [weak self] (errorContent) in
-                    guard errorContent != "Cancel" else {
-                        self?.detailView.toastView?.hide()
-                        return
-                    }
-                    self?.view.makeToast(errorContent, position: .center)
-                }
-                self.present(alert, animated: true, completion: nil)
-
-            }
+//            if LibraWalletManager.shared.walletBiometricLock == true {
+//                KeychainManager().getPasswordWithBiometric(walletAddress: "Violas_" + (raw.from ?? "")) { [weak self](result, error) in
+//                    if result.isEmpty == false {
+//                        do {
+//                            let mnemonic = try LibraWalletManager.shared.getMnemonicFromKeychain(password: result, walletRootAddress: LibraWalletManager.shared.walletRootAddress ?? "")
+//                            self?.detailView.toastView?.show()
+//                            self?   .dataModel.sendViolasTransaction(model: raw, mnemonic: mnemonic)
+//                        } catch {
+//                            self?.detailView.makeToast(error.localizedDescription, position: .center)
+//                        }
+//                        
+//                    } else {
+//                        self?.detailView.makeToast(error, position: .center)
+//                    }
+//                }
+//            } else {
+//                let alert = passowordAlert(rootAddress: "Violas_" + (raw.from ?? ""), mnemonic: { [weak self] (mnemonic) in
+//                    self?.detailView.toastView?.show()
+//                    self?.dataModel.sendViolasTransaction(model: raw, mnemonic: mnemonic)
+//                }) { [weak self] (errorContent) in
+//                    guard errorContent != "Cancel" else {
+//                        self?.detailView.toastView?.hide()
+//                        return
+//                    }
+//                    self?.view.makeToast(errorContent, position: .center)
+//                }
+//                self.present(alert, animated: true, completion: nil)
+//
+//            }
         } else {
             #warning("报错待处理")
         }

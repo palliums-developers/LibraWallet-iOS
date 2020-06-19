@@ -91,7 +91,7 @@ class MappingTransactionsViewController: BaseViewController {
     /// 数据偏移量，每次偏移10个
     var dataOffset: Int = 0
     /// 查询交易记录钱包
-    var wallet: LibraWalletManager?
+    var wallet: Token?
 }
 //MARK: - TableView Header和Footer刷新方法
 extension MappingTransactionsViewController {
@@ -107,7 +107,7 @@ extension MappingTransactionsViewController {
     func transactionRequest(refresh: Bool) {
         let requestState = refresh == true ? 0:1
         var requestType = ""
-        switch wallet?.walletType {
+        switch wallet?.tokenType {
         case .Violas:
             requestType = "0"
         case .Libra:
@@ -117,7 +117,7 @@ extension MappingTransactionsViewController {
         default:
             requestType = ""
         }
-        dataModel.getMappingTransactions(walletAddress: wallet?.walletAddress ?? "", page: dataOffset, pageSize: 10, requestType: requestType, requestStatus: requestState)
+        dataModel.getMappingTransactions(walletAddress: wallet?.tokenAddress ?? "", page: dataOffset, pageSize: 10, requestType: requestType, requestStatus: requestState)
     }
 }
 //MARK: - 网络请求数据处理中心

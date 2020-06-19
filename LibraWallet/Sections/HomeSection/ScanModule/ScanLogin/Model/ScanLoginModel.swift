@@ -69,8 +69,8 @@ class ScanLoginModel: NSObject {
     }
     private func getAllWallet(semaphore: DispatchSemaphore) {
         let wallets = DataBaseManager.DBManager.getLocalWallets()
-        let identityWallets = wallets.first!
-        let othersWallets = wallets.last!
+//        let identityWallets = wallets.first!
+//        let othersWallets = wallets.last!
         
 //        let tempData = identityWallets.reduce("") {
 //            $0 + "{\"name\":\"\($1.walletName ?? "")\",\"identity\":\($1.walletIdentity ?? 0),\"type\":\"\($1.walletType!.description.lowercased())\",\"address\":\"\($1.walletAddress ?? "")\"},"

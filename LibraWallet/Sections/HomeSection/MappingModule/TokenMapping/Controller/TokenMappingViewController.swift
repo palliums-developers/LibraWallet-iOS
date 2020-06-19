@@ -48,9 +48,9 @@ class TokenMappingViewController: BaseViewController {
         return model
     }()
     /// 映射钱包
-    var wallet: LibraWalletManager? {
+    var wallet: Token? {
         didSet {
-            self.detailView.headerView.walletType = wallet?.walletType
+            self.detailView.headerView.walletType = wallet?.tokenType
         }
     }
     /// 导航栏交易记录按钮
@@ -68,7 +68,7 @@ class TokenMappingViewController: BaseViewController {
     /// 数据监听KVO
     var observer: NSKeyValueObservation?
     /// 接收映射钱包
-    var receiveWallet: LibraWalletManager?
+    var receiveWallet: Token?
     typealias checkPublishClosure = (Bool) -> Void
     var actionClosure: checkPublishClosure?
     typealias publishFinishClosure = () -> Void
@@ -172,9 +172,9 @@ extension TokenMappingViewController {
                 }
             }
         })
-        if wallet?.walletType == .BTC || wallet?.walletType == .Libra {
+        if wallet?.tokenType == .BTC || wallet?.tokenType == .Libra {
             self.detailView.toastView?.show()
-            self.dataModel.getMappingInfo(walletType: (wallet?.walletType)!)
+            self.dataModel.getMappingInfo(walletType: (wallet?.tokenType)!)
         } else {
 //            // 获取当前钱包已映射稳定币列表
 //            self.dataModel.getMappingTokenList(walletAddress: "b45d3e7e8079eb16cd7111b676f0c32294135e4190261240e3fd7b96fe1b9b89")
@@ -202,15 +202,15 @@ extension TokenMappingViewController: TokenMappingHeaderViewDelegate {
     func showMappingTokenList() {
         self.detailView.toastView?.show()
         // 获取当前钱包已映射稳定币列表
-        self.dataModel.getMappingTokenList(walletAddress: self.wallet?.walletAddress ?? "")
+        self.dataModel.getMappingTokenList(walletAddress: self.wallet?.tokenAddress ?? "")
     }
     func chooseAddress() {
         let vc = LocalWalletViewController()
         vc.actionClosure = { (action, wallet) in
-            self.detailView.headerView.exchangeToAddressTextField.text = wallet.walletAddress
+            self.detailView.headerView.exchangeToAddressTextField.text = wallet.tokenAddress
             self.receiveWallet = wallet
         }
-        if self.wallet?.walletType == .BTC || self.wallet?.walletType == .Libra {
+        if self.wallet?.tokenType == .BTC || self.wallet?.tokenType == .Libra {
             vc.walletType = .Violas
         } else {
             if self.detailView.headerView.rightCoinButton.titleLabel?.text?.lowercased() == "btc" {
@@ -224,7 +224,7 @@ extension TokenMappingViewController: TokenMappingHeaderViewDelegate {
     }
     func confirmTransfer(amount: Double, address: String, fee: Double) {
         
-        if wallet?.walletType == .Libra || wallet?.walletType == .BTC {
+        if wallet?.tokenType == .Libra || wallet?.tokenType == .BTC {
             self.detailView.toastView?.show()
             self.dataModel.getWalletEnableToken(address: address, contract: ViolasMainContract)
             self.actionClosure = { (result) in
@@ -238,16 +238,16 @@ extension TokenMappingViewController: TokenMappingHeaderViewDelegate {
             }
             self.finishClosure = {
                 // 接收映射钱包注册成功映射币
-                let model = ViolasTokenModel.init(name: self.detailView.headerView.model?.name ?? "",
-                                                  description: "",
-                                                  address: self.detailView.headerView.model?.module ?? "",
-                                                  icon: "",
-                                                  enable: true,
-                                                  balance: 0,
-                                                  registerState: true)
-                _ = DataBaseManager.DBManager.insertViolasToken(walletID: self.receiveWallet?.walletID ?? 0, model: model)
+//                let model = ViolasTokenModel.init(name: self.detailView.headerView.model?.name ?? "",
+//                                                  description: "",
+//                                                  address: self.detailView.headerView.model?.module ?? "",
+//                                                  icon: "",
+//                                                  enable: true,
+//                                                  balance: 0,
+//                                                  registerState: true)
+//                _ = DataBaseManager.DBManager.insertViolasToken(tokenID: self.receiveWallet?.tokenID ?? 0, model: model)
 
-                self.showMappingWalletPasswordAlert(amount: amount, address: address, fee: fee)
+//                self.showMappingWalletPasswordAlert(amount: amount, address: address, fee: fee)
             }
         } else {
 //            if self.detailView.headerView.rightCoinButton.titleLabel?.text?.lowercased() == "btc" {
@@ -263,7 +263,7 @@ extension TokenMappingViewController: TokenMappingHeaderViewDelegate {
         }
     }
     func chooseMapping(amount: Double, address: String, fee: Double, mnemonic: [String]) {
-        switch self.wallet?.walletType {
+        switch self.wallet?.tokenType {
         case .BTC:
             let wallet = try! BTCManager().getWallet(mnemonic: mnemonic)
             self.dataModel.makeTransaction(wallet: wallet,
@@ -275,8 +275,8 @@ extension TokenMappingViewController: TokenMappingHeaderViewDelegate {
         case .Libra:
             print("Libra")
 //            self.dataModel.transfer(address: address, amount: amount, mnemonic: mnemonic)
-            self.dataModel.sendLibraTransaction(sendAddress: self.wallet?.walletAddress ?? "",
-                                                receiveAddress: self.receiveWallet?.walletAuthenticationKey ?? "",
+            self.dataModel.sendLibraTransaction(sendAddress: self.wallet?.tokenAddress ?? "",
+                                                receiveAddress: self.receiveWallet?.tokenAuthenticationKey ?? "",
                                                 amount: amount,
                                                 fee: 0,
                                                 mnemonic: mnemonic)
@@ -285,20 +285,22 @@ extension TokenMappingViewController: TokenMappingHeaderViewDelegate {
             self.detailView.toastView?.show()
             if self.detailView.headerView.rightCoinButton.titleLabel?.text?.lowercased() == "btc" {
                 // btc
-                self.dataModel.sendVBTCTransaction(sendAddress: self.wallet?.walletAddress ?? "",
+                self.dataModel.sendVBTCTransaction(sendAddress: self.wallet?.tokenAddress ?? "",
                                                    receiveAddress: address,
                                                    amount: amount,
                                                    fee: fee,
                                                    mnemonic: mnemonic,
-                                                   contact: self.detailView.headerView.reverseModel?.module ?? "")
+                                                   contact: self.detailView.headerView.reverseModel?.module ?? "",
+                                                   module: self.wallet?.tokenModule ?? "")
             } else if self.detailView.headerView.rightCoinButton.titleLabel?.text?.lowercased() == "libra" {
                 // libra
-                self.dataModel.sendVLibraTransaction(sendAddress: self.wallet?.walletAddress ?? "",
-                                                     receiveAddress: self.receiveWallet?.walletAuthenticationKey ?? "",
+                self.dataModel.sendVLibraTransaction(sendAddress: self.wallet?.tokenAddress ?? "",
+                                                     receiveAddress: self.receiveWallet?.tokenAuthenticationKey ?? "",
                                                      amount: amount,
                                                      fee: fee,
                                                      mnemonic: mnemonic,
-                                                     contact: self.detailView.headerView.reverseModel?.module ?? "")
+                                                     contact: self.detailView.headerView.reverseModel?.module ?? "",
+                                                     module: self.wallet?.tokenModule ?? "")
             } else {
                 //异常
             }
@@ -319,58 +321,58 @@ extension TokenMappingViewController: TokenMappingHeaderViewDelegate {
         self.present(alertContr, animated: true, completion: nil)
     }
     private func showNeedPublishWalletPasswordAlert() {
-        if LibraWalletManager.shared.walletBiometricLock == true {
-            KeychainManager().getPasswordWithBiometric(walletAddress: LibraWalletManager.shared.walletRootAddress ?? "") { [weak self](result, error) in
-                if result.isEmpty == false {
-                    do {
-                        let mnemonic = try LibraWalletManager.shared.getMnemonicFromKeychain(password: result, walletRootAddress: LibraWalletManager.shared.walletRootAddress ?? "")
-                        self?.dataModel.publishViolasToken(sendAddress: (self?.receiveWallet?.walletAddress)!, mnemonic: mnemonic, contact: (self?.detailView.headerView.model?.module)!)
-                    } catch {
-                        self?.detailView.makeToast(error.localizedDescription, position: .center)
-                    }
-                } else {
-                    self?.detailView.makeToast(error, position: .center)
-                }
-            }
-        } else {
-            let alert = passowordAlert(rootAddress: (self.receiveWallet?.walletRootAddress)!, message: localLanguage(keyString: "wallet_type_in_watting_publish_wallet_password_content"), mnemonic: { [weak self] (mnemonic) in
-                self?.dataModel.publishViolasToken(sendAddress: (self?.receiveWallet?.walletAddress)!, mnemonic: mnemonic, contact: (self?.detailView.headerView.model?.module)!)
-            }) { [weak self] (errorContent) in
-                guard errorContent != "Cancel" else {
-                    self?.detailView.toastView?.hide()
-                    return
-                }
-                self?.view.makeToast(errorContent, position: .center)
-            }
-            self.present(alert, animated: true, completion: nil)
-        }
+//        if LibraWalletManager.shared.walletBiometricLock == true {
+//            KeychainManager().getPasswordWithBiometric(walletAddress: LibraWalletManager.shared.walletRootAddress ?? "") { [weak self](result, error) in
+//                if result.isEmpty == false {
+//                    do {
+//                        let mnemonic = try LibraWalletManager.shared.getMnemonicFromKeychain(password: result, walletRootAddress: LibraWalletManager.shared.walletRootAddress ?? "")
+//                        self?.dataModel.publishViolasToken(sendAddress: (self?.receiveWallet?.walletAddress)!, mnemonic: mnemonic, contact: (self?.detailView.headerView.model?.module)!)
+//                    } catch {
+//                        self?.detailView.makeToast(error.localizedDescription, position: .center)
+//                    }
+//                } else {
+//                    self?.detailView.makeToast(error, position: .center)
+//                }
+//            }
+//        } else {
+//            let alert = passowordAlert(rootAddress: (self.receiveWallet?.walletRootAddress)!, message: localLanguage(keyString: "wallet_type_in_watting_publish_wallet_password_content"), mnemonic: { [weak self] (mnemonic) in
+//                self?.dataModel.publishViolasToken(sendAddress: (self?.receiveWallet?.walletAddress)!, mnemonic: mnemonic, contact: (self?.detailView.headerView.model?.module)!)
+//            }) { [weak self] (errorContent) in
+//                guard errorContent != "Cancel" else {
+//                    self?.detailView.toastView?.hide()
+//                    return
+//                }
+//                self?.view.makeToast(errorContent, position: .center)
+//            }
+//            self.present(alert, animated: true, completion: nil)
+//        }
         
     }
     private func showMappingWalletPasswordAlert(amount: Double, address: String, fee: Double) {
-        if LibraWalletManager.shared.walletBiometricLock == true {
-            KeychainManager().getPasswordWithBiometric(walletAddress: LibraWalletManager.shared.walletRootAddress ?? "") { [weak self](result, error) in
-                if result.isEmpty == false {
-                    do {
-                        let mnemonic = try LibraWalletManager.shared.getMnemonicFromKeychain(password: result, walletRootAddress: LibraWalletManager.shared.walletRootAddress ?? "")
-                        self?.chooseMapping(amount: amount, address: address, fee: fee, mnemonic: mnemonic)
-                    } catch {
-                        self?.detailView.makeToast(error.localizedDescription, position: .center)
-                    }
-                } else {
-                    self?.detailView.makeToast(error, position: .center)
-                }
-            }
-        } else {
-            let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
-                self?.chooseMapping(amount: amount, address: address, fee: fee, mnemonic: mnemonic)
-            }) { [weak self] (errorContent) in
-                guard errorContent != "Cancel" else {
-                    self?.detailView.toastView?.hide()
-                    return
-                }
-                self?.view.makeToast(errorContent, position: .center)
-            }
-            self.present(alert, animated: true, completion: nil)
-        }
+//        if LibraWalletManager.shared.walletBiometricLock == true {
+//            KeychainManager().getPasswordWithBiometric(walletAddress: LibraWalletManager.shared.walletRootAddress ?? "") { [weak self](result, error) in
+//                if result.isEmpty == false {
+//                    do {
+//                        let mnemonic = try LibraWalletManager.shared.getMnemonicFromKeychain(password: result, walletRootAddress: LibraWalletManager.shared.walletRootAddress ?? "")
+//                        self?.chooseMapping(amount: amount, address: address, fee: fee, mnemonic: mnemonic)
+//                    } catch {
+//                        self?.detailView.makeToast(error.localizedDescription, position: .center)
+//                    }
+//                } else {
+//                    self?.detailView.makeToast(error, position: .center)
+//                }
+//            }
+//        } else {
+//            let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
+//                self?.chooseMapping(amount: amount, address: address, fee: fee, mnemonic: mnemonic)
+//            }) { [weak self] (errorContent) in
+//                guard errorContent != "Cancel" else {
+//                    self?.detailView.toastView?.hide()
+//                    return
+//                }
+//                self?.view.makeToast(errorContent, position: .center)
+//            }
+//            self.present(alert, animated: true, completion: nil)
+//        }
     }
 }

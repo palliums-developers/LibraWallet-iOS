@@ -68,11 +68,11 @@ extension ScanSignTransactionViewController: ScanSignTransactionViewDelegate {
     func confirmLogin(password: String) {
         NSLog("Password:\(password)")
         if let raw = self.model {
-            if LibraWalletManager.shared.walletBiometricLock == true {
+//            if LibraWalletManager.shared.walletBiometricLock == true {
                 KeychainManager().getPasswordWithBiometric(walletAddress: "Violas_" + (raw.address ?? "")) { [weak self](result, error) in
                     if result.isEmpty == false {
                         do {
-                            let mnemonic = try LibraWalletManager.shared.getMnemonicFromKeychain(password: result, walletRootAddress: LibraWalletManager.shared.walletRootAddress ?? "")
+                            let mnemonic = try WalletManager.getMnemonicFromKeychain(password: result)
                             self?.detailView.toastView?.show()
                             self?.dataModel.signMessage(message: raw.message ?? "", mnemonic: mnemonic)
                         } catch {
@@ -83,20 +83,20 @@ extension ScanSignTransactionViewController: ScanSignTransactionViewDelegate {
                         self?.detailView.makeToast(error, position: .center)
                     }
                 }
-            } else {
-                let alert = passowordAlert(rootAddress: "Violas_" + (raw.address ?? ""), mnemonic: { [weak self] (mnemonic) in
-                    self?.detailView.toastView?.show()
-                    self?.dataModel.signMessage(message: raw.message ?? "", mnemonic: mnemonic)
-                }) { [weak self] (errorContent) in
-                    guard errorContent != "Cancel" else {
-                        self?.detailView.toastView?.hide()
-                        return
-                    }
-                    self?.view.makeToast(errorContent, position: .center)
-                }
-                self.present(alert, animated: true, completion: nil)
-
-            }
+//            } else {
+//                let alert = passowordAlert(rootAddress: "Violas_" + (raw.address ?? ""), mnemonic: { [weak self] (mnemonic) in
+//                    self?.detailView.toastView?.show()
+//                    self?.dataModel.signMessage(message: raw.message ?? "", mnemonic: mnemonic)
+//                }) { [weak self] (errorContent) in
+//                    guard errorContent != "Cancel" else {
+//                        self?.detailView.toastView?.hide()
+//                        return
+//                    }
+//                    self?.view.makeToast(errorContent, position: .center)
+//                }
+//                self.present(alert, animated: true, completion: nil)
+//
+//            }
         } else {
             #warning("报错待处理")
         }

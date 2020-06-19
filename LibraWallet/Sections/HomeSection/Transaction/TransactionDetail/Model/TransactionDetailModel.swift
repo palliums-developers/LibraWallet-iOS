@@ -30,10 +30,10 @@ class TransactionDetailModel: NSObject {
         
         tempArray.append(TransactionDetailDataModel.init(type: "CellAddress",
                                                          title: localLanguage(keyString: "wallet_transaction_detail_transfer_address_title"),
-                                                         value: transaction.receiver ?? "---"))
+                                                         value: transaction.sender ?? "---"))
         tempArray.append(TransactionDetailDataModel.init(type: "CellAddress",
                                                          title: localLanguage(keyString: "wallet_transaction_detail_receive_address_title"),
-                                                         value: transaction.sender ?? "---"))
+                                                         value: transaction.receiver ?? "---"))
         tempArray.append(TransactionDetailDataModel.init(type: "CellNormal",
                                                          title: localLanguage(keyString: "wallet_transaction_detail_version_title"),
                                                          value: "\(transaction.version ?? 0)"))

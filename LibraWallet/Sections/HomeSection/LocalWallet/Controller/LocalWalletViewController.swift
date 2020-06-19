@@ -37,7 +37,7 @@ class LocalWalletViewController: BaseViewController {
     deinit {
         print("WalletListController销毁了")
     }
-    typealias nextActionClosure = (ControllerAction, LibraWalletManager) -> Void
+    typealias nextActionClosure = (ControllerAction, Token) -> Void
     var actionClosure: nextActionClosure?
     //网络请求、数据模型
     lazy var dataModel: LocalWalletModel = {
@@ -90,7 +90,7 @@ extension LocalWalletViewController {
             }
             let type = dataDic.value(forKey: "type") as! String
             if type == "LoadLocalWallets" {
-                if let tempData = dataDic.value(forKey: "data") as? [[LibraWalletManager]] {
+                if let tempData = dataDic.value(forKey: "data") as? [[Token]] {
                     self?.tableViewManager.originModel = tempData
                     self?.tableViewManager.dataModel = tempData
 
@@ -116,10 +116,10 @@ extension LocalWalletViewController {
 
 }
 extension LocalWalletViewController: LocalWalletTableViewManagerDelegate {
-    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: LibraWalletManager) {
+    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: Token) {
         print(indexPath.row)
         if let action = self.actionClosure {
-            LibraWalletManager.shared.changeDefaultWallet(wallet: model)
+//            LibraWalletManager.shared.changeDefaultWallet(wallet: model)
             action(.update, model)
         }
         self.navigationController?.popViewController(animated: true)

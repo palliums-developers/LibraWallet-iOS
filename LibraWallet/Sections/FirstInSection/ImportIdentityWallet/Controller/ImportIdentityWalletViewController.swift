@@ -11,6 +11,7 @@ import Toast_Swift
 class ImportIdentityWalletViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        // 设置标题
         self.title = localLanguage(keyString: "wallet_first_in_import_identity_wallet_navigationbar_title")
         self.view.addSubview(detailView)
         self.initKVO()

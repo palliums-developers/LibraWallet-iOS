@@ -16,16 +16,10 @@ class WalletTransactionsViewController: BaseViewController {
         self.setNavigationWithoutShadowImage()
         // 设置标题
         self.title = localLanguage(keyString: "wallet_transactions_navigation_title")
-        // 加载子View
-//        self.view.addSubview(self.detailView)
         //设置空数据页面
         self.setEmptyView()
-//        // 初始化KVO
-//        self.initKVO()
         //设置默认页面（无数据、无网络）
         self.setPlaceholderView()
-//        //网络请求
-//        self.requestData()
     }
 //    override func viewWillLayoutSubviews() {
 //        super.viewWillLayoutSubviews()
@@ -54,7 +48,7 @@ class WalletTransactionsViewController: BaseViewController {
         transactionRequest(refresh: true)
     }
     override func hasContent() -> Bool {
-        switch self.wallet?.walletType {
+        switch self.wallet?.tokenType {
         case .Libra:
             if let addresses = self.tableViewManager.libraTransactions, addresses.isEmpty == false {
                 return true
@@ -101,9 +95,9 @@ class WalletTransactionsViewController: BaseViewController {
         return view
     }()
     var observer: NSKeyValueObservation?
-    var wallet: LibraWalletManager? {
+    var wallet: Token? {
         didSet {
-            self.tableViewManager.transactionType = wallet?.walletType
+            self.tableViewManager.transactionType = wallet?.tokenType
         }
     }
     
@@ -118,17 +112,18 @@ class WalletTransactionsViewController: BaseViewController {
         transactionRequest(refresh: false)
     }
     var firstIn: Bool = true
+    var requestType: String?
     func transactionRequest(refresh: Bool) {
         let requestState = refresh == true ? 0:1
-        switch self.wallet?.walletType {
+        switch self.wallet?.tokenType {
         case .Libra:
-            dataModel.getLibraTransactionHistory(address: (wallet?.walletAddress)!, page: dataOffset, pageSize: 10, requestStatus: requestState)
+            dataModel.getLibraTransactionHistory(address: (wallet?.tokenAddress)!, module: wallet?.tokenModule ?? "", requestType: requestType ?? "", page: dataOffset, pageSize: 10, requestStatus: requestState)
             break
         case .Violas:
-            dataModel.getViolasTransactions(address: (wallet?.walletAddress)!, page: dataOffset, pageSize: 10, contract: "", requestStatus: requestState)
+            dataModel.getViolasTransactions(address: (wallet?.tokenAddress)!, module: wallet?.tokenModule ?? "", requestType: requestType ?? "", page: dataOffset, pageSize: 10, requestStatus: requestState)
             break
         case .BTC:
-            dataModel.getBTCTransactionHistory(address: (wallet?.walletAddress)!, page: dataOffset + 1, pageSize: 10, requestStatus: requestState)
+            dataModel.getBTCTransactionHistory(address: (wallet?.tokenAddress)!, page: dataOffset + 1, pageSize: 10, requestStatus: requestState)
         default:
             break
         }
@@ -165,7 +160,7 @@ extension WalletTransactionsViewController {
                     } else {
                         self?.detailView.hideToastActivity()
                     }
-                    switch self?.wallet?.walletType {
+                    switch self?.wallet?.tokenType {
                     case .BTC:
                         self?.tableViewManager.btcTransactions?.removeAll()
                     case .Libra:
@@ -179,17 +174,20 @@ extension WalletTransactionsViewController {
                     self?.endLoading()
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .noMoreData).localizedDescription {
                     print(error.localizedDescription)
-                    if self?.detailView.tableView.mj_footer?.isRefreshing == true {
-                        self?.detailView.tableView.mj_footer?.endRefreshingWithNoMoreData()
-                    }
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
                     print(error.localizedDescription)
                     // 数据状态异常
                     self?.detailView.makeToast(LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription, position: .center)
                 }
                 self?.detailView.hideToastActivity()
-                self?.endLoading()
-    //            self.endLoading(animated: false, error: error, completion: nil)
+                if self?.detailView.tableView.mj_footer?.isRefreshing == true {
+                    self?.detailView.tableView.mj_footer?.endRefreshingWithNoMoreData()
+                }
+                if self?.detailView.tableView.mj_header?.isRefreshing == true {
+                    self?.detailView.tableView.mj_header?.endRefreshing()
+                }
+//                self?.endLoading(animated: true, error: nil, completion: nil)
+                self?.endLoading(animated: false, error: error, completion: nil)
                 return
             }
             let type = dataDic.value(forKey: "type") as! String
@@ -282,10 +280,8 @@ extension WalletTransactionsViewController {
     }
 }
 extension WalletTransactionsViewController: WalletTransactionsTableViewManagerDelegate {
-
-    
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, address: String) {
-        switch self.wallet?.walletType {
+        switch self.wallet?.tokenType {
         case .BTC:
             print("BTC")
             let vc = TransactionDetailWebViewController()

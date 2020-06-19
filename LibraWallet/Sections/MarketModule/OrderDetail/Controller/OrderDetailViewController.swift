@@ -51,7 +51,7 @@ class OrderDetailViewController: BaseViewController {
         startLoading ()
         
         self.detailView.makeToastActivity(.center)
-        guard let walletAddress = self.wallet?.walletAddress else {
+        guard let walletAddress = self.wallet?.tokenAddress else {
             return
         }
         dataModel.getOrderDetail(address: walletAddress,
@@ -87,7 +87,7 @@ class OrderDetailViewController: BaseViewController {
         return view
     }()
     @objc func refreshReceive() {
-        guard let walletAddress = self.wallet?.walletAddress else {
+        guard let walletAddress = self.wallet?.tokenAddress else {
             return
         }
         dataOffset = 1
@@ -98,7 +98,7 @@ class OrderDetailViewController: BaseViewController {
                                  requestStatus: 0)
     }
     @objc func getMoreReceive() {
-        guard let walletAddress = self.wallet?.walletAddress else {
+        guard let walletAddress = self.wallet?.tokenAddress else {
             return
         }
         dataOffset += 1
@@ -115,7 +115,7 @@ class OrderDetailViewController: BaseViewController {
             self.tableViewManager.priceModel = headerData
         }
     }
-    var wallet: LibraWalletManager?
+    var wallet: Token?
 }
 extension OrderDetailViewController: OrderDetailTableViewManagerDelegate {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, address: String) {

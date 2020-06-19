@@ -12,6 +12,7 @@ class CreateIdentityWalletViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationWhiteMode()
+        // 设置标题
         self.title = localLanguage(keyString: "wallet_first_in_create_identity_wallet_navigationbar_title")
         // 设置背景色
         self.view.addSubview(detailView)

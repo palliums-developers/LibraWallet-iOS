@@ -108,7 +108,7 @@ class TransactionDetailView: UIView {
         label.textAlignment = NSTextAlignment.center
         label.textColor = UIColor.init(hex: "999999")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = "2020-06-05 17:52:04"
+        label.text = "---"
         return label
     }()
     lazy var borderLayer: CAShapeLayer = {
@@ -169,6 +169,7 @@ class TransactionDetailView: UIView {
             guard let model = violasTransaction else {
                 return
             }
+            transactionDateLabel.text = timestampToDateString(timestamp: model.expiration_time ?? 0, dateFormat: "yyyy-MM-dd HH:mm:ss")
             switch model.type {
             case 0:
                 print("123")
@@ -207,5 +208,132 @@ class TransactionDetailView: UIView {
             }
         }
     }
+    var libraModel: LibraDataModel? {
+        didSet {
+            guard let model = libraModel else {
+                return
+            }
+            transactionDateLabel.text = timestampToDateString(timestamp: model.expiration_time ?? 0, dateFormat: "yyyy-MM-dd HH:mm:ss")
+            switch model.type {
+              case 0:
+                  // ADD_CURRENCY_TO_ACCOUNT
+                  print("0")
+              case 1:
+                  // ADD_VALIDATOR
+                  print("1")
+              case 2:
+                  // BURN
+                  print("2")
+              case 3:
+                  // BURN_TXN_FEES
+                  print("3")
+              case 4:
+                  // CANCEL_BURN
+                  print("4")
+              case 5:
+                  // CREATE_CHILD_VASP_ACCOUNT
+                  print("5")
+              case 6:
+                  // CREATE_DESIGNATED_DEALER
+                  print("6")
+              case 7:
+                  // CREATE_PARENT_VASP_ACCOUNT
+                  print("7")
+              case 8:
+                  // CREATE_VALIDATOR_ACCOUNT
+                  print("8")
+              case 9:
+                  // EMPTY_SCRIPT
+                  print("9")
+              case 10:
+                  // FREEZE_ACCOUNT
+                  print("10")
+              case 11:
+                  // MINT_LBR
+                  print("11")
+              case 12:
+                  // MINT_LBR_TO_ADDRESS
+                  print("12")
+              case 13:
+                  // MINT
+                  print("13")
+              case 14:
+                  // MODIFY_PUBLISHING_OPTION
+                  print("14")
+              case 15:
+                  // PEER_TO_PEER_WITH_METADATA
+                  print("15")
+              case 16:
+                  // PREBURN
+                  print("16")
+              case 17:
+                  // PUBLISH_SHARED_ED25519_PUBLIC_KEY
+                  print("17")
+              case 18:
+                  // REGISTER_PREBURNER
+                  print("18")
+              case 19:
+                  // REGISTER_VALIDATOR
+                  print("19")
+              case 20:
+                  // REMOVE_ASSOCIATION_PRIVILEGE
+                  print("20")
+              case 21:
+                  // REMOVE_VALIDATOR
+                  print("21")
+              case 22:
+                  //ROTATE_AUTHENTICATION_KEY
+                  print("22")
+              case 23:
+                  // ROTATE_AUTHENTICATION_KEY_WITH_NONCE
+                  print("23")
+              case 24:
+                  // ROTATE_BASE_URL
+                  print("24")
+              case 25:
+                  // ROTATE_COMPLIANCE_PUBLIC_KEY
+                  print("25")
+              case 26:
+                  // ROTATE_CONSENSUS_PUBKEY
+                  print("26")
+              case 27:
+                  // ROTATE_SHARED_ED25519_PUBLIC_KEY
+                  print("27")
+              case 28:
+                  // ROTATE_VALIDATOR_CONFIG
+                  print("28")
+              case 29:
+                  // TIERED_MINT
+                  print("29")
+              case 30:
+                  // UNFREEZE_ACCOUNT
+                  print("30")
+              case 31:
+                  // UNMINT_LBR
+                  print("31")
+              case 32:
+                  // UPDATE_EXCHANGE_RATE
+                  print("32")
+              case 33:
+                  // UPDATE_LIBRA_VERSION
+                  print("33")
+              case 34:
+                  // UPDATE_MINTING_ABILITY
+                  print("34")
+              case 97:
+                  // CHANGE_SET
+                  print("97")
+              case 98:
+                  // BLOCK_METADATA
+                  print("98")
+              case 100:
+                  // UNKNOWN
+                  print("100")
+              default:
+                  print("others")
+              }
+        }
+    }
+
 }
 

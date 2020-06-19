@@ -51,8 +51,7 @@ class ScanLoginViewController: UIViewController {
         let model = ScanLoginModel.init()
         return model
     }()
-    var wallet: LibraWalletManager?
-    var vtokenModel: ViolasTokenModel?
+    var wallet: Token?
     /// 数据监听KVO
     var observer: NSKeyValueObservation?
     var sessionID: String?

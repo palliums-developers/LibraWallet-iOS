@@ -49,7 +49,7 @@ class ScanSendRawTransactionViewController: BaseViewController {
         let model = ScanSendRawTransactionModel.init()
         return model
     }()
-    var wallet: LibraWalletManager?
+    var wallet: Token?
     /// 数据监听KVO
     var observer: NSKeyValueObservation?
     var transactionHex: String? {

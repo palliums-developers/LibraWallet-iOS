@@ -34,14 +34,14 @@ class OrderDoneViewController: UIViewController {
         return view
     }()
     @objc func refreshReceive() {
-        guard let walletAddress = self.wallet?.walletAddress else {
+        guard let walletAddress = self.wallet?.tokenAddress else {
             return
         }
         detailView.tableView.mj_footer?.resetNoMoreData()
         dataModel.getAllDoneOrder(address: walletAddress, version: "")
     }
     @objc func getMoreReceive() {
-        guard let walletAddress = self.wallet?.walletAddress else {
+        guard let walletAddress = self.wallet?.tokenAddress else {
             return
         }
         if let version = self.tableViewManager.dataModel?.last?.version {
@@ -52,7 +52,7 @@ class OrderDoneViewController: UIViewController {
     }
     var myContext = 0
     var firstIn: Bool = true
-    var wallet: LibraWalletManager?
+    var wallet: Token?
 }
 extension OrderDoneViewController: OrderDoneTableViewManagerDelegate {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: MarketOrderDataModel) {
@@ -151,7 +151,7 @@ extension OrderDoneViewController: JXSegmentedListContainerViewListDelegate {
         guard firstIn == true else {
             return
         }
-        guard let walletAddress = self.wallet?.walletAddress else {
+        guard let walletAddress = self.wallet?.tokenAddress else {
             return
         }
         self.detailView.makeToastActivity(.center)

@@ -119,15 +119,17 @@ class WalletTransactionsTableViewCell: UITableViewCell {
             amountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.transaction_value ?? 0)),
                                                       scale: 8,
                                                       unit: 100000000)
-            addressLabel.text = model.vin?.first?.addresses?.first
             if model.transaction_type == 0 {
                 // 转账
-                stateLabel.textColor = UIColor.init(hex: "E54040")
-                stateLabel.text = localLanguage(keyString: "wallet_transactions_transfer_title")
+                amountLabel.textColor = UIColor.init(hex: "13B788")
+                transactionTypeImageView.image = UIImage.init(named: "transfer_sign")
+                addressLabel.text = model.vin?.first?.addresses?.first
             } else {
                 // 收款
-                stateLabel.textColor = UIColor.init(hex: "13B788")
-                stateLabel.text = localLanguage(keyString: "wallet_transactions_receive_title")
+                amountLabel.textColor = UIColor.init(hex: "13B788")
+                transactionTypeImageView.image = UIImage.init(named: "transfer_sign")
+                addressLabel.text = model.vout?.first?.addresses?.first
+
             }
         }
     }
@@ -140,36 +142,64 @@ class WalletTransactionsTableViewCell: UITableViewCell {
             amountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.amount ?? 0)),
                                                       scale: 4,
                                                       unit: 1000000)
-            if model.type == 1 {
-                // 平台币铸币
+            switch model.type {
+            case 0:
+                //ADD_CURRENCY_TO_ACCOUNT
+                print("0")
+            case 1:
+                //ADD_VALIDATOR
+                print("1")
+            case 2:
+                //BURN
+                print("2")
+            case 3:
+                //BURN_TXN_FEES
+                print("3")
+            case 4:
+                //CANCEL_BURN
+                print("4")
+            case 5:
+                //CREATE_CHILD_VASP_ACCOUNT
+                print("5")
+            case 6:
+                //CREATE_DESIGNATED_DEALER
+                print("6")
+            case 7:
+                //CREATE_PARENT_VASP_ACCOUNT
+                print("7")
+            case 8:
+                //CREATE_VALIDATOR_ACCOUNT
+                print("8")
+            case 9:
+                //EMPTY_SCRIPT
+                print("9")
+            case 10:
+                //FREEZE_ACCOUNT
+                print("10")
+            case 11:
+                // MINT_LBR
+                print("11")
                 amountLabel.textColor = UIColor.init(hex: "FB8F0B")
                 transactionTypeImageView.image = UIImage.init(named: "mint_sign")
                 addressLabel.text = model.sender
-            } else if model.type == 2 {
-                // vtoken交易
-                if model.transaction_type == 0 {
-                    // 转账
-                    amountLabel.textColor = UIColor.init(hex: "13B788")
-                    transactionTypeImageView.image = UIImage.init(named: "transfer_sign")
-                    addressLabel.text = model.receiver
-                } else {
-                    // 收款
-                    amountLabel.textColor = UIColor.init(hex: "E54040")
-                    transactionTypeImageView.image = UIImage.init(named: "receive_sign")
-                    addressLabel.text = model.sender
-                }
-            }  else if model.type == 7 {
-                // 稳定币铸币
+            case 12:
+                //MINT_LBR_TO_ADDRESS
+                print("12")
                 amountLabel.textColor = UIColor.init(hex: "FB8F0B")
                 transactionTypeImageView.image = UIImage.init(named: "mint_sign")
                 addressLabel.text = model.sender
-            } else if model.type == 9 {
-                // publish
+            case 13:
+                //MINT
+                print("13")
                 amountLabel.textColor = UIColor.init(hex: "FB8F0B")
-                transactionTypeImageView.image = UIImage.init(named: "publish_sign")
+                transactionTypeImageView.image = UIImage.init(named: "mint_sign")
                 addressLabel.text = model.sender
-            } else if model.type == 12 {
-                // 稳定币交易
+            case 14:
+                //MODIFY_PUBLISHING_OPTION
+                print("14")
+            case 15:
+                //PEER_TO_PEER_WITH_METADATA
+                print("15")
                 if model.transaction_type == 0 {
                     // 转账
                     amountLabel.textColor = UIColor.init(hex: "13B788")
@@ -181,21 +211,74 @@ class WalletTransactionsTableViewCell: UITableViewCell {
                     transactionTypeImageView.image = UIImage.init(named: "receive_sign")
                     addressLabel.text = model.sender
                 }
-            } else if model.type == 13 {
-                // 交易所交易
-                #warning("交易状态待整理")
-                if model.transaction_type == 0 {
-                    // 转账
-                    amountLabel.textColor = UIColor.init(hex: "13B788")
-                    transactionTypeImageView.image = UIImage.init(named: "transfer_sign")
-                    addressLabel.text = model.receiver
-                } else {
-                    // 收款
-                    amountLabel.textColor = UIColor.init(hex: "E54040")
-                    transactionTypeImageView.image = UIImage.init(named: "receive_sign")
-                    addressLabel.text = model.sender
-                }
-            } else {
+            case 16:
+                //PREBURN
+                print("16")
+            case 17:
+                //PUBLISH_SHARED_ED25519_PUBLIC_KEY
+                print("17")
+            case 18:
+                //REGISTER_PREBURNER
+                print("18")
+            case 19:
+                //REGISTER_VALIDATOR
+                print("19")
+            case 20:
+                //REMOVE_ASSOCIATION_PRIVILEGE
+                print("20")
+            case 21:
+                //REMOVE_VALIDATOR
+                print("21")
+            case 22:
+                //ROTATE_AUTHENTICATION_KEY
+                print("22")
+            case 23:
+                //ROTATE_AUTHENTICATION_KEY_WITH_NONCE
+                print("23")
+            case 24:
+                //ROTATE_BASE_URL
+                print("24")
+            case 25:
+                //ROTATE_COMPLIANCE_PUBLIC_KEY
+                print("25")
+            case 26:
+                //ROTATE_CONSENSUS_PUBKEY
+                print("26")
+            case 27:
+                //ROTATE_SHARED_ED25519_PUBLIC_KEY
+                print("27")
+            case 28:
+                //ROTATE_VALIDATOR_CONFIG
+                print("28")
+            case 29:
+                //TIERED_MINT
+                print("29")
+            case 30:
+                //UNFREEZE_ACCOUNT
+                print("30")
+            case 31:
+                //UNMINT_LBR
+                print("31")
+            case 32:
+                //UPDATE_EXCHANGE_RATE
+                print("32")
+            case 33:
+                //UPDATE_LIBRA_VERSION
+                print("33")
+            case 34:
+                //UPDATE_MINTING_ABILITY
+                print("34")
+            case 97:
+                //CHANGE_SET
+                print("97")
+            case 98:
+                //BLOCK_METADATA
+                print("98")
+            case 100:
+                //UNKNOWN
+                print("100")
+            default:
+                print("others")
             }
         }
     }
@@ -208,18 +291,300 @@ class WalletTransactionsTableViewCell: UITableViewCell {
             amountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.amount ?? 0)),
                                           scale: 4,
                                           unit: 1000000)
-            if model.transaction_type == 0 {
-                // 转账
-                stateLabel.textColor = UIColor.init(hex: "E54040")
-                stateLabel.text = localLanguage(keyString: "wallet_transactions_transfer_title")
-                addressLabel.text = model.receiver
-            } else {
-                // 收款
-                stateLabel.textColor = UIColor.init(hex: "13B788")
-                stateLabel.text = localLanguage(keyString: "wallet_transactions_receive_title")
-                addressLabel.text = model.sender
-            }
+            switch model.type {
+              case 0:
+                  //ADD_CURRENCY_TO_ACCOUNT
+                  print("0")
+              case 1:
+                  //ADD_VALIDATOR
+                  print("1")
+              case 2:
+                  //BURN
+                  print("2")
+              case 3:
+                  //BURN_TXN_FEES
+                  print("3")
+              case 4:
+                  //CANCEL_BURN
+                  print("4")
+              case 5:
+                  //CREATE_CHILD_VASP_ACCOUNT
+                  print("5")
+              case 6:
+                  //CREATE_DESIGNATED_DEALER
+                  print("6")
+              case 7:
+                  //CREATE_PARENT_VASP_ACCOUNT
+                  print("7")
+              case 8:
+                  //CREATE_VALIDATOR_ACCOUNT
+                  print("8")
+              case 9:
+                  //EMPTY_SCRIPT
+                  print("9")
+              case 10:
+                  //FREEZE_ACCOUNT
+                  print("10")
+              case 11:
+                  // MINT_LBR
+                  print("11")
+                  amountLabel.textColor = UIColor.init(hex: "FB8F0B")
+                  transactionTypeImageView.image = UIImage.init(named: "mint_sign")
+                  addressLabel.text = model.sender
+              case 12:
+                  //MINT_LBR_TO_ADDRESS
+                  print("12")
+                  amountLabel.textColor = UIColor.init(hex: "FB8F0B")
+                  transactionTypeImageView.image = UIImage.init(named: "mint_sign")
+                  addressLabel.text = model.sender
+              case 13:
+                  //MINT
+                  print("13")
+                  amountLabel.textColor = UIColor.init(hex: "FB8F0B")
+                  transactionTypeImageView.image = UIImage.init(named: "mint_sign")
+                  addressLabel.text = model.sender
+              case 14:
+                  //MODIFY_PUBLISHING_OPTION
+                  print("14")
+              case 15:
+                  //PEER_TO_PEER_WITH_METADATA
+                  print("15")
+                  if model.transaction_type == 0 {
+                      // 转账
+                      amountLabel.textColor = UIColor.init(hex: "13B788")
+                      transactionTypeImageView.image = UIImage.init(named: "transfer_sign")
+                      addressLabel.text = model.receiver
+                  } else {
+                      // 收款
+                      amountLabel.textColor = UIColor.init(hex: "E54040")
+                      transactionTypeImageView.image = UIImage.init(named: "receive_sign")
+                      addressLabel.text = model.sender
+                  }
+              case 16:
+                  //PREBURN
+                  print("16")
+              case 17:
+                  //PUBLISH_SHARED_ED25519_PUBLIC_KEY
+                  print("17")
+              case 18:
+                  //REGISTER_PREBURNER
+                  print("18")
+              case 19:
+                  //REGISTER_VALIDATOR
+                  print("19")
+              case 20:
+                  //REMOVE_ASSOCIATION_PRIVILEGE
+                  print("20")
+              case 21:
+                  //REMOVE_VALIDATOR
+                  print("21")
+              case 22:
+                  //ROTATE_AUTHENTICATION_KEY
+                  print("22")
+              case 23:
+                  //ROTATE_AUTHENTICATION_KEY_WITH_NONCE
+                  print("23")
+              case 24:
+                  //ROTATE_BASE_URL
+                  print("24")
+              case 25:
+                  //ROTATE_COMPLIANCE_PUBLIC_KEY
+                  print("25")
+              case 26:
+                  //ROTATE_CONSENSUS_PUBKEY
+                  print("26")
+              case 27:
+                  //ROTATE_SHARED_ED25519_PUBLIC_KEY
+                  print("27")
+              case 28:
+                  //ROTATE_VALIDATOR_CONFIG
+                  print("28")
+              case 29:
+                  //TIERED_MINT
+                  print("29")
+              case 30:
+                  //UNFREEZE_ACCOUNT
+                  print("30")
+              case 31:
+                  //UNMINT_LBR
+                  print("31")
+              case 32:
+                  //UPDATE_EXCHANGE_RATE
+                  print("32")
+              case 33:
+                  //UPDATE_LIBRA_VERSION
+                  print("33")
+              case 34:
+                  //UPDATE_MINTING_ABILITY
+                  print("34")
+              case 97:
+                  //CHANGE_SET
+                  print("97")
+              case 98:
+                  //BLOCK_METADATA
+                  print("98")
+              case 100:
+                  //UNKNOWN
+                  print("100")
+              default:
+                  print("others")
+              }
         }
     }
-    
 }
+//ADD_CURRENCY_TO_ACCOUNT = 0
+//ADD_VALIDATOR = 1
+//BURN = 2
+//BURN_TXN_FEES = 3
+//CANCEL_BURN = 4
+//CREATE_CHILD_VASP_ACCOUNT = 5
+//CREATE_DESIGNATED_DEALER = 6
+//CREATE_PARENT_VASP_ACCOUNT = 7
+//CREATE_VALIDATOR_ACCOUNT = 8
+//EMPTY_SCRIPT = 9
+//FREEZE_ACCOUNT = 10
+//MINT_LBR = 11
+//MINT_LBR_TO_ADDRESS = 12
+//MINT = 13
+//MODIFY_PUBLISHING_OPTION = 14
+//PEER_TO_PEER_WITH_METADATA = 15
+//PREBURN = 16
+//PUBLISH_SHARED_ED25519_PUBLIC_KEY = 17
+//REGISTER_PREBURNER = 18
+//REGISTER_VALIDATOR = 19
+//REMOVE_ASSOCIATION_PRIVILEGE = 20
+//REMOVE_VALIDATOR = 21
+//ROTATE_AUTHENTICATION_KEY = 22
+//ROTATE_AUTHENTICATION_KEY_WITH_NONCE = 23
+//ROTATE_BASE_URL = 24
+//ROTATE_COMPLIANCE_PUBLIC_KEY = 25
+//ROTATE_CONSENSUS_PUBKEY = 26
+//ROTATE_SHARED_ED25519_PUBLIC_KEY = 27
+//ROTATE_VALIDATOR_CONFIG = 28
+//TIERED_MINT = 29
+//UNFREEZE_ACCOUNT = 30
+//UNMINT_LBR = 31
+//UPDATE_EXCHANGE_RATE = 32
+//UPDATE_LIBRA_VERSION = 33
+//UPDATE_MINTING_ABILITY = 34
+//CHANGE_SET = 97
+//BLOCK_METADATA = 98
+//UNKNOWN = 100
+//switch model.type {
+//case 0:
+//    //ADD_CURRENCY_TO_ACCOUNT
+//    print("0")
+//case 1:
+//    //ADD_VALIDATOR
+//    print("1")
+//case 2:
+//    //BURN
+//    print("2")
+//case 3:
+//    //BURN_TXN_FEES
+//    print("3")
+//case 4:
+//    //CANCEL_BURN
+//    print("4")
+//case 5:
+//    //CREATE_CHILD_VASP_ACCOUNT
+//    print("5")
+//case 6:
+//    //CREATE_DESIGNATED_DEALER
+//    print("6")
+//case 7:
+//    //CREATE_PARENT_VASP_ACCOUNT
+//    print("7")
+//case 8:
+//    //CREATE_VALIDATOR_ACCOUNT
+//    print("8")
+//case 9:
+//    //EMPTY_SCRIPT
+//    print("9")
+//case 10:
+//    //FREEZE_ACCOUNT
+//    print("10")
+//case 11:
+//    // MINT_LBR
+//    print("11")
+//case 12:
+//    //MINT_LBR_TO_ADDRESS
+//    print("12")
+//case 13:
+//    //MINT
+//    print("13")
+//case 14:
+//    //MODIFY_PUBLISHING_OPTION
+//    print("14")
+//case 15:
+//    //PEER_TO_PEER_WITH_METADATA
+//    print("15")
+//case 16:
+//    //PREBURN
+//    print("16")
+//case 17:
+//    //PUBLISH_SHARED_ED25519_PUBLIC_KEY
+//    print("17")
+//case 18:
+//    //REGISTER_PREBURNER
+//    print("18")
+//case 19:
+//    //REGISTER_VALIDATOR
+//    print("19")
+//case 20:
+//    //REMOVE_ASSOCIATION_PRIVILEGE
+//    print("20")
+//case 21:
+//    //REMOVE_VALIDATOR
+//    print("21")
+//case 22:
+//    //ROTATE_AUTHENTICATION_KEY
+//    print("22")
+//case 23:
+//    //ROTATE_AUTHENTICATION_KEY_WITH_NONCE
+//    print("23")
+//case 24:
+//    //ROTATE_BASE_URL
+//    print("24")
+//case 25:
+//    //ROTATE_COMPLIANCE_PUBLIC_KEY
+//    print("25")
+//case 26:
+//    //ROTATE_CONSENSUS_PUBKEY
+//    print("26")
+//case 27:
+//    //ROTATE_SHARED_ED25519_PUBLIC_KEY
+//    print("27")
+//case 28:
+//    //ROTATE_VALIDATOR_CONFIG
+//    print("28")
+//case 29:
+//    //TIERED_MINT
+//    print("29")
+//case 30:
+//    //UNFREEZE_ACCOUNT
+//    print("30")
+//case 31:
+//    //UNMINT_LBR
+//    print("31")
+//case 32:
+//    //UPDATE_EXCHANGE_RATE
+//    print("32")
+//case 33:
+//    //UPDATE_LIBRA_VERSION
+//    print("33")
+//case 34:
+//    //UPDATE_MINTING_ABILITY
+//    print("34")
+//case 97:
+//    //CHANGE_SET
+//    print("97")
+//case 98:
+//    //BLOCK_METADATA
+//    print("98")
+//case 100:
+//    //UNKNOWN
+//    print("100")
+//default:
+//    print("others")
+//}

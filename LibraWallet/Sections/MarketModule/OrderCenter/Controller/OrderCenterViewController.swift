@@ -102,7 +102,7 @@ class OrderCenterViewController: BaseViewController {
         con.initKVO()
         return con
     }()
-    var wallet: LibraWalletManager?
+    var wallet: Token?
 }
 extension OrderCenterViewController: JXSegmentedListContainerViewDataSource {
     func numberOfLists(in listContainerView: JXSegmentedListContainerView) -> Int {

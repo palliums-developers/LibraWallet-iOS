@@ -136,13 +136,13 @@ class WalletReceiveView: UIView {
         // 阴影的透明度，默认为0，不设置则不会显示阴影****
         self.layer.shadowOpacity = 0.3
     }
-    var wallet: LibraWalletManager? {
+    var wallet: Token? {
         didSet {
             guard let walletModel = wallet else {
                 return
             }
-            var tempAddress = walletModel.walletAddress ?? ""
-            switch wallet?.walletType {
+            var tempAddress = walletModel.tokenAddress
+            switch wallet?.tokenType {
             case .BTC:
                 tempAddress = "bitcoin:" + tempAddress
                 break
@@ -160,8 +160,8 @@ class WalletReceiveView: UIView {
                 break
             }
             qrcodeImageView.image = QRCodeGenerator.generate(from: tempAddress)
-            addressRemarksLabel.text = walletModel.walletName
-            addressLabel.text = walletModel.walletAddress ?? ""
+            addressRemarksLabel.text = walletModel.tokenName
+            addressLabel.text = walletModel.tokenAddress ?? ""
         }
     }
     var violasTokenName: String?

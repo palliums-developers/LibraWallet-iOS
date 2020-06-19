@@ -41,7 +41,7 @@ class WalletListController: BaseViewController {
     deinit {
         print("WalletListController销毁了")
     }
-    typealias nextActionClosure = (ControllerAction, LibraWalletManager) -> Void
+    typealias nextActionClosure = (ControllerAction, Token) -> Void
     var actionClosure: nextActionClosure?
     lazy var viewModel: WalletListViewModel = {
         let viewModel = WalletListViewModel.init()
@@ -50,7 +50,7 @@ class WalletListController: BaseViewController {
     }()
 }
 extension WalletListController: WalletListTableViewManagerDelegate {
-    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: LibraWalletManager) {
+    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: Token) {
         print(indexPath.row)
         
 //        // 去除旧的选中

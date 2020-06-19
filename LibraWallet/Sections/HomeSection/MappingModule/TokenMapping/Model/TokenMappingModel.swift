@@ -343,7 +343,8 @@ extension TokenMappingModel {
                                                                                 fee: fee,
                                                                                 mnemonic: mnemonic,
                                                                                 sequenceNumber: Int(self.sequenceNumber!),
-                                                                                vlibraReceiveAddress: receiveAddress)
+                                                                                vlibraReceiveAddress: receiveAddress,
+                                                                                module: "")
                 self.makeViolasTransaction(signature: signature)
             } catch {
                 print(error.localizedDescription)
@@ -427,7 +428,7 @@ extension TokenMappingModel {
 }
 //MARK: - VLibra
 extension TokenMappingModel {
-    func sendVLibraTransaction(sendAddress: String, receiveAddress: String, amount: Double, fee: Double, mnemonic: [String], contact: String) {
+    func sendVLibraTransaction(sendAddress: String, receiveAddress: String, amount: Double, fee: Double, mnemonic: [String], contact: String, module: String) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
         queue.async {
@@ -443,7 +444,8 @@ extension TokenMappingModel {
                                                                              mnemonic: mnemonic,
                                                                              contact: contact,
                                                                              sequenceNumber: Int(self.sequenceNumber!),
-                                                                             libraReceiveAddress: receiveAddress)
+                                                                             libraReceiveAddress: receiveAddress,
+                                                                             module: module)
                 self.makeViolasTransaction(signature: signature, type: "SendVLibraTransaction")
             } catch {
                 print(error.localizedDescription)
@@ -545,7 +547,7 @@ extension TokenMappingModel {
 }
 //MARK: - VBTC
 extension TokenMappingModel {
-    func sendVBTCTransaction(sendAddress: String, receiveAddress: String, amount: Double, fee: Double, mnemonic: [String], contact: String) {
+    func sendVBTCTransaction(sendAddress: String, receiveAddress: String, amount: Double, fee: Double, mnemonic: [String], contact: String, module: String) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
         queue.async {
@@ -560,7 +562,8 @@ extension TokenMappingModel {
                                                                              mnemonic: mnemonic,
                                                                              contact: contact,
                                                                              sequenceNumber: Int(self.sequenceNumber!),
-                                                                             btcAddress: receiveAddress)
+                                                                             btcAddress: receiveAddress,
+                                                                             module: module)
                 self.makeViolasTransaction(signature: signature, type: "SendVBTCTransaction")
             } catch {
                 print(error.localizedDescription)
@@ -583,10 +586,10 @@ extension TokenMappingModel {
         queue.async {
             semaphore.wait()
             do {
-                let signature = try ViolasManager.getRegisterTokenTransactionHex(mnemonic: mnemonic,
-                                                                                  contact: contact,
-                                                                                  sequenceNumber: Int(self.sequenceNumber!))
-                self.makeViolasTransaction(signature: signature, type: "SendPublishTransaction")
+//                let signature = try ViolasManager.getRegisterTokenTransactionHex(mnemonic: mnemonic,
+//                                                                                  contact: contact,
+//                                                                                  sequenceNumber: Int(self.sequenceNumber!))
+//                self.makeViolasTransaction(signature: signature, type: "SendPublishTransaction")
             } catch {
                 print(error.localizedDescription)
                 DispatchQueue.main.async(execute: {

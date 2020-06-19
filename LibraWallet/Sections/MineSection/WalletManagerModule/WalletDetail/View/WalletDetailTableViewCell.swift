@@ -99,7 +99,7 @@ class WalletDetailTableViewCell: UITableViewCell {
         label.backgroundColor = UIColor.init(hex: "DEDFE0")
         return label
     }()
-    var walletModel: LibraWalletManager? {
+    var walletModel: WalletManager? {
         didSet {
             if walletModel?.walletBiometricLock == true {
                 switchButton.setOn(true, animated: true)

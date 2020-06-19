@@ -308,7 +308,7 @@ class BTCTransferView: UIView {
             }
             #warning("待处理")
             // 金额大于我的金额
-            guard (amount + fee) <= (Double(wallet?.walletBalance ?? 0) / 100000000.0) else {
+            guard (amount + fee) <= (Double(wallet?.tokenBalance ?? 0) / 100000000.0) else {
                self.makeToast(LibraWalletError.WalletTransfer(reason: .amountOverload).localizedDescription,
                               position: .center)
                return
@@ -363,12 +363,12 @@ class BTCTransferView: UIView {
         let fee8 = NSString.init(format: "%.8f", fee)
         self.transferFeeLabel.text = "\(fee8) BTC"
     }
-    var wallet: LibraWalletManager? {
+    var wallet: Token? {
         didSet {
             guard let model = wallet else {
                 return
             }
-            let balance = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.walletBalance ?? 0)),
+            let balance = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.tokenBalance ?? 0)),
                                                  scale: 8,
                                                  unit: 100000000)
             walletBalanceLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + balance + " BTC"

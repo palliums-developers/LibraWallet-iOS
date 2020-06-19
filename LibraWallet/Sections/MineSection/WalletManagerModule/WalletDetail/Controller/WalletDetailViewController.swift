@@ -37,7 +37,7 @@ class WalletDetailViewController: BaseViewController {
         self.tableViewManager.dataModel = dataModel.loadLocalConfig()
         self.detailView.tableView.reloadData()
     }
-    typealias nextActionClosure = (ControllerAction, LibraWalletManager?) -> Void
+    typealias nextActionClosure = (ControllerAction, Token?) -> Void
     var actionClosure: nextActionClosure?
     //网络请求、数据模型
     lazy var dataModel: WalletDetailModel = {
@@ -59,7 +59,7 @@ class WalletDetailViewController: BaseViewController {
         view.delegate = self
         return view
     }()
-    var walletModel: LibraWalletManager?
+    var walletModel: Token?
     var canDelete: Bool?
 }
 extension WalletDetailViewController: WalletDetailTableViewManagerDelegate {
@@ -81,47 +81,47 @@ extension WalletDetailViewController: WalletDetailTableViewManagerDelegate {
 //            }
 //            self.navigationController?.pushViewController(vc, animated: true)
         } else {
-            if LibraWalletManager.shared.walletBiometricLock == true {
-                KeychainManager().getPasswordWithBiometric(walletAddress: LibraWalletManager.shared.walletRootAddress ?? "") { [weak self](result, error) in
-                    if result.isEmpty == false {
-                        do {
-                            let mnemonic = try LibraWalletManager.shared.getMnemonicFromKeychain(password: result, walletRootAddress: LibraWalletManager.shared.walletRootAddress ?? "")
-                            if self?.walletModel?.walletBackupState == true {
-                                let vc = BackupMnemonicController()
-                                vc.JustShow = true
-                                vc.tempWallet = CreateWalletModel.init(password: "", mnemonic: mnemonic, wallet: self?.walletModel)
-                                self?.navigationController?.pushViewController(vc, animated: true)
-                            } else {
-                                let vc = BackupWarningViewController()
-                                vc.FirstInApp = false
-                                vc.tempWallet = CreateWalletModel.init(password: "", mnemonic: mnemonic, wallet: self?.walletModel)
-                                self?.navigationController?.pushViewController(vc, animated: true)
-                            }
-                        } catch {
-                            self?.detailView.makeToast(error.localizedDescription, position: .center)
-                        }
-                    } else {
-                        self?.detailView.makeToast(error, position: .center)
-                    }
-                }
-            } else {
-                let alert = passowordAlert(rootAddress: (self.walletModel?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
-                    if self?.walletModel?.walletBackupState == true {
-                        let vc = BackupMnemonicController()
-                        vc.JustShow = true
-                        vc.tempWallet = CreateWalletModel.init(password: "", mnemonic: mnemonic, wallet: self?.walletModel)
-                        self?.navigationController?.pushViewController(vc, animated: true)
-                    } else {
-                        let vc = BackupWarningViewController()
-                        vc.FirstInApp = false
-                        vc.tempWallet = CreateWalletModel.init(password: "", mnemonic: mnemonic, wallet: self?.walletModel)
-                        self?.navigationController?.pushViewController(vc, animated: true)
-                    }
-                }) { [weak self] (errorContent) in
-                    self?.view.makeToast(errorContent, position: .center)
-                }
-                self.present(alert, animated: true, completion: nil)
-            }
+//            if LibraWalletManager.shared.walletBiometricLock == true {
+//                KeychainManager().getPasswordWithBiometric(walletAddress: LibraWalletManager.shared.walletRootAddress ?? "") { [weak self](result, error) in
+//                    if result.isEmpty == false {
+//                        do {
+//                            let mnemonic = try LibraWalletManager.shared.getMnemonicFromKeychain(password: result, walletRootAddress: LibraWalletManager.shared.walletRootAddress ?? "")
+//                            if self?.walletModel?.walletBackupState == true {
+//                                let vc = BackupMnemonicController()
+//                                vc.JustShow = true
+//                                vc.tempWallet = CreateWalletModel.init(password: "", mnemonic: mnemonic, wallet: self?.walletModel)
+//                                self?.navigationController?.pushViewController(vc, animated: true)
+//                            } else {
+//                                let vc = BackupWarningViewController()
+//                                vc.FirstInApp = false
+//                                vc.tempWallet = CreateWalletModel.init(password: "", mnemonic: mnemonic, wallet: self?.walletModel)
+//                                self?.navigationController?.pushViewController(vc, animated: true)
+//                            }
+//                        } catch {
+//                            self?.detailView.makeToast(error.localizedDescription, position: .center)
+//                        }
+//                    } else {
+//                        self?.detailView.makeToast(error, position: .center)
+//                    }
+//                }
+//            } else {
+//                let alert = passowordAlert(rootAddress: (self.walletModel?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
+//                    if self?.walletModel?.walletBackupState == true {
+//                        let vc = BackupMnemonicController()
+//                        vc.JustShow = true
+//                        vc.tempWallet = CreateWalletModel.init(password: "", mnemonic: mnemonic, wallet: self?.walletModel)
+//                        self?.navigationController?.pushViewController(vc, animated: true)
+//                    } else {
+//                        let vc = BackupWarningViewController()
+//                        vc.FirstInApp = false
+//                        vc.tempWallet = CreateWalletModel.init(password: "", mnemonic: mnemonic, wallet: self?.walletModel)
+//                        self?.navigationController?.pushViewController(vc, animated: true)
+//                    }
+//                }) { [weak self] (errorContent) in
+//                    self?.view.makeToast(errorContent, position: .center)
+//                }
+//                self.present(alert, animated: true, completion: nil)
+//            }
 
         }
     }
@@ -213,12 +213,12 @@ extension WalletDetailViewController: WalletDetailViewDelegate {
         let alert = UIAlertController.init(title: localLanguage(keyString: "wallet_alert_delete_wallet_title"), message: localLanguage(keyString: "wallet_alert_delete_wallet_content"), preferredStyle: UIAlertController.Style.alert)
         let confirmAction = UIAlertAction.init(title: localLanguage(keyString: "wallet_alert_delete_wallet_confirm_button_title"), style: UIAlertAction.Style.destructive) { (UIAlertAction) in
             #warning("缺少删除keychain")
-            let state = DataBaseManager.DBManager.deleteWalletFromTable(model: self.walletModel!)
+//            let state = DataBaseManager.DBManager.deleteWalletFromTable(model: self.walletModel!)
             
-            guard state == true else {
-                return
-            }
-            _ = DataBaseManager.DBManager.updateDefaultViolasWallet()
+//            guard state == true else {
+//                return
+//            }
+//            _ = DataBaseManager.DBManager.updateDefaultViolasWallet()
                         
             self.view.makeToast(localLanguage(keyString: "wallet_delete_wallet_success_title"), duration: 1, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { [weak self](bool) in
                 if let action = self?.actionClosure {

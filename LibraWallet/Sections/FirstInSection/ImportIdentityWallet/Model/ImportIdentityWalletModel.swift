@@ -34,96 +34,96 @@ class ImportIdentityWalletModel: NSObject {
         }
     }
     func importBTCWallet(name: String, password: String, mnemonics: [String]) throws {
-        let wallet = try! BTCManager().getWallet(mnemonic: mnemonics)
-        let walletModel = LibraWalletManager.init(walletID: 999,
-                                                  walletBalance: 0,
-                                                  walletAddress: wallet.address.description,
-                                                  walletRootAddress: "2_" + wallet.address.description,
-                                                  walletCreateTime: NSDate().timeIntervalSince1970,
-                                                  walletName: name,
-                                                  walletSubscription: false,
-                                                  walletBiometricLock: false,
-                                                  walletCreateType: 0,
-                                                  walletType: .BTC,
-                                                  walletIndex: 0,
-                                                  walletBackupState: true,
-                                                  walletAuthenticationKey: "",
-                                                  walletActiveState: false)
-        let result = DataBaseManager.DBManager.insertWallet(model: walletModel)
-        if result == true {
-            do {
-                try LibraWalletManager().saveMnemonicToKeychain(mnemonic: mnemonics, password: password, walletRootAddress: walletModel.walletRootAddress ?? "")
-            } catch {
-                print(error.localizedDescription)
-                //删除从数据库创建好钱包
-                _ = DataBaseManager.DBManager.deleteWalletFromTable(model: walletModel)
-                throw error
-            }
-        }
+//        let wallet = try! BTCManager().getWallet(mnemonic: mnemonics)
+//        let walletModel = LibraWalletManager.init(walletID: 999,
+//                                                  walletBalance: 0,
+//                                                  walletAddress: wallet.address.description,
+//                                                  walletRootAddress: "2_" + wallet.address.description,
+//                                                  walletCreateTime: NSDate().timeIntervalSince1970,
+//                                                  walletName: name,
+//                                                  walletSubscription: false,
+//                                                  walletBiometricLock: false,
+//                                                  walletCreateType: 0,
+//                                                  walletType: .BTC,
+//                                                  walletIndex: 0,
+//                                                  walletBackupState: true,
+//                                                  walletAuthenticationKey: "",
+//                                                  walletActiveState: false)
+//        let result = DataBaseManager.DBManager.insertWallet(model: walletModel)
+//        if result == true {
+//            do {
+//                try LibraWalletManager().saveMnemonicToKeychain(mnemonic: mnemonics, password: password, walletRootAddress: walletModel.walletRootAddress ?? "")
+//            } catch {
+//                print(error.localizedDescription)
+//                //删除从数据库创建好钱包
+//                _ = DataBaseManager.DBManager.deleteWalletFromTable(model: walletModel)
+//                throw error
+//            }
+//        }
     }
     func importViolasWallet(name: String, password: String, mnemonics: [String]) throws {
-        do {
-            let wallet = try ViolasManager.getWallet(mnemonic: mnemonics)
-            let walletModel = LibraWalletManager.init(walletID: 999,
-                                                      walletBalance: 0,
-                                                      walletAddress: wallet.publicKey.toLegacy(),
-                                                      walletRootAddress: "1_" + wallet.publicKey.toLegacy(),
-                                                      walletCreateTime: NSDate().timeIntervalSince1970,
-                                                      walletName: name,
-                                                      walletSubscription: false,
-                                                      walletBiometricLock: false,
-                                                      walletCreateType: 0,
-                                                      walletType: .Violas,
-                                                      walletIndex: 0,
-                                                      walletBackupState: true,
-                                                      walletAuthenticationKey: wallet.publicKey.toActive(),
-                                                      walletActiveState: false)
-            let result = DataBaseManager.DBManager.insertWallet(model: walletModel)
-            if result == true {
-                do {
-                    try LibraWalletManager().saveMnemonicToKeychain(mnemonic: mnemonics, password: password, walletRootAddress: walletModel.walletRootAddress ?? "")
-                } catch {
-                    print(error.localizedDescription)
-                    //删除从数据库创建好钱包
-                    _ = DataBaseManager.DBManager.deleteWalletFromTable(model: walletModel)
-                    throw error
-                }
-            }
-        } catch {
-            throw error
-        }
+//        do {
+//            let wallet = try ViolasManager.getWallet(mnemonic: mnemonics)
+//            let walletModel = LibraWalletManager.init(walletID: 999,
+//                                                      walletBalance: 0,
+//                                                      walletAddress: wallet.publicKey.toLegacy(),
+//                                                      walletRootAddress: "1_" + wallet.publicKey.toLegacy(),
+//                                                      walletCreateTime: NSDate().timeIntervalSince1970,
+//                                                      walletName: name,
+//                                                      walletSubscription: false,
+//                                                      walletBiometricLock: false,
+//                                                      walletCreateType: 0,
+//                                                      walletType: .Violas,
+//                                                      walletIndex: 0,
+//                                                      walletBackupState: true,
+//                                                      walletAuthenticationKey: wallet.publicKey.toActive(),
+//                                                      walletActiveState: false)
+//            let result = DataBaseManager.DBManager.insertWallet(model: walletModel)
+//            if result == true {
+//                do {
+//                    try LibraWalletManager().saveMnemonicToKeychain(mnemonic: mnemonics, password: password, walletRootAddress: walletModel.walletRootAddress ?? "")
+//                } catch {
+//                    print(error.localizedDescription)
+//                    //删除从数据库创建好钱包
+//                    _ = DataBaseManager.DBManager.deleteWalletFromTable(model: walletModel)
+//                    throw error
+//                }
+//            }
+//        } catch {
+//            throw error
+//        }
     }
     func importLibraWallet(name: String, password: String, mnemonics: [String]) throws {
-        do {
-            let wallet = try LibraManager.getWallet(mnemonic: mnemonics)
-            let walletModel = LibraWalletManager.init(walletID: 999,
-                                                      walletBalance: 0,
-                                                      walletAddress: wallet.publicKey.toLegacy(),
-                                                      walletRootAddress: "0_" + wallet.publicKey.toLegacy(),
-                                                      walletCreateTime: NSDate().timeIntervalSince1970,
-                                                      walletName: name,
-                                                      walletSubscription: false,
-                                                      walletBiometricLock: false,
-                                                      walletCreateType: 0,
-                                                      walletType: .Libra,
-                                                      walletIndex: 0,
-                                                      walletBackupState: true,
-                                                      walletAuthenticationKey: wallet.publicKey.toActive(),
-                                                      walletActiveState: false)
-            let result = DataBaseManager.DBManager.insertWallet(model: walletModel)
-            if result == true {
-                do {
-                    try LibraWalletManager().saveMnemonicToKeychain(mnemonic: mnemonics, password: password, walletRootAddress: walletModel.walletRootAddress ?? "")
-                } catch {
-                    print(error.localizedDescription)
-                    //删除从数据库创建好钱包
-                    _ = DataBaseManager.DBManager.deleteWalletFromTable(model: walletModel)
-                    throw error
-                }
-            }
-        } catch {
-            throw error
-        }
+//        do {
+//            let wallet = try LibraManager.getWallet(mnemonic: mnemonics)
+//            let walletModel = LibraWalletManager.init(walletID: 999,
+//                                                      walletBalance: 0,
+//                                                      walletAddress: wallet.publicKey.toLegacy(),
+//                                                      walletRootAddress: "0_" + wallet.publicKey.toLegacy(),
+//                                                      walletCreateTime: NSDate().timeIntervalSince1970,
+//                                                      walletName: name,
+//                                                      walletSubscription: false,
+//                                                      walletBiometricLock: false,
+//                                                      walletCreateType: 0,
+//                                                      walletType: .Libra,
+//                                                      walletIndex: 0,
+//                                                      walletBackupState: true,
+//                                                      walletAuthenticationKey: wallet.publicKey.toActive(),
+//                                                      walletActiveState: false)
+//            let result = DataBaseManager.DBManager.insertWallet(model: walletModel)
+//            if result == true {
+//                do {
+//                    try LibraWalletManager().saveMnemonicToKeychain(mnemonic: mnemonics, password: password, walletRootAddress: walletModel.walletRootAddress ?? "")
+//                } catch {
+//                    print(error.localizedDescription)
+//                    //删除从数据库创建好钱包
+//                    _ = DataBaseManager.DBManager.deleteWalletFromTable(model: walletModel)
+//                    throw error
+//                }
+//            }
+//        } catch {
+//            throw error
+//        }
     }
     deinit {
         print("ImportIdentityWalletModel销毁了")

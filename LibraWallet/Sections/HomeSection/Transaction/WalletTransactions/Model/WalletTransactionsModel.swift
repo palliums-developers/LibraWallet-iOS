@@ -210,9 +210,9 @@ class WalletTransactionsModel: NSObject {
     ///   - address: 地址
     ///   - page: 页数
     ///   - pageSize: 数量
-    func getViolasTransactions(address: String, page: Int, pageSize: Int, contract: String, requestStatus: Int) {
+    func getViolasTransactions(address: String, module: String, requestType: String, page: Int, pageSize: Int, requestStatus: Int) {
         let type = requestStatus == 0 ? "ViolasTransactionsOrigin":"ViolasTransactionsMore"
-        let request = mainProvide.request(.GetViolasAccountTransactionList(address, page, pageSize, contract)) {[weak self](result) in
+        let request = mainProvide.request(.GetViolasTransactions(address, module, requestType, page, pageSize)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -265,25 +265,19 @@ class WalletTransactionsModel: NSObject {
     ///   - address: 地址
     ///   - page: 页数
     ///   - pageSize: 数量
-    func getLibraTransactionHistory(address: String, page: Int, pageSize: Int, requestStatus: Int) {
+    func getLibraTransactionHistory(address: String, module: String, requestType: String, page: Int, pageSize: Int, requestStatus: Int) {
         let type = requestStatus == 0 ? "LibraTransactionHistoryOrigin":"LibraTransactionHistoryMore"
         guard requestStatus == 0 else {
             let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: type)
             self.setValue(data, forKey: "dataDic")
             return
         }
-        let request = mainProvide.request(.GetLibraAccountTransactionList(address, page, pageSize)) {[weak self](result) in
+        let request = mainProvide.request(.GetLibraTransactions(address, module, requestType, page, pageSize)) {[weak self](result) in
                 switch  result {
                 case let .success(response):
                     do {
                         let json = try response.map(LibraResponseModel.self)
-//                        guard json.code == 2000 else {
-//                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: type)
-//                            self?.setValue(data, forKey: "dataDic")
-//                            return
-//                        }
                         if json.code == 2000 {
-                            
                             guard json.data?.isEmpty == false else {
                                 if requestStatus == 0 {
                                     let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .dataEmpty), type: type)

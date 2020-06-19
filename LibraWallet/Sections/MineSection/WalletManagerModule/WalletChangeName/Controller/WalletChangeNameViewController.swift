@@ -28,7 +28,7 @@ class WalletChangeNameViewController: BaseViewController {
         }
     }
     override func back() {
-        guard self.detailView.walletNameTextField.text != self.account?.walletName else {
+        guard self.detailView.walletNameTextField.text != self.account?.tokenName else {
             self.navigationController?.popViewController(animated: true)
             return
         }
@@ -44,12 +44,12 @@ class WalletChangeNameViewController: BaseViewController {
         self.present(alert, animated: true, completion: nil)
         print("rest")
     }
-    var account: LibraWalletManager? {
+    var account: Token? {
         didSet {
-            self.detailView.walletNameTextField.text = account?.walletName
+            self.detailView.walletNameTextField.text = account?.tokenName
         }
     }
-    typealias nextActionClosure = (ControllerAction, LibraWalletManager) -> Void
+    typealias nextActionClosure = (ControllerAction, Token) -> Void
     var actionClosure: nextActionClosure?
     //懒加载子View
     private lazy var detailView : WalletChangeNameView = {
@@ -74,20 +74,21 @@ class WalletChangeNameViewController: BaseViewController {
             return
         }
         // 名称相同
-        guard walletName != account?.walletName else {
+        guard walletName != account?.tokenName else {
             self.view.makeToast(LibraWalletError.WalletChangeWalletName(reason: .walletNameSameAsOld).localizedDescription,
                                 position: .center)
             return
         }
         var tempAccount = account
-        tempAccount?.changeWalletName(name: walletName)
-        let status = DataBaseManager.DBManager.updateWalletName(walletID: (account?.walletID)!, name: walletName)
-        guard status == true else {
-            // 改名失败
-            self.view.makeToast(LibraWalletError.WalletChangeWalletName(reason: .changeWalletNameFailed).localizedDescription,
-                                position: .center)
-            return
-        }
+//        tempAccount?.changeWalletName(name: walletName)
+        #warning("待处理")
+//        let status = DataBaseManager.DBManager.updateWalletName(walletID: (account?.tokenID)!, name: walletName)
+//        guard status == true else {
+//            // 改名失败
+//            self.view.makeToast(LibraWalletError.WalletChangeWalletName(reason: .changeWalletNameFailed).localizedDescription,
+//                                position: .center)
+//            return
+//        }
         self.view.makeToast(localLanguage(keyString: "wallet_manager_change_wallet_name_success_title"), duration: toastDuration, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { [weak self](bool) in
             
             self?.navigationController?.popViewController(animated: true)

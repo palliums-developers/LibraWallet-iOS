@@ -81,17 +81,17 @@ class WalletListTableViewCell: UITableViewCell {
         return imageView
     }()
     //MARK: - 设置数据
-    var model: LibraWalletManager? {
+    var model: Token? {
         didSet {
-            if model?.walletType == .Libra {
+            if model?.tokenType == .Libra {
                 itemBackgroundImageView.image = UIImage.init(named: "libra_wallet_background")
-            } else if model?.walletType == .Violas {
+            } else if model?.tokenType == .Violas {
                 itemBackgroundImageView.image = UIImage.init(named: "violas_wallet_background")
             } else {
                 itemBackgroundImageView.image = UIImage.init(named: "btc_wallet_background")
             }
-            nameLabel.text = model?.walletName
-            addressLabel.text = model?.walletAddress
+            nameLabel.text = model?.tokenName
+            addressLabel.text = model?.tokenAddress
 //            selectIndicatorImageView.alpha = model?.walletCurrentUse == true ? 1:0
         }
     }

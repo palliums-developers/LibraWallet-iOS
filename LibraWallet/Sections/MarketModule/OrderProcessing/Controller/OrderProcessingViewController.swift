@@ -48,7 +48,7 @@ class OrderProcessingViewController: BaseViewController {
         return view
     }()
     @objc func refreshReceive() {
-        guard let walletAddress = self.wallet?.walletAddress else {
+        guard let walletAddress = self.wallet?.tokenAddress else {
             return
         }
         detailView.tableView.mj_footer?.resetNoMoreData()
@@ -56,7 +56,7 @@ class OrderProcessingViewController: BaseViewController {
         dataModel.getAllProcessingOrders(address: walletAddress, version: "")
     }
     @objc func getMoreReceive() {
-        guard let walletAddress = self.wallet?.walletAddress else {
+        guard let walletAddress = self.wallet?.tokenAddress else {
             return
         }
 //        detailView.tableView.mj_footer.beginRefreshing()
@@ -68,7 +68,7 @@ class OrderProcessingViewController: BaseViewController {
     }
     var myContext = 0
     var firstIn: Bool = true
-    var wallet: LibraWalletManager?
+    var wallet: Token?
     var cancelIndexPath: IndexPath?
 }
 extension OrderProcessingViewController: OrderProcessingTableViewManagerDelegate {
@@ -94,47 +94,47 @@ extension OrderProcessingViewController: OrderProcessingTableViewManagerDelegate
         self.present(alertView, animated: true, completion: nil)
     }
     func showPasswordAlert(model: MarketOrderDataModel) {
-        if LibraWalletManager.shared.walletBiometricLock == true {
-            KeychainManager().getPasswordWithBiometric(walletAddress: LibraWalletManager.shared.walletRootAddress ?? "") { [weak self](result, error) in
-                if result.isEmpty == false {
-                    do {
-                        let mnemonic = try LibraWalletManager.shared.getMnemonicFromKeychain(password: result, walletRootAddress: LibraWalletManager.shared.walletRootAddress ?? "")
-                        self?.detailView.toastView?.show()
-                        guard let walletAddress = self?.wallet?.walletAddress else {
-                            #warning("缺少错误提示")
-                            return
-                        }
-                        self?.dataModel.cancelTransaction(sendAddress: walletAddress,
-                                                         fee: 0,
-                                                         mnemonic: mnemonic,
-                                                         contact: ViolasMainContract,
-                                                         version: model.version ?? "",
-                                                         tokenIndex: model.tokenGive ?? "")
-                    } catch {
-                        self?.detailView.makeToast(error.localizedDescription, position: .center)
-                    }
-                } else {
-                    self?.detailView.makeToast(error, position: .center)
-                }
-            }
-        } else {
-            let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
-                self?.detailView.toastView?.show()
-                guard let walletAddress = self?.wallet?.walletAddress else {
-                    #warning("缺少错误提示")
-                    return
-                }
-                self?.dataModel.cancelTransaction(sendAddress: walletAddress,
-                                                 fee: 0,
-                                                 mnemonic: mnemonic,
-                                                 contact: ViolasMainContract,
-                                                 version: model.version ?? "",
-                                                 tokenIndex: model.tokenGive ?? "")
-            }) { [weak self] (errorContent) in
-                self?.view.makeToast(errorContent, position: .center)
-            }
-            self.present(alert, animated: true, completion: nil)
-        }
+//        if LibraWalletManager.shared.walletBiometricLock == true {
+//            KeychainManager().getPasswordWithBiometric(walletAddress: LibraWalletManager.shared.walletRootAddress ?? "") { [weak self](result, error) in
+//                if result.isEmpty == false {
+//                    do {
+//                        let mnemonic = try LibraWalletManager.shared.getMnemonicFromKeychain(password: result, walletRootAddress: LibraWalletManager.shared.walletRootAddress ?? "")
+//                        self?.detailView.toastView?.show()
+//                        guard let walletAddress = self?.wallet?.walletAddress else {
+//                            #warning("缺少错误提示")
+//                            return
+//                        }
+//                        self?.dataModel.cancelTransaction(sendAddress: walletAddress,
+//                                                         fee: 0,
+//                                                         mnemonic: mnemonic,
+//                                                         contact: ViolasMainContract,
+//                                                         version: model.version ?? "",
+//                                                         tokenIndex: model.tokenGive ?? "")
+//                    } catch {
+//                        self?.detailView.makeToast(error.localizedDescription, position: .center)
+//                    }
+//                } else {
+//                    self?.detailView.makeToast(error, position: .center)
+//                }
+//            }
+//        } else {
+//            let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
+//                self?.detailView.toastView?.show()
+//                guard let walletAddress = self?.wallet?.walletAddress else {
+//                    #warning("缺少错误提示")
+//                    return
+//                }
+//                self?.dataModel.cancelTransaction(sendAddress: walletAddress,
+//                                                 fee: 0,
+//                                                 mnemonic: mnemonic,
+//                                                 contact: ViolasMainContract,
+//                                                 version: model.version ?? "",
+//                                                 tokenIndex: model.tokenGive ?? "")
+//            }) { [weak self] (errorContent) in
+//                self?.view.makeToast(errorContent, position: .center)
+//            }
+//            self.present(alert, animated: true, completion: nil)
+//        }
 
     }
 
@@ -243,7 +243,7 @@ extension OrderProcessingViewController: JXSegmentedListContainerViewListDelegat
         guard firstIn == true else {
             return
         }
-        guard let walletAddress = self.wallet?.walletAddress else {
+        guard let walletAddress = self.wallet?.tokenAddress else {
             return
         }
         self.detailView.makeToastActivity(.center)

@@ -250,7 +250,7 @@ class MarketModel: NSObject {
         }
         self.requests.append(request)
     }
-    func exchangeViolasTokenTransaction(sendAddress: String, amount: Double, fee: Double, mnemonic: [String], contact: String, exchangeTokenContract: String, exchangeTokenAmount: Double, tokenIndex: String) {
+    func exchangeViolasTokenTransaction(sendAddress: String, amount: Double, fee: Double, mnemonic: [String], contact: String, exchangeTokenContract: String, exchangeTokenAmount: Double, tokenIndex: String, module: String) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
         queue.async {
@@ -267,7 +267,8 @@ class MarketModel: NSObject {
                                                                                    exchangeTokenContract: exchangeTokenContract,
                                                                                    exchangeTokenAmount: exchangeTokenAmount,
                                                                                    sequenceNumber: self.sequenceNumber!,
-                                                                                   tokenIndex: tokenIndex)
+                                                                                   tokenIndex: tokenIndex,
+                                                                                   module: module)
                 self.makeViolasTransaction(signature:signature, type: "ExchangeDone")
             } catch {
                 print(error.localizedDescription)
@@ -331,25 +332,25 @@ class MarketModel: NSObject {
             case let .success(response):
                 do {
                     let json = try response.map(BalanceViolasMainModel.self)
-                    if json.code == 2000 {
-                        let data = setKVOData(type: "UpdateViolasBalance", data: json.data)
-                        self?.setValue(data, forKey: "dataDic")
-                        // 刷新本地数据
-                        self?.updateLocalWalletData(walletID: walletID, balance: json.data?.balance ?? 0)
-                        guard let tokenModel = json.data?.modules else {
-                            return
-                        }
-                        self?.updateLocalWalletTokenData(walletID: walletID, modules: tokenModel)
-                    } else {
-                        print("UpdateViolasBalance_状态异常")
-                        if let message = json.message, message.isEmpty == false {
-                            let data = setKVOData(error: LibraWalletError.error(message), type: "UpdateViolasBalance")
-                            self?.setValue(data, forKey: "dataDic")
-                        } else {
-                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "UpdateViolasBalance")
-                            self?.setValue(data, forKey: "dataDic")
-                        }
-                    }
+//                    if json.code == 2000 {
+//                        let data = setKVOData(type: "UpdateViolasBalance", data: json.data)
+//                        self?.setValue(data, forKey: "dataDic")
+//                        // 刷新本地数据
+//                        self?.updateLocalWalletData(walletID: walletID, balance: json.data?.balance ?? 0)
+//                        guard let tokenModel = json.data?.modules else {
+//                            return
+//                        }
+//                        self?.updateLocalWalletTokenData(walletID: walletID, modules: tokenModel)
+//                    } else {
+//                        print("UpdateViolasBalance_状态异常")
+//                        if let message = json.message, message.isEmpty == false {
+//                            let data = setKVOData(error: LibraWalletError.error(message), type: "UpdateViolasBalance")
+//                            self?.setValue(data, forKey: "dataDic")
+//                        } else {
+//                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "UpdateViolasBalance")
+//                            self?.setValue(data, forKey: "dataDic")
+//                        }
+//                    }
                 } catch {
                     print("UpdateViolasBalance_解析异常\(error.localizedDescription)")
                     let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "UpdateViolasBalance")
@@ -368,14 +369,14 @@ class MarketModel: NSObject {
     }
     func updateLocalWalletData(walletID: Int64, balance: Int64) {
         // 刷新本地缓存数据
-        let result = DataBaseManager.DBManager.updateWalletBalance(walletID: walletID, balance: balance)
-        print("刷新本地钱包数据状态: \(result),walletID = \(walletID)")
+//        let result = DataBaseManager.DBManager.updateTokenBalance(tokenID: walletID, balance: balance)
+//        print("刷新本地钱包数据状态: \(result),walletID = \(walletID)")
     }
-    func updateLocalWalletTokenData(walletID: Int64, modules: [BalanceViolasModulesModel]) {
+    func updateLocalWalletTokenData(walletID: Int64, modules: [ViolasBalanceModel]) {
         // 刷新本地缓存数据
         for item in modules {
-            let result = DataBaseManager.DBManager.updateViolasTokenBalance(walletID: walletID, model: item)
-            print("刷新本地钱包Token数据状态: \(result),walletID = \(walletID)")
+//            let result = DataBaseManager.DBManager.updateTokenBalance(tokenID: walletID, model: item)
+//            print("刷新本地钱包Token数据状态: \(result),walletID = \(walletID)")
         }
     }
     func publishTokenForTransaction(sendAddress: String, mnemonic: [String], contact: String) {
@@ -387,10 +388,10 @@ class MarketModel: NSObject {
         queue.async {
             semaphore.wait()
             do {
-                let signature = try ViolasManager.getRegisterTokenTransactionHex(mnemonic: mnemonic,
-                                                                                 contact: contact,
-                                                                                 sequenceNumber: self.sequenceNumber!)
-                self.makeViolasTransaction(signature: signature, type: "PublishTokenForTransaction")
+//                let signature = try ViolasManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
+//                                                                                 contact: contact,
+//                                                                                 sequenceNumber: self.sequenceNumber!)
+//                self.makeViolasTransaction(signature: signature, type: "PublishTokenForTransaction")
             } catch {
                 print(error.localizedDescription)
             }

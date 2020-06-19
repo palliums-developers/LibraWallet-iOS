@@ -52,9 +52,9 @@ class WalletListViewModel: NSObject {
         }
         let type = jsonData.value(forKey: "type") as! String
         if type == "LoadLocalWallets" {
-            if let tempData = jsonData.value(forKey: "data") as? [[LibraWalletManager]] {
-                self.tableViewManager.originModel = tempData
-                self.tableViewManager.dataModel = tempData
+            if let tempData = jsonData.value(forKey: "data") as? [[Token]] {
+//                self.tableViewManager.originModel = tempData
+//                self.tableViewManager.dataModel = tempData
 
                 self.detailView.tableView.reloadData()
             }
@@ -89,40 +89,40 @@ class WalletListViewModel: NSObject {
 }
 extension WalletListViewModel: WalletListCollectionViewCellDelegate {
     func collectionViewDidSelectRowAtIndexPath(collectionView: UICollectionView, indexPath: IndexPath) {
-        print(indexPath.row)
-        if indexPath.row == 0 {
-            tableViewManager.dataModel = tableViewManager.originModel
-            detailView.tableView.reloadData()
-        } else if indexPath.row == 1 {
-            let tempArray = tableViewManager.originModel.map { (groupArray) in
-                groupArray.map { (items) in
-                    items.filter { (item) in
-                        item.walletType == .Violas
-                    }
-                }
-            }
-            tableViewManager.dataModel = tempArray
-            detailView.tableView.reloadData()
-        } else if indexPath.row == 2 {
-            let tempArray = tableViewManager.originModel.map { (groupArray) in
-               groupArray.map { (items) in
-                   items.filter { (item) in
-                    item.walletType == .BTC
-                   }
-               }
-            }
-            tableViewManager.dataModel = tempArray
-            detailView.tableView.reloadData()
-        } else if indexPath.row == 3 {
-            let tempArray = tableViewManager.originModel.map { groupArray in
-                groupArray.map { items in
-                    items.filter { item in
-                        item.walletType == .Libra
-                    }
-                }
-            }
-            tableViewManager.dataModel = tempArray
-            detailView.tableView.reloadData()
-        }
+//        print(indexPath.row)
+//        if indexPath.row == 0 {
+//            tableViewManager.dataModel = tableViewManager.originModel
+//            detailView.tableView.reloadData()
+//        } else if indexPath.row == 1 {
+//            let tempArray = tableViewManager.originModel.map { (groupArray) in
+//                groupArray.map { (items) in
+//                    items.filter { (item) in
+//                        item.tokenType == .Violas
+//                    }
+//                }
+//            }
+//            tableViewManager.dataModel = tempArray
+//            detailView.tableView.reloadData()
+//        } else if indexPath.row == 2 {
+//            let tempArray = tableViewManager.originModel.map { (groupArray) in
+//               groupArray.map { (items) in
+//                   items.filter { (item) in
+//                    item.tokenType == .BTC
+//                   }
+//               }
+//            }
+//            tableViewManager.dataModel = tempArray
+//            detailView.tableView.reloadData()
+//        } else if indexPath.row == 3 {
+//            let tempArray = tableViewManager.originModel.map { groupArray in
+//                groupArray.map { items in
+//                    items.filter { item in
+//                        item.tokenType == .Libra
+//                    }
+//                }
+//            }
+//            tableViewManager.dataModel = tempArray
+//            detailView.tableView.reloadData()
+//        }
     }
 }

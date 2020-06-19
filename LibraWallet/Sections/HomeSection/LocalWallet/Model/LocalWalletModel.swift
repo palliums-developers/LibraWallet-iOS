@@ -14,13 +14,13 @@ class LocalWalletModel: NSObject {
         return ["wallet_list_total", "violas_icon", "btc_icon", "libra_icon"]
     }
     func loadLocalWallet(walletType: WalletType) {
-        let wallets = DataBaseManager.DBManager.getWalletWithType(walletType: walletType)
-        guard wallets.isEmpty == false else {
-            let data = setKVOData(error: LibraWalletError.error("empty"), type: "LoadLocalWallets")
-            self.setValue(data, forKey: "dataDic")
-            return
-        }
-        let data = setKVOData(type: "LoadLocalWallets", data: wallets)
-        self.setValue(data, forKey: "dataDic")
+//        let wallets = DataBaseManager.DBManager.getTokens()//getWalletWithType(walletType: walletType)
+//        guard wallets.isEmpty == false else {
+//            let data = setKVOData(error: LibraWalletError.error("empty"), type: "LoadLocalWallets")
+//            self.setValue(data, forKey: "dataDic")
+//            return
+//        }
+//        let data = setKVOData(type: "LoadLocalWallets", data: wallets)
+//        self.setValue(data, forKey: "dataDic")
     }
 }

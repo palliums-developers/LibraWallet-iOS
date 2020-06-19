@@ -31,7 +31,7 @@ class WalletReceiveViewController: BaseViewController {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.barStyle = .default
     }
-    var wallet: LibraWalletManager? {
+    var wallet: Token? {
         didSet {
             self.detailView.wallet = wallet
         }

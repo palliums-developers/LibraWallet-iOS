@@ -253,7 +253,11 @@ class AddAssetModel: NSObject {
             }
             for token in tempLocalTokens {
                 if item.code == token.tokenModule {
-                    tempModel.enable = self.violasWalletActiveState == true ? true:false
+                    if tempModel.registerState == true {
+                        tempModel.enable = self.violasWalletActiveState == true ? true:false
+                    } else {
+                        tempModel.enable = false
+                    }
                     continue
                 }
             }

@@ -12,7 +12,7 @@ class ScanSendTransactionModel: NSObject {
     private var requests: [Cancellable] = []
     @objc dynamic var dataDic: NSMutableDictionary = [:]
     private var sequenceNumber: Int?
-    func sendViolasTransaction(model: WCRawTransaction,  mnemonic: [String]) {
+    func sendViolasTransaction(model: WCRawTransaction,  mnemonic: [String], module: String) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
         queue.async {
@@ -23,7 +23,8 @@ class ScanSendTransactionModel: NSObject {
             do {
                 let signature = try ViolasManager.getWalletConnectTransactionHex(mnemonic: mnemonic,
                                                                                  sequenceNumber: self.sequenceNumber!,
-                                                                                 model: model)
+                                                                                 model: model,
+                                                                                 module: module)
                 self.makeViolasTransaction(signature: signature)
             } catch {
                 print(error.localizedDescription)

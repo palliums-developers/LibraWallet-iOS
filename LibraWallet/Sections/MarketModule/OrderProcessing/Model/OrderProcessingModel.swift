@@ -51,7 +51,7 @@ class OrderProcessingModel: NSObject {
         }
         self.requests.append(request)
     }
-    func cancelTransaction(sendAddress: String, fee: Double, mnemonic: [String], contact: String, version: String, tokenIndex: String) {
+    func cancelTransaction(sendAddress: String, fee: Double, mnemonic: [String], contact: String, version: String, tokenIndex: String, module: String) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
         var signature = ""
@@ -67,7 +67,8 @@ class OrderProcessingModel: NSObject {
                                                                                     contact: contact,
                                                                                     version: version,
                                                                                     sequenceNumber: self.sequenceNumber!,
-                                                                                    tokenIndex: tokenIndex)
+                                                                                    tokenIndex: tokenIndex,
+                                                                                    module: module)
     //                self.makeViolasTransaction(signature: signature)
                 self.submitCancelOrder(signature: signature, version: version, semaphore: semaphore)
             } catch {

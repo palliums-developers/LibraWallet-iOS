@@ -11,7 +11,7 @@ import UIKit
 class BTCTransferViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = (self.wallet?.walletType?.description ?? "") + " " + localLanguage(keyString: "wallet_transfer_navigation_title")
+        self.title = (self.wallet?.tokenType.description ?? "") + " " + localLanguage(keyString: "wallet_transfer_navigation_title")
         
         self.view.addSubview(detailView)
         self.detailView.wallet = self.wallet
@@ -46,7 +46,7 @@ class BTCTransferViewController: BaseViewController {
     typealias successClosure = () -> Void
     var actionClosure: successClosure?
     var myContext = 0
-    var wallet: LibraWalletManager?
+    var wallet: Token?
     var address: String? {
         didSet {
            self.detailView.addressTextField.text = address
@@ -168,36 +168,36 @@ extension BTCTransferViewController: BTCTransferViewDelegate {
 
     }
     func confirmTransfer(amount: Double, address: String, fee: Double) {
-        if LibraWalletManager.shared.walletBiometricLock == true {
-            KeychainManager().getPasswordWithBiometric(walletAddress: LibraWalletManager.shared.walletRootAddress ?? "") { [weak self](result, error) in
-                if result.isEmpty == false {
-                    do {
-                        let mnemonic = try LibraWalletManager.shared.getMnemonicFromKeychain(password: result, walletRootAddress: LibraWalletManager.shared.walletRootAddress ?? "")
-                        self?.detailView.toastView?.show()
-                        let walletttt = try! BTCManager().getWallet(mnemonic: mnemonic)
-                        self?.dataModel.makeTransaction(wallet: walletttt,
-                                                        amount: amount,
-                                                        fee: fee,
-                                                        toAddress: address)
-                    } catch {
-                        self?.detailView.makeToast(error.localizedDescription, position: .center)
-                    }
-                } else {
-                    self?.detailView.makeToast(error, position: .center)
-                }
-            }
-        } else {
-            let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
-                self?.detailView.toastView?.show()
-                let walletttt = try! BTCManager().getWallet(mnemonic: mnemonic)
-                self?.dataModel.makeTransaction(wallet: walletttt,
-                                                amount: amount,
-                                                fee: fee,
-                                                toAddress: address)
-            }) { [weak self] (errorContent) in
-                self?.view.makeToast(errorContent, position: .center)
-            }
-            self.present(alert, animated: true, completion: nil)
-        }
+//        if LibraWalletManager.shared.walletBiometricLock == true {
+//            KeychainManager().getPasswordWithBiometric(walletAddress: LibraWalletManager.shared.walletRootAddress ?? "") { [weak self](result, error) in
+//                if result.isEmpty == false {
+//                    do {
+//                        let mnemonic = try LibraWalletManager.shared.getMnemonicFromKeychain(password: result, walletRootAddress: LibraWalletManager.shared.walletRootAddress ?? "")
+//                        self?.detailView.toastView?.show()
+//                        let walletttt = try! BTCManager().getWallet(mnemonic: mnemonic)
+//                        self?.dataModel.makeTransaction(wallet: walletttt,
+//                                                        amount: amount,
+//                                                        fee: fee,
+//                                                        toAddress: address)
+//                    } catch {
+//                        self?.detailView.makeToast(error.localizedDescription, position: .center)
+//                    }
+//                } else {
+//                    self?.detailView.makeToast(error, position: .center)
+//                }
+//            }
+//        } else {
+//            let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
+//                self?.detailView.toastView?.show()
+//                let walletttt = try! BTCManager().getWallet(mnemonic: mnemonic)
+//                self?.dataModel.makeTransaction(wallet: walletttt,
+//                                                amount: amount,
+//                                                fee: fee,
+//                                                toAddress: address)
+//            }) { [weak self] (errorContent) in
+//                self?.view.makeToast(errorContent, position: .center)
+//            }
+//            self.present(alert, animated: true, completion: nil)
+//        }
     }
 }
