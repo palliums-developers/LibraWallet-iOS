@@ -15,7 +15,7 @@ class LibraTransactionScript: NSObject {
         
     fileprivate let argruments: [LibraTransactionArgument]
         
-    fileprivate let programPrefixData: Data = Data.init(hex: "02")
+    fileprivate let programPrefixData: Data = Data.init(hex: "01")
     
     init(code: Data, typeTags: [LibraTypeTag], argruments: [LibraTransactionArgument]) {
         

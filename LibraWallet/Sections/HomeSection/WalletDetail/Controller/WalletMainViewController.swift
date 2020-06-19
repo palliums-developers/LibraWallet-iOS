@@ -100,18 +100,21 @@ class WalletMainViewController: BaseViewController {
     lazy var totalTransactions: WalletTransactionsViewController = {
         let con = WalletTransactionsViewController()
         con.wallet = self.wallet
+        con.requestType = ""
         con.initKVO()
         return con
     }()
     lazy var transferTransactions: WalletTransactionsViewController = {
         let con = WalletTransactionsViewController()
         con.wallet = self.wallet
+        con.requestType = "0"
         con.initKVO()
         return con
     }()
     lazy var receiveTransactions: WalletTransactionsViewController = {
         let con = WalletTransactionsViewController()
         con.wallet = self.wallet
+        con.requestType = "1"
         con.initKVO()
         return con
     }()
@@ -178,9 +181,9 @@ extension WalletMainViewController: JXSegmentedListContainerViewDataSource {
         if index == 0 {
             return totalTransactions
         } else if index == 1 {
-            return transferTransactions
-        } else {
             return receiveTransactions
+        } else {
+            return transferTransactions
         }
     }
 }

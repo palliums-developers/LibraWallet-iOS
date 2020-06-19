@@ -28,8 +28,8 @@ enum mainRequest {
     
     /// 获取Libra账户余额
     case GetLibraAccountBalance(String)
-    /// 获取Libra账户交易记录(地址、偏移量、数量)
-    case GetLibraAccountTransactionList(String, Int, Int)
+    /// 获取Libra账户交易记录(地址、币名、请求类型（空：全部；0：转出；1：转入）、偏移量、数量)
+    case GetLibraTransactions(String, String, String, Int, Int)
     /// 发送Libra交易
     case SendLibraTransaction(String)
     /// 获取Libra稳定币列表
@@ -39,8 +39,8 @@ enum mainRequest {
     case GetViolasAccountBalance(String, String)
     /// 获取Violas账户Sequence Number
     case GetViolasAccountSequenceNumber(String)
-    /// 获取Violas账户交易记录（地址、偏移量、数量, 合约地址）
-    case GetViolasAccountTransactionList(String, Int, Int, String)
+    /// 获取Violas账户交易记录（地址、币名、请求类型（空：全部；0：转出；1：转入）、偏移量、数量）
+    case GetViolasTransactions(String, String, String, Int, Int)
     /// 发送Violas交易
     case SendViolasTransaction(String)
     /// 获取代币
@@ -92,7 +92,7 @@ extension mainRequest:TargetType {
              .TrezorBTCPushTransaction:
             return URL(string:"https://tbtc1.trezor.io/api")!
             
-        case .GetLibraAccountTransactionList(_, _, _),
+        case .GetLibraTransactions(_, _, _, _, _),
              .ActiveLibraAccount(_),
              .ActiveViolasAccount(_):
             #if PUBLISH_VERSION
@@ -103,7 +103,7 @@ extension mainRequest:TargetType {
             #endif
         case .GetViolasAccountBalance(_, _),
              .GetViolasAccountSequenceNumber(_),
-             .GetViolasAccountTransactionList(_, _, _, _),
+             .GetViolasTransactions(_, _, _, _, _),
              .GetViolasAccountEnableToken(_),
              .GetMappingInfo(_),
              .GetMappingTokenList(_),
@@ -158,7 +158,7 @@ extension mainRequest:TargetType {
             return "/v2/sendtx/\(signature)"
         case .GetLibraAccountBalance(_):
             return ""
-        case .GetLibraAccountTransactionList(_, _, _):
+        case .GetLibraTransactions(_, _, _, _, _):
             return "/libra/transaction"
         case .SendLibraTransaction(_):
             return ""
@@ -168,7 +168,7 @@ extension mainRequest:TargetType {
             return "/violas/balance"
         case .GetViolasAccountSequenceNumber(_):
             return "/violas/seqnum"
-        case .GetViolasAccountTransactionList(_, _, _, _):
+        case .GetViolasTransactions(_, _, _, _, _):
             return "/violas/transaction"
         case .SendViolasTransaction(_):
             return ""
@@ -225,10 +225,10 @@ extension mainRequest:TargetType {
              .TrezorBTCTransactions(_, _, _),
              .TrezorBTCPushTransaction(_),
              
-             .GetLibraAccountTransactionList(_, _, _),
+             .GetLibraTransactions(_, _, _, _, _),
              .GetViolasAccountBalance(_, _),
              .GetViolasAccountSequenceNumber(_),
-             .GetViolasAccountTransactionList(_, _, _, _),
+             .GetViolasTransactions(_, _, _, _, _),
              .GetMarketSupportCoin,
              .GetViolasAccountEnableToken(_),
              .GetCurrentOrder(_, _, _),
@@ -248,7 +248,7 @@ extension mainRequest:TargetType {
     }
     var sampleData: Data {
         switch self {
-        case .GetLibraAccountTransactionList(_, _, _):
+        case .GetLibraTransactions(_, _, _, _, _):
             return "{\"code\":2000,\"message\":\"ok\",\"data\":[{\"version\":1,\"address\":\"f053480d94d09a00f77fec9975463bfd109ebeb0915d62822702f453cc87c809\",\"value\":100,\"sequence_number\":1,\"expiration_time\":1572771944},{\"version\":2,\"address\":\"address\",\"value\":100,\"sequence_number\":2,\"expiration_time\":1572771224}]}".data(using: String.Encoding.utf8)!
         default:
             return "{}".data(using: String.Encoding.utf8)!
@@ -286,8 +286,10 @@ extension mainRequest:TargetType {
                                                    "id":"123",
                                                    "params":["\(address)"]],
                                       encoding: JSONEncoding.default)
-        case .GetLibraAccountTransactionList(let address, let offset, let limit):
+        case .GetLibraTransactions(let address, let currency, let type, let offset, let limit):
             return .requestParameters(parameters: ["addr": address,
+                                                   "currency": currency,
+                                                   "flows": type,
                                                    "limit": limit,
                                                    "offset":offset],
                                       encoding: URLEncoding.queryString)
@@ -310,19 +312,21 @@ extension mainRequest:TargetType {
         case .GetViolasAccountSequenceNumber(let address):
             return .requestParameters(parameters: ["addr": address],
                                       encoding: URLEncoding.queryString)
-        case .GetViolasAccountTransactionList(let address, let offset, let limit, let contract):
-            if contract.isEmpty == true {
+        case .GetViolasTransactions(let address, let currency, let type, let offset, let limit):
+//            if type.isEmpty == true {
+//                return .requestParameters(parameters: ["addr": address,
+//                                                       "currency": currency,
+//                                                       "limit": limit,
+//                                                       "offset":offset],
+//                                          encoding: URLEncoding.queryString)
+//            } else {
                 return .requestParameters(parameters: ["addr": address,
+                                                       "currency": currency,
+                                                       "flows": type,
                                                        "limit": limit,
                                                        "offset":offset],
                                           encoding: URLEncoding.queryString)
-            } else {
-                return .requestParameters(parameters: ["addr": address,
-                                                       "limit": limit,
-                                                       "offset":offset,
-                                                       "modu":contract],
-                                          encoding: URLEncoding.queryString)
-            }
+//            }
         case .SendViolasTransaction(let signature):
             return .requestParameters(parameters: ["jsonrpc":"2.0",
                                                    "method":"submit",

@@ -28,19 +28,19 @@ extension LibraStructTag {
     init(type: LibraStructTagType) {
         switch type {
         case .libraDefault:
-            self.address = "00000000000000000000000000000000"
+            self.address = "00000000000000000000000000000001"
             self.module = "LBR"
-            self.name = "T"
+            self.name = "LBR"
             self.typeParams = [String]()
         case .coin1:
-            self.address = "00000000000000000000000000000000"
+            self.address = "00000000000000000000000000000001"
             self.module = "Coin1"
-            self.name = "T"
+            self.name = "LBR"
             self.typeParams = [String]()
         case .Normal(let module):
-            self.address = "00000000000000000000000000000000"
+            self.address = "00000000000000000000000000000001"
             self.module = module
-            self.name = "T"
+            self.name = module
             self.typeParams = [String]()
         }
         

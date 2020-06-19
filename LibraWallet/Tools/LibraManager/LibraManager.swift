@@ -98,7 +98,7 @@ extension LibraManager {
             let rawTransaction = LibraRawTransaction.init(senderAddres: sendAddress,
                                                           sequenceNumber: sequenceNumber,
                                                           maxGasAmount: 1000000,
-                                                          gasUnitPrice: 0,
+                                                          gasUnitPrice: 1,
                                                           expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
                                                           payLoad: script.serialize(),
                                                           module: module)

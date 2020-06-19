@@ -9,7 +9,7 @@
 import XCTest
 import CryptoSwift
 import BigInt
-@testable import Violas
+@testable import ViolasPay
 class LibraSDKTests: XCTestCase {
 
     override func setUp() {
@@ -35,31 +35,38 @@ class LibraSDKTests: XCTestCase {
         //LibraTransactionArgument
         // u64
         let amount = LibraTransactionArgument.init(code: .U64, value: "9213671392124193148").serialize().toHexString().uppercased()
-        XCTAssertEqual(amount, "007CC9BDA45089DD7F")
+        XCTAssertEqual(amount, "017CC9BDA45089DD7F")
         // Address
         let address = LibraTransactionArgument.init(code: .Address, value: "bafc671e8a38c05706f83b5159bbd8a4").serialize().toHexString()
-        XCTAssertEqual(address  , "01bafc671e8a38c05706f83b5159bbd8a4")
+        XCTAssertEqual(address  , "03bafc671e8a38c05706f83b5159bbd8a4")
         // U8Vector
         let u8vector = LibraTransactionArgument.init(code: .U8Vector, value: "CAFED00D").serialize().toHexString().uppercased()
-        XCTAssertEqual(u8vector, "0204CAFED00D")
+        XCTAssertEqual(u8vector, "0404CAFED00D")
         // Bool
         let bool1 = LibraTransactionArgument.init(code: .Bool, value: "00").serialize().toHexString().uppercased()
-        XCTAssertEqual(bool1, "0300")
+        XCTAssertEqual(bool1, "0500")
         // Bool
         let bool2 = LibraTransactionArgument.init(code: .Bool, value: "01").serialize().toHexString().uppercased()
-        XCTAssertEqual(bool2, "0301")
+        XCTAssertEqual(bool2, "0501")
         //LibraTransactionAccessPath
-        let accessPath1 = LibraTransactionAccessPath.init(address: "a71d76faa2d2d5c3224ec3d41deb293973564a791e55c6782ba76c2bf0495f9a",
+        let accessPath1 = LibraTransactionAccessPath.init(address: "a71d76faa2d2d5c3224ec3d41deb2939",
                                                           path: "01217da6c6b3e19f1825cfb2676daecce3bf3de03cf26647c78df00b371b25cc97",
                                                           writeType: LibraTransactionWriteType.Deletion)
-        let accessPath2 = LibraTransactionAccessPath.init(address: "c4c63f80c74b11263e421ebf8486a4e398d0dbc09fa7d4f62ccdb309f3aea81f",
+        let accessPath2 = LibraTransactionAccessPath.init(address: "c4c63f80c74b11263e421ebf8486a4e3",
                                                           path: "01217da6c6b3e19f18",
                                                           writeType: LibraTransactionWriteType.Value,
                                                           value: Data.init(Array<UInt8>(hex: "CAFED00D")))
-        let write = LibraTransactionWriteSet.init(accessPaths: [accessPath1, accessPath2]).serialize().toHexString().uppercased()
-        XCTAssertEqual(write, "0102A71D76FAA2D2D5C3224EC3D41DEB293973564A791E55C6782BA76C2BF0495F9A2101217DA6C6B3E19F1825CFB2676DAECCE3BF3DE03CF26647C78DF00B371B25CC9700C4C63F80C74B11263E421EBF8486A4E398D0DBC09FA7D4F62CCDB309F3AEA81F0901217DA6C6B3E19F180104CAFED00D")
+        let write = LibraTransactionWriteSet.init(accessPaths: [accessPath1, accessPath2]).serialize().toHexString().lowercased()
+        XCTAssertEqual(write, "0002a71d76faa2d2d5c3224ec3d41deb29392101217da6c6b3e19f1825cfb2676daecce3bf3de03cf26647c78df00b371b25cc9700c4c63f80c74b11263e421ebf8486a4e30901217da6c6b3e19f180104cafed00d")
         let module = LibraTransactionModule.init(code: Data.init(Array<UInt8>(hex: "CAFED00D"))).serialize().toHexString().uppercased()
-        XCTAssertEqual(module, "03CAFED00D")
+        XCTAssertEqual(module, "02CAFED00D")
+//        let a: Array<UInt8> = [0, 2, 167, 29, 118, 250, 162, 210, 213, 195, 34, 78, 195, 212, 29, 235, 41, 57, 33, 1, 33,
+//            125, 166, 198, 179, 225, 159, 24, 37, 207, 178, 103, 109, 174, 204, 227, 191, 61, 224, 60,
+//            242, 102, 71, 199, 141, 240, 11, 55, 27, 37, 204, 151, 0, 196, 198, 63, 128, 199, 75, 17,
+//            38, 62, 66, 30, 191, 132, 134, 164, 227, 9, 1, 33, 125, 166, 198, 179, 225, 159, 24, 1, 4,
+//            202, 254, 208, 13, 0]
+//        print(Data.init(a).toHexString())
+//        print("succ")
 //
 //        let raw = RawTransaction.init(senderAddres: "65e39e2e6b90ac215ec79e2b84690421d7286e6684b0e8e08a0b25dec640d849",
 //                                      sequenceNumber: 0,
@@ -245,13 +252,13 @@ class LibraSDKTests: XCTestCase {
             print("PublicKey = \(wallet.publicKey.toMultiPublicKey().toHexString())")
             //2bd7d9fe82120842daa860606060661b222824c65af7bfb2843eeb7792a3b96750b715879a727bbc561786b0dc9e6afcd5d8a443da6eb632952e692b83e8e7cbe7e1b22eeb0a9ce0c49e3bf6cf23ebbb4d93d24c2064c46f6ceb9daa6ca2e21702
             
-            let sign = try LibraManager.getMultiTransactionHex(sendAddress: multiPublicKey.toLegacy(),
-                                                               receiveAddress: "331321aefcce2ee794430d07d7a953a0",
-                                                               amount: 0.5,
-                                                               fee: 0,
-                                                               sequenceNumber: 8,
-                                                               wallet: wallet)
-            print(sign)
+//            let sign = try LibraManager.getMultiTransactionHex(sendAddress: multiPublicKey.toLegacy(),
+//                                                               receiveAddress: "331321aefcce2ee794430d07d7a953a0",
+//                                                               amount: 0.5,
+//                                                               fee: 0,
+//                                                               sequenceNumber: 8,
+//                                                               wallet: wallet)
+//            print(sign)
         } catch {
             print(error.localizedDescription)
         }

@@ -10,7 +10,7 @@ import Foundation
 struct LibraTransactionWriteSet {
     fileprivate let accessPaths: [LibraTransactionAccessPath]
     
-    fileprivate let writeHeaderData: Data = Data.init(hex: "01")
+    fileprivate let writeHeaderData: Data = Data.init(hex: "00")
     
     init(accessPaths: [LibraTransactionAccessPath]) {
         self.accessPaths = accessPaths

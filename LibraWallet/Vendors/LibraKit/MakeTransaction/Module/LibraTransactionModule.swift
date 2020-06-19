@@ -11,7 +11,7 @@ import UIKit
 struct LibraTransactionModule {
     fileprivate let code: Data
 
-    fileprivate let programPrefixData: Data = Data.init(hex: "03")
+    fileprivate let programPrefixData: Data = Data.init(hex: "02")
     
     init(code: Data) {
         self.code = code

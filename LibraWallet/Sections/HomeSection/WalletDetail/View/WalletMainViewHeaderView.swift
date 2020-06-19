@@ -9,7 +9,6 @@
 import UIKit
 
 class WalletMainViewHeaderView: UIView {
-    weak var delegate: VTokenMainHeaderViewDelegate?
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(headerBackgroundImageView)

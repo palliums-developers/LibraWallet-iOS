@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import Violas
+@testable import ViolasPay
 
 class LibraWalletTests: XCTestCase {
 
