@@ -1628,6 +1628,9 @@
 			isa = PBXGroup;
 			children = (
 				9DC4884823211180005FF254 /* WalletManager.swift */,
+				9DC8778B237958D2006378C3 /* LibraManager */,
+				9DC06A6C2373FEA300BCE1FE /* ViolasManager */,
+				9D3954FC235D4ABB0068019F /* BTCManager */,
 			);
 			path = WalletManager;
 			sourceTree = "<group>";
@@ -3128,14 +3131,11 @@
 		9DC9023B2328E7E60097FD85 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				9D6264702356F91A00A79B3D /* WalletManager */,
 				3667A799247500DE0000F119 /* WalletConnect */,
 				9D6264752356F96600A79B3D /* CryptoManager */,
 				9D6264742356F95800A79B3D /* KechainManger */,
 				36DA3FCC23B5E5C6001D7733 /* Extension */,
-				9DC8778B237958D2006378C3 /* LibraManager */,
-				9DC06A6C2373FEA300BCE1FE /* ViolasManager */,
-				9D3954FC235D4ABB0068019F /* BTCManager */,
-				9D6264702356F91A00A79B3D /* WalletManager */,
 				9D6264712356F92A00A79B3D /* DataManager */,
 				9D62646F2356F90E00A79B3D /* Error */,
 				9DC9023C2328E8290097FD85 /* CommonData.swift */,
