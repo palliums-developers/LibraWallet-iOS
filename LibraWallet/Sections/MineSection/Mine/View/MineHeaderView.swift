@@ -30,7 +30,7 @@ class MineHeaderView: UIView {
         avatarImageView.snp.makeConstraints { (make) in
             make.centerX.equalTo(self)
             make.centerY.equalTo(self)
-            make.size.equalTo(CGSize.init(width: 60, height: 60))
+            make.size.equalTo(CGSize.init(width: 75, height: 75))
         }
         nickNameLabel.snp.makeConstraints { (make) in
             make.centerX.equalTo(avatarImageView)
@@ -62,16 +62,4 @@ class MineHeaderView: UIView {
         label.text = "ViolasPay"
         return label
     }()
-//    var model: WalletData? {
-//        didSet {
-//            let url = URL(string: model?.walletAvatarURL ?? "")
-//            avatarImageView.kf.setImage(with: url, placeholder: UIImage.init(named: "default_avatar"))
-//            if let nickName = model?.walletNickName, nickName.isEmpty == false {
-//                nickNameLabel.text = nickName
-//            }
-//            if let uid = model?.walletUID {
-//                uidLabel.text = "UID: \(uid)"
-//            }
-//        }
-//    }
 }

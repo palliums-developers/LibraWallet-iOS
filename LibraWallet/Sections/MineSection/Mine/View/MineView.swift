@@ -12,7 +12,6 @@ class MineView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(mineHeaderView)
-        
         self.addSubview(self.tableView)
     }
     required init?(coder aDecoder: NSCoder) {

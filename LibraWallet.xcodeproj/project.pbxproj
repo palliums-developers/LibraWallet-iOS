@@ -1191,8 +1191,8 @@
 		3650F0A1248763830086F578 /* WalletDetail */ = {
 			isa = PBXGroup;
 			children = (
-				3650F0AF248898440086F578 /* TableViewManager */,
 				3650F0A42487650A0086F578 /* Controller */,
+				3650F0AF248898440086F578 /* TableViewManager */,
 				3650F0A3248764EA0086F578 /* Model */,
 				3650F0A2248764E40086F578 /* View */,
 			);

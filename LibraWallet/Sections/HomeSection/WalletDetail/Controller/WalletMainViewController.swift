@@ -32,7 +32,7 @@ class WalletMainViewController: BaseViewController {
         segmentView.snp.makeConstraints { (make) in
             make.top.equalTo(headerView.snp.bottom)
             make.left.equalTo(self.view)
-            make.size.equalTo(CGSize.init(width: 160, height: 42))
+            make.size.equalTo(CGSize.init(width: 180, height: 42))
         }
         listContainerView.snp.makeConstraints { (make) in
             make.bottom.equalTo(footerView.snp.top)

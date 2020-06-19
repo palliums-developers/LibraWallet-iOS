@@ -71,11 +71,9 @@ class MineViewController: UIViewController {
 extension MineViewController: MineTableViewManagerDelegate {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath) {
         if indexPath.section == 0 {
-            
             if indexPath.row == 0 {
                 let vc = WalletDetailViewController()
                 vc.hidesBottomBarWhenPushed = true
-//                vc.managerWallet = true
                 vc.canDelete = true
                 self.navigationController?.pushViewController(vc, animated: true)
             }
@@ -94,24 +92,10 @@ extension MineViewController: MineTableViewManagerDelegate {
         } else if indexPath.section == 3 {
             if indexPath.row == 0 {
                 let vc = ActiveAccountViewController()
-//                vc.authKey = LibraWalletManager.shared.walletAuthenticationKey
+                //                vc.authKey = LibraWalletManager.shared.walletAuthenticationKey
                 vc.hidesBottomBarWhenPushed = true
                 self.navigationController?.pushViewController(vc, animated: true)
             }
-       }
-//        if indexPath.row == 1 {
-//            let vc = AddressManagerViewController()
-//            vc.hidesBottomBarWhenPushed = true
-//            self.navigationController?.pushViewController(vc, animated: true)
-//        } else if indexPath.row == 2 {
-//            let vc = SettingViewController()
-//            vc.hidesBottomBarWhenPushed = true
-//            self.navigationController?.pushViewController(vc, animated: true)
-//        } else if indexPath.row == 0 {
-//            let vc = WalletManagerViewController()
-//            vc.hidesBottomBarWhenPushed = true
-//            vc.managerWallet = true
-//            self.navigationController?.pushViewController(vc, animated: true)
-//        }
+        }
     }
 }

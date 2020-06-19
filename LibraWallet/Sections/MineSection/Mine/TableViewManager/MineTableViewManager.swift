@@ -24,7 +24,6 @@ extension MineTableViewManager: UITableViewDelegate {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
-                
         self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath)
     }
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
