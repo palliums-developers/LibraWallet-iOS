@@ -17,8 +17,8 @@ struct ViolasTransactionScript {
         
     fileprivate let argruments: [ViolasTransactionArgument]
         
-    fileprivate let programPrefixData: Data = Data.init(hex: "02")
-    
+    fileprivate let programPrefixData: Data = Data.init(hex: "01")
+
     init(code: Data, typeTags: [ViolasTypeTag], argruments: [ViolasTransactionArgument]) {
         
         self.code = code

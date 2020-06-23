@@ -11,8 +11,8 @@ import UIKit
 struct ViolasTransactionWriteSet {
     fileprivate let accessPaths: [ViolasTransactionAccessPath]
     
-    fileprivate let writeHeaderData: Data = Data.init(hex: "01")
-    
+    fileprivate let writeHeaderData: Data = Data.init(hex: "00")
+
     init(accessPaths: [ViolasTransactionAccessPath]) {
         self.accessPaths = accessPaths
     }
