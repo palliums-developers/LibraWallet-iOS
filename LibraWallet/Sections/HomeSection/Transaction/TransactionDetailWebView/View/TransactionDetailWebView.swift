@@ -11,7 +11,6 @@ import WebKit
 class TransactionDetailWebView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        addSubview(topBackgroundImageView)
         self.addSubview(webView)
     }
     required init?(coder aDecoder: NSCoder) {
@@ -23,22 +22,12 @@ class TransactionDetailWebView: UIView {
     //MARK: - 布局
     override func layoutSubviews() {
         super.layoutSubviews()
-        topBackgroundImageView.snp.makeConstraints { (make) in
-            make.top.left.right.equalTo(0)
-            make.height.equalTo(202)
-        }
         webView.snp.makeConstraints { (make) in
-            make.top.equalTo(self).offset(navigationBarHeight)
+            make.top.equalTo(self)
             make.left.right.bottom.equalTo(self)
         }
     }
     //MARK: - 懒加载对象
-    private lazy var topBackgroundImageView : UIImageView = {
-        let imageView = UIImageView.init()
-        imageView.image = UIImage.init(named: "navigation_background")
-        imageView.isUserInteractionEnabled = true
-        return imageView
-    }()
     lazy var webView: WKWebView = {
         let webView = WKWebView.init()
         // 下面一行代码意思是充满的意思(一定要加，不然也会显示有问题)

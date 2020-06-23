@@ -241,6 +241,9 @@ wallet_transaction_detail_receive_address_title = "收款地址";
 wallet_transaction_detail_version_title = "交易号";
 wallet_transaction_detail_explorer_check_title = "浏览器查询更详细信息 >";
 
+/************* 添加资产 *******************/
+wallet_add_assets_get_test_coin_title = "获取体验币";
+
 /************* 弹出提示 *******************/
 // 转账弹出提示
 wallet_transfer_success_alert = "转账成功";
@@ -377,6 +380,7 @@ wallet_request_data_empty_error = "数据返回为空";
 wallet_request_data_no_more_error = "没有更多数据";
 wallet_request_version_invalid_error = "App版本太旧";
 wallet_request_network_invalid_error = "网络异常";
+wallet_request_wallet_unactive_error = "钱包尚未激活";
 // 钥匙串相关错误
 wallet_keychain_set_password_failed_error = "保存密码失败";
 wallet_keychain_set_mnemonic_failed_error = "保存助记词失败";

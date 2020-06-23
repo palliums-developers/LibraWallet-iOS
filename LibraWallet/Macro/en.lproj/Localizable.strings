@@ -239,6 +239,9 @@ wallet_transaction_detail_receive_address_title = "Receiver:";
 wallet_transaction_detail_version_title = "No.";
 wallet_transaction_detail_explorer_check_title = "Browser for more detailed information >";
 
+/************* 添加资产 *******************/
+wallet_add_assets_get_test_coin_title = "Get Test Coin";
+
 /************* 弹出提示 *******************/
 // 转账弹出提示
 wallet_transfer_success_alert = "Transfer Successful";
@@ -372,9 +375,10 @@ wallet_mapping_receive_wallet_navigationbar_title = "Wallets";
 wallet_request_parse_json_error = "Data Parsing Error";
 wallet_request_data_code_error = "Data Coding Error";
 wallet_request_data_empty_error = "Empty Data";
-wallet_request_data_no_more_error = "No more Data";
-wallet_request_version_invalid_error = "Too Old version App";
+wallet_request_data_no_more_error = "No more data";
+wallet_request_version_invalid_error = "Version Invalid";
 wallet_request_network_invalid_error = "Network Error";
+wallet_request_wallet_unactive_error = "Wallet has not been activated";
 // 钥匙串相关错误
 wallet_keychain_set_password_failed_error = "Save Wallet Access Code Error";
 wallet_keychain_set_mnemonic_failed_error = "Save Mnemonic Words Error";

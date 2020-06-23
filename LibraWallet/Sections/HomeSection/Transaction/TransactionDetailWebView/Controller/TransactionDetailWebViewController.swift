@@ -27,12 +27,24 @@ class TransactionDetailWebViewController: BaseViewController {
             make.top.left.right.bottom.equalTo(self.view)
         }
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.barStyle = .default
+    }
+    override func back() {
+        if needDismissViewController == true {
+            self.dismiss(animated: true, completion: nil)
+        } else {
+            self.navigationController?.popViewController(animated: true)
+        }
+    }
     //子View
     private lazy var detailView : TransactionDetailWebView = {
         let view = TransactionDetailWebView.init()
         view.webView.navigationDelegate = self
         return view
     }()
+    var needDismissViewController: Bool?
     deinit {
         print("TransactionDetailWebViewController销毁了")
     }

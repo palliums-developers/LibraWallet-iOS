@@ -29,8 +29,14 @@ struct ViolasTokenModel: Codable {
 struct AssetsModel {
     /// 币图片
     var icon: String?
+    /// 展示名字
+    var show_name: String?
     /// 名称
     var name: String?
+    /// 合约地址
+    var address: String?
+    /// module名字
+    var module: String?
     /// 描述
     var description: String?
     /// 是否已展示
@@ -41,42 +47,45 @@ struct AssetsModel {
     var type: WalletType?
     /// 钱包激活状态
     var walletActiveState: Bool?
+
 }
-struct ViolasTokenListDataModel: Codable {
-    /// Currency Code
-    var code: String?
-    /// Max fractional part of single unit of currency allowed in a transaction
-    var fractional_part: Int64?
-    /// Factor by which the amount is scaled before it is stored in the blockchain
-    var scaling_factor: Int64
+struct ViolasTokensCurrenciesModel: Codable {
+    var address: String?
+    var module: String?
+    var name: String?
+    var show_icon: String?
+    var show_name: String?
 }
-struct ViolasTokenListMainModel: Codable {
-    var id: String?
-    var jsonrpc: String?
-    var result: [ViolasTokenListDataModel]?
-    var error: LibraTransferErrorModel?
+struct ViolasTokensDataModel: Codable {
+    var currencies: [ViolasTokensCurrenciesModel]?
 }
-struct LibraTokenListDataModel: Codable {
-    /// Currency Code
-    var code: String?
-    /// Max fractional part of single unit of currency allowed in a transaction
-    var fractional_part: Int64?
-    /// Factor by which the amount is scaled before it is stored in the blockchain
-    var scaling_factor: Int64
+struct ViolasTokensMainModel: Codable {
+    var code: Int?
+    var message: String?
+    var data: ViolasTokensDataModel?
 }
-struct LibraTokenListMainModel: Codable {
-    var id: String?
-    var jsonrpc: String?
-    var result: [LibraTokenListDataModel]?
-    var error: LibraTransferErrorModel?
+struct LibraTokensCurrenciesModel: Codable {
+    var address: String?
+    var module: String?
+    var name: String?
+    var show_icon: String?
+    var show_name: String?
+}
+struct LibraTokensDataModel: Codable {
+    var currencies: [LibraTokensCurrenciesModel]?
+}
+struct LibraTokensMainModel: Codable {
+    var code: Int?
+    var message: String?
+    var data: LibraTokensDataModel?
 }
 class AddAssetModel: NSObject {
     private var requests: [Cancellable] = []
     @objc dynamic var dataDic: NSMutableDictionary = [:]
     private var violasEnableTokens: [ViolasBalanceModel]?
     private var libraEnableTokens: [LibraBalanceModel]?
-    private var violasTokens: [ViolasTokenListDataModel]?
-    private var libraTokens: [LibraTokenListDataModel]?
+    private var violasTokens: [ViolasTokensCurrenciesModel]?
+    private var libraTokens: [LibraTokensCurrenciesModel]?
     private var resultTokens = [AssetsModel]()
     private var violasWalletActiveState: Bool = false
     private var libraWalletActiveState: Bool = false
@@ -113,15 +122,26 @@ class AddAssetModel: NSObject {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(ViolasTokenListMainModel.self)
-                    guard let models = json.result, models.isEmpty == false else {
-                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: "GetViolasTokens")
-                        self?.setValue(data, forKey: "dataDic")
+                    let json = try response.map(ViolasTokensMainModel.self)
+                    if json.code == 2000 {
+                        guard let models = json.data?.currencies, models.isEmpty == false else {
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: "GetViolasTokens")
+                            self?.setValue(data, forKey: "dataDic")
+                            print("GetViolasTokens_状态异常")
+                            return
+                        }
+                        self?.violasTokens = models
+                        group.leave()
+                    } else {
                         print("GetViolasTokens_状态异常")
-                        return
+                        if let message = json.message, message.isEmpty == false {
+                            let data = setKVOData(error: LibraWalletError.error(message), type: "GetViolasTokens")
+                            self?.setValue(data, forKey: "dataDic")
+                        } else {
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "GetViolasTokens")
+                            self?.setValue(data, forKey: "dataDic")
+                        }
                     }
-                    self?.violasTokens = models
-                    group.leave()
                 } catch {
                     print("GetViolasTokens_解析异常\(error.localizedDescription)")
                     let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetViolasTokens")
@@ -180,17 +200,29 @@ class AddAssetModel: NSObject {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(LibraTokenListMainModel.self)
-                    guard let models = json.result, models.isEmpty == false else {
-                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: "GetViolasTokens")
-                        self?.setValue(data, forKey: "dataDic")
-                        return
+                    let json = try response.map(LibraTokensMainModel.self)
+                    if json.code == 2000 {
+                        guard let models = json.data?.currencies, models.isEmpty == false else {
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: "GetViolasTokens")
+                            self?.setValue(data, forKey: "dataDic")
+                            print("GetLibraTokens_状态异常")
+                            return
+                        }
+                        self?.libraTokens = models
+                        group.leave()
+                    } else {
+                        print("GetLibraTokens_状态异常")
+                        if let message = json.message, message.isEmpty == false {
+                            let data = setKVOData(error: LibraWalletError.error(message), type: "GetLibraTokens")
+                            self?.setValue(data, forKey: "dataDic")
+                        } else {
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "GetLibraTokens")
+                            self?.setValue(data, forKey: "dataDic")
+                        }
                     }
-                    self?.libraTokens = models
-                    group.leave()
                 } catch {
-                    print("GetViolasTokens_解析异常\(error.localizedDescription)")
-                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetViolasTokens")
+                    print("GetLibraTokens_解析异常\(error.localizedDescription)")
+                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetLibraTokens")
                     self?.setValue(data, forKey: "dataDic")
                 }
             case let .failure(error):
@@ -198,7 +230,7 @@ class AddAssetModel: NSObject {
                     print("网络请求已取消")
                     return
                 }
-                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "GetViolasTokens")
+                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "GetLibraTokens")
                 self?.setValue(data, forKey: "dataDic")
             }
         }
@@ -239,11 +271,20 @@ class AddAssetModel: NSObject {
         }
         self.requests.append(request)
     }
-    private func rebuiltViolasData(enableTokens: [ViolasBalanceModel], allTokens: [ViolasTokenListDataModel], localTokens: [Token]) {
+    private func rebuiltViolasData(enableTokens: [ViolasBalanceModel], allTokens: [ViolasTokensCurrenciesModel], localTokens: [Token]) {
         for item in allTokens {
-            var tempModel = AssetsModel.init(icon: "violas_icon", name: item.code, description: "", enable: false, registerState: false, type: .Violas, walletActiveState: false)
+            var tempModel = AssetsModel.init(icon: item.show_icon,
+                                             show_name: item.show_name,
+                                             name: item.name,
+                                             address: item.address,
+                                             module: item.module,
+                                             description: "",
+                                             enable: false,
+                                             registerState: false,
+                                             type: .Violas,
+                                             walletActiveState: false)
             for token in enableTokens {
-                if item.code == token.currency {
+                if item.module == token.currency {
                     tempModel.registerState = true
                     continue
                 }
@@ -252,7 +293,7 @@ class AddAssetModel: NSObject {
                 $0.tokenType == .Violas
             }
             for token in tempLocalTokens {
-                if item.code == token.tokenModule {
+                if item.module == token.tokenModule {
                     if tempModel.registerState == true {
                         tempModel.enable = self.violasWalletActiveState == true ? true:false
                     } else {
@@ -265,11 +306,20 @@ class AddAssetModel: NSObject {
             self.resultTokens.append(tempModel)
         }
     }
-    private func rebuiltLibraData(enableTokens: [LibraBalanceModel], allTokens: [LibraTokenListDataModel], localTokens: [Token]) {
+    private func rebuiltLibraData(enableTokens: [LibraBalanceModel], allTokens: [LibraTokensCurrenciesModel], localTokens: [Token]) {
         for item in allTokens {
-            var tempModel = AssetsModel.init(icon: "libra_icon", name: item.code, description: "", enable: false, registerState: false, type: .Libra)
+            var tempModel = AssetsModel.init(icon: item.show_icon,
+                                             show_name: item.show_name,
+                                             name: item.name,
+                                             address: item.address,
+                                             module: item.module,
+                                             description: "",
+                                             enable: false,
+                                             registerState: false,
+                                             type: .Libra,
+                                             walletActiveState: false)
             for token in enableTokens {
-                if item.code == token.currency {
+                if item.module == token.currency {
                     tempModel.registerState = true
                     continue
                 }
@@ -278,7 +328,7 @@ class AddAssetModel: NSObject {
                 $0.tokenType == .Libra
             }
             for token in tempLocalTokens {
-                if item.code == token.tokenModule {
+                if item.module == token.tokenModule {
                     tempModel.enable = true
                     continue
                 }
@@ -319,6 +369,11 @@ class AddAssetModel: NSObject {
             case let .success(response):
                 do {
                     let json = try response.map(BalanceViolasMainModel.self)
+                    guard json.result != nil else {
+                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.walletUnActive), type: "GetLibraSequenceNumber")
+                        self?.setValue(data, forKey: "dataDic")
+                        return
+                    }
                     self?.makeTransaction(sendAddress: sendAddress, mnemonic: mnemonic, sequenceNumber: Int(json.result?.sequence_number ?? 0), type: type, module: module)
                 } catch {
                     print("GetViolasSequenceNumber__解析异常\(error.localizedDescription)")
@@ -342,6 +397,11 @@ class AddAssetModel: NSObject {
             case let .success(response):
                 do {
                     let json = try response.map(BalanceLibraMainModel.self)
+                    guard json.result != nil else {
+                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.walletUnActive), type: "GetLibraSequenceNumber")
+                        self?.setValue(data, forKey: "dataDic")
+                        return
+                    }
                     self?.makeTransaction(sendAddress: sendAddress, mnemonic: mnemonic, sequenceNumber: Int(json.result?.sequence_number ?? 0), type: type, module: module)
                 } catch {
                     print("GetLibraSequenceNumber_解析异常\(error.localizedDescription)")
@@ -382,7 +442,7 @@ class AddAssetModel: NSObject {
             case let .success(response):
                 do {
                     let json = try response.map(LibraTransferMainModel.self)
-                    if json.result == nil {
+                    if json.error == nil {
                         let data = setKVOData(type: "SendViolasTransaction")
                         self?.setValue(data, forKey: "dataDic")
                     } else {
@@ -417,7 +477,7 @@ class AddAssetModel: NSObject {
             case let .success(response):
                 do {
                     let json = try response.map(LibraTransferMainModel.self)
-                    if json.result == nil {
+                    if json.error == nil {
                        DispatchQueue.main.async(execute: {
                            let data = setKVOData(type: "SendLibraTransaction")
                            self?.setValue(data, forKey: "dataDic")

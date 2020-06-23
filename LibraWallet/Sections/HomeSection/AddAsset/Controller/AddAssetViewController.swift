@@ -19,7 +19,7 @@ class AddAssetViewController: BaseViewController {
         // 加载数据
         self.initKVO()
         #warning("测试")
-        //        self.addNavigationRightBar()
+        self.addNavigationRightBar()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -79,7 +79,9 @@ class AddAssetViewController: BaseViewController {
     var needUpdateClosure: successClosure?
     lazy var addAddressButton: UIButton = {
         let button = UIButton(type: .custom)
-        button.setImage(UIImage.init(named: "add"), for: UIControl.State.normal)
+        button.setTitle(localLanguage(keyString: "wallet_add_assets_get_test_coin_title"), for: UIControl.State.normal)
+        button.setTitleColor(UIColor.init(hex: "7038FD"), for: UIControl.State.normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
         button.addTarget(self, action: #selector(addAddressMethod), for: .touchUpInside)
         return button
     }()
@@ -95,10 +97,10 @@ extension AddAssetViewController: AddAssetTableViewManagerDelegate {
             let wallet = tokens?.filter({
                 $0.tokenType == model.type
             })
-            if DataBaseManager.DBManager.isExistViolasToken(tokenAddress: wallet?.first?.tokenAddress ?? "", tokenModule: model.name ?? "", tokenType: model.type!) {
+            if DataBaseManager.DBManager.isExistViolasToken(tokenAddress: wallet?.first?.tokenAddress ?? "", tokenModule: model.module ?? "", tokenType: model.type!) {
                 //已存在改状态
                 print("已存在改状态,\(wallet?.first?.tokenAddress ?? "")")
-                let changeState = DataBaseManager.DBManager.updateViolasTokenState(tokenAddress: wallet?.first?.tokenAddress ?? "", tokenModule: model.name ?? "", tokenType: model.type!, state: state)
+                let changeState = DataBaseManager.DBManager.updateViolasTokenState(tokenAddress: wallet?.first?.tokenAddress ?? "", tokenModule: model.module ?? "", tokenType: model.type!, state: state)
                 if changeState == false {
                     let cell = self.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
                     cell.switchButton.setOn(!state, animated: true)
@@ -107,7 +109,7 @@ extension AddAssetViewController: AddAssetTableViewManagerDelegate {
                 //不存在插入
                 print("不存在插入")
                 let token = Token.init(tokenID: 999,
-                                       tokenName: model.name ?? "",
+                                       tokenName: model.show_name ?? "",
                                        tokenBalance: 0,
                                        tokenAddress: wallet?.first?.tokenAddress ?? "",
                                        tokenType: model.type!,
@@ -115,8 +117,8 @@ extension AddAssetViewController: AddAssetTableViewManagerDelegate {
                                        tokenAuthenticationKey: wallet?.first?.tokenAuthenticationKey ?? "",
                                        tokenActiveState: true,
                                        tokenIcon: model.icon ?? "",
-                                       tokenContract: model.type == .Libra ? "00000000000000000000000000000001":"00000000000000000000000000000000",
-                                       tokenModule: model.name ?? "",
+                                       tokenContract: model.address ?? "00000000000000000000000000000001",
+                                       tokenModule: model.module ?? "",
                                        tokenModuleName: "T",
                                        tokenEnable: true)
                 let changeState = DataBaseManager.DBManager.insertToken(token: token)
@@ -150,12 +152,12 @@ extension AddAssetViewController: AddAssetTableViewManagerDelegate {
     func showPasswordAlert(model: AssetsModel, indexPath: IndexPath, wallet: Token) {
         WalletManager.unlockWallet(controller: self, successful: { [weak self] (mnemonic) in
             self?.detailView.toastView?.show()
-            self?.dataModel.publishViolasToken(sendAddress: wallet.tokenAddress, mnemonic: mnemonic, type: wallet.tokenType, module: model.name ?? "")
+            self?.dataModel.publishViolasToken(sendAddress: wallet.tokenAddress, mnemonic: mnemonic, type: wallet.tokenType, module: model.module ?? "")
             self?.actionClosure = { result in
                 if result == true {
                     print("开启成功插入")
                     let token = Token.init(tokenID: 999,
-                                           tokenName: model.name ?? "",
+                                           tokenName: model.show_name ?? "",
                                            tokenBalance: 0,
                                            tokenAddress: wallet.tokenAddress,
                                            tokenType: model.type!,
@@ -163,8 +165,8 @@ extension AddAssetViewController: AddAssetTableViewManagerDelegate {
                                            tokenAuthenticationKey: wallet.tokenAuthenticationKey,
                                            tokenActiveState: true,
                                            tokenIcon: model.icon ?? "",
-                                           tokenContract: model.type == .Libra ? "00000000000000000000000000000001":"00000000000000000000000000000000",
-                                           tokenModule: model.name ?? "",
+                                           tokenContract: model.address ?? "00000000000000000000000000000001",
+                                           tokenModule: model.module ?? "",
                                            tokenModuleName: "T",
                                            tokenEnable: true)
                     _ = DataBaseManager.DBManager.insertToken(token: token)
@@ -200,6 +202,17 @@ extension AddAssetViewController {
         self.navigationItem.rightBarButtonItems = [barButtonItem, backView]
     }
     @objc func addAddressMethod() {
+        let violasTokens = tokens?.filter({
+            $0.tokenType == .Violas
+        })
+        if violasTokens?.isEmpty == false {
+            let vc = TransactionDetailWebViewController()
+            let navi = BaseNavigationViewController.init(rootViewController: vc)
+            vc.requestURL = "https://testnet.violas.io/faucet/\(violasTokens?.first?.tokenAddress ?? "")"
+            vc.needDismissViewController = true
+            self.present(navi, animated: true, completion: nil)
+        }
+        
     }
 }
 //MARK: - 网络请求数据处理中心
@@ -231,6 +244,8 @@ extension AddAssetViewController {
                 }
                 self?.detailView.hideToastActivity()
                 self?.detailView.toastView?.hide()
+                self?.detailView.makeToast(error.localizedDescription,
+                                           position: .center)
                 if let action = self?.actionClosure {
                     action(false)
                 }

@@ -63,7 +63,7 @@ class AddAssetViewTableViewCell: UITableViewCell {
     }()
     private lazy var iconImageView : UIImageView = {
         let imageView = UIImageView.init()
-        imageView.layer.cornerRadius = 19
+        imageView.layer.cornerRadius = 14
         imageView.layer.masksToBounds = true
        return imageView
    }()
@@ -101,7 +101,7 @@ class AddAssetViewTableViewCell: UITableViewCell {
     //MARK: - 设置数据
     var token: AssetsModel? {
         didSet {
-            nameLabel.text = token?.name
+            nameLabel.text = token?.show_name
             detailLabel.text = token?.description
             if let iconName = token?.icon, iconName.isEmpty == false {
                 if iconName.hasPrefix("http") {

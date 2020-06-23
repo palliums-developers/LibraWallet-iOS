@@ -141,6 +141,8 @@ struct ViolasDataModel: Codable {
     var amount: Int?
     /// 交易币合约
     var module: String?
+    /// 币种名字
+    var currency: String?
     /// 过期时间
     var expiration_time: Int?
     /// 手续费
@@ -173,7 +175,6 @@ class WalletTransactionsModel: NSObject {
     private var requests: [Cancellable] = []
     @objc dynamic var dataDic: NSMutableDictionary = [:]
     private var transactionList: [ViolasDataModel]?
-    private var supportTokens: [ViolasTokenModel]?
     /// 获取BTC交易记录
     /// - Parameters:
     ///   - address: 地址

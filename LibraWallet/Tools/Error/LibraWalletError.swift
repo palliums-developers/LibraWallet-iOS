@@ -25,6 +25,8 @@ public enum LibraWalletError: Error {
         case walletVersionExpired
         /// 网络无法访问
         case networkInvalid
+        /// 钱包尚未激活
+        case walletUnActive
     }
     case WalletRequest(reason: RequestError)
     
@@ -315,6 +317,8 @@ extension LibraWalletError.RequestError {
             return localLanguage(keyString: "wallet_request_version_invalid_error")
         case .networkInvalid:
             return localLanguage(keyString: "wallet_request_network_invalid_error")
+        case .walletUnActive:
+            return localLanguage(keyString: "wallet_request_wallet_unactive_error")
         }
     }
 }
