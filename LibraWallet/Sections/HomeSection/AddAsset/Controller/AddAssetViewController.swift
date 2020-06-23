@@ -120,7 +120,8 @@ extension AddAssetViewController: AddAssetTableViewManagerDelegate {
                                        tokenContract: model.address ?? "00000000000000000000000000000001",
                                        tokenModule: model.module ?? "",
                                        tokenModuleName: "T",
-                                       tokenEnable: true)
+                                       tokenEnable: true,
+                                       tokenPrice: "0.0")
                 let changeState = DataBaseManager.DBManager.insertToken(token: token)
                 if changeState == false {
                     let cell = self.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
@@ -168,7 +169,8 @@ extension AddAssetViewController: AddAssetTableViewManagerDelegate {
                                            tokenContract: model.address ?? "00000000000000000000000000000001",
                                            tokenModule: model.module ?? "",
                                            tokenModuleName: "T",
-                                           tokenEnable: true)
+                                           tokenEnable: true,
+                                           tokenPrice: "0.0")
                     _ = DataBaseManager.DBManager.insertToken(token: token)
                     if let action = self?.needUpdateClosure {
                         action(true)

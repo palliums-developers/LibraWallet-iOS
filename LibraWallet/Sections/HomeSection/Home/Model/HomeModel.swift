@@ -8,13 +8,15 @@
 
 import UIKit
 import Moya
-struct ViolasAccountInfoDataModel: Codable {
-    var authentication_key: String?
+
+struct ModelPriceDataModel: Codable {
+    var name: String?
+    var rate: Double?
 }
-struct ViolasAccountInfoMainModel: Codable {
+struct ModelPriceMainModel: Codable {
     var code: Int?
     var message: String?
-    var data: ViolasAccountInfoDataModel?
+    var data: [ModelPriceDataModel]?
 }
 struct ActiveAccountMainModel: Codable {
     var code: Int?
@@ -24,7 +26,6 @@ struct ScanLoginDataModel: Codable {
     var type: Int?
     var session_id: String?
 }
-
 struct LibraBalanceModel: Codable {
     var amount: Int64?
     var currency: String?
@@ -83,34 +84,6 @@ struct BalanceViolasMainModel: Codable {
     var result: BalanceViolasModel?
     var error: LibraTransferErrorModel?
     
-}
-struct BalanceBTCModel: Codable {
-    /// 地址
-    var address: String?
-    /// 总接收
-    var received: Int?
-    /// 总支出
-    var sent: Int?
-    /// 当前余额
-    var balance: Int64?
-    /// 交易数量
-    var tx_count: Int?
-    /// 未确认交易数量
-    var unconfirmed_tx_count: Int?
-    /// 未确认总接收
-    var unconfirmed_received: Int?
-    /// 未确认总支出
-    var unconfirmed_sent: Int?
-    /// 未花费交易数量D
-    var unspent_tx_count: Int?
-    /// 第一笔交易
-    var first_tx: String?
-    /// 最后一笔交易
-    var last_tx: String?
-}
-struct BalanceBTCMainModel: Codable {
-    var err_no: Int?
-    var data: BalanceBTCModel?
 }
 struct TrezorBTCBalanceMainModel: Codable {
     ///
@@ -179,13 +152,25 @@ class HomeModel: NSObject {
                 self.getLibraBalance(tokenID: libraToken.first!.tokenID, address: libraToken.first!.tokenAddress, tokens: tokens)
             })
             quene.async(group: group, qos: .default, flags: [], execute: {
+                guard btcToken.isEmpty == false else {
+                    return
+                }
                 // 更新BTC价格
+                self.getBTCPrice(address: btcToken.first!.tokenAddress)
             })
             quene.async(group: group, qos: .default, flags: [], execute: {
+                guard violasToken.isEmpty == false else {
+                    return
+                }
                 // 更新Violas价格
+                self.getViolasPrice(address: violasToken.first!.tokenAddress)
             })
             quene.async(group: group, qos: .default, flags: [], execute: {
+                guard libraToken.isEmpty == false else {
+                    return
+                }
                 // 更新Libra价格
+                self.getLibraPrice(address: libraToken.first!.tokenAddress)
             })
             group.notify(queue: quene) {
                 print("回到该队列中执行")
@@ -194,7 +179,7 @@ class HomeModel: NSObject {
 //                    let tempResult = self.rebuiltData(walletTokenEnable: state, marketTokens: marketTokens)
 //                    let finalResult = self.dealModelWithSelect(walletID: walletID, models: tempResult)
                     
-                    let data = setKVOData(type: "UpdateLocalTokenBalance", data: "finalResult")
+                    let data = setKVOData(type: "GetTotalPrice", data: "GetTotalPrice")
                     self.setValue(data, forKey: "dataDic")
                 })
             }
@@ -321,36 +306,129 @@ class HomeModel: NSObject {
         }
         self.requests.append(request)
     }
-//    func activeViolasAccount(tokenID: Int64, address: String, authKey: String, tokens: [Token]) {
-//        let request = mainProvide.request(.ActiveViolasAccount(authKey)) {[weak self](result) in
-//            switch  result {
-//            case let .success(response):
-//                do {
-//                    let json = try response.map(ActiveAccountMainModel.self)
-//                    if json.code == 2000 {
-//                        self?.getViolasBalance(tokenID: tokenID, address: address, authKey: authKey, tokens: tokens)
-//                        self?.updateLocalTokenActiveState(tokens: tokens, type: .Violas)
-//                    } else {
-//                        let data = setKVOData(error: LibraWalletError.error("Active Error"), type: "ActiveViolasAccount")
-//                        self?.setValue(data, forKey: "dataDic")
-//                    }
-//                } catch {
-//                    print("ActiveViolasAccount_解析异常\(error.localizedDescription)")
-//                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "ActiveViolasAccount")
-//                    self?.setValue(data, forKey: "dataDic")
-//                }
-//            case let .failure(error):
-//                guard error.errorCode != -999 else {
-//                    print("ActiveViolasAccount_网络请求已取消")
-//                    return
-//                }
-//                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "ActiveViolasAccount")
-//                self?.setValue(data, forKey: "dataDic")
-//            }
-//        }
-//        self.requests.append(request)
-//    }
-
+    func getBTCPrice(address: String) {
+        let request = mainProvide.request(.GetBTCPrice) {[weak self](result) in
+            switch  result {
+            case let .success(response):
+                do {
+                    let json = try response.map(ModelPriceMainModel.self)
+                    if json.code == 2000 {
+                        guard let models = json.data, models.isEmpty == false else {
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: "GetBTCPrice")
+                            self?.setValue(data, forKey: "dataDic")
+                            print("GetBTCPrice_状态异常")
+                            return
+                        }
+                        let data = setKVOData(type: "GetBTCPrice", data: json.data)
+                        self?.setValue(data, forKey: "dataDic")
+                    } else {
+                        print("GetBTCPrice_状态异常")
+                        if let message = json.message, message.isEmpty == false {
+                            let data = setKVOData(error: LibraWalletError.error(message), type: "GetBTCPrice")
+                            self?.setValue(data, forKey: "dataDic")
+                        } else {
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "GetBTCPrice")
+                            self?.setValue(data, forKey: "dataDic")
+                        }
+                    }
+                } catch {
+                    print("GetBTCPrice_解析异常\(error.localizedDescription)")
+                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetBTCPrice")
+                    self?.setValue(data, forKey: "dataDic")
+                }
+            case let .failure(error):
+                guard error.errorCode != -999 else {
+                    print("GetBTCPrice_网络请求已取消")
+                    return
+                }
+                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "GetBTCPrice")
+                self?.setValue(data, forKey: "dataDic")
+            }
+        }
+        self.requests.append(request)
+    }
+    func getViolasPrice(address: String) {
+        let request = mainProvide.request(.GetViolasPrice(address)) {[weak self](result) in
+            switch  result {
+            case let .success(response):
+                do {
+                    let json = try response.map(ModelPriceMainModel.self)
+                    if json.code == 2000 {
+                        guard let models = json.data, models.isEmpty == false else {
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: "GetViolasPrice")
+                            self?.setValue(data, forKey: "dataDic")
+                            print("GetViolasPrice_状态异常")
+                            return
+                        }
+                        let data = setKVOData(type: "GetViolasPrice", data: json.data)
+                        self?.setValue(data, forKey: "dataDic")
+                    } else {
+                        print("GetViolasPrice_状态异常")
+                        if let message = json.message, message.isEmpty == false {
+                            let data = setKVOData(error: LibraWalletError.error(message), type: "GetViolasPrice")
+                            self?.setValue(data, forKey: "dataDic")
+                        } else {
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "GetViolasPrice")
+                            self?.setValue(data, forKey: "dataDic")
+                        }
+                    }
+                } catch {
+                    print("GetViolasPrice_解析异常\(error.localizedDescription)")
+                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetViolasPrice")
+                    self?.setValue(data, forKey: "dataDic")
+                }
+            case let .failure(error):
+                guard error.errorCode != -999 else {
+                    print("GetViolasPrice_网络请求已取消")
+                    return
+                }
+                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "GetViolasPrice")
+                self?.setValue(data, forKey: "dataDic")
+            }
+        }
+        self.requests.append(request)
+    }
+    func getLibraPrice(address: String) {
+        let request = mainProvide.request(.GetLibraPrice(address)) {[weak self](result) in
+            switch  result {
+            case let .success(response):
+                do {
+                    let json = try response.map(ModelPriceMainModel.self)
+                    if json.code == 2000 {
+                        guard let models = json.data, models.isEmpty == false else {
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: "GetLibraPrice")
+                            self?.setValue(data, forKey: "dataDic")
+                            print("GetLibraPrice_状态异常")
+                            return
+                        }
+                        let data = setKVOData(type: "GetLibraPrice", data: json.data)
+                        self?.setValue(data, forKey: "dataDic")
+                    } else {
+                        print("GetLibraPrice_状态异常")
+                        if let message = json.message, message.isEmpty == false {
+                            let data = setKVOData(error: LibraWalletError.error(message), type: "GetLibraPrice")
+                            self?.setValue(data, forKey: "dataDic")
+                        } else {
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "GetLibraPrice")
+                            self?.setValue(data, forKey: "dataDic")
+                        }
+                    }
+                } catch {
+                    print("GetLibraPrice_解析异常\(error.localizedDescription)")
+                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetLibraPrice")
+                    self?.setValue(data, forKey: "dataDic")
+                }
+            case let .failure(error):
+                guard error.errorCode != -999 else {
+                    print("GetLibraPrice_网络请求已取消")
+                    return
+                }
+                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "UpdateViolasBalance")
+                self?.setValue(data, forKey: "dataDic")
+            }
+        }
+        self.requests.append(request)
+    }
     func updateLocalTokenBalance(tokens: [Token], type: WalletType, tokenBalances: [LibraBalanceModel]) {
         // 刷新本地缓存数据
         let tempTokens = tokens.filter {

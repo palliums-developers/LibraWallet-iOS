@@ -133,7 +133,12 @@ class HomeHeaderView: UIView {
     }
     var assetsModel: String? {
         didSet {
-            self.assetLabel.text = "$ \(assetsModel!)"
+            if assetsModel == "0" {
+                self.assetLabel.text = "$ 0.00"
+            } else {
+                self.assetLabel.text = "$ \(assetsModel ?? "0.00")"
+
+            }
         }
     }
     func showAssets() {
@@ -169,49 +174,6 @@ class HomeHeaderView: UIView {
 //                break
 //            default:
 //                break
-//            }
-        }
-    }
-    var libraModel: BalanceLibraModel? {
-        didSet {
-//            assetLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (libraModel?.balances?[0].amount ?? 0)),
-//                                                     scale: 4,
-//                                                     unit: 1000000)
-//            self.walletModel?.changeWalletBalance(banlance: libraModel?.balances?[0].amount ?? 0)
-//            assetUnitLabel.text = "libra"
-        }
-    }
-    var violasModel: BalanceViolasModel? {
-        didSet {
-//            if violasModel?.address == self.walletAddressLabel.text {
-//                assetLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (violasModel?.balance ?? 0)),
-//                                                         scale: 4,
-//                                                         unit: 1000000)
-//                self.walletModel?.changeWalletBalance(banlance: violasModel?.balance ?? 0)
-//                assetUnitLabel.text = "vtoken"
-//            }
-        }
-    }
-//    var btcModel: BalanceBTCModel? {
-//        didSet {
-//            if btcModel?.address == self.walletAddressLabel.text {
-//                assetLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (btcModel?.balance ?? 0)),
-//                                                         scale: 8,
-//                                                         unit: 100000000)
-//                self.walletModel?.changeWalletBalance(banlance: btcModel?.balance ?? 0)
-//                assetUnitLabel.text = "BTC"
-//            }
-//        }
-//    }
-    var btcModel: TrezorBTCBalanceMainModel? {
-        didSet {
-//            if btcModel?.address == self.walletAddressLabel.text {
-//                let amount = getDecimalNumber(amount: NSDecimalNumber.init(string: btcModel?.balance ?? ""),
-//                                              scale: 8,
-//                                              unit: 100000000)
-//                assetLabel.text = amount.stringValue
-//                self.walletModel?.changeWalletBalance(banlance: NSDecimalNumber.init(string: btcModel?.balance ?? "").int64Value)
-//                assetUnitLabel.text = "BTC"
 //            }
         }
     }

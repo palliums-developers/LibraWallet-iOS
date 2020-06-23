@@ -165,7 +165,7 @@ extension HomeViewController {
     func showBTCTransferViewController(address: String, amount: Int64?) {
         let vc = BTCTransferViewController()
         vc.actionClosure = {
-        //            self.dataModel.getLocalUserInfo()
+            //            self.dataModel.getLocalUserInfo()
         }
         vc.wallet = self.detailView.headerView.walletModel
         vc.address = address
@@ -175,7 +175,7 @@ extension HomeViewController {
     func showLibraTransferViewController(address: String, amount: Int64?) {
         let vc = TransferViewController()
         vc.actionClosure = {
-//            self.dataModel.getLocalUserInfo()
+            //            self.dataModel.getLocalUserInfo()
         }
         vc.wallet = self.detailView.headerView.walletModel
         vc.address = address
@@ -186,7 +186,7 @@ extension HomeViewController {
     func showViolasTransferViewController(address: String, amount: Int64?) {
         let vc = ViolasTransferViewController()
         vc.actionClosure = {
-        //            self.dataModel.getLocalUserInfo()
+            //            self.dataModel.getLocalUserInfo()
         }
         vc.wallet = self.detailView.headerView.walletModel
         vc.sendViolasTokenState = false
@@ -198,7 +198,7 @@ extension HomeViewController {
     func showViolasTokenViewController(address: String, tokenModel: ViolasTokenModel, amount: Int64?) {
         let vc = ViolasTransferViewController()
         vc.actionClosure = {
-        //            self.dataModel.getLocalUserInfo()
+            //            self.dataModel.getLocalUserInfo()
         }
         vc.wallet = self.detailView.headerView.walletModel
         vc.sendViolasTokenState = true
@@ -223,7 +223,7 @@ extension HomeViewController {
             WalletConnectManager.shared.allowConnect = {
                 self.detailView.toastView?.hide()
                 let vc = ScanLoginViewController()
-//                vc.wallet = LibraWalletManager.shared
+                //                vc.wallet = LibraWalletManager.shared
                 vc.sessionID = wcURL
                 self.present(vc, animated: true, completion: nil)
             }
@@ -271,7 +271,7 @@ extension HomeViewController: HomeHeaderViewDelegate {
         vc.hidesBottomBarWhenPushed = true
         vc.tokens = self.tableViewManager.dataModel
         vc.needUpdateClosure = { result in
-    //            self.refreshData()
+            //            self.refreshData()
             self.detailView.makeToastActivity(.center)
             self.dataModel.getLocalTokens()
             print("刷新首页数据")
@@ -314,7 +314,7 @@ extension HomeViewController {
         self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
             guard let dataDic = change.newValue, dataDic.count != 0 else {
                 self?.detailView.hideToastActivity()
-//                self?.endLoading()
+                //                self?.endLoading()
                 return
             }
             let type = dataDic.value(forKey: "type") as! String
@@ -342,7 +342,7 @@ extension HomeViewController {
             if type == "LoadCurrentEnableTokens" {
                 // 加载本地默认钱包
                 if let tempData = dataDic.value(forKey: "data") as? [Token] {
-//                    self?.detailView.model = tempData
+                    //                    self?.detailView.model = tempData
                     self?.tableViewManager.dataModel = tempData
                     self?.detailView.tableView.reloadData()
                     self?.detailView.headerView.assetsModel = "0.00"
@@ -353,16 +353,30 @@ extension HomeViewController {
                         return
                     }
                     var tempTokens = [Token]()
-                    for var model in dataModels {
-                        guard model.tokenType == .BTC else {
-                            tempTokens.append(model)
+                    var tempIndexPath = [IndexPath]()
+                    for i in 0..<dataModels.count {
+                        guard dataModels[i].tokenType == .BTC else {
+                            tempTokens.append(dataModels[i])
                             continue
                         }
-                        model.changeTokenBalance(banlance: NSDecimalNumber.init(string: tempData.balance ?? "").int64Value)
-                        tempTokens.append(model)
+                        for var model in dataModels {
+                            guard model.tokenType == .BTC else {
+                                tempTokens.append(model)
+                                continue
+                            }
+                            if NSDecimalNumber.init(string: tempData.balance ?? "").int64Value != dataModels[i].tokenBalance {
+                                model.changeTokenBalance(banlance: NSDecimalNumber.init(string: tempData.balance ?? "").int64Value)
+                                tempIndexPath.append(IndexPath.init(item: i, section: 0))
+                            }
+                            tempTokens.append(model)
+                        }
                     }
-                    self?.tableViewManager.dataModel = tempTokens
-                    self?.detailView.tableView.reloadData()
+                    if tempIndexPath.isEmpty == false {
+                        self?.tableViewManager.dataModel = tempTokens
+                        self?.detailView.tableView.beginUpdates()
+                        self?.detailView.tableView.reloadRows(at: tempIndexPath, with: .fade)
+                        self?.detailView.tableView.endUpdates()
+                    }
                 }
             } else if type == "UpdateLibraBalance" {
                 if let tempData = dataDic.value(forKey: "data") as? [LibraBalanceModel] {
@@ -370,53 +384,213 @@ extension HomeViewController {
                         return
                     }
                     var tempTokens = [Token]()
-                    for var model in dataModels {
-                        guard model.tokenType == .Libra else {
-                            tempTokens.append(model)
+                    var tempIndexPath = [IndexPath]()
+                    for i in 0..<dataModels.count {
+                        guard dataModels[i].tokenType == .Libra else {
+                            tempTokens.append(dataModels[i])
                             continue
                         }
                         var changeState = false
                         for token in tempData {
-                            if token.currency == model.tokenModule {
-                                model.changeTokenBalance(banlance: token.amount ?? 0)
-                                tempTokens.append(model)
+                            if token.currency == dataModels[i].tokenModule {
+                                var tempLocalToken = dataModels[i]
+                                if token.amount != dataModels[i].tokenBalance {
+                                    tempLocalToken.changeTokenBalance(banlance: token.amount ?? 0)
+                                    tempIndexPath.append(IndexPath.init(item: i, section: 0))
+                                }
+                                tempTokens.append(tempLocalToken)
                                 changeState = true
                                 continue
                             }
                         }
                         if changeState == false {
-                            tempTokens.append(model)
+                            tempTokens.append(dataModels[i])
                         }
                     }
-                    self?.tableViewManager.dataModel = tempTokens
-                    self?.detailView.tableView.reloadData()
+                    if tempIndexPath.isEmpty == false {
+                        self?.tableViewManager.dataModel = tempTokens
+                        self?.detailView.tableView.beginUpdates()
+                        self?.detailView.tableView.reloadRows(at: tempIndexPath, with: .fade)
+                        self?.detailView.tableView.endUpdates()
+                    }
                 }
             } else if type == "UpdateViolasBalance" {
-                 if let tempData = dataDic.value(forKey: "data") as? [ViolasBalanceModel] {
+                if let tempData = dataDic.value(forKey: "data") as? [ViolasBalanceModel] {
                     guard let dataModels = self?.tableViewManager.dataModel else {
                         return
                     }
                     var tempTokens = [Token]()
-                    for var model in dataModels {
-                        guard model.tokenType == .Violas else {
-                            tempTokens.append(model)
+                    var tempIndexPath = [IndexPath]()
+                    for i in 0..<dataModels.count {
+                        guard dataModels[i].tokenType == .Violas else {
+                            tempTokens.append(dataModels[i])
                             continue
                         }
                         var changeState = false
                         for token in tempData {
-                            if token.currency == model.tokenModule {
-                                model.changeTokenBalance(banlance: token.amount ?? 0)
-                                tempTokens.append(model)
+                            if token.currency == dataModels[i].tokenModule {
+                                var tempLocalToken = dataModels[i]
+                                if token.amount != dataModels[i].tokenBalance {
+                                    tempLocalToken.changeTokenBalance(banlance: token.amount ?? 0)
+                                    tempIndexPath.append(IndexPath.init(item: i, section: 0))
+                                }
+                                tempTokens.append(tempLocalToken)
                                 changeState = true
                                 continue
                             }
                         }
                         if changeState == false {
-                            tempTokens.append(model)
+                            tempTokens.append(dataModels[i])
                         }
                     }
-                    self?.tableViewManager.dataModel = tempTokens
-                    self?.detailView.tableView.reloadData()
+                    if tempIndexPath.isEmpty == false {
+                        self?.tableViewManager.dataModel = tempTokens
+                        self?.detailView.tableView.beginUpdates()
+                        self?.detailView.tableView.reloadRows(at: tempIndexPath, with: .fade)
+                        self?.detailView.tableView.endUpdates()
+                    }
+                }
+            } else if type == "GetBTCPrice" {
+                if let tempData = dataDic.value(forKey: "data") as? [ModelPriceDataModel] {
+                    guard let dataModels = self?.tableViewManager.dataModel else {
+                        return
+                    }
+                    var tempTokens = [Token]()
+                    var tempIndexPath = [IndexPath]()
+                    for i in 0..<dataModels.count {
+                        guard dataModels[i].tokenType == .Violas else {
+                            tempTokens.append(dataModels[i])
+                            continue
+                        }
+                        var changeState = false
+                        for token in tempData {
+                            if token.name == dataModels[i].tokenModule {
+                                var tempLocalToken = dataModels[i]
+                                let newPrice = NSDecimalNumber.init(value: token.rate ?? 0.0).stringValue
+                                if newPrice != dataModels[i].tokenPrice {
+                                    tempLocalToken.changeTokenPrice(price: newPrice)
+                                    _ = DataBaseManager.DBManager.updateTokenPrice(tokenID: dataModels[i].tokenID, price: newPrice)
+                                    tempIndexPath.append(IndexPath.init(item: i, section: 0))
+                                }
+                                tempTokens.append(tempLocalToken)
+                                changeState = true
+                                continue
+                            }
+                        }
+                        if changeState == false {
+                            tempTokens.append(dataModels[i])
+                        }
+                    }
+                    if tempIndexPath.isEmpty == false {
+                        self?.tableViewManager.dataModel = tempTokens
+                        self?.detailView.tableView.beginUpdates()
+                        self?.detailView.tableView.reloadRows(at: tempIndexPath, with: .fade)
+                        self?.detailView.tableView.endUpdates()
+                    }
+                }
+            } else if type == "GetViolasPrice" {
+                if let tempData = dataDic.value(forKey: "data") as? [ModelPriceDataModel] {
+                    guard let dataModels = self?.tableViewManager.dataModel else {
+                        return
+                    }
+                    var tempTokens = [Token]()
+                    var tempIndexPath = [IndexPath]()
+                    for i in 0..<dataModels.count {
+                        guard dataModels[i].tokenType == .Violas else {
+                            tempTokens.append(dataModels[i])
+                            continue
+                        }
+                        var changeState = false
+                        for token in tempData {
+                            if token.name == dataModels[i].tokenModule {
+                                var tempLocalToken = dataModels[i]
+                                let newPrice = NSDecimalNumber.init(value: token.rate ?? 0.0).stringValue
+                                if newPrice != dataModels[i].tokenPrice {
+                                    tempLocalToken.changeTokenPrice(price: newPrice)
+                                    _ = DataBaseManager.DBManager.updateTokenPrice(tokenID: dataModels[i].tokenID, price: newPrice)
+                                    tempIndexPath.append(IndexPath.init(item: i, section: 0))
+                                }
+                                tempTokens.append(tempLocalToken)
+                                changeState = true
+                                continue
+                            }
+                        }
+                        if changeState == false {
+                            tempTokens.append(dataModels[i])
+                        }
+                    }
+                    if tempIndexPath.isEmpty == false {
+                        self?.tableViewManager.dataModel = tempTokens
+                        self?.detailView.tableView.beginUpdates()
+                        self?.detailView.tableView.reloadRows(at: tempIndexPath, with: .fade)
+                        self?.detailView.tableView.endUpdates()
+                    }
+                }
+            } else if type == "GetLibraPrice" {
+                if let tempData = dataDic.value(forKey: "data") as? [ModelPriceDataModel] {
+                    guard let dataModels = self?.tableViewManager.dataModel else {
+                        return
+                    }
+                    var tempTokens = [Token]()
+                    var tempIndexPath = [IndexPath]()
+                    for i in 0..<dataModels.count {
+                        guard dataModels[i].tokenType == .Libra else {
+                            tempTokens.append(dataModels[i])
+                            continue
+                        }
+                        var changeState = false
+                        for token in tempData {
+                            if token.name == dataModels[i].tokenModule {
+                                var tempLocalToken = dataModels[i]
+                                let newPrice = NSDecimalNumber.init(value: token.rate ?? 0.0).stringValue
+                                if newPrice != dataModels[i].tokenPrice {
+                                    _ = DataBaseManager.DBManager.updateTokenPrice(tokenID: dataModels[i].tokenID, price: newPrice)
+                                    tempLocalToken.changeTokenPrice(price: newPrice)
+                                    tempIndexPath.append(IndexPath.init(item: i, section: 0))
+                                }
+                                tempTokens.append(tempLocalToken)
+                                changeState = true
+                                continue
+                            }
+                        }
+                        if changeState == false {
+                            tempTokens.append(dataModels[i])
+                        }
+                    }
+                    if tempIndexPath.isEmpty == false {
+                        self?.tableViewManager.dataModel = tempTokens
+                        self?.detailView.tableView.beginUpdates()
+                        self?.detailView.tableView.reloadRows(at: tempIndexPath, with: .fade)
+                        self?.detailView.tableView.endUpdates()
+                    }
+                }
+            } else if type == "GetTotalPrice" {
+                var totalPrice = 0.0
+                guard let dataModels = self?.tableViewManager.dataModel, dataModels.isEmpty == false else {
+                    return
+                }
+                for model in dataModels {
+                    var unit = 1000000
+                    if model.tokenType == .BTC {
+                        unit = 100000000
+                    }
+                    let rate = NSDecimalNumber.init(string: model.tokenPrice)
+                    let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model.tokenBalance),
+                                                   scale: 4,
+                                                   unit: unit)
+                    let value = rate.multiplying(by: amount)
+                    totalPrice += value.doubleValue
+                }
+                let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
+                                                               scale: 4,
+                                                               raiseOnExactness: false,
+                                                               raiseOnOverflow: false,
+                                                               raiseOnUnderflow: false,
+                                                               raiseOnDivideByZero: false)
+                let value = NSDecimalNumber.init(value: totalPrice).multiplying(by: 1, withBehavior: numberConfig)
+                if self?.detailView.headerView.assetsModel != value.stringValue {
+                    
+                    self?.detailView.headerView.assetsModel = value.stringValue
                 }
             }
             self?.detailView.hideToastActivity()
@@ -424,5 +598,41 @@ extension HomeViewController {
         })
         self.detailView.makeToastActivity(.center)
         self.dataModel.getLocalTokens()
+    }
+    func refreshTableView(type: WalletType, localTokens: [Token], dataModels: [ViolasBalanceModel]) {
+        //        guard let dataModels = self?.tableViewManager.dataModel else {
+        //            return
+        //        }
+        //        var tempTokens = [Token]()
+        //        var tempIndexPath = [IndexPath]()
+        //        for i in 0..<dataModels.count {
+        //            guard dataModels[i].tokenType == type else {
+        //                tempTokens.append(dataModels[i])
+        //                continue
+        //            }
+        //            var changeState = false
+        //            for token in tempData {
+        //                if token.currency == dataModels[i].tokenModule {
+        //                    var tempLocalToken = dataModels[i]
+        //                    if token.amount != dataModels[i].tokenBalance {
+        //                        tempLocalToken.changeTokenBalance(banlance: token.amount ?? 0)
+        //                        tempIndexPath.append(IndexPath.init(item: i, section: 0))
+        //                    }
+        //                    tempTokens.append(tempLocalToken)
+        //                    changeState = true
+        //                    continue
+        //                }
+        //            }
+        //            if changeState == false {
+        //                tempTokens.append(dataModels[i])
+        //            }
+        //        }
+        //        if tempIndexPath.isEmpty == false {
+        //            self?.tableViewManager.dataModel = tempTokens
+        //            self?.detailView.tableView.beginUpdates()
+        //            self?.detailView.tableView.reloadRows(at: tempIndexPath, with: .fade)
+        //            self?.detailView.tableView.endUpdates()
+        //        }
+        
     }
 }

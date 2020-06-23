@@ -76,7 +76,8 @@ class ImportWalletModel: NSObject {
                                    tokenContract: "",
                                    tokenModule: "",
                                    tokenModuleName: "",
-                                   tokenEnable: true)
+                                   tokenEnable: true,
+                                   tokenPrice: "0.0")
             let result = DataBaseManager.DBManager.insertToken(token: token)
             print("BTC钱包导入结果：\(result)")
             return token
@@ -99,7 +100,8 @@ class ImportWalletModel: NSObject {
                                      tokenContract: "00000000000000000000000000000000",
                                      tokenModule: "LBR",
                                      tokenModuleName: "T",
-                                     tokenEnable: true)
+                                     tokenEnable: true,
+                                     tokenPrice: "0.0")
             let result = DataBaseManager.DBManager.insertToken(token: token)
             print("Violas钱包导入结果：\(result)")
             return token
@@ -123,7 +125,8 @@ class ImportWalletModel: NSObject {
                                    tokenContract: "00000000000000000000000000000001",
                                    tokenModule: "LBR",
                                    tokenModuleName: "LBR",
-                                   tokenEnable: true)
+                                   tokenEnable: true,
+                                   tokenPrice: "0.0")
             let result = DataBaseManager.DBManager.insertToken(token: token)
             print("Libra钱包导入结果：\(result)")
             return token

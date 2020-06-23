@@ -141,6 +141,8 @@ struct Token {
     private(set) var tokenModuleName: String
     /// 币启用状态
     private(set) var tokenEnable: Bool
+    /// 币单价
+    private(set) var tokenPrice: String
 }
 extension Token {
     /// 创建Token单例
@@ -156,7 +158,7 @@ extension Token {
     ///   - tokenContract: 钱包合约地址
     ///   - tokenModule: 钱包合约名称
     ///   - tokenModuleName: 钱包合约名称
-    mutating func initToken(tokenID: Int64, tokenName: String, tokenBalance: Int64, tokenAddress: String, tokenType: WalletType, tokenIndex: Int64, tokenAuthenticationKey: String, tokenActiveState: Bool, tokenIcon: String, tokenContract: String, tokenModule: String, tokenModuleName: String) {
+    mutating func initToken(tokenID: Int64, tokenName: String, tokenBalance: Int64, tokenAddress: String, tokenType: WalletType, tokenIndex: Int64, tokenAuthenticationKey: String, tokenActiveState: Bool, tokenIcon: String, tokenContract: String, tokenModule: String, tokenModuleName: String, tokenPrice: String) {
         self.semaphore.wait()
         
         self.tokenID = tokenID
@@ -171,6 +173,7 @@ extension Token {
         self.tokenContract = tokenContract
         self.tokenModule = tokenModule
         self.tokenModuleName = tokenModuleName
+        self.tokenPrice = tokenPrice
         
         self.semaphore.signal()
     }
@@ -182,6 +185,11 @@ extension Token {
     mutating func changeTokenActiveState(state: Bool) {
         self.semaphore.wait()
         self.tokenActiveState = state
+        self.semaphore.signal()
+    }
+    mutating func changeTokenPrice(price: String) {
+        self.semaphore.wait()
+        self.tokenPrice = price
         self.semaphore.signal()
     }
 }

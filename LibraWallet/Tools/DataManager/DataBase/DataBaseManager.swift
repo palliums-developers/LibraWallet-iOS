@@ -567,6 +567,8 @@ extension DataBaseManager {
             let tokenEnable = Expression<Bool>("token_enable")
             // 币图片
             let tokenIcon = Expression<String>("token_icon")
+            // 币价
+            let tokenPrice = Expression<String>("token_price")
             // 建表
             try tempDB.run(tokenTable.create { t in
                 t.column(tokenID, primaryKey: true)
@@ -582,6 +584,7 @@ extension DataBaseManager {
                 t.column(tokenModuleName)
                 t.column(tokenEnable)
                 t.column(tokenIcon)
+                t.column(tokenPrice)
                 t.unique([tokenAddress, tokenModule, tokenType])
             })
         } catch {
@@ -621,7 +624,9 @@ extension DataBaseManager {
                     // 币启用状态
                     Expression<Bool>("token_enable") <- token.tokenEnable,
                     // 币图片
-                    Expression<String>("token_icon") <- token.tokenIcon)
+                    Expression<String>("token_icon") <- token.tokenIcon,
+                    // 币价
+                    Expression<String>("token_price") <- token.tokenPrice)
                 let rowid = try tempDB.run(insert)
                 print(rowid)
                 return true
@@ -684,7 +689,8 @@ extension DataBaseManager {
                     let tokenEnable = wallet[Expression<Bool>("token_enable")]
                     // 币图片
                     let tokenIcon = wallet[Expression<String>("token_icon")]
-                    
+                    // 币价
+                    let tokenPrice = wallet[Expression<String>("token_price")]
                     let type: WalletType
                     if tokenType == 0 {
                         type = .Libra
@@ -706,7 +712,8 @@ extension DataBaseManager {
                                             tokenContract: tokenContract,
                                             tokenModule: tokenModule,
                                             tokenModuleName: tokenModuleName,
-                                            tokenEnable: tokenEnable)
+                                            tokenEnable: tokenEnable,
+                                            tokenPrice: tokenPrice)
                     models.append(wallet)
                 }
                 return models
@@ -785,6 +792,21 @@ extension DataBaseManager {
             if let tempDB = self.db {
                 let contract = walletTable.filter(Expression<Int64>("token_id") == tokenID)
                 try tempDB.run(contract.update(Expression<Bool>("token_active_state") <- state))
+                return true
+            } else {
+                return false
+            }
+        } catch {
+            print(error.localizedDescription)
+            return false
+        }
+    }
+    func updateTokenPrice(tokenID: Int64, price: String) -> Bool {
+        let walletTable = Table("Tokens")
+        do {
+            if let tempDB = self.db {
+                let contract = walletTable.filter(Expression<Int64>("token_id") == tokenID)
+                try tempDB.run(contract.update(Expression<String>("token_price") <- price))
                 return true
             } else {
                 return false

@@ -78,7 +78,7 @@ class HomeTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "333333")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: UIFont.Weight.semibold)
-        label.text = "---"
+        label.text = "0.00"
         return label
     }()
     lazy var coinValueLabel: UILabel = {
@@ -86,16 +86,20 @@ class HomeTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "ADADAD")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = "---"
+        label.text = "≈$0.00"
         return label
     }()
     //MARK: - 设置数据
     var model: Token? {
         didSet {
             coinNameLabel.text = model?.tokenName
+            var unit = 1000000
+            if model?.tokenType == .BTC {
+                unit = 100000000
+            }
             coinAmountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model?.tokenBalance ?? 0)),
                                                           scale: 4,
-                                                          unit: 1000000)
+                                                          unit: unit)
             if let iconName = model?.tokenIcon, iconName.isEmpty == false {
                 if iconName.hasPrefix("http") {
                     let url = URL(string: iconName)
@@ -106,7 +110,16 @@ class HomeTableViewCell: UITableViewCell {
             } else {
                 coinIconImageView.image = UIImage.init(named: "wallet_icon_default")
             }
-            coinValueLabel.text = "≈$0.00"
+            let rate = NSDecimalNumber.init(string: model?.tokenPrice ?? "0.0")
+            let amount = NSDecimalNumber.init(string: coinAmountLabel.text ?? "0")
+            let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
+                                                           scale: 4,
+                                                           raiseOnExactness: false,
+                                                           raiseOnOverflow: false,
+                                                           raiseOnUnderflow: false,
+                                                           raiseOnDivideByZero: false)
+            let value = rate.multiplying(by: amount, withBehavior: numberConfig)
+            coinValueLabel.text = "≈$\(value.stringValue)"
         }
     }
 }
