@@ -112,6 +112,21 @@ extension WalletManager {
         self.walletBackupState = state
         self.semaphore.signal()
     }
+    mutating func deleteWallet() {
+        self.semaphore.wait()
+        
+        self.walletID = nil
+        self.walletName = nil
+        self.walletCreateTime = nil
+        self.walletCreateType = nil
+        self.walletBiometricLock = nil
+        self.walletBackupState = nil
+        self.walletSubscription = nil
+        self.walletMnemonicHash = nil
+        self.walletUseState = nil
+        
+        self.semaphore.signal()
+    }
 }
 struct Token {
     private let semaphore = DispatchSemaphore.init(value: 1)

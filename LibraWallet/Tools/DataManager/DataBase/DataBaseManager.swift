@@ -816,5 +816,16 @@ extension DataBaseManager {
             return false
         }
     }
+    func deleteAllTokens() {
+        let tokensTable = Table("Tokens")
+        do {
+            if let tempDB = self.db {
+                let rowid = try tempDB.run(tokensTable.delete())
+                print(rowid)
+            }
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
 }
 //let transection = walletTable.filter(Expression<String>("wallet_mnemonic_hash") == wallet.walletMnemonicHash && Expression<String>("wallet_contract") == wallet.walletContract && Expression<Int>("wallet_type") == wallet.walletType.value)

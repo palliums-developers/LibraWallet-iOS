@@ -21,12 +21,14 @@ class HomeView: UIView {
         }
         // 添加语言变换通知
         NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(deleteWallet), name: NSNotification.Name("PalliumsWalletDelete"), object: nil)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("PalliumsWalletDelete"), object: nil)
         print("HomeView销毁了")
     }
     //MARK: - 布局
@@ -105,9 +107,11 @@ class HomeView: UIView {
     }
     @objc func setText(){
         walletTitleLabel.text = localLanguage(keyString: "wallet_home_title")
-//        walletTotalAmountTitleLabel.text = localLanguage(keyString: "wallet_home_total_amount_title")
-//        receiveButtonTitleLabel.text = localLanguage(keyString: "wallet_home_receive_button_title")
-//        sendButtonTitleLabel.text = localLanguage(keyString: "wallet_home_send_button_title")
+    }
+    @objc func deleteWallet() {
+        addSubview(importOrCreateView)
+        self.layoutIfNeeded()
+        self.setNeedsLayout()
     }
 }
 extension UIView {

@@ -22,6 +22,8 @@ class HomeViewController: UIViewController {
         self.initKVO()
         // 添加语言变换通知
         NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(deleteWallet), name: NSNotification.Name("PalliumsWalletDelete"), object: nil)
+
         // 检查是否第一次打开app
         checkIsFisrtOpenApp()
         checkConfirmLegal()
@@ -276,6 +278,11 @@ extension HomeViewController {
     @objc func setText() {
         self.totalAssetsButton.setTitle(localLanguage(keyString: "wallet_home_wallet_total_asset_title"), for: UIControl.State.normal)
         self.totalAssetsButton.imagePosition(at: .right, space: 4, imageViewSize: CGSize.init(width: 14, height: 8))
+    }
+    @objc func deleteWallet() {
+        self.detailView.headerView.assetsModel = "0"
+        self.tableViewManager.dataModel?.removeAll()
+        self.detailView.tableView.reloadData()
     }
 }
 

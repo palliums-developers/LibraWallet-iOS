@@ -183,9 +183,14 @@ extension WalletConfigViewController: WalletConfigViewDelegate {
             //            _ = DataBaseManager.DBManager.updateDefaultViolasWallet()
             
             self.view.makeToast(localLanguage(keyString: "wallet_delete_wallet_success_title"), duration: 1, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { [weak self](bool) in
-                if let action = self?.actionClosure {
-                    action(.delete)
-                }
+//                if let action = self?.actionClosure {
+//                    action(.delete)
+//                }
+                DataBaseManager.DBManager.deleteHDWallet()
+                DataBaseManager.DBManager.deleteAllTokens()
+                WalletManager.shared.deleteWallet()
+                setIdentityWalletState(show: false)
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "PalliumsWalletDelete"), object: nil)
                 self?.navigationController?.popViewController(animated: true)
             })
         }
