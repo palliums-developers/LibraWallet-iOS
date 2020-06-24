@@ -47,17 +47,16 @@ class ServiceLegalViewController: BaseViewController {
 }
 extension ServiceLegalViewController :WKNavigationDelegate{
     // 页面开始加载时调用
-    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!){
+    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         self.view.makeToastActivity(.center)
     }
     // 当内容开始返回时调用
-    func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!){
+    func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
         
     }
     // 页面加载完成之后调用
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!){
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         self.view.hideToastActivity()
-        
     }
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         print(error)

@@ -68,6 +68,7 @@ wallet_import_wallet_libra_title = "导入Libra钱包";
 wallet_import_wallet_violas_title = "导入Violas钱包";
 wallet_import_mnemonic_textview_placeholder = "请输入助记词,并用空格分割";
 wallet_import_wallet_confirm_button_title = "开始导入";
+wallet_import_wallet_legal_content_title = "我已阅读并同意《服务协议》和《隐私政策》";
 
 /************* 钱包管理 *******************/
 wallet_manager_identity_wallet_header_title = "身份钱包";
@@ -321,10 +322,10 @@ wallet_market_order_center_cancel_order_alert_title = "提示";
 wallet_market_order_center_cancel_order_alert_content = "您确定要取消当前未完成订单吗？";
 // 用户协议与隐私保护
 wallet_user_and_private_agreement_title = "用户协议与隐私政策";
-wallet_user_agreement_title = "《用户协议》";
-wallet_private_agreement_title = "《隐私协议》";
-wallet_private_and_use_legal_cancel_button_title = "Disagree";
-wallet_private_and_use_legal_confirm_button_title = "Agree";
+wallet_user_agreement_title = "《服务协议》";
+wallet_private_agreement_title = "《隐私政策》";
+wallet_private_and_use_legal_cancel_button_title = "不同意";
+wallet_private_and_use_legal_confirm_button_title = "同意";
 wallet_private_and_use_legal_content = "感谢您选择了SSO APP\n我们极度重视您的用户隐私。您在使用我们的服务时，我们可能会收集和使用您的相关信息。在使用我们的产品前，请务必审慎阅读《隐私政策》和《服务协议》内的所有内容，来了解我们如何收集、使用、储存和分享这些信息，以及我们为您提供的访问、更新、控制和保护这些信息的方式。";
 // 语言切换
 wallet_language_change_success = "切换成功";
@@ -353,7 +354,7 @@ wallet_manager_navigation_title = "管理";
 wallet_setting_navigation_title = "设置";
 wallet_language_navigation_title = "多语言";
 wallet_service_navigation_title = "服务协议";
-wallet_private_navigation_title = "隐私协议";
+wallet_private_navigation_title = "隐私政策";
 wallet_about_us_navigation_title = "关于我们";
 wallet_feedback_navigation_title = "服务与反馈";
 wallet_address_navigation_title = "地址簿";
@@ -431,6 +432,8 @@ wallet_add_wallet_password_cofirm_empty_error = "确认密码为空";
 wallet_add_wallet_password_check_failed_error = "密码不一致";
 wallet_add_wallet_password_length_limit_long_error = "密码长度超限";
 wallet_add_wallet_password_length_limit_short_error = "密码长度太短";
+wallet_add_wallet_not_agree_legal_error = "请阅读并同意《隐私政策》和《服务协议》";
+
 // 助记词排查相关(导入钱包)
 wallet_mnemonic_invalid_error = "助记词无效";
 wallet_mnemonic_empty_error = "助记词为空";

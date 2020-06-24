@@ -139,6 +139,8 @@ public enum LibraWalletError: Error {
         case passwordTooLongError
         /// 密码太短
         case passwordTooShortError
+        /// 不同意协议
+        case notAgreeLegalError
     }
     case WalletAddWallet(reason: AddWalletError)
     
@@ -466,6 +468,9 @@ extension LibraWalletError.AddWalletError {
             return localLanguage(keyString: "wallet_add_wallet_password_length_limit_long_error")
         case .passwordTooShortError:
             return localLanguage(keyString: "wallet_add_wallet_password_length_limit_short_error")
+        case .notAgreeLegalError:
+            return localLanguage(keyString: "wallet_add_wallet_not_agree_legal_error")
+
         }
     }
 }

@@ -8,8 +8,11 @@
 
 import UIKit
 import RSKPlaceholderTextView
+import AttributedTextView
 protocol ImportWalletViewDelegate: NSObjectProtocol {
     func confirmImportWallet(password: String, mnemonics: [String])
+    func openPrivacyPolicy()
+    func openServiceAgreement()
 }
 class ImportWalletView: UIView {
     weak var delegate: ImportWalletViewDelegate?
@@ -21,6 +24,8 @@ class ImportWalletView: UIView {
         addSubview(passwordConfirmTextField)
         addSubview(passwordConfirmSpaceLabel)
         addSubview(confirmButton)
+        addSubview(legalButton)
+        addSubview(legalContentTextView)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -65,6 +70,17 @@ class ImportWalletView: UIView {
             make.left.equalTo(self).offset(68)
             make.right.equalTo(self.snp.right).offset(-68)
             make.height.equalTo(40)
+        }
+        legalButton.snp.makeConstraints { (make) in
+            make.top.equalTo(confirmButton.snp.bottom).offset(10)
+            make.left.equalTo(confirmButton).offset(15)
+            make.size.equalTo(CGSize.init(width: 24, height: 24))
+        }
+        legalContentTextView.snp.makeConstraints { (make) in
+            make.top.equalTo(legalButton).offset(-3)
+            make.left.equalTo(legalButton.snp.right)
+            make.right.equalTo(self.snp.right)
+            make.height.equalTo(60)
         }
     }
     // MARK: - 懒加载对象
@@ -140,6 +156,29 @@ class ImportWalletView: UIView {
         button.tag = 10
         return button
     }()
+    lazy var legalButton: UIButton = {
+        let button = UIButton.init(type: UIButton.ButtonType.custom)
+        button.setImage(UIImage.init(named: "unselect"), for: UIControl.State.normal)
+        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
+        button.tag = 30
+        return button
+    }()
+    private lazy var legalContentTextView: AttributedTextView = {
+        let textView = AttributedTextView.init()
+        textView.textAlignment = NSTextAlignment.left
+        textView.backgroundColor = UIColor.clear
+        textView.isEditable = false
+        textView.attributer = localLanguage(keyString: "wallet_import_wallet_legal_content_title")
+            .color(UIColor.init(hex: "999999"))
+            .font(UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular))
+            .match(localLanguage(keyString: "wallet_private_agreement_title")).underline.makeInteract({ _ in
+                self.delegate?.openPrivacyPolicy()
+            })
+            .match(localLanguage(keyString: "wallet_user_agreement_title")).underline.makeInteract({ _ in
+                self.delegate?.openServiceAgreement()
+            })
+        return textView
+    }()
     var toastView: ToastView {
         let toast = ToastView.init()
         return toast
@@ -211,10 +250,16 @@ class ImportWalletView: UIView {
                                position: .center)
                 return
             }
+            guard legalButton.imageView?.image != UIImage.init(named: "unselect") else {
+                // 未同意协议
+                self.makeToast(LibraWalletError.WalletAddWallet(reason: .notAgreeLegalError).localizedDescription,
+                               position: .center)
+                return
+            }
             self.passwordTextField.resignFirstResponder()
             self.passwordConfirmTextField.resignFirstResponder()
             self.delegate?.confirmImportWallet(password: password, mnemonics: tempArray)
-        } else {
+        } else if button.tag == 20 {
             if button.imageView?.image == UIImage.init(named: "eyes_close_black") {
                 self.passwordTextField.isSecureTextEntry = false
                 self.passwordConfirmTextField.isSecureTextEntry = false
@@ -223,6 +268,12 @@ class ImportWalletView: UIView {
                 self.passwordTextField.isSecureTextEntry = true
                 self.passwordConfirmTextField.isSecureTextEntry = true
                 button.setImage(UIImage.init(named: "eyes_close_black"), for: UIControl.State.normal)
+            }
+        } else {
+            if button.imageView?.image == UIImage.init(named: "unselect") {
+                button.setImage(UIImage.init(named: "selected"), for: UIControl.State.normal)
+            } else {
+                button.setImage(UIImage.init(named: "unselect"), for: UIControl.State.normal)
             }
         }
     }

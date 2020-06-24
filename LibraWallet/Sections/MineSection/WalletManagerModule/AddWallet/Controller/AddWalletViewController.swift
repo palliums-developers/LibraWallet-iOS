@@ -52,6 +52,18 @@ extension AddWalletViewController: AddWalletViewDelegate {
         self.detailView.toastView.show()
         self.dataModel.createWallet(password: password)
     }
+    func openPrivacyPolicy() {
+        let vc = PrivateLegalViewController()
+        vc.needDismissViewController = true
+        let navi = UINavigationController.init(rootViewController: vc)
+        self.present(navi, animated: true, completion: nil)
+    }
+    func openServiceAgreement() {
+        let vc = ServiceLegalViewController()
+        vc.needDismissViewController = true
+        let navi = UINavigationController.init(rootViewController: vc)
+        self.present(navi, animated: true, completion: nil)
+    }
 }
 //MARK: - 网络请求数据处理中心
 extension AddWalletViewController {

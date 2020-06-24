@@ -16,7 +16,9 @@ class HomeView: UIView {
         addSubview(topBackgroundImageView)
         addSubview(headerView)
         addSubview(tableView)
-        addSubview(importOrCreateView)
+        if getIdentityWalletState() == false {
+            addSubview(importOrCreateView)
+        }
         // 添加语言变换通知
         NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
     }
@@ -44,12 +46,14 @@ class HomeView: UIView {
             make.top.equalTo(headerView.snp.bottom)
             make.left.right.bottom.equalTo(self)
         }
-        importOrCreateView.snp.makeConstraints { (make) in
-            make.left.right.equalTo(self)
-            make.top.equalTo(headerView.snp.bottom).offset(-64)
-            make.bottom.equalTo(self)
+        if getIdentityWalletState() == false {
+            importOrCreateView.snp.makeConstraints { (make) in
+                make.left.right.equalTo(self)
+                make.top.equalTo(headerView.snp.bottom).offset(-64)
+                make.bottom.equalTo(self)
+            }
+            importOrCreateView.corner(byRoundingCorners: [UIRectCorner.topLeft, UIRectCorner.topRight], radii: 24)
         }
-        importOrCreateView.corner(byRoundingCorners: [UIRectCorner.topLeft, UIRectCorner.topRight], radii: 24)
     }
     //MARK: - 懒加载对象
     lazy var walletTitleLabel: UILabel = {
@@ -88,7 +92,6 @@ class HomeView: UIView {
     }()
     lazy var importOrCreateView: HomeWithoutWalletView = {
         let view = HomeWithoutWalletView.init()
-        view.alpha = 0
         return view
     }()
     var model: Token? {
@@ -105,12 +108,6 @@ class HomeView: UIView {
 //        walletTotalAmountTitleLabel.text = localLanguage(keyString: "wallet_home_total_amount_title")
 //        receiveButtonTitleLabel.text = localLanguage(keyString: "wallet_home_receive_button_title")
 //        sendButtonTitleLabel.text = localLanguage(keyString: "wallet_home_send_button_title")
-    }
-    func hideCreateView() {
-        self.importOrCreateView.alpha = 0
-    }
-    func showCreateView() {
-        self.importOrCreateView.alpha = 1
     }
 }
 extension UIView {

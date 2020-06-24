@@ -68,6 +68,7 @@ wallet_import_wallet_libra_title = "Import Libra Wallet";
 wallet_import_wallet_violas_title = "Import Violas Wallet";
 wallet_import_mnemonic_textview_placeholder = "Import Mnemonic Words Separated by a Space";
 wallet_import_wallet_confirm_button_title = "Start Import";
+wallet_import_wallet_legal_content_title = "I agree to the Service Agreement and Privacy Policy";
 
 /************* 钱包管理 *******************/
 wallet_manager_identity_wallet_header_title = "Identity Wallet";
@@ -319,8 +320,8 @@ wallet_market_order_center_cancel_order_alert_title = "Tips";
 wallet_market_order_center_cancel_order_alert_content = "Are you sure you want to cancel the currently outstanding order?";
 // 用户协议与隐私保护
 wallet_user_and_private_agreement_title = "User Agreement & Private Agreement";
-wallet_user_agreement_title = "《User Agreement》";
-wallet_private_agreement_title = "《Private Agreement》";
+wallet_user_agreement_title = "Service Agreement";
+wallet_private_agreement_title = "Privacy Policy";
 wallet_private_and_use_legal_cancel_button_title = "Disagree";
 wallet_private_and_use_legal_confirm_button_title = "Agree";
 wallet_private_and_use_legal_content = "Thank you select Violas SSO APP\nWe respect your privacy. We might collect some your information to better serve you while you use our service. Please read carefully the Service Agreement and Privacy Policy to understand why we need collect, use, store and share these information before you use the service. Please feel free to provide your feedback to us.";
@@ -351,7 +352,7 @@ wallet_manager_navigation_title = "Manage";
 wallet_setting_navigation_title = "Settings";
 wallet_language_navigation_title = "Languages";
 wallet_service_navigation_title = "Service Agreement";
-wallet_private_navigation_title = "Private Agreement";
+wallet_private_navigation_title = "Privacy Policy";
 wallet_about_us_navigation_title = "About Us";
 wallet_feedback_navigation_title = "Service & Feedback";
 wallet_address_navigation_title = "Address Book";
@@ -429,6 +430,7 @@ wallet_add_wallet_password_cofirm_empty_error = "Confirm Empty Wallet Access Cod
 wallet_add_wallet_password_check_failed_error = "Wallet Access Codes don't Match";
 wallet_add_wallet_password_length_limit_long_error = "Too-Long Wallet Access Code";
 wallet_add_wallet_password_length_limit_short_error = "Too-Short Wallet Access Code";
+wallet_add_wallet_not_agree_legal_error = "Please agree Service Agreement and Privacy Policy";
 // 助记词排查相关(导入钱包)
 wallet_mnemonic_invalid_error = "Invalid Mnemonic Words";
 wallet_mnemonic_empty_error = "Empty Mnemonic Words";

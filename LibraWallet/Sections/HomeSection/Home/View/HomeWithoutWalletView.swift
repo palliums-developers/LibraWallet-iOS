@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Localize_Swift
 protocol HomeWithoutWalletViewDelegate: NSObjectProtocol {
     func createWallet()
     func importWallet()
@@ -19,11 +20,14 @@ class HomeWithoutWalletView: UIView {
         backgroundColor = UIColor.white
         addSubview(createWalletButton)
         addSubview(importWalletButton)
+        // 添加语言变换通知
+        NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
         print("HomeWithoutWalletView销毁了")
     }
     //pragma MARK: 布局
@@ -85,5 +89,8 @@ class HomeWithoutWalletView: UIView {
             self.delegate?.importWallet()
         }
     }
-
+    @objc func setText(){
+        importWalletButton.setTitle(localLanguage(keyString: "wallet_create_choose_type_import_button_title"), for: UIControl.State.normal)
+        createWalletButton.setTitle(localLanguage(keyString: "wallet_create_choose_type_create_button_title"), for: UIControl.State.normal)
+    }
 }

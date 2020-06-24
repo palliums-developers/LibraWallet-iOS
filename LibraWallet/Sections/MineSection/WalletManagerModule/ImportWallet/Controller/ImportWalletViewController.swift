@@ -53,6 +53,19 @@ extension ImportWalletViewController: ImportWalletViewDelegate {
         self.detailView.toastView.show()
         self.dataModel.importWallet(password: password, mnemonics: mnemonics)
     }
+    func openPrivacyPolicy() {
+        let vc = PrivateLegalViewController()
+        vc.needDismissViewController = true
+        let navi = UINavigationController.init(rootViewController: vc)
+        self.present(navi, animated: true, completion: nil)
+    }
+    func openServiceAgreement() {
+        let vc = ServiceLegalViewController()
+        vc.needDismissViewController = true
+        let navi = UINavigationController.init(rootViewController: vc)
+        self.present(navi, animated: true, completion: nil)
+    }
+    
 //    func jumpToWalletManagerController() {
 //        if let vc = UIApplication.shared.keyWindow?.rootViewController, vc.children.isEmpty == false {
 //            if let mineControllers = vc.children.last?.children, mineControllers.isEmpty == false {
@@ -110,7 +123,7 @@ extension ImportWalletViewController {
                 // 加载本地默认钱包
                 if let tempData = dataDic.value(forKey: "data") as? CreateWalletModel {
                     self?.view.makeToast(localLanguage(keyString: "wallet_create_wallet_success_title"), duration: 0.5, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
-                        DataBaseManager.DBManager.getLocalWallets()
+                        _ = DataBaseManager.DBManager.getLocalWallets()
                         if let success = self?.successImportClosure {
                             success()
                         }

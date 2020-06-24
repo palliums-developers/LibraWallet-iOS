@@ -24,17 +24,13 @@ class HomeViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
         // 检查是否第一次打开app
         checkIsFisrtOpenApp()
+        checkConfirmLegal()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationController?.navigationBar.isTranslucent = true
-        if getIdentityWalletState() == true {
-            self.detailView.hideCreateView()
-        } else {
-            self.detailView.showCreateView()
-        }
         self.navigationController?.navigationBar.barStyle = .black
     }
     override func viewWillDisappear(_ animated: Bool) {
@@ -245,6 +241,27 @@ extension HomeViewController {
         let alert = WelcomeAlert.init()
         alert.show()
     }
+    func checkConfirmLegal() {
+        guard getConfirmPrivateAndUseLegalState() == false else {
+            return
+        }
+        let alert = PrivateAlertView.init(openPrivateLegal: {
+            let vc = ServiceLegalViewController()
+            vc.needDismissViewController = true
+            let navi = UINavigationController.init(rootViewController: vc)
+            self.present(navi, animated: true, completion: nil)
+        }) {
+            let vc = PrivateLegalViewController()
+            vc.needDismissViewController = true
+            let navi = UINavigationController.init(rootViewController: vc)
+            self.present(navi, animated: true, completion: nil)
+        }
+        
+        alert.show()
+        //        let alert = WelcomeAlert.init()
+        //        alert.show()
+    }
+    
 }
 //MARK: - 下拉刷新
 extension HomeViewController {
@@ -284,7 +301,7 @@ extension HomeViewController: HomeWithoutWalletViewDelegate {
     func createWallet() {
         let vc = AddWalletViewController()
         vc.successCreateClosure = {
-            self.detailView.hideCreateView()
+            self.detailView.importOrCreateView.removeFromSuperview()
             self.dataModel.getLocalTokens()
         }
         let navi = BaseNavigationViewController.init(rootViewController: vc)
@@ -293,7 +310,7 @@ extension HomeViewController: HomeWithoutWalletViewDelegate {
     func importWallet() {
         let vc = ImportWalletViewController()
         vc.successImportClosure = {
-            self.detailView.hideCreateView()
+            self.detailView.importOrCreateView.removeFromSuperview()
             self.dataModel.getLocalTokens()
         }
         let navi = BaseNavigationViewController.init(rootViewController: vc)
