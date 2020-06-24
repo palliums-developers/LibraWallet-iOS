@@ -114,35 +114,14 @@ struct TrezorBTCTransactionMainModel: Codable {
     var transactions: [TrezorBTCTransactionDataModel]?
 }
 struct LibraDataModel: Codable {
-    var amount: Int?
-    var expiration_time: Int?
-    var gas: Int?
-    var receiver: String?
-    var receiver_module: String?
-    var sender: String?
-    var sender_module: String?
-    var sequence_number: Int?
-    /// 0. vtoken p2p transaction; 1. module publish transaction; 2. module p2p transaction
-    var type: Int?
-    var version: Int?
-    /// 判断接收发送(自行添加0:转账,1收款)
-    var transaction_type: Int?
-    /// 判断交易代币名字
-    var module_name: String?
-}
-struct LibraResponseModel: Codable {
-//    var transactions: [LibraDataModel]?
-    var code: Int?
-    var message: String?
-    var data: [LibraDataModel]?
-}
-struct ViolasDataModel: Codable {
     /// 数量
     var amount: Int?
     /// 交易币合约
     var module: String?
     /// 币种名字
     var currency: String?
+    /// 手续费币名
+    var gas_currency: String?
     /// 过期时间
     var expiration_time: Int?
     /// 手续费
@@ -161,9 +140,40 @@ struct ViolasDataModel: Codable {
     var version: Int?
     /// 判断接收发送(自行添加0:转账,1收款)
     var transaction_type: Int?
-//    /// 判断交易代币名字
-//    var module_name: String?
-    
+}
+struct LibraResponseModel: Codable {
+//    var transactions: [LibraDataModel]?
+    var code: Int?
+    var message: String?
+    var data: [LibraDataModel]?
+}
+struct ViolasDataModel: Codable {
+    /// 数量
+    var amount: Int?
+    /// 交易币合约
+    var module: String?
+    /// 币种名字
+    var currency: String?
+    /// 手续费币名
+    var gas_currency: String?
+    /// 过期时间
+    var expiration_time: Int?
+    /// 手续费
+    var gas: Int?
+    /// 接收方
+    var receiver: String?
+    /// 发送方
+    var sender: String?
+    /// 交易序列号
+    var sequence_number: Int?
+    /// 交易执行状态
+    var status: Int?
+    /// 类型超多，不一一展示
+    var type: Int?
+    /// 交易序列号
+    var version: Int?
+    /// 判断接收发送(自行添加0:转账,1收款)
+    var transaction_type: Int?
 }
 struct ViolasResponseModel: Codable {
     var code: Int?
@@ -278,11 +288,6 @@ class WalletTransactionsModel: NSObject {
     ///   - pageSize: 数量
     func getLibraTransactionHistory(address: String, module: String, requestType: String, page: Int, pageSize: Int, requestStatus: Int) {
         let type = requestStatus == 0 ? "LibraTransactionHistoryOrigin":"LibraTransactionHistoryMore"
-        guard requestStatus == 0 else {
-            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: type)
-            self.setValue(data, forKey: "dataDic")
-            return
-        }
         let request = mainProvide.request(.GetLibraTransactions(address, module, requestType, page, pageSize)) {[weak self](result) in
                 switch  result {
                 case let .success(response):
@@ -418,8 +423,8 @@ class WalletTransactionsModel: NSObject {
     //                    break
     //                }
     //            }
-                if item.module_name == nil || item.module_name?.isEmpty == true {
-                    item.module_name = "libra"
+                if item.module == nil || item.module?.isEmpty == true {
+                    item.module = "LBR"
                 }
                 tempModels.append(item)
                 

@@ -1133,8 +1133,8 @@
 		3650F0B3248A42570086F578 /* TransactionDetail */ = {
 			isa = PBXGroup;
 			children = (
-				3650F0BD248A46D10086F578 /* TableViewManager */,
 				3650F0B6248A426A0086F578 /* Controller */,
+				3650F0BD248A46D10086F578 /* TableViewManager */,
 				3650F0B5248A42650086F578 /* Model */,
 				3650F0B4248A42600086F578 /* View */,
 			);
@@ -2727,9 +2727,9 @@
 		9DC06A6F2374059100BCE1FE /* HomeSection */ = {
 			isa = PBXGroup;
 			children = (
+				9DC902372328E78A0097FD85 /* Home */,
 				3650F0A1248763830086F578 /* WalletDetail */,
 				3650F0B2248A42470086F578 /* Transaction */,
-				9DC902372328E78A0097FD85 /* Home */,
 				9DC4885623220D73005FF254 /* Receive */,
 				9DC488702322246E005FF254 /* LibraTransfer */,
 				9D68D2FA237D25CA005B7593 /* ViolasTransfer */,

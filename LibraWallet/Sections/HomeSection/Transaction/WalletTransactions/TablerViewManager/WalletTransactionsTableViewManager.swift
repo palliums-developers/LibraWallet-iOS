@@ -8,9 +8,8 @@
 
 import UIKit
 protocol WalletTransactionsTableViewManagerDelegate: NSObjectProtocol {
-    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, address: String)
-    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, violasTransaction: ViolasDataModel)
-
+//    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, address: String)
+    func tableViewDidSelectRowAtIndexPath<T>(indexPath: IndexPath, model: T)
 }
 class WalletTransactionsTableViewManager: NSObject {
     weak var delegate: WalletTransactionsTableViewManagerDelegate?
@@ -32,20 +31,18 @@ extension WalletTransactionsTableViewManager: UITableViewDelegate {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
-        var content = ""
         switch transactionType {
         case .Libra:
             if let data = libraTransactions, data.isEmpty == false {
-                content = "\(data[indexPath.row].version ?? 0)"
+                self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, model: data[indexPath.row])
             }
         case .Violas:
             if let data = violasTransactions, data.isEmpty == false {
-                content = "\(data[indexPath.row].version ?? 0)"
-                self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, violasTransaction: data[indexPath.row])
+                self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, model: data[indexPath.row])
             }
         case .BTC:
             if let data = btcTransactions, data.isEmpty == false {
-                content = data[indexPath.row].txid ?? ""
+                self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, model: data[indexPath.row])
             }
         default:
             break

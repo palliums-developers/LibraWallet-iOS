@@ -124,7 +124,7 @@ class WalletMainViewController: BaseViewController {
         didSet {
             // 页面标题
             self.title = wallet?.tokenType.description
-            self.headerView.wallet = wallet
+            self.headerView.model = wallet
         }
     }
     var vtokenModel: ViolasTokenModel? {

@@ -73,7 +73,7 @@ class HomeViewController: UIViewController {
         view.importOrCreateView.delegate = self
         return view
     }()
-    /// 钱包切换按钮
+    /// 全部资产价值按钮
     lazy var totalAssetsButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setTitle(localLanguage(keyString: "wallet_home_wallet_total_asset_title"), for: UIControl.State.normal)
@@ -258,6 +258,7 @@ extension HomeViewController {
     /// 语言切换
     @objc func setText() {
         self.totalAssetsButton.setTitle(localLanguage(keyString: "wallet_home_wallet_total_asset_title"), for: UIControl.State.normal)
+        self.totalAssetsButton.imagePosition(at: .right, space: 4, imageViewSize: CGSize.init(width: 14, height: 8))
     }
 }
 

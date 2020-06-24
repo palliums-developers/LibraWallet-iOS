@@ -124,6 +124,8 @@ class WalletTransactionsViewController: BaseViewController {
             break
         case .BTC:
             dataModel.getBTCTransactionHistory(address: (wallet?.tokenAddress)!, page: dataOffset + 1, pageSize: 10, requestStatus: requestState)
+//            dataModel.getBTCTransactionHistory(address: "2NGZrVvZG92qGYqzTLjCAewvPZ7JE8S8VxE", page: dataOffset + 1, pageSize: 10, requestStatus: requestState)
+            //
         default:
             break
         }
@@ -280,32 +282,50 @@ extension WalletTransactionsViewController {
     }
 }
 extension WalletTransactionsViewController: WalletTransactionsTableViewManagerDelegate {
-    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, address: String) {
+    func tableViewDidSelectRowAtIndexPath<T>(indexPath: IndexPath, model: T) {
+        let vc = TransactionDetailViewController()
+        //            vc.requestURL = address
+        vc.tokenAddress = self.wallet?.tokenAddress
         switch self.wallet?.tokenType {
         case .BTC:
             print("BTC")
-            let vc = TransactionDetailWebViewController()
-            vc.requestURL = "https://live.blockcypher.com/btc-testnet/tx/\(address)"
-            self.navigationController?.pushViewController(vc, animated: true)
+            vc.btcTransaction = model as? TrezorBTCTransactionDataModel
         case .Libra:
             print("Libra")
-            let vc = TransactionDetailWebViewController()
-            vc.requestURL = address
-            self.navigationController?.pushViewController(vc, animated: true)
+            vc.libraTransaction = model as? LibraDataModel
+
         case .Violas:
             print("Violas")
-            let vc = TransactionDetailViewController()
-//            vc.requestURL = address
-            self.navigationController?.pushViewController(vc, animated: true)
+            vc.violasTransaction = model as? ViolasDataModel
         case .none:
             print("钱包类型异常")
         }
-    }
-    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, violasTransaction: ViolasDataModel) {
-        let vc = TransactionDetailViewController()
-        //            vc.requestURL = address
-        vc.violasTransaction = violasTransaction
         self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+//    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, address: String) {
+//        switch self.wallet?.tokenType {
+//        case .BTC:
+//            print("BTC")
+//            let vc = TransactionDetailWebViewController()
+//            vc.requestURL = "https://live.blockcypher.com/btc-testnet/tx/\(address)"
+//            self.navigationController?.pushViewController(vc, animated: true)
+//        case .Libra:
+//            print("Libra")
+//            let vc = TransactionDetailWebViewController()
+//            vc.requestURL = address
+//            self.navigationController?.pushViewController(vc, animated: true)
+//        case .Violas:
+//            print("Violas")
+//            let vc = TransactionDetailViewController()
+////            vc.requestURL = address
+//            self.navigationController?.pushViewController(vc, animated: true)
+//        case .none:
+//            print("钱包类型异常")
+//        }
+//    }
+    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, violasTransaction: ViolasDataModel) {
+        
     }
 }
 extension WalletTransactionsViewController: JXSegmentedListContainerViewListDelegate {

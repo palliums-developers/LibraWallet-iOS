@@ -129,7 +129,6 @@ class WalletTransactionsTableViewCell: UITableViewCell {
                 amountLabel.textColor = UIColor.init(hex: "13B788")
                 transactionTypeImageView.image = UIImage.init(named: "transfer_sign")
                 addressLabel.text = model.vout?.first?.addresses?.first
-                
             }
         }
     }
@@ -297,8 +296,8 @@ class WalletTransactionsTableViewCell: UITableViewCell {
             case 0:
                 //ADD_CURRENCY_TO_ACCOUNT
                 print("0")
-                transactionTypeImageView.image = UIImage.init(named: "mint_sign")
-                
+                transactionTypeImageView.image = UIImage.init(named: "publish_sign")
+                addressLabel.text = model.sender
             case 1:
                 //ADD_VALIDATOR
                 print("1")

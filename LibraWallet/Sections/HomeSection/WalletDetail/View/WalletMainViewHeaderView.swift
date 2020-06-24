@@ -120,15 +120,15 @@ class WalletMainViewHeaderView: UIView {
         self.makeToast(localLanguage(keyString: "wallet_copy_address_success_title"),
                        position: .center)
     }
-    var wallet: Token? {
+    var model: Token? {
         didSet {
-            self.amountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (wallet?.tokenBalance ?? 0)),
-                                                                                          scale: 4,
-                                                                                          unit: 1000000)
-            self.walletAddressLabel.text = wallet?.tokenAddress
-            switch wallet?.tokenType {
+
+            self.walletAddressLabel.text = model?.tokenAddress
+            var unit = 1000000
+            switch model?.tokenType {
             case .BTC:
                 self.walletIndicatorImageView.image = UIImage.init(named: "btc_icon")
+                unit = 100000000
             case .Libra:
                 self.walletIndicatorImageView.image = UIImage.init(named: "libra_icon")
             case .Violas:
@@ -136,6 +136,19 @@ class WalletMainViewHeaderView: UIView {
             default:
                 self.walletIndicatorImageView.image = UIImage.init(named: "wallet_icon_default")
             }
+            self.amountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model?.tokenBalance ?? 0)),
+                                                                                          scale: 4,
+                                                                                          unit: unit)
+            let rate = NSDecimalNumber.init(string: model?.tokenPrice ?? "0.0")
+            let amount = NSDecimalNumber.init(string: amountLabel.text ?? "0.0")
+            let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
+                                                           scale: 4,
+                                                           raiseOnExactness: false,
+                                                           raiseOnOverflow: false,
+                                                           raiseOnUnderflow: false,
+                                                           raiseOnDivideByZero: false)
+            let value = rate.multiplying(by: amount, withBehavior: numberConfig)
+            amountValueLabel.text = "≈$\(value.stringValue)"
         }
     }
 }

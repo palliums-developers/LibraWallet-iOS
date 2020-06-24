@@ -98,6 +98,7 @@ class HomeHeaderView: UIView {
         button.tag = 10
         button.layer.backgroundColor = UIColor.init(hex: "463288").cgColor
         button.layer.cornerRadius = 12
+        button.alpha = 0
         return button
     }()
     private lazy var coinBackgroundView: UIView = {
