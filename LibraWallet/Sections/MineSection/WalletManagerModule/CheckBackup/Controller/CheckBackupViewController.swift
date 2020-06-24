@@ -48,31 +48,30 @@ extension CheckBackupViewController: CheckBackupViewDelegate {
         do {
             try self.viewModel.checkIsAllValid()
             if FirstInApp == true {
-                if let wallets = self.tempWallet?.wallet, wallets.isEmpty == false {
-                    for wallet in wallets {
-                        let result = DataBaseManager.DBManager.updateWalletBackupState(wallet: WalletManager.shared)
-                        print("\(wallet.tokenAddress)钱包更新备份状态-\(result)")
-                    }
-                } else {
-                    print("无法更新备份状态")
+//                if let wallets = self.tempWallet?.wallet, wallets.isEmpty == false {
+//                    for wallet in wallets {
+//                        let result = DataBaseManager.DBManager.updateWalletBackupState(wallet: WalletManager.shared)
+//                        print("\(wallet.tokenAddress)钱包更新备份状态-\(result)")
+//                    }
+//                } else {
+//                    print("无法更新备份状态")
+//                }
+                let result = DataBaseManager.DBManager.updateWalletBackupState(wallet: WalletManager.shared)
+                print("钱包更新备份状态-\(result)")
+                if result == true {
+                    WalletManager.shared.changeWalletBackupState(state: true)
+                    self.view.makeToast(localLanguage(keyString: "wallet_check_mnemonic_success_title"), duration: 0.5, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
+                        self.dismiss(animated: true, completion: nil)
+                    })
                 }
-                self.view.makeToast(localLanguage(keyString: "wallet_check_mnemonic_success_title"), duration: 0.5, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
-//                    let tabbar = BaseTabBarViewController.init()
-//                    UIApplication.shared.keyWindow?.rootViewController = tabbar
-//                    UIApplication.shared.keyWindow?.makeKeyAndVisible()
-                    self.dismiss(animated: true, completion: nil)
-                })
             } else {
                 self.view.hideToastActivity()
-                if let wallets = self.tempWallet?.wallet, wallets.isEmpty == false {
-                    for wallet in wallets {
-                        let result = DataBaseManager.DBManager.updateWalletBackupState(wallet: WalletManager.shared)
-                        print("\(wallet.tokenAddress)钱包更新备份状态-\(result)")
-                    }
-                } else {
-                    print("无法更新备份状态")
+                let result = DataBaseManager.DBManager.updateWalletBackupState(wallet: WalletManager.shared)
+                print("钱包更新备份状态-\(result)")
+                if result == true {
+                    WalletManager.shared.changeWalletBackupState(state: true)
+                    self.jumpToWalletManagerController()
                 }
-                self.jumpToWalletManagerController()
             }
         } catch {
             self.view.makeToast(error.localizedDescription,

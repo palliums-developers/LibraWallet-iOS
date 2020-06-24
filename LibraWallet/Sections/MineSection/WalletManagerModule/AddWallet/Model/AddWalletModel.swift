@@ -59,7 +59,7 @@ class AddWalletModel: NSObject {
                                             walletCreateTime: NSDate().timeIntervalSince1970,
                                             walletBiometricLock: false,
                                             walletCreateType: 0,
-                                            walletBackupState: true,
+                                            walletBackupState: false,
                                             walletSubscription: false,
                                             walletMnemonicHash: mnemonics.joined(separator: " ").md5(),
                                             walletUseState: true)

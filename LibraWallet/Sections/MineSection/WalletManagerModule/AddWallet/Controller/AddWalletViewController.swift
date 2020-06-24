@@ -108,7 +108,7 @@ extension AddWalletViewController {
                         }
                         DispatchQueue.main.async(execute: {
                             let vc = BackupWarningViewController()
-                            vc.FirstInApp = false
+                            vc.FirstInApp = true
                             vc.tempWallet = tempData
                             self?.navigationController?.pushViewController(vc, animated: true)
                         })
