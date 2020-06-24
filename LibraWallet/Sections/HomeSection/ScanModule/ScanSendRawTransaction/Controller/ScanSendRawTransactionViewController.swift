@@ -86,13 +86,13 @@ extension ScanSendRawTransactionViewController {
                     print(error.localizedDescription)
                     // 数据返回状态异常
                 }
-                self?.detailView.toastView?.hide()
+                self?.detailView.toastView?.hide(tag: 99)
                 self?.detailView.hideToastActivity()
                 self?.detailView.makeToast(error.localizedDescription, position: .center)
                 return
             }
             if type == "SendViolasTransaction" {
-                self?.detailView.toastView?.hide()
+                self?.detailView.toastView?.hide(tag: 99)
                 self?.view.makeToast(localLanguage(keyString: "wallet_scan_login_alert_success_title"), duration: toastDuration, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
                     self?.needReject = false
                     self?.dismiss(animated: true, completion: nil)
@@ -114,7 +114,7 @@ extension ScanSendRawTransactionViewController: ScanSendRawTransactionViewDelega
     func confirmLogin(password: String) {
         NSLog("Password:\(password)")
         if let tx = self.transactionHex, tx.isEmpty == false {
-            self.detailView.toastView?.show()
+            self.detailView.toastView?.show(tag: 99)
             self.dataModel.sendTransaction(tx: tx)
         } else {
             #warning("报错待处理")

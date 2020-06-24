@@ -95,7 +95,7 @@ class TokenPickerViewAlert: UIView {
         if let action = self.actionClosure {
             action(model)
         }
-        self.hideAnimation()
+        self.hideAnimation(tag: 99)
     }
     var models: [MarketSupportCoinDataModel]?
     var pickerRow: Int = 0

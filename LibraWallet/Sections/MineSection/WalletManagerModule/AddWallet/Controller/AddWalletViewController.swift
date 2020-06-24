@@ -49,7 +49,7 @@ class AddWalletViewController: BaseViewController {
 }
 extension AddWalletViewController: AddWalletViewDelegate {
     func confirmAddWallet(password: String) {
-        self.detailView.toastView.show()
+        self.detailView.toastView.show(tag: 99)
         self.dataModel.createWallet(password: password)
     }
     func openPrivacyPolicy() {
@@ -71,7 +71,7 @@ extension AddWalletViewController {
         self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
             guard let dataDic = change.newValue, dataDic.count != 0 else {
                 self?.detailView.hideToastActivity()
-                self?.detailView.toastView.hide()
+                self?.detailView.toastView.hide(tag: 99)
 //                self?.endLoading()
                 return
             }
@@ -94,10 +94,10 @@ extension AddWalletViewController {
                     // 数据返回状态异常
                 }
                 self?.detailView.hideToastActivity()
-                self?.detailView.toastView.hide()
+                self?.detailView.toastView.hide(tag: 99)
                 return
             }
-            self?.detailView.toastView.hide()
+            self?.detailView.toastView.hide(tag: 99)
             if type == "CreateWallet" {
                 // 加载本地默认钱包
                 if let tempData = dataDic.value(forKey: "data") as? CreateWalletModel {

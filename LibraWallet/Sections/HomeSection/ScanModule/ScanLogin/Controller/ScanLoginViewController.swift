@@ -129,12 +129,12 @@ extension ScanLoginViewController: ScanLoginViewDelegate {
     }
     func confirmLogin(password: String) {
         NSLog("Password:\(password)")
-        self.detailView.toastView?.show()
+        self.detailView.toastView?.show(tag: 99)
         if let connect = WalletConnectManager.shared.connect {
             connect(true)
         }
         WalletConnectManager.shared.didConnectClosure = {
-            self.detailView.toastView?.hide()
+            self.detailView.toastView?.hide(tag: 99)
             self.view.makeToast(localLanguage(keyString: "wallet_scan_login_alert_success_title"), duration: toastDuration, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
                 self.dismiss(animated: true, completion: nil)
             })

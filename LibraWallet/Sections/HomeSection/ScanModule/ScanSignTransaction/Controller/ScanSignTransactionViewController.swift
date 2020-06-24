@@ -69,11 +69,11 @@ extension ScanSignTransactionViewController: ScanSignTransactionViewDelegate {
         NSLog("Password:\(password)")
         if let raw = self.model {
             WalletManager.unlockWallet(controller: self, successful: { [weak self] (mnemonic) in
-                self?.detailView.toastView?.show()
+                self?.detailView.toastView?.show(tag: 99)
                 self?.dataModel.signMessage(message: raw.message ?? "", mnemonic: mnemonic)
             }) { [weak self] (error) in
                 guard error != "Cancel" else {
-                    self?.detailView.toastView?.hide()
+                    self?.detailView.toastView?.hide(tag: 99)
                     return
                 }
                 self?.detailView.makeToast(error,
@@ -111,12 +111,12 @@ extension ScanSignTransactionViewController {
                     print(error.localizedDescription)
                     // 数据返回状态异常
                 }
-                self?.detailView.toastView?.hide()
+                self?.detailView.toastView?.hide(tag: 99)
                 self?.detailView.hideToastActivity()
                 self?.detailView.makeToast(error.localizedDescription, position: .center)
                 return
             }
-            self?.detailView.toastView?.hide()
+            self?.detailView.toastView?.hide(tag: 99)
             if type == "SignMessage" {
                 if let tempData = dataDic.value(forKey: "data") as? String {
                     self?.view.makeToast(localLanguage(keyString: "wallet_scan_login_alert_success_title"), duration: toastDuration, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in

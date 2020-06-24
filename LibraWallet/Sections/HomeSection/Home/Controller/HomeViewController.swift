@@ -217,9 +217,9 @@ extension HomeViewController {
             print("已登录")
         } else {
             // 未登录
-            self.detailView.toastView?.show()
+            self.detailView.toastView?.show(tag: 99)
             WalletConnectManager.shared.allowConnect = {
-                self.detailView.toastView?.hide()
+                self.detailView.toastView?.hide(tag: 99)
                 let vc = ScanLoginViewController()
                 //                vc.wallet = LibraWalletManager.shared
                 vc.sessionID = wcURL
@@ -227,7 +227,7 @@ extension HomeViewController {
             }
             WalletConnectManager.shared.connectToServer(url: wcURL)
             WalletConnectManager.shared.connectInvalid = {
-                self.detailView.toastView?.hide()
+                self.detailView.toastView?.hide(tag: 99)
                 self.detailView.makeToast(localLanguage(keyString: "wallet_connect_connect_time_invalid_title"), position: .center)
             }
         }
@@ -241,7 +241,7 @@ extension HomeViewController {
             return
         }
         let alert = WelcomeAlert.init()
-        alert.show()
+        alert.show(tag: 199)
     }
     func checkConfirmLegal() {
         guard getConfirmPrivateAndUseLegalState() == false else {
@@ -259,7 +259,7 @@ extension HomeViewController {
             self.present(navi, animated: true, completion: nil)
         }
         
-        alert.show()
+        alert.show(tag: 199)
         //        let alert = WelcomeAlert.init()
         //        alert.show()
     }

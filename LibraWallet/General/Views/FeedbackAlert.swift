@@ -169,7 +169,7 @@ class FeedbackAlert: UIView {
     var actionClosure: successClosure?
     @objc func buttonClick(button: UIButton) {
         if button.tag == 10 {
-            self.hide()
+            self.hide(tag: 99)
         } else {
             guard let content = self.contentTextView.text else {
                 self.makeToast(localLanguage(keyString: "wallet_alert_feedback_content_empty"), position: .center)

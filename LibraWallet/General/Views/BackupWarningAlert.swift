@@ -143,10 +143,10 @@ class BackupWarningAlert: UIView {
         if button.tag == 10 {
             if let action = self.actionClosure {
                 action()
-                self.hide()
+                self.hide(tag: 99)
             }
         } else {
-            self.hide()
+            self.hide(tag: 99)
         }
     }
 }

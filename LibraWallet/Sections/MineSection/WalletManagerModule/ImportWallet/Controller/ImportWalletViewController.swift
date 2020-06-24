@@ -50,7 +50,7 @@ class ImportWalletViewController: BaseViewController {
 }
 extension ImportWalletViewController: ImportWalletViewDelegate {
     func confirmImportWallet(password: String, mnemonics: [String]) {
-        self.detailView.toastView.show()
+        self.detailView.toastView.show(tag: 99)
         self.dataModel.importWallet(password: password, mnemonics: mnemonics)
     }
     func openPrivacyPolicy() {
@@ -94,7 +94,7 @@ extension ImportWalletViewController {
         self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
             guard let dataDic = change.newValue, dataDic.count != 0 else {
                 self?.detailView.hideToastActivity()
-                self?.detailView.toastView.hide()
+                self?.detailView.toastView.hide(tag: 99)
                 return
             }
             let type = dataDic.value(forKey: "type") as! String
@@ -116,7 +116,7 @@ extension ImportWalletViewController {
                     // 数据返回状态异常
                 }
                 self?.detailView.hideToastActivity()
-                self?.detailView.toastView.hide()
+                self?.detailView.toastView.hide(tag: 99)
                 return
             }
             if type == "ImportWallet" {
@@ -132,7 +132,7 @@ extension ImportWalletViewController {
 //                    print(tempData)
                 }
             }
-            self?.detailView.toastView.hide()
+            self?.detailView.toastView.hide(tag: 99)
         })
     }
 }

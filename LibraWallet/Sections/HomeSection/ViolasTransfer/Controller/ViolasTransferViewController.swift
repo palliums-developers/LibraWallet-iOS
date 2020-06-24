@@ -116,7 +116,7 @@ extension ViolasTransferViewController: ViolasTransferViewDelegate {
     }
     func confirmTransfer(amount: Double, address: String, fee: Double) {
         WalletManager.unlockWallet(controller: self, successful: { [weak self] (mnemonic) in
-            self?.detailView.toastView?.show()
+            self?.detailView.toastView?.show(tag: 99)
             self?.dataModel.sendViolasTransaction(sendAddress: self?.wallet?.tokenAddress ?? "",
                                                   receiveAddress: address,
                                                   amount: amount,
@@ -125,7 +125,7 @@ extension ViolasTransferViewController: ViolasTransferViewDelegate {
                                                   module: self?.wallet?.tokenModule ?? "")
         }) { [weak self] (error) in
             guard error != "Cancel" else {
-                self?.detailView.toastView?.hide()
+                self?.detailView.toastView?.hide(tag: 99)
                 return
             }
             self?.detailView.makeToast(error,
@@ -138,7 +138,7 @@ extension ViolasTransferViewController {
         self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
             guard let dataDic = change.newValue, dataDic.count != 0 else {
                 self?.detailView.hideToastActivity()
-                self?.detailView.toastView?.hide()
+                self?.detailView.toastView?.hide(tag: 99)
                 return
             }
             let type = dataDic.value(forKey: "type") as! String
@@ -160,12 +160,12 @@ extension ViolasTransferViewController {
                     // 数据返回状态异常
                 }
                 self?.detailView.hideToastActivity()
-                self?.detailView.toastView?.hide()
+                self?.detailView.toastView?.hide(tag: 99)
                 self?.view.makeToast(error.localizedDescription, position: .center)
                 return
             }
             if type == "SendViolasTransaction" {
-                self?.detailView.toastView?.hide()
+                self?.detailView.toastView?.hide(tag: 99)
                 self?.view.makeToast(localLanguage(keyString: "wallet_transfer_success_alert"),
                                      position: .center)
                 if let action = self?.actionClosure {

@@ -152,7 +152,7 @@ extension AddAssetViewController: AddAssetTableViewManagerDelegate {
     }
     func showPasswordAlert(model: AssetsModel, indexPath: IndexPath, wallet: Token) {
         WalletManager.unlockWallet(controller: self, successful: { [weak self] (mnemonic) in
-            self?.detailView.toastView?.show()
+            self?.detailView.toastView?.show(tag: 99)
             self?.dataModel.publishViolasToken(sendAddress: wallet.tokenAddress, mnemonic: mnemonic, type: wallet.tokenType, module: model.module ?? "")
             self?.actionClosure = { result in
                 if result == true {
@@ -185,7 +185,7 @@ extension AddAssetViewController: AddAssetTableViewManagerDelegate {
             let cell = self?.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
             cell.switchButton.setOn(false, animated: true)
             guard error != "Cancel" else {
-                self?.detailView.toastView?.hide()
+                self?.detailView.toastView?.hide(tag: 99)
                 return
             }
             self?.detailView.makeToast(error,
@@ -223,7 +223,7 @@ extension AddAssetViewController {
         self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
             guard let dataDic = change.newValue, dataDic.count != 0 else {
                 self?.detailView.hideToastActivity()
-                self?.detailView.toastView?.hide()
+                self?.detailView.toastView?.hide(tag: 99)
                 return
             }
             let type = dataDic.value(forKey: "type") as! String
@@ -245,7 +245,7 @@ extension AddAssetViewController {
                     // 数据返回状态异常
                 }
                 self?.detailView.hideToastActivity()
-                self?.detailView.toastView?.hide()
+                self?.detailView.toastView?.hide(tag: 99)
                 self?.detailView.makeToast(error.localizedDescription,
                                            position: .center)
                 if let action = self?.actionClosure {
@@ -260,7 +260,7 @@ extension AddAssetViewController {
                     self?.detailView.hideToastActivity()
                 }
             } else if type == "SendLibraTransaction" || type == "SendViolasTransaction" {
-                self?.detailView.toastView?.hide()
+                self?.detailView.toastView?.hide(tag: 99)
                 if let action = self?.actionClosure {
                     action(true)
                 }
@@ -268,7 +268,7 @@ extension AddAssetViewController {
                                            position: .center)
             }
             self?.detailView.hideToastActivity()
-            self?.detailView.toastView?.hide()
+            self?.detailView.toastView?.hide(tag: 99)
         })
         self.detailView.makeToastActivity(.center)
         let wallet = tokens?.filter({

@@ -90,13 +90,13 @@ class MappingTokenListAlert: UIView {
     var actionClosure: successClosure?
     @objc func buttonClick(button: UIButton) {
         guard let model = models?[pickerRow] else {
-            self.hideAnimation()
+            self.hideAnimation(tag: 99)
             return
         }
         if let action = self.actionClosure {
             action(model)
         }
-        self.hideAnimation()
+        self.hideAnimation(tag: 99)
     }
     var models: [TokenMappingListDataModel]?
     var pickerRow: Int = 0
@@ -151,7 +151,7 @@ extension MappingTokenListAlert: actionViewAnimationProtocol {
             })
         }
     }
-    func hideAnimation() {
+    func hideAnimation(tag: Int) {
         DispatchQueue.main.asyncAfter(deadline: .now()+0.001) {
             UIView.animate(withDuration: 0.3, animations: {
                 self.whiteBackgroundView.snp.remakeConstraints { (make) in
@@ -161,7 +161,7 @@ extension MappingTokenListAlert: actionViewAnimationProtocol {
                 }
                 self.layoutIfNeeded()
             }, completion: { (status) in
-                self.hide()
+                self.hide(tag: tag)
             })
         }
     }

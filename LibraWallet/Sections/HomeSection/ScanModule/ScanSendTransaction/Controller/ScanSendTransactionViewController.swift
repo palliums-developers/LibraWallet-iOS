@@ -85,13 +85,13 @@ extension ScanSendTransactionViewController {
                     print(error.localizedDescription)
                     // 数据返回状态异常
                 }
-                self?.detailView.toastView?.hide()
+                self?.detailView.toastView?.hide(tag: 99)
                 self?.detailView.hideToastActivity()
                 self?.detailView.makeToast(error.localizedDescription, position: .center)
                 return
             }
             if type == "SendViolasTransaction" {
-                self?.detailView.toastView?.hide()
+                self?.detailView.toastView?.hide(tag: 99)
                 self?.view.makeToast(localLanguage(keyString: "wallet_scan_login_alert_success_title"), duration: toastDuration, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
                     self?.needReject = false
                     self?.dismiss(animated: true, completion: nil)
@@ -114,12 +114,12 @@ extension ScanSendTransactionViewController: ScanSendTransactionViewDelegate {
         NSLog("Password:\(password)")
         if let raw = self.model {
             WalletManager.unlockWallet(controller: self, successful: { [weak self] (mnemonic) in
-                self?.detailView.toastView?.show()
+                self?.detailView.toastView?.show(tag: 99)
                 #warning("待处理")
                 self?.dataModel.sendViolasTransaction(model: raw, mnemonic: mnemonic, module: "")
             }) { [weak self] (error) in
                 guard error != "Cancel" else {
-                    self?.detailView.toastView?.hide()
+                    self?.detailView.toastView?.hide(tag: 99)
                     return
                 }
                 self?.detailView.makeToast(error,

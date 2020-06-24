@@ -146,7 +146,7 @@ extension MarketViewController: MarketTableViewManagerDelegate {
         guard let walletAddress = self.wallet?.tokenAddress else {
             return
         }
-        self.detailView.toastView?.show()
+        self.detailView.toastView?.show(tag: 99)
         // 移除旧的监听
         self.dataModel.removeDepthsLisening(payContract: rightModel.id ?? "", exchangeContract: leftModel.id ?? "")
         // 请求交易所对应交易对数据
@@ -162,7 +162,7 @@ extension MarketViewController: MarketTableViewManagerDelegate {
         guard let walletAddress = self.wallet?.tokenAddress else {
             return
         }
-        self.detailView.toastView?.show()
+        self.detailView.toastView?.show(tag: 99)
         self.dataModel.getSupportToken(address: walletAddress)
 
         self.actionClosure = { dataModel in
@@ -235,7 +235,7 @@ extension MarketViewController: MarketTableViewManagerDelegate {
                         return
                     }
                     print("添加监听")
-                    self.detailView.toastView?.show()
+                    self.detailView.toastView?.show(tag: 99)
                     self.dataModel.getMarketData(address: walletAddress, payContract: payContract, exchangeContract: exchangeContract)
                     // http
 //                    self.dataModel.getCurrentOrder(address: walletAddress, baseAddress: leftModel.addr ?? "", exchangeAddress: rightModel.addr ?? "")
@@ -243,12 +243,12 @@ extension MarketViewController: MarketTableViewManagerDelegate {
                     self.dataModel.addDepthsLisening(payContract: payContract, exchangeContract: exchangeContract)
                 }
             }, data: tempDataModel, onlyRegisterToken: showRegisterModel)
-            alert.show()
+            alert.show(tag: 99)
             alert.showAnimation()
         }
     }
     func exchangeToken(payToken: MarketSupportCoinDataModel, receiveToken: MarketSupportCoinDataModel, amount: Double, exchangeAmount: Double) {
-        self.detailView.toastView?.show()
+        self.detailView.toastView?.show(tag: 99)
         // 第一步，检查余额是否充足
 //        self.dataModel.getViolasBalance(walletID: LibraWalletManager.shared.walletID ?? 0,
 //                                        address: LibraWalletManager.shared.walletAddress ?? "",
@@ -467,7 +467,7 @@ extension MarketViewController {
             return
         }
         if let error = jsonData.value(forKey: "error") as? LibraWalletError {
-            self.detailView.toastView?.hide()
+            self.detailView.toastView?.hide(tag: 99)
             if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
                 // 网络无法访问
                 print(error.localizedDescription)
@@ -518,14 +518,14 @@ extension MarketViewController {
         
         if type == "GetTokenList" {
             // 获取交易所支持稳定币列表
-            self.detailView.toastView?.hide()
+            self.detailView.toastView?.hide(tag: 99)
             if let tempData = jsonData.value(forKey: "data") as? [MarketSupportCoinDataModel] {
                 if let action = self.actionClosure {
                     action(tempData)
                 }
             }
         } else if type == "GetCurrentOrder" {
-            self.detailView.toastView?.hide()
+            self.detailView.toastView?.hide(tag: 99)
             if let tempData = jsonData.value(forKey: "data") as? MarketResponseMainModel {
                 #warning("无奈之举，望谅解")
                 let headerView = self.detailView.tableView.headerView(forSection: 0) as? MarketExchangeHeaderView
@@ -549,7 +549,7 @@ extension MarketViewController {
             }
         } else if type == "OrderChange" {
             // 订单状态变更
-            self.detailView.toastView?.hide()
+            self.detailView.toastView?.hide(tag: 99)
             if let tempData = jsonData.value(forKey: "data") as? MarketOrderModel {
                 if let data = tempData.buys, data.isEmpty == false {
                     refreshTableView(data: data)
@@ -557,7 +557,7 @@ extension MarketViewController {
             }
         } else if type == "ExchangeDone" {
             // 兑换挂单成功
-            self.detailView.toastView?.hide()
+            self.detailView.toastView?.hide(tag: 99)
             self.detailView.makeToast(localLanguage(keyString: "wallet_market_alert_make_order_success_title"), position: .center)
             let headerView = self.detailView.tableView.headerView(forSection: 0) as! MarketExchangeHeaderView
             headerView.leftAmountTextField.text = ""

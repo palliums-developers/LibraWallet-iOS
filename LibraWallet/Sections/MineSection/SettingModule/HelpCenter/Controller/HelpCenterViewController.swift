@@ -64,7 +64,7 @@ class HelpCenterViewController: BaseViewController {
         alert = FeedbackAlert.init { (content, contact) in
 //            self.dataModel.feedback(uid: WalletData.wallet.walletUID!, content: content, contact: contact)
         }
-        alert?.show()
+        alert?.show(tag: 99)
     }
     var myContext = 0
 }
@@ -106,7 +106,7 @@ extension HelpCenterViewController {
         let type = jsonData.value(forKey: "type") as! String
         if type == "Feedback" {
             alert?.hideToastActivity()
-            alert?.hide()
+            alert?.hide(tag: 99)
             self.navigationController?.popViewController(animated: true)
         }
         self.view.hideToastActivity()

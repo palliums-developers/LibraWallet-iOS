@@ -93,7 +93,7 @@ class WelcomeAlert: UIView {
         return button
     }()
     @objc func buttonClick(button: UIButton) {
-        self.hide()
+        self.hide(tag: 99)
         setWelcomeState(show: true)
     }
 }

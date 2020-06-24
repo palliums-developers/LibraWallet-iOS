@@ -127,26 +127,26 @@ extension TokenMappingViewController {
                         return
                     }
                 }
-                self?.detailView.toastView?.hide()
+                self?.detailView.toastView?.hide(tag: 99)
                 self?.view.makeToast(error.localizedDescription, position: .center)
                 return
             }
             if type == "MappingInfo" {
-                self?.detailView.toastView?.hide()
+                self?.detailView.toastView?.hide(tag: 99)
                 if let tempData = dataDic.value(forKey: "data") as? TokenMappingDataModel {
                     self?.detailView.headerView.model = tempData
                 }
             } else if type == "SendBTCTransaction" {
-                self?.detailView.toastView?.hide()
+                self?.detailView.toastView?.hide(tag: 99)
                 self?.view.makeToast(localLanguage(keyString: "wallet_transfer_success_alert"), position: .center)
             } else if type == "SendLibraTransaction" {
-                self?.detailView.toastView?.hide()
+                self?.detailView.toastView?.hide(tag: 99)
                 self?.view.makeToast(localLanguage(keyString: "wallet_transfer_success_alert"), position: .center)
             } else if type == "SendVBTCTransaction" {
-                self?.detailView.toastView?.hide()
+                self?.detailView.toastView?.hide(tag: 99)
                 self?.view.makeToast(localLanguage(keyString: "wallet_transfer_success_alert"), position: .center)
             } else if type == "SendVLibraTransaction" {
-                self?.detailView.toastView?.hide()
+                self?.detailView.toastView?.hide(tag: 99)
                 self?.view.makeToast(localLanguage(keyString: "wallet_transfer_success_alert"), position: .center)
             } else if type == "GetWalletEnableCoin" {
                 if let tempData = dataDic.value(forKey: "data") as? Bool {
@@ -162,18 +162,18 @@ extension TokenMappingViewController {
             } else if type == "MappingTokenList" {
                 if let tempData = dataDic.value(forKey: "data") as? [TokenMappingListDataModel] {
                     print(tempData)
-                    self?.detailView.toastView?.hide()
+                    self?.detailView.toastView?.hide(tag: 99)
                     let alert = MappingTokenListAlert.init(data: tempData) { (model) in
                         print(model)
                         self?.detailView.headerView.reverseModel = model
                     }
-                    alert.show()
+                    alert.show(tag: 99)
                     alert.showAnimation()
                 }
             }
         })
         if wallet?.tokenType == .BTC || wallet?.tokenType == .Libra {
-            self.detailView.toastView?.show()
+            self.detailView.toastView?.show(tag: 99)
             self.dataModel.getMappingInfo(walletType: (wallet?.tokenType)!)
         } else {
 //            // 获取当前钱包已映射稳定币列表
@@ -183,7 +183,7 @@ extension TokenMappingViewController {
     private func showMappingFunctionAlert() {
         let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_mapping_info_alert_title"), message: LibraWalletError.WalletMapping(reason: .mappingFounctionInvalid).localizedDescription, preferredStyle: .alert)
         alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_mapping_info_alert_confirm_button_title"), style: .default){ [weak self] clickHandler in
-            self?.detailView.toastView?.hide()
+            self?.detailView.toastView?.hide(tag: 99)
             self?.navigationController?.popViewController(animated: true)
         })
         self.present(alertContr, animated: true, completion: nil)
@@ -191,7 +191,7 @@ extension TokenMappingViewController {
     private func showMappingDataEmptyFunctionAlert() {
         let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_mapping_info_alert_title"), message: LibraWalletError.WalletMapping(reason: .mappingCoinDataEmpty).localizedDescription, preferredStyle: .alert)
         alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_mapping_info_alert_confirm_button_title"), style: .default){ [weak self] clickHandler in
-            self?.detailView.toastView?.hide()
+            self?.detailView.toastView?.hide(tag: 99)
             self?.navigationController?.popViewController(animated: true)
         })
         self.present(alertContr, animated: true, completion: nil)
@@ -200,7 +200,7 @@ extension TokenMappingViewController {
 //MARK: - 映射子View Header代理方法
 extension TokenMappingViewController: TokenMappingHeaderViewDelegate {
     func showMappingTokenList() {
-        self.detailView.toastView?.show()
+        self.detailView.toastView?.show(tag: 99)
         // 获取当前钱包已映射稳定币列表
         self.dataModel.getMappingTokenList(walletAddress: self.wallet?.tokenAddress ?? "")
     }
@@ -225,7 +225,7 @@ extension TokenMappingViewController: TokenMappingHeaderViewDelegate {
     func confirmTransfer(amount: Double, address: String, fee: Double) {
         
         if wallet?.tokenType == .Libra || wallet?.tokenType == .BTC {
-            self.detailView.toastView?.show()
+            self.detailView.toastView?.show(tag: 99)
             self.dataModel.getWalletEnableToken(address: address, contract: ViolasMainContract)
             self.actionClosure = { (result) in
                 if result == false {
@@ -282,7 +282,7 @@ extension TokenMappingViewController: TokenMappingHeaderViewDelegate {
                                                 mnemonic: mnemonic)
         case .Violas:
             print("Violas")
-            self.detailView.toastView?.show()
+            self.detailView.toastView?.show(tag: 99)
             if self.detailView.headerView.rightCoinButton.titleLabel?.text?.lowercased() == "btc" {
                 // btc
                 self.dataModel.sendVBTCTransaction(sendAddress: self.wallet?.tokenAddress ?? "",
@@ -316,7 +316,7 @@ extension TokenMappingViewController: TokenMappingHeaderViewDelegate {
         })
         alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_cancel_button_title"), style: .cancel){ clickHandler in
             NSLog("点击了取消")
-            self.detailView.toastView?.hide()
+            self.detailView.toastView?.hide(tag: 99)
         })
         self.present(alertContr, animated: true, completion: nil)
     }

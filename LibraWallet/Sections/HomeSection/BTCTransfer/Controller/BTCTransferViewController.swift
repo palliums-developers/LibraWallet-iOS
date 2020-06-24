@@ -100,7 +100,7 @@ extension BTCTransferViewController {
                 print(error.localizedDescription)
                 // 数据状态异常
             }
-            self.detailView.toastView?.hide()
+            self.detailView.toastView?.hide(tag: 99)
             self.view.makeToast(error.localizedDescription, position: .center)
             return
         }
@@ -108,7 +108,7 @@ extension BTCTransferViewController {
         
         if type == "SendBTCTransaction" {
             print("SendBTCsuccess")
-            self.detailView.toastView?.hide()
+            self.detailView.toastView?.hide(tag: 99)
             self.view.makeToast(localLanguage(keyString: "wallet_transfer_success_alert"), position: .center)
         }
         self.view.hideToastActivity()
@@ -169,7 +169,7 @@ extension BTCTransferViewController: BTCTransferViewDelegate {
 //    }
     func confirmTransfer(amount: Double, address: String, fee: Double) {
         WalletManager.unlockWallet(controller: self, successful: { [weak self] (mnemonic) in
-            self?.detailView.toastView?.show()
+            self?.detailView.toastView?.show(tag: 99)
             let walletttt = try! BTCManager().getWallet(mnemonic: mnemonic)
             self?.dataModel.makeTransaction(wallet: walletttt,
                                             amount: amount,
@@ -177,7 +177,7 @@ extension BTCTransferViewController: BTCTransferViewDelegate {
                                             toAddress: address)
         }) { [weak self] (error) in
             guard error != "Cancel" else {
-                self?.detailView.toastView?.hide()
+                self?.detailView.toastView?.hide(tag: 99)
                 return
             }
             self?.detailView.makeToast(error,

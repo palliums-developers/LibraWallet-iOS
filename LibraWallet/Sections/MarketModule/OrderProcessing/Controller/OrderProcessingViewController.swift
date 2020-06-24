@@ -171,7 +171,7 @@ extension OrderProcessingViewController {
             } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
                 // 解析失败
                 print(error.localizedDescription)
-                self.detailView.toastView?.hide()
+                self.detailView.toastView?.hide(tag: 99)
                 self.detailView.makeToast(error.localizedDescription, position: .center)
             } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
                 print(error.localizedDescription)
@@ -219,7 +219,7 @@ extension OrderProcessingViewController {
             }
             self.detailView.tableView.mj_footer?.endRefreshing()
         } else {
-            self.detailView.toastView?.hide()
+            self.detailView.toastView?.hide(tag: 99)
             if let indexPath = self.cancelIndexPath {
                 self.tableViewManager.dataModel?.remove(at: indexPath.row)
                 self.detailView.tableView.beginUpdates()
