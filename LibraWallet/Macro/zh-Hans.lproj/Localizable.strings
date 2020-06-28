@@ -19,6 +19,7 @@ wallet_home_last_transaction_date_title = "交易记录";
 wallet_home_wallet_asset_title = "资产";
 wallet_home_wallet_total_asset_title = "总资产";
 wallet_home_exchange_title = "兑换";
+wallet_wallet_connect_state_title = "网页钱包已登录";
 
 /************* 个人中心 *******************/
 wallet_mine_manager_wallet_title = "钱包管理";

@@ -19,6 +19,7 @@ wallet_home_last_transaction_date_title = "Transactions";
 wallet_home_wallet_asset_title = "Assets";
 wallet_home_wallet_total_asset_title = "Total";
 wallet_home_exchange_title = "Exchange";
+wallet_wallet_connect_state_title = "Web Wallet Logged";
 
 /************* 个人中心 *******************/
 wallet_mine_manager_wallet_title = "Manage Wallet";

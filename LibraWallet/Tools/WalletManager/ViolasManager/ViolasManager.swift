@@ -417,7 +417,8 @@ extension ViolasManager {
         let txData = Data.init(Array<UInt8>(hex: tx))
         var WCTransferModel = WCDataModel.init(from: "",
                                                receive: "",
-                                               amount: 0)
+                                               amount: 0,
+                                               module: "")
         let (sendAddress, lastData0) = readData(data: txData, count: 16)
         print("sendAddress = \(sendAddress.toHexString())")
         WCTransferModel.from = sendAddress.toHexString()
@@ -435,7 +436,7 @@ extension ViolasManager {
         print("codeData = \(codeData.toHexString())")
         let (typeTagCount , lastData5) = getCount(data: lastData4)
         print("typeTagCount = \(typeTagCount)")
-        let lastData6 = readTypeTags(data: lastData5, typeTagCount: typeTagCount)
+        let (lastData6, module) = readTypeTags(data: lastData5, typeTagCount: typeTagCount)
         let (argumentCount, lastData7) = getCount(data: lastData6)
         print("argumentCount = \(argumentCount)")
         let (model, lastData8) = readArgument(data: lastData7, argumentCount: argumentCount)
@@ -443,7 +444,8 @@ extension ViolasManager {
         print("success")
         return WCDataModel.init(from: sendAddress.toHexString(),
                                 receive: model.receive,
-                                amount: model.amount)
+                                amount: model.amount,
+                                module: module)
     }
     private static func getCount(data: Data) -> (Int, Data) {
         var nameCountData = [UInt8]()
@@ -469,8 +471,9 @@ extension ViolasManager {
         let lastData = data.suffix(data.count - count)
         return (tempData, lastData)
     }
-    private static func readTypeTags(data: Data, typeTagCount: Int) -> (Data) {
+    private static func readTypeTags(data: Data, typeTagCount: Int) -> (Data, String) {
         var resultLastData = data
+        var tempModule = ""
         for _ in 0..<typeTagCount {
             let (type, lastData0) = readData(data: resultLastData, count: 1)
             switch type.toHexString() {
@@ -505,15 +508,19 @@ extension ViolasManager {
                 print("TypeParams = \(typeParamsCount)")
                 
                 resultLastData = lastData6
+                tempModule = module
             default:
                 print("invalid")
             }
         }
-        return resultLastData
+        return (resultLastData, tempModule)
     }
     private static func readArgument(data: Data, argumentCount: Int) -> (WCDataModel, Data) {
         var resultLastData = data
-        var model = WCDataModel.init(from: "", receive: "", amount: 0)
+        var model = WCDataModel.init(from: "",
+                                     receive: "",
+                                     amount: 0,
+                                     module: "")
         for _ in 0..<argumentCount {
             let (type, lastData0) = readData(data: resultLastData, count: 1)
             switch type.toHexString() {
