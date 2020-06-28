@@ -241,7 +241,7 @@ extension HomeViewController {
             return
         }
         let alert = WelcomeAlert.init()
-        alert.show(tag: 199)
+        alert.show(tag: 99)
     }
     func checkConfirmLegal() {
         guard getConfirmPrivateAndUseLegalState() == false else {
@@ -290,6 +290,7 @@ extension HomeViewController {
 extension HomeViewController: HomeHeaderViewDelegate {
     func walletConnectState() {
         print("123")
+        
     }
     func addAssets() {
         let vc = AddAssetViewController()
