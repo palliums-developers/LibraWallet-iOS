@@ -11,6 +11,7 @@ import UIKit
 class WalletReceiveViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.backgroundColor = UIColor.init(hex: "F7F7F9")
         // 页面标题
         self.title = localLanguage(keyString: "wallet_receive_navigation_title")
         // 加载子View
