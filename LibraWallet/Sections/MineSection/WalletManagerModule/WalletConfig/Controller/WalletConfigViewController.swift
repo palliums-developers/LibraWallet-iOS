@@ -181,18 +181,23 @@ extension WalletConfigViewController: WalletConfigViewDelegate {
             //                return
             //            }
             //            _ = DataBaseManager.DBManager.updateDefaultViolasWallet()
+            WalletManager.unlockWallet(controller: self, successful: { [weak self] (mnemonic) in
+                self?.view.makeToast(localLanguage(keyString: "wallet_delete_wallet_success_title"), duration: 1, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { [weak self](bool) in
+                //                if let action = self?.actionClosure {
+                //                    action(.delete)
+                //                }
+                                DataBaseManager.DBManager.deleteHDWallet()
+                                DataBaseManager.DBManager.deleteAllTokens()
+                                WalletManager.shared.deleteWallet()
+                                setIdentityWalletState(show: false)
+                                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "PalliumsWalletDelete"), object: nil)
+                                self?.navigationController?.popViewController(animated: true)
+                            })
+            }) { [weak self] (error) in
+                self?.view.makeToast(error,
+                                     position: .center)
+            }
             
-            self.view.makeToast(localLanguage(keyString: "wallet_delete_wallet_success_title"), duration: 1, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { [weak self](bool) in
-//                if let action = self?.actionClosure {
-//                    action(.delete)
-//                }
-                DataBaseManager.DBManager.deleteHDWallet()
-                DataBaseManager.DBManager.deleteAllTokens()
-                WalletManager.shared.deleteWallet()
-                setIdentityWalletState(show: false)
-                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "PalliumsWalletDelete"), object: nil)
-                self?.navigationController?.popViewController(animated: true)
-            })
         }
         let cancelAction = UIAlertAction.init(title: localLanguage(keyString: "wallet_alert_delete_wallet_cancel_button_title"), style: UIAlertAction.Style.cancel) { (UIAlertAction) in
             

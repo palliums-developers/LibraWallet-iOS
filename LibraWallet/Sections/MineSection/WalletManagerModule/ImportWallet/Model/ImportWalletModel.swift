@@ -89,7 +89,7 @@ class ImportWalletModel: NSObject {
         do {
             let wallet = try ViolasManager.getWallet(mnemonic: mnemonics)
             let token = Token.init(tokenID: 999,
-                                     tokenName: "Violas",
+                                     tokenName: "VLS",
                                      tokenBalance: 0,
                                      tokenAddress: wallet.publicKey.toLegacy(),
                                      tokenType: .Violas,
@@ -97,7 +97,7 @@ class ImportWalletModel: NSObject {
                                      tokenAuthenticationKey: wallet.publicKey.toActive(),
                                      tokenActiveState: false,
                                      tokenIcon: "violas_icon",
-                                     tokenContract: "00000000000000000000000000000000",
+                                     tokenContract: "00000000000000000000000000000001",
                                      tokenModule: "LBR",
                                      tokenModuleName: "T",
                                      tokenEnable: true,
