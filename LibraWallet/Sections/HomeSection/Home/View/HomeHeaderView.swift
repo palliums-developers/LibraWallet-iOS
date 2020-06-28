@@ -27,12 +27,16 @@ class HomeHeaderView: UIView {
 
         // 添加语言变换通知
         NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(addConnect), name: NSNotification.Name("WalletConnectDidConnect"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(removeConnect), name: NSNotification.Name("WalletConnectFailedConnect"), object: nil)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("WalletConnectDidConnect"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("WalletConnectFailedConnect"), object: nil)
         print("HomeHeaderView销毁了")
     }
     //MARK: - 布局
@@ -86,7 +90,7 @@ class HomeHeaderView: UIView {
     lazy var walletConnectStateButton: UIButton = {
         let button = UIButton.init(type: UIButton.ButtonType.custom)
         // 设置字体
-        button.setTitle(localLanguage(keyString: "wallet_home_transfer_button_title"), for: UIControl.State.normal)
+        button.setTitle(localLanguage(keyString: "wallet_wallet_connect_state_title"), for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
         button.setTitleColor(UIColor.init(hex: "FB8F0B"), for: UIControl.State.normal)
         // 设置图片
@@ -188,10 +192,11 @@ class HomeHeaderView: UIView {
         }
     }
     @objc func setText() {
-//        assetTitleLabel.text = localLanguage(keyString: "wallet_home_current_balance_title")
-//        walletConnectStateButton.setTitle(localLanguage(keyString: "wallet_home_transfer_button_title"), for: UIControl.State.normal)
-//        receiveButton.setTitle(localLanguage(keyString: "wallet_home_receive_button_title"), for: UIControl.State.normal)
-//        transactionTitleLabel.text = localLanguage(keyString: "wallet_home_last_transaction_date_title")
-//        coinTitleLabel.text = localLanguage(keyString: "wallet_home_wallet_asset_title")
+    }
+    @objc func addConnect() {
+        self.walletConnectStateButton.alpha = 1
+    }
+    @objc func removeConnect() {
+        self.walletConnectStateButton.alpha = 0
     }
 }

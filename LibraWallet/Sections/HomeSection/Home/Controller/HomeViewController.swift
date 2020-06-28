@@ -290,7 +290,8 @@ extension HomeViewController {
 extension HomeViewController: HomeHeaderViewDelegate {
     func walletConnectState() {
         print("123")
-        
+        let vc = ScanLogoutViewController()
+        self.present(vc, animated: true, completion: nil)
     }
     func addAssets() {
         let vc = AddAssetViewController()

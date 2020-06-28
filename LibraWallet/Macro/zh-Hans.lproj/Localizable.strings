@@ -221,6 +221,7 @@ wallet_wallet_connect_login_confirm_button_title = "确认登录";
 wallet_wallet_connect_exchange_confirm_button_title = "确认兑换";
 wallet_wallet_connect_sign_button_title = "确认签名";
 wallet_scan_login_cancel_button_title = "取消";
+wallet_wallet_connect_logout_button_title = "退出网页钱包";
 
 /************* 币详情 *******************/
 wallet_coin_detail_transaction_total_transactions_title = "全部";
@@ -340,6 +341,7 @@ wallet_mapping_info_data_empty_alert_content = "尚未拥有任何映射币，�
 wallet_scan_login_alert_success_title = "登录成功";
 // WalletConnect
 wallet_connect_connect_time_invalid_title = "连接失败，请稍后重试";
+wallet_connect_disconnect_success_title = "退出成功";
 
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "安全提醒";

@@ -208,7 +208,7 @@ wallet_mapping_transactions_state_failed_title = "Failed";
 wallet_wallet_connect_login_title = "Web ViolasPay Wallet Sign In";
 wallet_wallet_connect_logout_title = "Web ViolasPay Logged";
 wallet_wallet_connect_exchange_title = "Web ViolasPay Wallet Exchange";
-wallet_wallet_connect_sign_title = "网页ViolasPay钱包请求签名";
+wallet_wallet_connect_sign_title = "Web ViolasPay Wallet Require Signature";
 wallet_wallet_connect_transfer_title = "Web ViolasPay Wallet Transfer";
 wallet_wallet_connect_transfer_receive_address_title = "Receive Address";
 wallet_wallet_connect_transfer_amount_title = "Amount";
@@ -219,6 +219,7 @@ wallet_wallet_connect_login_confirm_button_title = "Sign In";
 wallet_wallet_connect_exchange_confirm_button_title = "Exchange";
 wallet_wallet_connect_sign_button_title = "Confirm Signature";
 wallet_scan_login_cancel_button_title = "Cancel";
+wallet_wallet_connect_logout_button_title = "Logout Web ViolasPay";
 
 /************* 币详情 *******************/
 wallet_coin_detail_transaction_total_transactions_title = "Total";
@@ -338,6 +339,7 @@ wallet_mapping_info_data_empty_alert_content = "Don’t have any mapping coins y
 wallet_scan_login_alert_success_title = "Login Successful";
 // WalletConnect
 wallet_connect_connect_time_invalid_title = "Connection failed, please try again later";
+wallet_connect_disconnect_success_title = "Logout Successful";
 
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "Safety Warning";

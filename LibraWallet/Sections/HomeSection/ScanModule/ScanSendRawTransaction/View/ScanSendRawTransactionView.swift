@@ -226,6 +226,7 @@ class ScanSendRawTransactionView: UIView {
                                           unit: 1000000)
             transactionAmountLabel.text = amount.stringValue
             transactionReceiveAddressLabel.text = model?.receive
+            transactionAmountUnitLabel.text = model?.module
         }
     }
 }

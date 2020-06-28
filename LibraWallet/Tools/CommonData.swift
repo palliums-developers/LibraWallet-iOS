@@ -98,7 +98,7 @@ let identifierNumber = UIDevice.current.identifierForVendor
 /// 设备名称
 let systemName = UIDevice.current.systemName
 /// 设备型号
-let model = UIDevice.current.model
+let mobileModel = UIDevice.current.model
 /// 设备区域化型号 如 A1533
 let localizedModel = UIDevice.current.localizedModel
 /// bundle ID

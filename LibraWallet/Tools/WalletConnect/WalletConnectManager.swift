@@ -33,9 +33,10 @@ struct WCRawTransaction: Codable {
     var expirationTime: Int64?
 }
 struct WCDataModel {
-    var from: String?
-    var receive: String?
-    var amount: Int64?
+    var from: String
+    var receive: String
+    var amount: Int64
+    var module: String
 }
 class WalletConnectManager: NSObject {
     static var shared = WalletConnectManager()
@@ -60,19 +61,41 @@ class WalletConnectManager: NSObject {
             print(error.localizedDescription)
         }
     }
+    func disConnectToServer() {
+        guard let sessionData = getWalletConnectSession(), sessionData.isEmpty == false else {
+            return
+        }
+        do {
+            let session = try JSONDecoder().decode(Session.self, from: sessionData)
+            try self.walletConnectServer.disconnect(from: session)
+        } catch {
+            print(error.localizedDescription)
+        }        
+    }
     private func walletInfo(state: Bool) -> Session.WalletInfo {
-//        let wallets = DataBaseManager.DBManager.getWalletWithType(walletType: tokenType.Violas)
-//        var address = [String]()
-//        for item in wallets {
-//            address.append(item.walletAddress ?? "")
-//        }
-        #warning("待处理")
-        let walletInfo = Session.WalletInfo(approved: state,
-                                            accounts: [""],//address
-                                            chainId: 4,
-                                            peerId: UUID().uuidString,
-                                            peerMeta: walletMeta)
-        return walletInfo
+        do {
+            let tokens = try DataBaseManager.DBManager.getTokens().filter({
+                $0.tokenEnable == true
+            })
+            var address = [String]()
+            for item in tokens {
+                address.append(item.tokenAddress)
+            }
+            let walletInfo = Session.WalletInfo(approved: state,
+                                                accounts: address,
+                                                chainId: 4,
+                                                peerId: UUID().uuidString,
+                                                peerMeta: walletMeta)
+            return walletInfo
+        } catch {
+            print(error.localizedDescription)
+            let walletInfo = Session.WalletInfo(approved: state,
+                                                accounts: [""],
+                                                chainId: 4,
+                                                peerId: UUID().uuidString,
+                                                peerMeta: walletMeta)
+            return walletInfo
+        }
     }
     @objc func connectTimeInvalid() {
         if let timeInvalid = WalletConnectManager.shared.connectInvalid {
@@ -103,6 +126,7 @@ class WalletConnectManager: NSObject {
     var connect: ((Bool) -> Void)?
     var allowConnect: (() -> Void)?
     var connectInvalid: (() -> Void)?
+    var disConnect: (() -> Void)?
     /// 连接状态
     var state: Bool?
     private var timer: Timer?
@@ -113,6 +137,9 @@ extension WalletConnectManager: ServerDelegate {
         print("failed")
         WalletConnectManager.shared.state = false
         WalletConnectManager.shared.timerInvalid()
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "WalletConnectFailedConnect"), object: nil)
+        }
     }
     func server(_ server: Server, shouldStart session: Session, completion: @escaping (Session.WalletInfo) -> Void) {
         print("shouldStart")
@@ -139,12 +166,23 @@ extension WalletConnectManager: ServerDelegate {
         setWalletConnectSession(session: sessionData)
         WalletConnectManager.shared.state = true
         WalletConnectManager.shared.timerInvalid()
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "WalletConnectDidConnect"), object: nil)
+        }
     }
     func server(_ server: Server, didDisconnect session: Session) {
         print("didDisconnect")
         removeWalletConnectSession()
         WalletConnectManager.shared.state = false
         WalletConnectManager.shared.timerInvalid()
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "WalletConnectFailedConnect"), object: nil)
+        }
+        if WalletConnectManager.shared.disConnect != nil {
+            DispatchQueue.main.async {
+                self.disConnect!()
+            }
+        }
     }
 }
 class SendRawTransactionHandler: RequestHandler {

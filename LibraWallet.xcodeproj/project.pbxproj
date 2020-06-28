@@ -46,6 +46,8 @@
 		3650F0C3248F7ED30086F578 /* HomeWithoutWalletView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3650F0C2248F7ED30086F578 /* HomeWithoutWalletView.swift */; };
 		365A89C023B9A7CE00C55A10 /* WYDTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 365A89BF23B9A7CE00C55A10 /* WYDTextField.swift */; };
 		3667A79B2475011F0000F119 /* WalletConnectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3667A79A2475011F0000F119 /* WalletConnectManager.swift */; };
+		3682E5BA24A865DB007CA2CA /* ScanLogoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3682E5B924A865DB007CA2CA /* ScanLogoutViewController.swift */; };
+		3682E5BC24A865EB007CA2CA /* ScanLogoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3682E5BB24A865EB007CA2CA /* ScanLogoutView.swift */; };
 		36B43A7223BDE967008E2EEA /* LBXScanError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B43A7123BDE967008E2EEA /* LBXScanError.swift */; };
 		36B466A62476563800CFF438 /* ScanSignTransactionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B466A52476563800CFF438 /* ScanSignTransactionViewController.swift */; };
 		36B466A82476565000CFF438 /* ScanSendTransactionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B466A72476565000CFF438 /* ScanSendTransactionViewController.swift */; };
@@ -556,6 +558,8 @@
 		3650F0C2248F7ED30086F578 /* HomeWithoutWalletView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeWithoutWalletView.swift; sourceTree = "<group>"; };
 		365A89BF23B9A7CE00C55A10 /* WYDTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WYDTextField.swift; sourceTree = "<group>"; };
 		3667A79A2475011F0000F119 /* WalletConnectManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectManager.swift; sourceTree = "<group>"; };
+		3682E5B924A865DB007CA2CA /* ScanLogoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanLogoutViewController.swift; sourceTree = "<group>"; };
+		3682E5BB24A865EB007CA2CA /* ScanLogoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanLogoutView.swift; sourceTree = "<group>"; };
 		36B43A7123BDE967008E2EEA /* LBXScanError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LBXScanError.swift; sourceTree = "<group>"; };
 		36B466A52476563800CFF438 /* ScanSignTransactionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanSignTransactionViewController.swift; sourceTree = "<group>"; };
 		36B466A72476565000CFF438 /* ScanSendTransactionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanSendTransactionViewController.swift; sourceTree = "<group>"; };
@@ -1026,6 +1030,7 @@
 		364BB571242CD2A300B9BE17 /* ScanModule */ = {
 			isa = PBXGroup;
 			children = (
+				3682E5B624A865A3007CA2CA /* ScanLogout */,
 				36E95D84242A084B0004B86D /* ScanLogin */,
 				36B4669B2476556A00CFF438 /* ScanSignTransaction */,
 				36B4669A2476553C00CFF438 /* ScanSendTransaction */,
@@ -1149,6 +1154,31 @@
 				3667A79A2475011F0000F119 /* WalletConnectManager.swift */,
 			);
 			path = WalletConnect;
+			sourceTree = "<group>";
+		};
+		3682E5B624A865A3007CA2CA /* ScanLogout */ = {
+			isa = PBXGroup;
+			children = (
+				3682E5B824A865B8007CA2CA /* Controller */,
+				3682E5B724A865B3007CA2CA /* View */,
+			);
+			path = ScanLogout;
+			sourceTree = "<group>";
+		};
+		3682E5B724A865B3007CA2CA /* View */ = {
+			isa = PBXGroup;
+			children = (
+				3682E5BB24A865EB007CA2CA /* ScanLogoutView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		3682E5B824A865B8007CA2CA /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				3682E5B924A865DB007CA2CA /* ScanLogoutViewController.swift */,
+			);
+			path = Controller;
 			sourceTree = "<group>";
 		};
 		36B46699247654B900CFF438 /* ScanSendRawTransaction */ = {
@@ -3461,6 +3491,7 @@
 				9DB515C723A391E70069A909 /* OrderCenterViewController.swift in Sources */,
 				9DC06A2523715ADB00BCE1FE /* BackupWarningAlert.swift in Sources */,
 				9D9B49BF235EE03C00354EF0 /* EmptyDataPlaceholderView.swift in Sources */,
+				3682E5BA24A865DB007CA2CA /* ScanLogoutViewController.swift in Sources */,
 				3623AB7C23FC0C93004A01BF /* MappingTransactionsViewController.swift in Sources */,
 				9DFFA88723683E1C00EA74F9 /* WalletTransactionsTableViewCell.swift in Sources */,
 				9DA0264A236FFE0A0084905B /* BackupMnemonicCollectionViewCell.swift in Sources */,
@@ -3578,6 +3609,7 @@
 				36B466A82476565000CFF438 /* ScanSendTransactionViewController.swift in Sources */,
 				9DC06A352371794100BCE1FE /* CheckBackupCollectionViewMananger.swift in Sources */,
 				36EBF018245055E9007FD4C5 /* ActiveAccountView.swift in Sources */,
+				3682E5BC24A865EB007CA2CA /* ScanLogoutView.swift in Sources */,
 				9D62646C2355A0E300A79B3D /* PasswordCrypto.swift in Sources */,
 				9DB515BF23A32EF80069A909 /* ViolasTransactionAccessPath.swift in Sources */,
 				9D9B49EF2360387B00354EF0 /* LanguageViewController.swift in Sources */,
