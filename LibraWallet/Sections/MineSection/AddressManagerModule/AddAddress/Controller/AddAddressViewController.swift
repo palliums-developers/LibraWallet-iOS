@@ -102,25 +102,25 @@ extension AddAddressViewController: AddAddressViewDelegate {
         self.view.makeToastActivity(.center)
         self.dataModel.addWithdrawAddress(address: address, remarks: remarks, type: type)
     }
-    func showTypeSelecter() {
-        let alert = UIAlertController.init(title: localLanguage(keyString: "wallet_address_add_type_title"), message: localLanguage(keyString: "wallet_address_add_type_action_alert_content"), preferredStyle: .actionSheet)
-        let violasAction = UIAlertAction.init(title: "Violas", style: .default) { (UIAlertAction) in
-            self.detailView.typeButton.setTitle("Violas", for: UIControl.State.normal)
-        }
-        let libraAction = UIAlertAction.init(title: "Libra", style: .default) { (UIAlertAction) in
-            self.detailView.typeButton.setTitle("Libra", for: UIControl.State.normal)
-        }
-        let btcAction = UIAlertAction.init(title: "BTC", style: .default) { (UIAlertAction) in
-            self.detailView.typeButton.setTitle("BTC", for: UIControl.State.normal)
-        }
-        let cancelAction = UIAlertAction.init(title: localLanguage(keyString: "wallet_address_add_type_action_alert_cancel_button_title"), style: .cancel) { (UIAlertAction) in
-        }
-        alert.addAction(violasAction)
-        alert.addAction(libraAction)
-        alert.addAction(btcAction)
-        alert.addAction(cancelAction)
-        self.present(alert, animated: true, completion: nil)
-    }
+//    func showTypeSelecter() {
+//        let alert = UIAlertController.init(title: localLanguage(keyString: "wallet_address_add_type_title"), message: localLanguage(keyString: "wallet_address_add_type_action_alert_content"), preferredStyle: .actionSheet)
+//        let violasAction = UIAlertAction.init(title: "Violas", style: .default) { (UIAlertAction) in
+//            self.detailView.typeButton.setTitle("Violas", for: UIControl.State.normal)
+//        }
+//        let libraAction = UIAlertAction.init(title: "Libra", style: .default) { (UIAlertAction) in
+//            self.detailView.typeButton.setTitle("Libra", for: UIControl.State.normal)
+//        }
+//        let btcAction = UIAlertAction.init(title: "BTC", style: .default) { (UIAlertAction) in
+//            self.detailView.typeButton.setTitle("BTC", for: UIControl.State.normal)
+//        }
+//        let cancelAction = UIAlertAction.init(title: localLanguage(keyString: "wallet_address_add_type_action_alert_cancel_button_title"), style: .cancel) { (UIAlertAction) in
+//        }
+//        alert.addAction(violasAction)
+//        alert.addAction(libraAction)
+//        alert.addAction(btcAction)
+//        alert.addAction(cancelAction)
+//        self.present(alert, animated: true, completion: nil)
+//    }
     
     func scanAddress() {
         let vc = ScanViewController()

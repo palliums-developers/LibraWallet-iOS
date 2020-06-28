@@ -96,7 +96,13 @@ class AddressManagerTableViewCell: UITableViewCell {
         didSet {
             addressLabel.text = dataModel?.address
             nameLabel.text = dataModel?.addressName
-            addressTypeLabel.text = dataModel?.addressType
+            if dataModel?.addressType == "0" {
+                addressTypeLabel.text = "Libra"
+            } else if dataModel?.addressType == "1" {
+                addressTypeLabel.text = "Violas"
+            }  else if dataModel?.addressType == "1" {
+                addressTypeLabel.text = "BTC"
+            }
         }
     }
 }

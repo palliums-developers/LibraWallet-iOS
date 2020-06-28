@@ -442,9 +442,9 @@ extension DataBaseManager {
             if let tempDB = self.db {
                 let insert = addressTable.insert(
                     
-                    Expression<String>("address_name") <- model.addressName ?? "",
-                    Expression<String>("address") <- "\(model.addressType!)_" + (model.address ?? ""),
-                    Expression<String>("address_type") <- model.addressType ?? "")
+                    Expression<String>("address_name") <- model.addressName,
+                    Expression<String>("address") <- "\(model.addressType)_" + (model.address),
+                    Expression<String>("address_type") <- model.addressType)
                 
                 let rowid = try tempDB.run(insert)
                 print(rowid)
@@ -479,7 +479,7 @@ extension DataBaseManager {
                         continue
                     }
                     let model = AddressModel.init(addressID: addressID,
-                                                  address: contentArray.last,
+                                                  address: contentArray.last!,
                                                   addressName: addressName,
                                                   addressType: addressType)
 
@@ -498,7 +498,7 @@ extension DataBaseManager {
         let addressTable = Table("TransferAddress")
         do {
             if let tempDB = self.db {
-                let item = addressTable.filter(Expression<String>("address") == model.address!)
+                let item = addressTable.filter(Expression<String>("address") == model.address)
                 try tempDB.run(item.update(Expression<String>("address_name") <- name))
                 return true
             } else {
@@ -513,7 +513,7 @@ extension DataBaseManager {
         let transectionAddressHistoryTable = Table("TransferAddress")
         do {
             if let tempDB = self.db {
-                let contract = transectionAddressHistoryTable.filter(Expression<String>("address") == "\(model.addressType!)_" + model.address!)
+                let contract = transectionAddressHistoryTable.filter(Expression<String>("address") == "\(model.addressType)_" + model.address)
                 let rowid = try tempDB.run(contract.delete())
                 print(rowid)
                 if rowid == 0 {

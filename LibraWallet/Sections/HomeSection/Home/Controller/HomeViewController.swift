@@ -23,9 +23,9 @@ class HomeViewController: UIViewController {
         // 添加语言变换通知
         NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(deleteWallet), name: NSNotification.Name("PalliumsWalletDelete"), object: nil)
-
         // 检查是否第一次打开app
         checkIsFisrtOpenApp()
+        // 添加服务协议
         checkConfirmLegal()
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -289,7 +289,6 @@ extension HomeViewController {
 //MARK: - 子View代理方法列表
 extension HomeViewController: HomeHeaderViewDelegate {
     func walletConnectState() {
-        print("123")
         let vc = ScanLogoutViewController()
         self.present(vc, animated: true, completion: nil)
     }

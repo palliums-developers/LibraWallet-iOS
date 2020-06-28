@@ -104,7 +104,7 @@ extension TransferViewController: TransferViewDelegate {
         vc.actionClosure = { address in
             self.detailView.addressTextField.text = address
         }
-        vc.addressType = "Libra"
+        vc.addressType = "0"
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }

@@ -10,10 +10,10 @@ import UIKit
 import Moya
 
 struct AddressModel: Codable {
-    let addressID: Int64?
-    let address: String?
-    let addressName: String?
-    let addressType: String?
+    let addressID: Int64
+    let address: String
+    let addressName: String
+    let addressType: String
 }
 class AddAddressModel: NSObject {
     @objc var dataDic: NSMutableDictionary = [:]

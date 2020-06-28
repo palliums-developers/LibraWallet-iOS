@@ -155,7 +155,7 @@ extension BTCTransferViewController: BTCTransferViewDelegate {
         vc.actionClosure = { address in
             self.detailView.addressTextField.text = address
         }
-        vc.addressType = "BTC"
+        vc.addressType = "2"
         self.navigationController?.pushViewController(vc, animated: true)
     }
     

@@ -18,7 +18,7 @@ class WalletMainViewFooterView: UIView {
         super.init(frame: frame)
         addSubview(transferButton)
         addSubview(receiveButton)
-        addSubview(exchangeButton)
+//        addSubview(exchangeButton)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -32,20 +32,20 @@ class WalletMainViewFooterView: UIView {
         transferButton.snp.makeConstraints { (make) in
             make.top.equalTo(self).offset(5)
             make.left.equalTo(self).offset(29)
-            let width = (mainWidth - 58 - 26) / 3
+            let width = (mainWidth - 58 - 26) / 2
             make.width.equalTo(width)
         }
         receiveButton.snp.makeConstraints { (make) in
             make.top.equalTo(self).offset(5)
-            make.width.equalTo(exchangeButton)
+            make.width.equalTo(transferButton)
             make.left.equalTo(transferButton.snp.right).offset(13)
         }
-        exchangeButton.snp.makeConstraints { (make) in
-            make.top.equalTo(self).offset(5)
-            make.width.equalTo(transferButton)
-            make.left.equalTo(receiveButton.snp.right).offset(13)
-            make.right.equalTo(self.snp.right).offset(-29)
-        }
+//        exchangeButton.snp.makeConstraints { (make) in
+//            make.top.equalTo(self).offset(5)
+//            make.width.equalTo(transferButton)
+//            make.left.equalTo(receiveButton.snp.right).offset(13)
+//            make.right.equalTo(self.snp.right).offset(-29)
+//        }
     }
     lazy var transferButton: UIButton = {
         let button = UIButton.init(type: UIButton.ButtonType.custom)

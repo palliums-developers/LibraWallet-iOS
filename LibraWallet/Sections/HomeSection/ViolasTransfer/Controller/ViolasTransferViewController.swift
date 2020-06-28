@@ -110,7 +110,7 @@ extension ViolasTransferViewController: ViolasTransferViewDelegate {
         vc.actionClosure = { address in
             self.detailView.addressTextField.text = address
         }
-        vc.addressType = "Violas"
+        vc.addressType = "1"
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }

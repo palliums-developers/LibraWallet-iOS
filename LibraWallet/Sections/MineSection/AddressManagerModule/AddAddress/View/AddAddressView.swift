@@ -10,7 +10,7 @@ import UIKit
 protocol AddAddressViewDelegate: NSObjectProtocol {
     func confirmAddAddress(address: String, remarks: String, type: String)
     func scanAddress()
-    func showTypeSelecter()
+//    func showTypeSelecter()
 }
 class AddAddressView: UIView {
     weak var delegate: AddAddressViewDelegate?
@@ -27,8 +27,9 @@ class AddAddressView: UIView {
         addSubview(addressSpaceLabel)
         
         addSubview(typeTitleLabel)
-        addSubview(typeButton)
-        addSubview(typeSpaceLabel)
+        addSubview(violasAddressButton)
+        addSubview(libraAddressButton)
+        addSubview(bitcoinAddressButton)
             
         addSubview(confirmButton)
     }
@@ -80,26 +81,34 @@ class AddAddressView: UIView {
             make.height.equalTo(1)
         }
         typeTitleLabel.snp.makeConstraints { (make) in
-            make.centerY.equalTo(typeButton)
+            make.centerY.equalTo(violasAddressButton)
             make.left.equalTo(self)
-            make.right.equalTo(typeButton.snp.left)
+            make.right.equalTo(violasAddressButton.snp.left)
         }
-        typeButton.snp.makeConstraints { (make) in
-            make.top.equalTo(addressSpaceLabel.snp.bottom)
-            make.left.equalTo(self).offset(67)
-//            make.size.equalTo(CGSize.init(width: 100, height: 50))
-            make.right.equalTo(self.snp.right).offset(-23)
-            make.height.equalTo(50)
+        violasAddressButton.snp.makeConstraints { (make) in
+            make.top.equalTo(addressSpaceLabel.snp.bottom).offset(11)
+            make.left.equalTo(self).offset(66)
+            make.width.equalTo(libraAddressButton)
+            make.height.equalTo(24)
         }
-        typeSpaceLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(addressSpaceLabel.snp.bottom).offset(50)
-            make.left.equalTo(self).offset(67)
-            make.right.equalTo(self.snp.right).offset(-23)
-            make.height.equalTo(1)
+        libraAddressButton.snp.makeConstraints { (make) in
+            make.top.equalTo(addressSpaceLabel.snp.bottom).offset(11)
+            make.left.equalTo(violasAddressButton.snp.right).offset(11)
+            //            make.size.equalTo(CGSize.init(width: 100, height: 50))
+            make.width.equalTo(bitcoinAddressButton)
+            make.height.equalTo(24)
+        }
+        bitcoinAddressButton.snp.makeConstraints { (make) in
+            make.top.equalTo(addressSpaceLabel.snp.bottom).offset(11)
+            make.left.equalTo(libraAddressButton.snp.right).offset(11)
+            //            make.size.equalTo(CGSize.init(width: 100, height: 50))
+            let width = (mainWidth - 67 - 23 - 11 - 11) / 3
+            make.width.equalTo(width)
+            make.height.equalTo(24)
         }
         confirmButton.snp.makeConstraints { (make) in
             make.centerX.equalTo(self)
-            make.top.equalTo(typeButton.snp.bottom).offset(40)
+            make.top.equalTo(addressSpaceLabel.snp.bottom).offset(107)
             make.left.equalTo(self).offset(49)
             make.right.equalTo(self.snp.right).offset(-49)
             make.height.equalTo(37)
@@ -169,21 +178,41 @@ class AddAddressView: UIView {
         label.text = localLanguage(keyString: "wallet_address_add_type_title")
         return label
     }()
-    lazy var typeButton: UIButton = {
+    lazy var violasAddressButton: UIButton = {
         let button = UIButton.init(type: UIButton.ButtonType.custom)
-        button.setTitle(localLanguage(keyString: "wallet_address_add_type_button_title"), for: UIControl.State.normal)
-        button.setTitleColor(UIColor.init(hex: "3C3848"), for: UIControl.State.normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: UIFont.Weight.regular)
+        button.setTitle(localLanguage(keyString: "Violas"), for: UIControl.State.normal)
+        button.setTitleColor(UIColor.init(hex: "999999"), for: UIControl.State.normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
+        button.layer.backgroundColor = UIColor.init(hex: "F7F7F7").cgColor
         button.layer.cornerRadius = 7
         button.layer.masksToBounds = true
-        button.tag = 30
+        button.tag = 31
         return button
     }()
-    lazy var typeSpaceLabel: UILabel = {
-        let label = UILabel.init()
-        label.backgroundColor = DefaultSpaceColor
-        return label
+    lazy var libraAddressButton: UIButton = {
+        let button = UIButton.init(type: UIButton.ButtonType.custom)
+        button.setTitle(localLanguage(keyString: "Libra"), for: UIControl.State.normal)
+        button.setTitleColor(UIColor.init(hex: "999999"), for: UIControl.State.normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
+        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
+        button.layer.backgroundColor = UIColor.init(hex: "F7F7F7").cgColor
+        button.layer.cornerRadius = 7
+        button.layer.masksToBounds = true
+        button.tag = 32
+        return button
+    }()
+    lazy var bitcoinAddressButton: UIButton = {
+        let button = UIButton.init(type: UIButton.ButtonType.custom)
+        button.setTitle(localLanguage(keyString: "Bitcoin"), for: UIControl.State.normal)
+        button.setTitleColor(UIColor.init(hex: "999999"), for: UIControl.State.normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
+        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
+        button.layer.backgroundColor = UIColor.init(hex: "F7F7F7").cgColor
+        button.layer.cornerRadius = 7
+        button.layer.masksToBounds = true
+        button.tag = 33
+        return button
     }()
     lazy var confirmButton: UIButton = {
         let button = UIButton.init(type: UIButton.ButtonType.custom)
@@ -220,43 +249,65 @@ class AddAddressView: UIView {
                                position: .center)
                 return
             }
-            guard self.typeButton.titleLabel?.text != localLanguage(keyString: "wallet_address_add_type_button_title") else {
+            guard let index = self.lastSelectIndex else {
                 self.makeToast(LibraWalletError.WalletAddAddress(reason: .addressTypeInvalidError).localizedDescription,
                                position: .center)
                 return
             }
-            switch self.typeButton.titleLabel?.text {
-            case "BTC":
-                guard BTCManager.isValidBTCAddress(address: address) == true else {
-                    self.makeToast(LibraWalletError.WalletAddAddress(reason: .btcAddressInvalidError).localizedDescription,
-                                   position: .center)
-                    return
-                }
-                break
-            case "Violas":
+            var type = ""
+            if index == 31 {
                 guard ViolasManager.isValidViolasAddress(address: address) == true else {
                     self.makeToast(LibraWalletError.WalletAddAddress(reason: .violasAddressInvalidError).localizedDescription,
                                    position: .center)
                     return
                 }
-                break
-            case "Libra":
+                type = "1"
+            } else if index == 32 {
                 guard LibraManager.isValidLibraAddress(address: address) == true else {
                     self.makeToast(LibraWalletError.WalletAddAddress(reason: .libraAddressInvalidError).localizedDescription,
                                    position: .center)
                     return
                 }
-                break
-            default:
+                type = "0"
+            } else if index == 33 {
+                guard BTCManager.isValidBTCAddress(address: address) == true else {
+                    self.makeToast(LibraWalletError.WalletAddAddress(reason: .btcAddressInvalidError).localizedDescription,
+                                   position: .center)
+                    return
+                }
+                type = "2"
+            } else {
                 self.makeToast(LibraWalletError.WalletAddAddress(reason: .addressTypeInvalidError).localizedDescription,
                                position: .center)
             }
-            //添加地址
-            self.delegate?.confirmAddAddress(address: address, remarks: remarks, type: (self.typeButton.titleLabel?.text)!)
+            // 添加地址
+            self.delegate?.confirmAddAddress(address: address, remarks: remarks, type: type)
         } else if button.tag == 20 {
             self.delegate?.scanAddress()
-        } else {
-            self.delegate?.showTypeSelecter()
+        } else if button.tag == 31 {
+            if let tag = lastSelectIndex {
+                (self.viewWithTag(tag) as! UIButton).setTitleColor(UIColor.init(hex: "999999"), for: UIControl.State.normal)
+                (self.viewWithTag(tag) as! UIButton).layer.backgroundColor = UIColor.init(hex: "F7F7F7").cgColor
+            }
+            lastSelectIndex = button.tag
+            button.layer.backgroundColor = UIColor.init(hex: "4730A7").cgColor
+            button.setTitleColor(UIColor.white, for: UIControl.State.normal)
+        } else if button.tag == 32 {
+            if let tag = lastSelectIndex {
+                (self.viewWithTag(tag) as! UIButton).setTitleColor(UIColor.init(hex: "999999"), for: UIControl.State.normal)
+                (self.viewWithTag(tag) as! UIButton).layer.backgroundColor = UIColor.init(hex: "F7F7F7").cgColor
+            }
+            lastSelectIndex = button.tag
+            button.layer.backgroundColor = UIColor.init(hex: "4730A7").cgColor
+            button.setTitleColor(UIColor.white, for: UIControl.State.normal)
+        } else if button.tag == 33 {
+            if let tag = lastSelectIndex {
+                (self.viewWithTag(tag) as! UIButton).setTitleColor(UIColor.init(hex: "999999"), for: UIControl.State.normal)
+                (self.viewWithTag(tag) as! UIButton).layer.backgroundColor = UIColor.init(hex: "F7F7F7").cgColor
+            }
+            lastSelectIndex = button.tag
+            button.layer.backgroundColor = UIColor.init(hex: "4730A7").cgColor
+            button.setTitleColor(UIColor.white, for: UIControl.State.normal)
         }
     }
     lazy var backgroundLayer: CAGradientLayer = {
@@ -268,6 +319,7 @@ class AddAddressView: UIView {
         gradientLayer.colors = [UIColor.init(hex: "363E57").cgColor, UIColor.init(hex: "101633").cgColor]
         return gradientLayer
     }()
+    var lastSelectIndex: Int?
 }
 extension AddAddressView: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
