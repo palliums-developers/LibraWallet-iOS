@@ -81,6 +81,7 @@ class ViolasTransferView: UIView {
         addressContactButton.snp.makeConstraints { (make) in
             make.bottom.equalTo(addressTextField.snp.top).offset(-7)
             make.right.equalTo(walletWhiteBackgroundView.snp.right).offset(-19)
+            make.size.equalTo(CGSize.init(width: 20, height: 20))
         }
 //        addressSpaceLabel.snp.makeConstraints { (make) in
 //            make.top.equalTo(addressContactButton.snp.bottom).offset(10)
@@ -211,9 +212,7 @@ class ViolasTransferView: UIView {
     }()
     lazy var addressContactButton: UIButton = {
         let button = UIButton.init(type: UIButton.ButtonType.custom)
-        button.setTitle(localLanguage(keyString: "wallet_transfer_address_contact_title"), for: UIControl.State.normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
-        button.setTitleColor(UIColor.init(hex: "3C3848"), for: UIControl.State.normal)
+        button.setImage(UIImage.init(named: "contact_address"), for: UIControl.State.normal)
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
         button.tag = 15
         return button
