@@ -461,7 +461,12 @@ extension HomeModel {
                 do {
                     let json = try response.map(ActiveAccountMainModel.self)
                     if json.code == 2000 {
-                        self?.getLibraBalance(tokenID: tokenID, address: address, authKey: authKey, tokens: tokens)
+                        var tempTokens = [Token]()
+                        for var item in tokens  {
+                            item.changeTokenActiveState(state: true)
+                            tempTokens.append(item)
+                        }
+                        self?.getLibraBalance(tokenID: tokenID, address: address, authKey: authKey, tokens: tempTokens)
                         self?.updateLocalTokenActiveState(tokens: tokens, type: .Libra)
                     } else {
                         let data = setKVOData(error: LibraWalletError.error("Active Error"), type: "ActiveLibraAccount")
@@ -490,7 +495,12 @@ extension HomeModel {
                 do {
                     let json = try response.map(ActiveAccountMainModel.self)
                     if json.code == 2000 {
-                        self?.getViolasBalance(tokenID: tokenID, address: address, authKey: authKey, tokens: tokens)
+                        var tempTokens = [Token]()
+                        for var item in tokens  {
+                            item.changeTokenActiveState(state: true)
+                            tempTokens.append(item)
+                        }
+                        self?.getViolasBalance(tokenID: tokenID, address: address, authKey: authKey, tokens: tempTokens)
                         self?.updateLocalTokenActiveState(tokens: tokens, type: .Violas)
                     } else {
                         let data = setKVOData(error: LibraWalletError.error("Active Error"), type: "ActiveViolasAccount")
