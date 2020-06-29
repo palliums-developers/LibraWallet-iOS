@@ -9,7 +9,6 @@
 import UIKit
 import Localize_Swift
 class BaseTabBarViewController: UITabBarController {
-
     override func viewDidLoad() {
         super.viewDidLoad()
         UITabBar.appearance().backgroundColor = UIColor.white
@@ -40,7 +39,7 @@ class BaseTabBarViewController: UITabBarController {
     }
     private func addChildViewController(childViewController:UIViewController, imageName:String, selectedImageName:String, title:String){
         childViewController.tabBarItem.title = title
-        childViewController.tabBarItem.image = UIImage(named: imageName)
+        childViewController.tabBarItem.image = UIImage(named: imageName)?.withRenderingMode(UIImage.RenderingMode.alwaysOriginal)
         childViewController.tabBarItem.selectedImage = UIImage(named: selectedImageName)?.withRenderingMode(UIImage.RenderingMode.alwaysOriginal)
         childViewController.tabBarItem.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.init(hex: "3D3949"),NSAttributedString.Key.font:UIFont.systemFont(ofSize: 11)], for: UIControl.State.normal)
         childViewController.tabBarItem.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.init(hex: "4421AB"),NSAttributedString.Key.font:UIFont.systemFont(ofSize: 11)], for:UIControl.State.selected)
