@@ -63,11 +63,11 @@ class BaseViewController: UIViewController {
     }
     func setNavigationBarTitleColorDefault() {
         self.navigationController?.navigationBar.titleTextAttributes=[NSAttributedString.Key.foregroundColor:UIColor.init(hex: "3C3848"),
-                                                                      NSAttributedString.Key.font:UIFont.systemFont(ofSize: 20, weight: UIFont.Weight.medium)]
+                                                                      NSAttributedString.Key.font:UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.medium)]
     }
     func setNavigationBarTitleColorWhite() {
         self.navigationController?.navigationBar.titleTextAttributes=[NSAttributedString.Key.foregroundColor:UIColor.white,
-                                                                  NSAttributedString.Key.font:UIFont.systemFont(ofSize: 20, weight: UIFont.Weight.medium)]
+                                                                  NSAttributedString.Key.font:UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.medium)]
     }
     func navigationWhiteMode() {
         backButton.setImage(UIImage.init(named: "navigation_back_white"), for: UIControl.State.normal)

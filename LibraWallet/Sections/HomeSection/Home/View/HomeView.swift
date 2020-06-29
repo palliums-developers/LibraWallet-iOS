@@ -36,13 +36,14 @@ class HomeView: UIView {
         super.layoutSubviews()
         topBackgroundImageView.snp.makeConstraints { (make) in
             make.top.left.right.equalTo(self)
-            make.height.equalTo((234 * ratio))
+            make.height.equalTo((196 * ratio))
         }
         headerView.snp.makeConstraints { (make) in
             make.top.equalTo(self).offset(navigationBarHeight)
             make.left.right.equalTo(self)
 //            make.height.equalTo(356)
-            make.height.equalTo(138)
+            let height = 163 - navigationBarHeight + 63
+            make.height.equalTo(height)
         }
         tableView.snp.makeConstraints { (make) in
             make.top.equalTo(headerView.snp.bottom)

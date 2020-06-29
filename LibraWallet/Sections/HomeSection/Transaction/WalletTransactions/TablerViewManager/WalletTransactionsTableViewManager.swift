@@ -82,6 +82,7 @@ extension WalletTransactionsTableViewManager: UITableViewDataSource {
             default:
                 break
             }
+            cell.selectionStyle = .none
             return cell
         } else {
             let cell = WalletTransactionsTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
@@ -102,6 +103,7 @@ extension WalletTransactionsTableViewManager: UITableViewDataSource {
             default:
                 break
             }
+            cell.selectionStyle = .none
             return cell
         }
     }

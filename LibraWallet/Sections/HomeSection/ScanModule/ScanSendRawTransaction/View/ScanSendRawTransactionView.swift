@@ -156,7 +156,7 @@ class ScanSendRawTransactionView: UIView {
     }()
     lazy var spaceLabel: UILabel = {
         let label = UILabel.init()
-        label.backgroundColor = UIColor.init(hex: "DEDFE0")
+        label.backgroundColor = DefaultSpaceColor
         return label
     }()
     lazy var transactionReceiveAddressTitleLabel: UILabel = {

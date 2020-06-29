@@ -51,6 +51,22 @@ class HomeTableViewCell: UITableViewCell {
             make.right.equalTo(whiteBackgroundView.snp.right).offset(-14)
         }
     }
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        if selected {
+            selectedBackgroundView = UIView.init(frame: whiteBackgroundView.bounds)
+        } else {
+            selectedBackgroundView = UIView.init(frame: whiteBackgroundView.bounds)
+        }
+    }
+    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+        super.setHighlighted(highlighted, animated: animated)
+        if highlighted {
+            whiteBackgroundView.layer.backgroundColor = UIColor.init(hex: "EBEBF1").cgColor
+        } else {
+            whiteBackgroundView.layer.backgroundColor = UIColor.init(hex: "F7F7F9").cgColor
+        }
+    }
     //MARK: - 懒加载对象
     private lazy var whiteBackgroundView: UIView = {
         let view = UIView.init()
@@ -61,7 +77,7 @@ class HomeTableViewCell: UITableViewCell {
     }()
     private lazy var coinIconImageView : UIImageView = {
         let imageView = UIImageView.init()
-        imageView.layer.cornerRadius = 14
+        imageView.layer.cornerRadius = 15
         imageView.layer.masksToBounds = true
         return imageView
     }()

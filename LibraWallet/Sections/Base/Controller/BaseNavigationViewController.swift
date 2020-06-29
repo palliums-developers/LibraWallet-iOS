@@ -16,6 +16,6 @@ class BaseNavigationViewController: UINavigationController {
         self.navigationBar.shadowImage = UIImage()
         self.navigationBar.isTranslucent = true
         self.navigationBar.titleTextAttributes=[NSAttributedString.Key.foregroundColor:UIColor.init(hex: "263C4E"),
-                                                NSAttributedString.Key.font:UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)]
+                                                NSAttributedString.Key.font:UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.medium)]
     }
 }

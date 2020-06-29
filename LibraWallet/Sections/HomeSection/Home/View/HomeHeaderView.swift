@@ -42,15 +42,9 @@ class HomeHeaderView: UIView {
     //MARK: - 布局
     override func layoutSubviews() {
         super.layoutSubviews()
-//        whiteBackgroundView.snp.makeConstraints { (make) in
-//            make.top.equalTo(self)
-//            make.left.equalTo(self).offset(15)
-//            make.right.equalTo(self).offset(-15)
-//            make.height.equalTo(183)
-//        }
         assetLabel.snp.makeConstraints { (make) in
-            make.left.equalTo(self).offset(29)
-            make.top.equalTo(self).offset(6)
+            make.left.equalTo(self).offset(25)
+            make.top.equalTo(self).offset(2)
         }
         walletConnectStateButton.snp.makeConstraints { (make) in
             make.bottom.equalTo(coinBackgroundView.snp.top).offset(-9)
@@ -65,7 +59,7 @@ class HomeHeaderView: UIView {
         }
         coinTitleLabel.snp.makeConstraints { (make) in
             make.centerY.equalTo(addCoinButton)
-            make.left.equalTo(coinBackgroundView).offset(28)
+            make.left.equalTo(coinBackgroundView).offset(25)
         }
         addCoinButton.snp.makeConstraints { (make) in
             make.bottom.equalTo(coinBackgroundView.snp.bottom).offset(-11)
@@ -73,17 +67,11 @@ class HomeHeaderView: UIView {
         }
         coinBackgroundView.corner(byRoundingCorners: [UIRectCorner.topLeft, UIRectCorner.topRight], radii: 24)
     }
-//    private lazy var whiteBackgroundView: UIView = {
-//        let view = UIView.init()
-//        view.layer.cornerRadius = 7
-//        view.layer.backgroundColor = UIColor.white.cgColor
-//        return view
-//    }()
     lazy var assetLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "FFFFFF")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 28), weight: .bold)
+        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 28), weight: .medium)
         label.text = "$ 0.00"
         return label
     }()

@@ -93,7 +93,7 @@ class AddWalletView: UIView {
     lazy var passwordSpaceLabel: UILabel = {
         //#263C4E
         let label = UILabel.init()
-        label.backgroundColor = UIColor.init(hex: "DEDFE0")
+        label.backgroundColor = DefaultSpaceColor
         return label
     }()
     lazy var passwordConfirmTextField: UITextField = {
@@ -111,7 +111,7 @@ class AddWalletView: UIView {
     }()
     lazy var passwordConfirmSpaceLabel: UILabel = {
         let label = UILabel.init()
-        label.backgroundColor = UIColor.init(hex: "DEDFE0")
+        label.backgroundColor = DefaultSpaceColor
         return label
     }()
     lazy var showPasswordButton: UIButton = {

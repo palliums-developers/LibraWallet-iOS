@@ -31,10 +31,10 @@ class AddAssetViewTableViewCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         contentBackgroundView.snp.makeConstraints { (make) in
-            make.top.equalTo(self).offset(10)
+            make.top.equalTo(contentView).offset(5)
             make.left.equalTo(contentView).offset(15)
             make.right.equalTo(contentView.snp.right).offset(-15)
-            make.bottom.equalTo(contentView)
+            make.bottom.equalTo(contentView).offset(-5)
         }
         iconImageView.snp.makeConstraints { (make) in
             make.centerY.equalTo(contentBackgroundView)
@@ -52,6 +52,7 @@ class AddAssetViewTableViewCell: UITableViewCell {
         switchButton.snp.makeConstraints { (make) in
             make.centerY.equalTo(contentBackgroundView)
             make.right.equalTo(contentBackgroundView).offset(-15)
+//            make.size.equalTo(CGSize.init(width: 38, height: 19))
         }
     }
     //MARK: - 懒加载对象
@@ -86,6 +87,8 @@ class AddAssetViewTableViewCell: UITableViewCell {
     lazy var switchButton: UISwitch = {
         let button = UISwitch.init()
         button.onTintColor = UIColor.init(hex: "4730A7")
+        // 不能设置frame，只能缩放
+        button.transform = CGAffineTransform(scaleX: 0.74, y: 0.74);
         button.addTarget(self, action: #selector(valueChange(button:)), for: UIControl.Event.valueChanged)
         return button
     }()

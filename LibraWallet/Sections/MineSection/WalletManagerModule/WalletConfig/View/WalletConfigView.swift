@@ -17,7 +17,6 @@ class WalletConfigView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.init(hex: "F7F7F9")
-        
     }
     convenience init(canDelete: Bool) {
         self.init(frame: CGRect.zero)
@@ -49,9 +48,11 @@ class WalletConfigView: UIView {
         }
         deleteButton.snp.makeConstraints { (make) in
             make.top.equalTo(tableView.snp.bottom).offset(51)
-            make.left.equalTo(self).offset(69)
-            make.right.equalTo(self.snp.right).offset(-69)
-            make.height.equalTo(40)
+//            make.left.equalTo(self).offset(69)
+//            make.right.equalTo(self.snp.right).offset(-69)
+            make.centerX.equalTo(self)
+            make.size.equalTo(CGSize.init(width: 238, height: 40))
+//            make.height.equalTo(40)
        }
     }
     //MARK: - 懒加载对象

@@ -105,7 +105,7 @@ class WalletTransactionsTableViewCell: UITableViewCell {
     lazy var cellSpaceLabel: UILabel = {
         //#263C4E
         let label = UILabel.init()
-        label.backgroundColor = UIColor.init(hex: "DEDFE0")
+        label.backgroundColor = DefaultSpaceColor
         return label
     }()
     //MARK: - 设置数据
@@ -121,7 +121,7 @@ class WalletTransactionsTableViewCell: UITableViewCell {
                                                       unit: 100000000)
             if model.transaction_type == 0 {
                 // 转账
-                amountLabel.textColor = UIColor.init(hex: "13B788")
+                amountLabel.textColor = UIColor.init(hex: "E54040")
                 transactionTypeImageView.image = UIImage.init(named: "transfer_sign")
                 addressLabel.text = model.vin?.first?.addresses?.first
             } else {
@@ -145,6 +145,7 @@ class WalletTransactionsTableViewCell: UITableViewCell {
             case 0:
                 //ADD_CURRENCY_TO_ACCOUNT
                 print("0")
+                amountLabel.textColor = UIColor.init(hex: "FB8F0B")
                 transactionTypeImageView.image = UIImage.init(named: "publish_sign")
                 addressLabel.text = model.sender
             case 1:
@@ -203,12 +204,12 @@ class WalletTransactionsTableViewCell: UITableViewCell {
                 print("15")
                 if model.transaction_type == 0 {
                     // 转账
-                    amountLabel.textColor = UIColor.init(hex: "13B788")
+                    amountLabel.textColor = UIColor.init(hex: "E54040")
                     transactionTypeImageView.image = UIImage.init(named: "transfer_sign")
                     addressLabel.text = model.receiver
                 } else {
                     // 收款
-                    amountLabel.textColor = UIColor.init(hex: "E54040")
+                    amountLabel.textColor = UIColor.init(hex: "13B788")
                     transactionTypeImageView.image = UIImage.init(named: "receive_sign")
                     addressLabel.text = model.sender
                 }
@@ -296,6 +297,7 @@ class WalletTransactionsTableViewCell: UITableViewCell {
             case 0:
                 //ADD_CURRENCY_TO_ACCOUNT
                 print("0")
+                amountLabel.textColor = UIColor.init(hex: "FB8F0B")
                 transactionTypeImageView.image = UIImage.init(named: "publish_sign")
                 addressLabel.text = model.sender
             case 1:
@@ -354,12 +356,12 @@ class WalletTransactionsTableViewCell: UITableViewCell {
                 print("15")
                 if model.transaction_type == 0 {
                     // 转账
-                    amountLabel.textColor = UIColor.init(hex: "13B788")
+                    amountLabel.textColor = UIColor.init(hex: "E54040")
                     transactionTypeImageView.image = UIImage.init(named: "transfer_sign")
                     addressLabel.text = model.receiver
                 } else {
                     // 收款
-                    amountLabel.textColor = UIColor.init(hex: "E54040")
+                    amountLabel.textColor = UIColor.init(hex: "13B788")
                     transactionTypeImageView.image = UIImage.init(named: "receive_sign")
                     addressLabel.text = model.sender
                 }

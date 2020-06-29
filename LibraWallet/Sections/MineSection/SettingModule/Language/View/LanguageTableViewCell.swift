@@ -53,7 +53,7 @@ class LanguageTableViewCell: UITableViewCell {
     }()
     lazy var IndicatorImageView : UIImageView = {
         let imageView = UIImageView.init()
-        imageView.image = UIImage.init(named: "language_deselect")
+//        imageView.image = UIImage.init(named: "language_deselect")
         imageView.isUserInteractionEnabled = true
         return imageView
     }()
@@ -76,7 +76,7 @@ class LanguageTableViewCell: UITableViewCell {
         if status == true {
             IndicatorImageView.image = UIImage.init(named: "language_select")
         } else {
-            IndicatorImageView.image = UIImage.init(named: "language_deselect")
+            IndicatorImageView.image = UIImage.init(named: "")
         }
     }
     var hideSpcaeLineState: Bool? {

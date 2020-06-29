@@ -55,13 +55,16 @@ class HomeWithoutWalletView: UIView {
         button.setTitleColor(UIColor.init(hex: "22126C"), for: UIControl.State.normal)
         // 设置图片
         button.setImage(UIImage.init(named: "create_wallet"), for: UIControl.State.normal)
+        button.setImage(UIImage.init(named: "create_wallet"), for: UIControl.State.highlighted)
         // 调整位置
         button.titleEdgeInsets = UIEdgeInsets(top: 0, left: 35, bottom: 0, right: -4)
         button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 4)
         button.contentHorizontalAlignment = .left
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
+        button.setBackgroundImage(UIImage().imageWithColor(color: UIColor.init(hex: "EBEBF1")), for: UIControl.State.highlighted)
         button.layer.backgroundColor = UIColor.init(hex: "F7F7FA").cgColor
         button.layer.cornerRadius = 16
+        button.layer.masksToBounds = true
         button.tag = 10
         return button
     }()
@@ -72,13 +75,16 @@ class HomeWithoutWalletView: UIView {
         button.setTitleColor(UIColor.init(hex: "22126C"), for: UIControl.State.normal)
         // 设置图片
         button.setImage(UIImage.init(named: "import_wallet"), for: UIControl.State.normal)
+        button.setImage(UIImage.init(named: "import_wallet"), for: UIControl.State.highlighted)
         // 调整位置
         button.titleEdgeInsets = UIEdgeInsets(top: 0, left: 35, bottom: 0, right: -4)
         button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 4)
         button.contentHorizontalAlignment = .left
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
+        button.setBackgroundImage(UIImage().imageWithColor(color: UIColor.init(hex: "EBEBF1")), for: UIControl.State.highlighted)
         button.layer.backgroundColor = UIColor.init(hex: "F7F7FA").cgColor
         button.layer.cornerRadius = 16
+        button.layer.masksToBounds = true
         button.tag = 20
         return button
     }()

@@ -17,7 +17,6 @@ class TransactionDetailView: UIView {
         transactionBackgroundImageView.addSubview(transactionStateImageView)
         transactionBackgroundImageView.addSubview(transactionStateLabel)
         transactionBackgroundImageView.addSubview(transactionDateLabel)
-        transactionBackgroundImageView.addSubview(spaceLabel)
         transactionBackgroundImageView.addSubview(tableView)
         addSubview(bottomBackgroundImageView)
         addSubview(checkOnlineButton)
@@ -58,14 +57,8 @@ class TransactionDetailView: UIView {
             make.left.equalTo(transactionBackgroundImageView).offset(10)
             make.right.equalTo(transactionBackgroundImageView.snp.right).offset(-10)
         }
-        spaceLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(transactionBackgroundImageView).offset(180)
-            make.left.equalTo(transactionBackgroundImageView).offset(24)
-            make.right.equalTo(transactionBackgroundImageView.snp.right).offset(-24)
-            make.height.equalTo(1)
-        }
         tableView.snp.makeConstraints { (make) in
-            make.top.equalTo(spaceLabel.snp.bottom).offset(20)
+            make.top.equalTo(transactionBackgroundImageView).offset(190)
             make.left.right.equalTo(transactionBackgroundImageView)
             make.bottom.equalTo(transactionBackgroundImageView.snp.bottom)
         }
@@ -75,6 +68,7 @@ class TransactionDetailView: UIView {
         checkOnlineButton.snp.makeConstraints { (make) in
             make.left.right.centerX.equalTo(self)
             make.bottom.equalTo(self.safeAreaLayoutGuide)
+            make.height.equalTo(60)
         }
     }
     private lazy var topBackgroundImageView : UIImageView = {
@@ -126,11 +120,6 @@ class TransactionDetailView: UIView {
         //虚线的间隔
         border.lineDashPattern = [3,1.5]
         return border
-    }()
-    lazy var spaceLabel: UILabel = {
-        let label = UILabel.init()
-        label.backgroundColor = UIColor.init(hex: "DEDFE0")
-        return label
     }()
     //MARK: - 懒加载对象
     lazy var tableView: UITableView = {

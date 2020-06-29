@@ -40,14 +40,14 @@ extension HomeTableViewManager: UITableViewDataSource {
             if let data = dataModel, data.isEmpty == false {
                 cell.model = data[indexPath.row]
             }
-            cell.selectionStyle = .none
+//            cell.selectionStyle = .none
             return cell
         } else {
             let cell = HomeTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
             if let data = dataModel, data.isEmpty == false {
                 cell.model = data[indexPath.row]
             }
-            cell.selectionStyle = .none
+//            cell.selectionStyle = .none
             return cell
         }
     }

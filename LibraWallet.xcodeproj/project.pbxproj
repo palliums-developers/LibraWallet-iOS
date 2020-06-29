@@ -3968,7 +3968,7 @@
 				CODE_SIGN_ENTITLEMENTS = LibraWallet/LibraWallet.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development: Jay Zou (JR6LZNW9NA)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = ND49YBN8B3;
 				INFOPLIST_FILE = LibraWallet/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -3995,7 +3995,7 @@
 				CODE_SIGN_ENTITLEMENTS = LibraWallet/LibraWallet.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Jay Zou (ND49YBN8B3)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = ND49YBN8B3;
 				INFOPLIST_FILE = LibraWallet/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;

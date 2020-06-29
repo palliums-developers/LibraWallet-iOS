@@ -13,7 +13,6 @@ class MineTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(iconImageView)
         contentView.addSubview(nameLabel)
-        contentView.addSubview(dateLabel)
         contentView.addSubview(detailIndicatorImageView)
         contentView.addSubview(cellSpaceLabel)
     }
@@ -55,15 +54,7 @@ class MineTableViewCell: UITableViewCell {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "3C3848")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
-        label.text = "---"
-        return label
-    }()
-    lazy var dateLabel: UILabel = {
-        let label = UILabel.init()
-        label.textAlignment = NSTextAlignment.left
-        label.textColor = UIColor.black
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
+        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: UIFont.Weight.regular)
         label.text = "---"
         return label
     }()
