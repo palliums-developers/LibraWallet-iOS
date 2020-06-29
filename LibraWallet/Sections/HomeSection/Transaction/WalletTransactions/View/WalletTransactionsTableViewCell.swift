@@ -54,7 +54,7 @@ class WalletTransactionsTableViewCell: UITableViewCell {
             make.bottom.equalTo(contentView)
             make.left.equalTo(contentView).offset(29)
             make.right.equalTo(contentView.snp.right).offset(-29)
-            make.height.equalTo(1)
+            make.height.equalTo(0.5)
         }
         //防止用户名字挤压
         //宽度不够时，可以被压缩

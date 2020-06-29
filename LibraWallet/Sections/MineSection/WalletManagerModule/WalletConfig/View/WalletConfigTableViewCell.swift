@@ -57,7 +57,7 @@ class WalletConfigTableViewCell: UITableViewCell {
             make.bottom.equalTo(contentView.snp.bottom)
             make.left.equalTo(contentView).offset(15)
             make.right.equalTo(contentView.snp.right).offset(-17)
-            make.height.equalTo(1)
+            make.height.equalTo(0.5)
         }
 //        detailLabel.setContentCompressionResistancePriority(UILayoutPriority.fittingSizeLevel, for: NSLayoutConstraint.Axis.horizontal)
 //        //抱紧内容

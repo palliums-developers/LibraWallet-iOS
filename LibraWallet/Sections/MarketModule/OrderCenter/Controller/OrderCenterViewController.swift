@@ -34,7 +34,7 @@ class OrderCenterViewController: BaseViewController {
             make.bottom.equalTo(self.segmentView.snp.bottom)
             make.left.equalTo(self.view).offset(14)
             make.right.equalTo(self.view).offset(-14)
-            make.height.equalTo(1)
+            make.height.equalTo(0.5)
         }
         listContainerView.snp.makeConstraints { (make) in
             if #available(iOS 11.0, *) {

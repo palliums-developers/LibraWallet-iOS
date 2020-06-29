@@ -64,7 +64,7 @@ class FeedbackAlert: UIView {
             make.top.equalTo(titleLabel.snp.bottom).offset(142)
             make.left.equalTo(whiteBackgroundView).offset(20)
             make.right.equalTo(whiteBackgroundView.snp.right).offset(-20)
-            make.height.equalTo(1)
+            make.height.equalTo(0.5)
         }
         contactTextField.snp.makeConstraints { (make) in
             make.top.equalTo(contentTextViewSpaceLabel.snp.bottom)
@@ -76,7 +76,7 @@ class FeedbackAlert: UIView {
             make.top.equalTo(contentTextViewSpaceLabel.snp.bottom).offset(52)
             make.left.equalTo(whiteBackgroundView).offset(20)
             make.right.equalTo(whiteBackgroundView.snp.right).offset(-20)
-            make.height.equalTo(1)
+            make.height.equalTo(0.5)
         }
         confirmButton.snp.makeConstraints { (make) in
             make.bottom.equalTo(whiteBackgroundView).offset(-26)

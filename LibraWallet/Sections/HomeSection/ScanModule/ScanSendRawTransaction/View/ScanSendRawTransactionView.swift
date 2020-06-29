@@ -73,7 +73,7 @@ class ScanSendRawTransactionView: UIView {
         spaceLabel.snp.makeConstraints { (make) in
             make.left.equalTo(walletWhiteBackgroundView).offset(14)
             make.right.equalTo(walletWhiteBackgroundView.snp.right).offset(-14)
-            make.height.equalTo(1)
+            make.height.equalTo(0.5)
             make.top.equalTo(walletWhiteBackgroundView).offset(71)
         }
         transactionReceiveAddressTitleLabel.snp.makeConstraints { (make) in

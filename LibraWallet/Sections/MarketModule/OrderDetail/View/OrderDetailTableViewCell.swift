@@ -66,7 +66,7 @@ class OrderDetailTableViewCell: UITableViewCell {
             make.left.equalTo(contentView).offset(14)
             make.right.equalTo(contentView.snp.right).offset(-14)
             make.bottom.equalTo(contentView)
-            make.height.equalTo(1)
+            make.height.equalTo(0.5)
         }
     }
     //MARK: - 懒加载对象

@@ -43,7 +43,7 @@ class AddWalletView: UIView {
             make.top.equalTo(self).offset(79)
             make.left.equalTo(self).offset(35)
             make.right.equalTo(self).offset(-35)
-            make.height.equalTo(1)
+            make.height.equalTo(0.5)
         }
         passwordConfirmTextField.snp.makeConstraints { (make) in
             make.top.equalTo(passwordSpaceLabel.snp.bottom)
@@ -54,7 +54,7 @@ class AddWalletView: UIView {
             make.top.equalTo(passwordSpaceLabel.snp.bottom).offset(51)
             make.left.equalTo(self).offset(35)
             make.right.equalTo(self).offset(-35)
-            make.height.equalTo(1)
+            make.height.equalTo(0.5)
         }
         confirmButton.snp.makeConstraints { (make) in
             make.top.equalTo(passwordConfirmSpaceLabel.snp.bottom).offset(48)

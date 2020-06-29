@@ -56,7 +56,7 @@ class AddAddressView: UIView {
             make.top.equalTo(self).offset(50)
             make.left.equalTo(self).offset(67)
             make.right.equalTo(self.snp.right).offset(-23)
-            make.height.equalTo(1)
+            make.height.equalTo(0.5)
         }
         addressTitleLabel.snp.makeConstraints { (make) in
             make.centerY.equalTo(addressTextField)
@@ -78,7 +78,7 @@ class AddAddressView: UIView {
             make.top.equalTo(remarksSpaceLabel.snp.bottom).offset(50)
             make.left.equalTo(self).offset(67)
             make.right.equalTo(self.snp.right).offset(-23)
-            make.height.equalTo(1)
+            make.height.equalTo(0.5)
         }
         typeTitleLabel.snp.makeConstraints { (make) in
             make.centerY.equalTo(violasAddressButton)

@@ -38,7 +38,7 @@ class LanguageTableViewCell: UITableViewCell {
             make.bottom.equalTo(contentView.snp.bottom)
             make.left.equalTo(self).offset(14)
             make.right.equalTo(self.snp.right).offset(-14)
-            make.height.equalTo(1)
+            make.height.equalTo(0.5)
         }
     }
     //MARK: - 懒加载对象

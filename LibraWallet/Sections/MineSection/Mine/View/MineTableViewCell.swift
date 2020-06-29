@@ -42,7 +42,7 @@ class MineTableViewCell: UITableViewCell {
             make.left.equalTo(contentView).offset(39)
             make.right.equalTo(contentView).offset(-15)
             make.bottom.equalTo(self.contentView).offset(0)
-            make.height.equalTo(1)
+            make.height.equalTo(0.5)
         }
     }
     //MARK: - 懒加载对象

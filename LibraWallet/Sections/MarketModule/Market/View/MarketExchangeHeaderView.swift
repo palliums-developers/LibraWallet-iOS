@@ -80,7 +80,7 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
             make.top.equalTo(backgroundImageView).offset(69)
             make.left.equalTo(backgroundImageView).offset(17)
             make.right.equalTo(backgroundImageView.snp.right).offset(-17)
-            make.height.equalTo(1)
+            make.height.equalTo(0.5)
         }
         exchangeCoinButton.snp.makeConstraints { (make) in
             make.centerY.centerX.equalTo(exchangeCoinSpaceLabel)
@@ -101,7 +101,7 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
             make.top.equalTo(exchangeCoinSpaceLabel.snp.bottom).offset(63)
             make.left.equalTo(backgroundImageView).offset(17)
             make.right.equalTo(backgroundImageView.snp.right).offset(-17)
-            make.height.equalTo(1)
+            make.height.equalTo(0.5)
         }
 //        exchangeToAddressTitleLabel.snp.makeConstraints { (make) in
 //            make.top.equalTo(exchangeAmountSpaceLabel.snp.bottom).offset(10)
@@ -130,7 +130,7 @@ class MarketExchangeHeaderView: UITableViewHeaderFooterView {
             make.top.equalTo(exchangeAmountSpaceLabel.snp.bottom).offset(63)
             make.left.equalTo(backgroundImageView).offset(17)
             make.right.equalTo(backgroundImageView.snp.right).offset(-17)
-            make.height.equalTo(1)
+            make.height.equalTo(0.5)
         }
         transferFeeTitleLabel.snp.makeConstraints { (make) in
             make.top.equalTo(exchangeRateSpaceLabel.snp.bottom).offset(10)

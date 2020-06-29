@@ -52,7 +52,7 @@ class ImportWalletView: UIView {
             make.top.equalTo(mnemonicTextView.snp.bottom).offset(76)
             make.left.equalTo(self).offset(35)
             make.right.equalTo(self).offset(-35)
-            make.height.equalTo(1)
+            make.height.equalTo(0.5)
         }
         passwordConfirmTextField.snp.makeConstraints { (make) in
             make.top.equalTo(passwordSpaceLabel.snp.bottom)
@@ -63,7 +63,7 @@ class ImportWalletView: UIView {
             make.top.equalTo(passwordSpaceLabel.snp.bottom).offset(51)
             make.left.equalTo(self).offset(35)
             make.right.equalTo(self).offset(-35)
-            make.height.equalTo(1)
+            make.height.equalTo(0.5)
         }
         confirmButton.snp.makeConstraints { (make) in
             make.top.equalTo(passwordConfirmSpaceLabel.snp.bottom).offset(48)

@@ -48,7 +48,7 @@ class MarketOthersOrderHeaderView: UITableViewHeaderFooterView {
             make.left.equalTo(contentView).offset(14)
             make.right.equalTo(contentView).offset(-14)
             make.centerY.equalTo(contentView).offset(12)
-            make.height.equalTo(1)
+            make.height.equalTo(0.5)
         }
         transactionAmountLabel.snp.makeConstraints { (make) in
             make.top.equalTo(headerSpaceLabel.snp.bottom).offset(15)
