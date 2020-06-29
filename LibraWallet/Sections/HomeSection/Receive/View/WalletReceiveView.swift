@@ -43,7 +43,6 @@ class WalletReceiveView: UIView {
         }
         addressLabel.snp.makeConstraints { (make) in
             make.top.equalTo(qrcodeImageView.snp.bottom).offset(21)
-            make.centerX.equalTo(backgroundImageView)
             make.left.equalTo(backgroundImageView).offset(25)
             make.right.equalTo(backgroundImageView).offset(-44)
         }
@@ -93,32 +92,25 @@ class WalletReceiveView: UIView {
         self.makeToast(localLanguage(keyString: "wallet_address_copy_success_title"),
                        position: .center)
     }
-    var wallet: Token? {
+    var token: Token? {
         didSet {
-            guard let walletModel = wallet else {
+            guard let tokenModel = token else {
                 return
             }
-            var tempAddress = walletModel.tokenAddress
-            switch wallet?.tokenType {
+            var tempAddress = tokenModel.tokenAddress
+            switch tokenModel.tokenType {
             case .BTC:
                 tempAddress = "bitcoin:" + tempAddress
                 break
             case .Libra:
-                tempAddress = "libra:" + tempAddress
+                tempAddress = "libra-\(tokenModel.tokenModule.lowercased()):" + tempAddress
                 break
             case .Violas:
-                if let name = violasTokenName, name.isEmpty == false {
-                    tempAddress = "violas-\(name.lowercased()):" + tempAddress
-                } else {
-                    tempAddress = "violas:" + tempAddress
-                }
-                break
-            default:
+                tempAddress = "violas-\(tokenModel.tokenModule.lowercased()):" + tempAddress
                 break
             }
             qrcodeImageView.image = QRCodeGenerator.generate(from: tempAddress)
-            addressLabel.text = walletModel.tokenAddress
+            addressLabel.text = tokenModel.tokenAddress
         }
     }
-    var violasTokenName: String?
 }

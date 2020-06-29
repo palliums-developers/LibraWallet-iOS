@@ -171,8 +171,6 @@ extension WalletMainViewController: WalletMainViewFooterViewDelegate {
     }
     func walletReceive() {
         let vc = WalletReceiveViewController()
-        // 一定要tokenname在前,否则显示有问题
-        vc.tokenName = self.vtokenModel?.name
         vc.wallet = self.wallet
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)

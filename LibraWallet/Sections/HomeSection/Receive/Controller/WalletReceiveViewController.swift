@@ -34,12 +34,7 @@ class WalletReceiveViewController: BaseViewController {
     }
     var wallet: Token? {
         didSet {
-            self.detailView.wallet = wallet
-        }
-    }
-    var tokenName: String? {
-        didSet {
-            self.detailView.violasTokenName = self.tokenName
+            self.detailView.token = wallet
         }
     }
     private lazy var detailView : WalletReceiveView = {
