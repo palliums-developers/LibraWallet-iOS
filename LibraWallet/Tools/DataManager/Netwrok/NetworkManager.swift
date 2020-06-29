@@ -78,6 +78,10 @@ enum mainRequest {
     case GetViolasPrice(String)
     /// 获取Libra链资产价格（地址）
     case GetLibraPrice(String)
+    /// 激活Violas（临时）
+    case ActiveViolasAccount(String)
+    /// 激活Libra（临时）
+    case ActiveLibraAccount(String)
 }
 extension mainRequest:TargetType {
     var baseURL: URL {
@@ -98,7 +102,9 @@ extension mainRequest:TargetType {
              .GetLibraTokenList,
              .GetBTCPrice,
              .GetViolasPrice(_),
-             .GetLibraPrice(_):
+             .GetLibraPrice(_),
+             .ActiveLibraAccount(_),
+             .ActiveViolasAccount(_):
             #if PUBLISH_VERSION
             return URL(string:"https://api.violas.io/1.0")!
             #else
@@ -204,6 +210,10 @@ extension mainRequest:TargetType {
             return "/violas/value/violas"
         case .GetLibraPrice(_):
             return "/violas/value/libra"
+        case .ActiveLibraAccount(_):
+            return "/libra/mint"
+        case .ActiveViolasAccount(_):
+            return "/violas/mint"
         }
     }
     var method: Moya.Method {
@@ -242,7 +252,9 @@ extension mainRequest:TargetType {
              .GetLibraTokenList,
              .GetBTCPrice,
              .GetViolasPrice(_),
-             .GetLibraPrice(_):
+             .GetLibraPrice(_),
+             .ActiveViolasAccount(_),
+             .ActiveLibraAccount(_):
             return .get
         }
     }
@@ -408,6 +420,22 @@ extension mainRequest:TargetType {
                                       encoding: URLEncoding.queryString)
         case .GetLibraPrice(let address):
             return .requestParameters(parameters: ["address":address],
+                                      encoding: URLEncoding.queryString)
+        case .ActiveLibraAccount(let authKey):
+            let index = authKey.index(authKey.startIndex, offsetBy: 32)
+            let address = authKey.suffix(from: index)
+            let authPrefix = authKey.prefix(upTo: index)
+            return .requestParameters(parameters: ["address": address,
+                                                   "auth_key_perfix": authPrefix,
+                                                   "currency":"LBR"],
+                                      encoding: URLEncoding.queryString)
+        case .ActiveViolasAccount(let authKey):
+            let index = authKey.index(authKey.startIndex, offsetBy: 32)
+            let address = authKey.suffix(from: index)
+            let authPrefix = authKey.prefix(upTo: index)
+            return .requestParameters(parameters: ["address": address,
+                                                   "auth_key_perfix": authPrefix,
+                                                   "currency":"LBR"],
                                       encoding: URLEncoding.queryString)
         }
     }
