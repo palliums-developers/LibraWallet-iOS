@@ -37,7 +37,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         DataBaseManager.DBManager.createWalletTable()
         DataBaseManager.DBManager.createTransferAddressListTable()
         DataBaseManager.DBManager.createViolasTokenTable()
-        DataBaseManager.DBManager.getLocalWallets()
+        _ = DataBaseManager.DBManager.getLocalWallets()
         IQKeyboardManager.shared.enable = true
         if let sessionData = getWalletConnectSession(), sessionData.isEmpty == false {
             WalletConnectManager.shared.reconnectToServer(sessionData: sessionData)

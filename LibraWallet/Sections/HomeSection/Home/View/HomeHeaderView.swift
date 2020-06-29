@@ -44,7 +44,11 @@ class HomeHeaderView: UIView {
         super.layoutSubviews()
         assetLabel.snp.makeConstraints { (make) in
             make.left.equalTo(self).offset(25)
-            make.top.equalTo(self).offset(2)
+            if statusBarHeight < 44 {
+                make.top.equalTo(self).offset(2 + (44 - statusBarHeight))
+            } else {
+                make.top.equalTo(self).offset(2)
+            }
         }
         walletConnectStateButton.snp.makeConstraints { (make) in
             make.bottom.equalTo(coinBackgroundView.snp.top).offset(-9)
