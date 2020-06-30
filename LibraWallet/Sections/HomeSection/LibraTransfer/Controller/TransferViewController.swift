@@ -52,7 +52,7 @@ class TransferViewController: BaseViewController {
     
     var address: String? {
         didSet {
-           self.detailView.addressTextField.text = address
+            self.detailView.addressTextField.text = address
         }
     }
     var amount: Int64? {
@@ -75,14 +75,14 @@ extension TransferViewController: TransferViewDelegate {
         let vc = ScanViewController()
         vc.actionClosure = { address in
             do {
-                let result = try libraWalletTool.scanResultHandle(content: address, contracts: [])
+                let result = try libraWalletTool.scanResultHandle(content: address, contracts: [self.wallet!])
                 if result.type == .transfer {
                     switch result.addressType {
                     case .Libra:
                         self.detailView.addressTextField.text = result.address
                         self.amount = result.amount
                     default:
-//                        self.showScanContent(content: address)
+                        //                        self.showScanContent(content: address)
                         self.detailView.addressTextField.text?.removeAll()
                         self.detailView.amountTextField.text?.removeAll()
                         self.view.makeToast(LibraWalletError.WalletScan(reason: LibraWalletError.ScanError.libraAddressInvalid).localizedDescription,
@@ -164,7 +164,7 @@ extension TransferViewController {
                 self?.detailView.toastView?.hide(tag: 99)
                 // 转账成功
                 self?.view.makeToast(localLanguage(keyString: "wallet_transfer_success_alert"),
-                                    position: .center)
+                                     position: .center)
                 if let action = self?.actionClosure {
                     action()
                     self?.navigationController?.popViewController(animated: true)

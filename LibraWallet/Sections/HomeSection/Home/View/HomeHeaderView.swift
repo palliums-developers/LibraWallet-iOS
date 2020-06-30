@@ -141,8 +141,8 @@ class HomeHeaderView: UIView {
     func showAssets() {
         self.assetLabel.text = "$ \(assetsModel!)"
     }
-    var walletModel: Token? {
-        didSet {
+//    var walletModel: Token? {
+//        didSet {
 //            walletNameLabel.text = "address"
 //            walletAddressLabel.text = walletModel?.walletAddress
 //            // 更新本地数据
@@ -172,8 +172,8 @@ class HomeHeaderView: UIView {
 //            default:
 //                break
 //            }
-        }
-    }
+//        }
+//    }
     var hideAddTokenButtonState: Bool? {
         didSet {
 //            if hideAddTokenButtonState == true {

@@ -97,11 +97,7 @@ class HomeView: UIView {
         let view = HomeWithoutWalletView.init()
         return view
     }()
-    var model: Token? {
-        didSet {
-            headerView.walletModel = model
-        }
-    }
+    var model: Token?
     var toastView: ToastView? {
         let toast = ToastView.init()
         return toast

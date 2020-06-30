@@ -464,8 +464,10 @@ wallet_transfer_to_self_error = "向自己转账无效";
 wallet_scan_result_address_btc_invalid_error = "BTC地址无效";
 wallet_scan_result_address_violas_invalid_error = "Violas地址无效";
 wallet_scan_result_address_libra_invalid_error = "Libra地址无效";
-wallet_scan_result_address_violas_module_name_empty_error = "Violas稳定币名字为空";
-wallet_scan_result_address_contract_invalid_error = "Violas稳定币合约未开启或不支持";
+wallet_scan_result_address_violas_module_empty_error = "Violas稳定币名字为空";
+wallet_scan_result_address_violas_module_invalid_error = "Violas稳定币合约未开启或不支持";
+wallet_scan_result_address_libra_module_empty_error = "Libra稳定币名字为空";
+wallet_scan_result_address_libra_module_invalid_error = "Libra稳定币合约未开启或不支持";
 wallet_scan_result_not_support_error = "扫描内容不支持";
 // 交易所
 wallet_market_swap_unpublisheda_error = "未开启不能调换";

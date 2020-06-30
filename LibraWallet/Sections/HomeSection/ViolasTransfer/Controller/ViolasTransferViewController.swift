@@ -13,12 +13,8 @@ class ViolasTransferViewController: BaseViewController {
         self.title = (self.wallet?.tokenType.description ?? "") + " " + localLanguage(keyString: "wallet_transfer_navigation_title")
 
         self.view.addSubview(detailView)
-        self.detailView.sendViolasTokenState = self.sendViolasTokenState
-        if self.sendViolasTokenState == false {
-            self.detailView.wallet = self.wallet
-        } else {
-            self.detailView.vtoken = self.vtokenModel
-        }
+//        self.detailView.sendViolasTokenState = self.sendViolasTokenState
+        self.detailView.wallet = self.wallet
         self.initKVO()
     }
     override func viewWillLayoutSubviews() {
@@ -50,8 +46,8 @@ class ViolasTransferViewController: BaseViewController {
     var actionClosure: successClosure?
     var wallet: Token?
     
-    var sendViolasTokenState: Bool?
-    var vtokenModel: ViolasTokenModel?
+//    var sendViolasTokenState: Bool?
+//    var vtokenModel: ViolasTokenModel?
     /// 数据监听KVO
     private var observer: NSKeyValueObservation?
     var address: String? {
@@ -75,14 +71,9 @@ extension ViolasTransferViewController: ViolasTransferViewDelegate {
     func scanAddressQRcode() {
         let vc = ScanViewController()
         vc.actionClosure = { address in
-//            do {
-//                let tempAddressModel = try handleScanContent(content: address)
-//                self.detailView.addressTextField.text = tempAddressModel.address
-//            } catch {
-//                self.detailView.makeToast(error.localizedDescription, position: .center)
-//            }
             do {
-                let result = try libraWalletTool.scanResultHandle(content: address, contracts: [])
+                let result = try libraWalletTool.scanResultHandle(content: address, contracts: [self.wallet!])
+                print(result)
                 if result.type == .transfer {
                     switch result.addressType {
                     case .Violas:
@@ -104,7 +95,6 @@ extension ViolasTransferViewController: ViolasTransferViewDelegate {
         }
         self.navigationController?.pushViewController(vc, animated: true)
     }
-    
     func chooseAddress() {
         let vc = AddressManagerViewController()
         vc.actionClosure = { address in

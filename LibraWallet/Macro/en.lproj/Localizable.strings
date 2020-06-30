@@ -461,8 +461,10 @@ wallet_transfer_to_self_error = "Invalid Transfer to Self";
 wallet_scan_result_address_btc_invalid_error = "BTC Address Invalid";
 wallet_scan_result_address_violas_invalid_error = "Violas Address Invalid";
 wallet_scan_result_address_libra_invalid_error = "Libra Address Invalid";
-wallet_scan_result_address_violas_module_name_empty_error = "Violas stable token name empty";
-wallet_scan_result_address_contract_invalid_error = "Violas stable token not open or not support";
+wallet_scan_result_address_violas_module_empty_error = "Violas stable token name empty";
+wallet_scan_result_address_violas_module_invalid_error = "Violas stable token not open or not support";
+wallet_scan_result_address_libra_module_empty_error = "Libra stable token name empty";
+wallet_scan_result_address_libra_module_invalid_error = "Libra stable token not open or not support";
 wallet_scan_result_not_support_error = "Scan result not support";
 // 交易所
 wallet_market_swap_unpublisheda_error = "Stable currency to be exchanged has not been opened and cannot be exchanged";

@@ -316,38 +316,26 @@ class ViolasTransferView: UIView {
             let fee = Double(feeString!.replacingOccurrences(of: " vtoken", with: ""))!
             #warning("暂时不用手续费")
             // 金额大于我的金额
-            if sendViolasTokenState == false {
-                let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
-                                                               scale: 4,
-                                                               raiseOnExactness: false,
-                                                               raiseOnOverflow: false,
-                                                               raiseOnUnderflow: false,
-                                                               raiseOnDivideByZero: false)
-                let balance = NSDecimalNumber.init(value: wallet?.tokenBalance ?? 0).dividing(by: NSDecimalNumber.init(value: 1000000), withBehavior: numberConfig)
-                // 平台币
-                guard (amount) <= balance.doubleValue else {
-                   self.makeToast(LibraWalletError.WalletTransfer(reason: .amountOverload).localizedDescription,
-                                  position: .center)
-                   return
-                }
-            } else {
-                let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
-                                                               scale: 4,
-                                                               raiseOnExactness: false,
-                                                               raiseOnOverflow: false,
-                                                               raiseOnUnderflow: false,
-                                                               raiseOnDivideByZero: false)
-                let balance = NSDecimalNumber.init(value: vtoken?.balance ?? 0).dividing(by: NSDecimalNumber.init(value: 1000000), withBehavior: numberConfig)
-                // 稳定币
-                guard (amount) <= balance.doubleValue else {
-                   self.makeToast(LibraWalletError.WalletTransfer(reason: .amountOverload).localizedDescription,
-                                  position: .center)
-                   return
-                }
+                var unit = 1000000
+            if wallet?.tokenType == .BTC {
+                unit = 100000000
+            }
+            let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
+                                                           scale: 4,
+                                                           raiseOnExactness: false,
+                                                           raiseOnOverflow: false,
+                                                           raiseOnUnderflow: false,
+                                                           raiseOnDivideByZero: false)
+            let balance = NSDecimalNumber.init(value: wallet?.tokenBalance ?? 0).dividing(by: NSDecimalNumber.init(value: unit), withBehavior: numberConfig)
+            // 平台币
+            guard (amount) <= balance.doubleValue else {
+                self.makeToast(LibraWalletError.WalletTransfer(reason: .amountOverload).localizedDescription,
+                               position: .center)
+                return
             }
             // 地址拆包检查
             guard let address = self.addressTextField.text, address.isEmpty == false else {
-               self.makeToast(LibraWalletError.WalletTransfer(reason: .addressEmpty).localizedDescription,
+                self.makeToast(LibraWalletError.WalletTransfer(reason: .addressEmpty).localizedDescription,
                               position: .center)
                return
             }
@@ -392,24 +380,27 @@ class ViolasTransferView: UIView {
             guard let model = wallet else {
                 return
             }
-            
-            let balance = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.tokenBalance ?? 0)),
-                                                 scale: 4,
-                                                 unit: 1000000)
-            walletBalanceLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + balance + " vtoken"
-        }
-    }
-    var vtoken: ViolasTokenModel? {
-        didSet {
-            guard let model = vtoken else {
-                return
+            var unit = 1000000
+            if model.tokenType == .BTC {
+                unit = 100000000
             }
-            let balance = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.balance ?? 0)),
+            let balance = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.tokenBalance )),
                                                  scale: 4,
-                                                 unit: 1000000)
-            walletBalanceLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + balance + " " + (model.name ?? "")
+                                                 unit: unit)
+            walletBalanceLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + balance + " " + (wallet?.tokenName ?? "")
         }
     }
+//    var vtoken: ViolasTokenModel? {
+//        didSet {
+//            guard let model = vtoken else {
+//                return
+//            }
+//            let balance = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.balance ?? 0)),
+//                                                 scale: 4,
+//                                                 unit: 1000000)
+//            walletBalanceLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + balance + " " + (model.name ?? "")
+//        }
+//    }
     var sendViolasTokenState: Bool?
 }
 extension ViolasTransferView: UITextFieldDelegate {

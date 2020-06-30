@@ -127,14 +127,14 @@ class WalletMainViewController: BaseViewController {
             self.headerView.model = wallet
         }
     }
-    var vtokenModel: ViolasTokenModel? {
-        didSet {
+//    var vtokenModel: ViolasTokenModel? {
+//        didSet {
 //            self.detailView.headerView.assetLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (vtokenModel?.balance ?? 0)),
 //                                                                                          scale: 4,
 //                                                                                          unit: 1000000)
 //            self.detailView.headerView.assetUnitLabel.text = vtokenModel?.name
-        }
-    }
+//        }
+//    }
 }
 extension WalletMainViewController: WalletMainViewFooterViewDelegate {
     func walletTransfer() {
@@ -144,9 +144,6 @@ extension WalletMainViewController: WalletMainViewFooterViewDelegate {
             //            self.dataModel.getLocalUserInfo()
             }
             vc.wallet = self.wallet
-            vc.sendViolasTokenState = false
-            vc.vtokenModel = self.vtokenModel
-//            vc.title = (vtokenModel?.name ?? "") + localLanguage(keyString: "wallet_transfer_navigation_title")
             vc.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController(vc, animated: true)
         } else if wallet?.tokenType == .Libra {
@@ -155,7 +152,7 @@ extension WalletMainViewController: WalletMainViewFooterViewDelegate {
             //            self.dataModel.getLocalUserInfo()
             }
             vc.wallet = self.wallet
-            vc.title = (vtokenModel?.name ?? "") + localLanguage(keyString: "wallet_transfer_navigation_title")
+            vc.title = (self.wallet?.tokenName ?? "") + localLanguage(keyString: "wallet_transfer_navigation_title")
             vc.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController(vc, animated: true)
         } else if wallet?.tokenType == .BTC {

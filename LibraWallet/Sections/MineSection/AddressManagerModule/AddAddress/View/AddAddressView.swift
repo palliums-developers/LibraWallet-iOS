@@ -229,6 +229,8 @@ class AddAddressView: UIView {
     }()
     @objc func buttonClick(button: UIButton) {
         if button.tag == 10 {
+            self.remarksTextField.resignFirstResponder()
+            self.addressTextField.resignFirstResponder()
             guard let remarks = remarksTextField.text else {
                 self.makeToast(LibraWalletError.WalletAddAddress(reason: .remarksInvalidError).localizedDescription,
                                position: .center)
@@ -285,29 +287,26 @@ class AddAddressView: UIView {
         } else if button.tag == 20 {
             self.delegate?.scanAddress()
         } else if button.tag == 31 {
-            if let tag = lastSelectIndex {
-                (self.viewWithTag(tag) as! UIButton).setTitleColor(UIColor.init(hex: "999999"), for: UIControl.State.normal)
-                (self.viewWithTag(tag) as! UIButton).layer.backgroundColor = UIColor.init(hex: "F7F7F7").cgColor
-            }
+            setDefaultType()
             lastSelectIndex = button.tag
             button.layer.backgroundColor = UIColor.init(hex: "4730A7").cgColor
             button.setTitleColor(UIColor.white, for: UIControl.State.normal)
         } else if button.tag == 32 {
-            if let tag = lastSelectIndex {
-                (self.viewWithTag(tag) as! UIButton).setTitleColor(UIColor.init(hex: "999999"), for: UIControl.State.normal)
-                (self.viewWithTag(tag) as! UIButton).layer.backgroundColor = UIColor.init(hex: "F7F7F7").cgColor
-            }
+            setDefaultType()
             lastSelectIndex = button.tag
             button.layer.backgroundColor = UIColor.init(hex: "4730A7").cgColor
             button.setTitleColor(UIColor.white, for: UIControl.State.normal)
         } else if button.tag == 33 {
-            if let tag = lastSelectIndex {
-                (self.viewWithTag(tag) as! UIButton).setTitleColor(UIColor.init(hex: "999999"), for: UIControl.State.normal)
-                (self.viewWithTag(tag) as! UIButton).layer.backgroundColor = UIColor.init(hex: "F7F7F7").cgColor
-            }
+            setDefaultType()
             lastSelectIndex = button.tag
             button.layer.backgroundColor = UIColor.init(hex: "4730A7").cgColor
             button.setTitleColor(UIColor.white, for: UIControl.State.normal)
+        }
+    }
+    func setDefaultType() {
+        if let tag = lastSelectIndex {
+            (self.viewWithTag(tag) as! UIButton).setTitleColor(UIColor.init(hex: "999999"), for: UIControl.State.normal)
+            (self.viewWithTag(tag) as! UIButton).layer.backgroundColor = UIColor.init(hex: "F7F7F7").cgColor
         }
     }
     lazy var backgroundLayer: CAGradientLayer = {

@@ -207,12 +207,16 @@ public enum LibraWalletError: Error {
         case btcAddressInvalid
         /// Violas地址无效
         case violasAddressInvalid
-        /// Libra地址无效
-        case libraAddressInvalid
         /// Violas稳定币名字为空
         case violasTokenNameEmpty
         /// Violas稳定币合约未开启或不支持
-        case violasTokenContractInvalid
+        case violasModuleInvalid
+        /// Libra地址无效
+        case libraAddressInvalid
+        /// Violas稳定币名字为空
+        case libraTokenNameEmpty
+        /// Violas稳定币合约未开启或不支持
+        case libraModuleInvalid
         /// 解析失败，不支持
         case handleInvalid
     }
@@ -550,12 +554,16 @@ extension LibraWalletError.ScanError {
             return localLanguage(keyString: "wallet_scan_result_address_btc_invalid_error")
         case .violasAddressInvalid:
             return localLanguage(keyString: "wallet_scan_result_address_violas_invalid_error")
+        case .violasTokenNameEmpty:
+            return localLanguage(keyString: "wallet_scan_result_address_violas_module_empty_error")
+        case .violasModuleInvalid:
+            return localLanguage(keyString: "wallet_scan_result_address_violas_module_invalid_error")
         case .libraAddressInvalid:
             return localLanguage(keyString: "wallet_scan_result_address_libra_invalid_error")
-        case .violasTokenNameEmpty:
-            return localLanguage(keyString: "wallet_scan_result_address_violas_module_name_empty_error")
-        case .violasTokenContractInvalid:
-            return localLanguage(keyString: "wallet_scan_result_address_contract_invalid_error")
+        case .libraTokenNameEmpty:
+            return localLanguage(keyString: "wallet_scan_result_address_libra_module_empty_error")
+        case .libraModuleInvalid:
+            return localLanguage(keyString: "wallet_scan_result_address_libra_module_invalid_error")
         case .handleInvalid:
             return localLanguage(keyString: "wallet_scan_result_not_support_error")
         }
