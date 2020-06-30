@@ -12,7 +12,8 @@ class MarketView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.white
-        addSubview(headerBackground)
+//        addSubview(headerBackground)
+        addSubview(headerView)
         addSubview(tableView)
     }
     required init?(coder aDecoder: NSCoder) {
@@ -24,35 +25,39 @@ class MarketView: UIView {
     //MARK: - 布局
     override func layoutSubviews() {
         super.layoutSubviews()
-        headerBackground.snp.makeConstraints { (make) in
+        headerView.snp.makeConstraints { (make) in
             make.top.left.right.equalTo(self)
-            make.height.equalTo(196)
+            make.height.equalTo(404)
         }
         tableView.snp.makeConstraints { (make) in
-            make.top.equalTo(self).offset(navigationBarHeight)
+            make.top.equalTo(headerView.snp.bottom)
             make.left.right.bottom.equalTo(self)
         }
     }
     func changeHeaderViewDefault(hideLeftModel: Bool) {
-        guard let headerView = tableView.headerView(forSection: 0) as? MarketExchangeHeaderView else {
-            return
-        }
-        if hideLeftModel == true {
-            headerView.leftTokenModel = nil
-        }
-        headerView.rightTokenModel = nil
-        headerView.exchangeRateLabel.text = "---"
-        headerView.leftAmountTextField.text = ""
-        headerView.rightAmountTextField.text = ""
+//        guard let headerView = tableView.headerView(forSection: 0) as? MarketExchangeHeaderView else {
+//            return
+//        }
+//        if hideLeftModel == true {
+//            headerView.leftTokenModel = nil
+//        }
+//        headerView.rightTokenModel = nil
+//        headerView.exchangeRateLabel.text = "---"
+//        headerView.leftAmountTextField.text = ""
+//        headerView.rightAmountTextField.text = ""
     }
     //MARK: - 懒加载对象
+    private lazy var headerView : MarketViewHeaderView = {
+        let header = MarketViewHeaderView.init()
+        return header
+    }()
     private lazy var headerBackground : UIImageView = {
         let imageView = UIImageView.init()
         imageView.image = UIImage.init(named: "home_top_background")
         return imageView
     }()
     lazy var tableView: UITableView = {
-        let tableView = UITableView.init(frame: CGRect.zero, style: UITableView.Style.grouped)
+        let tableView = UITableView.init(frame: CGRect.zero, style: UITableView.Style.plain)
         tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
         tableView.estimatedRowHeight = 0;
         tableView.estimatedSectionHeaderHeight = 0;
@@ -62,11 +67,8 @@ class MarketView: UIView {
             // Fallback on earlier versions
         }
         tableView.backgroundColor = UIColor.clear
-        tableView.register(MarketExchangeHeaderView.classForCoder(), forHeaderFooterViewReuseIdentifier: "MainHeader")
-        tableView.register(MarketMyOrderHeaderView.classForCoder(), forHeaderFooterViewReuseIdentifier: "MineHeader")
-        tableView.register(MarketOthersOrderHeaderView.classForCoder(), forHeaderFooterViewReuseIdentifier: "OthersHeader")
-        tableView.register(MarketMyOrderTableViewCell.classForCoder(), forCellReuseIdentifier: "MineCell")
-        tableView.register(MarketOthersOrderTableViewCell.classForCoder(), forCellReuseIdentifier: "OtherCell")
+        tableView.register(MarketTransactionsTableViewCell.classForCoder(), forCellReuseIdentifier: "NormalCell")
+        tableView.register(MarketTransactionsTableViewCell.classForCoder(), forCellReuseIdentifier: "FailedCell")
         return tableView
     }()
     var toastView: ToastView? {

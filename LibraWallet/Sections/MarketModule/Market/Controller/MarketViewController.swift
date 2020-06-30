@@ -17,7 +17,7 @@ class MarketViewController: UIViewController {
      */
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor.init(hex: "F7F7F9")
+        self.view.backgroundColor = UIColor.white
         // 加载子View
         self.view.addSubview(detailView)
         // 设置空数据页面
@@ -26,7 +26,7 @@ class MarketViewController: UIViewController {
         self.initKVO()
         //设置默认页面（无数据、无网络）
         self.setPlaceholderView()
-        addSocket()
+//        addSocket()
         // 判断时候是Violas钱包
 //        self.requestData()
         self.restartLisening = true
@@ -35,16 +35,16 @@ class MarketViewController: UIViewController {
         super.viewWillLayoutSubviews()
         detailView.snp.makeConstraints { (make) in
             if #available(iOS 11.0, *) {
-                make.bottom.equalTo(self.view.safeAreaLayoutGuide)
+                make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
             } else {
-                make.bottom.equalTo(self.view)
+                make.top.bottom.equalTo(self.view)
             }
-            make.top.left.right.equalTo(self.view)
+            make.left.right.equalTo(self.view)
         }
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.navigationBar.barStyle = .black
+        self.navigationController?.navigationBar.barStyle = .default
         // 关闭后当前页面可以刷新
         stopRefreshTableView = false
         // 判断是否切换钱包
@@ -77,23 +77,23 @@ class MarketViewController: UIViewController {
     }
     func requestData() {
         if (lastState == .Loading) {return}
-        startLoading()
-        guard self.wallet?.tokenType == .Violas else {
-            endLoading(error: NSError.init(domain: "test", code: 1, userInfo: nil))
-            return
-        }
-        endLoading()
-        if let headerView = self.detailView.tableView.headerView(forSection: 0) as? MarketExchangeHeaderView {
-            if let payContract = headerView.leftTokenModel?.id, let exchangeContract = headerView.rightTokenModel?.id, payContract.isEmpty == false, exchangeContract.isEmpty == false {
-                guard let walletAddress = self.wallet?.tokenAddress else {
-                    return
-                }
-                print("添加监听")
-                self.dataModel.getMarketData(address: walletAddress, payContract: payContract, exchangeContract: exchangeContract)
-                // http请求
-//                self.dataModel.getCurrentOrder(address: walletAddress, baseAddress: payContract, exchangeAddress: exchangeContract)
-            }
-        }
+//        startLoading()
+//        guard self.wallet?.tokenType == .Violas else {
+//            endLoading(error: NSError.init(domain: "test", code: 1, userInfo: nil))
+//            return
+//        }
+//        endLoading()
+//        if let headerView = self.detailView.tableView.headerView(forSection: 0) as? MarketExchangeHeaderView {
+//            if let payContract = headerView.leftTokenModel?.id, let exchangeContract = headerView.rightTokenModel?.id, payContract.isEmpty == false, exchangeContract.isEmpty == false {
+//                guard let walletAddress = self.wallet?.tokenAddress else {
+//                    return
+//                }
+//                print("添加监听")
+//                self.dataModel.getMarketData(address: walletAddress, payContract: payContract, exchangeContract: exchangeContract)
+//                // http请求
+////                self.dataModel.getCurrentOrder(address: walletAddress, baseAddress: payContract, exchangeAddress: exchangeContract)
+//            }
+//        }
     }
     func hasContent() -> Bool {
         guard self.wallet?.tokenType == .Violas else {
@@ -141,112 +141,112 @@ class MarketViewController: UIViewController {
     var stopRefreshTableView: Bool?
 }
 extension MarketViewController: MarketTableViewManagerDelegate {
-    func changeLeftRightTokenModel(leftModel: MarketSupportCoinDataModel, rightModel: MarketSupportCoinDataModel) {
-        // 获取当前钱包地址
-        guard let walletAddress = self.wallet?.tokenAddress else {
-            return
-        }
-        self.detailView.toastView?.show(tag: 99)
-        // 移除旧的监听
-        self.dataModel.removeDepthsLisening(payContract: rightModel.id ?? "", exchangeContract: leftModel.id ?? "")
-        // 请求交易所对应交易对数据
-        self.dataModel.getMarketData(address: walletAddress, payContract: leftModel.id ?? "", exchangeContract: rightModel.id ?? "")
-        // http请求
-//        self.dataModel.getCurrentOrder(address: walletAddress, baseAddress: leftModel.addr ?? "", exchangeAddress: rightModel.addr ?? "")
-        // 添加对应交易对数据变化监听
-        self.dataModel.addDepthsLisening(payContract: leftModel.id ?? "", exchangeContract: rightModel.id ?? "")
-    }
-    
-    func selectToken(button: UIButton, leftModelName: String, rightModelName: String, header: MarketExchangeHeaderView) {
-        // 获取当前钱包地址
-        guard let walletAddress = self.wallet?.tokenAddress else {
-            return
-        }
-        self.detailView.toastView?.show(tag: 99)
-        self.dataModel.getSupportToken(address: walletAddress)
-
-        self.actionClosure = { dataModel in
-            var tempDataModel = dataModel
-            // 筛选左右展示数据
-            var showRegisterModel: Bool = false
-            if button.tag == 20 {
-                // 左边点击
-                tempDataModel = dataModel.filter({ item in
-                    item.enable == true
-                })
-                showRegisterModel = true
-            } else {
-                // 右边点击
-                tempDataModel = dataModel.filter({ item in
-                    item.name != leftModelName
-                }).sorted(by: {
-                    ($0.enable ?? false) != ($1.enable ?? false)
-                }).reversed()
-                showRegisterModel = false
-            }
-            // 尚未注册任何稳定币
-            if button.tag == 20 && tempDataModel.isEmpty == true {
-                let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_market_alert_register_token_title"), message: localLanguage(keyString: "wallet_market_alert_register_token_content"), preferredStyle: .alert)
-                alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_confirm_button_title"), style: .default){ [weak self] clickHandler in
-                    let vc = AddAssetViewController()
-//                    vc.wallet = self?.wallet
-                    vc.needDismissViewController = true
-                    let navi = UINavigationController.init(rootViewController: vc)
-                    self?.present(navi, animated: true, completion: nil)
-                })
-                alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_cancel_button_title"), style: .cancel){ clickHandler in
-                    NSLog("点击了取消")
-                })
-                self.present(alertContr, animated: true, completion: nil)
-                return
-            }
-            let alert = TokenPickerViewAlert.init(successClosure: { (model) in
-                if button.tag == 20 {
-                    // 移除之前监听
-                    if let payContract = header.leftTokenModel?.id, let exchangeContract = header.rightTokenModel?.id, payContract.isEmpty == false, exchangeContract.isEmpty == false {
-                        print("移除之前监听")
-                        self.dataModel.removeDepthsLisening(payContract: payContract, exchangeContract: exchangeContract)
-                    } else {
-                        // 之前无监听
-                        print("之前无监听")
-                    }
-                    header.leftTokenModel = model
-                    // 右边设置为空
-                    if header.rightTokenModel?.name == header.leftTokenModel?.name {
-                        self.detailView.changeHeaderViewDefault(hideLeftModel: false)
-                    }
-                } else {
-                    guard header.rightTokenModel?.name != model.name else {
-                        return
-                    }
-                    // 移除之前监听
-                    if let payContract = header.leftTokenModel?.id, let exchangeContract = header.rightTokenModel?.id, payContract.isEmpty == false, exchangeContract.isEmpty == false {
-                        print("移除之前监听")
-                        self.dataModel.removeDepthsLisening(payContract: payContract, exchangeContract: exchangeContract)
-                    } else {
-                        // 之前无监听
-                        print("之前无监听")
-                    }
-                    header.rightTokenModel = model
-                }
-                // 添加监听
-                if let payContract = header.leftTokenModel?.id, let exchangeContract = header.rightTokenModel?.id, payContract.isEmpty == false, exchangeContract.isEmpty == false {
-                    guard let walletAddress = self.wallet?.tokenAddress else {
-                        return
-                    }
-                    print("添加监听")
-                    self.detailView.toastView?.show(tag: 99)
-                    self.dataModel.getMarketData(address: walletAddress, payContract: payContract, exchangeContract: exchangeContract)
-                    // http
-//                    self.dataModel.getCurrentOrder(address: walletAddress, baseAddress: leftModel.addr ?? "", exchangeAddress: rightModel.addr ?? "")
-
-                    self.dataModel.addDepthsLisening(payContract: payContract, exchangeContract: exchangeContract)
-                }
-            }, data: tempDataModel, onlyRegisterToken: showRegisterModel)
-            alert.show(tag: 99)
-            alert.showAnimation()
-        }
-    }
+//    func changeLeftRightTokenModel(leftModel: MarketSupportCoinDataModel, rightModel: MarketSupportCoinDataModel) {
+//        // 获取当前钱包地址
+//        guard let walletAddress = self.wallet?.tokenAddress else {
+//            return
+//        }
+//        self.detailView.toastView?.show(tag: 99)
+//        // 移除旧的监听
+//        self.dataModel.removeDepthsLisening(payContract: rightModel.id ?? "", exchangeContract: leftModel.id ?? "")
+//        // 请求交易所对应交易对数据
+//        self.dataModel.getMarketData(address: walletAddress, payContract: leftModel.id ?? "", exchangeContract: rightModel.id ?? "")
+//        // http请求
+////        self.dataModel.getCurrentOrder(address: walletAddress, baseAddress: leftModel.addr ?? "", exchangeAddress: rightModel.addr ?? "")
+//        // 添加对应交易对数据变化监听
+//        self.dataModel.addDepthsLisening(payContract: leftModel.id ?? "", exchangeContract: rightModel.id ?? "")
+//    }
+//
+//    func selectToken(button: UIButton, leftModelName: String, rightModelName: String, header: MarketExchangeHeaderView) {
+//        // 获取当前钱包地址
+//        guard let walletAddress = self.wallet?.tokenAddress else {
+//            return
+//        }
+//        self.detailView.toastView?.show(tag: 99)
+//        self.dataModel.getSupportToken(address: walletAddress)
+//
+//        self.actionClosure = { dataModel in
+//            var tempDataModel = dataModel
+//            // 筛选左右展示数据
+//            var showRegisterModel: Bool = false
+//            if button.tag == 20 {
+//                // 左边点击
+//                tempDataModel = dataModel.filter({ item in
+//                    item.enable == true
+//                })
+//                showRegisterModel = true
+//            } else {
+//                // 右边点击
+//                tempDataModel = dataModel.filter({ item in
+//                    item.name != leftModelName
+//                }).sorted(by: {
+//                    ($0.enable ?? false) != ($1.enable ?? false)
+//                }).reversed()
+//                showRegisterModel = false
+//            }
+//            // 尚未注册任何稳定币
+//            if button.tag == 20 && tempDataModel.isEmpty == true {
+//                let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_market_alert_register_token_title"), message: localLanguage(keyString: "wallet_market_alert_register_token_content"), preferredStyle: .alert)
+//                alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_confirm_button_title"), style: .default){ [weak self] clickHandler in
+//                    let vc = AddAssetViewController()
+////                    vc.wallet = self?.wallet
+//                    vc.needDismissViewController = true
+//                    let navi = UINavigationController.init(rootViewController: vc)
+//                    self?.present(navi, animated: true, completion: nil)
+//                })
+//                alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_cancel_button_title"), style: .cancel){ clickHandler in
+//                    NSLog("点击了取消")
+//                })
+//                self.present(alertContr, animated: true, completion: nil)
+//                return
+//            }
+//            let alert = TokenPickerViewAlert.init(successClosure: { (model) in
+//                if button.tag == 20 {
+//                    // 移除之前监听
+//                    if let payContract = header.leftTokenModel?.id, let exchangeContract = header.rightTokenModel?.id, payContract.isEmpty == false, exchangeContract.isEmpty == false {
+//                        print("移除之前监听")
+//                        self.dataModel.removeDepthsLisening(payContract: payContract, exchangeContract: exchangeContract)
+//                    } else {
+//                        // 之前无监听
+//                        print("之前无监听")
+//                    }
+//                    header.leftTokenModel = model
+//                    // 右边设置为空
+//                    if header.rightTokenModel?.name == header.leftTokenModel?.name {
+//                        self.detailView.changeHeaderViewDefault(hideLeftModel: false)
+//                    }
+//                } else {
+//                    guard header.rightTokenModel?.name != model.name else {
+//                        return
+//                    }
+//                    // 移除之前监听
+//                    if let payContract = header.leftTokenModel?.id, let exchangeContract = header.rightTokenModel?.id, payContract.isEmpty == false, exchangeContract.isEmpty == false {
+//                        print("移除之前监听")
+//                        self.dataModel.removeDepthsLisening(payContract: payContract, exchangeContract: exchangeContract)
+//                    } else {
+//                        // 之前无监听
+//                        print("之前无监听")
+//                    }
+//                    header.rightTokenModel = model
+//                }
+//                // 添加监听
+//                if let payContract = header.leftTokenModel?.id, let exchangeContract = header.rightTokenModel?.id, payContract.isEmpty == false, exchangeContract.isEmpty == false {
+//                    guard let walletAddress = self.wallet?.tokenAddress else {
+//                        return
+//                    }
+//                    print("添加监听")
+//                    self.detailView.toastView?.show(tag: 99)
+//                    self.dataModel.getMarketData(address: walletAddress, payContract: payContract, exchangeContract: exchangeContract)
+//                    // http
+////                    self.dataModel.getCurrentOrder(address: walletAddress, baseAddress: leftModel.addr ?? "", exchangeAddress: rightModel.addr ?? "")
+//
+//                    self.dataModel.addDepthsLisening(payContract: payContract, exchangeContract: exchangeContract)
+//                }
+//            }, data: tempDataModel, onlyRegisterToken: showRegisterModel)
+//            alert.show(tag: 99)
+//            alert.showAnimation()
+//        }
+//    }
     func exchangeToken(payToken: MarketSupportCoinDataModel, receiveToken: MarketSupportCoinDataModel, amount: Double, exchangeAmount: Double) {
         self.detailView.toastView?.show(tag: 99)
         // 第一步，检查余额是否充足
@@ -526,27 +526,27 @@ extension MarketViewController {
             }
         } else if type == "GetCurrentOrder" {
             self.detailView.toastView?.hide(tag: 99)
-            if let tempData = jsonData.value(forKey: "data") as? MarketResponseMainModel {
-                #warning("无奈之举，望谅解")
-                let headerView = self.detailView.tableView.headerView(forSection: 0) as? MarketExchangeHeaderView
-                self.tableViewManager.buyOrders = tempData.orders?.filter({
-                    $0.user?.contains(self.wallet?.tokenAddress ?? "") == true
-                }).sorted(by: {
-                    ($0.date ?? 0) > ($1.date ?? 0)
-                }).map({ (item) in
-                    MarketOrderDataModel.init(id: item.id, user: item.user, state: item.state, tokenGet: item.tokenGet, tokenGetSymbol: item.tokenGetSymbol, amountGet: item.amountGet, tokenGive: item.tokenGive, tokenGiveSymbol: item.tokenGiveSymbol, amountGive: item.amountGive, version: item.version, date: item.date, update_date: item.update_date, update_version: item.update_version, amountFilled: item.amountFilled, tokenGivePrice: item.tokenGivePrice, tokenGetPrice: item.tokenGetPrice)
-                })
-                #warning("无奈之举，望谅解")
-                self.tableViewManager.sellOrders = tempData.depths?.buys?.filter({
-                    $0.user?.contains(self.wallet?.tokenAddress ?? "") == false
-                }).sorted(by: {
-                    ($0.date ?? 0) < ($1.date ?? 0)
-                }).map({ (item) in
-                    MarketOrderDataModel.init(id: item.id, user: item.user, state: item.state, tokenGet: item.tokenGet, tokenGetSymbol: item.tokenGetSymbol, amountGet: item.amountGet, tokenGive: item.tokenGive, tokenGiveSymbol: item.tokenGiveSymbol, amountGive: item.amountGive, version: item.version, date: item.date, update_date: item.update_date, update_version: item.update_version, amountFilled: item.amountFilled, tokenGivePrice: item.tokenGivePrice, tokenGetPrice: item.tokenGetPrice)
-                })
-                headerView?.rate = tempData.price ?? 0
-                self.detailView.tableView.reloadData()
-            }
+//            if let tempData = jsonData.value(forKey: "data") as? MarketResponseMainModel {
+//                #warning("无奈之举，望谅解")
+//                let headerView = self.detailView.tableView.headerView(forSection: 0) as? MarketExchangeHeaderView
+//                self.tableViewManager.buyOrders = tempData.orders?.filter({
+//                    $0.user?.contains(self.wallet?.tokenAddress ?? "") == true
+//                }).sorted(by: {
+//                    ($0.date ?? 0) > ($1.date ?? 0)
+//                }).map({ (item) in
+//                    MarketOrderDataModel.init(id: item.id, user: item.user, state: item.state, tokenGet: item.tokenGet, tokenGetSymbol: item.tokenGetSymbol, amountGet: item.amountGet, tokenGive: item.tokenGive, tokenGiveSymbol: item.tokenGiveSymbol, amountGive: item.amountGive, version: item.version, date: item.date, update_date: item.update_date, update_version: item.update_version, amountFilled: item.amountFilled, tokenGivePrice: item.tokenGivePrice, tokenGetPrice: item.tokenGetPrice)
+//                })
+//                #warning("无奈之举，望谅解")
+//                self.tableViewManager.sellOrders = tempData.depths?.buys?.filter({
+//                    $0.user?.contains(self.wallet?.tokenAddress ?? "") == false
+//                }).sorted(by: {
+//                    ($0.date ?? 0) < ($1.date ?? 0)
+//                }).map({ (item) in
+//                    MarketOrderDataModel.init(id: item.id, user: item.user, state: item.state, tokenGet: item.tokenGet, tokenGetSymbol: item.tokenGetSymbol, amountGet: item.amountGet, tokenGive: item.tokenGive, tokenGiveSymbol: item.tokenGiveSymbol, amountGive: item.amountGive, version: item.version, date: item.date, update_date: item.update_date, update_version: item.update_version, amountFilled: item.amountFilled, tokenGivePrice: item.tokenGivePrice, tokenGetPrice: item.tokenGetPrice)
+//                })
+//                headerView?.rate = tempData.price ?? 0
+//                self.detailView.tableView.reloadData()
+//            }
         } else if type == "OrderChange" {
             // 订单状态变更
             self.detailView.toastView?.hide(tag: 99)
@@ -559,9 +559,9 @@ extension MarketViewController {
             // 兑换挂单成功
             self.detailView.toastView?.hide(tag: 99)
             self.detailView.makeToast(localLanguage(keyString: "wallet_market_alert_make_order_success_title"), position: .center)
-            let headerView = self.detailView.tableView.headerView(forSection: 0) as! MarketExchangeHeaderView
-            headerView.leftAmountTextField.text = ""
-            headerView.rightAmountTextField.text = ""
+//            let headerView = self.detailView.tableView.headerView(forSection: 0) as! MarketExchangeHeaderView
+//            headerView.leftAmountTextField.text = ""
+//            headerView.rightAmountTextField.text = ""
         } else if type == "UpdateViolasBalance" {
             // 获取余额
 //            self.detailView.toastView?.hide()
