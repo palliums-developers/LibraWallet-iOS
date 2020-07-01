@@ -32,6 +32,9 @@ class AddWalletViewController: BaseViewController {
     deinit {
         print("AddWalletViewController销毁了")
     }
+    override func back() {
+        self.dismiss(animated: true, completion: nil)
+    }
     /// 子View
     private lazy var detailView : AddWalletView = {
         let view = AddWalletView.init()
