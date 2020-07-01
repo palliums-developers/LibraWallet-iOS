@@ -116,17 +116,27 @@ class WalletTransactionsTableViewCell: UITableViewCell {
                 return
             }
             dateLabel.text = timestampToDateString(timestamp: model.blockTime ?? 0, dateFormat: "yyyy-MM-dd HH:mm:ss")
-            amountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.transaction_value ?? 0)),
-                                                      scale: 8,
-                                                      unit: 100000000)
+            let amount = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.transaction_value ?? 0)),
+                                                scale: 8,
+                                                unit: 100000000)
+            var color = "13B788"
+            if (model.confirmations ?? 0) >= 6 {
+                // 成功收款
+                color = "13B788"
+            } else {
+                // 转账中
+                color = "FB8F0B"
+            }
             if model.transaction_type == 0 {
                 // 转账
-                amountLabel.textColor = UIColor.init(hex: "E54040")
+                amountLabel.text = "-" + amount
+                amountLabel.textColor = UIColor.init(hex: color)
                 transactionTypeImageView.image = UIImage.init(named: "transfer_sign")
                 addressLabel.text = model.vin?.first?.addresses?.first
             } else {
                 // 收款
-                amountLabel.textColor = UIColor.init(hex: "13B788")
+                amountLabel.text = "+" + amount
+                amountLabel.textColor = UIColor.init(hex: color)
                 transactionTypeImageView.image = UIImage.init(named: "transfer_sign")
                 addressLabel.text = model.vout?.first?.addresses?.first
             }
@@ -138,13 +148,20 @@ class WalletTransactionsTableViewCell: UITableViewCell {
                 return
             }
             dateLabel.text = timestampToDateString(timestamp: model.expiration_time ?? 0, dateFormat: "yyyy-MM-dd HH:mm:ss")
-            amountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.amount ?? 0)),
-                                                      scale: 4,
-                                                      unit: 1000000)
+            let amount = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.amount ?? 0)),
+                                                scale: 4,
+                                                unit: 1000000)
+            var amountColor = ""
+            if violasModel?.status == 4001 {
+                amountColor = "13B788"
+            } else {
+                amountColor = "E54040"
+            }
             switch model.type {
             case 0:
                 //ADD_CURRENCY_TO_ACCOUNT
                 print("0")
+                amountLabel.text = amount
                 amountLabel.textColor = UIColor.init(hex: "FB8F0B")
                 transactionTypeImageView.image = UIImage.init(named: "publish_sign")
                 addressLabel.text = model.sender
@@ -181,18 +198,21 @@ class WalletTransactionsTableViewCell: UITableViewCell {
             case 11:
                 // MINT_LBR
                 print("11")
+                amountLabel.text = "+" + amount
                 amountLabel.textColor = UIColor.init(hex: "FB8F0B")
                 transactionTypeImageView.image = UIImage.init(named: "mint_sign")
                 addressLabel.text = model.sender
             case 12:
                 //MINT_LBR_TO_ADDRESS
                 print("12")
+                amountLabel.text = "+" + amount
                 amountLabel.textColor = UIColor.init(hex: "FB8F0B")
                 transactionTypeImageView.image = UIImage.init(named: "mint_sign")
                 addressLabel.text = model.sender
             case 13:
                 //MINT
                 print("13")
+                amountLabel.text = "+" + amount
                 amountLabel.textColor = UIColor.init(hex: "FB8F0B")
                 transactionTypeImageView.image = UIImage.init(named: "mint_sign")
                 addressLabel.text = model.sender
@@ -204,12 +224,14 @@ class WalletTransactionsTableViewCell: UITableViewCell {
                 print("15")
                 if model.transaction_type == 0 {
                     // 转账
-                    amountLabel.textColor = UIColor.init(hex: "E54040")
+                    amountLabel.text = "-" + amount
+                    amountLabel.textColor = UIColor.init(hex: amountColor)
                     transactionTypeImageView.image = UIImage.init(named: "transfer_sign")
                     addressLabel.text = model.receiver
                 } else {
                     // 收款
-                    amountLabel.textColor = UIColor.init(hex: "13B788")
+                    amountLabel.text = "+" + amount
+                    amountLabel.textColor = UIColor.init(hex: amountColor)
                     transactionTypeImageView.image = UIImage.init(named: "receive_sign")
                     addressLabel.text = model.sender
                 }
@@ -290,13 +312,20 @@ class WalletTransactionsTableViewCell: UITableViewCell {
                 return
             }
             dateLabel.text = timestampToDateString(timestamp: model.expiration_time ?? 0, dateFormat: "yyyy-MM-dd HH:mm:ss")
-            amountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.amount ?? 0)),
+            let amount = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.amount ?? 0)),
                                                       scale: 4,
                                                       unit: 1000000)
+            var amountColor = ""
+            if violasModel?.status == 4001 {
+                amountColor = "13B788"
+            } else {
+                amountColor = "E54040"
+            }
             switch model.type {
             case 0:
                 //ADD_CURRENCY_TO_ACCOUNT
                 print("0")
+                amountLabel.text = amount
                 amountLabel.textColor = UIColor.init(hex: "FB8F0B")
                 transactionTypeImageView.image = UIImage.init(named: "publish_sign")
                 addressLabel.text = model.sender
@@ -333,18 +362,21 @@ class WalletTransactionsTableViewCell: UITableViewCell {
             case 11:
                 // MINT_LBR
                 print("11")
+                amountLabel.text = "+" + amount
                 amountLabel.textColor = UIColor.init(hex: "FB8F0B")
                 transactionTypeImageView.image = UIImage.init(named: "mint_sign")
                 addressLabel.text = model.sender
             case 12:
                 //MINT_LBR_TO_ADDRESS
                 print("12")
+                amountLabel.text = "+" + amount
                 amountLabel.textColor = UIColor.init(hex: "FB8F0B")
                 transactionTypeImageView.image = UIImage.init(named: "mint_sign")
                 addressLabel.text = model.sender
             case 13:
                 //MINT
                 print("13")
+                amountLabel.text = "+" + amount
                 amountLabel.textColor = UIColor.init(hex: "FB8F0B")
                 transactionTypeImageView.image = UIImage.init(named: "mint_sign")
                 addressLabel.text = model.sender
@@ -356,12 +388,14 @@ class WalletTransactionsTableViewCell: UITableViewCell {
                 print("15")
                 if model.transaction_type == 0 {
                     // 转账
-                    amountLabel.textColor = UIColor.init(hex: "E54040")
+                    amountLabel.text = "-" + amount
+                    amountLabel.textColor = UIColor.init(hex: amountColor)
                     transactionTypeImageView.image = UIImage.init(named: "transfer_sign")
                     addressLabel.text = model.receiver
                 } else {
                     // 收款
-                    amountLabel.textColor = UIColor.init(hex: "13B788")
+                    amountLabel.text = "+" + amount
+                    amountLabel.textColor = UIColor.init(hex: amountColor)
                     transactionTypeImageView.image = UIImage.init(named: "receive_sign")
                     addressLabel.text = model.sender
                 }

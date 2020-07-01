@@ -528,7 +528,6 @@ class TransactionDetailView: UIView {
                 transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_uncheck_title")
                 transactionStateImageView.image = UIImage.init(named: "transaction_detail_uncheck")
             }
-
         }
     }
     
