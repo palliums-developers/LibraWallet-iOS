@@ -17,8 +17,8 @@ class ScanSendRawTransactionModel: NSObject {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(ViolaSendTransactionMainModel.self)
-                    if json.code == 2000 {
+                    let json = try response.map(LibraTransferMainModel.self)
+                    if json.result == nil {
                        DispatchQueue.main.async(execute: {
                            let data = setKVOData(type: "SendViolasTransaction")
                            self?.setValue(data, forKey: "dataDic")
@@ -26,7 +26,7 @@ class ScanSendRawTransactionModel: NSObject {
                     } else {
                         print("SendViolasTransaction_状态异常")
                         DispatchQueue.main.async(execute: {
-                            if let message = json.message, message.isEmpty == false {
+                            if let message = json.error?.message, message.isEmpty == false {
                                 let data = setKVOData(error: LibraWalletError.error(message), type: "SendViolasTransaction")
                                 self?.setValue(data, forKey: "dataDic")
                             } else {

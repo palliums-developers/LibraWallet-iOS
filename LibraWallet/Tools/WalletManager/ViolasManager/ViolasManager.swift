@@ -190,7 +190,7 @@ extension ViolasManager {
                                                       argruments: [argument0, argument1, argument2, argument3])
             let rawTransaction = ViolasRawTransaction.init(senderAddres: sendAddress,
                                                            sequenceNumber: sequenceNumber,
-                                                           maxGasAmount: 400000,
+                                                           maxGasAmount: 1000000,
                                                            gasUnitPrice: 0,
                                                            expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
                                                            payLoad: script.serialize(),
@@ -235,7 +235,7 @@ extension ViolasManager {
             
             let rawTransaction = ViolasRawTransaction.init(senderAddres: sendAddress,
                                                 sequenceNumber: sequenceNumber,
-                                                maxGasAmount: 400000,
+                                                maxGasAmount: 1000000,
                                                 gasUnitPrice: 0,
                                                 expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
                                                 payLoad: script.serialize(),
@@ -276,7 +276,7 @@ extension ViolasManager {
                                                       argruments: [argument0, argument1, argument2, argument3])
             let rawTransaction = ViolasRawTransaction.init(senderAddres: sendAddress,
                                                            sequenceNumber: sequenceNumber,
-                                                           maxGasAmount: 400000,
+                                                           maxGasAmount: 1000000,
                                                            gasUnitPrice: 0,
                                                            expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
                                                            payLoad: script.serialize(),
@@ -311,7 +311,7 @@ extension ViolasManager {
 
             let rawTransaction = ViolasRawTransaction.init(senderAddres: sendAddress,
                                                            sequenceNumber: sequenceNumber,
-                                                           maxGasAmount: 400000,
+                                                           maxGasAmount: 1000000,
                                                            gasUnitPrice: 0,
                                                            expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
                                                            payLoad: script.serialize(),
@@ -341,7 +341,7 @@ extension ViolasManager {
                                                       argruments: [argument0, argument1, argument2, argument3])
             let rawTransaction = ViolasRawTransaction.init(senderAddres: sendAddress,
                                                            sequenceNumber: sequenceNumber,
-                                                           maxGasAmount: 600000,
+                                                           maxGasAmount: 1000000,
                                                            gasUnitPrice: 0,
                                                            expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
                                                            payLoad: script.serialize(),
@@ -386,7 +386,7 @@ extension ViolasManager {
                                                       argruments: tempArguments)
             let rawTransaction = ViolasRawTransaction.init(senderAddres: model.from ?? "",
                                                            sequenceNumber: sequenceNumber,
-                                                           maxGasAmount: model.maxGasAmount ?? 400000,
+                                                           maxGasAmount: model.maxGasAmount ?? 1000000,
                                                            gasUnitPrice: model.gasUnitPrice ?? 0,
                                                            expirationTime: Int(model.expirationTime ?? (Int64(Date().timeIntervalSince1970) + 3600)),
                                                            payLoad: script.serialize(),
@@ -471,7 +471,7 @@ extension ViolasManager {
         let lastData = data.suffix(data.count - count)
         return (tempData, lastData)
     }
-    private static func readTypeTags(data: Data, typeTagCount: Int) -> (Data, String) {
+    static func readTypeTags(data: Data, typeTagCount: Int) -> (Data, String) {
         var resultLastData = data
         var tempModule = ""
         for _ in 0..<typeTagCount {
@@ -490,8 +490,10 @@ extension ViolasManager {
             case "05":
                 print("05")
             case "06":
-                //Struct
                 print("06")
+            case "07":
+                //Struct
+                print("07")
                 let (addressData, lastData1) = readData(data: lastData0, count: 16)
                 print("address = \(addressData.toHexString())")
                 let (moduleCount, lastData2) = getCount(data: lastData1)

@@ -18,11 +18,11 @@ class ScanSendRawTransactionViewController: BaseViewController {
         super.viewWillLayoutSubviews()
         detailView.snp.makeConstraints { (make) in
             if #available(iOS 11.0, *) {
-                make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
+                make.top.equalTo(self.view.safeAreaLayoutGuide)
             } else {
-                make.top.bottom.equalTo(self.view)
+                make.top.equalTo(self.view)
             }
-            make.left.right.equalTo(self.view)
+            make.left.right.bottom.equalTo(self.view)
         }
     }
     override func viewDidDisappear(_ animated: Bool) {
@@ -93,7 +93,7 @@ extension ScanSendRawTransactionViewController {
             }
             if type == "SendViolasTransaction" {
                 self?.detailView.toastView?.hide(tag: 99)
-                self?.view.makeToast(localLanguage(keyString: "wallet_scan_login_alert_success_title"), duration: toastDuration, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
+                self?.view.makeToast(localLanguage(keyString: "wallet_transfer_success_alert"), duration: toastDuration, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
                     self?.needReject = false
                     self?.dismiss(animated: true, completion: nil)
                 })
@@ -119,5 +119,6 @@ extension ScanSendRawTransactionViewController: ScanSendRawTransactionViewDelega
         } else {
             #warning("报错待处理")
         }
+        self.needReject = false
     }
 }

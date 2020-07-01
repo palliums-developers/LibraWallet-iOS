@@ -11,8 +11,6 @@ import Localize_Swift
 class HomeView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
-//        self.backgroundColor = UIColor.init(hex: "F7F7F9")
-//        addSubview(walletTitleLabel)
         addSubview(topBackgroundImageView)
         addSubview(headerView)
         addSubview(tableView)

@@ -366,5 +366,11 @@ extension libraWalletTool {
                                                           context: nil)
         return ceil(rect.height)
     }
-    
+    static func ga_widthForComment(content: String, fontSize: CGFloat, height: CGFloat) -> CGFloat {
+        let rect = NSString(string: content).boundingRect(with: CGSize(width: CGFloat(MAXFLOAT), height: height),
+                                                          options: .usesLineFragmentOrigin,
+                                                          attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: fontSize)],
+                                                          context: nil)
+        return ceil(rect.width)
+    }
 }

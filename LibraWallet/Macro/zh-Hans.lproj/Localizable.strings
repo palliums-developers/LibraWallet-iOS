@@ -212,14 +212,18 @@ wallet_wallet_connect_logout_title = "网页ViolasPay钱包已登录";
 wallet_wallet_connect_exchange_title = "网页ViolasPay钱包兑换确认";
 wallet_wallet_connect_sign_title = "网页ViolasPay钱包请求签名";
 wallet_wallet_connect_transfer_title = "网页ViolasPay钱包转账";
+wallet_wallet_connect_publish_title = "网页ViolasPay注册币种";
 wallet_wallet_connect_transfer_receive_address_title = "转账地址";
 wallet_wallet_connect_transfer_amount_title = "金额";
+wallet_wallet_connect_publish_module_title = "注册币种";
+wallet_wallet_connect_publish_address_title = "注册地址";
 wallet_wallet_connect_login_warnning_content = "网页ViolasPay正在申请访问你的钱包地址,你确认将钱包地址公开给此网站吗?";
 wallet_wallet_connect_login_warnning_describe = "*其使用行为同样适用《用户协议》和《隐私协议》";
 wallet_wallet_connect_transfer_confirm_button_title = "确认转账";
 wallet_wallet_connect_login_confirm_button_title = "确认登录";
 wallet_wallet_connect_exchange_confirm_button_title = "确认兑换";
 wallet_wallet_connect_sign_button_title = "确认签名";
+wallet_wallet_connect_publish_confirm_button_title = "确认注册";
 wallet_scan_login_cancel_button_title = "取消";
 wallet_wallet_connect_logout_button_title = "退出网页钱包";
 
@@ -342,6 +346,7 @@ wallet_scan_login_alert_success_title = "登录成功";
 // WalletConnect
 wallet_connect_connect_time_invalid_title = "连接失败，请稍后重试";
 wallet_connect_disconnect_success_title = "退出成功";
+wallet_connect_publish_success_title = "注册成功";
 
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "安全提醒";

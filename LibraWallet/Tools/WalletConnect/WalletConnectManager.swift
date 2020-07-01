@@ -217,44 +217,23 @@ class SendTransactionHandler: RequestHandler {
             let model = try request.parameter(of: WCRawTransaction.self, at: 0)
             DispatchQueue.main.async {
                 if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-                    let vc = ScanSendTransactionViewController()
-                    vc.model = model
-                    vc.reject = {
-                        WalletConnectManager.shared.walletConnectServer.send(.reject(request))
+                    if model.payload?.code == "a11ceb0b010006010002030206040802050a0707111a082b100000000100010101000201060c000109000c4c696272614163636f756e740c6164645f63757272656e63790000000000000000000000000000000101010001030b00380002" {
+                        let vc = ScanPublishViewController()
+                        vc.model = model
+                        vc.reject = {
+                            WalletConnectManager.shared.walletConnectServer.send(.reject(request))
+                        }
+                        appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
+                    } else {
+                        let vc = ScanSendTransactionViewController()
+                         vc.model = model
+                         vc.reject = {
+                             WalletConnectManager.shared.walletConnectServer.send(.reject(request))
+                         }
+                         appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
                     }
-                    appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
                 }
             }
-        } catch {
-            WalletConnectManager.shared.walletConnectServer.send(.invalid(request))
-            return
-        }
-    }
-}
-class GetAccountHandler: RequestHandler {
-    func canHandle(request: Request) -> Bool {
-        return request.method == "_get_accounts"
-    }
-    func handle(request: Request) {
-        do {
-            struct tempData: Codable {
-                var walletType: Int64?
-                var coinType: String?
-                var name: String?
-                var address: String?
-            }
-            let localWallets = try DataBaseManager.DBManager.getTokens()
-            var tempWallets = [tempData]()
-            for wallets in localWallets {
-                tempWallets.append(tempData.init(walletType: wallets.tokenType.value,
-                                                 coinType: wallets.tokenType.description.lowercased(),
-                                                 name: wallets.tokenName,
-                                                 address: wallets.tokenAddress))
-            }
-            let resultData = try? JSONEncoder().encode(tempWallets)
-            let strJson = String.init(data: resultData!, encoding: .utf8)
-            WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: strJson, id: request.id!))//
-
         } catch {
             WalletConnectManager.shared.walletConnectServer.send(.invalid(request))
             return
@@ -286,6 +265,33 @@ class SignTransactionHandler: RequestHandler {
                     appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
                 }
             }
+        } catch {
+            WalletConnectManager.shared.walletConnectServer.send(.invalid(request))
+            return
+        }
+    }
+}
+class GetAccountHandler: RequestHandler {
+    func canHandle(request: Request) -> Bool {
+        return request.method == "_get_accounts"
+    }
+    func handle(request: Request) {
+        do {
+            struct tempData: Codable {
+                var walletType: Int64?
+                var coinType: String?
+                var name: String?
+                var address: String?
+            }
+            let localWallets = try DataBaseManager.DBManager.getTokens()
+            var tempWallets = [tempData]()
+            for wallets in localWallets {
+                tempWallets.append(tempData.init(walletType: 0,
+                                                 coinType: wallets.tokenType.description.lowercased(),
+                                                 name: wallets.tokenName,
+                                                 address: wallets.tokenAddress))
+            }
+            WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: tempWallets, id: request.id!))//
         } catch {
             WalletConnectManager.shared.walletConnectServer.send(.invalid(request))
             return

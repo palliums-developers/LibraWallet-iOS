@@ -38,18 +38,18 @@ class ScanSendTransactionModel: NSObject {
     }
     private func getViolasSequenceNumber(sendAddress: String, semaphore: DispatchSemaphore) {
         semaphore.wait()
-        let request = mainProvide.request(.GetViolasAccountSequenceNumber(sendAddress)) {[weak self](result) in
+        let request = mainProvide.request(.GetViolasAccountInfo(sendAddress)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(ViolaSequenceNumberMainModel.self)
-                    if json.code == 2000 {
-                       self?.sequenceNumber = json.data
-                       semaphore.signal()
+                    let json = try response.map(BalanceViolasMainModel.self)
+                    if json.result != nil {
+                        self?.sequenceNumber = Int(json.result?.sequence_number ?? 0)
+                        semaphore.signal()
                     } else {
                         print("GetViolasSequenceNumber_状态异常")
                         DispatchQueue.main.async(execute: {
-                            if let message = json.message, message.isEmpty == false {
+                            if let message = json.error?.message, message.isEmpty == false {
                                 let data = setKVOData(error: LibraWalletError.error(message), type: "GetViolasSequenceNumber")
                                 self?.setValue(data, forKey: "dataDic")
                             } else {
@@ -84,16 +84,16 @@ class ScanSendTransactionModel: NSObject {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(ViolaSendTransactionMainModel.self)
-                    if json.code == 2000 {
-                       DispatchQueue.main.async(execute: {
-                           let data = setKVOData(type: "SendViolasTransaction")
-                           self?.setValue(data, forKey: "dataDic")
-                       })
+                    let json = try response.map(LibraTransferMainModel.self)
+                    if json.result == nil {
+                        DispatchQueue.main.async(execute: {
+                            let data = setKVOData(type: "SendViolasTransaction")
+                            self?.setValue(data, forKey: "dataDic")
+                        })
                     } else {
                         print("SendViolasTransaction_状态异常")
                         DispatchQueue.main.async(execute: {
-                            if let message = json.message, message.isEmpty == false {
+                            if let message = json.error?.message, message.isEmpty == false {
                                 let data = setKVOData(error: LibraWalletError.error(message), type: "SendViolasTransaction")
                                 self?.setValue(data, forKey: "dataDic")
                             } else {

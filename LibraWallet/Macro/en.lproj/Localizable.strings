@@ -210,14 +210,18 @@ wallet_wallet_connect_logout_title = "Web ViolasPay Logged";
 wallet_wallet_connect_exchange_title = "Web ViolasPay Wallet Exchange";
 wallet_wallet_connect_sign_title = "Web ViolasPay Wallet Require Signature";
 wallet_wallet_connect_transfer_title = "Web ViolasPay Wallet Transfer";
+wallet_wallet_connect_publish_title = "Web ViolasPay Publish Token";
 wallet_wallet_connect_transfer_receive_address_title = "Receive Address";
 wallet_wallet_connect_transfer_amount_title = "Amount";
+wallet_wallet_connect_publish_module_title = "Token";
+wallet_wallet_connect_publish_address_title = "Address";
 wallet_wallet_connect_login_warnning_content = "Web ViolasPay wallet apply to access your wallet address, Are you sure to disclose the wallet address to this website?";
 wallet_wallet_connect_login_warnning_describe = "*The usage behavior also applies to《User Agreement》and《Private Agreement》";
 wallet_wallet_connect_transfer_confirm_button_title = "Transfer";
 wallet_wallet_connect_login_confirm_button_title = "Sign In";
 wallet_wallet_connect_exchange_confirm_button_title = "Exchange";
 wallet_wallet_connect_sign_button_title = "Confirm Signature";
+wallet_wallet_connect_publish_confirm_button_title = "Confirm Publish";
 wallet_scan_login_cancel_button_title = "Cancel";
 wallet_wallet_connect_logout_button_title = "Logout Web ViolasPay";
 
@@ -340,6 +344,7 @@ wallet_scan_login_alert_success_title = "Login Successful";
 // WalletConnect
 wallet_connect_connect_time_invalid_title = "Connection failed, please try again later";
 wallet_connect_disconnect_success_title = "Logout Successful";
+wallet_connect_publish_success_title = "Publish Successful";
 
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "Safety Warning";
