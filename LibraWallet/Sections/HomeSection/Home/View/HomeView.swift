@@ -81,11 +81,9 @@ class HomeView: UIView {
         tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
         tableView.estimatedRowHeight = 0;
         tableView.estimatedSectionHeaderHeight = 0;
-        if #available(iOS 11.0, *) {
-            tableView.contentInsetAdjustmentBehavior = UIScrollView.ContentInsetAdjustmentBehavior.never
-        } else {
-            // Fallback on earlier versions
-        }
+        tableView.estimatedSectionFooterHeight = 0;
+        tableView.contentInsetAdjustmentBehavior = .never
+
         tableView.backgroundColor = UIColor.white
         tableView.register(HomeTableViewCell.classForCoder(), forCellReuseIdentifier: "CellNormal")
         tableView.register(HomeTableViewHeader.classForCoder(), forHeaderFooterViewReuseIdentifier: "Header")

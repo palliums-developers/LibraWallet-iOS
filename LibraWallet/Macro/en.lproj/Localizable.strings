@@ -32,7 +32,7 @@ wallet_receive_copy_button_title = "Copy Address";
 
 /************* 转账 *******************/
 wallet_transfer_amount_title = "Amount";
-wallet_transfer_balance_title = "Balance";
+wallet_transfer_balance_title = "Balance: ";
 wallet_transfer_amount_textfield_placeholder = "Enter Amount";
 wallet_transfer_address_title = "Receiving Address";
 wallet_transfer_address_contact_title = "Address Book";

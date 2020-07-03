@@ -149,7 +149,7 @@ class WalletTransactionsTableViewCell: UITableViewCell {
             }
             dateLabel.text = timestampToDateString(timestamp: model.expiration_time ?? 0, dateFormat: "yyyy-MM-dd HH:mm:ss")
             let amount = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.amount ?? 0)),
-                                                scale: 4,
+                                                scale: 6,
                                                 unit: 1000000)
             var amountColor = ""
             if violasModel?.status == 4001 {
@@ -313,7 +313,7 @@ class WalletTransactionsTableViewCell: UITableViewCell {
             }
             dateLabel.text = timestampToDateString(timestamp: model.expiration_time ?? 0, dateFormat: "yyyy-MM-dd HH:mm:ss")
             let amount = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.amount ?? 0)),
-                                                      scale: 4,
+                                                      scale: 6,
                                                       unit: 1000000)
             var amountColor = ""
             if violasModel?.status == 4001 {

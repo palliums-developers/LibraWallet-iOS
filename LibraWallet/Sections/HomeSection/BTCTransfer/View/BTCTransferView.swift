@@ -367,7 +367,8 @@ class BTCTransferView: UIView {
             guard let model = wallet else {
                 return
             }
-            let balance = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.tokenBalance ?? 0)),
+            amountTitleLabel.text = "BTC"
+            let balance = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.tokenBalance)),
                                                  scale: 8,
                                                  unit: 100000000)
             walletBalanceLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + balance + " BTC"

@@ -83,7 +83,6 @@ struct BalanceViolasMainModel: Codable {
     /// 数据体
     var result: BalanceViolasModel?
     var error: LibraTransferErrorModel?
-    
 }
 struct TrezorBTCBalanceMainModel: Codable {
     ///
@@ -155,30 +154,29 @@ class HomeModel: NSObject {
                 guard btcToken.isEmpty == false else {
                     return
                 }
+                group.enter()
                 // 更新BTC价格
-                self.getBTCPrice(address: btcToken.first!.tokenAddress)
+                self.getBTCPrice(address: btcToken.first!.tokenAddress, group: group)
             })
             quene.async(group: group, qos: .default, flags: [], execute: {
                 guard violasToken.isEmpty == false else {
                     return
                 }
+                group.enter()
                 // 更新Violas价格
-                self.getViolasPrice(address: violasToken.first!.tokenAddress)
+                self.getViolasPrice(address: violasToken.first!.tokenAddress, group: group)
             })
             quene.async(group: group, qos: .default, flags: [], execute: {
                 guard libraToken.isEmpty == false else {
                     return
                 }
+                group.enter()
                 // 更新Libra价格
-                self.getLibraPrice(address: libraToken.first!.tokenAddress)
+                self.getLibraPrice(address: libraToken.first!.tokenAddress, group: group)
             })
             group.notify(queue: quene) {
                 print("回到该队列中执行")
                 DispatchQueue.main.async(execute: {
-
-//                    let tempResult = self.rebuiltData(walletTokenEnable: state, marketTokens: marketTokens)
-//                    let finalResult = self.dealModelWithSelect(walletID: walletID, models: tempResult)
-                    
                     let data = setKVOData(type: "GetTotalPrice", data: "GetTotalPrice")
                     self.setValue(data, forKey: "dataDic")
                 })
@@ -287,7 +285,7 @@ class HomeModel: NSObject {
         }
         self.requests.append(request)
     }
-    func getBTCPrice(address: String) {
+    func getBTCPrice(address: String, group: DispatchGroup) {
         let request = mainProvide.request(.GetBTCPrice) {[weak self](result) in
             switch  result {
             case let .success(response):
@@ -325,10 +323,11 @@ class HomeModel: NSObject {
                 let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "GetBTCPrice")
                 self?.setValue(data, forKey: "dataDic")
             }
+            group.leave()
         }
         self.requests.append(request)
     }
-    func getViolasPrice(address: String) {
+    func getViolasPrice(address: String, group: DispatchGroup) {
         let request = mainProvide.request(.GetViolasPrice(address)) {[weak self](result) in
             switch  result {
             case let .success(response):
@@ -366,10 +365,11 @@ class HomeModel: NSObject {
                 let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "GetViolasPrice")
                 self?.setValue(data, forKey: "dataDic")
             }
+            group.leave()
         }
         self.requests.append(request)
     }
-    func getLibraPrice(address: String) {
+    func getLibraPrice(address: String, group: DispatchGroup) {
         let request = mainProvide.request(.GetLibraPrice(address)) {[weak self](result) in
             switch  result {
             case let .success(response):
@@ -407,6 +407,7 @@ class HomeModel: NSObject {
                 let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "UpdateViolasBalance")
                 self?.setValue(data, forKey: "dataDic")
             }
+            group.leave()
         }
         self.requests.append(request)
     }

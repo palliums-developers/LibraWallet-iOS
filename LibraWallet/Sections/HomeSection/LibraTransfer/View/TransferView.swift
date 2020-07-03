@@ -16,14 +16,8 @@ class TransferView: UIView {
     weak var delegate: TransferViewDelegate?
     override init(frame: CGRect) {
         super.init(frame: frame)
-//        self.backgroundColor = UIColor.init(hex: "F7F7F9")
         addSubview(scrollView)
         scrollView.addSubview(walletWhiteBackgroundView)
-//        walletWhiteBackgroundView.addSubview(walletIconImageView)
-
-//        walletWhiteBackgroundView.addSubview(addressScanButton)
-////        walletWhiteBackgroundView.addSubview(addressMiddleSpaceLabel)
-//        walletWhiteBackgroundView.addSubview(addressSpaceLabel)
         
         walletWhiteBackgroundView.addSubview(amountTitleLabel)
         walletWhiteBackgroundView.addSubview(amountTextField)
@@ -33,22 +27,13 @@ class TransferView: UIView {
         walletWhiteBackgroundView.addSubview(addressTextField)
         walletWhiteBackgroundView.addSubview(addressContactButton)
 
-
-//        walletWhiteBackgroundView.addSubview(coinUnitLabel)
-//        walletWhiteBackgroundView.addSubview(amountUnitChangeButton)
-        
-//        walletWhiteBackgroundView.addSubview(selectTotalCoinButton)
-//
         walletWhiteBackgroundView.addSubview(transferFeeTitleLabel)
 
         walletWhiteBackgroundView.addSubview(transferSpeedLeftTitleLabel)
         walletWhiteBackgroundView.addSubview(transferSpeedRightTitleLabel)
         walletWhiteBackgroundView.addSubview(transferFeeLabel)
         walletWhiteBackgroundView.addSubview(transferFeeSlider)
-//        walletWhiteBackgroundView.addSubview(transactionFeeLabel)
-//        walletWhiteBackgroundView.addSubview(transactionFeeUnitLabel)
-//        walletWhiteBackgroundView.addSubview(transactionFeeSpaceLabel)
-//
+
         walletWhiteBackgroundView.addSubview(confirmButton)
     }
     required init?(coder aDecoder: NSCoder) {
@@ -98,19 +83,6 @@ class TransferView: UIView {
             make.right.equalTo(walletWhiteBackgroundView.snp.right).offset(-19)
             make.size.equalTo(CGSize.init(width: 20, height: 20))
         }
-//        addressSpaceLabel.snp.makeConstraints { (make) in
-//            make.top.equalTo(addressContactButton.snp.bottom).offset(10)
-//            make.left.equalTo(walletWhiteBackgroundView).offset(21)
-//            make.right.equalTo(walletWhiteBackgroundView.snp.right).offset(-19)
-//            make.height.equalTo(1)
-//        }
-//
-//        amountSpaceLabel.snp.makeConstraints { (make) in
-//            make.top.equalTo(addressSpaceLabel.snp.bottom).offset(83)
-//            make.left.equalTo(walletWhiteBackgroundView).offset(21)
-//            make.right.equalTo(walletWhiteBackgroundView.snp.right).offset(-19)
-//            make.height.equalTo(1)
-//        }
         transferFeeTitleLabel.snp.makeConstraints { (make) in
             make.top.equalTo(addressTextField.snp.bottom).offset(27)
             make.left.equalTo(walletWhiteBackgroundView).offset(15)
@@ -132,28 +104,6 @@ class TransferView: UIView {
             make.left.equalTo(walletWhiteBackgroundView).offset(15)
             make.right.equalTo(walletWhiteBackgroundView).offset(-15)
         }
-//
-//        transactionFeeTitleLabel.snp.makeConstraints { (make) in
-//            make.top.equalTo(amountSpaceLabel.snp.bottom).offset(28)
-//            make.left.equalTo(walletWhiteBackgroundView).offset(21)
-//        }
-//        transactionFeeLabel.snp.makeConstraints { (make) in
-//            make.bottom.equalTo(transactionFeeSpaceLabel.snp.top)
-//            make.left.equalTo(walletWhiteBackgroundView).offset(21)
-//            make.right.equalTo(transactionFeeUnitLabel.snp.left)
-//            make.height.equalTo(40)
-//        }
-//        transactionFeeUnitLabel.snp.makeConstraints { (make) in
-//            make.centerY.equalTo(transactionFeeLabel)
-//            make.right.equalTo(walletWhiteBackgroundView).offset(-21)
-//            make.width.equalTo(50)
-//        }
-//        transactionFeeSpaceLabel.snp.makeConstraints { (make) in
-//            make.top.equalTo(amountSpaceLabel.snp.bottom).offset(93)
-//            make.left.equalTo(walletWhiteBackgroundView).offset(21)
-//            make.right.equalTo(walletWhiteBackgroundView.snp.right).offset(-19)
-//            make.height.equalTo(1)
-//        }
         confirmButton.snp.makeConstraints { (make) in
             make.bottom.equalTo(walletWhiteBackgroundView.snp.bottom).offset(-51)
             make.left.equalTo(walletWhiteBackgroundView).offset(54)
@@ -186,7 +136,6 @@ class TransferView: UIView {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "3C3848")
         label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
-        label.text = localLanguage(keyString: "wallet_transfer_amount_title")
         return label
     }()
     lazy var amountTextField: WYDTextField = {
@@ -405,8 +354,9 @@ class TransferView: UIView {
             guard let model = wallet else {
                 return
             }
+            amountTitleLabel.text = wallet?.tokenName
             let balance = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.tokenBalance )),
-                                                 scale: 4,
+                                                 scale: 6,
                                                  unit: 1000000)
             walletBalanceLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + balance + " Libra"
         }
@@ -420,7 +370,7 @@ extension TransferView: UITextFieldDelegate {
        let textLength = content.count + string.count - range.length
        if content.contains(".") {
            let firstContent = content.split(separator: ".").first?.description ?? "0"
-           if (textLength - firstContent.count) < 6 {
+           if (textLength - firstContent.count) < 8 {
                return true
            } else {
                return false

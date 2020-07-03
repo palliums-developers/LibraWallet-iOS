@@ -78,7 +78,7 @@ class WalletMainViewHeaderView: UIView {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "999999")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: .regular)
-        label.text = localLanguage(keyString: "Violas")
+        label.text = "---"
         return label
     }()
     lazy var amountLabel: UILabel = {
@@ -127,11 +127,14 @@ class WalletMainViewHeaderView: UIView {
             var unit = 1000000
             switch model?.tokenType {
             case .BTC:
+                self.walletTypeLabel.text = "BTC"
                 self.walletIndicatorImageView.image = UIImage.init(named: "btc_icon")
                 unit = 100000000
             case .Libra:
+                self.walletTypeLabel.text = model?.tokenName
                 self.walletIndicatorImageView.image = UIImage.init(named: "libra_icon")
             case .Violas:
+                self.walletTypeLabel.text = model?.tokenName
                 self.walletIndicatorImageView.image = UIImage.init(named: "violas_icon")
             default:
                 self.walletIndicatorImageView.image = UIImage.init(named: "wallet_icon_default")

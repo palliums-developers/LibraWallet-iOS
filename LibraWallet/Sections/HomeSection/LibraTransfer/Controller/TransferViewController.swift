@@ -11,7 +11,7 @@ import UIKit
 class TransferViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = (self.wallet?.tokenType.description ?? "") + " " + localLanguage(keyString: "wallet_transfer_navigation_title")
+        self.title = (self.wallet?.tokenName ?? "") + " " + localLanguage(keyString: "wallet_transfer_navigation_title")
         
         self.view.addSubview(detailView)
         self.detailView.wallet = self.wallet
@@ -61,7 +61,7 @@ class TransferViewController: BaseViewController {
                 return
             }
             let amountContent = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: tempAmount),
-                                                       scale: 4,
+                                                       scale: 6,
                                                        unit: 1000000)
             self.detailView.amountTextField.text = "\(amountContent)"
         }
@@ -170,7 +170,6 @@ extension TransferViewController {
                     self?.navigationController?.popViewController(animated: true)
                 }
             }
-            
         })
     }
 }

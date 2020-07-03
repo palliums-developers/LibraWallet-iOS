@@ -16,7 +16,6 @@ class WalletMainViewController: BaseViewController {
         self.view.addSubview(segmentView)
         self.view.addSubview(listContainerView)
         self.view.addSubview(footerView)
-//        self.initKVO()
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -123,18 +122,14 @@ class WalletMainViewController: BaseViewController {
     var wallet: Token? {
         didSet {
             // 页面标题
-            self.title = wallet?.tokenType.description
+            if wallet?.tokenType == .BTC {
+                self.title = "BTC"
+            } else {
+                self.title = wallet?.tokenName
+            }
             self.headerView.model = wallet
         }
     }
-//    var vtokenModel: ViolasTokenModel? {
-//        didSet {
-//            self.detailView.headerView.assetLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (vtokenModel?.balance ?? 0)),
-//                                                                                          scale: 4,
-//                                                                                          unit: 1000000)
-//            self.detailView.headerView.assetUnitLabel.text = vtokenModel?.name
-//        }
-//    }
 }
 extension WalletMainViewController: WalletMainViewFooterViewDelegate {
     func walletTransfer() {
@@ -142,6 +137,9 @@ extension WalletMainViewController: WalletMainViewFooterViewDelegate {
             let vc = ViolasTransferViewController()
             vc.actionClosure = {
             //            self.dataModel.getLocalUserInfo()
+                self.segmentView.selectItemAt(index: 0)
+                self.listContainerView.didClickSelectedItem(at: 0)
+                self.totalTransactions.detailView.tableView.mj_header?.beginRefreshing()
             }
             vc.wallet = self.wallet
             vc.hidesBottomBarWhenPushed = true

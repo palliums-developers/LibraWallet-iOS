@@ -10,7 +10,7 @@ import UIKit
 class ViolasTransferViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = (self.wallet?.tokenType.description ?? "") + " " + localLanguage(keyString: "wallet_transfer_navigation_title")
+        self.title = (self.wallet?.tokenName ?? "") + " " + localLanguage(keyString: "wallet_transfer_navigation_title")
 
         self.view.addSubview(detailView)
 //        self.detailView.sendViolasTokenState = self.sendViolasTokenState
@@ -61,7 +61,7 @@ class ViolasTransferViewController: BaseViewController {
                 return
             }
             let amountContent = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: tempAmount),
-                                                       scale: 4,
+                                                       scale: 6,
                                                        unit: 1000000)
             self.detailView.amountTextField.text = "\(amountContent)"
         }

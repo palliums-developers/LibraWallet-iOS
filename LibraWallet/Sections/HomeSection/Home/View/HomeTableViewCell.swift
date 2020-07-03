@@ -105,6 +105,7 @@ class HomeTableViewCell: UITableViewCell {
         label.text = "≈$0.00"
         return label
     }()
+    var hideValue: Bool?
     //MARK: - 设置数据
     var model: Token? {
         didSet {
@@ -113,9 +114,9 @@ class HomeTableViewCell: UITableViewCell {
             if model?.tokenType == .BTC {
                 unit = 100000000
             }
-            coinAmountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model?.tokenBalance ?? 0)),
-                                                          scale: 4,
-                                                          unit: unit)
+            coinAmountLabel.text = hideValue == false ? getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model?.tokenBalance ?? 0)),
+                                                                               scale: 4,
+                                                                               unit: unit):"****"
             if let iconName = model?.tokenIcon, iconName.isEmpty == false {
                 if iconName.hasPrefix("http") {
                     let url = URL(string: iconName)
@@ -135,7 +136,7 @@ class HomeTableViewCell: UITableViewCell {
                                                            raiseOnUnderflow: false,
                                                            raiseOnDivideByZero: false)
             let value = rate.multiplying(by: amount, withBehavior: numberConfig)
-            coinValueLabel.text = "≈$\(value.stringValue)"
+            coinValueLabel.text = hideValue == false ? "≈$\(value.stringValue)":"****"
         }
     }
 }

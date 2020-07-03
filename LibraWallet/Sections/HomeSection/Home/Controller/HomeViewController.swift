@@ -96,6 +96,7 @@ class HomeViewController: UIViewController {
     }
     /// 数据监听KVO
     var observer: NSKeyValueObservation?
+    var refreshing: Bool = false
 }
 //MARK: - 导航栏添加按钮
 extension HomeViewController {
@@ -120,10 +121,13 @@ extension HomeViewController {
         if let amount = self.detailView.headerView.assetLabel.text, amount.hasPrefix("***") == true {
             self.detailView.headerView.showAssets()
             self.totalAssetsButton.setImage(UIImage.init(named: "eyes_open_white"), for: UIControl.State.normal)
+            self.tableViewManager.hideValue = false
         } else {
             self.detailView.headerView.assetLabel.text = "*****"
             self.totalAssetsButton.setImage(UIImage.init(named: "eyes_close_white"), for: UIControl.State.normal)
+            self.tableViewManager.hideValue = true
         }
+        self.detailView.tableView.reloadData()
     }
     
     /// 扫面按钮点击
@@ -192,7 +196,7 @@ extension HomeViewController {
         vc.wallet = tokenModel
         vc.address = address
         vc.amount = amount
-//        vc.sendViolasTokenState = false
+        //        vc.sendViolasTokenState = false
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
@@ -259,6 +263,11 @@ extension HomeViewController {
 extension HomeViewController {
     /// 下拉刷新
     @objc func refreshData() {
+        guard self.refreshing == false else {
+            print("Refreshing")
+            return
+        }
+        self.refreshing = true
         self.dataModel.getLocalTokens()
     }
 }
@@ -352,7 +361,9 @@ extension HomeViewController {
                     // 数据返回状态异常
                 }
                 self?.detailView.hideToastActivity()
-                self?.detailView.tableView.mj_header?.endRefreshing()
+                if self?.detailView.tableView.mj_header?.isRefreshing == true {
+                    self?.detailView.tableView.mj_header?.endRefreshing()
+                }
                 return
             }
             if type == "LoadCurrentEnableTokens" {
@@ -592,8 +603,8 @@ extension HomeViewController {
                     }
                     let rate = NSDecimalNumber.init(string: model.tokenPrice)
                     let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model.tokenBalance),
-                                                   scale: 4,
-                                                   unit: unit)
+                                                  scale: 4,
+                                                  unit: unit)
                     let value = rate.multiplying(by: amount)
                     totalPrice += value.doubleValue
                 }
@@ -608,47 +619,14 @@ extension HomeViewController {
                     
                     self?.detailView.headerView.assetsModel = value.stringValue
                 }
+                if self?.detailView.tableView.mj_header?.isRefreshing == true {
+                    self?.detailView.tableView.mj_header?.endRefreshing()
+                }
+                self?.refreshing = false
             }
             self?.detailView.hideToastActivity()
-            self?.detailView.tableView.mj_header?.endRefreshing()
         })
         self.detailView.makeToastActivity(.center)
         self.dataModel.getLocalTokens()
-    }
-    func refreshTableView(type: WalletType, localTokens: [Token], dataModels: [ViolasBalanceModel]) {
-        //        guard let dataModels = self?.tableViewManager.dataModel else {
-        //            return
-        //        }
-        //        var tempTokens = [Token]()
-        //        var tempIndexPath = [IndexPath]()
-        //        for i in 0..<dataModels.count {
-        //            guard dataModels[i].tokenType == type else {
-        //                tempTokens.append(dataModels[i])
-        //                continue
-        //            }
-        //            var changeState = false
-        //            for token in tempData {
-        //                if token.currency == dataModels[i].tokenModule {
-        //                    var tempLocalToken = dataModels[i]
-        //                    if token.amount != dataModels[i].tokenBalance {
-        //                        tempLocalToken.changeTokenBalance(banlance: token.amount ?? 0)
-        //                        tempIndexPath.append(IndexPath.init(item: i, section: 0))
-        //                    }
-        //                    tempTokens.append(tempLocalToken)
-        //                    changeState = true
-        //                    continue
-        //                }
-        //            }
-        //            if changeState == false {
-        //                tempTokens.append(dataModels[i])
-        //            }
-        //        }
-        //        if tempIndexPath.isEmpty == false {
-        //            self?.tableViewManager.dataModel = tempTokens
-        //            self?.detailView.tableView.beginUpdates()
-        //            self?.detailView.tableView.reloadRows(at: tempIndexPath, with: .fade)
-        //            self?.detailView.tableView.endUpdates()
-        //        }
-        
     }
 }

@@ -16,15 +16,12 @@ class HomeHeaderView: UIView {
     weak var delegate: HomeHeaderViewDelegate?
     override init(frame: CGRect) {
         super.init(frame: frame)
-//        addSubview(whiteBackgroundView)
         addSubview(assetLabel)
-        
         addSubview(walletConnectStateButton)
-        
         addSubview(coinBackgroundView)
         addSubview(coinTitleLabel)
         addSubview(addCoinButton)
-
+        
         // 添加语言变换通知
         NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(addConnect), name: NSNotification.Name("WalletConnectDidConnect"), object: nil)
@@ -118,7 +115,7 @@ class HomeHeaderView: UIView {
         button.backgroundColor = UIColor.white
         return button
     }()
-
+    
     @objc func buttonClick(button: UIButton) {
         if button.tag == 10 {
             // WalletConnect
@@ -134,54 +131,11 @@ class HomeHeaderView: UIView {
                 self.assetLabel.text = "$ 0.00"
             } else {
                 self.assetLabel.text = "$ \(assetsModel ?? "0.00")"
-
             }
         }
     }
     func showAssets() {
         self.assetLabel.text = "$ \(assetsModel!)"
-    }
-//    var walletModel: Token? {
-//        didSet {
-//            walletNameLabel.text = "address"
-//            walletAddressLabel.text = walletModel?.walletAddress
-//            // 更新本地数据
-//            switch walletModel?.walletType {
-//            case .Libra:
-//                assetUnitLabel.text = "libra"
-//                assetLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (libraModel?.balances?[0].amount ?? 0)),
-//                                                         scale: 4,
-//                                                         unit: 1000000)
-//                hideAddTokenButtonState = true
-//                break
-//            case .Violas:
-//                assetUnitLabel.text = "vtoken"
-//                assetLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (walletModel?.walletBalance ?? 0)),
-//                                                         scale: 4,
-//                                                         unit: 1000000)
-//                hideAddTokenButtonState = false
-//                break
-//            case .BTC:
-//                assetUnitLabel.text = "BTC"
-//
-//                assetLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (walletModel?.walletBalance ?? 0)),
-//                                                         scale: 8,
-//                                                         unit: 100000000)
-//                hideAddTokenButtonState = true
-//                break
-//            default:
-//                break
-//            }
-//        }
-//    }
-    var hideAddTokenButtonState: Bool? {
-        didSet {
-//            if hideAddTokenButtonState == true {
-//                self.addCoinButton.alpha = 0
-//            } else {
-//                self.addCoinButton.alpha = 1
-//            }
-        }
     }
     @objc func setText() {
     }

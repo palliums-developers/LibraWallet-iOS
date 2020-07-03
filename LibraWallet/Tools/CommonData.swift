@@ -268,6 +268,6 @@ let ApplyTokenAmountLengthLimit = 12
 let ApplyTokenMaxLimit: Int64 = 900000000000
 
 let officialAddress = "https://violas.io"
-let officialEmail = "violas_blockchain@violas.io"
+let officialEmail = "violas.team@violas.io"
 /************* 弹出提示隐藏时间 *******************/
 let toastDuration = 0.5

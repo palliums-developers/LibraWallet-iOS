@@ -149,7 +149,7 @@ class ViolasTransferView: UIView {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "3C3848")
         label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
-        label.text = localLanguage(keyString: "wallet_transfer_amount_title")
+        label.text = "---"
         return label
     }()
     lazy var amountTextField: WYDTextField = {
@@ -173,7 +173,7 @@ class ViolasTransferView: UIView {
         label.textAlignment = NSTextAlignment.center
         label.textColor = UIColor.init(hex: "3C3848")
         label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
-        label.text = localLanguage(keyString: "wallet_transfer_balance_title") + " --- vtoken"
+        label.text = localLanguage(keyString: "wallet_transfer_balance_title") + " 0.00"
         return label
     }()
     lazy var addressTitleLabel: UILabel = {
@@ -264,7 +264,7 @@ class ViolasTransferView: UIView {
         label.textAlignment = NSTextAlignment.center
         let fee = Float(transferFeeMax - transferFeeMin) * Float(0.2) + Float(transferFeeMin)
         let fee8 = NSString.init(format: "%.8f", fee)
-        label.text = "\(fee8) vtoken"
+        label.text = "\(fee8)"
         return label
     }()
     lazy var confirmButton: UIButton = {
@@ -312,8 +312,8 @@ class ViolasTransferView: UIView {
                 return
             }
             // 手续费转换
-            let feeString = self.transferFeeLabel.text
-            let fee = Double(feeString!.replacingOccurrences(of: " vtoken", with: ""))!
+            let fee = NSDecimalNumber.init(string: self.transferFeeLabel.text ?? "0.0").doubleValue
+//            let fee = Double(feeString!.replacingOccurrences(of: "", with: ""))!
             #warning("暂时不用手续费")
             // 金额大于我的金额
                 var unit = 1000000
@@ -373,7 +373,7 @@ class ViolasTransferView: UIView {
     @objc func slideValueDidChange(slide: UISlider) {
         let fee = Float(transferFeeMax - transferFeeMin) * slide.value + Float(transferFeeMin)
         let fee8 = NSString.init(format: "%.8f", fee)
-        self.transferFeeLabel.text = "\(fee8) vtoken"
+        self.transferFeeLabel.text = "\(fee8)"
     }
     var wallet: Token? {
         didSet {
@@ -384,23 +384,13 @@ class ViolasTransferView: UIView {
             if model.tokenType == .BTC {
                 unit = 100000000
             }
+            amountTitleLabel.text = wallet?.tokenName
             let balance = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.tokenBalance )),
-                                                 scale: 4,
+                                                 scale: 6,
                                                  unit: unit)
             walletBalanceLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + balance + " " + (wallet?.tokenName ?? "")
         }
     }
-//    var vtoken: ViolasTokenModel? {
-//        didSet {
-//            guard let model = vtoken else {
-//                return
-//            }
-//            let balance = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.balance ?? 0)),
-//                                                 scale: 4,
-//                                                 unit: 1000000)
-//            walletBalanceLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + balance + " " + (model.name ?? "")
-//        }
-//    }
     var sendViolasTokenState: Bool?
 }
 extension ViolasTransferView: UITextFieldDelegate {
@@ -411,7 +401,7 @@ extension ViolasTransferView: UITextFieldDelegate {
        let textLength = content.count + string.count - range.length
        if content.contains(".") {
            let firstContent = content.split(separator: ".").first?.description ?? "0"
-           if (textLength - firstContent.count) < 6 {
+           if (textLength - firstContent.count) < 8 {
                return true
            } else {
                return false

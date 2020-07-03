@@ -11,8 +11,8 @@ import UIKit
 class BTCTransferViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = (self.wallet?.tokenType.description ?? "") + " " + localLanguage(keyString: "wallet_transfer_navigation_title")
-        
+        self.title = (self.wallet?.tokenName ?? "") + " " + localLanguage(keyString: "wallet_transfer_navigation_title")
+
         self.view.addSubview(detailView)
         self.detailView.wallet = self.wallet
 
