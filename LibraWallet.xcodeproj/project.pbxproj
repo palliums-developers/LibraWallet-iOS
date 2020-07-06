@@ -59,6 +59,12 @@
 		3682E5D724AC9DA3007CA2CA /* ScanPublishViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3682E5D624AC9DA3007CA2CA /* ScanPublishViewController.swift */; };
 		3682E5D924AC9DC0007CA2CA /* ScanPublishView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3682E5D824AC9DC0007CA2CA /* ScanPublishView.swift */; };
 		3682E5DB24AC9E09007CA2CA /* ScanPublishModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3682E5DA24AC9E09007CA2CA /* ScanPublishModel.swift */; };
+		36836D2F24B3010F0031AC6E /* ExchangeTransactionDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36836D2E24B3010F0031AC6E /* ExchangeTransactionDetailViewController.swift */; };
+		36836D3124B301250031AC6E /* ExchangeTransactionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36836D3024B301250031AC6E /* ExchangeTransactionDetailView.swift */; };
+		36836D3324B301320031AC6E /* ExchangeTransactionDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36836D3224B301320031AC6E /* ExchangeTransactionDetailModel.swift */; };
+		36836D3724B304700031AC6E /* ExchangeTransactionDetailTableViewMananger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36836D3624B304700031AC6E /* ExchangeTransactionDetailTableViewMananger.swift */; };
+		36836D3924B3059B0031AC6E /* ExchangeTransactionDetailHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36836D3824B3059B0031AC6E /* ExchangeTransactionDetailHeaderView.swift */; };
+		36836D3B24B305D00031AC6E /* ExchangeTransactionDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36836D3A24B305D00031AC6E /* ExchangeTransactionDetailTableViewCell.swift */; };
 		36B43A7223BDE967008E2EEA /* LBXScanError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B43A7123BDE967008E2EEA /* LBXScanError.swift */; };
 		36B466A62476563800CFF438 /* ScanSignTransactionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B466A52476563800CFF438 /* ScanSignTransactionViewController.swift */; };
 		36B466A82476565000CFF438 /* ScanSendTransactionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B466A72476565000CFF438 /* ScanSendTransactionViewController.swift */; };
@@ -572,6 +578,12 @@
 		3682E5D624AC9DA3007CA2CA /* ScanPublishViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanPublishViewController.swift; sourceTree = "<group>"; };
 		3682E5D824AC9DC0007CA2CA /* ScanPublishView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanPublishView.swift; sourceTree = "<group>"; };
 		3682E5DA24AC9E09007CA2CA /* ScanPublishModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanPublishModel.swift; sourceTree = "<group>"; };
+		36836D2E24B3010F0031AC6E /* ExchangeTransactionDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeTransactionDetailViewController.swift; sourceTree = "<group>"; };
+		36836D3024B301250031AC6E /* ExchangeTransactionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeTransactionDetailView.swift; sourceTree = "<group>"; };
+		36836D3224B301320031AC6E /* ExchangeTransactionDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeTransactionDetailModel.swift; sourceTree = "<group>"; };
+		36836D3624B304700031AC6E /* ExchangeTransactionDetailTableViewMananger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeTransactionDetailTableViewMananger.swift; sourceTree = "<group>"; };
+		36836D3824B3059B0031AC6E /* ExchangeTransactionDetailHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeTransactionDetailHeaderView.swift; sourceTree = "<group>"; };
+		36836D3A24B305D00031AC6E /* ExchangeTransactionDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeTransactionDetailTableViewCell.swift; sourceTree = "<group>"; };
 		36B43A7123BDE967008E2EEA /* LBXScanError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LBXScanError.swift; sourceTree = "<group>"; };
 		36B466A52476563800CFF438 /* ScanSignTransactionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanSignTransactionViewController.swift; sourceTree = "<group>"; };
 		36B466A72476565000CFF438 /* ScanSendTransactionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanSendTransactionViewController.swift; sourceTree = "<group>"; };
@@ -1192,8 +1204,8 @@
 		3682E5C124AC30D4007CA2CA /* AssetsPool */ = {
 			isa = PBXGroup;
 			children = (
-				3682E5CD24AC8178007CA2CA /* TableViewManager */,
 				3682E5C424AC36C1007CA2CA /* Controller */,
+				3682E5CD24AC8178007CA2CA /* TableViewManager */,
 				3682E5C324AC36BC007CA2CA /* Model */,
 				3682E5C224AC36B4007CA2CA /* View */,
 			);
@@ -1266,6 +1278,51 @@
 				3682E5D624AC9DA3007CA2CA /* ScanPublishViewController.swift */,
 			);
 			path = Controller;
+			sourceTree = "<group>";
+		};
+		36836D2A24B2FEF50031AC6E /* ExchangeTransactionDetail */ = {
+			isa = PBXGroup;
+			children = (
+				36836D2D24B2FF590031AC6E /* Controller */,
+				36836D3524B304560031AC6E /* TableViewManager */,
+				36836D2C24B2FF530031AC6E /* Model */,
+				36836D2B24B2FF4D0031AC6E /* View */,
+			);
+			path = ExchangeTransactionDetail;
+			sourceTree = "<group>";
+		};
+		36836D2B24B2FF4D0031AC6E /* View */ = {
+			isa = PBXGroup;
+			children = (
+				36836D3024B301250031AC6E /* ExchangeTransactionDetailView.swift */,
+				36836D3824B3059B0031AC6E /* ExchangeTransactionDetailHeaderView.swift */,
+				36836D3A24B305D00031AC6E /* ExchangeTransactionDetailTableViewCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		36836D2C24B2FF530031AC6E /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				36836D3224B301320031AC6E /* ExchangeTransactionDetailModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		36836D2D24B2FF590031AC6E /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				36836D2E24B3010F0031AC6E /* ExchangeTransactionDetailViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		36836D3524B304560031AC6E /* TableViewManager */ = {
+			isa = PBXGroup;
+			children = (
+				36836D3624B304700031AC6E /* ExchangeTransactionDetailTableViewMananger.swift */,
+			);
+			path = TableViewManager;
 			sourceTree = "<group>";
 		};
 		36B46699247654B900CFF438 /* ScanSendRawTransaction */ = {
@@ -2600,6 +2657,7 @@
 		9DC06A382372A92100BCE1FE /* MarketModule */ = {
 			isa = PBXGroup;
 			children = (
+				36836D2A24B2FEF50031AC6E /* ExchangeTransactionDetail */,
 				3682E5C124AC30D4007CA2CA /* AssetsPool */,
 				9DC06A392372A92C00BCE1FE /* Market */,
 				9D628A9D239F318C00E222FB /* OrderCenter */,
@@ -3718,6 +3776,7 @@
 				3650F0AC2488907A0086F578 /* WalletMainViewHeaderView.swift in Sources */,
 				3617835D24440C1E003C6588 /* ViolasWordList.swift in Sources */,
 				9D628AC7239F9F6D00E222FB /* ViolasSocketManager.swift in Sources */,
+				36836D3B24B305D00031AC6E /* ExchangeTransactionDetailTableViewCell.swift in Sources */,
 				9D08AD4B2330D8E6004687E8 /* TransactionDetailWebViewController.swift in Sources */,
 				36B466B2247656BE00CFF438 /* ScanSignTransactionView.swift in Sources */,
 				36E95D8B242A084B0004B86D /* ScanLoginViewController.swift in Sources */,
@@ -3749,6 +3808,7 @@
 				9D9B4A05236048A000354EF0 /* AboutUsTableViewManager.swift in Sources */,
 				9DC06A332371789D00BCE1FE /* CheckBackupView.swift in Sources */,
 				9D9B49B0235DA76100354EF0 /* AddAddressModel.swift in Sources */,
+				36836D3124B301250031AC6E /* ExchangeTransactionDetailView.swift in Sources */,
 				9DB515C323A32F660069A909 /* ViolasTransactionScript.swift in Sources */,
 				9D9B4A152360496900354EF0 /* FeedbackAlert.swift in Sources */,
 				9D628AAC239F3A2100E222FB /* OrderProcessingView.swift in Sources */,
@@ -3772,6 +3832,7 @@
 				9D08AD372330BA75004687E8 /* NetworkManager.swift in Sources */,
 				9DC4884B232111E9005FF254 /* TransferViewController.swift in Sources */,
 				3682E5D124AC81DC007CA2CA /* AssetsPoolTableViewCell.swift in Sources */,
+				36836D3924B3059B0031AC6E /* ExchangeTransactionDetailHeaderView.swift in Sources */,
 				9D628A8D239A4A2B00E222FB /* PrivateLegalView.swift in Sources */,
 				9D628A9C239E48A200E222FB /* TokenPickerViewAlert.swift in Sources */,
 				9D5B4E7A236BD22600F4D99C /* AddAssetTableViewHeader.swift in Sources */,
@@ -3779,6 +3840,7 @@
 				3650F0BA248A46280086F578 /* TransactionDetailModel.swift in Sources */,
 				9D712441232F621B009DED52 /* LibraWalletTool.swift in Sources */,
 				9D626482235719A400A79B3D /* WelcomePageView.swift in Sources */,
+				36836D3324B301320031AC6E /* ExchangeTransactionDetailModel.swift in Sources */,
 				36178361244465CF003C6588 /* ViolasMultiPrivateKey.swift in Sources */,
 				9D9B4A522366954700354EF0 /* ImportWalletModel.swift in Sources */,
 				9D5B4E65236ABB8700F4D99C /* TransferFeeSliderCustom.swift in Sources */,
@@ -3803,6 +3865,7 @@
 				9DC4887C23223204005FF254 /* ScanViewController.swift in Sources */,
 				9D9B49D32360268E00354EF0 /* BaseTabBarViewController.swift in Sources */,
 				9D628ABE239F72CE00E222FB /* OrderDetailViewController.swift in Sources */,
+				36836D2F24B3010F0031AC6E /* ExchangeTransactionDetailViewController.swift in Sources */,
 				3682E5D724AC9DA3007CA2CA /* ScanPublishViewController.swift in Sources */,
 				36F42E89242E347300DBBF8F /* LibraTypeTag.swift in Sources */,
 				9D9B49DD23602EB900354EF0 /* SettingTableViewManager.swift in Sources */,
@@ -3814,6 +3877,7 @@
 				9D628AC3239F731100E222FB /* OrderDetailTableViewManager.swift in Sources */,
 				9D9B4A5D2366D1E000354EF0 /* WalletConfigViewController.swift in Sources */,
 				9D9B4A09236048A000354EF0 /* AboutUsTableViewCell.swift in Sources */,
+				36836D3724B304700031AC6E /* ExchangeTransactionDetailTableViewMananger.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

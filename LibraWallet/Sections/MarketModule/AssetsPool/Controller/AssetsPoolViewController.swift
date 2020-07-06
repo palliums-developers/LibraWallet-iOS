@@ -35,7 +35,7 @@ class AssetsPoolViewController: UIViewController {
     /// tableView管理类
     lazy var tableViewManager: AssetsPoolTableViewManager = {
         let manager = AssetsPoolTableViewManager.init()
-//        manager.delegate = self
+        manager.delegate = self
         return manager
     }()
     /// 子View
@@ -45,14 +45,11 @@ class AssetsPoolViewController: UIViewController {
         view.tableView.dataSource = self.tableViewManager
         return view
     }()
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+}
+extension AssetsPoolViewController: AssetsPoolTableViewManagerDelegate {
+    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath) {
+        let vc = ExchangeTransactionDetailViewController()
+        vc.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(vc, animated: true)
     }
-    */
-
 }

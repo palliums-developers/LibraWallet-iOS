@@ -17,13 +17,10 @@ class AssetsPoolTableViewCell: UITableViewCell {
         contentView.addSubview(stateLabel)
         contentView.addSubview(tokenLabel)
         contentView.addSubview(inputAmountLabel)
-        contentView.addSubview(exchangeIndicatorImageView)
+        contentView.addSubview(exchangeIndicatorLabel)
         contentView.addSubview(outputAmountLabel)
         contentView.addSubview(dateLabel)
         contentView.addSubview(spaceLabel)
-        if reuseIdentifier == "FailedCell" {
-            contentView.addSubview(retryButton)
-        }
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -40,26 +37,26 @@ class AssetsPoolTableViewCell: UITableViewCell {
             make.size.equalTo(CGSize.init(width: 24, height: 24))
         }
         stateLabel.snp.makeConstraints { (make) in
-            make.centerY.equalTo(contentView).offset(-15)
-            make.left.equalTo(contentView).offset(8)
+            make.centerY.equalTo(contentView).offset(-13)
+            make.left.equalTo(transactionTypeImageView.snp.right).offset(8)
         }
         tokenLabel.snp.makeConstraints { (make) in
-            make.centerY.equalTo(contentView).offset(15)
-            make.left.equalTo(contentView).offset(8)
+            make.centerY.equalTo(contentView).offset(13)
+            make.left.equalTo(transactionTypeImageView.snp.right).offset(8)
         }
-//        inputAmountLabel.snp.makeConstraints { (make) in
-//            make.right.equalTo(exchangeIndicatorImageView.snp.left).offset(-33)
-//            make.centerY.equalTo(outputAmountLabel)
-//        }
-//        exchangeIndicatorImageView.snp.makeConstraints { (make) in
-//            make.centerY.equalTo(outputAmountLabel)
-//            make.right.equalTo(outputAmountLabel.snp.left).offset(-33)
-//            make.size.equalTo(CGSize.init(width: 10, height: 9))
-//        }
-//        outputAmountLabel.snp.makeConstraints { (make) in
-//            make.top.equalTo(contentView).offset(9)
-//            make.right.equalTo(exchangeIndicatorImageView.snp.right).offset(-16)
-//        }
+        inputAmountLabel.snp.makeConstraints { (make) in
+            make.right.equalTo(exchangeIndicatorLabel.snp.left).offset(-13)
+            make.centerY.equalTo(outputAmountLabel)
+        }
+        exchangeIndicatorLabel.snp.makeConstraints { (make) in
+            make.centerY.equalTo(outputAmountLabel)
+            make.right.equalTo(outputAmountLabel.snp.left).offset(-13)
+            make.size.equalTo(CGSize.init(width: 10, height: 9))
+        }
+        outputAmountLabel.snp.makeConstraints { (make) in
+            make.centerY.equalTo(stateLabel)
+            make.right.equalTo(contentView.snp.right).offset(-16)
+        }
         dateLabel.snp.makeConstraints { (make) in
             make.right.equalTo(contentView.snp.right).offset(-16)
             make.centerY.equalTo(tokenLabel)
@@ -70,17 +67,12 @@ class AssetsPoolTableViewCell: UITableViewCell {
             make.right.equalTo(contentView.snp.right).offset(-16)
             make.height.equalTo(0.5)
         }
-        if reuseIdentifier == "FailedCell" {
-            retryButton.snp.makeConstraints { (make) in
-                make.centerY.equalTo(stateLabel)
-                make.left.equalTo(stateLabel.snp.right).offset(7)
-            }
-        }
     }
     // MARK: - 懒加载对象
     private lazy var transactionTypeImageView: UIImageView = {
         let view = UIImageView.init()
-        view.image = UIImage.init(named: "wallet_icon_default")
+//        view.image = UIImage.init(named: "wallet_icon_default")
+        view.backgroundColor = UIColor.red
         return view
     }()
     lazy var stateLabel: UILabel = {
@@ -107,14 +99,17 @@ class AssetsPoolTableViewCell: UITableViewCell {
         label.text = "8888USD"
         return label
     }()
-    private lazy var exchangeIndicatorImageView : UIImageView = {
-        let imageView = UIImageView.init()
-        imageView.image = UIImage.init(named: "exchange_indicator")
-        return imageView
+    private lazy var exchangeIndicatorLabel : UILabel = {
+        let label = UILabel.init()
+        label.textAlignment = NSTextAlignment.left
+        label.textColor = UIColor.init(hex: "999999")
+        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
+        label.text = "&"
+        return label
     }()
     lazy var outputAmountLabel: UILabel = {
         let label = UILabel.init()
-        label.textAlignment = NSTextAlignment.left
+        label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "000000")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
         label.text = "9999USD"
@@ -123,22 +118,10 @@ class AssetsPoolTableViewCell: UITableViewCell {
     lazy var dateLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
-        label.textColor = UIColor.init(hex: "BABABA")
+        label.textColor = UIColor.init(hex: "999999")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
         label.text = "01.18 12:06"
         return label
-    }()
-    lazy var retryButton: UIButton = {
-        let button = UIButton.init(type: UIButton.ButtonType.custom)
-        button.setTitle(localLanguage(keyString: "wallet_market_exchange_confirm_title"), for: UIControl.State.normal)
-        button.setTitleColor(UIColor.white, for: UIControl.State.normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
-        //        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
-        button.layer.borderColor = UIColor.init(hex: "7038FD").cgColor
-        button.layer.borderWidth = 0.5
-        button.layer.cornerRadius = 14
-        button.tag = 100
-        return button
     }()
     lazy var spaceLabel: UILabel = {
         let label = UILabel.init()

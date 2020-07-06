@@ -7,9 +7,11 @@
 //
 
 import UIKit
-
+protocol AssetsPoolTableViewManagerDelegate: NSObjectProtocol {
+    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath)
+}
 class AssetsPoolTableViewManager: NSObject {
-    weak var delegate: MarketTableViewManagerDelegate?
+    weak var delegate: AssetsPoolTableViewManagerDelegate?
     /// 当前委托
     var buyOrders: [MarketOrderDataModel]?
     /// 他人委托
@@ -33,7 +35,7 @@ extension AssetsPoolTableViewManager: UITableViewDelegate {
         //        guard let model = self.dataModel else {
         //            return
         //        }
-        //        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, model: model[indexPath.row])
+        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath)
     }
 }
 extension AssetsPoolTableViewManager: UITableViewDataSource {
