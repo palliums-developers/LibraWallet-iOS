@@ -31,6 +31,7 @@ struct WCRawTransaction: Codable {
     var gasUnitPrice: Int64?
     var sequenceNumber: Int64?
     var expirationTime: Int64?
+    var gasCurrencyCode: String?
 }
 struct WCDataModel {
     var from: String
@@ -199,6 +200,14 @@ class SendRawTransactionHandler: RequestHandler {
                     vc.reject = {
                         WalletConnectManager.shared.walletConnectServer.send(.reject(request))
                     }
+                    vc.confirm = { (signature) in
+                        do {
+                            WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))//
+                        } catch {
+                            print(error.localizedDescription)
+                        }
+                        print(signature)
+                    }
                     appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
                 }
             }
@@ -223,14 +232,30 @@ class SendTransactionHandler: RequestHandler {
                         vc.reject = {
                             WalletConnectManager.shared.walletConnectServer.send(.reject(request))
                         }
+                        vc.confirm = { (signature) in
+                            do {
+                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))//
+                            } catch {
+                                print(error.localizedDescription)
+                            }
+                            print(signature)
+                        }
                         appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
                     } else {
                         let vc = ScanSendTransactionViewController()
-                         vc.model = model
-                         vc.reject = {
-                             WalletConnectManager.shared.walletConnectServer.send(.reject(request))
-                         }
-                         appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
+                        vc.model = model
+                        vc.reject = {
+                            WalletConnectManager.shared.walletConnectServer.send(.reject(request))
+                        }
+                        vc.confirm = { (signature) in
+                            do {
+                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))//
+                            } catch {
+                                print(error.localizedDescription)
+                            }
+                            print(signature)
+                        }
+                        appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
                     }
                 }
             }

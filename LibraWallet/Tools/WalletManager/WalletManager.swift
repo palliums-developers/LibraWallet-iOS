@@ -265,7 +265,7 @@ extension WalletManager {
                 }
             }
         } else {
-            let alert = passowordAlert(rootAddress: "", mnemonic: { (mnemonic) in
+            let alert = libraWalletTool.passowordAlert(rootAddress: "", mnemonic: { (mnemonic) in
                 successful(mnemonic)
             }) { (errorContent) in
                 failed(errorContent)
@@ -329,7 +329,7 @@ extension WalletManager {
             }
         } else {
             // 打开
-            let alert = passowordCheckAlert(rootAddress: "", passwordContent: { (password) in
+            let alert = libraWalletTool.passowordCheckAlert(rootAddress: "", passwordContent: { (password) in
                 KeychainManager().addBiometric(password: password, success: { (result, error) in
                     if result == "Success" {
                         let result = DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: WalletManager.shared.walletID!, state: state)

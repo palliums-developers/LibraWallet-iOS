@@ -43,7 +43,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let sessionData = getWalletConnectSession(), sessionData.isEmpty == false {
             WalletConnectManager.shared.reconnectToServer(sessionData: sessionData)
         }
-        addAlert()
+        application.applicationIconBadgeNumber = 0
+//        addAlert()
         return true
     }
     func addAlert() {

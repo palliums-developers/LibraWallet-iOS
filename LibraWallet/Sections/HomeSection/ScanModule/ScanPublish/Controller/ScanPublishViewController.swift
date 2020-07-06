@@ -58,6 +58,7 @@ class ScanPublishViewController: BaseViewController {
         }
     }
     var reject: (() -> Void)?
+    var confirm: ((String) -> Void)?
     var needReject: Bool? = true
 }
 extension ScanPublishViewController {
@@ -95,6 +96,9 @@ extension ScanPublishViewController {
                 self?.detailView.toastView?.hide(tag: 99)
                 self?.view.makeToast(localLanguage(keyString: "wallet_connect_publish_success_title"), duration: toastDuration, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
                     self?.needReject = false
+                    if let confirmAction = self?.confirm {
+                        confirmAction("success")
+                    }
                     self?.dismiss(animated: true, completion: nil)
                 })
             }

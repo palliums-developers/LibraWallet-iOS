@@ -88,7 +88,7 @@ extension WalletConfigViewController: WalletConfigTableViewManagerDelegate {
     func switchButtonValueChange(button: UISwitch) {
         if button.isOn == true {
             // 打开
-            let alert = passowordCheckAlert(rootAddress: "", passwordContent: { (password) in
+            let alert = libraWalletTool.passowordCheckAlert(rootAddress: "", passwordContent: { (password) in
                 KeychainManager().addBiometric(password: password, success: { (result, error) in
                     if result == "Success" {
                         let result = DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: WalletManager.shared.walletID!, state: button.isOn)
