@@ -105,11 +105,11 @@ extension mainRequest:TargetType {
              .GetLibraPrice(_),
              .ActiveLibraAccount(_),
              .ActiveViolasAccount(_):
-            #if PUBLISH_VERSION
-            return URL(string:"https://api.violas.io/1.0")!
-            #else
-            return URL(string:"https://api4.violas.io/1.0")!
-            #endif
+            if PUBLISH_VERSION == true {
+                return URL(string:"https://api.violas.io/1.0")!
+            } else {
+                return URL(string:"https://api4.violas.io/1.0")!
+            }
         case .GetViolasAccountBalance(_, _),
              .GetViolasAccountSequenceNumber(_),
              .GetViolasTransactions(_, _, _, _, _),
@@ -119,25 +119,33 @@ extension mainRequest:TargetType {
              .GetMappingTokenList(_),
              .GetMappingTransactions(_, _, _, _),
              .SubmitScanLoginData(_, _):
-            #if PUBLISH_VERSION
-            return URL(string:"https://api.violas.io/1.0")!
-            #else
-            return URL(string:"https://api4.violas.io/1.0")!
-            #endif
+            if PUBLISH_VERSION == true {
+                return URL(string:"https://api.violas.io/1.0")!
+            } else {
+                return URL(string:"https://api4.violas.io/1.0")!
+            }
         case .GetMarketSupportCoin,
              .GetCurrentOrder(_, _, _),
              .GetAllProcessingOrder(_, _),
              .GetOrderDetail(_, _),
              .GetAllDoneOrder(_, _),
              .CancelOrder(_, _):
-            #if PUBLISH_VERSION
-            return URL(string:"https://dex.violas.io/v1")!
-            #else
-            return URL(string:"http://18.220.66.235:38181/v1")!
-            #endif
+            if PUBLISH_VERSION == true {
+                return URL(string:"https://dex.violas.io/v1")!
+            } else {
+                return URL(string:"http://18.220.66.235:38181/v1")!
+            }
         case .GetViolasAccountInfo(_),
              .SendViolasTransaction(_):
-            return URL(string:"http://47.240.8.80:50001")!
+//            // 对内
+//            return URL(string:"https://ab.testnet.violas.io")!
+//            // 对外
+////            return URL(string:"https://ac.testnet.violas.io")!
+            if PUBLISH_VERSION == true {
+                return URL(string:"https://ac.testnet.violas.io")!
+            } else {
+                return URL(string:"https://ab.testnet.violas.io")!
+            }
         case .GetLibraAccountBalance(_),
              .SendLibraTransaction(_):
             return URL(string:"https://client.testnet.libra.org")!

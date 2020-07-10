@@ -271,3 +271,5 @@ let officialAddress = "https://violas.io"
 let officialEmail = "violas.team@violas.io"
 /************* 弹出提示隐藏时间 *******************/
 let toastDuration = 0.5
+/************* 测试正式环境切换 *******************/
+let PUBLISH_VERSION = true

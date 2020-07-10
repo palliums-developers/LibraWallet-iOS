@@ -18,4 +18,7 @@ class BaseNavigationViewController: UINavigationController {
         self.navigationBar.titleTextAttributes=[NSAttributedString.Key.foregroundColor:UIColor.init(hex: "263C4E"),
                                                 NSAttributedString.Key.font:UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.medium)]
     }
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+    }
 }

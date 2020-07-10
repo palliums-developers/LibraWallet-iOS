@@ -28,6 +28,8 @@ class BaseTabBarViewController: UITabBarController {
         let home = HomeViewController.init()
         
 //        let market = AssetsPoolViewController.init()
+//        let market = MarketViewController.init()
+
         
         let mine = MineViewController.init()
         
