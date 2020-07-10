@@ -1,14 +1,14 @@
 //
-//  MarketViewHeaderView.swift
+//  ExchangeViewHeaderView.swift
 //  LibraWallet
 //
-//  Created by wangyingdong on 2020/6/29.
+//  Created by wangyingdong on 2020/7/9.
 //  Copyright © 2020 palliums. All rights reserved.
 //
 
 import UIKit
 
-class MarketViewHeaderView: UIView {
+class ExchangeViewHeaderView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.white
@@ -32,7 +32,7 @@ class MarketViewHeaderView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
-        print("MarketView销毁了")
+        print("ExchangeViewHeaderView销毁了")
     }
     //MARK: - 布局
     override func layoutSubviews() {
@@ -197,7 +197,7 @@ class MarketViewHeaderView: UIView {
         button.setTitle("---", for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
         button.setTitleColor(UIColor.init(hex: "7038FD"), for: UIControl.State.normal)
-//        button.addTarget(self, action: #selector(selectExchangeToken(button:)), for: UIControl.Event.touchUpInside)
+        //        button.addTarget(self, action: #selector(selectExchangeToken(button:)), for: UIControl.Event.touchUpInside)
         button.layer.borderColor = UIColor.init(hex: "7038FD").cgColor
         button.layer.borderWidth = 0.5
         button.layer.cornerRadius = 14
@@ -225,10 +225,10 @@ class MarketViewHeaderView: UIView {
         button.setTitle(localLanguage(keyString: "wallet_market_exchange_confirm_title"), for: UIControl.State.normal)
         button.setTitleColor(UIColor.white, for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
-//        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
+        //        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
         button.backgroundColor = UIColor.init(hex: "15C794")
         let width = UIScreen.main.bounds.width - 69 - 69
-
+        
         button.layer.insertSublayer(colorGradualChange(size: CGSize.init(width: width, height: 40)), at: 0)
         button.layer.cornerRadius = 5
         button.layer.masksToBounds = true
@@ -250,39 +250,39 @@ class MarketViewHeaderView: UIView {
         return label
     }()
 }
-extension MarketViewHeaderView: UITextFieldDelegate {
-//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-//        guard let content = textField.text else {
-//            return true
-//        }
-//        let textLength = content.count + string.count - range.length
-//        if textField.tag == 10 {
-//            if textLength == 0 {
-//                rightAmountTextField.text = ""
-//            }
-//        } else {
-//            if textLength == 0 {
-//                leftAmountTextField.text = ""
-//            }
-//        }
-//        if content.contains(".") {
-//            let firstContent = content.split(separator: ".").first?.description ?? "0"
-//            if (textLength - firstContent.count) < 6 {
-//                return true
-//            } else {
-//                return false
-//            }
-//        } else {
-//            return textLength <= ApplyTokenAmountLengthLimit
-//        }
-//    }
-//    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-//        if self.leftCoinButton.titleLabel?.text != "---" && self.rightCoinButton.titleLabel?.text != "---" {
-//            print("true")
-//            return true
-//        } else {
-//            print("false")
-//            return false
-//        }
-//    }
+extension ExchangeViewHeaderView: UITextFieldDelegate {
+    //    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    //        guard let content = textField.text else {
+    //            return true
+    //        }
+    //        let textLength = content.count + string.count - range.length
+    //        if textField.tag == 10 {
+    //            if textLength == 0 {
+    //                rightAmountTextField.text = ""
+    //            }
+    //        } else {
+    //            if textLength == 0 {
+    //                leftAmountTextField.text = ""
+    //            }
+    //        }
+    //        if content.contains(".") {
+    //            let firstContent = content.split(separator: ".").first?.description ?? "0"
+    //            if (textLength - firstContent.count) < 6 {
+    //                return true
+    //            } else {
+    //                return false
+    //            }
+    //        } else {
+    //            return textLength <= ApplyTokenAmountLengthLimit
+    //        }
+    //    }
+    //    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+    //        if self.leftCoinButton.titleLabel?.text != "---" && self.rightCoinButton.titleLabel?.text != "---" {
+    //            print("true")
+    //            return true
+    //        } else {
+    //            print("false")
+    //            return false
+    //        }
+    //    }
 }

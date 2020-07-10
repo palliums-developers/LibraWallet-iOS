@@ -1,15 +1,14 @@
 //
-//  AssetsPoolViewController.swift
+//  ExchangeViewController.swift
 //  LibraWallet
 //
-//  Created by wangyingdong on 2020/7/1.
+//  Created by wangyingdong on 2020/7/9.
 //  Copyright © 2020 palliums. All rights reserved.
 //
 
 import UIKit
 import MJRefresh
-class AssetsPoolViewController: UIViewController {
-
+class ExchangeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.white
@@ -31,20 +30,31 @@ class AssetsPoolViewController: UIViewController {
             make.left.right.equalTo(self.view)
         }
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.barStyle = .default
+    }
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        self.navigationController?.navigationBar.barStyle = .default
+    }
+    deinit {
+        print("ExchangeViewController销毁了")
+    }
     /// 网络请求、数据模型
-    lazy var dataModel: AssetsPoolModel = {
-        let model = AssetsPoolModel.init()
+    lazy var dataModel: ExchangeModel = {
+        let model = ExchangeModel.init()
         return model
     }()
     /// tableView管理类
-    lazy var tableViewManager: AssetsPoolTableViewManager = {
-        let manager = AssetsPoolTableViewManager.init()
-        manager.delegate = self
+    lazy var tableViewManager: ExchangeTableViewManager = {
+        let manager = ExchangeTableViewManager.init()
+        //        manager.delegate = self
         return manager
     }()
     /// 子View
-    lazy var detailView : AssetsPoolView = {
-        let view = AssetsPoolView.init()
+    lazy var detailView : ExchangeView = {
+        let view = ExchangeView.init()
         view.tableView.delegate = self.tableViewManager
         view.tableView.dataSource = self.tableViewManager
         view.tableView.mj_header = MJRefreshNormalHeader.init(refreshingTarget: self, refreshingAction:  #selector(refreshData))
@@ -57,27 +67,21 @@ class AssetsPoolViewController: UIViewController {
     @objc func refreshData() {
         dataOffset = 0
         detailView.tableView.mj_footer?.resetNoMoreData()
-        self.dataModel.getAssetsPoolTransactions(address: "123123123123", page: dataOffset, pageSize: 10, requestStatus: 0)
+        self.dataModel.getExchangeTransactions(address: "123123123123", page: dataOffset, pageSize: 10, requestStatus: 0)
     }
     @objc func getMoreData() {
         dataOffset += 10
-        self.dataModel.getAssetsPoolTransactions(address: "123123123123", page: dataOffset, pageSize: 10, requestStatus: 1)
+        self.dataModel.getExchangeTransactions(address: "123123123123", page: dataOffset, pageSize: 10, requestStatus: 1)
     }
 }
-extension AssetsPoolViewController: AssetsPoolTableViewManagerDelegate {
-    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath) {
-        let vc = ExchangeTransactionDetailViewController()
-        vc.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(vc, animated: true)
-    }
-}
-extension AssetsPoolViewController {
+extension ExchangeViewController {
     func initKVO() {
         self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
             guard let dataDic = change.newValue, dataDic.count != 0 else {
                 self?.detailView.hideToastActivity()
                 return
             }
+            #warning("已修改完成，可拷贝执行")
             if let error = dataDic.value(forKey: "error") as? LibraWalletError {
                 // 隐藏请求指示
                 self?.detailView.hideToastActivity()
@@ -122,14 +126,14 @@ extension AssetsPoolViewController {
                 return
             }
             let type = dataDic.value(forKey: "type") as! String
-            if type == "AssetsPoolTransactionsOrigin" {
-                guard let tempData = dataDic.value(forKey: "data") as? [AssetsPoolTransactionsDataModel] else {
+            if type == "ExchangeTransactionsOrigin" {
+                guard let tempData = dataDic.value(forKey: "data") as? [ExchangeTransactionsDataModel] else {
                     return
                 }
                 self?.tableViewManager.dataModels = tempData
                 self?.detailView.tableView.reloadData()
-            } else if type == "AssetsPoolTransactionsMore" {
-                guard let tempData = dataDic.value(forKey: "data") as? [AssetsPoolTransactionsDataModel] else {
+            } else if type == "ExchangeTransactionsMore" {
+                guard let tempData = dataDic.value(forKey: "data") as? [ExchangeTransactionsDataModel] else {
                     return
                 }
                 if let oldData = self?.tableViewManager.dataModels, oldData.isEmpty == false {
@@ -140,7 +144,7 @@ extension AssetsPoolViewController {
                         insertIndexPath.append(indexPath)
                     }
                     tempArray.addObjects(from: tempData)
-                    self?.tableViewManager.dataModels = tempArray as? [AssetsPoolTransactionsDataModel]
+                    self?.tableViewManager.dataModels = tempArray as? [ExchangeTransactionsDataModel]
                     self?.detailView.tableView.beginUpdates()
                     self?.detailView.tableView.insertRows(at: insertIndexPath, with: UITableView.RowAnimation.bottom)
                     self?.detailView.tableView.endUpdates()

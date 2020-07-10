@@ -128,43 +128,43 @@ class TokenMappingModel: NSObject {
 //        }
 //    }
     func getWalletEnableToken(address: String, contract: String) {
-        let request = mainProvide.request(.GetViolasAccountEnableToken(address)) {[weak self](result) in
-            switch  result {
-            case let .success(response):
-                do {
-                    let json = try response.map(ViolasAccountEnableTokenResponseMainModel.self)
-                    if json.code == 2000 {
-                        if json.data?.is_published == 1 {
-                            let data = setKVOData(type: "GetWalletEnableCoin", data: true)
-                            self?.setValue(data, forKey: "dataDic")
-                        } else {
-                            let data = setKVOData(type: "GetWalletEnableCoin", data: false)
-                            self?.setValue(data, forKey: "dataDic")
-                        }
-                    } else {
-                        if let message = json.message, message.isEmpty == false {
-                            let data = setKVOData(error: LibraWalletError.error(message), type: "GetWalletEnableCoin")
-                            self?.setValue(data, forKey: "dataDic")
-                        } else {
-                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "GetWalletEnableCoin")
-                            self?.setValue(data, forKey: "dataDic")
-                        }
-                    }
-                } catch {
-                    print("GetWalletEnableCoin_解析异常\(error.localizedDescription)")
-                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetWalletEnableCoin")
-                    self?.setValue(data, forKey: "dataDic")
-                }
-            case let .failure(error):
-                guard error.errorCode != -999 else {
-                    print("GetWalletEnableCoin_网络请求已取消")
-                    return
-                }
-                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "GetWalletEnableCoin")
-                self?.setValue(data, forKey: "dataDic")
-            }
-        }
-        self.requests.append(request)
+//        let request = mainProvide.request(.GetViolasAccountEnableToken(address)) {[weak self](result) in
+//            switch  result {
+//            case let .success(response):
+//                do {
+//                    let json = try response.map(ViolasAccountEnableTokenResponseMainModel.self)
+//                    if json.code == 2000 {
+//                        if json.data?.is_published == 1 {
+//                            let data = setKVOData(type: "GetWalletEnableCoin", data: true)
+//                            self?.setValue(data, forKey: "dataDic")
+//                        } else {
+//                            let data = setKVOData(type: "GetWalletEnableCoin", data: false)
+//                            self?.setValue(data, forKey: "dataDic")
+//                        }
+//                    } else {
+//                        if let message = json.message, message.isEmpty == false {
+//                            let data = setKVOData(error: LibraWalletError.error(message), type: "GetWalletEnableCoin")
+//                            self?.setValue(data, forKey: "dataDic")
+//                        } else {
+//                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "GetWalletEnableCoin")
+//                            self?.setValue(data, forKey: "dataDic")
+//                        }
+//                    }
+//                } catch {
+//                    print("GetWalletEnableCoin_解析异常\(error.localizedDescription)")
+//                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetWalletEnableCoin")
+//                    self?.setValue(data, forKey: "dataDic")
+//                }
+//            case let .failure(error):
+//                guard error.errorCode != -999 else {
+//                    print("GetWalletEnableCoin_网络请求已取消")
+//                    return
+//                }
+//                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "GetWalletEnableCoin")
+//                self?.setValue(data, forKey: "dataDic")
+//            }
+//        }
+//        self.requests.append(request)
     }
 //    var utxos: [BTCUnspentUTXOListModel]?
     var utxos: [TrezorBTCUTXOMainModel]?

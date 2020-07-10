@@ -1,48 +1,44 @@
 //
-//  AssetsPoolModel.swift
+//  ExchangeModel.swift
 //  LibraWallet
 //
-//  Created by wangyingdong on 2020/7/1.
+//  Created by wangyingdong on 2020/7/9.
 //  Copyright © 2020 palliums. All rights reserved.
 //
 
 import UIKit
 import Moya
-struct AssetsPoolTransactionsDataModel: Codable {
+struct ExchangeTransactionsDataModel: Codable {
     /// 输入数量
-    var amounta: Int64?
+    var input_amount: Int64?
     /// 兑换数量
-    var amountb: Int64?
+    var output_amount: Int64?
     /// 输入币名
-    var coina: String?
+    var input_name: String?
     /// 兑换币名
-    var coinb: String?
+    var output_name: String?
     /// 日期
     var date: Int?
     /// 状态（同链上状态）
     var status: Int?
-    ///
-    var token: Int64?
-    /// 交易状态
-    var transaction_type: String?
     /// 交易唯一ID
     var version: Int?
 }
-struct AssetsPoolTransactionsMainModel: Codable {
+struct ExchangeTransactionsMainModel: Codable {
     var code: Int?
     var message: String?
-    var data: [AssetsPoolTransactionsDataModel]?
+    var data: [ExchangeTransactionsDataModel]?
 }
-class AssetsPoolModel: NSObject {
+class ExchangeModel: NSObject {
     private var requests: [Cancellable] = []
     @objc dynamic var dataDic: NSMutableDictionary = [:]
-    func getAssetsPoolTransactions(address: String, page: Int, pageSize: Int, requestStatus: Int) {
-        let type = requestStatus == 0 ? "AssetsPoolTransactionsOrigin":"AssetsPoolTransactionsMore"
-        let request = mainProvide.request(.AssetsPoolTransactions(address, page, pageSize)) {[weak self](result) in
+    func getExchangeTransactions(address: String, page: Int, pageSize: Int, requestStatus: Int) {
+        let type = requestStatus == 0 ? "ExchangeTransactionsOrigin":"ExchangeTransactionsMore"
+        let request = mainProvide.request(.ExchangeTransactions(address, page, pageSize)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(AssetsPoolTransactionsMainModel.self)
+                    let json = try response.map(ExchangeTransactionsMainModel.self)
                     if json.code == 2000 {
                         guard json.data?.isEmpty == false else {
                             if requestStatus == 0 {
@@ -67,7 +63,7 @@ class AssetsPoolModel: NSObject {
                         }
                     }
                 } catch {
-                    print("\(type)解析异常\(error.localizedDescription)")
+                    print("解析异常\(error.localizedDescription)")
                     let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: type)
                     self?.setValue(data, forKey: "dataDic")
                 }
@@ -76,7 +72,7 @@ class AssetsPoolModel: NSObject {
                     print("网络请求已取消")
                     return
                 }
-                print("\(type)网络异常\(error.localizedDescription)")
+                print(error.localizedDescription)
                 let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.networkInvalid), type: type)
                 self?.setValue(data, forKey: "dataDic")
             }
@@ -88,6 +84,6 @@ class AssetsPoolModel: NSObject {
             cancellable.cancel()
         }
         requests.removeAll()
-        print("AssetsPoolModel销毁了")
+        print("ExchangeModel销毁了")
     }
 }

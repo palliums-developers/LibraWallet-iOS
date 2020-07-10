@@ -33,7 +33,7 @@ class AssetsPoolViewHeaderView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
-        print("MarketView销毁了")
+        print("AssetsPoolViewHeaderView销毁了")
     }
     //MARK: - 布局
     override func layoutSubviews() {

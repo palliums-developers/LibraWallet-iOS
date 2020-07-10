@@ -251,6 +251,20 @@ wallet_transaction_detail_explorer_check_title = "浏览器查询更详细信息
 /************* 添加资产 *******************/
 wallet_add_assets_get_test_coin_title = "获取体验币";
 
+/************* 交易所（最新） *******************/
+wallet_market_exchange_transaction_status_success_title = "兑换成功";
+wallet_market_exchange_transaction_status_failed_title = "兑换失败";
+wallet_market_exchange_transaction_retry_button_title = "重试";
+
+/************* 资金池 *******************/
+wallet_assets_pool_transaction_token_title = "通证";
+wallet_assets_pool_transaction_status_transfer_in_success_title = "转入成功";
+wallet_assets_pool_transaction_status_transfer_in_failed_title = "转入失败";
+wallet_assets_pool_transaction_status_transfer_out_success_title = "转出成功";
+wallet_assets_pool_transaction_status_transfer_out_failed_title = "转出失败";
+wallet_assets_pool_transaction_status_transfer_processing_title = "打包中";
+wallet_assets_pool_transaction_status_transfer_invalid_title = "状态异常";
+
 /************* 弹出提示 *******************/
 // 转账弹出提示
 wallet_transfer_success_alert = "转账成功";

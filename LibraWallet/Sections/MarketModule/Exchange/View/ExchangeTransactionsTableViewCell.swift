@@ -1,18 +1,17 @@
 //
-//  MarketTransactionsTableViewCell.swift
+//  ExchangeTransactionsTableViewCell.swift
 //  LibraWallet
 //
-//  Created by wangyingdong on 2020/6/30.
+//  Created by wangyingdong on 2020/7/9.
 //  Copyright © 2020 palliums. All rights reserved.
 //
 
 import UIKit
-
-class MarketTransactionsTableViewCell: UITableViewCell {
+import Localize_Swift
+class ExchangeTransactionsTableViewCell: UITableViewCell {
     //    weak var delegate: AddAssetViewTableViewCellDelegate?
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        //        contentView.addSubview(iconImageView)
         contentView.addSubview(stateLabel)
         contentView.addSubview(inputAmountLabel)
         contentView.addSubview(exchangeIndicatorImageView)
@@ -22,12 +21,15 @@ class MarketTransactionsTableViewCell: UITableViewCell {
         if reuseIdentifier == "FailedCell" {
             contentView.addSubview(retryButton)
         }
+        // 添加语言变换通知
+        NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
-        print("MarketTransactionsTableViewCell销毁了")
+        print("ExchangeTransactionsTableViewCell销毁了")
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
     }
     //pragma MARK: 布局
     override func layoutSubviews() {
@@ -63,6 +65,7 @@ class MarketTransactionsTableViewCell: UITableViewCell {
             retryButton.snp.makeConstraints { (make) in
                 make.centerY.equalTo(stateLabel)
                 make.left.equalTo(stateLabel.snp.right).offset(7)
+                make.size.equalTo(CGSize.init(width: 42, height: 18))
             }
         }
     }
@@ -72,7 +75,7 @@ class MarketTransactionsTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "13B788")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.semibold)
-        label.text = "兑换成功"
+        label.text = "---"
         return label
     }()
     lazy var inputAmountLabel: UILabel = {
@@ -80,20 +83,20 @@ class MarketTransactionsTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "000000")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
-        label.text = "8888USD"
+        label.text = "---"
         return label
     }()
     private lazy var exchangeIndicatorImageView : UIImageView = {
         let imageView = UIImageView.init()
         imageView.image = UIImage.init(named: "exchange_indicator")
-       return imageView
+        return imageView
     }()
     lazy var outputAmountLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "000000")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
-        label.text = "9999USD"
+        label.text = "---"
         return label
     }()
     lazy var dateLabel: UILabel = {
@@ -101,19 +104,19 @@ class MarketTransactionsTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "BABABA")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = "01.18 12:06"
+        label.text = "---"
         return label
     }()
     lazy var retryButton: UIButton = {
         let button = UIButton.init(type: UIButton.ButtonType.custom)
-        button.setTitle(localLanguage(keyString: "wallet_market_exchange_confirm_title"), for: UIControl.State.normal)
-        button.setTitleColor(UIColor.white, for: UIControl.State.normal)
+        button.setTitle(localLanguage(keyString: "wallet_market_exchange_transaction_retry_button_title"), for: UIControl.State.normal)
+        button.setTitleColor(UIColor.init(hex: "7038FD"), for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
         //        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
         button.layer.borderColor = UIColor.init(hex: "7038FD").cgColor
         button.layer.borderWidth = 0.5
-        button.layer.cornerRadius = 14
-        button.tag = 100
+        button.layer.cornerRadius = 9
+        button.tag = 20
         return button
     }()
     lazy var spaceLabel: UILabel = {
@@ -122,17 +125,27 @@ class MarketTransactionsTableViewCell: UITableViewCell {
         return label
     }()
     //MARK: - 设置数据
-//    var model: MarketOrderDataModel? {
-//        didSet {
-//            // 计算剩余
-//            let lastAmount = NSDecimalNumber.init(string: model?.amountGet ?? "0").subtracting(NSDecimalNumber.init(string: model?.amountFilled ?? "0"))
-//            
-//            amountLabel.text = getDecimalNumberAmount(amount: lastAmount,
-//                                                      scale: 4,
-//                                                      unit: 1000000)
-//            priceLabel.text = "\(model?.tokenGetPrice ?? 0)"
-//        }
-//    }
+    var model: ExchangeTransactionsDataModel? {
+        didSet {
+            // 计算剩余
+            inputAmountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: model?.input_amount ?? 0),
+                                                           scale: 4,
+                                                           unit: 1000000)
+            outputAmountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: model?.output_amount ?? 0),
+                                                            scale: 4,
+                                                            unit: 1000000)
+            dateLabel.text = timestampToDateString(timestamp: model?.date ?? 0,
+                                                   dateFormat: "MM.dd HH:mm")
+            if model?.status == 4001 {
+                stateLabel.textColor = UIColor.init(hex: "13B788")
+                stateLabel.text = localLanguage(keyString: "wallet_market_exchange_transaction_status_success_title")
+                
+            } else {
+                stateLabel.textColor = UIColor.init(hex: "E54040")
+                stateLabel.text = localLanguage(keyString: "wallet_market_exchange_transaction_status_failed_title")
+            }
+        }
+    }
     var indexPath: IndexPath?
     var hideSpcaeLineState: Bool? {
         didSet {
@@ -140,5 +153,14 @@ class MarketTransactionsTableViewCell: UITableViewCell {
                 spaceLabel.alpha = 0
             }
         }
+    }
+    /// 语言切换
+    @objc func setText() {
+        if model?.status == 4001 {
+            stateLabel.text = localLanguage(keyString: "wallet_market_exchange_transaction_status_success_title")
+        } else {
+            stateLabel.text = localLanguage(keyString: "wallet_market_exchange_transaction_status_failed_title")
+        }
+        retryButton.setTitle(localLanguage(keyString: "wallet_market_exchange_transaction_retry_button_title"), for: UIControl.State.normal)
     }
 }

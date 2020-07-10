@@ -46,21 +46,6 @@ enum mainRequest {
     /// 获取代币
     case GetViolasTokenList
     
-    /// 获取钱包已开启代币列表
-    case GetViolasAccountEnableToken(String)
-    /// 获取交易所支持的代币列表
-    case GetMarketSupportCoin
-    /// 获取当前委托（地址、付出稳定币合约、兑换稳定币合约）
-    case GetCurrentOrder(String, String, String)
-    /// 获取当前进行中全部委托（地址、Version）
-    case GetAllProcessingOrder(String, String)
-    /// 获取订单详情(地址、页数)
-    case GetOrderDetail(String, Int)
-    /// 获取已完成订单
-    case GetAllDoneOrder(String, String)
-    /// 取消订单（交易字节码，Version）
-    case CancelOrder(String, String)
-    
     /// 查询映射信息
     case GetMappingInfo(String)
     /// 获取当前已开启映射币（钱包地址）
@@ -82,6 +67,13 @@ enum mainRequest {
     case ActiveViolasAccount(String)
     /// 激活Libra（临时）
     case ActiveLibraAccount(String)
+    
+    
+    //交易所
+    /// 获取兑换交易记录
+    case ExchangeTransactions(String, Int, Int)
+    /// 获取资金池交易记录
+    case AssetsPoolTransactions(String, Int, Int)
 }
 extension mainRequest:TargetType {
     var baseURL: URL {
@@ -113,7 +105,6 @@ extension mainRequest:TargetType {
         case .GetViolasAccountBalance(_, _),
              .GetViolasAccountSequenceNumber(_),
              .GetViolasTransactions(_, _, _, _, _),
-             .GetViolasAccountEnableToken(_),
              .GetViolasTokenList,
              .GetMappingInfo(_),
              .GetMappingTokenList(_),
@@ -124,23 +115,19 @@ extension mainRequest:TargetType {
             } else {
                 return URL(string:"https://api4.violas.io/1.0")!
             }
-        case .GetMarketSupportCoin,
-             .GetCurrentOrder(_, _, _),
-             .GetAllProcessingOrder(_, _),
-             .GetOrderDetail(_, _),
-             .GetAllDoneOrder(_, _),
-             .CancelOrder(_, _):
+        case .ExchangeTransactions(_, _, _),
+             .AssetsPoolTransactions(_, _, _):
             if PUBLISH_VERSION == true {
-                return URL(string:"https://dex.violas.io/v1")!
+                return URL(string:"https://api.violas.io/1.0")!
             } else {
-                return URL(string:"http://18.220.66.235:38181/v1")!
+                return URL(string:"https://api4.violas.io/1.0")!
             }
         case .GetViolasAccountInfo(_),
              .SendViolasTransaction(_):
-//            // 对内
-//            return URL(string:"https://ab.testnet.violas.io")!
-//            // 对外
-////            return URL(string:"https://ac.testnet.violas.io")!
+            //            // 对内
+            //            return URL(string:"https://ab.testnet.violas.io")!
+            //            // 对外
+            ////            return URL(string:"https://ac.testnet.violas.io")!
             if PUBLISH_VERSION == true {
                 return URL(string:"https://ac.testnet.violas.io")!
             } else {
@@ -188,20 +175,6 @@ extension mainRequest:TargetType {
             return ""
         case .GetViolasTokenList:
             return "/violas/currency"
-        case .GetMarketSupportCoin:
-            return "/tokens"
-        case .GetViolasAccountEnableToken(_):
-            return "/violas/module"
-        case .GetCurrentOrder(_, _, _):
-            return "/orderbook"
-        case .GetAllProcessingOrder(_, _):
-            return "/orders"
-        case .GetOrderDetail(_, _):
-            return "/trades"
-        case .GetAllDoneOrder(_, _):
-            return "/orders"
-        case .CancelOrder(_, _):
-            return "/cancelOrder"
         case .GetMappingInfo(_):
             return "/crosschain/info"
         case .GetMappingTokenList(_):
@@ -222,6 +195,10 @@ extension mainRequest:TargetType {
             return "/libra/mint"
         case .ActiveViolasAccount(_):
             return "/violas/mint"
+        case .ExchangeTransactions(_, _, _):
+            return "/market/exchange/transaction"
+        case .AssetsPoolTransactions(_, _, _):
+            return "/market/pool/transaction"
         }
     }
     var method: Moya.Method {
@@ -231,7 +208,6 @@ extension mainRequest:TargetType {
              .SendBTCTransaction(_),
              .SubmitScanLoginData(_, _),
              .GetLibraAccountBalance(_),
-             .CancelOrder(_, _),
              .GetViolasAccountInfo(_):
             return .post
         case .GetBTCBalance(_),
@@ -247,12 +223,6 @@ extension mainRequest:TargetType {
              .GetViolasAccountBalance(_, _),
              .GetViolasAccountSequenceNumber(_),
              .GetViolasTransactions(_, _, _, _, _),
-             .GetMarketSupportCoin,
-             .GetViolasAccountEnableToken(_),
-             .GetCurrentOrder(_, _, _),
-             .GetAllProcessingOrder(_, _),
-             .GetOrderDetail(_, _),
-             .GetAllDoneOrder(_, _),
              .GetMappingInfo(_),
              .GetMappingTokenList(_),
              .GetMappingTransactions(_, _, _, _),
@@ -262,7 +232,9 @@ extension mainRequest:TargetType {
              .GetViolasPrice(_),
              .GetLibraPrice(_),
              .ActiveViolasAccount(_),
-             .ActiveLibraAccount(_):
+             .ActiveLibraAccount(_),
+             .ExchangeTransactions(_, _, _),
+             .AssetsPoolTransactions(_, _, _):
             return .get
         }
     }
@@ -332,20 +304,20 @@ extension mainRequest:TargetType {
             return .requestParameters(parameters: ["addr": address],
                                       encoding: URLEncoding.queryString)
         case .GetViolasTransactions(let address, let currency, let type, let offset, let limit):
-//            if type.isEmpty == true {
-//                return .requestParameters(parameters: ["addr": address,
-//                                                       "currency": currency,
-//                                                       "limit": limit,
-//                                                       "offset":offset],
-//                                          encoding: URLEncoding.queryString)
-//            } else {
+            //            if type.isEmpty == true {
+            //                return .requestParameters(parameters: ["addr": address,
+            //                                                       "currency": currency,
+            //                                                       "limit": limit,
+            //                                                       "offset":offset],
+            //                                          encoding: URLEncoding.queryString)
+            //            } else {
             return .requestParameters(parameters: ["addr": address,
                                                    "currency": currency,
                                                    "flows": type,
                                                    "limit": limit,
                                                    "offset":offset],
                                       encoding: URLEncoding.queryString)
-//            }
+        //            }
         case .SendViolasTransaction(let signature):
             return .requestParameters(parameters: ["jsonrpc":"2.0",
                                                    "method":"submit",
@@ -354,50 +326,6 @@ extension mainRequest:TargetType {
                                       encoding: JSONEncoding.default)
         case .GetViolasTokenList:
             return .requestPlain
-        case .GetMarketSupportCoin:
-            return .requestPlain
-        case .GetViolasAccountEnableToken(let address):
-            return .requestParameters(parameters: ["addr": address],
-                                      encoding: URLEncoding.queryString)
-        case .GetCurrentOrder(_, let baseAddress, let changeAddress):
-            return .requestParameters(parameters: ["base": baseAddress,
-                                                   "quote":changeAddress],
-                                      encoding: URLEncoding.queryString)
-        case .GetAllProcessingOrder(let address, let version):
-            if version.isEmpty == true {
-                return .requestParameters(parameters: ["user": address,
-                                                       "state":0,
-                                                       "limit":10],
-                                          encoding: URLEncoding.queryString)
-            } else {
-                return .requestParameters(parameters: ["user": address,
-                                                       "state":0,
-                                                       "limit":10,
-                                                       "version":version],
-                                          encoding: URLEncoding.queryString)
-            }
-        case .GetOrderDetail(let version, let page):
-            return .requestParameters(parameters: ["version":version,
-                                                   "pagesize":10,
-                                                   "pagenum":page],
-                                      encoding: URLEncoding.queryString)
-        case .GetAllDoneOrder(let address, let version):
-            if version.isEmpty == true {
-                return .requestParameters(parameters: ["user": address,
-                                                       "state":4,
-                                                       "limit":10],
-                                          encoding: URLEncoding.queryString)
-            } else {
-                return .requestParameters(parameters: ["user": address,
-                                                       "state": 4,
-                                                       "limit": 10,
-                                                       "version":version],
-                                          encoding: URLEncoding.queryString)
-            }
-        case .CancelOrder(let signature, let version):
-            return .requestParameters(parameters: ["version": version,
-                                                   "signedtxn":signature],
-                                      encoding: JSONEncoding.default)
         case .GetMappingInfo(let type):
             return .requestParameters(parameters: ["type":type.lowercased()],
                                       encoding: URLEncoding.queryString)
@@ -445,6 +373,17 @@ extension mainRequest:TargetType {
                                                    "auth_key_perfix": authPrefix,
                                                    "currency":"LBR"],
                                       encoding: URLEncoding.queryString)
+        case .ExchangeTransactions(let address, let offset, let limit):
+            return .requestParameters(parameters: ["address": address,
+                                                   "limit": limit,
+                                                   "offset":offset],
+                                      encoding: URLEncoding.queryString)
+        case .AssetsPoolTransactions(let address, let offset, let limit):
+            return .requestParameters(parameters: ["address": address,
+                                                   "limit": limit,
+                                                   "offset":offset],
+                                      encoding: URLEncoding.queryString)
+            
         }
     }
     var headers: [String : String]? {

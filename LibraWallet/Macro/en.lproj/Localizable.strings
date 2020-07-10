@@ -249,6 +249,20 @@ wallet_transaction_detail_explorer_check_title = "Browser for more detailed info
 /************* 添加资产 *******************/
 wallet_add_assets_get_test_coin_title = "Get Test Coin";
 
+/************* 交易所（最新） *******************/
+wallet_market_exchange_transaction_status_success_title = "Successful";
+wallet_market_exchange_transaction_status_failed_title = "Failed";
+wallet_market_exchange_transaction_retry_button_title = "Retry";
+
+/************* 资金池 *******************/
+wallet_assets_pool_transaction_token_title = "Token";
+wallet_assets_pool_transaction_status_transfer_in_success_title = "Transfer-In Successful";
+wallet_assets_pool_transaction_status_transfer_in_failed_title = "Transfer-In Failed";
+wallet_assets_pool_transaction_status_transfer_out_success_title = "Transfer-Out Successful";
+wallet_assets_pool_transaction_status_transfer_out_failed_title = "Transfer-Out Failed";
+wallet_assets_pool_transaction_status_transfer_processing_title = "Transfer Processing";
+wallet_assets_pool_transaction_status_transfer_invalid_title = "Status Invalid";
+
 /************* 弹出提示 *******************/
 // 转账弹出提示
 wallet_transfer_success_alert = "Transfer Successful";
