@@ -316,7 +316,7 @@ class WalletTransactionsTableViewCell: UITableViewCell {
                                                       scale: 6,
                                                       unit: 1000000)
             var amountColor = ""
-            if violasModel?.status == 4001 {
+            if libraModel?.status == 4001 {
                 amountColor = "13B788"
             } else {
                 amountColor = "E54040"
