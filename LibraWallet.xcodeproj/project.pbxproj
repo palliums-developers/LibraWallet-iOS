@@ -63,6 +63,7 @@
 		36828CE624B74C9A0085A165 /* ExchangeTransactionsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36828CE524B74C9A0085A165 /* ExchangeTransactionsTableViewCell.swift */; };
 		36828CE924B74D3C0085A165 /* ExchangeTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36828CE824B74D3C0085A165 /* ExchangeTableViewManager.swift */; };
 		36828CEB24B808760085A165 /* ColorAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 36828CEA24B808760085A165 /* ColorAssets.xcassets */; };
+		36828CED24BBFA300085A165 /* MarketContracts.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 36828CEC24BBFA300085A165 /* MarketContracts.bundle */; };
 		3682E5BA24A865DB007CA2CA /* ScanLogoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3682E5B924A865DB007CA2CA /* ScanLogoutViewController.swift */; };
 		3682E5BC24A865EB007CA2CA /* ScanLogoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3682E5BB24A865EB007CA2CA /* ScanLogoutView.swift */; };
 		3682E5C624AC36DC007CA2CA /* AssetsPoolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3682E5C524AC36DC007CA2CA /* AssetsPoolView.swift */; };
@@ -370,6 +371,7 @@
 		36828CE524B74C9A0085A165 /* ExchangeTransactionsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeTransactionsTableViewCell.swift; sourceTree = "<group>"; };
 		36828CE824B74D3C0085A165 /* ExchangeTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeTableViewManager.swift; sourceTree = "<group>"; };
 		36828CEA24B808760085A165 /* ColorAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ColorAssets.xcassets; sourceTree = "<group>"; };
+		36828CEC24BBFA300085A165 /* MarketContracts.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = MarketContracts.bundle; sourceTree = "<group>"; };
 		3682E5B924A865DB007CA2CA /* ScanLogoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanLogoutViewController.swift; sourceTree = "<group>"; };
 		3682E5BB24A865EB007CA2CA /* ScanLogoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanLogoutView.swift; sourceTree = "<group>"; };
 		3682E5C524AC36DC007CA2CA /* AssetsPoolView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsPoolView.swift; sourceTree = "<group>"; };
@@ -1628,6 +1630,7 @@
 				9DA8E2AA2317ABC600E28D07 /* LaunchScreen.storyboard */,
 				9D712442232F7662009DED52 /* Assets.xcassets */,
 				36828CEA24B808760085A165 /* ColorAssets.xcassets */,
+				36828CEC24BBFA300085A165 /* MarketContracts.bundle */,
 			);
 			path = Resource;
 			sourceTree = "<group>";
@@ -3127,6 +3130,7 @@
 			files = (
 				9DA8E2AC2317ABC600E28D07 /* LaunchScreen.storyboard in Resources */,
 				36828CEB24B808760085A165 /* ColorAssets.xcassets in Resources */,
+				36828CED24BBFA300085A165 /* MarketContracts.bundle in Resources */,
 				9D7124342329EA1C009DED52 /* Localizable.strings in Resources */,
 				9D712443232F7662009DED52 /* Assets.xcassets in Resources */,
 			);

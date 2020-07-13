@@ -45,69 +45,69 @@ class OrderDoneModel: NSObject {
     }
     private func getAllDoneOrderList(address: String, version: String, group: DispatchGroup) {
         group.enter()
-        let type = version.isEmpty == true ? "GetAllDoneOrderOrigin":"GetAllDoneOrderMore"
-        let request = mainProvide.request(.GetAllDoneOrder(address, version)) {[weak self](result) in
-            switch  result {
-            case let .success(response):
-                do {
-                    print(try response.mapString())
-                    let json = try response.map(AllProcessingOrderMainModel.self)
-                    guard json.orders?.isEmpty == false else {
-                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: type)
-                        self?.setValue(data, forKey: "dataDic")
-                        return
-                    }
-                    let data = setKVOData(type: type, data: json.orders)
-                    self?.setValue(data, forKey: "dataDic")
-//                    self?.orderModels = json.orders
-                } catch {
-                    print("\(type)_解析异常\(error.localizedDescription)")
-                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: type)
-                    self?.setValue(data, forKey: "dataDic")
-                }
-            case let .failure(error):
-                guard error.errorCode != -999 else {
-                    print("\(type)_网络请求已取消")
-                    return
-                }
-                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: type)
-                self?.setValue(data, forKey: "dataDic")
-            }
-            group.leave()
-        }
-        self.requests.append(request)
+//        let type = version.isEmpty == true ? "GetAllDoneOrderOrigin":"GetAllDoneOrderMore"
+//        let request = mainProvide.request(.GetAllDoneOrder(address, version)) {[weak self](result) in
+//            switch  result {
+//            case let .success(response):
+//                do {
+//                    print(try response.mapString())
+//                    let json = try response.map(AllProcessingOrderMainModel.self)
+//                    guard json.orders?.isEmpty == false else {
+//                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: type)
+//                        self?.setValue(data, forKey: "dataDic")
+//                        return
+//                    }
+//                    let data = setKVOData(type: type, data: json.orders)
+//                    self?.setValue(data, forKey: "dataDic")
+////                    self?.orderModels = json.orders
+//                } catch {
+//                    print("\(type)_解析异常\(error.localizedDescription)")
+//                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: type)
+//                    self?.setValue(data, forKey: "dataDic")
+//                }
+//            case let .failure(error):
+//                guard error.errorCode != -999 else {
+//                    print("\(type)_网络请求已取消")
+//                    return
+//                }
+//                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: type)
+//                self?.setValue(data, forKey: "dataDic")
+//            }
+//            group.leave()
+//        }
+//        self.requests.append(request)
     }
     private func getCurrentPrice(group: DispatchGroup) {
-        group.enter()
-        let request = mainProvide.request(.GetMarketSupportCoin) {[weak self](result) in
-            switch  result {
-            case let .success(response):
-                do {
-                    let json = try response.map([MarketSupportCoinDataModel].self)
-                    guard json.isEmpty == false else {
-                        let data = setKVOData(error: LibraWalletError.WalletMarket(reason: .marketSupportTokenEmpty), type: "GetOrderPrices")
-                        self?.setValue(data, forKey: "dataDic")
-                        return
-                    }
-//                    let data = setKVOData(type: "GetSupportCoin", data: json)
+//        group.enter()
+//        let request = mainProvide.request(.GetMarketSupportCoin) {[weak self](result) in
+//            switch  result {
+//            case let .success(response):
+//                do {
+//                    let json = try response.map([MarketSupportCoinDataModel].self)
+//                    guard json.isEmpty == false else {
+//                        let data = setKVOData(error: LibraWalletError.WalletMarket(reason: .marketSupportTokenEmpty), type: "GetOrderPrices")
+//                        self?.setValue(data, forKey: "dataDic")
+//                        return
+//                    }
+////                    let data = setKVOData(type: "GetSupportCoin", data: json)
+////                    self?.setValue(data, forKey: "dataDic")
+//                    self?.priceModels = json
+//                } catch {
+//                    print("GetOrderPrices_解析异常\(error.localizedDescription)")
+//                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetOrderPrices")
 //                    self?.setValue(data, forKey: "dataDic")
-                    self?.priceModels = json
-                } catch {
-                    print("GetOrderPrices_解析异常\(error.localizedDescription)")
-                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetOrderPrices")
-                    self?.setValue(data, forKey: "dataDic")
-                }
-            case let .failure(error):
-                guard error.errorCode != -999 else {
-                    print("GetOrderPrices_网络请求已取消")
-                    return
-                }
-                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "GetOrderPrices")
-                self?.setValue(data, forKey: "dataDic")
-            }
-            group.leave()
-        }
-        self.requests.append(request)
+//                }
+//            case let .failure(error):
+//                guard error.errorCode != -999 else {
+//                    print("GetOrderPrices_网络请求已取消")
+//                    return
+//                }
+//                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "GetOrderPrices")
+//                self?.setValue(data, forKey: "dataDic")
+//            }
+//            group.leave()
+//        }
+//        self.requests.append(request)
     }
 //    func rebuiltData(orderModel: [MarketOrderDataModel], priceModel: [MarketSupportCoinDataModel]) -> [MarketOrderDataModel] {
 //        var tempOrderModel = [MarketOrderDataModel]()

@@ -7,8 +7,9 @@
 //
 
 import UIKit
-import SocketIO
+//import SocketIO
 import StatefulViewController
+import Localize_Swift
 class MarketViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -17,6 +18,8 @@ class MarketViewController: UIViewController {
         // 加载子View
         self.view.addSubview(detailView)
         self.addFirstSubView()
+        // 添加语言变换通知
+        NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -47,6 +50,7 @@ class MarketViewController: UIViewController {
     }
     deinit {
         print("MarketViewController销毁了")
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
     }
     func addNavigationBar() {
         titleButtonView.addSubview(exchangeButton)
@@ -104,7 +108,7 @@ class MarketViewController: UIViewController {
     lazy var exchangeButton: UIButton = {
         let button = UIButton(type: .custom)
         // 设置字体
-        button.setTitle("兑换", for: UIControl.State.normal)
+        button.setTitle(localLanguage(keyString: "wallet_market_exchange_navigation_title"), for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
         button.setTitleColor(UIColor.white, for: UIControl.State.normal)
         button.addTarget(self, action: #selector(changeSubViewButtonClick(button:)), for: UIControl.Event.touchUpInside)
@@ -116,7 +120,7 @@ class MarketViewController: UIViewController {
     lazy var assetsPoolButton: UIButton = {
         let button = UIButton(type: .custom)
         // 设置字体
-        button.setTitle("资金池", for: UIControl.State.normal)
+        button.setTitle(localLanguage(keyString: "wallet_market_assets_pool_navigation_title"), for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
         button.setTitleColor(UIColor.init(hex: "7038FD"), for: UIControl.State.normal)
         button.addTarget(self, action: #selector(changeSubViewButtonClick(button:)), for: UIControl.Event.touchUpInside)
@@ -157,6 +161,11 @@ class MarketViewController: UIViewController {
         let vc = MarketMineViewController()
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
+    }
+    /// 语言切换
+    @objc func setText() {
+        exchangeButton.setTitle(localLanguage(keyString: "wallet_market_exchange_navigation_title"), for: UIControl.State.normal)
+        assetsPoolButton.setTitle(localLanguage(keyString: "wallet_market_assets_pool_navigation_title"), for: UIControl.State.normal)
     }
 }
 /*

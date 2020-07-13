@@ -22,34 +22,34 @@ class OrderProcessingModel: NSObject {
     private var orderModels: [MarketOrderDataModel]?
     private var priceModels: [MarketSupportCoinDataModel]?
     func getAllProcessingOrders(address: String, version: String) {
-        let type = version.isEmpty == true ? "GetAllProcessingOrderOrigin":"GetAllProcessingOrderMore"
-        let request = mainProvide.request(.GetAllProcessingOrder(address, version)) {[weak self](result) in
-            switch  result {
-            case let .success(response):
-                do {
-                    let json = try response.map(AllProcessingOrderMainModel.self)
-                    guard json.orders?.isEmpty == false else {
-                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: type)
-                        self?.setValue(data, forKey: "dataDic")
-                        return
-                    }
-                    let data = setKVOData(type: type, data: json.orders)
-                    self?.setValue(data, forKey: "dataDic")
-                } catch {
-                    print("\(type)_解析异常\(error.localizedDescription)")
-                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: type)
-                    self?.setValue(data, forKey: "dataDic")
-                }
-            case let .failure(error):
-                guard error.errorCode != -999 else {
-                    print("\(type)_网络请求已取消")
-                    return
-                }
-                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: type)
-                self?.setValue(data, forKey: "dataDic")
-            }
-        }
-        self.requests.append(request)
+//        let type = version.isEmpty == true ? "GetAllProcessingOrderOrigin":"GetAllProcessingOrderMore"
+//        let request = mainProvide.request(.GetAllProcessingOrder(address, version)) {[weak self](result) in
+//            switch  result {
+//            case let .success(response):
+//                do {
+//                    let json = try response.map(AllProcessingOrderMainModel.self)
+//                    guard json.orders?.isEmpty == false else {
+//                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: type)
+//                        self?.setValue(data, forKey: "dataDic")
+//                        return
+//                    }
+//                    let data = setKVOData(type: type, data: json.orders)
+//                    self?.setValue(data, forKey: "dataDic")
+//                } catch {
+//                    print("\(type)_解析异常\(error.localizedDescription)")
+//                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: type)
+//                    self?.setValue(data, forKey: "dataDic")
+//                }
+//            case let .failure(error):
+//                guard error.errorCode != -999 else {
+//                    print("\(type)_网络请求已取消")
+//                    return
+//                }
+//                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: type)
+//                self?.setValue(data, forKey: "dataDic")
+//            }
+//        }
+//        self.requests.append(request)
     }
     func cancelTransaction(sendAddress: String, fee: Double, mnemonic: [String], contact: String, version: String, tokenIndex: String, module: String) {
         let semaphore = DispatchSemaphore.init(value: 1)
@@ -88,45 +88,45 @@ class OrderProcessingModel: NSObject {
         
     }
     private func submitCancelOrder(signature: String, version: String, semaphore: DispatchSemaphore) {
-        let request = mainProvide.request(.CancelOrder(signature, version)) {[weak self](result) in
-            switch  result {
-            case let .success(response):
-                do {
-                    let json = try response.map(CancelOrderMainModel.self)
-                    if json.code == 2000 {
-                        semaphore.signal()
-                    } else {
-                        if let message = json.message, message.isEmpty == false {
-                            DispatchQueue.main.async(execute: {
-                                let data = setKVOData(error: LibraWalletError.error(message), type: "SubmitCancelOrder")
-                                self?.setValue(data, forKey: "dataDic")
-                            })
-                        } else {
-                            DispatchQueue.main.async(execute: {
-                                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "SubmitCancelOrder")
-                                self?.setValue(data, forKey: "dataDic")
-                            })
-                        }
-                    }
-                } catch {
-                    print("SubmitCancelOrder_解析异常\(error.localizedDescription)")
-                    DispatchQueue.main.async(execute: {
-                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "SubmitCancelOrder")
-                        self?.setValue(data, forKey: "dataDic")
-                    })
-                }
-            case let .failure(error):
-                guard error.errorCode != -999 else {
-                    print("SubmitCancelOrder_网络请求已取消")
-                    return
-                }
-                DispatchQueue.main.async(execute: {
-                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "SubmitCancelOrder")
-                    self?.setValue(data, forKey: "dataDic")
-                })
-            }
-        }
-        self.requests.append(request)
+//        let request = mainProvide.request(.CancelOrder(signature, version)) {[weak self](result) in
+//            switch  result {
+//            case let .success(response):
+//                do {
+//                    let json = try response.map(CancelOrderMainModel.self)
+//                    if json.code == 2000 {
+//                        semaphore.signal()
+//                    } else {
+//                        if let message = json.message, message.isEmpty == false {
+//                            DispatchQueue.main.async(execute: {
+//                                let data = setKVOData(error: LibraWalletError.error(message), type: "SubmitCancelOrder")
+//                                self?.setValue(data, forKey: "dataDic")
+//                            })
+//                        } else {
+//                            DispatchQueue.main.async(execute: {
+//                                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "SubmitCancelOrder")
+//                                self?.setValue(data, forKey: "dataDic")
+//                            })
+//                        }
+//                    }
+//                } catch {
+//                    print("SubmitCancelOrder_解析异常\(error.localizedDescription)")
+//                    DispatchQueue.main.async(execute: {
+//                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "SubmitCancelOrder")
+//                        self?.setValue(data, forKey: "dataDic")
+//                    })
+//                }
+//            case let .failure(error):
+//                guard error.errorCode != -999 else {
+//                    print("SubmitCancelOrder_网络请求已取消")
+//                    return
+//                }
+//                DispatchQueue.main.async(execute: {
+//                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "SubmitCancelOrder")
+//                    self?.setValue(data, forKey: "dataDic")
+//                })
+//            }
+//        }
+//        self.requests.append(request)
     }
     func getViolasSequenceNumber(sendAddress: String, semaphore: DispatchSemaphore) {
         semaphore.wait()

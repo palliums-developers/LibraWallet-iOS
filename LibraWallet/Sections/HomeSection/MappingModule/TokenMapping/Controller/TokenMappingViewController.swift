@@ -160,16 +160,16 @@ extension TokenMappingViewController {
                     action()
                 }
             } else if type == "MappingTokenList" {
-                if let tempData = dataDic.value(forKey: "data") as? [TokenMappingListDataModel] {
-                    print(tempData)
-                    self?.detailView.toastView?.hide(tag: 99)
-                    let alert = MappingTokenListAlert.init(data: tempData) { (model) in
-                        print(model)
-                        self?.detailView.headerView.reverseModel = model
-                    }
-                    alert.show(tag: 99)
-                    alert.showAnimation()
-                }
+//                if let tempData = dataDic.value(forKey: "data") as? [TokenMappingListDataModel] {
+//                    print(tempData)
+//                    self?.detailView.toastView?.hide(tag: 99)
+//                    let alert = MappingTokenListAlert.init(data: tempData) { (model) in
+//                        print(model)
+//                        self?.detailView.headerView.reverseModel = model
+//                    }
+//                    alert.show(tag: 99)
+//                    alert.showAnimation()
+//                }
             }
         })
         if wallet?.tokenType == .BTC || wallet?.tokenType == .Libra {
