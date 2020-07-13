@@ -12,7 +12,6 @@ class ExchangeView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.white
-        //        addSubview(headerBackground)
         addSubview(headerView)
         addSubview(tableView)
     }
@@ -47,14 +46,10 @@ class ExchangeView: UIView {
         //        headerView.rightAmountTextField.text = ""
     }
     //MARK: - 懒加载对象
-    private lazy var headerView : ExchangeViewHeaderView = {
+    lazy var headerView : ExchangeViewHeaderView = {
         let header = ExchangeViewHeaderView.init()
+        
         return header
-    }()
-    private lazy var headerBackground : UIImageView = {
-        let imageView = UIImageView.init()
-        imageView.image = UIImage.init(named: "home_top_background")
-        return imageView
     }()
     lazy var tableView: UITableView = {
         let tableView = UITableView.init(frame: CGRect.zero, style: UITableView.Style.plain)

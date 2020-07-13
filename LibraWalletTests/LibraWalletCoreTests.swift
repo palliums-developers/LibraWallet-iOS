@@ -45,17 +45,17 @@ class LibraWalletCoreTests: XCTestCase {
 //            let result2 = KeychainManager.KeyManager.checkPayPasswordInvalid(walletAddress: walletAddress, password: "123456")
 //            XCTAssertEqual(result2, true)
             
-            try KeychainManager.KeyManager.saveMnemonicStringToKeychain(walletAddress: walletAddress, mnemonic: mnemonic.joined(separator: " "))
-            
-            let menmonicString = try KeychainManager.KeyManager.getMnemonicStringFromKeychain(walletAddress: walletAddress)
-            let mnemonicArray = menmonicString.split(separator: " ").compactMap { (item) -> String in
-                return "\(item)"
-            }
-            XCTAssertEqual(mnemonic, mnemonicArray)
-
-//            try KeychainManager.KeyManager.deletePayPasswordFromKeychain(walletAddress: walletAddress)
-
-            try KeychainManager.KeyManager.deleteMnemonicStringFromKeychain(walletAddress: walletAddress)
+//            try KeychainManager.KeyManager.saveMnemonicStringToKeychain(walletAddress: walletAddress, mnemonic: mnemonic.joined(separator: " "))
+//            
+//            let menmonicString = try KeychainManager.KeyManager.getMnemonicStringFromKeychain(walletAddress: walletAddress)
+//            let mnemonicArray = menmonicString.split(separator: " ").compactMap { (item) -> String in
+//                return "\(item)"
+//            }
+//            XCTAssertEqual(mnemonic, mnemonicArray)
+//
+////            try KeychainManager.KeyManager.deletePayPasswordFromKeychain(walletAddress: walletAddress)
+//
+//            try KeychainManager.KeyManager.deleteMnemonicStringFromKeychain(walletAddress: walletAddress)
 
         } catch {
             print(error.localizedDescription)

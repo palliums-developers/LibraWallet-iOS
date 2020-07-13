@@ -59,6 +59,7 @@ class ExchangeViewController: UIViewController {
         view.tableView.dataSource = self.tableViewManager
         view.tableView.mj_header = MJRefreshNormalHeader.init(refreshingTarget: self, refreshingAction:  #selector(refreshData))
         view.tableView.mj_footer = MJRefreshBackNormalFooter.init(refreshingTarget: self, refreshingAction:  #selector(getMoreData))
+        view.headerView.delegate = self
         return view
     }()
     /// 数据监听KVO
@@ -73,6 +74,23 @@ class ExchangeViewController: UIViewController {
         dataOffset += 10
         self.dataModel.getExchangeTransactions(address: "123123123123", page: dataOffset, pageSize: 10, requestStatus: 1)
     }
+}
+extension ExchangeViewController: ExchangeViewHeaderViewDelegate {
+    func exchangeConfirm() {
+        print("Exchange")
+    }
+    func selectInputToken() {
+        self.detailView.makeToastActivity(.center)
+        self.dataModel.getMarketSupportTokens()
+    }
+    func selectOutoutToken() {
+        print("selectOutoutToken")
+    }
+    func swapInputOutputToken() {
+        print("Swap")
+    }
+    
+    
 }
 extension ExchangeViewController {
     func initKVO() {
@@ -153,9 +171,19 @@ extension ExchangeViewController {
                     self?.detailView.tableView.reloadData()
                 }
                 self?.detailView.tableView.mj_footer?.endRefreshing()
+            } else if type == "GetMarketSupportTokens" {
+                guard let tempData = dataDic.value(forKey: "data") as? [MarketSupportTokensDataModel] else {
+                    return
+                }
+                let alert = MappingTokenListAlert.init(data: tempData) { (model) in
+                    print(model)
+                }
+                alert.show(tag: 99)
+                alert.showAnimation()
             }
             self?.detailView.hideToastActivity()
             self?.detailView.tableView.mj_header?.endRefreshing()
         })
     }
 }
+

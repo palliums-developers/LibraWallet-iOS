@@ -252,6 +252,17 @@ wallet_transaction_detail_explorer_check_title = "浏览器查询更详细信息
 wallet_add_assets_get_test_coin_title = "获取体验币";
 
 /************* 交易所（最新） *******************/
+wallet_market_exchange_navigation_title = "兑换";
+wallet_market_assets_pool_navigation_title = "资金池";
+wallet_market_exchange_input_amount_title = "输入";
+wallet_market_exchange_output_amount_title = "输出";
+wallet_market_exchange_fee_title = "费率：";
+wallet_market_exchange_rate_title = "兑换率：";
+wallet_market_exchange_miner_fee_title = "矿工费：";
+wallet_market_exchange_button_title = "兑换";
+wallet_market_exchange_input_token_button_title = "选择通证";
+wallet_market_exchange_output_token_button_title = "选择通证";
+wallet_market_exchange_transactions_title = "兑换记录";
 wallet_market_exchange_transaction_status_success_title = "兑换成功";
 wallet_market_exchange_transaction_status_failed_title = "兑换失败";
 wallet_market_exchange_transaction_retry_button_title = "重试";

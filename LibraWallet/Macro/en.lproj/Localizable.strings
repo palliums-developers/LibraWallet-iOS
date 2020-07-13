@@ -250,6 +250,17 @@ wallet_transaction_detail_explorer_check_title = "Browser for more detailed info
 wallet_add_assets_get_test_coin_title = "Get Test Coin";
 
 /************* 交易所（最新） *******************/
+wallet_market_exchange_navigation_title = "Exchange";
+wallet_market_assets_pool_navigation_title = "Pool";
+wallet_market_exchange_input_amount_title = "Input";
+wallet_market_exchange_output_amount_title = "Output";
+wallet_market_exchange_fee_title = "Fees: ";
+wallet_market_exchange_rate_title = "Exchange Rate: ";
+wallet_market_exchange_miner_fee_title = "Miner Fees: ";
+wallet_market_exchange_button_title = "Exchange";
+wallet_market_exchange_input_token_button_title = "Token";
+wallet_market_exchange_output_token_button_title = "Token";
+wallet_market_exchange_transactions_title = "Exchange Transactions";
 wallet_market_exchange_transaction_status_success_title = "Successful";
 wallet_market_exchange_transaction_status_failed_title = "Failed";
 wallet_market_exchange_transaction_retry_button_title = "Retry";
