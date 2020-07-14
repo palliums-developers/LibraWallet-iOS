@@ -258,14 +258,16 @@ wallet_market_exchange_fee_title = "Fees: ";
 wallet_market_exchange_rate_title = "Exchange Rate: ";
 wallet_market_exchange_miner_fee_title = "Miner Fees: ";
 wallet_market_exchange_button_title = "Exchange";
-wallet_market_exchange_input_token_button_title = "Token";
-wallet_market_exchange_output_token_button_title = "Token";
+wallet_market_exchange_input_token_button_title = "Select Token";
+wallet_market_exchange_output_token_button_title = "Select Token";
 wallet_market_exchange_transactions_title = "Exchange Transactions";
 wallet_market_exchange_transaction_status_success_title = "Successful";
 wallet_market_exchange_transaction_status_failed_title = "Failed";
 wallet_market_exchange_transaction_retry_button_title = "Retry";
 
 /************* 资金池 *******************/
+wallet_assets_pool_transfer_in_title = "Transfer-In";
+wallet_assets_pool_transfer_out_title = "Transfer-Out";
 wallet_assets_pool_transaction_token_title = "Token";
 wallet_assets_pool_transaction_status_transfer_in_success_title = "Transfer-In Successful";
 wallet_assets_pool_transaction_status_transfer_in_failed_title = "Transfer-In Failed";

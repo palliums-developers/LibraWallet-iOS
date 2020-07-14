@@ -51,7 +51,7 @@ struct TokenMappingListMainModel: Codable {
 class TokenMappingModel: NSObject {
     private var requests: [Cancellable] = []
     @objc dynamic var dataDic: NSMutableDictionary = [:]
-    private var sequenceNumber: Int64?
+    private var sequenceNumber: Int?
     func getMappingInfo(walletType: WalletType) {
 //        let model = getLocalModel(walletType: walletType)
 //        let data = setKVOData(type: "MappingInfo", data: model)
@@ -465,7 +465,7 @@ extension TokenMappingModel {
                 do {
                     let json = try response.map(ViolaSequenceNumberMainModel.self)
                     if json.code == 2000 {
-                       self?.sequenceNumber = Int64(json.data ?? 0)
+                       self?.sequenceNumber = json.data ?? 0
                        semaphore.signal()
                     } else {
                         print("GetViolasSequenceNumber_状态异常")

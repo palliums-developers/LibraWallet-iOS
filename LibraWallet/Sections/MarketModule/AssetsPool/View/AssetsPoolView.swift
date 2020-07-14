@@ -35,7 +35,7 @@ class AssetsPoolView: UIView {
         }
     }
     //MARK: - 懒加载对象
-    private lazy var headerView : AssetsPoolViewHeaderView = {
+    lazy var headerView : AssetsPoolViewHeaderView = {
         let header = AssetsPoolViewHeaderView.init()
         return header
     }()

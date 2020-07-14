@@ -7,8 +7,14 @@
 //
 
 import UIKit
-
+protocol AssetsPoolViewHeaderViewDelegate: NSObjectProtocol {
+    func exchangeConfirm()
+    func selectInputToken()
+    func selectOutoutToken()
+    func swapInputOutputToken()
+}
 class AssetsPoolViewHeaderView: UIView {
+    weak var delegate: AssetsPoolViewHeaderViewDelegate?
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.white
@@ -41,6 +47,8 @@ class AssetsPoolViewHeaderView: UIView {
         changeTypeButton.snp.makeConstraints { (make) in
             make.left.equalTo(inputTokenBackgroundView.snp.left).offset(5)
             make.bottom.equalTo(inputTokenBackgroundView.snp.top).offset(-6)
+            let width = libraWalletTool.ga_widthForComment(content: changeTypeButton.titleLabel?.text ?? "", fontSize: 12, height: 20) + 8 + 19
+            make.size.equalTo(CGSize.init(width: width, height: 20))
         }
         feeLabel.snp.makeConstraints { (make) in
             make.right.equalTo(inputTokenBackgroundView.snp.right).offset(-6)
@@ -65,8 +73,8 @@ class AssetsPoolViewHeaderView: UIView {
         inputTokenButton.snp.makeConstraints { (make) in
             make.right.equalTo(inputTokenBackgroundView.snp.right).offset(-11)
             make.bottom.equalTo(inputTokenBackgroundView.snp.bottom).offset(-11)
-            let width = libraWalletTool.ga_widthForComment(content: "选择通证", fontSize: 12, height: 22)
-            make.size.equalTo(CGSize.init(width: 8 + width + 3 + 9 + 8 + 20, height: 22))
+            let width = libraWalletTool.ga_widthForComment(content: localLanguage(keyString: "wallet_market_exchange_input_token_button_title"), fontSize: 12, height: 22) + 8 + 19
+            make.size.equalTo(CGSize.init(width: width, height: 22))
         }
         swapButton.snp.makeConstraints { (make) in
             make.top.equalTo(inputTokenBackgroundView.snp.bottom).offset(6)
@@ -92,6 +100,8 @@ class AssetsPoolViewHeaderView: UIView {
         outputTokenButton.snp.makeConstraints { (make) in
             make.right.equalTo(outputTokenBackgroundView.snp.right).offset(-11)
             make.bottom.equalTo(outputTokenBackgroundView.snp.bottom).offset(-11)
+            let width = libraWalletTool.ga_widthForComment(content: localLanguage(keyString: "wallet_market_exchange_output_token_button_title"), fontSize: 12, height: 22) + 8 + 19
+            make.size.equalTo(CGSize.init(width: width, height: 22))
         }
         exchangeRateLabel.snp.makeConstraints { (make) in
             make.left.equalTo(outputTokenBackgroundView).offset(15)
@@ -119,13 +129,15 @@ class AssetsPoolViewHeaderView: UIView {
     lazy var changeTypeButton: UIButton = {
         let button = UIButton(type: .custom)
         // 设置字体
-        button.setTitle("---", for: UIControl.State.normal)
+        button.setTitle(localLanguage(keyString: "wallet_assets_pool_transfer_in_title"), for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
         button.setTitleColor(UIColor.init(hex: "7038FD"), for: UIControl.State.normal)
         //        button.addTarget(self, action: #selector(selectExchangeToken(button:)), for: UIControl.Event.touchUpInside)
-        button.layer.borderColor = UIColor.init(hex: "7038FD").cgColor
-        button.layer.borderWidth = 0.5
-        button.layer.cornerRadius = 14
+        button.setImage(UIImage.init(named: "arrow_down"), for: UIControl.State.normal)
+        // 调整位置
+        button.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 9, height: 5.5))
+        button.layer.backgroundColor = UIColor.init(hex: "F1EEFB").cgColor
+        button.layer.cornerRadius = 10
         button.tag = 20
         return button
     }()
@@ -134,7 +146,7 @@ class AssetsPoolViewHeaderView: UIView {
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "5C5C5C")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = "费率：0.3000%"
+        label.text = localLanguage(keyString: "wallet_market_exchange_fee_title") + "---"
         return label
     }()
     private lazy var inputTokenBackgroundView: UIView = {
@@ -149,7 +161,7 @@ class AssetsPoolViewHeaderView: UIView {
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "333333")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = "输入"
+        label.text = localLanguage(keyString: "wallet_market_exchange_input_amount_title")
         return label
     }()
     lazy var inputAmountTextField: WYDTextField = {
@@ -167,13 +179,13 @@ class AssetsPoolViewHeaderView: UIView {
     lazy var inputTokenButton: UIButton = {
         let button = UIButton(type: .custom)
         // 设置字体
-        button.setTitle("选择通证", for: UIControl.State.normal)
+        button.setTitle(localLanguage(keyString: "wallet_market_exchange_input_token_button_title"), for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
         button.setTitleColor(UIColor.init(hex: "7038FD"), for: UIControl.State.normal)
         //        button.addTarget(self, action: #selector(selectExchangeToken(button:)), for: UIControl.Event.touchUpInside)
         button.setImage(UIImage.init(named: "arrow_down"), for: UIControl.State.normal)
         // 调整位置
-        button.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 14, height: 8))
+        button.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 9, height: 5.5))
         button.layer.borderColor = UIColor.init(hex: "7038FD").cgColor
         button.layer.borderWidth = 0.5
         button.layer.cornerRadius = 11
@@ -199,7 +211,7 @@ class AssetsPoolViewHeaderView: UIView {
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "000000")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
-        label.text = "输出"
+        label.text = localLanguage(keyString: "wallet_market_exchange_output_amount_title")
         return label
     }()
     lazy var outputAmountTextField: WYDTextField = {
@@ -217,16 +229,17 @@ class AssetsPoolViewHeaderView: UIView {
     lazy var outputTokenButton: UIButton = {
         let button = UIButton(type: .custom)
         // 设置字体
-        button.setTitle("选择通证", for: UIControl.State.normal)
+        button.setTitle(localLanguage(keyString: "wallet_market_exchange_output_token_button_title"), for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
         button.setTitleColor(UIColor.init(hex: "7038FD"), for: UIControl.State.normal)
         //        button.addTarget(self, action: #selector(selectExchangeToken(button:)), for: UIControl.Event.touchUpInside)
-//        button.setImage(UIImage.init(named: "arrow_down"), for: UIControl.State.normal)
-//        // 调整位置
-//        button.imagePosition(at: .right, space: 4, imageViewSize: CGSize.init(width: 14, height: 8))
+        //        button.setImage(UIImage.init(named: "arrow_down"), for: UIControl.State.normal)
+        button.setImage(UIImage.init(named: "arrow_down"), for: UIControl.State.normal)
+        // 调整位置
+        button.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 9, height: 5.5))
         button.layer.borderColor = UIColor.init(hex: "7038FD").cgColor
         button.layer.borderWidth = 0.5
-        button.layer.cornerRadius = 14
+        button.layer.cornerRadius = 11
         button.tag = 30
         return button
     }()
@@ -235,7 +248,7 @@ class AssetsPoolViewHeaderView: UIView {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "5C5C5C")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: UIFont.Weight.regular)
-        label.text = "兑换费率：---"
+        label.text = localLanguage(keyString: "wallet_market_exchange_rate_title") + "---"
         return label
     }()
     lazy var minerFeeLabel: UILabel = {
@@ -243,7 +256,7 @@ class AssetsPoolViewHeaderView: UIView {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "5C5C5C")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: UIFont.Weight.regular)
-        label.text = "矿工费用：---"
+        label.text = localLanguage(keyString: "wallet_market_exchange_miner_fee_title") + "---"
         return label
     }()
     lazy var confirmButton: UIButton = {
@@ -312,3 +325,5 @@ extension AssetsPoolViewHeaderView: UITextFieldDelegate {
     //        }
     //    }
 }
+//wallet_assets_pool_transfer_in_title = "Transfer-In"
+//wallet_assets_pool_transfer_out_title = "Transfer-Out"

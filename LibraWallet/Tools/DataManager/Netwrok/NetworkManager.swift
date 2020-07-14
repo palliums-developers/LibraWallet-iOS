@@ -132,8 +132,10 @@ extension mainRequest:TargetType {
             //            // 对外
             ////            return URL(string:"https://ac.testnet.violas.io")!
             if PUBLISH_VERSION == true {
+                //对外
                 return URL(string:"https://ac.testnet.violas.io")!
             } else {
+                //对内
                 return URL(string:"https://ab.testnet.violas.io")!
             }
         case .GetLibraAccountBalance(_),

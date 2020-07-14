@@ -49,6 +49,7 @@ class AssetsPoolViewController: UIViewController {
         view.tableView.dataSource = self.tableViewManager
         view.tableView.mj_header = MJRefreshNormalHeader.init(refreshingTarget: self, refreshingAction:  #selector(refreshData))
         view.tableView.mj_footer = MJRefreshBackNormalFooter.init(refreshingTarget: self, refreshingAction:  #selector(getMoreData))
+        view.headerView.delegate = self
         return view
     }()
     /// 数据监听KVO
@@ -70,6 +71,44 @@ extension AssetsPoolViewController: AssetsPoolTableViewManagerDelegate {
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
+}
+extension AssetsPoolViewController: AssetsPoolViewHeaderViewDelegate {
+    func exchangeConfirm() {
+        print("Exchange")
+        
+        WalletManager.unlockWallet(controller: self, successful: { [weak self](mnemonic) in
+//            self?.dataModel.sendAddLiquidityViolasTransaction(sendAddress: "",
+//                                                              amounta_desired: <#T##Double#>,
+//                                                              amountb_desired: <#T##Double#>,
+//                                                              amounta_min: <#T##Double#>,
+//                                                              amountb_min: <#T##Double#>,
+//                                                              fee: <#T##Double#>,
+//                                                              mnemonic: <#T##[String]#>,
+//                                                              moduleA: <#T##String#>,
+//                                                              moduleB: <#T##String#>,
+//                                                              feeModule: <#T##String#>)
+        }) { [weak self](error) in
+            guard error != "Cancel" else {
+                self?.detailView.toastView?.hide(tag: 99)
+                return
+            }
+            self?.detailView.makeToast(error,
+                                       position: .center)
+        }
+        
+    }
+    func selectInputToken() {
+//        self.detailView.makeToastActivity(.center)
+//        self.dataModel.getMarketSupportTokens()
+    }
+    func selectOutoutToken() {
+        print("selectOutoutToken")
+    }
+    func swapInputOutputToken() {
+        print("Swap")
+    }
+    
+    
 }
 extension AssetsPoolViewController {
     func initKVO() {

@@ -70,6 +70,8 @@ class ExchangeViewHeaderView: UIView {
         inputTokenButton.snp.makeConstraints { (make) in
             make.right.equalTo(inputTokenBackgroundView.snp.right).offset(-11)
             make.bottom.equalTo(inputTokenBackgroundView.snp.bottom).offset(-11)
+            let width = libraWalletTool.ga_widthForComment(content: localLanguage(keyString: "wallet_market_exchange_input_token_button_title"), fontSize: 12, height: 22) + 8 + 19
+            make.size.equalTo(CGSize.init(width: width, height: 22))
         }
         swapButton.snp.makeConstraints { (make) in
             make.top.equalTo(inputTokenBackgroundView.snp.bottom).offset(6)
@@ -95,6 +97,8 @@ class ExchangeViewHeaderView: UIView {
         outputTokenButton.snp.makeConstraints { (make) in
             make.right.equalTo(outputTokenBackgroundView.snp.right).offset(-11)
             make.bottom.equalTo(outputTokenBackgroundView.snp.bottom).offset(-11)
+            let width = libraWalletTool.ga_widthForComment(content: localLanguage(keyString: "wallet_market_exchange_output_token_button_title"), fontSize: 12, height: 22) + 8 + 19
+            make.size.equalTo(CGSize.init(width: width, height: 22))
         }
         exchangeRateLabel.snp.makeConstraints { (make) in
             make.left.equalTo(outputTokenBackgroundView).offset(15)
@@ -161,9 +165,12 @@ class ExchangeViewHeaderView: UIView {
         button.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
         button.setTitleColor(UIColor.init(hex: "7038FD"), for: UIControl.State.normal)
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
+        button.setImage(UIImage.init(named: "arrow_down"), for: UIControl.State.normal)
+        // 调整位置
+        button.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 9, height: 5.5))
         button.layer.borderColor = UIColor.init(hex: "7038FD").cgColor
         button.layer.borderWidth = 0.5
-        button.layer.cornerRadius = 14
+        button.layer.cornerRadius = 11
         button.tag = 10
         return button
     }()
@@ -208,9 +215,12 @@ class ExchangeViewHeaderView: UIView {
         button.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
         button.setTitleColor(UIColor.init(hex: "7038FD"), for: UIControl.State.normal)
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
+        button.setImage(UIImage.init(named: "arrow_down"), for: UIControl.State.normal)
+        // 调整位置
+        button.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 9, height: 5.5))
         button.layer.borderColor = UIColor.init(hex: "7038FD").cgColor
         button.layer.borderWidth = 0.5
-        button.layer.cornerRadius = 14
+        button.layer.cornerRadius = 11
         button.tag = 20
         return button
     }()

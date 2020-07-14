@@ -25,7 +25,7 @@ struct ViolaSendTransactionMainModel: Codable {
 class ViolasTransferModel: NSObject {
     @objc dynamic var dataDic: NSMutableDictionary = [:]
     private var requests: [Cancellable] = []
-    private var sequenceNumber: Int64?
+    private var sequenceNumber: Int?
     func sendViolasTransaction(sendAddress: String, receiveAddress: String, amount: Double, fee: Double, mnemonic: [String], module: String) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
@@ -43,34 +43,6 @@ class ViolasTransferModel: NSObject {
                                                                            mnemonic: mnemonic,
                                                                            sequenceNumber: Int(self.sequenceNumber!),
                                                                            module: module)
-                self.makeViolasTransaction(signature: signature)
-            } catch {
-                print(error.localizedDescription)
-                DispatchQueue.main.async(execute: {
-                    let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "SendViolasTransaction")
-                    self.setValue(data, forKey: "dataDic")
-                })
-            }
-            semaphore.signal()
-        }
-    }
-    func sendViolasTokenTransaction(sendAddress: String, receiveAddress: String, amount: Double, fee: Double, mnemonic: [String], tokenIndex: String, module: String) {
-        let semaphore = DispatchSemaphore.init(value: 1)
-        let queue = DispatchQueue.init(label: "SendQueue")
-        queue.async {
-            self.getViolasSequenceNumber(sendAddress: sendAddress, semaphore: semaphore)
-        }
-        queue.async {
-            semaphore.wait()
-            do {
-                let signature = try ViolasManager.getViolasTokenTransactionHex(sendAddress: sendAddress,
-                                                                               receiveAddress: receiveAddress,
-                                                                               amount: amount,
-                                                                               fee: fee,
-                                                                               mnemonic: mnemonic,
-                                                                               sequenceNumber: Int(self.sequenceNumber!),
-                                                                               tokenIndex: tokenIndex,
-                                                                               module: module)
                 self.makeViolasTransaction(signature: signature)
             } catch {
                 print(error.localizedDescription)

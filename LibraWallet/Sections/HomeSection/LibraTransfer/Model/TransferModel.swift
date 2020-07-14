@@ -24,7 +24,7 @@ class TransferModel: NSObject {
     @objc dynamic var dataDic: NSMutableDictionary = [:]
     private var requests: [Cancellable] = []
     
-    private var sequenceNumber: Int64?
+    private var sequenceNumber: Int?
     fileprivate func getLibraSequenceNumber(sendAddress: String, semaphore: DispatchSemaphore) {
         let request = mainProvide.request(.GetLibraAccountBalance(sendAddress)) {[weak self](result) in
             switch  result {

@@ -52,39 +52,39 @@ class OrderProcessingModel: NSObject {
 //        self.requests.append(request)
     }
     func cancelTransaction(sendAddress: String, fee: Double, mnemonic: [String], contact: String, version: String, tokenIndex: String, module: String) {
-        let semaphore = DispatchSemaphore.init(value: 1)
-        let queue = DispatchQueue.init(label: "SendQueue")
-        var signature = ""
-        queue.async {
-            self.getViolasSequenceNumber(sendAddress: sendAddress, semaphore: semaphore)
-        }
-        queue.async {
-            semaphore.wait()
-            do {
-                signature = try ViolasManager.getMarketExchangeCancelTransactionHex(sendAddress: sendAddress,
-                                                                                    fee: fee,
-                                                                                    mnemonic: mnemonic,
-                                                                                    contact: contact,
-                                                                                    version: version,
-                                                                                    sequenceNumber: self.sequenceNumber!,
-                                                                                    tokenIndex: tokenIndex,
-                                                                                    module: module)
-    //                self.makeViolasTransaction(signature: signature)
-                self.submitCancelOrder(signature: signature, version: version, semaphore: semaphore)
-            } catch {
-                print(error.localizedDescription)
-                DispatchQueue.main.async(execute: {
-                    let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "SendViolasTransaction")
-                    self.setValue(data, forKey: "dataDic")
-                })
-            }
-    //            semaphore.signal()
-        }
-        queue.async {
-            semaphore.wait()
-            self.makeViolasTransaction(signature: signature)
-            semaphore.signal()
-        }
+//        let semaphore = DispatchSemaphore.init(value: 1)
+//        let queue = DispatchQueue.init(label: "SendQueue")
+//        var signature = ""
+//        queue.async {
+//            self.getViolasSequenceNumber(sendAddress: sendAddress, semaphore: semaphore)
+//        }
+//        queue.async {
+//            semaphore.wait()
+//            do {
+//                signature = try ViolasManager.getMarketExchangeCancelTransactionHex(sendAddress: sendAddress,
+//                                                                                    fee: fee,
+//                                                                                    mnemonic: mnemonic,
+//                                                                                    contact: contact,
+//                                                                                    version: version,
+//                                                                                    sequenceNumber: self.sequenceNumber!,
+//                                                                                    tokenIndex: tokenIndex,
+//                                                                                    module: module)
+//    //                self.makeViolasTransaction(signature: signature)
+//                self.submitCancelOrder(signature: signature, version: version, semaphore: semaphore)
+//            } catch {
+//                print(error.localizedDescription)
+//                DispatchQueue.main.async(execute: {
+//                    let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "SendViolasTransaction")
+//                    self.setValue(data, forKey: "dataDic")
+//                })
+//            }
+//    //            semaphore.signal()
+//        }
+//        queue.async {
+//            semaphore.wait()
+//            self.makeViolasTransaction(signature: signature)
+//            semaphore.signal()
+//        }
         
     }
     private func submitCancelOrder(signature: String, version: String, semaphore: DispatchSemaphore) {
