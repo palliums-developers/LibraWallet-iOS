@@ -1,23 +1,24 @@
 //
-//  AssetsPoolTransactionDetailView.swift
+//  ExchangeTransactionsView.swift
 //  LibraWallet
 //
-//  Created by wangyingdong on 2020/7/9.
+//  Created by wangyingdong on 2020/7/14.
 //  Copyright © 2020 palliums. All rights reserved.
 //
 
 import UIKit
 
-class AssetsPoolTransactionDetailView: UIView {
+class ExchangeTransactionsView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
+        self.backgroundColor = UIColor.white
         addSubview(tableView)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
-        print("AssetsPoolTransactionDetailView销毁了")
+        print("ExchangeTransactionsView销毁了")
     }
     //MARK: - 布局
     override func layoutSubviews() {
@@ -29,18 +30,32 @@ class AssetsPoolTransactionDetailView: UIView {
     }
     //MARK: - 懒加载对象
     lazy var tableView: UITableView = {
-        let tableView = UITableView.init()
+        let tableView = UITableView.init(frame: CGRect.zero, style: UITableView.Style.plain)
         tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
         tableView.estimatedRowHeight = 0;
         tableView.estimatedSectionHeaderHeight = 0;
-        tableView.backgroundColor = UIColor.white
-        tableView.isScrollEnabled = false
-        tableView.register(AssetsPoolTableViewCell.classForCoder(), forCellReuseIdentifier: "NormalCell")
-        tableView.register(AssetsPoolTableViewCell.classForCoder(), forCellReuseIdentifier: "FailedCell")
+        if #available(iOS 11.0, *) {
+            tableView.contentInsetAdjustmentBehavior = UIScrollView.ContentInsetAdjustmentBehavior.never
+        } else {
+            // Fallback on earlier versions
+        }
+        tableView.backgroundColor = UIColor.clear
         return tableView
     }()
     var toastView: ToastView? {
         let toast = ToastView.init()
         return toast
+    }
+    func deleteRowInTableView(indexPaths: [IndexPath]) {
+        
+    }
+    func insertRowInTableView(indexPaths: [IndexPath]) {
+        
+    }
+    func reloadRowInTableView(indexPaths: [IndexPath]) {
+        
+    }
+    func dealErrorToast(error: LibraWalletError) {
+        
     }
 }

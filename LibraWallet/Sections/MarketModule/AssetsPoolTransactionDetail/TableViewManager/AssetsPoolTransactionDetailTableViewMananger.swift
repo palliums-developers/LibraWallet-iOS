@@ -9,7 +9,8 @@
 import UIKit
 
 class AssetsPoolTransactionDetailTableViewMananger: NSObject {
-    
+    var dataModels: [TransactionDetailCustomDataModel]?
+    var model: AssetsPoolTransactionsDataModel?
 }
 extension AssetsPoolTransactionDetailTableViewMananger: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -25,9 +26,11 @@ extension AssetsPoolTransactionDetailTableViewMananger: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let identifier = "Header"
         if let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier) as? ExchangeTransactionDetailHeaderView {
+            header.model = self.model
             return header
         } else {
             let header = ExchangeTransactionDetailHeaderView.init(reuseIdentifier: identifier)
+            header.model = self.model
             return header
         }
     }
@@ -37,22 +40,22 @@ extension AssetsPoolTransactionDetailTableViewMananger: UITableViewDelegate {
 }
 extension AssetsPoolTransactionDetailTableViewMananger: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5//dataModel?.count ?? 0
+        return dataModels?.count ?? 0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let identifier = "NormalCell"
         if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? ExchangeTransactionDetailTableViewCell {
-            //            if let data = dataModel, data.isEmpty == false {
-            //                cell.model = data[indexPath.row]
-            //            }
+            if let data = dataModels, data.isEmpty == false {
+                cell.model = data[indexPath.row]
+            }
             cell.selectionStyle = .none
             //            cell.delegate = self
             return cell
         } else {
             let cell = ExchangeTransactionDetailTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
-            //            if let data = dataModel, data.isEmpty == false {
-            //                cell.model = data[indexPath.row]
-            //            }
+            if let data = dataModels, data.isEmpty == false {
+                cell.model = data[indexPath.row]
+            }
             cell.selectionStyle = .none
             //            cell.delegate = self
             

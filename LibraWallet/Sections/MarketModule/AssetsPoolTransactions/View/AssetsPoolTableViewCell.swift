@@ -36,29 +36,29 @@ class AssetsPoolTableViewCell: UITableViewCell {
         super.layoutSubviews()
         transactionTypeImageView.snp.makeConstraints { (make) in
             make.left.equalTo(contentView).offset(15)
-            make.centerY.equalTo(contentView)
+            make.top.equalTo(contentView).offset(15)
             make.size.equalTo(CGSize.init(width: 24, height: 24))
         }
         stateLabel.snp.makeConstraints { (make) in
-            make.centerY.equalTo(contentView).offset(-13)
+            make.centerY.equalTo(contentView).offset(-20)
             make.left.equalTo(transactionTypeImageView.snp.right).offset(8)
         }
         tokenLabel.snp.makeConstraints { (make) in
-            make.centerY.equalTo(contentView).offset(13)
+            make.centerY.equalTo(contentView).offset(20)
             make.left.equalTo(transactionTypeImageView.snp.right).offset(8)
         }
         inputAmountLabel.snp.makeConstraints { (make) in
-            make.right.equalTo(exchangeIndicatorLabel.snp.left).offset(-13)
-            make.centerY.equalTo(outputAmountLabel)
+            make.left.equalTo(transactionTypeImageView.snp.right).offset(8)
+            make.centerY.equalTo(contentView)
         }
         exchangeIndicatorLabel.snp.makeConstraints { (make) in
-            make.centerY.equalTo(outputAmountLabel)
-            make.right.equalTo(outputAmountLabel.snp.left).offset(-13)
+            make.centerY.equalTo(inputAmountLabel)
+            make.left.equalTo(inputAmountLabel.snp.right).offset(13)
             make.size.equalTo(CGSize.init(width: 10, height: 9))
         }
         outputAmountLabel.snp.makeConstraints { (make) in
-            make.centerY.equalTo(stateLabel)
-            make.right.equalTo(contentView.snp.right).offset(-16)
+            make.centerY.equalTo(contentView)
+            make.left.equalTo(exchangeIndicatorLabel.snp.right).offset(13)
         }
         dateLabel.snp.makeConstraints { (make) in
             make.right.equalTo(contentView.snp.right).offset(-16)
@@ -89,7 +89,7 @@ class AssetsPoolTableViewCell: UITableViewCell {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "999999")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
+        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: UIFont.Weight.regular)
         label.text = "---"
         return label
     }()

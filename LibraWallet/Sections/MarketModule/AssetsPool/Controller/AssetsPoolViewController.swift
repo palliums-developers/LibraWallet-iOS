@@ -9,7 +9,6 @@
 import UIKit
 import MJRefresh
 class AssetsPoolViewController: UIViewController {
-
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.white
@@ -17,8 +16,6 @@ class AssetsPoolViewController: UIViewController {
         self.view.addSubview(detailView)
         // 初始化KVO
         self.initKVO()
-        // 请求数据
-        self.detailView.tableView.mj_header?.beginRefreshing()
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -36,41 +33,14 @@ class AssetsPoolViewController: UIViewController {
         let model = AssetsPoolModel.init()
         return model
     }()
-    /// tableView管理类
-    lazy var tableViewManager: AssetsPoolTableViewManager = {
-        let manager = AssetsPoolTableViewManager.init()
-        manager.delegate = self
-        return manager
-    }()
     /// 子View
     lazy var detailView : AssetsPoolView = {
         let view = AssetsPoolView.init()
-        view.tableView.delegate = self.tableViewManager
-        view.tableView.dataSource = self.tableViewManager
-        view.tableView.mj_header = MJRefreshNormalHeader.init(refreshingTarget: self, refreshingAction:  #selector(refreshData))
-        view.tableView.mj_footer = MJRefreshBackNormalFooter.init(refreshingTarget: self, refreshingAction:  #selector(getMoreData))
         view.headerView.delegate = self
         return view
     }()
     /// 数据监听KVO
     var observer: NSKeyValueObservation?
-    var dataOffset: Int = 0
-    @objc func refreshData() {
-        dataOffset = 0
-        detailView.tableView.mj_footer?.resetNoMoreData()
-        self.dataModel.getAssetsPoolTransactions(address: "123123123123", page: dataOffset, pageSize: 10, requestStatus: 0)
-    }
-    @objc func getMoreData() {
-        dataOffset += 10
-        self.dataModel.getAssetsPoolTransactions(address: "123123123123", page: dataOffset, pageSize: 10, requestStatus: 1)
-    }
-}
-extension AssetsPoolViewController: AssetsPoolTableViewManagerDelegate {
-    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath) {
-        let vc = ExchangeTransactionDetailViewController()
-        vc.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(vc, animated: true)
-    }
 }
 extension AssetsPoolViewController: AssetsPoolViewHeaderViewDelegate {
     func exchangeConfirm() {
@@ -120,12 +90,6 @@ extension AssetsPoolViewController {
             if let error = dataDic.value(forKey: "error") as? LibraWalletError {
                 // 隐藏请求指示
                 self?.detailView.hideToastActivity()
-                if self?.detailView.tableView.mj_footer?.isRefreshing == true {
-                    self?.detailView.tableView.mj_footer?.endRefreshingWithNoMoreData()
-                }
-                if self?.detailView.tableView.mj_header?.isRefreshing == true {
-                    self?.detailView.tableView.mj_header?.endRefreshing()
-                }
                 if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
                     // 网络无法访问
                     print(error.localizedDescription)
@@ -149,48 +113,44 @@ extension AssetsPoolViewController {
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
                     print(error.localizedDescription)
                     // 下拉刷新请求数据为空
-                    self?.tableViewManager.dataModels?.removeAll()
-                    self?.detailView.tableView.reloadData()
                     self?.detailView.makeToast(error.localizedDescription,
                                                position: .center)
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .noMoreData).localizedDescription {
                     // 上拉请求更多数据为空
                     print(error.localizedDescription)
-                    self?.detailView.tableView.mj_footer?.endRefreshingWithNoMoreData()
                 }
                 return
             }
             let type = dataDic.value(forKey: "type") as! String
-            if type == "AssetsPoolTransactionsOrigin" {
-                guard let tempData = dataDic.value(forKey: "data") as? [AssetsPoolTransactionsDataModel] else {
-                    return
-                }
-                self?.tableViewManager.dataModels = tempData
-                self?.detailView.tableView.reloadData()
-            } else if type == "AssetsPoolTransactionsMore" {
-                guard let tempData = dataDic.value(forKey: "data") as? [AssetsPoolTransactionsDataModel] else {
-                    return
-                }
-                if let oldData = self?.tableViewManager.dataModels, oldData.isEmpty == false {
-                    let tempArray = NSMutableArray.init(array: oldData)
-                    var insertIndexPath = [IndexPath]()
-                    for index in 0..<tempData.count {
-                        let indexPath = IndexPath.init(row: oldData.count + index, section: 0)
-                        insertIndexPath.append(indexPath)
-                    }
-                    tempArray.addObjects(from: tempData)
-                    self?.tableViewManager.dataModels = tempArray as? [AssetsPoolTransactionsDataModel]
-                    self?.detailView.tableView.beginUpdates()
-                    self?.detailView.tableView.insertRows(at: insertIndexPath, with: UITableView.RowAnimation.bottom)
-                    self?.detailView.tableView.endUpdates()
-                } else {
-                    self?.tableViewManager.dataModels = tempData
-                    self?.detailView.tableView.reloadData()
-                }
-                self?.detailView.tableView.mj_footer?.endRefreshing()
-            }
+//            if type == "AssetsPoolTransactionsOrigin" {
+//                guard let tempData = dataDic.value(forKey: "data") as? [AssetsPoolTransactionsDataModel] else {
+//                    return
+//                }
+//                self?.tableViewManager.dataModels = tempData
+//                self?.detailView.tableView.reloadData()
+//            } else if type == "AssetsPoolTransactionsMore" {
+//                guard let tempData = dataDic.value(forKey: "data") as? [AssetsPoolTransactionsDataModel] else {
+//                    return
+//                }
+//                if let oldData = self?.tableViewManager.dataModels, oldData.isEmpty == false {
+//                    let tempArray = NSMutableArray.init(array: oldData)
+//                    var insertIndexPath = [IndexPath]()
+//                    for index in 0..<tempData.count {
+//                        let indexPath = IndexPath.init(row: oldData.count + index, section: 0)
+//                        insertIndexPath.append(indexPath)
+//                    }
+//                    tempArray.addObjects(from: tempData)
+//                    self?.tableViewManager.dataModels = tempArray as? [AssetsPoolTransactionsDataModel]
+//                    self?.detailView.tableView.beginUpdates()
+//                    self?.detailView.tableView.insertRows(at: insertIndexPath, with: UITableView.RowAnimation.bottom)
+//                    self?.detailView.tableView.endUpdates()
+//                } else {
+//                    self?.tableViewManager.dataModels = tempData
+//                    self?.detailView.tableView.reloadData()
+//                }
+//                self?.detailView.tableView.mj_footer?.endRefreshing()
+//            }
             self?.detailView.hideToastActivity()
-            self?.detailView.tableView.mj_header?.endRefreshing()
         })
     }
 }

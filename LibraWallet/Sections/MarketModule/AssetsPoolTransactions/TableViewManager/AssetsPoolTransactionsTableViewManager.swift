@@ -1,35 +1,35 @@
 //
-//  AssetsPoolTableViewManager.swift
+//  AssetsPoolTransactionsTableViewManager.swift
 //  LibraWallet
 //
-//  Created by wangyingdong on 2020/7/1.
+//  Created by wangyingdong on 2020/7/14.
 //  Copyright © 2020 palliums. All rights reserved.
 //
 
 import UIKit
-protocol AssetsPoolTableViewManagerDelegate: NSObjectProtocol {
-    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath)
+protocol AssetsPoolTransactionsTableViewManagerDelegate: NSObjectProtocol {
+    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: AssetsPoolTransactionsDataModel)
 }
-class AssetsPoolTableViewManager: NSObject {
-    weak var delegate: AssetsPoolTableViewManagerDelegate?
+class AssetsPoolTransactionsTableViewManager: NSObject {
+    weak var delegate: AssetsPoolTransactionsTableViewManagerDelegate?
     var dataModels: [AssetsPoolTransactionsDataModel]?
     deinit {
         print("AssetsPoolTableViewManager销毁了")
     }
 }
-extension AssetsPoolTableViewManager: UITableViewDelegate {
+extension AssetsPoolTransactionsTableViewManager: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 60
+        return 74
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
-        //        guard let model = self.dataModel else {
-        //            return
-        //        }
-        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath)
+        guard let model = self.dataModels else {
+            return
+        }
+        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, model: model[indexPath.row])
     }
 }
-extension AssetsPoolTableViewManager: UITableViewDataSource {
+extension AssetsPoolTransactionsTableViewManager: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dataModels?.count ?? 0
     }

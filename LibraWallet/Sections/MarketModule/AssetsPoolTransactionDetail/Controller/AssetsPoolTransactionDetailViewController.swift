@@ -8,10 +8,13 @@
 
 import UIKit
 
-class AssetsPoolTransactionDetailViewController: UIViewController {
+class AssetsPoolTransactionDetailViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.addSubview(detailView)
+        self.tableViewManager.model = self.model
+        self.tableViewManager.dataModels = self.dataModel.getCustomModel(model: self.model!)
+        self.detailView.tableView.reloadData()
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -48,5 +51,5 @@ class AssetsPoolTransactionDetailViewController: UIViewController {
     var firstIn: Bool = true
     var wallet: Token?
     var cancelIndexPath: IndexPath?
-    
+    var model: AssetsPoolTransactionsDataModel?
 }

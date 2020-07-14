@@ -32,6 +32,7 @@ class MarketView: UIView {
         let scrollView = UIScrollView.init()
         scrollView.isPagingEnabled = true
         scrollView.contentSize = CGSize.init(width: mainWidth * 2, height: self.frame.size.height)
+        scrollView.isScrollEnabled = false
         return scrollView
     }()
 }

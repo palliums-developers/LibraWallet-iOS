@@ -32,8 +32,8 @@ class AssetsPoolViewHeaderView: UIView {
         addSubview(exchangeRateLabel)
         addSubview(minerFeeLabel)
         addSubview(confirmButton)
-        addSubview(exchangeTransactionsTitleLabel)
-        addSubview(titleIndicatorLabel)
+//        addSubview(exchangeTransactionsTitleLabel)
+//        addSubview(titleIndicatorLabel)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -116,15 +116,15 @@ class AssetsPoolViewHeaderView: UIView {
             make.size.equalTo(CGSize.init(width: 238, height: 40))
             make.centerX.equalTo(self)
         }
-        exchangeTransactionsTitleLabel.snp.makeConstraints { (make) in
-            make.left.equalTo(self).offset(14)
-            make.bottom.equalTo(titleIndicatorLabel.snp.top).offset(-6)
-        }
-        titleIndicatorLabel.snp.makeConstraints { (make) in
-            make.left.equalTo(self).offset(14)
-            make.bottom.equalTo(self.snp.bottom).offset(-6)
-            make.size.equalTo(CGSize.init(width: 12, height: 2))
-        }
+//        exchangeTransactionsTitleLabel.snp.makeConstraints { (make) in
+//            make.left.equalTo(self).offset(14)
+//            make.bottom.equalTo(titleIndicatorLabel.snp.top).offset(-6)
+//        }
+//        titleIndicatorLabel.snp.makeConstraints { (make) in
+//            make.left.equalTo(self).offset(14)
+//            make.bottom.equalTo(self.snp.bottom).offset(-6)
+//            make.size.equalTo(CGSize.init(width: 12, height: 2))
+//        }
     }
     lazy var changeTypeButton: UIButton = {
         let button = UIButton(type: .custom)
@@ -274,20 +274,20 @@ class AssetsPoolViewHeaderView: UIView {
         button.tag = 100
         return button
     }()
-    lazy var exchangeTransactionsTitleLabel: UILabel = {
-        let label = UILabel.init()
-        label.textAlignment = NSTextAlignment.left
-        label.textColor = UIColor.init(hex: "3D3949")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
-        label.text = "资金池记录"
-        return label
-    }()
-    lazy var titleIndicatorLabel: UILabel = {
-        let label = UILabel.init()
-        label.layer.backgroundColor = UIColor.init(hex: "#7038FD").cgColor
-        label.layer.cornerRadius = 3
-        return label
-    }()
+//    lazy var exchangeTransactionsTitleLabel: UILabel = {
+//        let label = UILabel.init()
+//        label.textAlignment = NSTextAlignment.left
+//        label.textColor = UIColor.init(hex: "3D3949")
+//        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
+//        label.text = "资金池记录"
+//        return label
+//    }()
+//    lazy var titleIndicatorLabel: UILabel = {
+//        let label = UILabel.init()
+//        label.layer.backgroundColor = UIColor.init(hex: "#7038FD").cgColor
+//        label.layer.cornerRadius = 3
+//        return label
+//    }()
 }
 extension AssetsPoolViewHeaderView: UITextFieldDelegate {
     //    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {

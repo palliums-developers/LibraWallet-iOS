@@ -32,8 +32,8 @@ class ExchangeViewHeaderView: UIView {
         addSubview(exchangeRateLabel)
         addSubview(minerFeeLabel)
         addSubview(confirmButton)
-        addSubview(exchangeTransactionsTitleLabel)
-        addSubview(titleIndicatorLabel)
+//        addSubview(exchangeTransactionsTitleLabel)
+//        addSubview(titleIndicatorLabel)
         // 添加语言变换通知
         NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
     }
@@ -113,15 +113,15 @@ class ExchangeViewHeaderView: UIView {
             make.size.equalTo(CGSize.init(width: 238, height: 40))
             make.centerX.equalTo(self)
         }
-        exchangeTransactionsTitleLabel.snp.makeConstraints { (make) in
-            make.left.equalTo(self).offset(14)
-            make.bottom.equalTo(titleIndicatorLabel.snp.top).offset(-6)
-        }
-        titleIndicatorLabel.snp.makeConstraints { (make) in
-            make.left.equalTo(self).offset(14)
-            make.bottom.equalTo(self.snp.bottom).offset(-6)
-            make.size.equalTo(CGSize.init(width: 12, height: 2))
-        }
+//        exchangeTransactionsTitleLabel.snp.makeConstraints { (make) in
+//            make.left.equalTo(self).offset(14)
+//            make.bottom.equalTo(titleIndicatorLabel.snp.top).offset(-6)
+//        }
+//        titleIndicatorLabel.snp.makeConstraints { (make) in
+//            make.left.equalTo(self).offset(14)
+//            make.bottom.equalTo(self.snp.bottom).offset(-6)
+//            make.size.equalTo(CGSize.init(width: 12, height: 2))
+//        }
     }
     lazy var feeLabel: UILabel = {
         let label = UILabel.init()
@@ -255,20 +255,20 @@ class ExchangeViewHeaderView: UIView {
         button.tag = 100
         return button
     }()
-    lazy var exchangeTransactionsTitleLabel: UILabel = {
-        let label = UILabel.init()
-        label.textAlignment = NSTextAlignment.left
-        label.textColor = UIColor.init(hex: "3D3949")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "wallet_market_exchange_transactions_title")
-        return label
-    }()
-    lazy var titleIndicatorLabel: UILabel = {
-        let label = UILabel.init()
-        label.layer.backgroundColor = UIColor.init(hex: "#7038FD").cgColor
-        label.layer.cornerRadius = 3
-        return label
-    }()
+//    lazy var exchangeTransactionsTitleLabel: UILabel = {
+//        let label = UILabel.init()
+//        label.textAlignment = NSTextAlignment.left
+//        label.textColor = UIColor.init(hex: "3D3949")
+//        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
+//        label.text = localLanguage(keyString: "wallet_market_exchange_transactions_title")
+//        return label
+//    }()
+//    lazy var titleIndicatorLabel: UILabel = {
+//        let label = UILabel.init()
+//        label.layer.backgroundColor = UIColor.init(hex: "#7038FD").cgColor
+//        label.layer.cornerRadius = 3
+//        return label
+//    }()
     @objc func buttonClick(button: UIButton) {
         if button.tag == 10 {
             self.delegate?.selectInputToken()
@@ -288,7 +288,7 @@ class ExchangeViewHeaderView: UIView {
         exchangeRateLabel.text = localLanguage(keyString: "wallet_market_exchange_rate_title") + "---"
         minerFeeLabel.text = localLanguage(keyString: "wallet_market_exchange_miner_fee_title") + "---"
         confirmButton.setTitle(localLanguage(keyString: "wallet_market_exchange_button_title"), for: UIControl.State.normal)
-        exchangeTransactionsTitleLabel.text = localLanguage(keyString: "wallet_market_exchange_transactions_title")
+//        exchangeTransactionsTitleLabel.text = localLanguage(keyString: "wallet_market_exchange_transactions_title")
         if inputTokenButton.titleLabel?.text == localLanguage(keyString: "wallet_market_exchange_input_token_button_title") {        inputTokenButton.setTitle(localLanguage(keyString: "wallet_market_exchange_input_token_button_title"), for: UIControl.State.normal)
         }
         if outputTokenButton.titleLabel?.text == localLanguage(keyString: "wallet_market_exchange_output_token_button_title") {        outputTokenButton.setTitle(localLanguage(keyString: "wallet_market_exchange_output_token_button_title"), for: UIControl.State.normal)

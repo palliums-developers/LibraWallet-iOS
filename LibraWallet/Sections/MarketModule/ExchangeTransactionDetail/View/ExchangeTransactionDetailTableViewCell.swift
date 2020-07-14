@@ -39,7 +39,7 @@ class ExchangeTransactionDetailTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "999999")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
-        label.text = "兑换成功"
+        label.text = "---"
         return label
     }()
     lazy var contentLabel: UILabel = {
@@ -47,19 +47,14 @@ class ExchangeTransactionDetailTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "333333")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.medium)
-        label.text = "通证：+199"
+        label.text = "---"
         return label
     }()
     //MARK: - 设置数据
-    //    var model: MarketOrderDataModel? {
-    //        didSet {
-    //            // 计算剩余
-    //            let lastAmount = NSDecimalNumber.init(string: model?.amountGet ?? "0").subtracting(NSDecimalNumber.init(string: model?.amountFilled ?? "0"))
-    //
-    //            amountLabel.text = getDecimalNumberAmount(amount: lastAmount,
-    //                                                      scale: 4,
-    //                                                      unit: 1000000)
-    //            priceLabel.text = "\(model?.tokenGetPrice ?? 0)"
-    //        }
-    //    }
+    var model: TransactionDetailCustomDataModel? {
+        didSet {
+            titleLabel.text = model?.name
+            contentLabel.text = model?.value
+        }
+    }
 }

@@ -292,11 +292,11 @@ class LibraSDKTests: XCTestCase {
 //        let signature = try! ViolasManager.getMarketAddLiquidityTransactionHex(sendAddress: "fa279f2615270daed6061313a48360f7",
 //                                                                               fee: 0,
 //                                                                               mnemonic: mnemonic1,
-//                                                                               amounta_desired: 10,
-//                                                                               amountb_desired: 10,
+//                                                                               amounta_desired: 1000,
+//                                                                               amountb_desired: 1000,
 //                                                                               amounta_min: 1,
 //                                                                               amountb_min: 1,
-//                                                                               sequenceNumber: 8,
+//                                                                               sequenceNumber: 29,
 //                                                                               moduleA: "VLSUSD",
 //                                                                               moduleB: "VLSEUR",
 //                                                                               feeModule: "LBR")
@@ -312,10 +312,10 @@ class LibraSDKTests: XCTestCase {
 //                                                                                  feeModule: "LBR")
         let signature = try! ViolasManager.getMarketSwapTransactionHex(sendAddress: "fa279f2615270daed6061313a48360f7",
                                                                            amountIn: 2,
-                                                                           amountOut: 2,
+                                                                           amountOutMin: 1,
                                                                            fee: 0,
                                                                            mnemonic: mnemonic1,
-                                                                           sequenceNumber: 12,
+                                                                           sequenceNumber: 30,
                                                                            moduleA: "VLSUSD",
                                                                            moduleB: "VLSEUR",
                                                                            feeModule: "LBR")

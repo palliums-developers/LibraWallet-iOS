@@ -34,7 +34,7 @@ class ExchangeTransactionDetailHeaderView: UITableViewHeaderFooterView {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
-        print("HomeTableViewHeader销毁了")
+        print("ExchangeTransactionDetailHeaderView销毁了")
     }
     //pragma MARK: 布局
     override func layoutSubviews() {
@@ -75,6 +75,7 @@ class ExchangeTransactionDetailHeaderView: UITableViewHeaderFooterView {
         finalTitleLabel.snp.makeConstraints { (make) in
             make.centerY.equalTo(exchangeTitleLabel)
             make.left.equalTo(finalIndicatorImageView.snp.right).offset(5)
+            make.right.equalTo(contentView.snp.right).offset(-10)
         }
         inputAmountTitleLabel.snp.makeConstraints { (make) in
             make.left.equalTo(contentView).offset(10)
@@ -123,7 +124,7 @@ class ExchangeTransactionDetailHeaderView: UITableViewHeaderFooterView {
         let label = UILabel.init()
         label.textColor = UIColor.init(hex: "333333")
         label.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "已提交")
+        label.text = localLanguage(keyString: "wallet_market_transaction_status_submitted_title")
         return label
     }()
     lazy var submitSpaceLabel: UILabel = {
@@ -141,7 +142,7 @@ class ExchangeTransactionDetailHeaderView: UITableViewHeaderFooterView {
     lazy var exchangeTitleLabel: UILabel = {
         let label = UILabel.init()
         label.textColor = UIColor.init(hex: "333333")
-        label.text = localLanguage(keyString: "兑换中")
+        label.text = localLanguage(keyString: "---")
         label.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
         return label
     }()
@@ -160,8 +161,8 @@ class ExchangeTransactionDetailHeaderView: UITableViewHeaderFooterView {
     lazy var finalTitleLabel: UILabel = {
         let label = UILabel.init()
         label.textColor = UIColor.init(hex: "333333")
-        label.text = localLanguage(keyString: "兑换失败")
         label.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
+        label.numberOfLines = 2
         return label
     }()
     lazy var retryButton: UIButton = {
@@ -174,6 +175,7 @@ class ExchangeTransactionDetailHeaderView: UITableViewHeaderFooterView {
         button.layer.borderWidth = 0.5
         button.layer.cornerRadius = 9
         button.tag = 100
+        button.alpha = 0
         return button
     }()
     lazy var inputAmountTitleLabel: UILabel = {
@@ -181,23 +183,13 @@ class ExchangeTransactionDetailHeaderView: UITableViewHeaderFooterView {
         label.textAlignment = NSTextAlignment.center
         label.textColor = UIColor.init(hex: "999999")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "输入")
+        label.text = localLanguage(keyString: "wallet_market_transaction_input_amount_title")
         return label
     }()
     lazy var inputAmountLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.center
         label.lineBreakMode = .byTruncatingMiddle
-        label.textColor = UIColor.init(hex: "333333")
-//        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 24), weight: UIFont.Weight.bold)
-        
-        let amountString = NSAttributedString(string: localLanguage(keyString: "9899999999999"),
-                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "333333"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .bold)])
-        let amountString2 = NSAttributedString(string: localLanguage(keyString: "eth"),
-                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "333333"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16)])
-        let tempAtt = NSMutableAttributedString.init(attributedString: amountString)
-        tempAtt.append(amountString2)
-        label.attributedText = tempAtt
         return label
     }()
     lazy var inputAmountUnitLabel: UILabel = {
@@ -206,7 +198,6 @@ class ExchangeTransactionDetailHeaderView: UITableViewHeaderFooterView {
         label.textColor = UIColor.init(hex: "333333")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: UIFont.Weight.regular)
         label.text = localLanguage(keyString: "Violas")
-        
         return label
     }()
     private lazy var exchangeAmountIndicatorImageView: UIImageView = {
@@ -219,22 +210,13 @@ class ExchangeTransactionDetailHeaderView: UITableViewHeaderFooterView {
         label.textAlignment = NSTextAlignment.center
         label.textColor = UIColor.init(hex: "999999")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "输出")
+        label.text = localLanguage(keyString: "wallet_market_transaction_output_amount_title")
         return label
     }()
     lazy var outputAmountLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.center
         label.lineBreakMode = .byTruncatingMiddle
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: UIFont.Weight.regular)
-//        label.text = localLanguage(keyString: "wallet_home_wallet_asset_title")
-        let amountString = NSAttributedString(string: localLanguage(keyString: "9899999999999"),
-                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "333333"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .bold)])
-        let amountString2 = NSAttributedString(string: localLanguage(keyString: "eth"),
-                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "333333"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16)])
-        let tempAtt = NSMutableAttributedString.init(attributedString: amountString)
-        tempAtt.append(amountString2)
-        label.attributedText = tempAtt
         return label
     }()
     lazy var outputAmountUnitLabel: UILabel = {
@@ -248,6 +230,76 @@ class ExchangeTransactionDetailHeaderView: UITableViewHeaderFooterView {
     @objc func buttonClick(button: UIButton) {
         if button.tag == 10 {
             
+        }
+    }
+    var model: AssetsPoolTransactionsDataModel? {
+        didSet {
+            exchangeTitleLabel.text = localLanguage(keyString: "wallet_market_transaction_status_packing_title")
+            if model?.status == 4001 {
+                retryButton.alpha = 0
+                finalTitleLabel.textColor = UIColor.init(hex: "13B788")
+                if model?.transaction_type == "ADD_LIQUIDITY" {
+                    finalIndicatorImageView.image = UIImage.init(named: "transaction_detail_finish")
+                    finalTitleLabel.text = localLanguage(keyString: "wallet_market_transaction_status_transfer_in_successful_title")
+                } else if model?.transaction_type == "REMOVE_LIQUIDITY" {
+                    finalIndicatorImageView.image = UIImage.init(named: "transaction_detail_finish")
+                    finalTitleLabel.text = localLanguage(keyString: "wallet_market_transaction_status_transfer_out_successful_title")
+                } else {
+                    finalTitleLabel.text = localLanguage(keyString: "wallet_assets_pool_transaction_status_transfer_invalid_title")
+                }
+            } else {
+                retryButton.alpha = 0
+                finalTitleLabel.textColor = UIColor.init(hex: "E54040")
+                if model?.transaction_type == "ADD_LIQUIDITY" {
+                    finalIndicatorImageView.image = UIImage.init(named: "transaction_detail_failed")
+                    finalTitleLabel.text = localLanguage(keyString: "wallet_market_transaction_status_transfer_in_failed_title")
+                } else if model?.transaction_type == "REMOVE_LIQUIDITY" {
+                    finalIndicatorImageView.image = UIImage.init(named: "transaction_detail_failed")
+                    finalTitleLabel.text = localLanguage(keyString: "wallet_market_transaction_status_transfer_out_failed_title")
+                } else {
+                    finalTitleLabel.text = localLanguage(keyString: "wallet_assets_pool_transaction_status_transfer_invalid_title")
+                }
+            }
+            
+            
+            // 设置输入数量
+            let inputAmount = getDecimalNumber(amount: NSDecimalNumber.init(value: model?.amounta ?? 0),
+                                               scale: 4,
+                                               unit: 1000000)
+            let inputAmountString = NSAttributedString(string: inputAmount.stringValue,
+                                                  attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "333333"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .bold)])
+            let inputUnitString = NSAttributedString(string: model?.coina ?? "---",
+                                                   attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "333333"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: .regular)])
+            let tempInputAtt = NSMutableAttributedString.init(attributedString: inputAmountString)
+            tempInputAtt.append(inputUnitString)
+            inputAmountLabel.attributedText = tempInputAtt
+            // 设置输出数量
+            let outputAmount = getDecimalNumber(amount: NSDecimalNumber.init(value: model?.amountb ?? 0),
+                                                scale: 4,
+                                                unit: 1000000)
+            let outputAmountString = NSAttributedString(string: outputAmount.stringValue,
+                                                  attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "333333"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .bold)])
+            let outputUnitString = NSAttributedString(string: model?.coinb ?? "---",
+                                                      attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "333333"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: .regular)])
+            let tempOutputAtt = NSMutableAttributedString.init(attributedString: outputAmountString)
+            tempOutputAtt.append(outputUnitString)
+            outputAmountLabel.attributedText = tempOutputAtt
+        }
+    }
+    var exchangeModel: ExchangeTransactionsDataModel? {
+        didSet {
+            exchangeTitleLabel.text = localLanguage(keyString: "wallet_market_transaction_status_exchanging_title")
+
+            if exchangeModel?.status == 4001 {
+                retryButton.alpha = 0
+                finalTitleLabel.textColor = UIColor.init(hex: "13B788")
+                finalIndicatorImageView.image = UIImage.init(named: "transaction_detail_finish")
+                finalTitleLabel.text = localLanguage(keyString: "wallet_market_transaction_status_exchange_fsuccessful_title")
+            } else {
+                retryButton.alpha = 1
+                finalIndicatorImageView.image = UIImage.init(named: "transaction_detail_failed")
+                finalTitleLabel.text = localLanguage(keyString: "wallet_market_transaction_status_exchange_failed_title")
+            }
         }
     }
 }

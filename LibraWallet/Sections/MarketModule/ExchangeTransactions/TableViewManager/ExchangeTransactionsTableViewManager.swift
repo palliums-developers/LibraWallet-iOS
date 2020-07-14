@@ -1,20 +1,20 @@
 //
-//  ExchangeTableViewManager.swift
+//  ExchangeTransactionsTableViewManager.swift
 //  LibraWallet
 //
-//  Created by wangyingdong on 2020/7/9.
+//  Created by wangyingdong on 2020/7/14.
 //  Copyright © 2020 palliums. All rights reserved.
 //
 
 import UIKit
 
-class ExchangeTableViewManager: NSObject {
+class ExchangeTransactionsTableViewManager: NSObject {
     var dataModels: [ExchangeTransactionsDataModel]?
     deinit {
-        print("ExchangeTableViewManager销毁了")
+        print("ExchangeTransactionsTableViewManager销毁了")
     }
 }
-extension ExchangeTableViewManager: UITableViewDelegate {
+extension ExchangeTransactionsTableViewManager: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 62
     }
@@ -26,7 +26,7 @@ extension ExchangeTableViewManager: UITableViewDelegate {
         //        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, model: model[indexPath.row])
     }
 }
-extension ExchangeTableViewManager: UITableViewDataSource {
+extension ExchangeTransactionsTableViewManager: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dataModels?.count ?? 0
     }

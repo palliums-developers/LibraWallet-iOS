@@ -270,7 +270,7 @@ wallet_market_exchange_transaction_retry_button_title = "重试";
 /************* 资金池 *******************/
 wallet_assets_pool_transfer_in_title = "转入";
 wallet_assets_pool_transfer_out_title = "转出";
-wallet_assets_pool_transaction_token_title = "通证";
+wallet_assets_pool_transaction_token_title = "通证：";
 wallet_assets_pool_transaction_status_transfer_in_success_title = "转入成功";
 wallet_assets_pool_transaction_status_transfer_in_failed_title = "转入失败";
 wallet_assets_pool_transaction_status_transfer_out_success_title = "转出成功";
@@ -283,6 +283,26 @@ wallet_market_mine_tokens_title = "资金池通证";
 wallet_market_mine_assets_pool_transfer_in_title = "转入";
 wallet_market_mine_assets_pool_transfer_out_title = "转出";
 wallet_market_mine_assets_pool_token_assets_transactions_title = "资产";
+
+/************* 交易所交易记录详情 *******************/
+wallet_market_transaction_status_submitted_title = "已提交";
+wallet_market_transaction_status_packing_title = "打包中";
+wallet_market_transaction_status_transfer_in_successful_title = "转入成功";
+wallet_market_transaction_status_transfer_out_successful_title = "转出成功";
+wallet_market_transaction_status_transfer_in_failed_title = "转入失败";
+wallet_market_transaction_status_transfer_out_failed_title = "转出失败";
+wallet_market_transaction_status_exchange_failed_title = "兑换失败";
+wallet_market_transaction_status_exchange_fsuccessful_title = "兑换成功";
+wallet_market_transaction_status_exchanging_title = "兑换中";
+wallet_market_transaction_input_amount_title = "输入";
+wallet_market_transaction_output_amount_title = "输出";
+wallet_market_transaction_content_token_title = "通证：";
+wallet_market_transaction_content_exchange_rate_title = "汇率：";
+wallet_market_transaction_content_miner_fee_title = "矿工费用：";
+wallet_market_transaction_content_order_time_title = "下单时间：";
+wallet_market_transaction_content_order_done_time_title = "成交时间：";
+wallet_market_transaction_content_order_fee_title = "手续费：";
+
 
 /************* 弹出提示 *******************/
 // 转账弹出提示
