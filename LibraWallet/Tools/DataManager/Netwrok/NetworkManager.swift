@@ -76,6 +76,8 @@ enum mainRequest {
     case AssetsPoolTransactions(String, Int, Int)
     /// 获取交易支持稳定币
     case MarketSupportTokens
+    /// 获取我的通证
+    case MarketMineTokens(String)
 }
 extension mainRequest:TargetType {
     var baseURL: URL {
@@ -117,9 +119,11 @@ extension mainRequest:TargetType {
             } else {
                 return URL(string:"https://api4.violas.io/1.0")!
             }
+        // 交易所
         case .ExchangeTransactions(_, _, _),
              .AssetsPoolTransactions(_, _, _),
-             .MarketSupportTokens:
+             .MarketSupportTokens,
+             .MarketMineTokens(_):
             if PUBLISH_VERSION == true {
                 return URL(string:"https://api.violas.io/1.0")!
             } else {
@@ -206,6 +210,8 @@ extension mainRequest:TargetType {
             return "/market/pool/transaction"
         case .MarketSupportTokens:
             return "/market/currency/violas"
+        case .MarketMineTokens(_):
+            return "/market/pool/info"
         }
     }
     var method: Moya.Method {
@@ -242,7 +248,8 @@ extension mainRequest:TargetType {
              .ActiveLibraAccount(_),
              .ExchangeTransactions(_, _, _),
              .AssetsPoolTransactions(_, _, _),
-             .MarketSupportTokens:
+             .MarketSupportTokens,
+             .MarketMineTokens(_):
             return .get
         }
     }
@@ -394,6 +401,9 @@ extension mainRequest:TargetType {
             
         case .MarketSupportTokens:
             return .requestPlain
+        case .MarketMineTokens(let address):
+            return .requestParameters(parameters: ["address": address],
+                                      encoding: URLEncoding.queryString)
         }
     }
     var headers: [String : String]? {

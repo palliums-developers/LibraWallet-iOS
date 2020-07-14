@@ -40,7 +40,7 @@ class MarketMineTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "333333")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
-        label.text = "AAA-BBB"
+        label.text = "---"
         return label
     }()
     lazy var tokenAmountLabel: UILabel = {
@@ -48,7 +48,16 @@ class MarketMineTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "999999")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = "123(+123)"
+        label.text = "---"
         return label
     }()
+    var model: MarketMineMainTokensDataModel? {
+        didSet {
+            tokenNameLabel.text = (model?.coin_a_name ?? "---") + "-" + (model?.coin_b_name ?? "---")
+            let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model?.token ?? 0),
+                                          scale: 4,
+                                          unit: 1000000)
+            tokenAmountLabel.text = amount.stringValue
+        }
+    }
 }

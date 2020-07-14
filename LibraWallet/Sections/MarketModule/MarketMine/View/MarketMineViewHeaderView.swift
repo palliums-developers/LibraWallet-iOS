@@ -78,7 +78,7 @@ class MarketMineViewHeaderView: UIView {
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "999999")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = "输入"
+        label.text = localLanguage(keyString: "wallet_market_mine_tokens_title")
         return label
     }()
     lazy var tokenAmountTextField: WYDTextField = {
@@ -90,14 +90,14 @@ class MarketMineViewHeaderView: UIView {
                                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C2C2C2"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20)])
         textField.isEnabled = false
         //        textField.delegate = self
-        textField.text = "10000"
+        textField.text = "0.00"
         textField.tag = 10
         return textField
     }()
     lazy var transferInButton: UIButton = {
         let button = UIButton(type: .custom)
         // 设置字体
-        button.setTitle("转入", for: UIControl.State.normal)
+        button.setTitle(localLanguage(keyString: "wallet_market_mine_assets_pool_transfer_in_title"), for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.medium)
         button.setTitleColor(UIColor.white, for: UIControl.State.normal)
         button.layer.backgroundColor = UIColor.init(hex: "7038FD").cgColor
@@ -109,7 +109,7 @@ class MarketMineViewHeaderView: UIView {
     lazy var transferOutButton: UIButton = {
         let button = UIButton(type: .custom)
         // 设置字体
-        button.setTitle("转出", for: UIControl.State.normal)
+        button.setTitle(localLanguage(keyString: "wallet_market_mine_assets_pool_transfer_out_title"), for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.medium)
         button.setTitleColor(UIColor.white, for: UIControl.State.normal)
         //        button.addTarget(self, action: #selector(selectExchangeToken(button:)), for: UIControl.Event.touchUpInside)
@@ -124,7 +124,7 @@ class MarketMineViewHeaderView: UIView {
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "5C5C5C")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = "资产"
+        label.text = localLanguage(keyString: "wallet_market_mine_assets_pool_token_assets_transactions_title")
         return label
     }()
     lazy var spaceLabel: UILabel = {
@@ -133,4 +133,12 @@ class MarketMineViewHeaderView: UIView {
         label.backgroundColor = DefaultSpaceColor
         return label
     }()
+    var model: Int64? {
+        didSet {
+            let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model ?? 0),
+                                          scale: 4,
+                                          unit: 1000000)
+            tokenAmountTextField.text = amount.stringValue
+        }
+    }
 }

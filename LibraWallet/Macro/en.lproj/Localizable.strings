@@ -276,6 +276,12 @@ wallet_assets_pool_transaction_status_transfer_out_failed_title = "Transfer-Out 
 wallet_assets_pool_transaction_status_transfer_processing_title = "Transfer Processing";
 wallet_assets_pool_transaction_status_transfer_invalid_title = "Status Invalid";
 
+/************* 资金池个人中心 *******************/
+wallet_market_mine_tokens_title = "Pool Tokens";
+wallet_market_mine_assets_pool_transfer_in_title = "Transfer-In";
+wallet_market_mine_assets_pool_transfer_out_title = "Transfer-Out";
+wallet_market_mine_assets_pool_token_assets_transactions_title = "Tokens";
+
 /************* 弹出提示 *******************/
 // 转账弹出提示
 wallet_transfer_success_alert = "Transfer Successful";

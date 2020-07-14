@@ -9,7 +9,7 @@
 import UIKit
 
 class MarketMineTableViewManager: NSObject {
-
+    var dataModels: [MarketMineMainTokensDataModel]?
 }
 extension MarketMineTableViewManager: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -25,29 +25,21 @@ extension MarketMineTableViewManager: UITableViewDelegate {
 }
 extension MarketMineTableViewManager: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        return dataModels?.count ?? 0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let identifier = "NormalCell"
-        let identifier = "FailedCell"
-//        if indexPath.section == 0 {
-//            identifier = "";
-//        } else if indexPath.section == 1 {
-//            identifier = "MineCell";
-//        } else {
-//            identifier = "OtherCell"
-//        }
+        let identifier = "NormalCell"
         if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? MarketMineTableViewCell {
-//            if let data = buyOrders, data.isEmpty == false {
-//                cell.model = data[indexPath.row]
-//            }
+            if let data = dataModels, data.isEmpty == false {
+                cell.model = data[indexPath.row]
+            }
             cell.selectionStyle = .none
             return cell
         } else {
             let cell = MarketMineTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
-//            if let data = sellOrders, data.isEmpty == false {
-//                cell.model = data[indexPath.row]
-//            }
+            if let data = dataModels, data.isEmpty == false {
+                cell.model = data[indexPath.row]
+            }
             cell.selectionStyle = .none
             return cell
         }

@@ -278,6 +278,12 @@ wallet_assets_pool_transaction_status_transfer_out_failed_title = "转出失败"
 wallet_assets_pool_transaction_status_transfer_processing_title = "打包中";
 wallet_assets_pool_transaction_status_transfer_invalid_title = "状态异常";
 
+/************* 资金池个人中心 *******************/
+wallet_market_mine_tokens_title = "资金池通证";
+wallet_market_mine_assets_pool_transfer_in_title = "转入";
+wallet_market_mine_assets_pool_transfer_out_title = "转出";
+wallet_market_mine_assets_pool_token_assets_transactions_title = "资产";
+
 /************* 弹出提示 *******************/
 // 转账弹出提示
 wallet_transfer_success_alert = "转账成功";

@@ -35,7 +35,7 @@ class MarketMineView: UIView {
         }
     }
     //MARK: - 懒加载对象
-    private lazy var headerView : MarketMineViewHeaderView = {
+    lazy var headerView : MarketMineViewHeaderView = {
         let header = MarketMineViewHeaderView.init()
         return header
     }()
