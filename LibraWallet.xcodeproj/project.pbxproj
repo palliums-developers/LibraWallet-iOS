@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		01694EF4D3F368EB6A685132 /* Pods_LibraWalletUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7658E656E8E8976B3E75152 /* Pods_LibraWalletUITests.framework */; };
-		1A8251333880EBAB4D609292 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		1A8251333880EBAB4D609292 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		36178322243F1455003C6588 /* LibraMultiHDWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36178321243F1455003C6588 /* LibraMultiHDWallet.swift */; };
 		3617835B24440BDB003C6588 /* ViolasUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3617835A24440BDB003C6588 /* ViolasUtils.swift */; };
 		3617835D24440C1E003C6588 /* ViolasWordList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3617835C24440C1E003C6588 /* ViolasWordList.swift */; };
@@ -107,8 +107,9 @@
 		36F826F924BD9F460007ACC3 /* AssetsPoolTransactionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F826F824BD9F460007ACC3 /* AssetsPoolTransactionsModel.swift */; };
 		36F826FC24BD9FD90007ACC3 /* ExchangeTransactionsTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F826FB24BD9FD90007ACC3 /* ExchangeTransactionsTableViewManager.swift */; };
 		36F826FF24BDA1DF0007ACC3 /* AssetsPoolTransactionsTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F826FE24BDA1DF0007ACC3 /* AssetsPoolTransactionsTableViewManager.swift */; };
-		79E14A1ECB7CE5CBF4ADDA48 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		79E14A1ECB7CE5CBF4ADDA48 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		84F942D4E0AB7CC3C4350654 /* Pods_LibraWalletTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68DEF872B52FD220FD8C8434 /* Pods_LibraWalletTests.framework */; };
+		867CEFE69FDCACEE3E68EB96 /* Pods_LibraWallet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 807ADD830AA2F2AEA1FA4239 /* Pods_LibraWallet.framework */; };
 		9D08AD372330BA75004687E8 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D08AD362330BA75004687E8 /* NetworkManager.swift */; };
 		9D08AD4B2330D8E6004687E8 /* TransactionDetailWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D08AD4A2330D8E6004687E8 /* TransactionDetailWebViewController.swift */; };
 		9D08AD4D2330D8F5004687E8 /* TransactionDetailWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D08AD4C2330D8F5004687E8 /* TransactionDetailWebView.swift */; };
@@ -285,7 +286,7 @@
 		9DFFA88123683C4400EA74F9 /* WalletTransactionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DFFA88023683C4400EA74F9 /* WalletTransactionsViewController.swift */; };
 		9DFFA88323683C5700EA74F9 /* WalletTransactionsTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DFFA88223683C5700EA74F9 /* WalletTransactionsTableViewManager.swift */; };
 		9DFFA88723683E1C00EA74F9 /* WalletTransactionsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DFFA88623683E1C00EA74F9 /* WalletTransactionsTableViewCell.swift */; };
-		CB52B783A96F9C03BDB8D5C5 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		CB52B783A96F9C03BDB8D5C5 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -411,6 +412,7 @@
 		68DEF872B52FD220FD8C8434 /* Pods_LibraWalletTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LibraWalletTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7179C563526D2D0E6B9341B1 /* Pods-LibraWallet_Publish.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LibraWallet_Publish.release.xcconfig"; path = "Target Support Files/Pods-LibraWallet_Publish/Pods-LibraWallet_Publish.release.xcconfig"; sourceTree = "<group>"; };
 		7378AE2C0E4A760533962991 /* Pods-LibraWalletTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LibraWalletTests.release.xcconfig"; path = "Target Support Files/Pods-LibraWalletTests/Pods-LibraWalletTests.release.xcconfig"; sourceTree = "<group>"; };
+		807ADD830AA2F2AEA1FA4239 /* Pods_LibraWallet.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LibraWallet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		99B7D4CFFDA59EFEF6DB6E0E /* Pods-LibraWallet_Publish.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LibraWallet_Publish.debug.xcconfig"; path = "Target Support Files/Pods-LibraWallet_Publish/Pods-LibraWallet_Publish.debug.xcconfig"; sourceTree = "<group>"; };
 		9D08AD362330BA75004687E8 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		9D08AD4A2330D8E6004687E8 /* TransactionDetailWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionDetailWebViewController.swift; sourceTree = "<group>"; };
@@ -608,9 +610,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				9D628AC923A086D100E222FB /* MessageUI.framework in Frameworks */,
-				1A8251333880EBAB4D609292 /* (null) in Frameworks */,
-				CB52B783A96F9C03BDB8D5C5 /* (null) in Frameworks */,
-				79E14A1ECB7CE5CBF4ADDA48 /* (null) in Frameworks */,
+				1A8251333880EBAB4D609292 /* BuildFile in Frameworks */,
+				CB52B783A96F9C03BDB8D5C5 /* BuildFile in Frameworks */,
+				79E14A1ECB7CE5CBF4ADDA48 /* BuildFile in Frameworks */,
+				867CEFE69FDCACEE3E68EB96 /* Pods_LibraWallet.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2904,6 +2907,7 @@
 				68DEF872B52FD220FD8C8434 /* Pods_LibraWalletTests.framework */,
 				F7658E656E8E8976B3E75152 /* Pods_LibraWalletUITests.framework */,
 				3319F603C808C70BDFCCC240 /* Pods_LibraWallet_Publish.framework */,
+				807ADD830AA2F2AEA1FA4239 /* Pods_LibraWallet.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

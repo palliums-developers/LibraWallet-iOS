@@ -6,7 +6,7 @@ target 'LibraWallet' do
   use_frameworks!
   
   pod 'CryptoSwift'
-  pod 'SwiftProtobuf'
+#  pod 'SwiftProtobuf'
   pod 'BigInt'
 #  pod 'SwiftGRPC'
   pod 'SnapKit'
@@ -29,12 +29,9 @@ target 'LibraWallet' do
   pod 'Device'
   pod 'JXSegmentedView'
   pod 'WalletConnectSwift'
+  pod 'NewPopMenu'
   # Pods for LibraWallet
 
-  target 'LibraWallet_Publish' do
-    inherit! :search_paths
-    # Pods for testing
-  end
   target 'LibraWalletTests' do
     inherit! :search_paths
     # Pods for testing
