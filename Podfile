@@ -29,7 +29,6 @@ target 'LibraWallet' do
   pod 'Device'
   pod 'JXSegmentedView'
   pod 'WalletConnectSwift'
-  pod 'NewPopMenu'
   # Pods for LibraWallet
 
   target 'LibraWalletTests' do

@@ -264,8 +264,10 @@ wallet_market_exchange_transactions_title = "Exchange Transactions";
 wallet_market_exchange_transaction_status_success_title = "Successful";
 wallet_market_exchange_transaction_status_failed_title = "Failed";
 wallet_market_exchange_transaction_retry_button_title = "Retry";
+wallet_market_assets_pool_token_title = "Tokens: ";
+wallet_market_exchange_token_title = "Assets: ";
 
-/************* 资金池 *******************/
+/************* 资金池交易记录 *******************/
 wallet_assets_pool_transfer_in_title = "Transfer-In";
 wallet_assets_pool_transfer_out_title = "Transfer-Out";
 wallet_assets_pool_transaction_token_title = "Token: ";

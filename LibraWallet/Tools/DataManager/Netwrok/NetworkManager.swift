@@ -78,6 +78,8 @@ enum mainRequest {
     case MarketSupportTokens
     /// 获取我的通证
     case MarketMineTokens(String)
+    /// 获取资金池转出试算
+    case AssetsPoolTransferOutInfo(String, String, String, Int64)
 }
 extension mainRequest:TargetType {
     var baseURL: URL {
@@ -123,7 +125,8 @@ extension mainRequest:TargetType {
         case .ExchangeTransactions(_, _, _),
              .AssetsPoolTransactions(_, _, _),
              .MarketSupportTokens,
-             .MarketMineTokens(_):
+             .MarketMineTokens(_),
+             .AssetsPoolTransferOutInfo(_, _, _, _):
             if PUBLISH_VERSION == true {
                 return URL(string:"https://api.violas.io/1.0")!
             } else {
@@ -212,6 +215,8 @@ extension mainRequest:TargetType {
             return "/market/currency/violas"
         case .MarketMineTokens(_):
             return "/market/pool/info"
+        case .AssetsPoolTransferOutInfo(_, _, _, _):
+            return "/market/pool/withdrawal/trial"
         }
     }
     var method: Moya.Method {
@@ -249,7 +254,8 @@ extension mainRequest:TargetType {
              .ExchangeTransactions(_, _, _),
              .AssetsPoolTransactions(_, _, _),
              .MarketSupportTokens,
-             .MarketMineTokens(_):
+             .MarketMineTokens(_),
+             .AssetsPoolTransferOutInfo(_, _, _, _):
             return .get
         }
     }
@@ -403,6 +409,12 @@ extension mainRequest:TargetType {
             return .requestPlain
         case .MarketMineTokens(let address):
             return .requestParameters(parameters: ["address": address],
+                                      encoding: URLEncoding.queryString)
+        case .AssetsPoolTransferOutInfo(let address, let coinA, let coinB, let amount):
+            return .requestParameters(parameters: ["address": address,
+                                                   "coin_a":coinA,
+                                                   "coin_b":coinB,
+                                                   "amount":amount],
                                       encoding: URLEncoding.queryString)
         }
     }

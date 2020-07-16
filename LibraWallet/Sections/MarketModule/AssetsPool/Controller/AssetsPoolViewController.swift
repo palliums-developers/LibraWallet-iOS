@@ -41,22 +41,25 @@ class AssetsPoolViewController: UIViewController {
     }()
     /// 数据监听KVO
     var observer: NSKeyValueObservation?
+    
+    var currentTokens: [MarketMineMainTokensDataModel]?
+    
 }
 extension AssetsPoolViewController: AssetsPoolViewHeaderViewDelegate {
-    func exchangeConfirm() {
+    func exchangeConfirm(amountIn: Int64, amountOut: Int64, inputModelName: String, outputModelName: String) {
         print("Exchange")
         
         WalletManager.unlockWallet(controller: self, successful: { [weak self](mnemonic) in
-//            self?.dataModel.sendAddLiquidityViolasTransaction(sendAddress: "",
-//                                                              amounta_desired: <#T##Double#>,
-//                                                              amountb_desired: <#T##Double#>,
-//                                                              amounta_min: <#T##Double#>,
-//                                                              amountb_min: <#T##Double#>,
-//                                                              fee: <#T##Double#>,
-//                                                              mnemonic: <#T##[String]#>,
-//                                                              moduleA: <#T##String#>,
-//                                                              moduleB: <#T##String#>,
-//                                                              feeModule: <#T##String#>)
+//            self?.dataModel.sendAddLiquidityViolasTransaction(sendAddress: "fa279f2615270daed6061313a48360f7",
+//                                                              amounta_desired: amountIn,
+//                                                              amountb_desired: amountOut,
+//                                                              amounta_min: 0,
+//                                                              amountb_min: 0,
+//                                                              fee: 0,
+//                                                              mnemonic: mnemonic,
+//                                                              moduleA: inputModelName,
+//                                                              moduleB: outputModelName,
+//                                                              feeModule: "LBR")
         }) { [weak self](error) in
             guard error != "Cancel" else {
                 self?.detailView.toastView?.hide(tag: 99)
@@ -68,8 +71,13 @@ extension AssetsPoolViewController: AssetsPoolViewHeaderViewDelegate {
         
     }
     func selectInputToken() {
-//        self.detailView.makeToastActivity(.center)
-//        self.dataModel.getMarketSupportTokens()
+        if self.detailView.headerView.changeTypeButton.titleLabel?.text == localLanguage(keyString: localLanguage(keyString: "wallet_assets_pool_transfer_in_title")) {
+            // 转入
+        } else {
+            // 转出
+            self.detailView.makeToastActivity(.center)
+            self.dataModel.getMarketMineTokens(address: "fa279f2615270daed6061313a48360f7")
+        }
     }
     func selectOutoutToken() {
         print("selectOutoutToken")
@@ -77,7 +85,13 @@ extension AssetsPoolViewController: AssetsPoolViewHeaderViewDelegate {
     func swapInputOutputToken() {
         print("Swap")
     }
-    
+    func changeTrasferInOut() {
+        
+    }
+    func dealTransferOutAmount(amount: Int64) {
+        self.detailView.toastView?.show(tag: 99)
+        self.dataModel.getMarketAssetsPoolTransferOutRate(address: "fa279f2615270daed6061313a48360f7", coinA: "VLSUSD", coinB: "VLSEUR", amount: amount * 1000000)
+    }
     
 }
 extension AssetsPoolViewController {
@@ -90,6 +104,7 @@ extension AssetsPoolViewController {
             if let error = dataDic.value(forKey: "error") as? LibraWalletError {
                 // 隐藏请求指示
                 self?.detailView.hideToastActivity()
+                self?.detailView.toastView?.hide(tag: 99)
                 if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
                     // 网络无法访问
                     print(error.localizedDescription)
@@ -122,35 +137,40 @@ extension AssetsPoolViewController {
                 return
             }
             let type = dataDic.value(forKey: "type") as! String
-//            if type == "AssetsPoolTransactionsOrigin" {
-//                guard let tempData = dataDic.value(forKey: "data") as? [AssetsPoolTransactionsDataModel] else {
-//                    return
-//                }
-//                self?.tableViewManager.dataModels = tempData
-//                self?.detailView.tableView.reloadData()
-//            } else if type == "AssetsPoolTransactionsMore" {
-//                guard let tempData = dataDic.value(forKey: "data") as? [AssetsPoolTransactionsDataModel] else {
-//                    return
-//                }
-//                if let oldData = self?.tableViewManager.dataModels, oldData.isEmpty == false {
-//                    let tempArray = NSMutableArray.init(array: oldData)
-//                    var insertIndexPath = [IndexPath]()
-//                    for index in 0..<tempData.count {
-//                        let indexPath = IndexPath.init(row: oldData.count + index, section: 0)
-//                        insertIndexPath.append(indexPath)
-//                    }
-//                    tempArray.addObjects(from: tempData)
-//                    self?.tableViewManager.dataModels = tempArray as? [AssetsPoolTransactionsDataModel]
-//                    self?.detailView.tableView.beginUpdates()
-//                    self?.detailView.tableView.insertRows(at: insertIndexPath, with: UITableView.RowAnimation.bottom)
-//                    self?.detailView.tableView.endUpdates()
-//                } else {
-//                    self?.tableViewManager.dataModels = tempData
-//                    self?.detailView.tableView.reloadData()
-//                }
-//                self?.detailView.tableView.mj_footer?.endRefreshing()
-//            }
+            if type == "GetMarketMineTokens" {
+                guard let tempData = dataDic.value(forKey: "data") as? MarketMineMainDataModel else {
+                    return
+                }
+                var tempDropperData = [String]()
+                for item in tempData.balance! {
+                    let tokenNameString = (item.coin_a_name ?? "---") + "/" + (item.coin_b_name ?? "---")
+                    tempDropperData.append(tokenNameString)
+                }
+                self?.currentTokens = tempData.balance
+                let dropper = Dropper.init(width: 120, height: CGFloat((tempData.balance?.count ?? 34) * 34))
+                dropper.items = tempDropperData
+                dropper.cornerRadius = 8
+                dropper.theme = .black(UIColor.init(hex: "F1EEFB"))
+                dropper.cellTextFont = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
+                dropper.cellColor = UIColor.init(hex: "333333")
+                dropper.spacing = 12
+                dropper.show(Dropper.Alignment.center, button: (self?.detailView.headerView.inputTokenButton)!)
+                dropper.delegate = self
+            } else if type == "GetAssetsPoolTransferOutInfo" {
+                guard let tempData = dataDic.value(forKey: "data") as? AssetsPoolTransferOutInfoDataModel else {
+                    return
+                }
+                self?.detailView.headerView.transferOutModel = tempData
+                
+            }
             self?.detailView.hideToastActivity()
+            self?.detailView.toastView?.hide(tag: 99)
         })
+    }
+}
+extension AssetsPoolViewController: DropperDelegate {
+    func DropperSelectedRow(_ path: IndexPath, contents: String) {
+        self.detailView.headerView.inputTokenButton.setTitle(contents, for: UIControl.State.normal)
+        self.detailView.headerView.tokenModel = self.currentTokens?[path.row]
     }
 }

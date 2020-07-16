@@ -8,10 +8,12 @@
 
 import UIKit
 protocol AssetsPoolViewHeaderViewDelegate: NSObjectProtocol {
-    func exchangeConfirm()
+    func exchangeConfirm(amountIn: Int64, amountOut: Int64, inputModelName: String, outputModelName: String)
     func selectInputToken()
     func selectOutoutToken()
-    func swapInputOutputToken()
+//    func swapInputOutputToken()
+    func changeTrasferInOut()
+    func dealTransferOutAmount(amount: Int64)
 }
 class AssetsPoolViewHeaderView: UIView {
     weak var delegate: AssetsPoolViewHeaderViewDelegate?
@@ -21,13 +23,17 @@ class AssetsPoolViewHeaderView: UIView {
         addSubview(changeTypeButton)
         addSubview(feeLabel)
         addSubview(inputTokenBackgroundView)
-        addSubview(inputTitleLabel)
-        addSubview(inputAmountTextField)
+        inputTokenBackgroundView.addSubview(inputTitleLabel)
+        inputTokenBackgroundView.addSubview(inputTokenAssetsImageView)
+        inputTokenBackgroundView.addSubview(inputTokenAssetsLabel)
+        inputTokenBackgroundView.addSubview(inputAmountTextField)
         addSubview(inputTokenButton)
         addSubview(swapButton)
         addSubview(outputTokenBackgroundView)
-        addSubview(outputTitleLabel)
-        addSubview(outputAmountTextField)
+        outputTokenBackgroundView.addSubview(outputTitleLabel)
+        outputTokenBackgroundView.addSubview(outputAmountTextField)
+        outputTokenBackgroundView.addSubview(outputCoinAAmountLabel)
+        outputTokenBackgroundView.addSubview(outputCoinBAmountLabel)
         addSubview(outputTokenButton)
         addSubview(exchangeRateLabel)
         addSubview(minerFeeLabel)
@@ -45,10 +51,10 @@ class AssetsPoolViewHeaderView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         changeTypeButton.snp.makeConstraints { (make) in
-            make.left.equalTo(inputTokenBackgroundView.snp.left).offset(5)
-            make.bottom.equalTo(inputTokenBackgroundView.snp.top).offset(-6)
+            make.left.equalTo(inputTokenBackgroundView.snp.left).offset(5).priority(250)
+            make.bottom.equalTo(inputTokenBackgroundView.snp.top).offset(-6).priority(250)
             let width = libraWalletTool.ga_widthForComment(content: changeTypeButton.titleLabel?.text ?? "", fontSize: 12, height: 20) + 8 + 19
-            make.size.equalTo(CGSize.init(width: width, height: 20))
+            make.size.equalTo(CGSize.init(width: width, height: 20)).priority(250)
         }
         feeLabel.snp.makeConstraints { (make) in
             make.right.equalTo(inputTokenBackgroundView.snp.right).offset(-6)
@@ -63,6 +69,15 @@ class AssetsPoolViewHeaderView: UIView {
         inputTitleLabel.snp.makeConstraints { (make) in
             make.top.equalTo(inputTokenBackgroundView).offset(16)
             make.left.equalTo(inputTokenBackgroundView).offset(15)
+        }
+        inputTokenAssetsImageView.snp.makeConstraints { (make) in
+            make.centerY.equalTo(inputTokenAssetsLabel)
+            make.right.equalTo(inputTokenAssetsLabel.snp.left).offset(-2)
+            make.size.equalTo(CGSize.init(width: 12, height: 13))
+        }
+        inputTokenAssetsLabel.snp.makeConstraints { (make) in
+            make.top.equalTo(inputTokenBackgroundView).offset(16)
+            make.right.equalTo(inputTokenBackgroundView.snp.right).offset(-11)
         }
         inputAmountTextField.snp.makeConstraints { (make) in
             make.left.equalTo(inputTokenBackgroundView).offset(15)
@@ -82,10 +97,10 @@ class AssetsPoolViewHeaderView: UIView {
             make.size.equalTo(CGSize.init(width: 20, height: 20))
         }
         outputTokenBackgroundView.snp.makeConstraints { (make) in
-            make.top.equalTo(inputTokenBackgroundView.snp.bottom).offset(33)
-            make.left.equalTo(self).offset(30)
-            make.right.equalTo(self.snp.right).offset(-30)
-            make.height.equalTo(80)
+            make.top.equalTo(inputTokenBackgroundView.snp.bottom).offset(33).priority(250)
+            make.left.equalTo(self).offset(30).priority(500)
+            make.right.equalTo(self.snp.right).offset(-30).priority(500)
+            make.height.equalTo(80).priority(250)
         }
         outputTitleLabel.snp.makeConstraints { (make) in
             make.top.equalTo(outputTokenBackgroundView).offset(16)
@@ -116,15 +131,20 @@ class AssetsPoolViewHeaderView: UIView {
             make.size.equalTo(CGSize.init(width: 238, height: 40))
             make.centerX.equalTo(self)
         }
-//        exchangeTransactionsTitleLabel.snp.makeConstraints { (make) in
-//            make.left.equalTo(self).offset(14)
-//            make.bottom.equalTo(titleIndicatorLabel.snp.top).offset(-6)
-//        }
-//        titleIndicatorLabel.snp.makeConstraints { (make) in
-//            make.left.equalTo(self).offset(14)
-//            make.bottom.equalTo(self.snp.bottom).offset(-6)
-//            make.size.equalTo(CGSize.init(width: 12, height: 2))
-//        }
+        outputCoinAAmountLabel.snp.makeConstraints { (make) in
+            make.left.equalTo(outputTokenBackgroundView).offset(11)
+            make.right.equalTo(outputTokenBackgroundView.snp.right).offset(-11)
+            make.bottom.equalTo(outputCoinBAmountLabel.snp.top)
+
+            make.height.equalTo(24)
+        }
+        outputCoinBAmountLabel.snp.makeConstraints { (make) in
+            make.left.equalTo(outputTokenBackgroundView).offset(11)
+            make.right.equalTo(outputTokenBackgroundView.snp.right).offset(-11)
+            make.bottom.equalTo(outputTokenBackgroundView.snp.bottom).offset(-7)
+            make.height.equalTo(24)
+            
+        }
     }
     lazy var changeTypeButton: UIButton = {
         let button = UIButton(type: .custom)
@@ -132,13 +152,13 @@ class AssetsPoolViewHeaderView: UIView {
         button.setTitle(localLanguage(keyString: "wallet_assets_pool_transfer_in_title"), for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
         button.setTitleColor(UIColor.init(hex: "7038FD"), for: UIControl.State.normal)
-        //        button.addTarget(self, action: #selector(selectExchangeToken(button:)), for: UIControl.Event.touchUpInside)
+        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
         button.setImage(UIImage.init(named: "arrow_down"), for: UIControl.State.normal)
         // 调整位置
         button.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 9, height: 5.5))
         button.layer.backgroundColor = UIColor.init(hex: "F1EEFB").cgColor
         button.layer.cornerRadius = 10
-        button.tag = 20
+        button.tag = 10
         return button
     }()
     lazy var feeLabel: UILabel = {
@@ -164,6 +184,19 @@ class AssetsPoolViewHeaderView: UIView {
         label.text = localLanguage(keyString: "wallet_market_exchange_input_amount_title")
         return label
     }()
+    private lazy var inputTokenAssetsImageView : UIImageView = {
+        let imageView = UIImageView.init()
+        imageView.image = UIImage.init(named: "assets_pool_token")
+        return imageView
+    }()
+    lazy var inputTokenAssetsLabel: UILabel = {
+        let label = UILabel.init()
+        label.textAlignment = NSTextAlignment.left
+        label.textColor = UIColor.init(hex: "333333")
+        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
+        label.text = localLanguage(keyString: "wallet_market_assets_pool_token_title") + "---"
+        return label
+    }()
     lazy var inputAmountTextField: WYDTextField = {
         let textField = WYDTextField.init()
         textField.textAlignment = NSTextAlignment.left
@@ -172,7 +205,7 @@ class AssetsPoolViewHeaderView: UIView {
         textField.attributedPlaceholder = NSAttributedString(string: "0.00",
                                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C2C2C2"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20)])
         textField.keyboardType = .decimalPad
-//        textField.delegate = self
+        textField.delegate = self
         textField.tag = 10
         return textField
     }()
@@ -182,7 +215,7 @@ class AssetsPoolViewHeaderView: UIView {
         button.setTitle(localLanguage(keyString: "wallet_market_exchange_input_token_button_title"), for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
         button.setTitleColor(UIColor.init(hex: "7038FD"), for: UIControl.State.normal)
-        //        button.addTarget(self, action: #selector(selectExchangeToken(button:)), for: UIControl.Event.touchUpInside)
+        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
         button.setImage(UIImage.init(named: "arrow_down"), for: UIControl.State.normal)
         // 调整位置
         button.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 9, height: 5.5))
@@ -208,9 +241,9 @@ class AssetsPoolViewHeaderView: UIView {
     }()
     lazy var outputTitleLabel: UILabel = {
         let label = UILabel.init()
-        label.textAlignment = NSTextAlignment.right
-        label.textColor = UIColor.init(hex: "000000")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
+        label.textAlignment = NSTextAlignment.left
+        label.textColor = UIColor.init(hex: "333333")
+        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
         label.text = localLanguage(keyString: "wallet_market_exchange_output_amount_title")
         return label
     }()
@@ -222,9 +255,27 @@ class AssetsPoolViewHeaderView: UIView {
         textField.attributedPlaceholder = NSAttributedString(string: "0.00",
                                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C2C2C2"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20)])
         textField.keyboardType = .decimalPad
-//        textField.delegate = self
+        textField.delegate = self
         textField.tag = 20
         return textField
+    }()
+    lazy var outputCoinAAmountLabel: UILabel = {
+        let label = UILabel.init()
+        label.textAlignment = NSTextAlignment.left
+        label.textColor = UIColor.init(hex: "333333")
+        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 20), weight: UIFont.Weight.bold)
+        label.text = "---"
+        label.alpha = 0
+        return label
+    }()
+    lazy var outputCoinBAmountLabel: UILabel = {
+        let label = UILabel.init()
+        label.textAlignment = NSTextAlignment.left
+        label.textColor = UIColor.init(hex: "333333")
+        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 20), weight: UIFont.Weight.bold)
+        label.text = "---"
+        label.alpha = 0
+        return label
     }()
     lazy var outputTokenButton: UIButton = {
         let button = UIButton(type: .custom)
@@ -232,8 +283,7 @@ class AssetsPoolViewHeaderView: UIView {
         button.setTitle(localLanguage(keyString: "wallet_market_exchange_output_token_button_title"), for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
         button.setTitleColor(UIColor.init(hex: "7038FD"), for: UIControl.State.normal)
-        //        button.addTarget(self, action: #selector(selectExchangeToken(button:)), for: UIControl.Event.touchUpInside)
-        //        button.setImage(UIImage.init(named: "arrow_down"), for: UIControl.State.normal)
+        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
         button.setImage(UIImage.init(named: "arrow_down"), for: UIControl.State.normal)
         // 调整位置
         button.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 9, height: 5.5))
@@ -264,7 +314,7 @@ class AssetsPoolViewHeaderView: UIView {
         button.setTitle(localLanguage(keyString: "wallet_market_exchange_confirm_title"), for: UIControl.State.normal)
         button.setTitleColor(UIColor.white, for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
-        //        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
+        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
         button.backgroundColor = UIColor.init(hex: "15C794")
         let width = UIScreen.main.bounds.width - 69 - 69
         
@@ -288,42 +338,127 @@ class AssetsPoolViewHeaderView: UIView {
 //        label.layer.cornerRadius = 3
 //        return label
 //    }()
+    @objc func buttonClick(button: UIButton) {
+        if button.tag == 10 {
+            self.delegate?.changeTrasferInOut()
+            let dropper = Dropper.init(width: button.frame.size.width, height: 68)
+            dropper.items = [localLanguage(keyString: "wallet_assets_pool_transfer_in_title"), localLanguage(keyString: "wallet_assets_pool_transfer_out_title")]
+            dropper.cornerRadius = 8
+            dropper.theme = .black(UIColor.init(hex: "F1EEFB"))
+            dropper.cellTextFont = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
+            dropper.cellColor = UIColor.init(hex: "333333")
+            dropper.spacing = 12
+            dropper.show(Dropper.Alignment.center, button: button)
+            dropper.delegate = self
+        } else if button.tag == 20 {
+            self.delegate?.selectInputToken()
+        } else if button.tag == 30 {
+            self.delegate?.selectOutoutToken()
+        } else if button.tag == 100 {
+            self.delegate?.exchangeConfirm(amountIn: NSDecimalNumber.init(value: transferOutModel?.coin_a_value ?? 0).int64Value,
+                                           amountOut: NSDecimalNumber.init(value: transferOutModel?.coin_b_value ?? 0).int64Value,
+                                           inputModelName: tokenModel?.coin_a_name ?? "",
+                                           outputModelName: tokenModel?.coin_b_name ?? "")
+        }
+    }
+    /// 通证Model
+    var tokenModel: MarketMineMainTokensDataModel? {
+        didSet {
+            let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: tokenModel?.token ?? 0),
+                                          scale: 4,
+                                          unit: 1000000)
+            inputTokenAssetsLabel.text = localLanguage(keyString: "wallet_market_assets_pool_token_title") + amount.stringValue
+        }
+    }
+    /// 资金池转出Model
+    var transferOutModel: AssetsPoolTransferOutInfoDataModel? {
+        didSet {
+            let amountA = getDecimalNumber(amount: NSDecimalNumber.init(value: transferOutModel?.coin_a_value ?? 0),
+                                          scale: 4,
+                                          unit: 1000000)
+            outputCoinAAmountLabel.text = amountA.stringValue + (transferOutModel?.coin_a_name ?? "---")
+            
+            let amountB = getDecimalNumber(amount: NSDecimalNumber.init(value: transferOutModel?.coin_b_value ?? 0),
+                                          scale: 4,
+                                          unit: 1000000)
+            outputCoinBAmountLabel.text = amountB.stringValue + (transferOutModel?.coin_b_name ?? "---")
+        }
+    }
+}
+extension AssetsPoolViewHeaderView: DropperDelegate {
+    func DropperSelectedRow(_ path: IndexPath, contents: String) {
+        print(contents)
+        if contents == localLanguage(keyString: localLanguage(keyString: "wallet_assets_pool_transfer_in_title")) {
+            // 转入
+            outputTokenButton.alpha = 1
+            changeTypeButton.setTitle(localLanguage(keyString: "wallet_assets_pool_transfer_in_title"), for: UIControl.State.normal)
+            // 调整位置
+            changeTypeButton.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 9, height: 5.5))
+            outputAmountTextField.alpha = 1
+            outputCoinAAmountLabel.alpha = 0
+            outputCoinBAmountLabel.alpha = 0
+            outputTokenBackgroundView.snp.remakeConstraints { (make) in
+                make.top.equalTo(inputTokenBackgroundView.snp.bottom).offset(33)
+                make.left.equalTo(self).offset(30)
+                make.right.equalTo(self.snp.right).offset(-30)
+                make.height.equalTo(80)
+            }
+        } else {
+            // 转出
+            outputTokenButton.alpha = 0
+            changeTypeButton.setTitle(localLanguage(keyString: "wallet_assets_pool_transfer_out_title"), for: UIControl.State.normal)
+            outputAmountTextField.alpha = 0
+            outputCoinAAmountLabel.alpha = 1
+            outputCoinBAmountLabel.alpha = 1
+            outputTokenBackgroundView.snp.remakeConstraints { (make) in
+                make.top.equalTo(inputTokenBackgroundView.snp.bottom).offset(33)
+                make.left.equalTo(self).offset(30)
+                make.right.equalTo(self.snp.right).offset(-30)
+                make.height.equalTo(95)
+            }
+        }
+        changeTypeButton.snp.remakeConstraints { (make) in
+            make.left.equalTo(inputTokenBackgroundView.snp.left).offset(5)
+            make.bottom.equalTo(inputTokenBackgroundView.snp.top).offset(-6)
+            let width = libraWalletTool.ga_widthForComment(content: changeTypeButton.titleLabel?.text ?? "", fontSize: 12, height: 20) + 8 + 19
+            make.size.equalTo(CGSize.init(width: width, height: 20))
+        }
+        // 调整位置
+        changeTypeButton.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 9, height: 5.5))
+    }
 }
 extension AssetsPoolViewHeaderView: UITextFieldDelegate {
-    //    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-    //        guard let content = textField.text else {
-    //            return true
-    //        }
-    //        let textLength = content.count + string.count - range.length
-    //        if textField.tag == 10 {
-    //            if textLength == 0 {
-    //                rightAmountTextField.text = ""
-    //            }
-    //        } else {
-    //            if textLength == 0 {
-    //                leftAmountTextField.text = ""
-    //            }
-    //        }
-    //        if content.contains(".") {
-    //            let firstContent = content.split(separator: ".").first?.description ?? "0"
-    //            if (textLength - firstContent.count) < 6 {
-    //                return true
-    //            } else {
-    //                return false
-    //            }
-    //        } else {
-    //            return textLength <= ApplyTokenAmountLengthLimit
-    //        }
-    //    }
-    //    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-    //        if self.leftCoinButton.titleLabel?.text != "---" && self.rightCoinButton.titleLabel?.text != "---" {
-    //            print("true")
-    //            return true
-    //        } else {
-    //            print("false")
-    //            return false
-    //        }
-    //    }
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let content = textField.text else {
+            return true
+        }
+        let textLength = content.count + string.count - range.length
+        if textField.tag == 10 {
+            if textLength == 0 {
+                inputAmountTextField.text = "0.00"
+            }
+        } else {
+            if textLength == 0 {
+                outputAmountTextField.text = "0.00"
+            }
+        }
+        if content.contains(".") {
+            let firstContent = content.split(separator: ".").first?.description ?? "0"
+            if (textLength - firstContent.count) < 6 {
+                return true
+            } else {
+                return false
+            }
+        } else {
+            return textLength <= ApplyTokenAmountLengthLimit
+        }
+    }
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if textField.tag == 10 {
+            print("123")
+            self.delegate?.dealTransferOutAmount(amount: NSDecimalNumber.init(string: textField.text).int64Value)
+        }
+    }
 }
 //wallet_assets_pool_transfer_in_title = "Transfer-In"
 //wallet_assets_pool_transfer_out_title = "Transfer-Out"

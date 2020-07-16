@@ -289,17 +289,17 @@ class LibraSDKTests: XCTestCase {
     func testAddCur() {
         //        let signature = try librama
         let mnemonic1 = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
-//        let signature = try! ViolasManager.getMarketAddLiquidityTransactionHex(sendAddress: "fa279f2615270daed6061313a48360f7",
-//                                                                               fee: 0,
-//                                                                               mnemonic: mnemonic1,
-//                                                                               amounta_desired: 1000,
-//                                                                               amountb_desired: 1000,
-//                                                                               amounta_min: 1,
-//                                                                               amountb_min: 1,
-//                                                                               sequenceNumber: 29,
-//                                                                               moduleA: "VLSUSD",
-//                                                                               moduleB: "VLSEUR",
-//                                                                               feeModule: "LBR")
+        let signature = try! ViolasManager.getMarketAddLiquidityTransactionHex(sendAddress: "fa279f2615270daed6061313a48360f7",
+                                                                               fee: 0,
+                                                                               mnemonic: mnemonic1,
+                                                                               amounta_desired: 100,
+                                                                               amountb_desired: 54,
+                                                                               amounta_min: 100,
+                                                                               amountb_min: 53,
+                                                                               sequenceNumber: 42,
+                                                                               moduleA: "VLSUSD",
+                                                                               moduleB: "VLSEUR",
+                                                                               feeModule: "LBR")
 //        let signature = try! ViolasManager.getMarketRemoveLiquidityTransactionHex(sendAddress: "fa279f2615270daed6061313a48360f7",
 //                                                                                  fee: 0,
 //                                                                                  mnemonic: mnemonic1,
@@ -310,15 +310,15 @@ class LibraSDKTests: XCTestCase {
 //                                                                                  moduleA: "VLSUSD",
 //                                                                                  moduleB: "VLSEUR",
 //                                                                                  feeModule: "LBR")
-        let signature = try! ViolasManager.getMarketSwapTransactionHex(sendAddress: "fa279f2615270daed6061313a48360f7",
-                                                                           amountIn: 2,
-                                                                           amountOutMin: 1,
-                                                                           fee: 0,
-                                                                           mnemonic: mnemonic1,
-                                                                           sequenceNumber: 30,
-                                                                           moduleA: "VLSUSD",
-                                                                           moduleB: "VLSEUR",
-                                                                           feeModule: "LBR")
+//        let signature = try! ViolasManager.getMarketSwapTransactionHex(sendAddress: "fa279f2615270daed6061313a48360f7",
+//                                                                           amountIn: 2,
+//                                                                           amountOutMin: 1,
+//                                                                           fee: 0,
+//                                                                           mnemonic: mnemonic1,
+//                                                                           sequenceNumber: 30,
+//                                                                           moduleA: "VLSUSD",
+//                                                                           moduleB: "VLSEUR",
+//                                                                           feeModule: "LBR")
         print(signature)
     }
 }
