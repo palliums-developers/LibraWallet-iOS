@@ -81,7 +81,7 @@ class MappingTokenListAlert: UIView {
         tableView.delegate = self
         return tableView
     }()
-    typealias successClosure = (TokenMappingListDataModel) -> Void
+    typealias successClosure = (MarketSupportTokensDataModel) -> Void
     var actionClosure: successClosure?
 //    @objc func buttonClick(button: UIButton) {
 //        guard let model = dataModels?[pickerRow] else {
@@ -123,6 +123,10 @@ extension MappingTokenListAlert: UITableViewDelegate {
         tableView.reloadRows(at: indexPaths, with: UITableView.RowAnimation.fade)
         tableView.endUpdates()
 //        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, model: model[indexPath.row])
+        if let action = self.actionClosure {
+            action(model[indexPath.row])
+            self.hideAnimation(tag: 199)
+        }
     }
 }
 extension MappingTokenListAlert: UITableViewDataSource {
@@ -261,7 +265,13 @@ class TokenListCell: UITableViewCell {
     var model: MarketSupportTokensDataModel? {
         didSet {
             tokenNameLabel.text = model?.show_name
-            
+            if let iconName = model?.icon, iconName.isEmpty == false {
+                let url = URL(string: iconName)
+                transactionTypeImageView.kf.setImage(with: url, placeholder: UIImage.init(named: "wallet_icon_default"))
+            }
+            amountLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + getDecimalNumberAmount(amount: NSDecimalNumber.init(value: model?.amount ?? 0),
+                                                                                                                  scale: 4,
+                                                                                                                  unit: 1000000)
         }
     }
     var showSelectState: Bool? {

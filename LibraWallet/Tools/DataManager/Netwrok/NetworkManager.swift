@@ -55,7 +55,7 @@ enum mainRequest {
     
     /// 扫码登录
     case SubmitScanLoginData(String, String)
-    /// 获取Violas账户信息（临时）
+    /// 获取Violas账户信息
     case GetViolasAccountInfo(String)
     /// 获取BTC价格
     case GetBTCPrice
@@ -80,6 +80,10 @@ enum mainRequest {
     case MarketMineTokens(String)
     /// 获取资金池转出试算
     case AssetsPoolTransferOutInfo(String, String, String, Int64)
+    /// 获取资金池转入试算
+    case AssetsPoolTransferInInfo(String, String, Int64)
+    /// 获取兑换试算
+    case ExchangeTransferInfo(String, String, Int64)
 }
 extension mainRequest:TargetType {
     var baseURL: URL {
@@ -126,7 +130,9 @@ extension mainRequest:TargetType {
              .AssetsPoolTransactions(_, _, _),
              .MarketSupportTokens,
              .MarketMineTokens(_),
-             .AssetsPoolTransferOutInfo(_, _, _, _):
+             .AssetsPoolTransferOutInfo(_, _, _, _),
+             .AssetsPoolTransferInInfo(_, _, _),
+             .ExchangeTransferInfo(_, _, _):
             if PUBLISH_VERSION == true {
                 return URL(string:"https://api.violas.io/1.0")!
             } else {
@@ -134,10 +140,6 @@ extension mainRequest:TargetType {
             }
         case .GetViolasAccountInfo(_),
              .SendViolasTransaction(_):
-            //            // 对内
-            //            return URL(string:"https://ab.testnet.violas.io")!
-            //            // 对外
-            ////            return URL(string:"https://ac.testnet.violas.io")!
             if PUBLISH_VERSION == true {
                 //对外
                 return URL(string:"https://ac.testnet.violas.io")!
@@ -212,11 +214,15 @@ extension mainRequest:TargetType {
         case .AssetsPoolTransactions(_, _, _):
             return "/market/pool/transaction"
         case .MarketSupportTokens:
-            return "/market/currency/violas"
+            return "/market/exchange/currency"
         case .MarketMineTokens(_):
             return "/market/pool/info"
         case .AssetsPoolTransferOutInfo(_, _, _, _):
             return "/market/pool/withdrawal/trial"
+        case .AssetsPoolTransferInInfo(_, _, _):
+            return "/market/pool/deposit/trial"
+        case .ExchangeTransferInfo(_, _, _):
+            return "/market/exchange/trial"
         }
     }
     var method: Moya.Method {
@@ -255,7 +261,9 @@ extension mainRequest:TargetType {
              .AssetsPoolTransactions(_, _, _),
              .MarketSupportTokens,
              .MarketMineTokens(_),
-             .AssetsPoolTransferOutInfo(_, _, _, _):
+             .AssetsPoolTransferOutInfo(_, _, _, _),
+             .AssetsPoolTransferInInfo(_, _, _),
+             .ExchangeTransferInfo(_, _, _):
             return .get
         }
     }
@@ -414,6 +422,16 @@ extension mainRequest:TargetType {
             return .requestParameters(parameters: ["address": address,
                                                    "coin_a":coinA,
                                                    "coin_b":coinB,
+                                                   "amount":amount],
+                                      encoding: URLEncoding.queryString)
+        case .AssetsPoolTransferInInfo(let coinA, let coinB, let amount):
+            return .requestParameters(parameters: ["coin_a":coinA,
+                                                   "coin_b":coinB,
+                                                   "amount":amount],
+                                      encoding: URLEncoding.queryString)
+        case .ExchangeTransferInfo(let coinA, let coinB, let amount):
+            return .requestParameters(parameters: ["currencyIn":coinA,
+                                                   "currencyOut":coinB,
                                                    "amount":amount],
                                       encoding: URLEncoding.queryString)
         }

@@ -9,10 +9,11 @@
 import UIKit
 import Localize_Swift
 protocol ExchangeViewHeaderViewDelegate: NSObjectProtocol {
-    func exchangeConfirm()
+    func exchangeConfirm(amountIn: Double, amountOutMin: Double, inputModelName: String, outputModelName: String, path: [UInt8])
     func selectInputToken()
     func selectOutoutToken()
     func swapInputOutputToken()
+    func dealTransferOutAmount(amount: Int64, inputModule: String, outputModule: String)
 }
 class ExchangeViewHeaderView: UIView {
     weak var delegate: ExchangeViewHeaderViewDelegate?
@@ -271,15 +272,80 @@ class ExchangeViewHeaderView: UIView {
 //    }()
     @objc func buttonClick(button: UIButton) {
         if button.tag == 10 {
+            self.selectAToken = true
             self.delegate?.selectInputToken()
         } else if button.tag == 20 {
+            self.selectAToken = false
             self.delegate?.selectOutoutToken()
         } else if button.tag == 30 {
             self.delegate?.swapInputOutputToken()
         } else if button.tag == 100 {
-            self.delegate?.exchangeConfirm()
+            self.delegate?.exchangeConfirm(amountIn: NSDecimalNumber.init(string: inputAmountTextField.text ?? "0").doubleValue,
+                                           amountOutMin: NSDecimalNumber.init(string: outputAmountTextField.text ?? "0").doubleValue,
+                                           inputModelName: transferInInputTokenA?.name ?? "",
+                                           outputModelName: transferInInputTokenB?.name ?? "",
+                                           path: (exchangeModel?.path)!)
         }
     }
+    /// 资金池转入ModelA
+    var transferInInputTokenA: MarketSupportTokensDataModel? {
+        didSet {
+            guard let model = transferInInputTokenA else {
+                return
+            }
+            inputTokenButton.setTitle(model.show_name, for: UIControl.State.normal)
+            // 调整位置
+            inputTokenButton.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 9, height: 5.5))
+            inputTokenButton.snp.remakeConstraints { (make) in
+                make.right.equalTo(inputTokenBackgroundView.snp.right).offset(-11)
+                make.bottom.equalTo(inputTokenBackgroundView.snp.bottom).offset(-11)
+                let width = libraWalletTool.ga_widthForComment(content: model.show_name ?? "---", fontSize: 12, height: 22) + 8 + 19
+                make.size.equalTo(CGSize.init(width: width, height: 22))
+            }
+//            let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model.amount ?? 0),
+//                                          scale: 4,
+//                                          unit: 1000000)
+//            inputTokenAssetsLabel.text = localLanguage(keyString: "wallet_market_assets_pool_token_title") + amount.stringValue
+        }
+    }
+    /// 资金池转入ModelB
+    var transferInInputTokenB: MarketSupportTokensDataModel? {
+        didSet {
+            guard let model = transferInInputTokenB else {
+                return
+            }
+            outputTokenButton.setTitle(model.show_name, for: UIControl.State.normal)
+            // 调整位置
+            outputTokenButton.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 9, height: 5.5))
+            outputTokenButton.snp.remakeConstraints { (make) in
+                make.right.equalTo(outputTokenBackgroundView.snp.right).offset(-11)
+                make.bottom.equalTo(outputTokenBackgroundView.snp.bottom).offset(-11)
+                let width = libraWalletTool.ga_widthForComment(content: model.show_name ?? "---", fontSize: 12, height: 22) + 8 + 19
+                make.size.equalTo(CGSize.init(width: width, height: 22))
+            }
+//            let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model.amount ?? 0),
+//                                          scale: 4,
+//                                          unit: 1000000)
+//            outputTokenAssetsLabel.text = localLanguage(keyString: "wallet_market_assets_pool_token_title") + amount.stringValue
+        }
+    }
+    var exchangeModel: ExchangeInfoDataModel? {
+        didSet {
+            guard let model = exchangeModel else {
+                return
+            }
+            outputAmountTextField.text = getDecimalNumber(amount: NSDecimalNumber.init(value: model.amount ?? 0),
+                                                          scale: 4,
+                                                          unit: 1000000).stringValue
+            exchangeRateLabel.text = localLanguage(keyString: "wallet_market_exchange_rate_title") + getDecimalNumber(amount: NSDecimalNumber.init(value: model.rate ?? 0),
+                                                                                                                      scale: 4,
+                                                                                                                      unit: 1).stringValue
+            feeLabel.text = localLanguage(keyString: "wallet_market_exchange_fee_title") + getDecimalNumber(amount: NSDecimalNumber.init(value: model.fee ?? 0),
+                                                                                                            scale: 4,
+                                                                                                            unit: 1000000).stringValue
+        }
+    }
+    var selectAToken: Bool?
     /// 语言切换
     @objc func setText() {
         feeLabel.text = localLanguage(keyString: "wallet_market_exchange_fee_title") + "---"
@@ -297,38 +363,45 @@ class ExchangeViewHeaderView: UIView {
     }
 }
 extension ExchangeViewHeaderView: UITextFieldDelegate {
-    //    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-    //        guard let content = textField.text else {
-    //            return true
-    //        }
-    //        let textLength = content.count + string.count - range.length
-    //        if textField.tag == 10 {
-    //            if textLength == 0 {
-    //                rightAmountTextField.text = ""
-    //            }
-    //        } else {
-    //            if textLength == 0 {
-    //                leftAmountTextField.text = ""
-    //            }
-    //        }
-    //        if content.contains(".") {
-    //            let firstContent = content.split(separator: ".").first?.description ?? "0"
-    //            if (textLength - firstContent.count) < 6 {
-    //                return true
-    //            } else {
-    //                return false
-    //            }
-    //        } else {
-    //            return textLength <= ApplyTokenAmountLengthLimit
-    //        }
-    //    }
-    //    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-    //        if self.leftCoinButton.titleLabel?.text != "---" && self.rightCoinButton.titleLabel?.text != "---" {
-    //            print("true")
-    //            return true
-    //        } else {
-    //            print("false")
-    //            return false
-    //        }
-    //    }
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let content = textField.text else {
+            return true
+        }
+        let textLength = content.count + string.count - range.length
+        if textField.tag == 10 {
+            if textLength == 0 {
+                inputAmountTextField.text = ""
+            }
+        } else {
+            if textLength == 0 {
+                outputAmountTextField.text = ""
+            }
+        }
+        if content.contains(".") {
+            let firstContent = content.split(separator: ".").first?.description ?? "0"
+            if (textLength - firstContent.count) < 6 {
+                return true
+            } else {
+                return false
+            }
+        } else {
+            return textLength <= ApplyTokenAmountLengthLimit
+        }
+    }
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if textField.tag == 10 {
+            print("123")
+            self.delegate?.dealTransferOutAmount(amount: NSDecimalNumber.init(string: textField.text).int64Value,
+                                                 inputModule: transferInInputTokenA?.name ?? "",
+                                                 outputModule: transferInInputTokenB?.name ?? "")
+
+        } else if textField.tag == 20 {
+//            if self.changeTypeButton.titleLabel?.text == localLanguage(keyString: localLanguage(keyString: "wallet_assets_pool_transfer_in_title")) {
+//                // 转入
+//                self.delegate?.dealTransferOutAmount(amount: NSDecimalNumber.init(string: textField.text).int64Value,
+//                                                     coinAModule: transferInInputTokenA?.name ?? "",
+//                                                     coinBModule: transferInInputTokenB?.name ?? "")
+//            }
+        }
+    }
 }

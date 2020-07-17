@@ -168,7 +168,7 @@ extension AddAssetViewController: AddAssetTableViewManagerDelegate {
                                            tokenIcon: model.icon ?? "",
                                            tokenContract: model.address ?? "00000000000000000000000000000001",
                                            tokenModule: model.module ?? "",
-                                           tokenModuleName: "T",
+                                           tokenModuleName: model.module ?? "",
                                            tokenEnable: true,
                                            tokenPrice: "0.0")
                     _ = DataBaseManager.DBManager.insertToken(token: token)
@@ -204,17 +204,22 @@ extension AddAssetViewController {
         self.navigationItem.rightBarButtonItems = [barButtonItem, backView]
     }
     @objc func addAddressMethod() {
-        let violasTokens = tokens?.filter({
-            $0.tokenType == .Violas
-        })
-        if violasTokens?.isEmpty == false {
-            let vc = TransactionDetailWebViewController()
-            let navi = BaseNavigationViewController.init(rootViewController: vc)
-            vc.requestURL = "https://testnet.violas.io/faucet/\(violasTokens?.first?.tokenAddress ?? "")"
-            vc.needDismissViewController = true
-            self.present(navi, animated: true, completion: nil)
-        }
-        
+//        let violasTokens = tokens?.filter({
+//            $0.tokenType == .Violas
+//        })
+//        if violasTokens?.isEmpty == false {
+//            let vc = TransactionDetailWebViewController()
+//            let navi = BaseNavigationViewController.init(rootViewController: vc)
+//            vc.requestURL = "https://testnet.violas.io/faucet/\(violasTokens?.first?.tokenAddress ?? "")"
+//            vc.needDismissViewController = true
+//            self.present(navi, animated: true, completion: nil)
+//        }
+//
+        self.detailView.toastView?.show(tag: 99)
+        self.dataModel.publishViolasToken(sendAddress: "fa279f2615270daed6061313a48360f7",
+                                          mnemonic: ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"],
+                                          type: .Violas,
+                                          module: "Coin1")
     }
 }
 //MARK: - 网络请求数据处理中心

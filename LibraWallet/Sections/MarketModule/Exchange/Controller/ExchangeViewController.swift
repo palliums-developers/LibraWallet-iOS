@@ -13,6 +13,7 @@ class ExchangeViewController: UIViewController {
         self.view.backgroundColor = UIColor.white
         // 加载子View
         self.view.addSubview(detailView)
+        self.initKVO()
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -51,15 +52,48 @@ class ExchangeViewController: UIViewController {
     var observer: NSKeyValueObservation?
 }
 extension ExchangeViewController: ExchangeViewHeaderViewDelegate {
-    func exchangeConfirm() {
+    func dealTransferOutAmount(amount: Int64, inputModule: String, outputModule: String) {
+        self.detailView.toastView?.show(tag: 99)
+        self.dataModel.getExchangeInfo(amount: amount * 1000000,
+                                       inputModule: inputModule,
+                                       outputModule: outputModule)
+    }
+    
+    func exchangeConfirm(amountIn: Double, amountOutMin: Double, inputModelName: String, outputModelName: String, path: [UInt8]) {
         print("Exchange")
+        
+        WalletManager.unlockWallet(controller: self, successful: { [weak self](mnemonic) in
+            self?.detailView.toastView?.show(tag: 99)
+            self?.dataModel.sendSwapViolasTransaction(sendAddress: "fa279f2615270daed6061313a48360f7",
+                                                      amountIn: amountIn,
+                                                      AmountOutMin: amountOutMin,
+                                                      path: path,
+                                                      fee: 0,
+                                                      mnemonic: mnemonic,
+                                                      moduleA: inputModelName,
+                                                      moduleB: outputModelName,
+                                                      feeModule: "LBR")
+        }) { [weak self](error) in
+            guard error != "Cancel" else {
+                self?.detailView.toastView?.hide(tag: 99)
+                return
+            }
+            self?.detailView.makeToast(error,
+                                       position: .center)
+        }
     }
     func selectInputToken() {
-        self.detailView.makeToastActivity(.center)
-        self.dataModel.getMarketSupportTokens()
+//        self.detailView.makeToastActivity(.center)
+//        self.dataModel.getMarketSupportTokens()
+        self.detailView.toastView?.show(tag: 99)
+        self.dataModel.getMarketTokens(address: "fa279f2615270daed6061313a48360f7",
+                                       showMineTokens: false)
     }
     func selectOutoutToken() {
         print("selectOutoutToken")
+        self.detailView.toastView?.show(tag: 99)
+        self.dataModel.getMarketTokens(address: "fa279f2615270daed6061313a48360f7",
+                                       showMineTokens: false)
     }
     func swapInputOutputToken() {
         print("Swap")
@@ -78,6 +112,7 @@ extension ExchangeViewController {
             if let error = dataDic.value(forKey: "error") as? LibraWalletError {
                 // 隐藏请求指示
                 self?.detailView.hideToastActivity()
+                self?.detailView.toastView?.hide(tag: 99)
                 if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
                     // 网络无法访问
                     print(error.localizedDescription)
@@ -106,48 +141,37 @@ extension ExchangeViewController {
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .noMoreData).localizedDescription {
                     // 上拉请求更多数据为空
                     print(error.localizedDescription)
+                } else {
+                    self?.detailView.makeToast(error.localizedDescription,
+                                               position: .center)
                 }
                 return
             }
             let type = dataDic.value(forKey: "type") as! String
-//            if type == "ExchangeTransactionsOrigin" {
-//                guard let tempData = dataDic.value(forKey: "data") as? [ExchangeTransactionsDataModel] else {
-//                    return
-//                }
-//                self?.tableViewManager.dataModels = tempData
-//                self?.detailView.tableView.reloadData()
-//            } else if type == "ExchangeTransactionsMore" {
-//                guard let tempData = dataDic.value(forKey: "data") as? [ExchangeTransactionsDataModel] else {
-//                    return
-//                }
-//                if let oldData = self?.tableViewManager.dataModels, oldData.isEmpty == false {
-//                    let tempArray = NSMutableArray.init(array: oldData)
-//                    var insertIndexPath = [IndexPath]()
-//                    for index in 0..<tempData.count {
-//                        let indexPath = IndexPath.init(row: oldData.count + index, section: 0)
-//                        insertIndexPath.append(indexPath)
-//                    }
-//                    tempArray.addObjects(from: tempData)
-//                    self?.tableViewManager.dataModels = tempArray as? [ExchangeTransactionsDataModel]
-//                    self?.detailView.tableView.beginUpdates()
-//                    self?.detailView.tableView.insertRows(at: insertIndexPath, with: UITableView.RowAnimation.bottom)
-//                    self?.detailView.tableView.endUpdates()
-//                } else {
-//                    self?.tableViewManager.dataModels = tempData
-//                    self?.detailView.tableView.reloadData()
-//                }
-//                self?.detailView.tableView.mj_footer?.endRefreshing()
-//            } else if type == "GetMarketSupportTokens" {
-//                guard let tempData = dataDic.value(forKey: "data") as? [MarketSupportTokensDataModel] else {
-//                    return
-//                }
-//                let alert = MappingTokenListAlert.init(data: tempData) { (model) in
-//                    print(model)
-//                }
-//                alert.show(tag: 99)
-//                alert.showAnimation()
-//            }
+            if type == "SupportViolasTokens" {
+                guard let tempData = dataDic.value(forKey: "data") as? [MarketSupportTokensDataModel] else {
+                    return
+                }
+                let alert = MappingTokenListAlert.init(data: tempData) { (model) in
+                    print(model)
+                    if self?.detailView.headerView.selectAToken == true {
+                        self?.detailView.headerView.transferInInputTokenA = model
+                    } else {
+                        self?.detailView.headerView.transferInInputTokenB = model
+                    }
+                }
+                alert.show(tag: 199)
+                alert.showAnimation()
+            } else if type == "GetExchangeInfo" {
+                guard let tempData = dataDic.value(forKey: "data") as? ExchangeInfoDataModel else {
+                    return
+                }
+                self?.detailView.headerView.exchangeModel = tempData
+            } else if type == "SendViolasTransaction" {
+                self?.detailView.makeToast("发送成功", position: .center)
+            }
             self?.detailView.hideToastActivity()
+            self?.detailView.toastView?.hide(tag: 99)
         })
     }
 }

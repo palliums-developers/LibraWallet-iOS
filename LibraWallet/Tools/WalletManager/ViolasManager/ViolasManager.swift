@@ -200,7 +200,7 @@ extension ViolasManager {
     ///   - exchangeTokenContract: 兑换合约地址
     ///   - exchangeTokenAmount: 兑换数量
     ///   - sequenceNumber: 序列码
-    public static func getMarketSwapTransactionHex(sendAddress: String, amountIn: Double, amountOutMin: Double, fee: Double, mnemonic: [String], sequenceNumber: Int, moduleA: String, moduleB: String, feeModule: String) throws -> String {
+    public static func getMarketSwapTransactionHex(sendAddress: String, amountIn: Double, amountOutMin: Double, path: [UInt8], fee: Double, mnemonic: [String], sequenceNumber: Int, moduleA: String, moduleB: String, feeModule: String) throws -> String {
         do {
             let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
             // 拼接交易
@@ -210,8 +210,8 @@ extension ViolasManager {
                                                            value: "\(Int(amountIn * 1000000))")
             let argument2 = ViolasTransactionArgument.init(code: .U64,
                                                            value: "\(Int(amountOutMin * 1000000))")
-            let mBytes:[UInt8]  =  [0,1];
-            let data:Data = Data(bytes: mBytes, count: mBytes.count);
+//            let mBytes:[UInt8]  =  [0,1];
+            let data:Data = Data(bytes: path, count: path.count);
             let argument3 = ViolasTransactionArgument.init(code: .U8Vector,
                                                            value: data.toHexString())
             let argument4 = ViolasTransactionArgument.init(code: .U8Vector,

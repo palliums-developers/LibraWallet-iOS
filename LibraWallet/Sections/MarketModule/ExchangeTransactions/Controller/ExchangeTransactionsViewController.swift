@@ -122,6 +122,9 @@ extension ExchangeTransactionsViewController {
                     // 上拉请求更多数据为空
                     print(error.localizedDescription)
                     self?.detailView.tableView.mj_footer?.endRefreshingWithNoMoreData()
+                } else {
+                    self?.detailView.makeToast(error.localizedDescription,
+                                               position: .center)
                 }
                 return
             }
