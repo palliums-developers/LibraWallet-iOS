@@ -9,18 +9,19 @@
 import UIKit
 
 open class Dropper: UIView {
-    public let TableMenu: UITableView = UITableView()
     /**
-    Alignment of the dropdown menu compared to the button
-    
-    - Left: Dropdown is aligned to the left side the corresponding button
-    
-    - Center: Dropdown is aligned to the center of the corresponding button
-    
-    - Right: Dropdown is aligned to the right of the corresponding button
-    */
+     Alignment of the dropdown menu compared to the button
+     
+     - Left: Dropdown is aligned to the left side the corresponding button
+     
+     - Center: Dropdown is aligned to the center of the corresponding button
+     
+     - Right: Dropdown is aligned to the right of the corresponding button
+     */
     public enum Alignment {
-        case left, center, right
+        case left
+        case center
+        case right
     }
     
     /**
@@ -30,26 +31,29 @@ open class Dropper: UIView {
      - Bottom: Displayed on bottom of the dropdown
      */
     public enum Position {
-        case top, bottom
+        case top
+        case bottom
     }
     
     /**
-    The current status of the dropdowns state
-    
-    - Displayed: The dropdown is visible on screen
-    - Hidden: The dropdwon is hidden or offscreen.
-    
-    */
+     The current status of the dropdowns state
+     
+     - Displayed: The dropdown is visible on screen
+     - Hidden: The dropdwon is hidden or offscreen.
+     
+     */
     public enum Status {
-        case displayed, hidden, shown
+        case displayed
+        case hidden
+        case shown
     }
     
     /**
-    Default themes for dropdown menu
-    
-    - Black: Black theme for dropdown. Black background, white text
-    - White: White theme for dropdown. White background, black text
-    */
+     Default themes for dropdown menu
+     
+     - Black: Black theme for dropdown. Black background, white text
+     - White: White theme for dropdown. White background, black text
+     */
     public enum Themes {
         case black(UIColor?), white
     }
@@ -62,22 +66,23 @@ open class Dropper: UIView {
     open var spacing: CGFloat = 10 /// The distance from the button to the dropdown
     open var maxHeight: CGFloat? /// The maximum possible height of the dropdown
     open var cellBackgroundColor: UIColor? /// Sets the cell background color
-    open var cellColor: UIColor? /// Sets the cell tint color and text color
-	open var cellTextSize: CGFloat? {
-		get {
-			return cellTextFont?.pointSize
-		}
-		set {
-			if let newValue = newValue {
-				cellTextFont = UIFont.systemFont(ofSize: newValue)
-			}else{
-				cellTextFont = nil
-			}
-		}
-	}
+    /// Sets the cell tint color and text color
+    open var cellColor: UIColor?
+    open var cellTextSize: CGFloat? {
+        get {
+            return cellTextFont?.pointSize
+        }
+        set {
+            if let newValue = newValue {
+                cellTextFont = UIFont.systemFont(ofSize: newValue)
+            }else{
+                cellTextFont = nil
+            }
+        }
+    }
     /// Sets the size of the text to provided value
-	open var cellTextFont: UIFont?
-	
+    open var cellTextFont: UIFont?
+    
     // MARK: - Public Computed Properties
     /// The items to be dispalyed in the tableview
     open var items = [String]() {
@@ -125,12 +130,12 @@ open class Dropper: UIView {
     }
     
     /**
-    Dropdown border styling
-    
-    - (width: CGFloat) Border Width
-    - (color: UIColor) Color of Border
-    
-    */
+     Dropdown border styling
+     
+     - (width: CGFloat) Border Width
+     - (color: UIColor) Color of Border
+     
+     */
     open var border: (width: CGFloat, color: UIColor) {
         get { return (TableMenu.layer.borderWidth, UIColor(cgColor: TableMenu.layer.borderColor!)) }
         set {
@@ -147,7 +152,7 @@ open class Dropper: UIView {
             if let height = maxHeight { // Determines if max_height is provided
                 return height
             }
-
+            
             if let containingView = self.superview { // restrict to containing views height
                 return containingView.frame.size.height - self.frame.origin.y
             }
@@ -174,20 +179,9 @@ open class Dropper: UIView {
         // Size of table menu
         TableMenu.frame.size.height = self.frame.size.height + 0.1
         TableMenu.frame.size.width = self.frame.size.width + 0.1
-        // Delegates and data Source
-        TableMenu.dataSource = self
-        TableMenu.delegate = self
-        TableMenu.register(DropperCell.self, forCellReuseIdentifier: "cell")
-        // Styling
-        TableMenu.backgroundColor = UIColor.lightGray
-        TableMenu.separatorStyle = UITableViewCell.SeparatorStyle.none
-        TableMenu.bounces = false
-        if (trimCorners) {
-            TableMenu.layer.cornerRadius = 9.0
-            TableMenu.clipsToBounds = true
-        }
+        
     }
-    
+
     // MARK: - Private Properties
     /// Defines if the view has been shown yet
     fileprivate var shown: Status = .hidden
@@ -214,23 +208,23 @@ open class Dropper: UIView {
     // MARK: - API
     
     /**
-    Displays the dropdown
-    
-    - parameter options: Position of the dropdown corresponding of the button
-    - parameter button: Button to which the dropdown will be aligned to
-    
-    */
+     Displays the dropdown
+     
+     - parameter options: Position of the dropdown corresponding of the button
+     - parameter button: Button to which the dropdown will be aligned to
+     
+     */
     
     /**
-    Displays the dropdown
-    
-    - parameter options:  Vertical alignment of the dropdown corresponding of the button
-    - parameter position: Horizontal alignment of the dropdown. Defaults to bottom.
-    - parameter button:   Button to which the dropdown will be aligned to
-    */
+     Displays the dropdown
+     
+     - parameter options:  Vertical alignment of the dropdown corresponding of the button
+     - parameter position: Horizontal alignment of the dropdown. Defaults to bottom.
+     - parameter button:   Button to which the dropdown will be aligned to
+     */
     open func show(_ options: Alignment, position: Position = .bottom, button: UIButton) {
         refreshHeight()
-    
+        
         switch options { // Aligns the view vertically to the button
         case .left:
             self.frame.origin.x = button.frame.origin.x
@@ -246,7 +240,7 @@ open class Dropper: UIView {
         case .bottom:
             self.frame.origin.y = button.frame.origin.y + button.frame.height + spacing
         }
-    
+        
         if (!self.isHidden) {
             self.addSubview(TableMenu)
             if let buttonRoot = findButtonFromSubviews((button.superview?.subviews)!, button: button) {
@@ -264,12 +258,12 @@ open class Dropper: UIView {
     }
     
     /**
-    Displays the dropdown with fade in type of aniamtion
-    
-    - parameter time:    Time taken for the fade animation
-    - parameter options: Position of the dropdown corresponding of the button
-    - parameter button:  Button to which the dropdown will be aligned to
-    */
+     Displays the dropdown with fade in type of aniamtion
+     
+     - parameter time:    Time taken for the fade animation
+     - parameter options: Position of the dropdown corresponding of the button
+     - parameter button:  Button to which the dropdown will be aligned to
+     */
     open func showWithAnimation(_ time: TimeInterval, options: Alignment, position: Position = .bottom, button: UIButton) {
         if (self.isHidden) {
             refresh()
@@ -284,8 +278,8 @@ open class Dropper: UIView {
     }
     
     /**
-    Hides the dropdown from the view
-    */
+     Hides the dropdown from the view
+     */
     open func hide() {
         status = .hidden
         self.isHidden = true
@@ -295,28 +289,28 @@ open class Dropper: UIView {
     }
     
     /**
-    Fades out and hides the dropdown from the view
-    
-    - parameter time: Time taken to fade out the dropdown
-    */
+     Fades out and hides the dropdown from the view
+     
+     - parameter time: Time taken to fade out the dropdown
+     */
     open func hideWithAnimation(_ time: TimeInterval) {
         UIView.animate(withDuration: time, delay: 0.0, options: .curveEaseOut, animations: {
             self.TableMenu.alpha = 0.0
-            }, completion: { finished in
-                self.hide()
+        }, completion: { finished in
+            self.hide()
         })
     }
     
     /**
-    Refresh the Tablemenu. For specifically calling .reloadData() on the TableView
-    */
+     Refresh the Tablemenu. For specifically calling .reloadData() on the TableView
+     */
     open func refresh() {
         TableMenu.reloadData()
     }
     
     /**
-    Refreshes the table view height
-    */
+     Refreshes the table view height
+     */
     fileprivate func refreshHeight() {
         // Updates the height of the view depending on the amount of item
         let tempHeight: CGFloat = CGFloat(items.count) * TableMenu.rowHeight // Height of TableView
@@ -328,13 +322,13 @@ open class Dropper: UIView {
     }
     
     /**
-    Find corresponding button to which the dropdown is aligned too
-    
-    - parameter subviews: All subviews of where the button is.
-    - parameter button: Button to find
-    
-    - returns: Found button or nil
-    */
+     Find corresponding button to which the dropdown is aligned too
+     
+     - parameter subviews: All subviews of where the button is.
+     - parameter button: Button to find
+     
+     - returns: Found button or nil
+     */
     fileprivate func findButtonFromSubviews(_ subviews: [UIView], button: UIButton) -> UIView? {
         for subview in subviews {
             if (subview is UIButton && subview == button) {
@@ -343,55 +337,116 @@ open class Dropper: UIView {
         }
         return nil
     }
+    var defaultSelectRow: Int?
+    lazy var TableMenu: UITableView = {
+        let tableView = UITableView.init(frame: CGRect.zero, style: UITableView.Style.plain)
+        tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
+        tableView.estimatedRowHeight = 0;
+        tableView.estimatedSectionHeaderHeight = 0;
+        tableView.contentInsetAdjustmentBehavior = UIScrollView.ContentInsetAdjustmentBehavior.never
+        tableView.register(DropperCell.classForCoder(), forCellReuseIdentifier: "cell")
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.backgroundColor = UIColor.lightGray
+        tableView.bounces = false
+        if (trimCorners) {
+            tableView.layer.cornerRadius = 9.0
+            tableView.clipsToBounds = true
+        }
+        return tableView
+    }()
+    private lazy var invisableBackgroundView: UIView = {
+        let view = UIView.init(frame: CGRect.init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
+        return view
+    }()
+//    var cellConfig: CellConfig?
+//    struct CellConfig {
+//        var textFont: UIFont?
+//        var textColor: UIColor?
+//        var showSeperator: Bool?
+//        var backgroundColor: UIColor?
+//    }
 }
 
-extension Dropper: UITableViewDelegate, UITableViewDataSource, DropperExtentsions {
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! DropperCell
-        // Sets up Cell
-        // Removes image and text just in case the cell still contains the view
-        cell.imageItem.removeFromSuperview()
-        cell.textItem.removeFromSuperview()
-        cell.last = items.count - 1  // Sets the last item to the cell
-        cell.indexPath = indexPath // Sets index path to the cell
-        cell.borderColor = border.color // Sets the border color for the seperator
-        let item = items[(indexPath as NSIndexPath).row]
-        
-        if let color = cellBackgroundColor {
-            cell.backgroundColor = color
-        }
-        
-        if let color = cellColor {
-            cell.textItem.textColor = color
-            cell.imageItem.tintColor = color
-        }
-        
-        if let font = cellTextFont {
-            cell.textItem.font = font
-        }
-        
-        if let image = toImage(item) { // Determines if item is an image or not
-            cell.cellType = .icon
-            cell.imageItem.image = image
-        } else {
-            cell.cellType = .text
-            cell.textItem.text = item
-        }
-        
-        return cell
-    }
-    
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return items.count
-    }
-    
-    public func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
+extension Dropper: UITableViewDelegate, DropperExtentsions {
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         delegate?.DropperSelectedRow(indexPath, contents: items[(indexPath as NSIndexPath).row])
         delegate?.DropperSelectedRow(indexPath, contents: items[(indexPath as NSIndexPath).row], tag: self.tag)
         self.hideWithAnimation(defaultAnimationTime)
     }
+}
+extension Dropper: UITableViewDataSource {
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return items.count
+    }
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as? DropperCell {
+            // Sets up Cell
+            // Removes image and text just in case the cell still contains the view
+            cell.imageItem.removeFromSuperview()
+            cell.textItem.removeFromSuperview()
+            cell.last = items.count - 1  // Sets the last item to the cell
+            cell.indexPath = indexPath // Sets index path to the cell
+            cell.borderColor = border.color // Sets the border color for the seperator
+            let item = items[indexPath.row]
+            
+            if let color = cellBackgroundColor {
+                cell.backgroundColor = color
+            }
+            
+            if let color = cellColor {
+                cell.textItem.textColor = color
+                cell.imageItem.tintColor = color
+            }
+            
+            if let font = cellTextFont {
+                cell.textItem.font = font
+            }
+            if let image = toImage(item) { // Determines if item is an image or not
+                //                cell.cellType = .icon
+                cell.imageItem.image = image
+            } else {
+                //                cell.cellType = .text
+                cell.textItem.text = item
+            }
+            if let selectRow = defaultSelectRow, indexPath.row == selectRow {
+                cell.selectMode = true
+            } else {
+                cell.selectMode = false
+            }
+            return cell
+        } else {
+            let cell = DropperCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: "cell", cellType: toImage(items[indexPath.row]) == nil ? .text:.icon)
+            // Removes image and text just in case the cell still contains the view
+            cell.imageItem.removeFromSuperview()
+            cell.textItem.removeFromSuperview()
+            cell.last = items.count - 1  // Sets the last item to the cell
+            cell.indexPath = indexPath // Sets index path to the cell
+            cell.borderColor = border.color // Sets the border color for the seperator
+            let item = items[(indexPath as NSIndexPath).row]
+            
+            if let color = cellBackgroundColor {
+                cell.backgroundColor = color
+            }
+            
+            if let color = cellColor {
+                cell.textItem.textColor = color
+                cell.imageItem.tintColor = color
+            }
+            
+            if let font = cellTextFont {
+                cell.textItem.font = font
+            }
+            if let image = toImage(item) { // Determines if item is an image or not
+                //                cell.cellType = .icon
+                cell.imageItem.image = image
+            } else {
+                //                cell.cellType = .text
+                cell.textItem.text = item
+            }
+            
+            return cell
+        }
+    }
+    
 }
