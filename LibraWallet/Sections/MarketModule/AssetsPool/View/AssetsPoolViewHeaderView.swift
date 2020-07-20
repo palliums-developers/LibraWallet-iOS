@@ -14,22 +14,25 @@ protocol AssetsPoolViewHeaderViewDelegate: NSObjectProtocol {
     func selectOutoutToken()
 //    func swapInputOutputToken()
     func changeTrasferInOut()
-    func dealTransferOutAmount(amount: Int64, coinAModule: String, coinBModule: String)
-}
-enum AssetsPoolViewHeaderViewState {
-    case Normal
-    case ExchangeTransferInSwap
-
-    case AssetsPoolTransferInSelectAToken
-    case AssetsPoolTransferInSelectBToken
-    case AssetsPoolTransferInRequestRate
-    case AssetsPoolTransferOutSelectToken
-    case AssetsPoolTransferOutRequestLiquidityRate
-    case AssetsPoolTransferOutAddLiquidity
-    case AssetsPoolTransferOutRemoveLiquidity
+    func dealTransferOutAmount(amount: Double, coinAModule: String, coinBModule: String)
 }
 class AssetsPoolViewHeaderView: UIView {
     weak var delegate: AssetsPoolViewHeaderViewDelegate?
+    enum AssetsPoolViewHeaderViewState {
+        case Normal
+        case AssetsPoolTransferInSelectAToken
+        case AssetsPoolTransferInSelectBToken
+        case AssetsPoolTransferInBaseOnInputARequestRate
+        case AssetsPoolTransferInBaseOnInputBRequestRate
+        case AssetsPoolTransferInConfirm
+        
+        case AssetsPoolTransferOutSelectToken
+        case AssetsPoolTransferOutRequestLiquidityRate
+        case AssetsPoolTransferOutAddLiquidity
+        case AssetsPoolTransferOutRemoveLiquidity
+    }
+    var viewState: AssetsPoolViewHeaderViewState = .Normal
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.white
@@ -374,7 +377,15 @@ class AssetsPoolViewHeaderView: UIView {
 //        label.layer.cornerRadius = 3
 //        return label
 //    }()
-    var viewState: AssetsPoolViewHeaderViewState = .Normal
+    func stringToDouble(string: String?) -> Double {
+        guard let tempString = string, tempString.isEmpty == false else {
+            return 0.0
+        }
+        guard isPurnDouble(string: tempString) == true else {
+            return 0.0
+        }
+        return NSDecimalNumber.init(string: tempString).doubleValue
+    }
     @objc func buttonClick(button: UIButton) {
         if button.tag == 10 {
             self.delegate?.changeTrasferInOut()
@@ -382,25 +393,89 @@ class AssetsPoolViewHeaderView: UIView {
             dropper.items = [localLanguage(keyString: "wallet_assets_pool_transfer_in_title"), localLanguage(keyString: "wallet_assets_pool_transfer_out_title")]
             dropper.cornerRadius = 8
             dropper.theme = .black(UIColor.init(hex: "F1EEFB"))
-            dropper.cellTextFont = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
+            dropper.cellTextFont = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
             dropper.cellColor = UIColor.init(hex: "333333")
             dropper.spacing = 12
-            dropper.show(Dropper.Alignment.center, button: button)
             dropper.delegate = self
+            if self.changeTypeButton.titleLabel?.text == localLanguage(keyString: localLanguage(keyString: "wallet_assets_pool_transfer_in_title")) {
+                dropper.defaultSelectRow = 0
+            } else {
+                dropper.defaultSelectRow = 1
+            }
+            dropper.show(Dropper.Alignment.center, button: button)
         } else if button.tag == 20 {
-            selectAToken = true
+            self.viewState = .AssetsPoolTransferInSelectAToken
             self.delegate?.selectInputToken()
         } else if button.tag == 30 {
-            selectAToken = false
+            self.viewState = .AssetsPoolTransferInSelectBToken
             self.delegate?.selectOutoutToken()
         } else if button.tag == 100 {
             if self.changeTypeButton.titleLabel?.text == localLanguage(keyString: localLanguage(keyString: "wallet_assets_pool_transfer_in_title")) {
                 // 转入
-                self.delegate?.addLiquidityConfirm(amountIn: NSDecimalNumber.init(string: inputAmountTextField.text ?? "0").doubleValue,
-                                                   amountOut: NSDecimalNumber.init(string: outputAmountTextField.text ?? "0").doubleValue,
-                                                   inputModelName: transferInInputTokenA?.module ?? "",
-                                                   outputModelName: transferInInputTokenB?.module ?? "")
+                self.inputAmountTextField.resignFirstResponder()
+                self.outputAmountTextField.resignFirstResponder()
+                // ModelA不为空
+                guard let tempInputTokenA = transferInInputTokenA else {
+                    self.makeToast("请选择第一个输入通证后输入",
+                                   position: .center)
+                    return
+                }
+                // ModelB不为空
+                guard let tempInputTokenB = transferInInputTokenB else {
+                    self.makeToast("请选择第二个输入通证后输入",
+                                   position: .center)
+                    return
+                }
+                // 金额不为空检查
+                guard let amountAString = self.inputAmountTextField.text, amountAString.isEmpty == false else {
+                    self.makeToast(LibraWalletError.WalletTransfer(reason: .amountEmpty).localizedDescription,
+                                   position: .center)
+                    return
+                }
+                // 金额是否纯数字检查
+                guard isPurnDouble(string: amountAString) == true else {
+                    self.makeToast(LibraWalletError.WalletTransfer(reason: .amountInvalid).localizedDescription,
+                                   position: .center)
+                    return
+                }
+                // 转换数字
+                let amountA = NSDecimalNumber.init(string: amountAString).doubleValue
+                
+                // 金额不为空检查
+                guard let amountBString = self.inputAmountTextField.text, amountBString.isEmpty == false else {
+                    self.makeToast(LibraWalletError.WalletTransfer(reason: .amountEmpty).localizedDescription,
+                                   position: .center)
+                    return
+                }
+                // 金额是否纯数字检查
+                guard isPurnDouble(string: amountBString) == true else {
+                    self.makeToast(LibraWalletError.WalletTransfer(reason: .amountInvalid).localizedDescription,
+                                   position: .center)
+                    return
+                }
+                // 转换数字
+                let amountB = NSDecimalNumber.init(string: amountBString).doubleValue
+                
+                
+                
+                let leastModuleA: MarketSupportTokensDataModel?
+                let otherModuleB: MarketSupportTokensDataModel?
+                if (tempInputTokenA.index ?? 0) > (tempInputTokenB.index ?? 0) {
+                    leastModuleA = tempInputTokenB
+                    otherModuleB = tempInputTokenA
+                } else {
+                    leastModuleA = tempInputTokenA
+                    otherModuleB = tempInputTokenB
+                }
+                // 转入
+                self.viewState = .AssetsPoolTransferInConfirm
+                self.delegate?.addLiquidityConfirm(amountIn: amountA,
+                                                   amountOut: amountB,
+                                                   inputModelName: leastModuleA?.module ?? "",
+                                                   outputModelName: otherModuleB?.module ?? "")
             } else {
+                // 转出
+                self.inputAmountTextField.resignFirstResponder()
                 let amountA = getDecimalNumber(amount: NSDecimalNumber.init(value: transferOutModel?.coin_a_value ?? 0),
                                                scale: 4,
                                                unit: 1000000)
@@ -474,11 +549,14 @@ class AssetsPoolViewHeaderView: UIView {
                                           scale: 4,
                                           unit: 1000000)
             inputTokenAssetsLabel.text = localLanguage(keyString: "wallet_market_assets_pool_token_title") + amount.stringValue
+            // 重置View 状态
+            self.viewState = .Normal
         }
     }
     /// 资金池转入ModelB
     var transferInInputTokenB: MarketSupportTokensDataModel? {
         didSet {
+            
             guard let model = transferInInputTokenB else {
                 return
             }
@@ -495,9 +573,11 @@ class AssetsPoolViewHeaderView: UIView {
                                           scale: 4,
                                           unit: 1000000)
             outputTokenAssetsLabel.text = localLanguage(keyString: "wallet_market_assets_pool_token_title") + amount.stringValue
+            // 重置View 状态
+            self.viewState = .Normal
         }
     }
-    var selectAToken: Bool?
+//    var selectAToken: Bool?
 }
 extension AssetsPoolViewHeaderView: DropperDelegate {
     func DropperSelectedRow(_ path: IndexPath, contents: String) {
@@ -627,27 +707,78 @@ extension AssetsPoolViewHeaderView: UITextFieldDelegate {
             return textLength <= ApplyTokenAmountLengthLimit
         }
     }
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        #warning("待翻译")
+        if changeTypeButton.titleLabel?.text == localLanguage(keyString: localLanguage(keyString: "wallet_assets_pool_transfer_in_title")) {
+            // 转入
+            guard inputTokenButton.titleLabel?.text != localLanguage(keyString: "wallet_market_exchange_input_token_button_title") else {
+                textField.resignFirstResponder()
+                self.makeToast("请选择第一个输入通证后输入",
+                               position: .center)
+                return false
+            }
+            guard outputTokenButton.titleLabel?.text != localLanguage(keyString: "wallet_market_exchange_output_token_button_title") else {
+                textField.resignFirstResponder()
+                self.makeToast("请选择第二个通证后输入",
+                               position: .center)
+                return false
+            }
+            
+        } else {
+            // 转出
+            guard inputTokenButton.titleLabel?.text != localLanguage(keyString: "wallet_market_exchange_input_token_button_title") else {
+                textField.resignFirstResponder()
+                self.makeToast("请先选择通证后输入",
+                               position: .center)
+                return false
+            }
+        }
+        return true
+    }
     func textFieldDidEndEditing(_ textField: UITextField) {
         if textField.tag == 10 {
-            print("123")
+            guard inputTokenButton.titleLabel?.text != localLanguage(keyString: "wallet_market_exchange_input_token_button_title") else {
+                return
+            }
             if self.changeTypeButton.titleLabel?.text == localLanguage(keyString: localLanguage(keyString: "wallet_assets_pool_transfer_in_title")) {
                 // 转入
-                self.delegate?.dealTransferOutAmount(amount: NSDecimalNumber.init(string: textField.text).int64Value,
+                self.viewState = .AssetsPoolTransferInBaseOnInputARequestRate
+                let baseOnAmount = stringToDouble(string: textField.text)
+                guard baseOnAmount != 0 else {
+                    outputAmountTextField.text = ""
+                    self.makeToast("请输入正确的数字，以进行试算",
+                                   position: .center)
+                    return
+                }
+                self.delegate?.dealTransferOutAmount(amount: baseOnAmount,
                                                      coinAModule: transferInInputTokenA?.name ?? "",
                                                      coinBModule: transferInInputTokenB?.name ?? "")
             } else {
                 // 转出
-                self.delegate?.dealTransferOutAmount(amount: NSDecimalNumber.init(string: textField.text).int64Value,
+                // 转入
+                self.viewState = .AssetsPoolTransferInBaseOnInputBRequestRate
+                self.delegate?.dealTransferOutAmount(amount: NSDecimalNumber.init(string: textField.text).doubleValue,
                                                      coinAModule: tokenModel?.coin_a_name ?? "",
                                                      coinBModule: tokenModel?.coin_b_name ?? "")
             }
-
+            
         } else if textField.tag == 20 {
+            guard outputTokenButton.titleLabel?.text != localLanguage(keyString: "wallet_market_exchange_output_token_button_title") else {
+                return
+            }
             if self.changeTypeButton.titleLabel?.text == localLanguage(keyString: localLanguage(keyString: "wallet_assets_pool_transfer_in_title")) {
                 // 转入
-                self.delegate?.dealTransferOutAmount(amount: NSDecimalNumber.init(string: textField.text).int64Value,
-                                                     coinAModule: transferInInputTokenA?.name ?? "",
-                                                     coinBModule: transferInInputTokenB?.name ?? "")
+                self.viewState = .AssetsPoolTransferInBaseOnInputBRequestRate
+                let baseOnAmount = stringToDouble(string: textField.text)
+                guard baseOnAmount != 0 else {
+                    inputAmountTextField.text = ""
+                    self.makeToast("请输入正确的数字，以进行试算",
+                                   position: .center)
+                    return
+                }
+                self.delegate?.dealTransferOutAmount(amount: baseOnAmount,
+                                                     coinAModule: transferInInputTokenB?.name ?? "",
+                                                     coinBModule: transferInInputTokenA?.name ?? "")
             } 
         }
     }

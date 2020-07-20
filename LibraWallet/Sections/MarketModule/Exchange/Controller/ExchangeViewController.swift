@@ -72,7 +72,7 @@ extension ExchangeViewController: ExchangeViewHeaderViewDelegate {
                                                       mnemonic: mnemonic,
                                                       moduleA: inputModelName,
                                                       moduleB: outputModelName,
-                                                      feeModule: "LBR")
+                                                      feeModule: inputModelName)
         }) { [weak self](error) in
             guard error != "Cancel" else {
                 self?.detailView.toastView?.hide(tag: 99)

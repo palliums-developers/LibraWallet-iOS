@@ -8,16 +8,16 @@
 
 import UIKit
 import Moya
-struct AssetsPoolTransferInInfoDataModel: Codable {
-    /// 兑换数量
-    var amount: Int64?
-    /// 输入币名
-    var rate: Double?
-}
+//struct AssetsPoolTransferInInfoDataModel: Codable {
+//    /// 兑换数量
+//    var amount: Int64?
+//    /// 输入币名
+//    var rate: Double?
+//}
 struct AssetsPoolTransferInInfoMainModel: Codable {
     var code: Int?
     var message: String?
-    var data: AssetsPoolTransferInInfoDataModel?
+    var data: Int64?
 }
 struct AssetsPoolTransferOutInfoDataModel: Codable {
     /// 输入数量
@@ -136,8 +136,8 @@ extension AssetsPoolModel {
                                                                                       mnemonic: mnemonic,
                                                                                       amounta_desired: amounta_desired,
                                                                                       amountb_desired: amountb_desired,
-                                                                                      amounta_min: 0,
-                                                                                      amountb_min: 0,
+                                                                                      amounta_min: amounta_min,
+                                                                                      amountb_min: amountb_min,
                                                                                       sequenceNumber: self.sequenceNumber ?? 0,
                                                                                       moduleA: moduleA,
                                                                                       moduleB: moduleB,

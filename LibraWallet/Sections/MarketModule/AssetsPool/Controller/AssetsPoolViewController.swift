@@ -52,13 +52,13 @@ extension AssetsPoolViewController: AssetsPoolViewHeaderViewDelegate {
             self?.dataModel.sendAddLiquidityViolasTransaction(sendAddress: "fa279f2615270daed6061313a48360f7",
                                                               amounta_desired: Double(amountIn),
                                                               amountb_desired: Double(amountOut),
-                                                              amounta_min: 0,
-                                                              amountb_min: 0,
+                                                              amounta_min: Double(amountIn) * 0.995,
+                                                              amountb_min: Double(amountOut) * 0.995,
                                                               fee: 0,
                                                               mnemonic: mnemonic,
                                                               moduleA: inputModelName,
                                                               moduleB: outputModelName,
-                                                              feeModule: "LBR")
+                                                              feeModule: inputModelName)
         }) { [weak self](error) in
             guard error != "Cancel" else {
                 self?.detailView.toastView?.hide(tag: 99)
@@ -81,7 +81,7 @@ extension AssetsPoolViewController: AssetsPoolViewHeaderViewDelegate {
                                                                  mnemonic: mnemonic,
                                                                  moduleA: inputModelName,
                                                                  moduleB: outputModelName,
-                                                                 feeModule: "LBR")
+                                                                 feeModule: inputModelName)
         }) { [weak self](error) in
             guard error != "Cancel" else {
                 self?.detailView.toastView?.hide(tag: 99)
@@ -112,24 +112,25 @@ extension AssetsPoolViewController: AssetsPoolViewHeaderViewDelegate {
     }
     func swapInputOutputToken() {
         print("Swap")
+        
     }
     func changeTrasferInOut() {
         
     }
-    func dealTransferOutAmount(amount: Int64, coinAModule: String, coinBModule: String) {
+    func dealTransferOutAmount(amount: Double, coinAModule: String, coinBModule: String) {
         if self.detailView.headerView.changeTypeButton.titleLabel?.text == localLanguage(keyString: localLanguage(keyString: "wallet_assets_pool_transfer_in_title")) {
             // 转入
             self.detailView.toastView?.show(tag: 99)
             self.dataModel.getMarketAssetsPoolTransferInRate(coinA: coinAModule,
                                                              coinB: coinBModule,
-                                                             amount: amount * 1000000)
+                                                             amount: Int64(amount * 1000000))
         } else {
             // 转出
             self.detailView.toastView?.show(tag: 99)
             self.dataModel.getMarketAssetsPoolTransferOutRate(address: "fa279f2615270daed6061313a48360f7",
                                                               coinA: coinAModule,
                                                               coinB: coinBModule,
-                                                              amount: amount * 1000000)
+                                                              amount: Int64(amount * 1000000))
         }
         
     }
@@ -207,12 +208,25 @@ extension AssetsPoolViewController {
                 self?.detailView.headerView.transferOutModel = tempData
                 
             } else if type == "SupportViolasTokens" {
-                guard let tempData = dataDic.value(forKey: "data") as? [MarketSupportTokensDataModel] else {
+                guard let datas = dataDic.value(forKey: "data") as? [MarketSupportTokensDataModel] else {
                     return
                 }
+                var tempData = datas
+                if self?.detailView.headerView.viewState == .AssetsPoolTransferInSelectAToken {
+                    if let selectBModel = self?.detailView.headerView.transferInInputTokenB {
+                        tempData = tempData.filter {
+                            $0.module != selectBModel.module
+                        }
+                    }
+                } else {
+                    if let selectBModel = self?.detailView.headerView.transferInInputTokenA {
+                        tempData = tempData.filter {
+                            $0.module != selectBModel.module
+                        }
+                    }
+                }
                 let alert = MappingTokenListAlert.init(data: tempData) { (model) in
-                    print(model)
-                    if self?.detailView.headerView.selectAToken == true {
+                    if self?.detailView.headerView.viewState == .AssetsPoolTransferInSelectAToken {
                         self?.detailView.headerView.transferInInputTokenA = model
                     } else {
                         self?.detailView.headerView.transferInInputTokenB = model
@@ -221,20 +235,29 @@ extension AssetsPoolViewController {
                 alert.show(tag: 199)
                 alert.showAnimation()
             } else if type == "SendViolasTransaction" {
-                self?.detailView.makeToast("发送成功", position: .center)
+                if self?.detailView.headerView.viewState == .AssetsPoolTransferInConfirm {
+                    print("资金池转入成功")
+                    self?.detailView.makeToast("发送成功", position: .center)
+                } else {
+                    print("资金池转出成功")
+                    self?.detailView.makeToast("发送成功", position: .center)
+                }
+                self?.detailView.headerView.viewState = .Normal
             } else if type == "GetAssetsPoolTransferInInfo" {
-                guard let tempData = dataDic.value(forKey: "data") as? AssetsPoolTransferInInfoDataModel else {
+                guard let tempData = dataDic.value(forKey: "data") as? Int64 else {
                     return
                 }
-                if self?.detailView.headerView.selectAToken == true {
-                    self?.detailView.headerView.inputAmountTextField.text = getDecimalNumber(amount: NSDecimalNumber.init(value: tempData.amount ?? 0),
+                if self?.detailView.headerView.viewState == .AssetsPoolTransferInBaseOnInputARequestRate {
+                    self?.detailView.headerView.outputAmountTextField.text = getDecimalNumber(amount: NSDecimalNumber.init(value: tempData ?? 0),
                                                                                               scale: 4,
                                                                                               unit: 1000000).stringValue
+                    
                 } else {
-                    self?.detailView.headerView.outputAmountTextField.text = getDecimalNumber(amount: NSDecimalNumber.init(value: tempData.amount ?? 0),
+                    self?.detailView.headerView.inputAmountTextField.text = getDecimalNumber(amount: NSDecimalNumber.init(value: tempData ?? 0),
                                                                                              scale: 4,
                                                                                              unit: 1000000).stringValue
                 }
+                self?.detailView.headerView.viewState = .Normal
             }
             self?.detailView.hideToastActivity()
             self?.detailView.toastView?.hide(tag: 99)

@@ -15,6 +15,10 @@ protocol ExchangeViewHeaderViewDelegate: NSObjectProtocol {
     func swapInputOutputToken()
     func dealTransferOutAmount(amount: Int64, inputModule: String, outputModule: String)
 }
+enum ExchangeViewState {
+    case Normal
+    case SelectInputToken
+}
 class ExchangeViewHeaderView: UIView {
     weak var delegate: ExchangeViewHeaderViewDelegate?
     override init(frame: CGRect) {
