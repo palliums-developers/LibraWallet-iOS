@@ -61,6 +61,12 @@ extension DataBaseManager {
                 let walletMnemonicHash = Expression<String>("wallet_mnemonic_hash")
                 // 钱包使用状态
                 let walletUseState = Expression<Bool>("wallet_use_state")
+                // 钱包BTC地址
+                let walletBTCAddress = Expression<String>("wallet_btc_address")
+                // 钱包Violas地址
+                let walletViolasAddress = Expression<String>("wallet_violas_address")
+                // 钱包Libra地址
+                let walletLibraAddress = Expression<String>("wallet_libra_address")
                 // 建表
                 try tempDB.run(walletTable.create { t in
                     t.column(walletID, primaryKey: true)
@@ -72,6 +78,9 @@ extension DataBaseManager {
                     t.column(walletBackupState)
                     t.column(walletMnemonicHash, unique: true)
                     t.column(walletUseState)
+                    t.column(walletBTCAddress)
+                    t.column(walletViolasAddress)
+                    t.column(walletLibraAddress)
                 })
             }
         } catch {
@@ -98,7 +107,10 @@ extension DataBaseManager {
                 Expression<Bool>("wallet_backup_state") <- model.walletBackupState ?? false,
                 Expression<Bool>("wallet_subscription") <- model.walletSubscription ?? false,
                 Expression<String>("wallet_mnemonic_hash") <- model.walletMnemonicHash ?? "",
-                Expression<Bool>("wallet_use_state") <- model.walletUseState ?? false)
+                Expression<Bool>("wallet_use_state") <- model.walletUseState ?? false,
+                Expression<String>("wallet_btc_address") <- model.btcAddress ?? "",
+                Expression<String>("wallet_violas_address") <- model.violasAddress ?? "",
+                Expression<String>("wallet_libra_address") <- model.libraAddress ?? "")
             let rowid = try tempDB.run(insert)
             print(rowid)
         } catch {
@@ -149,6 +161,12 @@ extension DataBaseManager {
                     let walletMnemonicHash = wallet[Expression<String>("wallet_mnemonic_hash")]
                     // 钱包使用状态
                     let walletUseState = wallet[Expression<Bool>("wallet_use_state")]
+                    // 钱包BTC地址
+                    let walletBTCAddress = wallet[Expression<String>("wallet_btc_address")]
+                    // 钱包Violas地址
+                    let walletViolasAddress = wallet[Expression<String>("wallet_violas_address")]
+                    // 钱包Libra地址
+                    let walletLibraAddress = wallet[Expression<String>("wallet_libra_address")]
 
                     WalletManager.shared.initWallet(walletID: walletID,
                                                     walletName: walletName,
@@ -158,7 +176,10 @@ extension DataBaseManager {
                                                     walletBackupState: walletBackupState,
                                                     walletSubscription: walletSubscription,
                                                     walletMnemonicHash: walletMnemonicHash,
-                                                    walletUseState: walletUseState)
+                                                    walletUseState: walletUseState,
+                                                    btcAddress: walletBTCAddress,
+                                                    violasAddress: walletViolasAddress,
+                                                    libraAddress: walletLibraAddress)
                     return WalletManager.shared
                 }
                 return WalletManager.shared

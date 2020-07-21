@@ -9,24 +9,24 @@
 import UIKit
 class ImportWalletModel: NSObject {
     @objc dynamic var dataDic: NSMutableDictionary = [:]
-    func importWallet(password: String, mnemonics: [String]){
+    func importWallet(password: String, mnemonic: [String]){
         let quene = DispatchQueue.init(label: "createWalletQuene")
         quene.async {
             do {
-                // 创建钱包
-                try self.createWallet(mnemonic: mnemonics)
                 // 1.1创建Violas钱包
-                let violasWallet = try self.createViolasWallet(mnemonics: mnemonics)
+                let violasWallet = try self.createViolasWallet(mnemonics: mnemonic)
                 // 1.2创建BTC钱包
-                let btcWallet = try self.createBTCWallet(mnemonics: mnemonics)
+                let btcWallet = try self.createBTCWallet(mnemonics: mnemonic)
                 // 1.3创建Libra钱包
-                let libraWallet = try self.createLibraWallet(mnemonics: mnemonics)
+                let libraWallet = try self.createLibraWallet(mnemonics: mnemonic)
+                // 1.4创建总钱包
+                try self.createWallet(mnemonic: mnemonic, btcAddress: btcWallet.tokenAddress, violasAddress: violasWallet.tokenAddress, libraAddress: libraWallet.tokenAddress)
                 // 2.设置已创建钱包状态
                 setIdentityWalletState(show: true)
                 // 3.加密助记词到Keychain
-                try WalletManager.saveMnemonicToKeychain(mnemonic: mnemonics, password: password)
+                try WalletManager.saveMnemonicToKeychain(mnemonic: mnemonic, password: password)
                 let tempWallet = CreateWalletModel.init(password: password,
-                                                        mnemonic: mnemonics,
+                                                        mnemonic: mnemonic,
                                                         wallet: [violasWallet, btcWallet, libraWallet])
                 DispatchQueue.main.async(execute: {
                     //需更新
@@ -35,6 +35,7 @@ class ImportWalletModel: NSObject {
                 })
             } catch {
                 DataBaseManager.DBManager.deleteHDWallet()
+                DataBaseManager.DBManager.deleteAllTokens()
                 setIdentityWalletState(show: false)
                 DispatchQueue.main.async(execute: {
                     //需更新
@@ -45,7 +46,7 @@ class ImportWalletModel: NSObject {
             }
         }
     }
-    private func createWallet(mnemonic: [String]) throws {
+    private func createWallet(mnemonic: [String], btcAddress: String, violasAddress: String, libraAddress: String) throws {
         do {
             let wallet = WalletManager.init(walletID: 999,
                                             walletName: "PalliumsWallet",
@@ -55,7 +56,10 @@ class ImportWalletModel: NSObject {
                                             walletBackupState: true,
                                             walletSubscription: false,
                                             walletMnemonicHash: mnemonic.joined(separator: " ").md5(),
-                                            walletUseState: true)
+                                            walletUseState: true,
+                                            btcAddress: btcAddress,
+                                            violasAddress: violasAddress,
+                                            libraAddress: libraAddress)
             try DataBaseManager.DBManager.insertWallet(model: wallet)
         } catch {
             throw error

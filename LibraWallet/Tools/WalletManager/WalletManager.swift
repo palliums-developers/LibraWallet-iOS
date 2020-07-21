@@ -58,10 +58,16 @@ struct WalletManager {
     private(set) var walletMnemonicHash: String?
     /// 当前钱包使用状态
     private(set) var walletUseState: Bool?
+    /// 当前钱包BTC地址
+    private(set) var btcAddress: String?
+    /// 当前钱包Violas地址
+    private(set) var violasAddress: String?
+    /// 当前钱包Libra地址
+    private(set) var libraAddress: String?
 }
 
 extension WalletManager {
-    mutating func initWallet(walletID: Int64, walletName: String, walletCreateTime: Double, walletBiometricLock: Bool, walletCreateType: Int, walletBackupState: Bool, walletSubscription: Bool, walletMnemonicHash: String, walletUseState: Bool) {
+    mutating func initWallet(walletID: Int64, walletName: String, walletCreateTime: Double, walletBiometricLock: Bool, walletCreateType: Int, walletBackupState: Bool, walletSubscription: Bool, walletMnemonicHash: String, walletUseState: Bool, btcAddress: String, violasAddress: String, libraAddress: String) {
         self.semaphore.wait()
         
         self.walletID = walletID
@@ -73,6 +79,9 @@ extension WalletManager {
         self.walletSubscription = walletSubscription
         self.walletMnemonicHash = walletMnemonicHash
         self.walletUseState = walletUseState
+        self.btcAddress = btcAddress
+        self.violasAddress = violasAddress
+        self.libraAddress = libraAddress
         
         self.semaphore.signal()
     }
@@ -124,6 +133,9 @@ extension WalletManager {
         self.walletSubscription = nil
         self.walletMnemonicHash = nil
         self.walletUseState = nil
+        self.btcAddress = nil
+        self.violasAddress = nil
+        self.libraAddress = nil
         
         self.semaphore.signal()
     }

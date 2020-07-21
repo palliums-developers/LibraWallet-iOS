@@ -54,7 +54,7 @@ class ImportWalletViewController: BaseViewController {
 extension ImportWalletViewController: ImportWalletViewDelegate {
     func confirmImportWallet(password: String, mnemonics: [String]) {
         self.detailView.toastView.show(tag: 99)
-        self.dataModel.importWallet(password: password, mnemonics: mnemonics)
+        self.dataModel.importWallet(password: password, mnemonic: mnemonics)
     }
     func openPrivacyPolicy() {
         let vc = PrivateLegalViewController()

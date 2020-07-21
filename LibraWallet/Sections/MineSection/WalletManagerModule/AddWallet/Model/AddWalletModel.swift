@@ -20,14 +20,14 @@ class AddWalletModel: NSObject {
             do {
                 // 1.生成助记词
                 let mnemonic = try LibraMnemonic.generate(strength: .default, language: .english)
-                // 创建钱包
-                try self.createWallet(mnemonics: mnemonic)
                 // 2.1创建Violas钱包
-                let violasWallet = try self.createViolasWallet(mnemonics: mnemonic)
+                let violasWallet = try self.createViolasWallet(mnemonic: mnemonic)
                 // 2.2创建BTC钱包
-                let btcWallet = try self.createBTCWallet(mnemonics: mnemonic)
+                let btcWallet = try self.createBTCWallet(mnemonic: mnemonic)
                 // 2.3创建Libra钱包
-                let libraWallet = try self.createLibraWallet(mnemonics: mnemonic)
+                let libraWallet = try self.createLibraWallet(mnemonic: mnemonic)
+                // 2.4创建总钱包
+                try self.createWallet(mnemonic: mnemonic, btcAddress: btcWallet.tokenAddress, violasAddress: violasWallet.tokenAddress, libraAddress: libraWallet.tokenAddress)
                 // 3.设置已创建钱包状态
                 setIdentityWalletState(show: true)
                 // 4.加密助记词到Keychain
@@ -42,6 +42,7 @@ class AddWalletModel: NSObject {
                 })
             } catch {
                 DataBaseManager.DBManager.deleteHDWallet()
+                DataBaseManager.DBManager.deleteAllTokens()
                 setIdentityWalletState(show: false)
                 DispatchQueue.main.async(execute: {
                     //需更新
@@ -52,7 +53,7 @@ class AddWalletModel: NSObject {
             }
         }
     }
-    private func createWallet(mnemonics: [String]) throws {
+    private func createWallet(mnemonic: [String], btcAddress: String, violasAddress: String, libraAddress: String) throws {
         do {
             let wallet = WalletManager.init(walletID: 999,
                                             walletName: "PalliumsWallet",
@@ -61,16 +62,19 @@ class AddWalletModel: NSObject {
                                             walletCreateType: 0,
                                             walletBackupState: false,
                                             walletSubscription: false,
-                                            walletMnemonicHash: mnemonics.joined(separator: " ").md5(),
-                                            walletUseState: true)
+                                            walletMnemonicHash: mnemonic.joined(separator: " ").md5(),
+                                            walletUseState: true,
+                                            btcAddress: btcAddress,
+                                            violasAddress: violasAddress,
+                                            libraAddress: libraAddress)
             try DataBaseManager.DBManager.insertWallet(model: wallet)
         } catch {
             throw error
         }
     }
-    func createBTCWallet(mnemonics: [String]) throws -> Token {
+    func createBTCWallet(mnemonic: [String]) throws -> Token {
         do {
-            let wallet = try BTCManager().getWallet(mnemonic: mnemonics)
+            let wallet = try BTCManager().getWallet(mnemonic: mnemonic)
             let token = Token.init(tokenID: 999,
                                    tokenName: "BTC",
                                    tokenBalance: 0,
@@ -92,9 +96,9 @@ class AddWalletModel: NSObject {
             throw error
         }
     }
-    func createViolasWallet(mnemonics: [String]) throws -> Token {
+    func createViolasWallet(mnemonic: [String]) throws -> Token {
         do {
-            let wallet = try ViolasManager.getWallet(mnemonic: mnemonics)
+            let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
             let token = Token.init(tokenID: 999,
                                    tokenName: "VLS",
                                    tokenBalance: 0,
@@ -116,9 +120,9 @@ class AddWalletModel: NSObject {
             throw error
         }
     }
-    func createLibraWallet(mnemonics: [String]) throws -> Token {
+    func createLibraWallet(mnemonic: [String]) throws -> Token {
         do {
-            let wallet = try LibraManager.getWallet(mnemonic: mnemonics)
+            let wallet = try LibraManager.getWallet(mnemonic: mnemonic)
             let token = Token.init(tokenID: 999,
                                    tokenName: "LBR",
                                    tokenBalance: 0,
