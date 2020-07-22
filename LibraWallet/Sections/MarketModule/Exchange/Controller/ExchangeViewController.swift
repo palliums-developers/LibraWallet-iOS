@@ -149,12 +149,26 @@ extension ExchangeViewController {
             }
             let type = dataDic.value(forKey: "type") as! String
             if type == "SupportViolasTokens" {
-                guard let tempData = dataDic.value(forKey: "data") as? [MarketSupportTokensDataModel] else {
+                guard let datas = dataDic.value(forKey: "data") as? [MarketSupportTokensDataModel] else {
                     return
+                }
+                var tempData = datas
+                if self?.detailView.headerView.viewState == .ExchangeSelectAToken {
+                    if let selectBModel = self?.detailView.headerView.transferInInputTokenB {
+                        tempData = tempData.filter {
+                            $0.module != selectBModel.module
+                        }
+                    }
+                } else {
+                    if let selectBModel = self?.detailView.headerView.transferInInputTokenA {
+                        tempData = tempData.filter {
+                            $0.module != selectBModel.module
+                        }
+                    }
                 }
                 let alert = MappingTokenListAlert.init(data: tempData) { (model) in
                     print(model)
-                    if self?.detailView.headerView.selectAToken == true {
+                    if self?.detailView.headerView.viewState == .ExchangeSelectAToken {
                         self?.detailView.headerView.transferInInputTokenA = model
                     } else {
                         self?.detailView.headerView.transferInInputTokenB = model

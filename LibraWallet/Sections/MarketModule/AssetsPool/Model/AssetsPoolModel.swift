@@ -373,6 +373,9 @@ extension AssetsPoolModel {
                         //                        }
                         let data = setKVOData(type: "GetAssetsPoolTransferInInfo", data: json.data)
                         self?.setValue(data, forKey: "dataDic")
+                    } else if json.code == 4000 {
+                        let data = setKVOData(error: LibraWalletError.error("CalculateRateFailed"), type: "GetAssetsPoolTransferInInfo")
+                        self?.setValue(data, forKey: "dataDic")
                     } else {
                         print("GetAssetsPoolTransferInInfo_状态异常")
                         if let message = json.message, message.isEmpty == false {

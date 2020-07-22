@@ -15,24 +15,34 @@ protocol ExchangeViewHeaderViewDelegate: NSObjectProtocol {
     func swapInputOutputToken()
     func dealTransferOutAmount(amount: Int64, inputModule: String, outputModule: String)
 }
-enum ExchangeViewState {
-    case Normal
-    case SelectInputToken
-}
+
 class ExchangeViewHeaderView: UIView {
     weak var delegate: ExchangeViewHeaderViewDelegate?
+    enum ExchangeViewState {
+        case Normal
+        case ExchangeSelectAToken
+        case ExchangeSelectBToken
+        case ExchangeSwap
+        case ExchangeConfirm
+    }
+    var viewState: ExchangeViewState = .Normal
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.white
         addSubview(feeLabel)
         addSubview(inputTokenBackgroundView)
-        addSubview(inputTitleLabel)
-        addSubview(inputAmountTextField)
+        inputTokenBackgroundView.addSubview(inputTitleLabel)
+        inputTokenBackgroundView.addSubview(inputTokenAssetsImageView)
+        inputTokenBackgroundView.addSubview(inputTokenAssetsLabel)
+        inputTokenBackgroundView.addSubview(inputAmountTextField)
         addSubview(inputTokenButton)
         addSubview(swapButton)
         addSubview(outputTokenBackgroundView)
-        addSubview(outputTitleLabel)
-        addSubview(outputAmountTextField)
+        outputTokenBackgroundView.addSubview(outputTitleLabel)
+        outputTokenBackgroundView.addSubview(outputTokenAssetsImageView)
+        outputTokenBackgroundView.addSubview(outputTokenAssetsLabel)
+        outputTokenBackgroundView.addSubview(outputAmountTextField)
         addSubview(outputTokenButton)
         addSubview(exchangeRateLabel)
         addSubview(minerFeeLabel)
@@ -66,6 +76,15 @@ class ExchangeViewHeaderView: UIView {
             make.top.equalTo(inputTokenBackgroundView).offset(16)
             make.left.equalTo(inputTokenBackgroundView).offset(15)
         }
+        inputTokenAssetsImageView.snp.makeConstraints { (make) in
+            make.centerY.equalTo(inputTokenAssetsLabel)
+            make.right.equalTo(inputTokenAssetsLabel.snp.left).offset(-2)
+            make.size.equalTo(CGSize.init(width: 12, height: 13))
+        }
+        inputTokenAssetsLabel.snp.makeConstraints { (make) in
+            make.top.equalTo(inputTokenBackgroundView).offset(16)
+            make.right.equalTo(inputTokenBackgroundView.snp.right).offset(-11)
+        }
         inputAmountTextField.snp.makeConstraints { (make) in
             make.left.equalTo(inputTokenBackgroundView).offset(15)
             make.bottom.equalTo(inputTokenBackgroundView).offset(0)
@@ -92,6 +111,15 @@ class ExchangeViewHeaderView: UIView {
         outputTitleLabel.snp.makeConstraints { (make) in
             make.top.equalTo(outputTokenBackgroundView).offset(16)
             make.left.equalTo(outputTokenBackgroundView).offset(15)
+        }
+        outputTokenAssetsImageView.snp.makeConstraints { (make) in
+            make.centerY.equalTo(outputTokenAssetsLabel)
+            make.right.equalTo(outputTokenAssetsLabel.snp.left).offset(-2)
+            make.size.equalTo(CGSize.init(width: 12, height: 13))
+        }
+        outputTokenAssetsLabel.snp.makeConstraints { (make) in
+            make.top.equalTo(outputTokenBackgroundView).offset(16)
+            make.right.equalTo(outputTokenBackgroundView.snp.right).offset(-11)
         }
         outputAmountTextField.snp.makeConstraints { (make) in
             make.left.equalTo(outputTokenBackgroundView).offset(15)
@@ -151,6 +179,19 @@ class ExchangeViewHeaderView: UIView {
         label.text = localLanguage(keyString: "wallet_market_exchange_input_amount_title")
         return label
     }()
+    private lazy var inputTokenAssetsImageView : UIImageView = {
+        let imageView = UIImageView.init()
+        imageView.image = UIImage.init(named: "assets_pool_token")
+        return imageView
+    }()
+    lazy var inputTokenAssetsLabel: UILabel = {
+        let label = UILabel.init()
+        label.textAlignment = NSTextAlignment.left
+        label.textColor = UIColor.init(hex: "333333")
+        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
+        label.text = localLanguage(keyString: "wallet_market_assets_pool_token_title") + "---"
+        return label
+    }()
     lazy var inputAmountTextField: WYDTextField = {
         let textField = WYDTextField.init()
         textField.textAlignment = NSTextAlignment.left
@@ -199,6 +240,19 @@ class ExchangeViewHeaderView: UIView {
         label.textColor = UIColor.init(hex: "000000")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
         label.text = localLanguage(keyString: "wallet_market_exchange_output_amount_title")
+        return label
+    }()
+    private lazy var outputTokenAssetsImageView : UIImageView = {
+        let imageView = UIImageView.init()
+        imageView.image = UIImage.init(named: "assets_pool_token")
+        return imageView
+    }()
+    lazy var outputTokenAssetsLabel: UILabel = {
+        let label = UILabel.init()
+        label.textAlignment = NSTextAlignment.left
+        label.textColor = UIColor.init(hex: "333333")
+        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
+        label.text = localLanguage(keyString: "wallet_market_assets_pool_token_title") + "---"
         return label
     }()
     lazy var outputAmountTextField: WYDTextField = {
@@ -276,19 +330,71 @@ class ExchangeViewHeaderView: UIView {
 //    }()
     @objc func buttonClick(button: UIButton) {
         if button.tag == 10 {
-            self.selectAToken = true
+            self.viewState = .ExchangeSelectAToken
             self.delegate?.selectInputToken()
         } else if button.tag == 20 {
-            self.selectAToken = false
+            self.viewState = .ExchangeSelectBToken
             self.delegate?.selectOutoutToken()
         } else if button.tag == 30 {
+            self.viewState = .ExchangeSwap
             self.delegate?.swapInputOutputToken()
         } else if button.tag == 100 {
-            self.delegate?.exchangeConfirm(amountIn: NSDecimalNumber.init(string: inputAmountTextField.text ?? "0").doubleValue,
-                                           amountOutMin: NSDecimalNumber.init(string: outputAmountTextField.text ?? "0").doubleValue,
+            self.viewState = .ExchangeConfirm
+            self.inputAmountTextField.resignFirstResponder()
+            self.outputAmountTextField.resignFirstResponder()
+            // ModelA不为空
+            guard let tempInputTokenA = transferInInputTokenA else {
+                self.makeToast("请选择第一个输入通证后输入",
+                               position: .center)
+                return
+            }
+            // ModelB不为空
+            guard let tempInputTokenB = transferInInputTokenB else {
+                self.makeToast("请选择第二个输入通证后输入",
+                               position: .center)
+                return
+            }
+            // 金额不为空检查
+            guard let amountAString = self.inputAmountTextField.text, amountAString.isEmpty == false else {
+                self.makeToast(LibraWalletError.WalletTransfer(reason: .amountEmpty).localizedDescription,
+                               position: .center)
+                return
+            }
+            // 金额是否纯数字检查
+            guard isPurnDouble(string: amountAString) == true else {
+                self.makeToast(LibraWalletError.WalletTransfer(reason: .amountInvalid).localizedDescription,
+                               position: .center)
+                return
+            }
+            // 转换数字
+            let amountA = NSDecimalNumber.init(string: amountAString).doubleValue
+            
+            // 金额不为空检查
+            guard let amountBString = self.outputAmountTextField.text, amountBString.isEmpty == false else {
+                self.makeToast(LibraWalletError.WalletTransfer(reason: .amountEmpty).localizedDescription,
+                               position: .center)
+                return
+            }
+            // 金额是否纯数字检查
+            guard isPurnDouble(string: amountBString) == true else {
+                self.makeToast(LibraWalletError.WalletTransfer(reason: .amountInvalid).localizedDescription,
+                               position: .center)
+                return
+            }
+            // 转换数字
+            let amountB = NSDecimalNumber.init(string: amountBString).doubleValue
+            
+            guard let path = exchangeModel?.path, path.isEmpty == false, path.count > 2 else {
+                self.makeToast("路径为空",
+                               position: .center)
+                return
+            }
+
+            self.delegate?.exchangeConfirm(amountIn: amountA,
+                                           amountOutMin: amountB,
                                            inputModelName: transferInInputTokenA?.name ?? "",
                                            outputModelName: transferInInputTokenB?.name ?? "",
-                                           path: (exchangeModel?.path)!)
+                                           path: path)
         }
     }
     /// 资金池转入ModelA
@@ -306,10 +412,11 @@ class ExchangeViewHeaderView: UIView {
                 let width = libraWalletTool.ga_widthForComment(content: model.show_name ?? "---", fontSize: 12, height: 22) + 8 + 19
                 make.size.equalTo(CGSize.init(width: width, height: 22))
             }
-//            let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model.amount ?? 0),
-//                                          scale: 4,
-//                                          unit: 1000000)
-//            inputTokenAssetsLabel.text = localLanguage(keyString: "wallet_market_assets_pool_token_title") + amount.stringValue
+            let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model.amount ?? 0),
+                                          scale: 4,
+                                          unit: 1000000)
+            inputTokenAssetsLabel.text = localLanguage(keyString: "wallet_market_assets_pool_token_title") + amount.stringValue
+            self.viewState = .Normal
         }
     }
     /// 资金池转入ModelB
@@ -327,10 +434,11 @@ class ExchangeViewHeaderView: UIView {
                 let width = libraWalletTool.ga_widthForComment(content: model.show_name ?? "---", fontSize: 12, height: 22) + 8 + 19
                 make.size.equalTo(CGSize.init(width: width, height: 22))
             }
-//            let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model.amount ?? 0),
-//                                          scale: 4,
-//                                          unit: 1000000)
-//            outputTokenAssetsLabel.text = localLanguage(keyString: "wallet_market_assets_pool_token_title") + amount.stringValue
+            let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model.amount ?? 0),
+                                          scale: 4,
+                                          unit: 1000000)
+            outputTokenAssetsLabel.text = localLanguage(keyString: "wallet_market_assets_pool_token_title") + amount.stringValue
+            self.viewState = .Normal
         }
     }
     var exchangeModel: ExchangeInfoDataModel? {
@@ -341,15 +449,22 @@ class ExchangeViewHeaderView: UIView {
             outputAmountTextField.text = getDecimalNumber(amount: NSDecimalNumber.init(value: model.amount ?? 0),
                                                           scale: 4,
                                                           unit: 1000000).stringValue
-            exchangeRateLabel.text = localLanguage(keyString: "wallet_market_exchange_rate_title") + getDecimalNumber(amount: NSDecimalNumber.init(value: model.rate ?? 0),
-                                                                                                                      scale: 4,
-                                                                                                                      unit: 1).stringValue
+            let inputAmount = NSDecimalNumber.init(string: inputAmountTextField.text ?? "0").multiplying(by: NSDecimalNumber.init(value: 1000000))
+            let outputAmount = NSDecimalNumber.init(value: model.amount ?? 0)
+            let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
+                                                                 scale: 4,
+                                                                 raiseOnExactness: false,
+                                                                 raiseOnOverflow: false,
+                                                                 raiseOnUnderflow: false,
+                                                                 raiseOnDivideByZero: false)
+            let rate = outputAmount.dividing(by: inputAmount, withBehavior: numberConfig)
+            exchangeRateLabel.text = localLanguage(keyString: "wallet_market_exchange_rate_title") + rate.stringValue
             feeLabel.text = localLanguage(keyString: "wallet_market_exchange_fee_title") + getDecimalNumber(amount: NSDecimalNumber.init(value: model.fee ?? 0),
                                                                                                             scale: 4,
                                                                                                             unit: 1000000).stringValue
         }
     }
-    var selectAToken: Bool?
+//    var selectAToken: Bool?
     /// 语言切换
     @objc func setText() {
         feeLabel.text = localLanguage(keyString: "wallet_market_exchange_fee_title") + "---"
@@ -391,6 +506,23 @@ extension ExchangeViewHeaderView: UITextFieldDelegate {
         } else {
             return textLength <= ApplyTokenAmountLengthLimit
         }
+    }
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        #warning("待翻译")
+        // 转入
+        guard inputTokenButton.titleLabel?.text != localLanguage(keyString: "wallet_market_exchange_input_token_button_title") else {
+            textField.resignFirstResponder()
+            self.makeToast("请选择付出稳定币",
+                           position: .center)
+            return false
+        }
+        guard outputTokenButton.titleLabel?.text != localLanguage(keyString: "wallet_market_exchange_output_token_button_title") else {
+            textField.resignFirstResponder()
+            self.makeToast("请选择兑换稳定币",
+                           position: .center)
+            return false
+        }
+        return true
     }
     func textFieldDidEndEditing(_ textField: UITextField) {
         if textField.tag == 10 {

@@ -54,7 +54,6 @@ class AssetsPoolViewHeaderView: UIView {
         outputTokenBackgroundView.addSubview(outputCoinBAmountLabel)
         addSubview(outputTokenButton)
         addSubview(exchangeRateLabel)
-        addSubview(minerFeeLabel)
         addSubview(confirmButton)
 //        addSubview(exchangeTransactionsTitleLabel)
 //        addSubview(titleIndicatorLabel)
@@ -149,10 +148,6 @@ class AssetsPoolViewHeaderView: UIView {
             make.left.equalTo(outputTokenBackgroundView).offset(15)
             make.top.equalTo(outputTokenBackgroundView.snp.bottom).offset(6)
         }
-        minerFeeLabel.snp.makeConstraints { (make) in
-            make.left.equalTo(outputTokenBackgroundView).offset(15)
-            make.top.equalTo(exchangeRateLabel.snp.bottom).offset(6)
-        }
         confirmButton.snp.makeConstraints { (make) in
             make.top.equalTo(outputTokenBackgroundView.snp.bottom).offset(66)
             make.size.equalTo(CGSize.init(width: 238, height: 40))
@@ -192,7 +187,7 @@ class AssetsPoolViewHeaderView: UIView {
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "5C5C5C")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "wallet_market_exchange_fee_title") + "---"
+        label.text = localLanguage(keyString: "wallet_market_assets_pool_add_liquidity_fee_title")
         return label
     }()
     private lazy var inputTokenBackgroundView: UIView = {
@@ -253,9 +248,9 @@ class AssetsPoolViewHeaderView: UIView {
     }()
     lazy var swapButton: UIButton = {
         let button = UIButton(type: .custom)
-        button.setImage(UIImage.init(named: "swap_indicator"), for: UIControl.State.normal)
-        //        button.addTarget(self, action: #selector(selectExchangeToken(button:)), for: UIControl.Event.touchUpInside)
-        button.tag = 20
+        button.setTitle("&", for: UIControl.State.normal)
+        button.setTitleColor(UIColor.init(hex: "999999"), for: UIControl.State.normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: UIFont.Weight.regular)
         return button
     }()
     private lazy var outputTokenBackgroundView: UIView = {
@@ -270,7 +265,7 @@ class AssetsPoolViewHeaderView: UIView {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "333333")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "wallet_market_exchange_output_amount_title")
+        label.text = localLanguage(keyString: "wallet_market_exchange_input_amount_title")
         return label
     }()
     private lazy var outputTokenAssetsImageView : UIImageView = {
@@ -337,15 +332,7 @@ class AssetsPoolViewHeaderView: UIView {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "5C5C5C")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "wallet_market_exchange_rate_title") + "---"
-        return label
-    }()
-    lazy var minerFeeLabel: UILabel = {
-        let label = UILabel.init()
-        label.textAlignment = NSTextAlignment.left
-        label.textColor = UIColor.init(hex: "5C5C5C")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "wallet_market_exchange_miner_fee_title") + "---"
+        label.text = localLanguage(keyString: "wallet_market_assets_pool_exchange_rate_title")
         return label
     }()
     lazy var confirmButton: UIButton = {
@@ -405,9 +392,13 @@ class AssetsPoolViewHeaderView: UIView {
             dropper.show(Dropper.Alignment.center, button: button)
         } else if button.tag == 20 {
             self.viewState = .AssetsPoolTransferInSelectAToken
+            self.inputAmountTextField.resignFirstResponder()
+            self.outputAmountTextField.resignFirstResponder()
             self.delegate?.selectInputToken()
         } else if button.tag == 30 {
             self.viewState = .AssetsPoolTransferInSelectBToken
+            self.inputAmountTextField.resignFirstResponder()
+            self.outputAmountTextField.resignFirstResponder()
             self.delegate?.selectOutoutToken()
         } else if button.tag == 100 {
             if self.changeTypeButton.titleLabel?.text == localLanguage(keyString: localLanguage(keyString: "wallet_assets_pool_transfer_in_title")) {
@@ -442,7 +433,7 @@ class AssetsPoolViewHeaderView: UIView {
                 let amountA = NSDecimalNumber.init(string: amountAString).doubleValue
                 
                 // 金额不为空检查
-                guard let amountBString = self.inputAmountTextField.text, amountBString.isEmpty == false else {
+                guard let amountBString = self.outputAmountTextField.text, amountBString.isEmpty == false else {
                     self.makeToast(LibraWalletError.WalletTransfer(reason: .amountEmpty).localizedDescription,
                                    position: .center)
                     return
@@ -458,21 +449,22 @@ class AssetsPoolViewHeaderView: UIView {
                 
                 
                 
-                let leastModuleA: MarketSupportTokensDataModel?
-                let otherModuleB: MarketSupportTokensDataModel?
+                var leastModuleA = tempInputTokenA
+                var otherModuleB = tempInputTokenB
+                var tempAmountA = amountA
+                var tempAmountB = amountB
                 if (tempInputTokenA.index ?? 0) > (tempInputTokenB.index ?? 0) {
                     leastModuleA = tempInputTokenB
                     otherModuleB = tempInputTokenA
-                } else {
-                    leastModuleA = tempInputTokenA
-                    otherModuleB = tempInputTokenB
+                    tempAmountA = amountB
+                    tempAmountB = amountA
                 }
                 // 转入
                 self.viewState = .AssetsPoolTransferInConfirm
-                self.delegate?.addLiquidityConfirm(amountIn: amountA,
-                                                   amountOut: amountB,
-                                                   inputModelName: leastModuleA?.module ?? "",
-                                                   outputModelName: otherModuleB?.module ?? "")
+                self.delegate?.addLiquidityConfirm(amountIn: tempAmountA,
+                                                   amountOut: tempAmountB,
+                                                   inputModelName: leastModuleA.module ?? "",
+                                                   outputModelName: otherModuleB.module ?? "")
             } else {
                 // 转出
                 self.inputAmountTextField.resignFirstResponder()
@@ -551,6 +543,7 @@ class AssetsPoolViewHeaderView: UIView {
             inputTokenAssetsLabel.text = localLanguage(keyString: "wallet_market_assets_pool_token_title") + amount.stringValue
             // 重置View 状态
             self.viewState = .Normal
+            self.autoCalculateMode = true
         }
     }
     /// 资金池转入ModelB
@@ -573,11 +566,15 @@ class AssetsPoolViewHeaderView: UIView {
                                           scale: 4,
                                           unit: 1000000)
             outputTokenAssetsLabel.text = localLanguage(keyString: "wallet_market_assets_pool_token_title") + amount.stringValue
+            
+            
             // 重置View 状态
             self.viewState = .Normal
+            self.autoCalculateMode = true
         }
     }
-//    var selectAToken: Bool?
+    /// 自动试算模式
+    var autoCalculateMode: Bool = true
 }
 extension AssetsPoolViewHeaderView: DropperDelegate {
     func DropperSelectedRow(_ path: IndexPath, contents: String) {
@@ -599,7 +596,7 @@ extension AssetsPoolViewHeaderView: DropperDelegate {
             }
             outputTokenAssetsImageView.alpha = 1
             outputTokenAssetsLabel.alpha = 1
-            
+            // 重置页面
             resetAssetsPoolTransferInView()
         } else {
             // 转出
@@ -616,7 +613,7 @@ extension AssetsPoolViewHeaderView: DropperDelegate {
             }
             outputTokenAssetsImageView.alpha = 0
             outputTokenAssetsLabel.alpha = 0
-            
+            // 重置页面
             resetAssetsPoolTransferOutView()
         }
         changeTypeButton.snp.remakeConstraints { (make) in
@@ -740,6 +737,9 @@ extension AssetsPoolViewHeaderView: UITextFieldDelegate {
             guard inputTokenButton.titleLabel?.text != localLanguage(keyString: "wallet_market_exchange_input_token_button_title") else {
                 return
             }
+            guard autoCalculateMode == true else {
+                return
+            }
             if self.changeTypeButton.titleLabel?.text == localLanguage(keyString: localLanguage(keyString: "wallet_assets_pool_transfer_in_title")) {
                 // 转入
                 self.viewState = .AssetsPoolTransferInBaseOnInputARequestRate
@@ -764,6 +764,9 @@ extension AssetsPoolViewHeaderView: UITextFieldDelegate {
             
         } else if textField.tag == 20 {
             guard outputTokenButton.titleLabel?.text != localLanguage(keyString: "wallet_market_exchange_output_token_button_title") else {
+                return
+            }
+            guard autoCalculateMode == true else {
                 return
             }
             if self.changeTypeButton.titleLabel?.text == localLanguage(keyString: localLanguage(keyString: "wallet_assets_pool_transfer_in_title")) {

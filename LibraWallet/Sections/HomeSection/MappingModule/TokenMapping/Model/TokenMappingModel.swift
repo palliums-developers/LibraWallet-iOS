@@ -437,23 +437,23 @@ extension TokenMappingModel {
         }
         queue.async {
             semaphore.wait()
-            do {
-                let signature = try ViolasManager.getVLibraToLibraTransactionHex(sendAddress: sendAddress,
-                                                                             amount: amount,
-                                                                             fee: fee,
-                                                                             mnemonic: mnemonic,
-                                                                             contact: contact,
-                                                                             sequenceNumber: Int(self.sequenceNumber!),
-                                                                             libraReceiveAddress: receiveAddress,
-                                                                             module: module)
-                self.makeViolasTransaction(signature: signature, type: "SendVLibraTransaction")
-            } catch {
-                print(error.localizedDescription)
-                DispatchQueue.main.async(execute: {
-                    let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "SendVLibraTransaction")
-                    self.setValue(data, forKey: "dataDic")
-                })
-            }
+//            do {
+//                let signature = try ViolasManager.getVLibraToLibraTransactionHex(sendAddress: sendAddress,
+//                                                                             amount: amount,
+//                                                                             fee: fee,
+//                                                                             mnemonic: mnemonic,
+//                                                                             contact: contact,
+//                                                                             sequenceNumber: Int(self.sequenceNumber!),
+//                                                                             libraReceiveAddress: receiveAddress,
+//                                                                             module: module)
+//                self.makeViolasTransaction(signature: signature, type: "SendVLibraTransaction")
+//            } catch {
+//                print(error.localizedDescription)
+//                DispatchQueue.main.async(execute: {
+//                    let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "SendVLibraTransaction")
+//                    self.setValue(data, forKey: "dataDic")
+//                })
+//            }
             semaphore.signal()
         }
         
@@ -555,23 +555,23 @@ extension TokenMappingModel {
         }
         queue.async {
             semaphore.wait()
-            do {
-                let signature = try ViolasManager.getVBTCToBTCTransactionHex(sendAddress: sendAddress,
-                                                                             amount: amount,
-                                                                             fee: fee,
-                                                                             mnemonic: mnemonic,
-                                                                             contact: contact,
-                                                                             sequenceNumber: Int(self.sequenceNumber!),
-                                                                             btcAddress: receiveAddress,
-                                                                             module: module)
-                self.makeViolasTransaction(signature: signature, type: "SendVBTCTransaction")
-            } catch {
-                print(error.localizedDescription)
-                DispatchQueue.main.async(execute: {
-                    let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "SendVBTCTransaction")
-                    self.setValue(data, forKey: "dataDic")
-                })
-            }
+//            do {
+//                let signature = try ViolasManager.getVBTCToBTCTransactionHex(sendAddress: sendAddress,
+//                                                                             amount: amount,
+//                                                                             fee: fee,
+//                                                                             mnemonic: mnemonic,
+//                                                                             contact: contact,
+//                                                                             sequenceNumber: Int(self.sequenceNumber!),
+//                                                                             btcAddress: receiveAddress,
+//                                                                             module: module)
+//                self.makeViolasTransaction(signature: signature, type: "SendVBTCTransaction")
+//            } catch {
+//                print(error.localizedDescription)
+//                DispatchQueue.main.async(execute: {
+//                    let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "SendVBTCTransaction")
+//                    self.setValue(data, forKey: "dataDic")
+//                })
+//            }
             semaphore.signal()
         }
     }

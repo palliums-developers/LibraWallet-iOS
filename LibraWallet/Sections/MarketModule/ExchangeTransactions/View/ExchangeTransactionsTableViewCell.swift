@@ -130,10 +130,10 @@ class ExchangeTransactionsTableViewCell: UITableViewCell {
             // 计算剩余
             inputAmountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: model?.input_amount ?? 0),
                                                            scale: 4,
-                                                           unit: 1000000)
+                                                           unit: 1000000) + (model?.input_name ?? "")
             outputAmountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: model?.output_amount ?? 0),
                                                             scale: 4,
-                                                            unit: 1000000)
+                                                            unit: 1000000) + (model?.output_name ?? "")
             dateLabel.text = timestampToDateString(timestamp: model?.date ?? 0,
                                                    dateFormat: "MM.dd HH:mm")
             if model?.status == 4001 {

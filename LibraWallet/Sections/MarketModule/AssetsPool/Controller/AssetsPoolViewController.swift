@@ -175,6 +175,10 @@ extension AssetsPoolViewController {
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .noMoreData).localizedDescription {
                     // 上拉请求更多数据为空
                     print(error.localizedDescription)
+                } else if error.localizedDescription == "CalculateRateFailed" {
+                    self?.detailView.makeToast("资金池中尚未有此交易对，请谨慎设置注入比例，以防造成较大损失",
+                                               position: .center)
+                    self?.detailView.headerView.autoCalculateMode = false
                 } else {
                     self?.detailView.makeToast(error.localizedDescription,
                                                position: .center)
@@ -192,15 +196,21 @@ extension AssetsPoolViewController {
                     tempDropperData.append(tokenNameString)
                 }
                 self?.currentTokens = tempData.balance
-                let dropper = Dropper.init(width: 120, height: CGFloat((tempData.balance?.count ?? 34) * 34))
+                let realHeight = CGFloat((tempData.balance?.count ?? 34) * 34)
+                let height = realHeight > 34*6 ? 34*6:realHeight
+                let dropper = Dropper.init(width: 120, height: height)
                 dropper.items = tempDropperData
                 dropper.cornerRadius = 8
                 dropper.theme = .black(UIColor.init(hex: "F1EEFB"))
                 dropper.cellTextFont = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
                 dropper.cellColor = UIColor.init(hex: "333333")
                 dropper.spacing = 12
-                dropper.show(Dropper.Alignment.center, button: (self?.detailView.headerView.inputTokenButton)!)
                 dropper.delegate = self
+                if self?.detailView.headerView.inputTokenButton.titleLabel?.text != localLanguage(keyString: "wallet_market_exchange_input_token_button_title") {
+                    let index = tempDropperData.firstIndex(of: self?.detailView.headerView.inputTokenButton.titleLabel?.text ?? "")
+                    dropper.defaultSelectRow = index
+                }
+                dropper.show(Dropper.Alignment.center, button: (self?.detailView.headerView.inputTokenButton)!)
             } else if type == "GetAssetsPoolTransferOutInfo" {
                 guard let tempData = dataDic.value(forKey: "data") as? AssetsPoolTransferOutInfoDataModel else {
                     return
@@ -247,17 +257,19 @@ extension AssetsPoolViewController {
                 guard let tempData = dataDic.value(forKey: "data") as? Int64 else {
                     return
                 }
+                self?.detailView.headerView.autoCalculateMode = true
                 if self?.detailView.headerView.viewState == .AssetsPoolTransferInBaseOnInputARequestRate {
-                    self?.detailView.headerView.outputAmountTextField.text = getDecimalNumber(amount: NSDecimalNumber.init(value: tempData ?? 0),
+                    self?.detailView.headerView.outputAmountTextField.text = getDecimalNumber(amount: NSDecimalNumber.init(value: tempData),
                                                                                               scale: 4,
                                                                                               unit: 1000000).stringValue
                     
                 } else {
-                    self?.detailView.headerView.inputAmountTextField.text = getDecimalNumber(amount: NSDecimalNumber.init(value: tempData ?? 0),
+                    self?.detailView.headerView.inputAmountTextField.text = getDecimalNumber(amount: NSDecimalNumber.init(value: tempData),
                                                                                              scale: 4,
                                                                                              unit: 1000000).stringValue
                 }
                 self?.detailView.headerView.viewState = .Normal
+                
             }
             self?.detailView.hideToastActivity()
             self?.detailView.toastView?.hide(tag: 99)

@@ -258,18 +258,20 @@ wallet_market_exchange_fee_title = "Fees: ";
 wallet_market_exchange_rate_title = "Exchange Rate: ";
 wallet_market_exchange_miner_fee_title = "Miner Fees: ";
 wallet_market_exchange_button_title = "Exchange";
-wallet_market_exchange_input_token_button_title = "Select Token";
-wallet_market_exchange_output_token_button_title = "Select Token";
+wallet_market_exchange_input_token_button_title = "Select a token";
+wallet_market_exchange_output_token_button_title = "Select a token";
 wallet_market_exchange_transactions_title = "Exchange Transactions";
 wallet_market_exchange_transaction_status_success_title = "Successful";
 wallet_market_exchange_transaction_status_failed_title = "Failed";
 wallet_market_exchange_transaction_retry_button_title = "Retry";
 wallet_market_assets_pool_token_title = "Tokens: ";
 wallet_market_exchange_token_title = "Assets: ";
+wallet_market_assets_pool_add_liquidity_fee_title = "Add liquidity to get fee income";
+wallet_market_assets_pool_exchange_rate_title = "Rate: ";
 
 /************* 资金池交易记录 *******************/
-wallet_assets_pool_transfer_in_title = "Transfer-In";
-wallet_assets_pool_transfer_out_title = "Transfer-Out";
+wallet_assets_pool_transfer_in_title = "Add Liquidity";
+wallet_assets_pool_transfer_out_title = "Remove Liquidity";
 wallet_assets_pool_transaction_token_title = "Token: ";
 wallet_assets_pool_transaction_status_transfer_in_success_title = "Transfer-In Successful";
 wallet_assets_pool_transaction_status_transfer_in_failed_title = "Transfer-In Failed";
@@ -280,8 +282,8 @@ wallet_assets_pool_transaction_status_transfer_invalid_title = "Status Invalid";
 
 /************* 资金池个人中心 *******************/
 wallet_market_mine_tokens_title = "Pool Tokens";
-wallet_market_mine_assets_pool_transfer_in_title = "Transfer-In";
-wallet_market_mine_assets_pool_transfer_out_title = "Transfer-Out";
+wallet_market_mine_assets_pool_transfer_in_title = "Add Liquidity";
+wallet_market_mine_assets_pool_transfer_out_title = "Remove Liquidity";
 wallet_market_mine_assets_pool_token_assets_transactions_title = "Tokens";
 
 /************* 交易所交易记录详情 *******************/

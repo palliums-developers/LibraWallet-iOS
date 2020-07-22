@@ -268,6 +268,8 @@ wallet_market_exchange_transaction_status_failed_title = "兑换失败";
 wallet_market_exchange_transaction_retry_button_title = "重试";
 wallet_market_assets_pool_token_title = "当前通证：";
 wallet_market_exchange_token_title = "当前资产：";
+wallet_market_assets_pool_add_liquidity_fee_title = "转入资金池可获取手续费收益";
+wallet_market_assets_pool_exchange_rate_title = "兑换率：";
 
 /************* 资金池交易记录 *******************/
 wallet_assets_pool_transfer_in_title = "转入";

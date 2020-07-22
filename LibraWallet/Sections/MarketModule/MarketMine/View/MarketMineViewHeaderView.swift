@@ -101,7 +101,7 @@ class MarketMineViewHeaderView: UIView {
         button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.medium)
         button.setTitleColor(UIColor.white, for: UIControl.State.normal)
         button.layer.backgroundColor = UIColor.init(hex: "7038FD").cgColor
-        button.layer.borderWidth = 0.5
+//        button.layer.borderWidth = 0.5
         button.layer.cornerRadius = 14
         button.tag = 20
         return button
@@ -114,7 +114,7 @@ class MarketMineViewHeaderView: UIView {
         button.setTitleColor(UIColor.white, for: UIControl.State.normal)
         //        button.addTarget(self, action: #selector(selectExchangeToken(button:)), for: UIControl.Event.touchUpInside)
         button.layer.backgroundColor = UIColor.init(hex: "7038FD").cgColor
-        button.layer.borderWidth = 0.5
+//        button.layer.borderWidth = 0.5
         button.layer.cornerRadius = 14
         button.tag = 20
         return button

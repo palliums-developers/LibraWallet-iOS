@@ -140,7 +140,7 @@ class AssetsPoolTableViewCell: UITableViewCell {
             inputAmountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: model?.amounta ?? 0),
                                                            scale: 4,
                                                            unit: 1000000) + (model?.coina ?? "")
-            outputAmountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: model?.amounta ?? 0),
+            outputAmountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: model?.amountb ?? 0),
                                                             scale: 4,
                                                             unit: 1000000) + (model?.coinb ?? "")
             dateLabel.text = timestampToDateString(timestamp: model?.date ?? 0,
