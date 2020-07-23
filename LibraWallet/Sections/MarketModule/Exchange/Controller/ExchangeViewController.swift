@@ -50,8 +50,64 @@ class ExchangeViewController: UIViewController {
     }()
     /// 数据监听KVO
     var observer: NSKeyValueObservation?
+    
+    var marketSupportModels: [MarketSupportMappingTokensDataModel]?
+    
+    var successGetMappingTokens: (([MarketSupportMappingTokensDataModel])->())?
 }
 extension ExchangeViewController: ExchangeViewHeaderViewDelegate {
+    func MappingBTCToViolasConfirm(amountIn: Double, amountOut: Double, inputModel: MarketSupportTokensDataModel, outputModel: MarketSupportTokensDataModel) {
+        
+    }
+    
+    func MappingBTCToLibraConfirm(amountIn: Double, amountOut: Double, inputModel: MarketSupportTokensDataModel, outputModel: MarketSupportTokensDataModel) {
+        
+    }
+    
+    func MappingViolasToLibraConfirm(amountIn: Double, amountOut: Double, inputModel: MarketSupportTokensDataModel, outputModel: MarketSupportTokensDataModel) {
+        self.detailView.toastView?.show(tag: 99)
+        self.dataModel.getMappingTokenList()
+        self.successGetMappingTokens = { tokens in
+            let tempModel = tokens.filter {
+                $0.to_coin?.assets?.module == outputModel.module
+            }
+            WalletManager.unlockWallet(controller: self, successful: { [weak self](mnemonic) in
+                self?.detailView.toastView?.show(tag: 99)
+                self?.dataModel.sendSwapViolasToLibraTransaction(sendAddress: WalletManager.shared.violasAddress ?? "",
+                                                                 amountIn: amountIn,
+                                                                 AmountOut: amountOut,
+                                                                 fee: 0,
+                                                                 mnemonic: mnemonic,
+                                                                 moduleInput: inputModel.module ?? "",
+                                                                 feeModule: inputModel.module ?? "",
+                                                                 exchangeCenterAddress: tempModel.first?.receiver_address ?? "",
+                                                                 receiveAddress: WalletManager.shared.libraAddress ?? "",
+                                                                 type: tempModel.first?.lable ?? "")
+            }) { [weak self](error) in
+                guard error != "Cancel" else {
+                    self?.detailView.toastView?.hide(tag: 99)
+                    return
+                }
+                self?.detailView.makeToast(error,
+                                           position: .center)
+            }
+                    
+        }
+
+    }
+    
+    func MappingViolasToBTCConfirm(amountIn: Double, amountOut: Double, inputModel: MarketSupportTokensDataModel, outputModel: MarketSupportTokensDataModel) {
+        
+    }
+    
+    func MappingLibraToViolasConfirm(amountIn: Double, amountOut: Double, inputModel: MarketSupportTokensDataModel, outputModel: MarketSupportTokensDataModel) {
+        
+    }
+    
+    func MappingLibraToBTCConfirm(amountIn: Double, amountOut: Double, inputModel: MarketSupportTokensDataModel, outputModel: MarketSupportTokensDataModel) {
+        
+    }
+    
     func dealTransferOutAmount(amount: Int64, inputModule: String, outputModule: String) {
         self.detailView.toastView?.show(tag: 99)
         self.dataModel.getExchangeInfo(amount: amount * 1000000,
@@ -83,17 +139,17 @@ extension ExchangeViewController: ExchangeViewHeaderViewDelegate {
         }
     }
     func selectInputToken() {
-//        self.detailView.makeToastActivity(.center)
-//        self.dataModel.getMarketSupportTokens()
         self.detailView.toastView?.show(tag: 99)
-        self.dataModel.getMarketTokens(address: "fa279f2615270daed6061313a48360f7",
-                                       showMineTokens: false)
+        self.dataModel.getMarketTokens(btcAddress: "n1dqi6pwdS46ucUh5eJ9KmHS11JgnQLWwc",
+                                       violasAddress: WalletManager.shared.violasAddress ?? "",
+                                       libraAddress: WalletManager.shared.libraAddress ?? "")
     }
     func selectOutoutToken() {
         print("selectOutoutToken")
         self.detailView.toastView?.show(tag: 99)
-        self.dataModel.getMarketTokens(address: "fa279f2615270daed6061313a48360f7",
-                                       showMineTokens: false)
+        self.dataModel.getMarketTokens(btcAddress: WalletManager.shared.btcAddress ?? "",
+                                       violasAddress: WalletManager.shared.violasAddress ?? "",
+                                       libraAddress: WalletManager.shared.libraAddress ?? "")
     }
     func swapInputOutputToken() {
         print("Swap")
@@ -183,7 +239,16 @@ extension ExchangeViewController {
                 self?.detailView.headerView.exchangeModel = tempData
             } else if type == "SendViolasTransaction" {
                 self?.detailView.makeToast("发送成功", position: .center)
-            }
+            } else if type == "GetMappingTokenList" {
+                guard let tempData = dataDic.value(forKey: "data") as? [MarketSupportMappingTokensDataModel] else {
+                    return
+                }
+                if let action = self?.successGetMappingTokens {
+                    action(tempData)
+                }
+            } else if type == "SendViolasToLibraMappingTransaction" {
+                self?.detailView.makeToast("发送成功", position: .center)
+            } 
             self?.detailView.hideToastActivity()
             self?.detailView.toastView?.hide(tag: 99)
         })

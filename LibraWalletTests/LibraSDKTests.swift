@@ -286,7 +286,7 @@ class LibraSDKTests: XCTestCase {
         let model = LibraManager.derializeTransaction(tx: "793fdd2c245229230fd52aca841875b3080000000000000002f401a11ceb0b010007014600000002000000034800000011000000045900000004000000055d0000001c00000007790000004900000008c20000001000000009d200000022000000000000010001010100020203000003040101010006020602050a0200010501010405030a020a0205050a02030a020a020109000c4c696272614163636f756e74166372656174655f746573746e65745f6163636f756e74066578697374731d7061795f66726f6d5f73656e6465725f776974685f6d6574616461746100000000000000000000000000000000010105010e000a001101200305000508000a000b0138000a000a020b030b04380102010700000000000000000000000000000000034c42520154000503fa279f2615270daed6061313a48360f704000100e1f505000000000400040040420f00000000000000000000000000034c4252eb27cf5e0000000000200825e33e0e828cb8869cf5ca22bb5360cc5edeba621a1cde8f13ed179ce8135f402f957968ff0d3d2c780ee003dbd23ea38d8dee62a64f2de376eb969a0049fad35e24410031346ef0f22fce5dd50f98511a542ccb95e473ba864d1123ab35630c")
         print(model)
     }
-    func testAddCur() {
+    func testMarketTransaction() {
         //        let signature = try librama
         let mnemonic1 = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
         let signature = try! ViolasManager.getMarketAddLiquidityTransactionHex(sendAddress: "fa279f2615270daed6061313a48360f7",
@@ -320,6 +320,32 @@ class LibraSDKTests: XCTestCase {
 //                                                                           moduleA: "VLSUSD",
 //                                                                           moduleB: "VLSEUR",
 //                                                                           feeModule: "LBR")
+        print(signature)
+    }
+    func testMarketMappingTransaction() {
+        let mnemonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
+        let signature = try! ViolasManager.getViolasToLibraMappingTransactionHex(sendAddress: "fa279f2615270daed6061313a48360f7",
+                                                                                 module: "VLSUSD",
+                                                                                 amountIn: 15,
+                                                                                 amountOut: 14,
+                                                                                 fee: 0,
+                                                                                 mnemonic: mnemonic,
+                                                                                 sequenceNumber: 94,
+                                                                                 exchangeCenterAddress: "dc49a7c8979f83cde4bc229fb35fd27f",
+                                                                                 libraReceiveAddress: "fa279f2615270daed6061313a48360f7",
+                                                                                 feeModule: "LBR",
+                                                                                 type: "v2lusd")
+//        let signature = try! LibraManager.getLibraToViolasMappingTransactionHex(sendAddress: "fa279f2615270daed6061313a48360f7",
+//                                                                         module: "LBR",
+//                                                                         amountIn: 10,
+//                                                                         amountOut: 10,
+//                                                                         fee: 0,
+//                                                                         mnemonic: mnemonic,
+//                                                                         sequenceNumber: 6,
+//                                                                         exchangeCenterAddress: "c5e53097c9f82f81513d02eeb515ecce",
+//                                                                         violasReceiveAddress: "fa279f2615270daed6061313a48360f7",
+//                                                                         feeModule: "LBR",
+//                                                                         type: "l2vusd")
         print(signature)
     }
 }

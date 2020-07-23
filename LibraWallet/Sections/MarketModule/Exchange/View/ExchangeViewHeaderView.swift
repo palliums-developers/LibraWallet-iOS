@@ -10,6 +10,12 @@ import UIKit
 import Localize_Swift
 protocol ExchangeViewHeaderViewDelegate: NSObjectProtocol {
     func exchangeConfirm(amountIn: Double, amountOutMin: Double, inputModelName: String, outputModelName: String, path: [UInt8])
+    func MappingBTCToViolasConfirm(amountIn: Double, amountOut: Double, inputModel: MarketSupportTokensDataModel, outputModel: MarketSupportTokensDataModel)
+    func MappingBTCToLibraConfirm(amountIn: Double, amountOut: Double, inputModel: MarketSupportTokensDataModel, outputModel: MarketSupportTokensDataModel)
+    func MappingViolasToLibraConfirm(amountIn: Double, amountOut: Double, inputModel: MarketSupportTokensDataModel, outputModel: MarketSupportTokensDataModel)
+    func MappingViolasToBTCConfirm(amountIn: Double, amountOut: Double, inputModel: MarketSupportTokensDataModel, outputModel: MarketSupportTokensDataModel)
+    func MappingLibraToViolasConfirm(amountIn: Double, amountOut: Double, inputModel: MarketSupportTokensDataModel, outputModel: MarketSupportTokensDataModel)
+    func MappingLibraToBTCConfirm(amountIn: Double, amountOut: Double, inputModel: MarketSupportTokensDataModel, outputModel: MarketSupportTokensDataModel)
     func selectInputToken()
     func selectOutoutToken()
     func swapInputOutputToken()
@@ -383,18 +389,25 @@ class ExchangeViewHeaderView: UIView {
             }
             // 转换数字
             let amountB = NSDecimalNumber.init(string: amountBString).doubleValue
-            
-            guard let path = exchangeModel?.path, path.isEmpty == false, path.count > 2 else {
-                self.makeToast("路径为空",
-                               position: .center)
-                return
-            }
+            if tempInputTokenA.chainType == 1 && tempInputTokenB.chainType == 1 {
+                guard let path = exchangeModel?.path, path.isEmpty == false, path.count > 2 else {
+                    self.makeToast("路径为空",
+                                   position: .center)
+                    return
+                }
 
-            self.delegate?.exchangeConfirm(amountIn: amountA,
-                                           amountOutMin: amountB,
-                                           inputModelName: transferInInputTokenA?.name ?? "",
-                                           outputModelName: transferInInputTokenB?.name ?? "",
-                                           path: path)
+                self.delegate?.exchangeConfirm(amountIn: amountA,
+                                               amountOutMin: amountB,
+                                               inputModelName: transferInInputTokenA?.name ?? "",
+                                               outputModelName: transferInInputTokenB?.name ?? "",
+                                               path: path)
+            } else if tempInputTokenA.chainType == 1 && tempInputTokenB.chainType == 0 {
+                self.delegate?.MappingViolasToLibraConfirm(amountIn: amountA,
+                                                           amountOut: amountB,
+                                                           inputModel: tempInputTokenA,
+                                                           outputModel: tempInputTokenB)
+            }
+            
         }
     }
     /// 资金池转入ModelA
@@ -528,8 +541,8 @@ extension ExchangeViewHeaderView: UITextFieldDelegate {
         if textField.tag == 10 {
             print("123")
             self.delegate?.dealTransferOutAmount(amount: NSDecimalNumber.init(string: textField.text).int64Value,
-                                                 inputModule: transferInInputTokenA?.name ?? "",
-                                                 outputModule: transferInInputTokenB?.name ?? "")
+                                                 inputModule: transferInInputTokenA?.show_name ?? "",
+                                                 outputModule: transferInInputTokenB?.show_name ?? "")
 
         } else if textField.tag == 20 {
 //            if self.changeTypeButton.titleLabel?.text == localLanguage(keyString: localLanguage(keyString: "wallet_assets_pool_transfer_in_title")) {

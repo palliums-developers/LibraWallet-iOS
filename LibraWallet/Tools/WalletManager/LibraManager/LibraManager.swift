@@ -167,42 +167,32 @@ extension LibraManager {
     }
 }
 extension LibraManager {
-    /// 获取Libra映射VLibra交易Hex
-    /// - Parameters:
-    ///   - sendAddress: 发送地址
-    ///   - amount: 数量
-    ///   - fee: 手续费
-    ///   - mnemonic: 助记词
-    ///   - contact: 合约
-    ///   - sequenceNumber: 序列码
-    ///   - libraReceiveAddress: 接收地址
-    /// - Throws: 报错
-    /// - Returns: 返回结果
-    public static func getLibraToVLibraTransactionHex(sendAddress: String, amount: Double, fee: Double, mnemonic: [String], sequenceNumber: Int, vlibraReceiveAddress: String, module: String) throws -> String {
+    
+    public static func getLibraToViolasMappingTransactionHex(sendAddress: String, module: String, amountIn: Double, amountOut: Double, fee: Double, mnemonic: [String], sequenceNumber: Int, exchangeCenterAddress: String, violasReceiveAddress: String, feeModule: String, type: String) throws -> String {
         do {
             let wallet = try LibraManager.getWallet(mnemonic: mnemonic)
             // 拼接交易
             let argument0 = LibraTransactionArgument.init(code: .Address,
-                                                          value: "0a82179351b8ecb6c5e68ab7b08622de")
-            let argument1 = LibraTransactionArgument.init(code: .U8Vector,
-                                                          value: "")
-            let argument2 = LibraTransactionArgument.init(code: .U64,
-                                                          value: "\(Int(amount * 1000000))")
-            let data = "{\"flag\":\"libra\",\"type\":\"l2v\",\"to_address\":\"\(vlibraReceiveAddress)\",\"state\":\"start\"}".data(using: .utf8)!
-            let argument3 = LibraTransactionArgument.init(code: .U8Vector,
+                                                          value: exchangeCenterAddress)
+            let argument1 = LibraTransactionArgument.init(code: .U64,
+                                                          value: "\(Int(amountIn * 1000000))")
+            // metadata
+            let data = "{\"flag\":\"libra\",\"type\":\"\(type)\",\"times\": 0, \"to_address\":\"00000000000000000000000000000000\(violasReceiveAddress)\",\"out_amount\":\"\(Int(amountOut * 1000000))\",\"state\":\"start\"}".data(using: .utf8)!
+            let argument2 = LibraTransactionArgument.init(code: .U8Vector,
                                                           value: data.toHexString())
-
+            // metadata_signature
+            let argument3 = LibraTransactionArgument.init(code: .U8Vector,
+                                                          value: "")
             let script = LibraTransactionScript.init(code: Data.init(hex: LibraScriptCodeWithData),
-                                                      typeTags: [LibraTypeTag.init(structData: LibraStructTag.init(type: .libraDefault))],
-                                                      argruments: [argument0, argument1, argument2, argument3])
-
+                                                     typeTags: [LibraTypeTag.init(structData: LibraStructTag.init(type: .Normal(module)))],
+                                                     argruments: [argument0, argument1, argument2, argument3])
             let rawTransaction = LibraRawTransaction.init(senderAddres: sendAddress,
-                                                sequenceNumber: sequenceNumber,
-                                                maxGasAmount: 560000,
-                                                gasUnitPrice: 0,
-                                                expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
-                                                payLoad: script.serialize(),
-                                                module: module)
+                                                          sequenceNumber: sequenceNumber,
+                                                          maxGasAmount: 1000000,
+                                                          gasUnitPrice: 1,
+                                                          expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 600),
+                                                          payLoad: script.serialize(),
+                                                          module: feeModule)
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
             return signature.toHexString()
@@ -263,7 +253,7 @@ extension LibraManager {
                 }
             }
         }
-        let nameCount = ViolasUtils.uleb128FormatToInt(data: Data.init(nameCountData))
+        let nameCount = LibraUtils.uleb128FormatToInt(data: Data.init(nameCountData))
         return (nameCount, data.suffix(data.count - nameCountData.count))
     }
     private static func readData(data: Data, count: Int) -> (Data, Data) {

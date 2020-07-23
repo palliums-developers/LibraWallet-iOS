@@ -84,6 +84,8 @@ enum mainRequest {
     case AssetsPoolTransferInInfo(String, String, Int64)
     /// 获取兑换试算
     case ExchangeTransferInfo(String, String, Int64)
+    /// 获取交易所支持映射币
+    case MarketSupportMappingTokens
 }
 extension mainRequest:TargetType {
     var baseURL: URL {
@@ -108,9 +110,9 @@ extension mainRequest:TargetType {
              .ActiveLibraAccount(_),
              .ActiveViolasAccount(_):
             if PUBLISH_VERSION == true {
-                return URL(string:"https://api.violas.io/1.0")!
+                return URL(string:"https://api.violas.io")!
             } else {
-                return URL(string:"https://api4.violas.io/1.0")!
+                return URL(string:"https://api4.violas.io")!
             }
         case .GetViolasAccountBalance(_, _),
              .GetViolasAccountSequenceNumber(_),
@@ -121,9 +123,9 @@ extension mainRequest:TargetType {
              .GetMappingTransactions(_, _, _, _),
              .SubmitScanLoginData(_, _):
             if PUBLISH_VERSION == true {
-                return URL(string:"https://api.violas.io/1.0")!
+                return URL(string:"https://api.violas.io")!
             } else {
-                return URL(string:"https://api4.violas.io/1.0")!
+                return URL(string:"https://api4.violas.io")!
             }
         // 交易所
         case .ExchangeTransactions(_, _, _),
@@ -132,11 +134,12 @@ extension mainRequest:TargetType {
              .MarketMineTokens(_),
              .AssetsPoolTransferOutInfo(_, _, _, _),
              .AssetsPoolTransferInInfo(_, _, _),
-             .ExchangeTransferInfo(_, _, _):
+             .ExchangeTransferInfo(_, _, _),
+             .MarketSupportMappingTokens:
             if PUBLISH_VERSION == true {
-                return URL(string:"https://api.violas.io/1.0")!
+                return URL(string:"https://api.violas.io")!
             } else {
-                return URL(string:"https://api4.violas.io/1.0")!
+                return URL(string:"https://api4.violas.io")!
             }
         case .GetViolasAccountInfo(_),
              .SendViolasTransaction(_):
@@ -174,55 +177,57 @@ extension mainRequest:TargetType {
         case .GetLibraAccountBalance(_):
             return ""
         case .GetLibraTransactions(_, _, _, _, _):
-            return "/libra/transaction"
+            return "/1.0/libra/transaction"
         case .SendLibraTransaction(_):
             return ""
         case .GetLibraTokenList:
-            return "/libra/currency"
+            return "/1.0/libra/currency"
         case .GetViolasAccountBalance(_, _):
-            return "/violas/balance"
+            return "/1.0/violas/balance"
         case .GetViolasAccountSequenceNumber(_):
-            return "/violas/seqnum"
+            return "/1.0/violas/seqnum"
         case .GetViolasTransactions(_, _, _, _, _):
-            return "/violas/transaction"
+            return "/1.0/violas/transaction"
         case .SendViolasTransaction(_):
             return ""
         case .GetViolasTokenList:
-            return "/violas/currency"
+            return "/1.0/violas/currency"
         case .GetMappingInfo(_):
-            return "/crosschain/info"
+            return "/1.0/crosschain/info"
         case .GetMappingTokenList(_):
-            return "/crosschain/modules"
+            return "/1.0/crosschain/modules"
         case .GetMappingTransactions(_, _, _, _):
-            return "/crosschain/transactions"
+            return "/1.0/crosschain/transactions"
         case .SubmitScanLoginData(_, _):
-            return "/violas/singin"
+            return "/1.0/violas/singin"
         case .GetViolasAccountInfo(_):
             return ""
         case .GetBTCPrice:
-            return "/violas/value/btc"
+            return "/1.0/violas/value/btc"
         case .GetViolasPrice(_):
-            return "/violas/value/violas"
+            return "/1.0/violas/value/violas"
         case .GetLibraPrice(_):
-            return "/violas/value/libra"
+            return "/1.0/violas/value/libra"
         case .ActiveLibraAccount(_):
-            return "/libra/mint"
+            return "/1.0/libra/mint"
         case .ActiveViolasAccount(_):
-            return "/violas/mint"
+            return "/1.0/violas/mint"
         case .ExchangeTransactions(_, _, _):
-            return "/market/exchange/transaction"
+            return "/1.0/market/exchange/transaction"
         case .AssetsPoolTransactions(_, _, _):
-            return "/market/pool/transaction"
+            return "/1.0/market/pool/transaction"
         case .MarketSupportTokens:
-            return "/market/exchange/currency"
+            return "/1.0/market/exchange/currency"
         case .MarketMineTokens(_):
-            return "/market/pool/info"
+            return "/1.0/market/pool/info"
         case .AssetsPoolTransferOutInfo(_, _, _, _):
-            return "/market/pool/withdrawal/trial"
+            return "/1.0/market/pool/withdrawal/trial"
         case .AssetsPoolTransferInInfo(_, _, _):
-            return "/market/pool/deposit/trial"
+            return "/1.0/market/pool/deposit/trial"
         case .ExchangeTransferInfo(_, _, _):
-            return "/market/exchange/trial"
+            return "/1.0/market/exchange/trial"
+        case . MarketSupportMappingTokens:
+            return "/1.0/market/exchange/crosschain/address/info"
         }
     }
     var method: Moya.Method {
@@ -263,7 +268,8 @@ extension mainRequest:TargetType {
              .MarketMineTokens(_),
              .AssetsPoolTransferOutInfo(_, _, _, _),
              .AssetsPoolTransferInInfo(_, _, _),
-             .ExchangeTransferInfo(_, _, _):
+             .ExchangeTransferInfo(_, _, _),
+             .MarketSupportMappingTokens:
             return .get
         }
     }
@@ -434,6 +440,9 @@ extension mainRequest:TargetType {
                                                    "currencyOut":coinB,
                                                    "amount":amount],
                                       encoding: URLEncoding.queryString)
+        case .MarketSupportMappingTokens:
+            return .requestPlain
+            
         }
     }
     var headers: [String : String]? {

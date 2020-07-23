@@ -338,14 +338,14 @@ extension TokenMappingModel {
 //                // 签名交易
 //                let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
 //                self.makeViolasTransaction(signature: signature.toHexString())
-                let signature = try LibraManager.getLibraToVLibraTransactionHex(sendAddress: sendAddress,
-                                                                                amount: amount,
-                                                                                fee: fee,
-                                                                                mnemonic: mnemonic,
-                                                                                sequenceNumber: Int(self.sequenceNumber!),
-                                                                                vlibraReceiveAddress: receiveAddress,
-                                                                                module: "")
-                self.makeViolasTransaction(signature: signature)
+//                let signature = try LibraManager.getLibraToVLibraTransactionHex(sendAddress: sendAddress,
+//                                                                                amount: amount,
+//                                                                                fee: fee,
+//                                                                                mnemonic: mnemonic,
+//                                                                                sequenceNumber: Int(self.sequenceNumber!),
+//                                                                                vlibraReceiveAddress: receiveAddress,
+//                                                                                module: "")
+//                self.makeViolasTransaction(signature: signature)
             } catch {
                 print(error.localizedDescription)
                 DispatchQueue.main.async(execute: {

@@ -125,7 +125,7 @@ extension ViolasManager {
                                                            sequenceNumber: sequenceNumber,
                                                            maxGasAmount: 1000000,
                                                            gasUnitPrice: 0,
-                                                           expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
+                                                           expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 600),
                                                            payLoad: script.serialize(),
                                                            module: module)
             // 签名交易
@@ -154,7 +154,7 @@ extension ViolasManager {
                                                            sequenceNumber: sequenceNumber,
                                                            maxGasAmount: 1000000,
                                                            gasUnitPrice: 0,
-                                                           expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
+                                                           expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 600),
                                                            payLoad: script.serialize(),
                                                            module: "LBR")
             // 签名交易
@@ -224,7 +224,7 @@ extension ViolasManager {
                                                            sequenceNumber: sequenceNumber,
                                                            maxGasAmount: 1000000,
                                                            gasUnitPrice: 1,
-                                                           expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
+                                                           expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 600),
                                                            payLoad: script.serialize(),
                                                            module: feeModule)
             // 签名交易
@@ -256,7 +256,7 @@ extension ViolasManager {
                                                            sequenceNumber: sequenceNumber,
                                                            maxGasAmount: 1000000,
                                                            gasUnitPrice: 1,
-                                                           expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
+                                                           expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 600),
                                                            payLoad: script.serialize(),
                                                            module: feeModule)
             // 签名交易
@@ -285,7 +285,7 @@ extension ViolasManager {
                                                            sequenceNumber: sequenceNumber,
                                                            maxGasAmount: 1000000,
                                                            gasUnitPrice: 1,
-                                                           expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
+                                                           expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 600),
                                                            payLoad: script.serialize(),
                                                            module: feeModule)
             // 签名交易
@@ -299,7 +299,7 @@ extension ViolasManager {
 //MARK: - 映射
 #warning("模块待测试")
 extension ViolasManager {
-    public static func getVBTCToBTCTransactionHex(sendAddress: String, amount: Double, fee: Double, mnemonic: [String], contact: String, sequenceNumber: Int, btcAddress: String, module: String) throws -> String {
+    public static func getVBTCToBTCTransactionHex(sendAddress: String, amount: Double, fee: Double, mnemonic: [String], contact: String, sequenceNumber: Int, btcAddress: String, feeModule: String) throws -> String {
         do {
             let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
             // 拼接交易
@@ -319,10 +319,10 @@ extension ViolasManager {
             let rawTransaction = ViolasRawTransaction.init(senderAddres: sendAddress,
                                                            sequenceNumber: sequenceNumber,
                                                            maxGasAmount: 1000000,
-                                                           gasUnitPrice: 0,
-                                                           expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
+                                                           gasUnitPrice: 1,
+                                                           expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 600),
                                                            payLoad: script.serialize(),
-                                                           module: module)
+                                                           module: feeModule)
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
             return signature.toHexString()
@@ -330,29 +330,31 @@ extension ViolasManager {
             throw error
         }
     }
-    public static func getVLibraToLibraTransactionHex(sendAddress: String, amount: Double, fee: Double, mnemonic: [String], contact: String, sequenceNumber: Int, libraReceiveAddress: String, module: String) throws -> String {
+    public static func getViolasToLibraMappingTransactionHex(sendAddress: String, module: String, amountIn: Double, amountOut: Double, fee: Double, mnemonic: [String], sequenceNumber: Int, exchangeCenterAddress: String, libraReceiveAddress: String, feeModule: String, type: String) throws -> String {
         do {
             let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
             // 拼接交易
-            let argument0 = ViolasTransactionArgument.init(code: .U64,
-                                                           value: "3")
-            let argument1 = ViolasTransactionArgument.init(code: .Address,
-                                                           value: "ee1e24e8fc664894709c947b74823b2f")
-            let argument2 = ViolasTransactionArgument.init(code: .U64,
-                                                           value: "\(Int(amount * 1000000))")
-            let data = "{\"flag\":\"violas\",\"type\":\"v2l\",\"to_address\":\"\(libraReceiveAddress)\",\"state\":\"start\"}".data(using: .utf8)!
-            let argument3 = ViolasTransactionArgument.init(code: .U8Vector,
+            let argument0 = ViolasTransactionArgument.init(code: .Address,
+                                                           value: exchangeCenterAddress)
+            let argument1 = ViolasTransactionArgument.init(code: .U64,
+                                                           value: "\(Int(amountIn * 1000000))")
+            // metadata
+            let data = "{\"flag\":\"violas\",\"type\":\"\(type)\",\"times\": 0, \"to_address\":\"00000000000000000000000000000000\(libraReceiveAddress)\",\"out_amount\":\"\(Int(amountOut * 1000000))\",\"state\":\"start\"}".data(using: .utf8)!
+            let argument2 = ViolasTransactionArgument.init(code: .U8Vector,
                                                            value: data.toHexString())
-            let script = ViolasTransactionScript.init(code: ViolasManager.getCodeData(move: ViolasStableCoinScriptWithDataCode, address: contact),
-                                                      typeTags: [ViolasTypeTag](),
+            // metadata_signature
+            let argument3 = ViolasTransactionArgument.init(code: .U8Vector,
+                                                           value: "")
+            let script = ViolasTransactionScript.init(code: Data.init(hex: ViolasStableCoinScriptWithDataCode),
+                                                      typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .Normal(module)))],
                                                       argruments: [argument0, argument1, argument2, argument3])
             let rawTransaction = ViolasRawTransaction.init(senderAddres: sendAddress,
                                                            sequenceNumber: sequenceNumber,
                                                            maxGasAmount: 1000000,
-                                                           gasUnitPrice: 0,
-                                                           expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
+                                                           gasUnitPrice: 1,
+                                                           expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 600),
                                                            payLoad: script.serialize(),
-                                                           module: module)
+                                                           module: feeModule)
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
             return signature.toHexString()
@@ -361,7 +363,7 @@ extension ViolasManager {
         }
     }
 }
-// WalletConnect
+//MARK: - WalletConnect
 extension ViolasManager {
     public static func getWalletConnectTransactionHex(mnemonic: [String], sequenceNumber: Int, model: WCRawTransaction, module: String) throws -> String {
         do {
@@ -395,7 +397,7 @@ extension ViolasManager {
                                                            sequenceNumber: sequenceNumber,
                                                            maxGasAmount: model.maxGasAmount ?? 1000000,
                                                            gasUnitPrice: model.gasUnitPrice ?? 0,
-                                                           expirationTime: Int(model.expirationTime ?? (Int64(Date().timeIntervalSince1970) + 3600)),
+                                                           expirationTime: Int(model.expirationTime ?? (Int64(Date().timeIntervalSince1970) + 600)),
                                                            payLoad: script.serialize(),
                                                            module: module)
             // 签名交易
