@@ -9,9 +9,9 @@
 import UIKit
 import Localize_Swift
 protocol ExchangeViewHeaderViewDelegate: NSObjectProtocol {
-    func exchangeConfirm(amountIn: Double, amountOutMin: Double, inputModelName: String, outputModelName: String, path: [UInt8])
     func MappingBTCToViolasConfirm(amountIn: Double, amountOut: Double, inputModel: MarketSupportTokensDataModel, outputModel: MarketSupportTokensDataModel)
     func MappingBTCToLibraConfirm(amountIn: Double, amountOut: Double, inputModel: MarketSupportTokensDataModel, outputModel: MarketSupportTokensDataModel)
+    func MappingViolasToViolasConfirm(amountIn: Double, amountOutMin: Double, inputModelName: String, outputModelName: String, path: [UInt8])
     func MappingViolasToLibraConfirm(amountIn: Double, amountOut: Double, inputModel: MarketSupportTokensDataModel, outputModel: MarketSupportTokensDataModel)
     func MappingViolasToBTCConfirm(amountIn: Double, amountOut: Double, inputModel: MarketSupportTokensDataModel, outputModel: MarketSupportTokensDataModel)
     func MappingLibraToViolasConfirm(amountIn: Double, amountOut: Double, inputModel: MarketSupportTokensDataModel, outputModel: MarketSupportTokensDataModel)
@@ -29,7 +29,14 @@ class ExchangeViewHeaderView: UIView {
         case ExchangeSelectAToken
         case ExchangeSelectBToken
         case ExchangeSwap
-        case ExchangeConfirm
+        case LibraToViolasSwap
+        case LibraToBTCSwap
+        case LibraToLibraSwap
+        case ViolasToLibraSwap
+        case ViolasToBTCSwap
+        case ViolasToViolasSwap
+        case BTCToLibraSwap
+        case BTCToViolasSwap
     }
     var viewState: ExchangeViewState = .Normal
 
@@ -53,8 +60,6 @@ class ExchangeViewHeaderView: UIView {
         addSubview(exchangeRateLabel)
         addSubview(minerFeeLabel)
         addSubview(confirmButton)
-//        addSubview(exchangeTransactionsTitleLabel)
-//        addSubview(titleIndicatorLabel)
         // 添加语言变换通知
         NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
     }
@@ -152,15 +157,6 @@ class ExchangeViewHeaderView: UIView {
             make.size.equalTo(CGSize.init(width: 238, height: 40))
             make.centerX.equalTo(self)
         }
-//        exchangeTransactionsTitleLabel.snp.makeConstraints { (make) in
-//            make.left.equalTo(self).offset(14)
-//            make.bottom.equalTo(titleIndicatorLabel.snp.top).offset(-6)
-//        }
-//        titleIndicatorLabel.snp.makeConstraints { (make) in
-//            make.left.equalTo(self).offset(14)
-//            make.bottom.equalTo(self.snp.bottom).offset(-6)
-//            make.size.equalTo(CGSize.init(width: 12, height: 2))
-//        }
     }
     lazy var feeLabel: UILabel = {
         let label = UILabel.init()
@@ -243,8 +239,8 @@ class ExchangeViewHeaderView: UIView {
     lazy var outputTitleLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.right
-        label.textColor = UIColor.init(hex: "000000")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
+        label.textColor = UIColor.init(hex: "333333")
+        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
         label.text = localLanguage(keyString: "wallet_market_exchange_output_amount_title")
         return label
     }()
@@ -320,20 +316,6 @@ class ExchangeViewHeaderView: UIView {
         button.tag = 100
         return button
     }()
-//    lazy var exchangeTransactionsTitleLabel: UILabel = {
-//        let label = UILabel.init()
-//        label.textAlignment = NSTextAlignment.left
-//        label.textColor = UIColor.init(hex: "3D3949")
-//        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
-//        label.text = localLanguage(keyString: "wallet_market_exchange_transactions_title")
-//        return label
-//    }()
-//    lazy var titleIndicatorLabel: UILabel = {
-//        let label = UILabel.init()
-//        label.layer.backgroundColor = UIColor.init(hex: "#7038FD").cgColor
-//        label.layer.cornerRadius = 3
-//        return label
-//    }()
     @objc func buttonClick(button: UIButton) {
         if button.tag == 10 {
             self.viewState = .ExchangeSelectAToken
@@ -345,7 +327,6 @@ class ExchangeViewHeaderView: UIView {
             self.viewState = .ExchangeSwap
             self.delegate?.swapInputOutputToken()
         } else if button.tag == 100 {
-            self.viewState = .ExchangeConfirm
             self.inputAmountTextField.resignFirstResponder()
             self.outputAmountTextField.resignFirstResponder()
             // ModelA不为空
@@ -395,19 +376,49 @@ class ExchangeViewHeaderView: UIView {
                                    position: .center)
                     return
                 }
-
-                self.delegate?.exchangeConfirm(amountIn: amountA,
-                                               amountOutMin: amountB,
-                                               inputModelName: transferInInputTokenA?.name ?? "",
-                                               outputModelName: transferInInputTokenB?.name ?? "",
-                                               path: path)
+                self.viewState = .ViolasToViolasSwap
+                self.delegate?.MappingViolasToViolasConfirm(amountIn: amountA,
+                                                            amountOutMin: amountB,
+                                                            inputModelName: transferInInputTokenA?.name ?? "",
+                                                            outputModelName: transferInInputTokenB?.name ?? "",
+                                                            path: path)
             } else if tempInputTokenA.chainType == 1 && tempInputTokenB.chainType == 0 {
+                self.viewState = .ViolasToLibraSwap
                 self.delegate?.MappingViolasToLibraConfirm(amountIn: amountA,
                                                            amountOut: amountB,
                                                            inputModel: tempInputTokenA,
                                                            outputModel: tempInputTokenB)
+            } else if tempInputTokenA.chainType == 1 && tempInputTokenB.chainType == 2 {
+                self.viewState = .ViolasToBTCSwap
+                self.delegate?.MappingViolasToBTCConfirm(amountIn: amountA,
+                                                         amountOut: amountB,
+                                                         inputModel: tempInputTokenA,
+                                                         outputModel: tempInputTokenB)
+            } else if tempInputTokenA.chainType == 0 && tempInputTokenB.chainType == 1 {
+                self.viewState = .LibraToViolasSwap
+                self.delegate?.MappingLibraToViolasConfirm(amountIn: amountA,
+                                                           amountOut: amountB,
+                                                           inputModel: tempInputTokenA,
+                                                           outputModel: tempInputTokenB)
+            } else if tempInputTokenA.chainType == 0 && tempInputTokenB.chainType == 2 {
+                self.viewState = .LibraToBTCSwap
+                self.delegate?.MappingLibraToBTCConfirm(amountIn: amountA,
+                                                        amountOut: amountB,
+                                                        inputModel: tempInputTokenA,
+                                                        outputModel: tempInputTokenB)
+            } else if tempInputTokenA.chainType == 2 && tempInputTokenB.chainType == 0 {
+                self.viewState = .BTCToLibraSwap
+                self.delegate?.MappingBTCToLibraConfirm(amountIn: amountA,
+                                                        amountOut: amountB,
+                                                        inputModel: tempInputTokenA,
+                                                        outputModel: tempInputTokenB)
+            } else if tempInputTokenA.chainType == 2 && tempInputTokenB.chainType == 1 {
+                self.viewState = .BTCToViolasSwap
+                self.delegate?.MappingBTCToViolasConfirm(amountIn: amountA,
+                                                         amountOut: amountB,
+                                                         inputModel: tempInputTokenA,
+                                                         outputModel: tempInputTokenB)
             }
-            
         }
     }
     /// 资金池转入ModelA
@@ -454,6 +465,7 @@ class ExchangeViewHeaderView: UIView {
             self.viewState = .Normal
         }
     }
+    /// 兑换比例
     var exchangeModel: ExchangeInfoDataModel? {
         didSet {
             guard let model = exchangeModel else {
@@ -477,7 +489,6 @@ class ExchangeViewHeaderView: UIView {
                                                                                                             unit: 1000000).stringValue
         }
     }
-//    var selectAToken: Bool?
     /// 语言切换
     @objc func setText() {
         feeLabel.text = localLanguage(keyString: "wallet_market_exchange_fee_title") + "---"
@@ -491,7 +502,6 @@ class ExchangeViewHeaderView: UIView {
         }
         if outputTokenButton.titleLabel?.text == localLanguage(keyString: "wallet_market_exchange_output_token_button_title") {        outputTokenButton.setTitle(localLanguage(keyString: "wallet_market_exchange_output_token_button_title"), for: UIControl.State.normal)
         }
-        
     }
 }
 extension ExchangeViewHeaderView: UITextFieldDelegate {

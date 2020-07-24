@@ -233,13 +233,13 @@ class HomeModel: NSObject {
                     // 刷新本地数据
                     self?.updateLocalTokenBalance(tokens: tokens, type: .Libra, tokenBalances: json.result?.balances ?? [LibraBalanceModel.init(amount: 0, currency: "LBR")])
                 } catch {
-                    print("解析异常\(error.localizedDescription)")
+                    print("UpdateLibraBalance_解析异常\(error.localizedDescription)")
                     let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "UpdateLibraBalance")
                     self?.setValue(data, forKey: "dataDic")
                 }
             case let .failure(error):
                 guard error.errorCode != -999 else {
-                    print("网络请求已取消")
+                    print("UpdateLibraBalance_网络请求已取消")
                     return
                 }
                 let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "UpdateLibraBalance")

@@ -49,23 +49,46 @@ class LibraSDKTests: XCTestCase {
         let bool2 = LibraTransactionArgument.init(code: .Bool, value: "01").serialize().toHexString().uppercased()
         XCTAssertEqual(bool2, "0501")
         //LibraTransactionAccessPath
-        let accessPath1 = LibraTransactionAccessPath.init(address: "a71d76faa2d2d5c3224ec3d41deb2939",
+        let accessPath1 = LibraAccessPath.init(address: "a71d76faa2d2d5c3224ec3d41deb2939",
                                                           path: "01217da6c6b3e19f1825cfb2676daecce3bf3de03cf26647c78df00b371b25cc97",
-                                                          writeType: LibraTransactionWriteType.Deletion)
-        let accessPath2 = LibraTransactionAccessPath.init(address: "c4c63f80c74b11263e421ebf8486a4e3",
+                                                          writeType: LibraWriteType.Deletion)
+        let accessPath2 = LibraAccessPath.init(address: "c4c63f80c74b11263e421ebf8486a4e3",
                                                           path: "01217da6c6b3e19f18",
-                                                          writeType: LibraTransactionWriteType.Value,
+                                                          writeType: LibraWriteType.Value,
                                                           value: Data.init(Array<UInt8>(hex: "CAFED00D")))
-        let write = LibraTransactionWriteSet.init(accessPaths: [accessPath1, accessPath2]).serialize().toHexString().lowercased()
-        XCTAssertEqual(write, "0002a71d76faa2d2d5c3224ec3d41deb29392101217da6c6b3e19f1825cfb2676daecce3bf3de03cf26647c78df00b371b25cc9700c4c63f80c74b11263e421ebf8486a4e30901217da6c6b3e19f180104cafed00d")
+        let writeSet = LibraWriteSet.init(accessPaths: [accessPath1, accessPath2])
+        XCTAssertEqual(writeSet.serialize().toHexString().lowercased(), "0002a71d76faa2d2d5c3224ec3d41deb29392101217da6c6b3e19f1825cfb2676daecce3bf3de03cf26647c78df00b371b25cc9700c4c63f80c74b11263e421ebf8486a4e30901217da6c6b3e19f180104cafed00d")
+
+        let writeSetPayload = LibraTransactionWriteSetPayload.init(code: .direct, writeSet: writeSet, events: [LibraContractEvent]())
+
+        let aa: Array<UInt8> = [0, 0, 2, 167, 29, 118, 250, 162, 210, 213, 195, 34, 78, 195, 212, 29, 235, 41, 57, 33, 1,
+        33, 125, 166, 198, 179, 225, 159, 24, 37, 207, 178, 103, 109, 174, 204, 227, 191, 61, 224,
+        60, 242, 102, 71, 199, 141, 240, 11, 55, 27, 37, 204, 151, 0, 196, 198, 63, 128, 199, 75,
+        17, 38, 62, 66, 30, 191, 132, 134, 164, 227, 9, 1, 33, 125, 166, 198, 179, 225, 159, 24, 1,
+        4, 202, 254, 208, 13, 0]
+        XCTAssertEqual(writeSetPayload.serialize().toHexString().lowercased(), Data.init(aa).toHexString())
+        
         let module = LibraTransactionModule.init(code: Data.init(Array<UInt8>(hex: "CAFED00D"))).serialize().toHexString().uppercased()
         XCTAssertEqual(module, "02CAFED00D")
-//        let a: Array<UInt8> = [0, 2, 167, 29, 118, 250, 162, 210, 213, 195, 34, 78, 195, 212, 29, 235, 41, 57, 33, 1, 33,
-//            125, 166, 198, 179, 225, 159, 24, 37, 207, 178, 103, 109, 174, 204, 227, 191, 61, 224, 60,
-//            242, 102, 71, 199, 141, 240, 11, 55, 27, 37, 204, 151, 0, 196, 198, 63, 128, 199, 75, 17,
-//            38, 62, 66, 30, 191, 132, 134, 164, 227, 9, 1, 33, 125, 166, 198, 179, 225, 159, 24, 1, 4,
-//            202, 254, 208, 13, 0]
-//        print(Data.init(a).toHexString())
+        let writeSetRaw = LibraRawTransaction.init(senderAddres: "c3398a599a6f3b9f30b635af29f2ba04",
+                                                   sequenceNumber: 32,
+                                                   maxGasAmount: 0,
+                                                   gasUnitPrice: 0,
+                                                   expirationTime: Int.max,
+                                                   payLoad: writeSetPayload.serialize(),
+                                                   module: "LBR",
+                                                   chainID: 4)
+        
+        let a: Array<UInt8> = [195, 57, 138, 89, 154, 111, 59, 159, 48, 182, 53, 175, 41, 242, 186, 4, 32, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 2, 167, 29, 118, 250, 162, 210, 213, 195, 34, 78, 195, 212, 29, 235, 41, 57,
+        33, 1, 33, 125, 166, 198, 179, 225, 159, 24, 37, 207, 178, 103, 109, 174, 204, 227, 191,
+        61, 224, 60, 242, 102, 71, 199, 141, 240, 11, 55, 27, 37, 204, 151, 0, 196, 198, 63, 128,
+        199, 75, 17, 38, 62, 66, 30, 191, 132, 134, 164, 227, 9, 1, 33, 125, 166, 198, 179, 225,
+        159, 24, 1, 4, 202, 254, 208, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 76,
+        66, 82, 255, 255, 255, 255, 255, 255, 255, 255, 4]
+//        XCTAssertEqual(writeSetRaw.serialize().toHexString().lowercased(), Data.init(a).toHexString())
+
+//        print()
 //        print("succ")
 //
 //        let raw = RawTransaction.init(senderAddres: "65e39e2e6b90ac215ec79e2b84690421d7286e6684b0e8e08a0b25dec640d849",
@@ -264,13 +287,13 @@ class LibraSDKTests: XCTestCase {
         }
     }
     func testLibraKitPublishModule() {
-        print(BigUInt(20000).serialize().bytes)
-        print("LBR".data(using: .utf8)?.bytes.toHexString())
-        print("T".data(using: .utf8)?.bytes.toHexString())
+        print(BigUInt(86400).serialize().bytes)
+//        print("LBR".data(using: .utf8)?.bytes.toHexString())
+//        print("T".data(using: .utf8)?.bytes.toHexString())
 //        let data = Data.init(Array<UInt8>(hex: "76696f6c617301003000fa279f2615270daed6061313a48360f7000000005ea2b35be1be1ab8360a35a0259f1c93e3eac736"))
 //        let string = String.init(data: data, encoding: String.Encoding.utf8)
 //        print(string)
-        print(LibraUtils.getLengthData(length: Int(20000), appendBytesCount: 8).bytes)
+//        print(LibraUtils.getLengthData(length: Int(20000), appendBytesCount: 8).bytes)
     }
     func testReadMV() {
         let htmlBundlePath = Bundle.main.path(forResource:"MarketContracts", ofType:"bundle") ?? ""
@@ -346,6 +369,23 @@ class LibraSDKTests: XCTestCase {
 //                                                                         violasReceiveAddress: "fa279f2615270daed6061313a48360f7",
 //                                                                         feeModule: "LBR",
 //                                                                         type: "l2vusd")
+        
         print(signature)
+        
+    }
+    func testBTCScript() {
+        let script = BTCManager().getBTCScript(address: "c91806cabcd5b2b5fa25ae1c50bed3c6",
+                                               type: "0x4000",
+                                               tokenContract: "524689a4f870c46d6a5d901b5ac1fdb2",
+                                               amount: 10000)
+        print(script.toHexString())
+        XCTAssertEqual("76696f6c617300034000c91806cabcd5b2b5fa25ae1c50bed3c600000004b40537b6524689a4f870c46d6a5d901b5ac1fdb200000000000027100000", script.toHexString())
+//        76696f6c617300034000c91806cabcd5b2b5fa25ae1c50bed3c600000004b40537b6524689a4f870c46d6a5d901b5ac1fdb200000000000027100000
+//        76696f6c617300034000c91806cabcd5b2b5fa25ae1c50bed3c6000000005f1946f7524689a4f870c46d6a5d901b5ac1fdb200000000000027100000
+    }
+    func testA() {
+        let a: Array<UInt8> = [165, 87, 66, 216, 60, 179, 202, 135, 205,248,242,49,242,45,215,85,52,162,88,139,23,75,32,230,220,65,41,46,146,206,121,229]
+        print(Data.init(a).toHexString())
+        
     }
 }

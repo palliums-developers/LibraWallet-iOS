@@ -262,12 +262,12 @@ extension TokenMappingModel {
 
         let transaction = TransactionBuilder.build(from: plan, toAddress: toAddressResult, changeAddress: wallet.addresses.first!)
         // 添加脚本
-        let script = BTCManager().getBTCToVBTCScript(address: mappingReceiveAddress, tokenContract: mappingContract)
-        let data = BTCManager().getData(script: script)
-        let opReturn = TransactionOutput.init(value: 0, lockingScript: data)
+//        let script = BTCManager().getBTCToVBTCScript(address: mappingReceiveAddress, tokenContract: mappingContract)
+//        let data = BTCManager().getData(script: script)
+//        let opReturn = TransactionOutput.init(value: 0, lockingScript: data)
         
         var tempOutputs = transaction.outputs
-        tempOutputs.append(opReturn)
+//        tempOutputs.append(opReturn)
         let transactionResult = Transaction.init(version: transaction.version, inputs: transaction.inputs, outputs: tempOutputs, lockTime: transaction.lockTime)
         
         let signature = TransactionSigner.init(unspentTransactions: plan.unspentTransactions, transaction: transactionResult, sighashHelper: BTCSignatureHashHelper(hashType: .ALL))

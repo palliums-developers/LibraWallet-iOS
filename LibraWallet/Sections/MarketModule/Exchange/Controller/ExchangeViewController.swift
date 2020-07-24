@@ -53,21 +53,94 @@ class ExchangeViewController: UIViewController {
     
     var marketSupportModels: [MarketSupportMappingTokensDataModel]?
     
-    var successGetMappingTokens: (([MarketSupportMappingTokensDataModel])->())?
+    var successV2LMappingClosure: (([MarketSupportMappingTokensDataModel])->())?
+    var successL2VMappingClosure: (([MarketSupportMappingTokensDataModel])->())?
+    var successB2VMappingClosure: (([MarketSupportMappingTokensDataModel])->())?
+    var successB2LMappingClosure: (([MarketSupportMappingTokensDataModel])->())?
 }
 extension ExchangeViewController: ExchangeViewHeaderViewDelegate {
     func MappingBTCToViolasConfirm(amountIn: Double, amountOut: Double, inputModel: MarketSupportTokensDataModel, outputModel: MarketSupportTokensDataModel) {
-        
+        self.detailView.toastView?.show(tag: 99)
+        self.dataModel.getMappingTokenList()
+        self.successB2VMappingClosure = { tokens in
+            let tempModel = tokens.filter {
+                $0.to_coin?.assets?.module == outputModel.module && $0.input_coin_type == "btc"
+            }
+            WalletManager.unlockWallet(controller: self, successful: { [weak self](mnemonic) in
+                self?.detailView.toastView?.show(tag: 99)
+                let wallet = try! BTCManager().getWallet(mnemonic: mnemonic)
+                self?.dataModel.makeTransaction(wallet: wallet,
+                                                amountIn: amountIn,
+                                                amountOut: amountOut,
+                                                fee: 0.0003,
+                                                toAddress: tempModel.first?.receiver_address ?? "",
+                                                mappingContract: tempModel.first?.to_coin?.assets?.address ?? "",
+                                                mappingReceiveAddress: WalletManager.shared.violasAddress ?? "",
+                                                type: tempModel.first?.lable ?? "")
+            }) { [weak self](error) in
+                guard error != "Cancel" else {
+                    self?.detailView.toastView?.hide(tag: 99)
+                    return
+                }
+                self?.detailView.makeToast(error,
+                                           position: .center)
+            }
+        }
     }
-    
     func MappingBTCToLibraConfirm(amountIn: Double, amountOut: Double, inputModel: MarketSupportTokensDataModel, outputModel: MarketSupportTokensDataModel) {
-        
+        self.detailView.toastView?.show(tag: 99)
+        self.dataModel.getMappingTokenList()
+        self.successB2VMappingClosure = { tokens in
+            let tempModel = tokens.filter {
+                $0.to_coin?.assets?.module == outputModel.module && $0.input_coin_type == "btc"
+            }
+            WalletManager.unlockWallet(controller: self, successful: { [weak self](mnemonic) in
+                self?.detailView.toastView?.show(tag: 99)
+                let wallet = try! BTCManager().getWallet(mnemonic: mnemonic)
+                self?.dataModel.makeTransaction(wallet: wallet,
+                                                amountIn: amountIn,
+                                                amountOut: amountOut,
+                                                fee: 0.0003,
+                                                toAddress: tempModel.first?.receiver_address ?? "",
+                                                mappingContract: tempModel.first?.to_coin?.assets?.address ?? "",
+                                                mappingReceiveAddress: WalletManager.shared.libraAddress ?? "",
+                                                type: tempModel.first?.lable ?? "")
+            }) { [weak self](error) in
+                guard error != "Cancel" else {
+                    self?.detailView.toastView?.hide(tag: 99)
+                    return
+                }
+                self?.detailView.makeToast(error,
+                                           position: .center)
+            }
+        }
     }
-    
+    func MappingViolasToViolasConfirm(amountIn: Double, amountOutMin: Double, inputModelName: String, outputModelName: String, path: [UInt8]) {
+        print("Exchange")
+        WalletManager.unlockWallet(controller: self, successful: { [weak self](mnemonic) in
+            self?.detailView.toastView?.show(tag: 99)
+            self?.dataModel.sendSwapViolasTransaction(sendAddress: WalletManager.shared.libraAddress ?? "",
+                                                      amountIn: amountIn,
+                                                      AmountOutMin: amountOutMin,
+                                                      path: path,
+                                                      fee: 0,
+                                                      mnemonic: mnemonic,
+                                                      moduleA: inputModelName,
+                                                      moduleB: outputModelName,
+                                                      feeModule: inputModelName)
+        }) { [weak self](error) in
+            guard error != "Cancel" else {
+                self?.detailView.toastView?.hide(tag: 99)
+                return
+            }
+            self?.detailView.makeToast(error,
+                                       position: .center)
+        }
+    }
     func MappingViolasToLibraConfirm(amountIn: Double, amountOut: Double, inputModel: MarketSupportTokensDataModel, outputModel: MarketSupportTokensDataModel) {
         self.detailView.toastView?.show(tag: 99)
         self.dataModel.getMappingTokenList()
-        self.successGetMappingTokens = { tokens in
+        self.successV2LMappingClosure = { tokens in
             let tempModel = tokens.filter {
                 $0.to_coin?.assets?.module == outputModel.module
             }
@@ -91,17 +164,41 @@ extension ExchangeViewController: ExchangeViewHeaderViewDelegate {
                 self?.detailView.makeToast(error,
                                            position: .center)
             }
-                    
         }
-
     }
-    
     func MappingViolasToBTCConfirm(amountIn: Double, amountOut: Double, inputModel: MarketSupportTokensDataModel, outputModel: MarketSupportTokensDataModel) {
         
     }
     
     func MappingLibraToViolasConfirm(amountIn: Double, amountOut: Double, inputModel: MarketSupportTokensDataModel, outputModel: MarketSupportTokensDataModel) {
-        
+        self.detailView.toastView?.show(tag: 99)
+        self.dataModel.getMappingTokenList()
+        self.successL2VMappingClosure = { tokens in
+            let tempModel = tokens.filter {
+                $0.to_coin?.assets?.module == outputModel.module
+            }
+            WalletManager.unlockWallet(controller: self, successful: { [weak self](mnemonic) in
+                self?.detailView.toastView?.show(tag: 99)
+                self?.dataModel.sendLibraToViolasMappingTransaction(sendAddress: WalletManager.shared.libraAddress ?? "",
+                                                                    module: inputModel.module ?? "",
+                                                                    amountIn: amountIn,
+                                                                    amountOut: amountOut,
+                                                                    fee: 0,
+                                                                    mnemonic: mnemonic,
+                                                                    exchangeCenterAddress: tempModel.first?.receiver_address ?? "",
+                                                                    violasReceiveAddress: WalletManager.shared.violasAddress ?? "",
+                                                                    feeModule: inputModel.module ?? "",
+                                                                    type: tempModel.first?.lable ?? "")
+            }) { [weak self](error) in
+                guard error != "Cancel" else {
+                    self?.detailView.toastView?.hide(tag: 99)
+                    return
+                }
+                self?.detailView.makeToast(error,
+                                           position: .center)
+            }
+                    
+        }
     }
     
     func MappingLibraToBTCConfirm(amountIn: Double, amountOut: Double, inputModel: MarketSupportTokensDataModel, outputModel: MarketSupportTokensDataModel) {
@@ -115,32 +212,10 @@ extension ExchangeViewController: ExchangeViewHeaderViewDelegate {
                                        outputModule: outputModule)
     }
     
-    func exchangeConfirm(amountIn: Double, amountOutMin: Double, inputModelName: String, outputModelName: String, path: [UInt8]) {
-        print("Exchange")
-        
-        WalletManager.unlockWallet(controller: self, successful: { [weak self](mnemonic) in
-            self?.detailView.toastView?.show(tag: 99)
-            self?.dataModel.sendSwapViolasTransaction(sendAddress: "fa279f2615270daed6061313a48360f7",
-                                                      amountIn: amountIn,
-                                                      AmountOutMin: amountOutMin,
-                                                      path: path,
-                                                      fee: 0,
-                                                      mnemonic: mnemonic,
-                                                      moduleA: inputModelName,
-                                                      moduleB: outputModelName,
-                                                      feeModule: inputModelName)
-        }) { [weak self](error) in
-            guard error != "Cancel" else {
-                self?.detailView.toastView?.hide(tag: 99)
-                return
-            }
-            self?.detailView.makeToast(error,
-                                       position: .center)
-        }
-    }
+
     func selectInputToken() {
         self.detailView.toastView?.show(tag: 99)
-        self.dataModel.getMarketTokens(btcAddress: "n1dqi6pwdS46ucUh5eJ9KmHS11JgnQLWwc",
+        self.dataModel.getMarketTokens(btcAddress: WalletManager.shared.btcAddress ?? "",
                                        violasAddress: WalletManager.shared.violasAddress ?? "",
                                        libraAddress: WalletManager.shared.libraAddress ?? "")
     }
@@ -161,6 +236,7 @@ extension ExchangeViewController {
     func initKVO() {
         self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
             guard let dataDic = change.newValue, dataDic.count != 0 else {
+                self?.detailView.toastView?.hide(tag: 99)
                 self?.detailView.hideToastActivity()
                 return
             }
@@ -201,6 +277,7 @@ extension ExchangeViewController {
                     self?.detailView.makeToast(error.localizedDescription,
                                                position: .center)
                 }
+                self?.detailView.headerView.viewState = .Normal
                 return
             }
             let type = dataDic.value(forKey: "type") as! String
@@ -211,14 +288,27 @@ extension ExchangeViewController {
                 var tempData = datas
                 if self?.detailView.headerView.viewState == .ExchangeSelectAToken {
                     if let selectBModel = self?.detailView.headerView.transferInInputTokenB {
-                        tempData = tempData.filter {
-                            $0.module != selectBModel.module
+                        if self?.detailView.headerView.transferInInputTokenB?.chainType == 0 {
+                            tempData = tempData.filter {
+                                $0.chainType != 0
+                            }
+                        } else {
+                            tempData = tempData.filter {
+                                $0.module != selectBModel.module
+                            }
                         }
+
                     }
                 } else {
                     if let selectBModel = self?.detailView.headerView.transferInInputTokenA {
-                        tempData = tempData.filter {
-                            $0.module != selectBModel.module
+                        if self?.detailView.headerView.transferInInputTokenA?.chainType == 0 {
+                            tempData = tempData.filter {
+                                $0.chainType != 0
+                            }
+                        } else {
+                            tempData = tempData.filter {
+                                $0.module != selectBModel.module
+                            }
                         }
                     }
                 }
@@ -229,6 +319,7 @@ extension ExchangeViewController {
                     } else {
                         self?.detailView.headerView.transferInInputTokenB = model
                     }
+                    self?.detailView.headerView.viewState = .Normal
                 }
                 alert.show(tag: 199)
                 alert.showAnimation()
@@ -243,12 +334,33 @@ extension ExchangeViewController {
                 guard let tempData = dataDic.value(forKey: "data") as? [MarketSupportMappingTokensDataModel] else {
                     return
                 }
-                if let action = self?.successGetMappingTokens {
-                    action(tempData)
+                if self?.detailView.headerView.viewState == .ViolasToLibraSwap {
+                    if let action = self?.successV2LMappingClosure {
+                        action(tempData)
+                    }
+                } else if self?.detailView.headerView.viewState == .LibraToViolasSwap {
+                    if let action = self?.successL2VMappingClosure {
+                        action(tempData)
+                    }
+                } else if self?.detailView.headerView.viewState == .BTCToViolasSwap {
+                    if let action = self?.successB2VMappingClosure {
+                        action(tempData)
+                    }
+                } else if self?.detailView.headerView.viewState == .BTCToLibraSwap {
+                    if let action = self?.successB2LMappingClosure {
+                        action(tempData)
+                    }
                 }
             } else if type == "SendViolasToLibraMappingTransaction" {
+                self?.detailView.headerView.viewState = .Normal
                 self?.detailView.makeToast("发送成功", position: .center)
-            } 
+            } else if type == "SendLibraToViolasTransaction" {
+                self?.detailView.headerView.viewState = .Normal
+                self?.detailView.makeToast("发送成功", position: .center)
+            } else if type == "SendBTCTransaction" {
+                self?.detailView.headerView.viewState = .Normal
+                self?.detailView.makeToast("发送成功", position: .center)
+            }
             self?.detailView.hideToastActivity()
             self?.detailView.toastView?.hide(tag: 99)
         })

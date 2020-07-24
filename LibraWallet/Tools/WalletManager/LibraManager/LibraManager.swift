@@ -80,8 +80,6 @@ extension LibraManager {
             let wallet = try LibraManager.getWallet(mnemonic: mnemonic)
             let (_, address) = try LibraManager.splitAddress(address: receiveAddress)
             // 拼接交易
-//            let argument0 = LibraTransactionArgument.init(code: .U8Vector,
-//                                                          value: "")
             let argument0 = LibraTransactionArgument.init(code: .Address,
                                                           value: address)
             let argument1 = LibraTransactionArgument.init(code: .U64,
@@ -92,16 +90,17 @@ extension LibraManager {
             // metadata_signature
             let argument3 = LibraTransactionArgument.init(code: .U8Vector,
                                                           value: "")
-            let script = LibraTransactionScript.init(code: Data.init(hex: LibraScriptCodeWithData),
+            let script = LibraTransactionScriptPayload.init(code: Data.init(hex: LibraUtils.getMoveCode(name: "peer_to_peer_with_metadata")),
                                                      typeTags: [LibraTypeTag.init(structData: LibraStructTag.init(type: .Normal(module)))],
                                                      argruments: [argument0, argument1, argument2, argument3])
             let rawTransaction = LibraRawTransaction.init(senderAddres: sendAddress,
                                                           sequenceNumber: sequenceNumber,
                                                           maxGasAmount: 1000000,
                                                           gasUnitPrice: 1,
-                                                          expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
+                                                          expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 300),
                                                           payLoad: script.serialize(),
-                                                          module: module)
+                                                          module: module,
+                                                          chainID: 2)
 
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
@@ -148,16 +147,17 @@ extension LibraManager {
         do {
             let wallet = try LibraManager.getWallet(mnemonic: mnemonic)
             // 拼接交易
-            let script = LibraTransactionScript.init(code: Data.init(hex: LibraPublishScriptCode),
+            let script = LibraTransactionScriptPayload.init(code: Data.init(hex: LibraUtils.getMoveCode(name: "add_currency_to_account")),
                                                      typeTags: [LibraTypeTag.init(structData: LibraStructTag.init(type: .Normal(module)))],
                                                      argruments: [])
             let rawTransaction = LibraRawTransaction.init(senderAddres: wallet.publicKey.toLegacy(),
                                                           sequenceNumber: sequenceNumber,
                                                           maxGasAmount: 400000,
                                                           gasUnitPrice: 0,
-                                                          expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
+                                                          expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 300),
                                                           payLoad: script.serialize(),
-                                                          module: "LBR")
+                                                          module: "LBR",
+                                                          chainID: 2)
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
             return signature.toHexString()
@@ -183,16 +183,17 @@ extension LibraManager {
             // metadata_signature
             let argument3 = LibraTransactionArgument.init(code: .U8Vector,
                                                           value: "")
-            let script = LibraTransactionScript.init(code: Data.init(hex: LibraScriptCodeWithData),
+            let script = LibraTransactionScriptPayload.init(code: Data.init(hex: LibraUtils.getMoveCode(name: "peer_to_peer_with_metadata")),
                                                      typeTags: [LibraTypeTag.init(structData: LibraStructTag.init(type: .Normal(module)))],
                                                      argruments: [argument0, argument1, argument2, argument3])
             let rawTransaction = LibraRawTransaction.init(senderAddres: sendAddress,
                                                           sequenceNumber: sequenceNumber,
                                                           maxGasAmount: 1000000,
                                                           gasUnitPrice: 1,
-                                                          expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 600),
+                                                          expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 300),
                                                           payLoad: script.serialize(),
-                                                          module: feeModule)
+                                                          module: feeModule,
+                                                          chainID: 2)
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
             return signature.toHexString()

@@ -23,32 +23,7 @@ struct LibraTransferMainModel: Codable {
 class TransferModel: NSObject {
     @objc dynamic var dataDic: NSMutableDictionary = [:]
     private var requests: [Cancellable] = []
-    
     private var sequenceNumber: Int?
-    fileprivate func getLibraSequenceNumber(sendAddress: String, semaphore: DispatchSemaphore) {
-        let request = mainProvide.request(.GetLibraAccountBalance(sendAddress)) {[weak self](result) in
-            switch  result {
-            case let .success(response):
-                do {
-                    let json = try response.map(BalanceLibraMainModel.self)
-                    self?.sequenceNumber = json.result?.sequence_number
-                    semaphore.signal()
-                } catch {
-                    print("GetLibraSequenceNumber_解析异常\(error.localizedDescription)")
-                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetLibraSequenceNumber")
-                    self?.setValue(data, forKey: "dataDic")
-                }
-            case let .failure(error):
-                guard error.errorCode != -999 else {
-                    print("GetLibraSequenceNumber_网络请求已取消")
-                    return
-                }
-                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "GetLibraSequenceNumber")
-                self?.setValue(data, forKey: "dataDic")
-            }
-        }
-        self.requests.append(request)
-    }
     func sendLibraTransaction(sendAddress: String, receiveAddress: String, amount: Double, fee: Double, mnemonic: [String], module: String) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
@@ -74,7 +49,7 @@ class TransferModel: NSObject {
 //                                                                         fee: fee,
 //                                                                         mnemonic: mnemonic,
 //                                                                         sequenceNumber: Int(self.sequenceNumber!))
-                self.makeViolasTransaction(signature: signature)
+                self.makeLibraTransaction(signature: signature)
             } catch {
                 print(error.localizedDescription)
                 DispatchQueue.main.async(execute: {
@@ -85,7 +60,35 @@ class TransferModel: NSObject {
             semaphore.signal()
         }
     }
-    private func makeViolasTransaction(signature: String) {
+    private func getLibraSequenceNumber(sendAddress: String, semaphore: DispatchSemaphore) {
+        let request = mainProvide.request(.GetLibraAccountBalance(sendAddress)) {[weak self](result) in
+            switch  result {
+            case let .success(response):
+                do {
+                    let json = try response.map(BalanceLibraMainModel.self)
+                    self?.sequenceNumber = json.result?.sequence_number
+                    semaphore.signal()
+                } catch {
+                    print("GetLibraSequenceNumber_解析异常\(error.localizedDescription)")
+                    DispatchQueue.main.async(execute: {
+                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetLibraSequenceNumber")
+                        self?.setValue(data, forKey: "dataDic")
+                    })
+                }
+            case let .failure(error):
+                guard error.errorCode != -999 else {
+                    print("GetLibraSequenceNumber_网络请求已取消")
+                    return
+                }
+                DispatchQueue.main.async(execute: {
+                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "GetLibraSequenceNumber")
+                    self?.setValue(data, forKey: "dataDic")
+                })
+            }
+        }
+        self.requests.append(request)
+    }
+    private func makeLibraTransaction(signature: String) {
         let request = mainProvide.request(.SendLibraTransaction(signature)) {[weak self](result) in
             switch  result {
             case let .success(response):
@@ -129,5 +132,11 @@ class TransferModel: NSObject {
         }
         self.requests.append(request)
     }
-
+    deinit {
+        requests.forEach { cancellable in
+            cancellable.cancel()
+        }
+        requests.removeAll()
+        print("TransferModel销毁了")
+    }
 }

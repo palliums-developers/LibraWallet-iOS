@@ -388,7 +388,6 @@ extension HomeViewController {
                         }
                         for var model in dataModels {
                             guard model.tokenType == .BTC else {
-                                tempTokens.append(model)
                                 continue
                             }
                             if NSDecimalNumber.init(string: tempData.balance ?? "").int64Value != dataModels[i].tokenBalance {

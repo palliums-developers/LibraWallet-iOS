@@ -49,7 +49,7 @@ extension AssetsPoolViewController: AssetsPoolViewHeaderViewDelegate {
     func addLiquidityConfirm(amountIn: Double, amountOut: Double, inputModelName: String, outputModelName: String) {
         WalletManager.unlockWallet(controller: self, successful: { [weak self](mnemonic) in
             self?.detailView.toastView?.show(tag: 99)
-            self?.dataModel.sendAddLiquidityViolasTransaction(sendAddress: "fa279f2615270daed6061313a48360f7",
+            self?.dataModel.sendAddLiquidityViolasTransaction(sendAddress: WalletManager.shared.violasAddress ?? "",
                                                               amounta_desired: Double(amountIn),
                                                               amountb_desired: Double(amountOut),
                                                               amounta_min: Double(amountIn) * 0.995,
@@ -73,7 +73,7 @@ extension AssetsPoolViewController: AssetsPoolViewHeaderViewDelegate {
         
         WalletManager.unlockWallet(controller: self, successful: { [weak self](mnemonic) in
             self?.detailView.toastView?.show(tag: 99)
-            self?.dataModel.sendRemoveLiquidityViolasTransaction(sendAddress: "fa279f2615270daed6061313a48360f7",
+            self?.dataModel.sendRemoveLiquidityViolasTransaction(sendAddress: WalletManager.shared.violasAddress ?? "",
                                                                  liquidity: token,
                                                                  amounta_min: amountIn,
                                                                  amountb_min: amountOut,
@@ -96,18 +96,18 @@ extension AssetsPoolViewController: AssetsPoolViewHeaderViewDelegate {
         if self.detailView.headerView.changeTypeButton.titleLabel?.text == localLanguage(keyString: localLanguage(keyString: "wallet_assets_pool_transfer_in_title")) {
             // 转入
             self.detailView.toastView?.show(tag: 99)
-            self.dataModel.getMarketTokens(address: "fa279f2615270daed6061313a48360f7")
+            self.dataModel.getMarketTokens(address: WalletManager.shared.violasAddress ?? "")
         } else {
             // 转出
             self.detailView.makeToastActivity(.center)
-            self.dataModel.getMarketMineTokens(address: "fa279f2615270daed6061313a48360f7")
+            self.dataModel.getMarketMineTokens(address: WalletManager.shared.violasAddress ?? "")
         }
     }
     func selectOutoutToken() {
         if self.detailView.headerView.changeTypeButton.titleLabel?.text == localLanguage(keyString: localLanguage(keyString: "wallet_assets_pool_transfer_in_title")) {
             // 转入
             self.detailView.toastView?.show(tag: 99)
-            self.dataModel.getMarketTokens(address: "fa279f2615270daed6061313a48360f7")
+            self.dataModel.getMarketTokens(address: WalletManager.shared.violasAddress ?? "")
         }
     }
     func swapInputOutputToken() {
@@ -127,7 +127,7 @@ extension AssetsPoolViewController: AssetsPoolViewHeaderViewDelegate {
         } else {
             // 转出
             self.detailView.toastView?.show(tag: 99)
-            self.dataModel.getMarketAssetsPoolTransferOutRate(address: "fa279f2615270daed6061313a48360f7",
+            self.dataModel.getMarketAssetsPoolTransferOutRate(address: WalletManager.shared.violasAddress ?? "",
                                                               coinA: coinAModule,
                                                               coinB: coinBModule,
                                                               amount: Int64(amount * 1000000))

@@ -92,15 +92,24 @@ class BTCManager: NSObject {
         }
         return true
     }
-    func getBTCToVBTCScript(address: String, tokenContract: String) -> Data {
+    func getBTCScript(address: String, type: String, tokenContract: String, amount: Int) -> Data {
         var data = Data()
         data += "violas".data(using: .utf8)!
-        data += UInt16(0x0001).bigEndian
-        data += UInt16(0x3000).bigEndian
+        // Version(版本)
+        data += UInt16(0x0003).bigEndian
+        // Type(类型)
+        data += Data.init(Array<UInt8>(hex: type))
+        // payee_address(收款人地址)
         data += Data.init(Array<UInt8>(hex: (address)))
-//        data += UInt64(20200113201).bigEndian
+        // Sequence(时间戳)
+//        data += UInt64(20200110006).bigEndian
         data += UInt64(Date().timeIntervalSince1970).bigEndian
+        // module_address
         data += Data.init(Array<UInt8>(hex: (tokenContract)))
+        // out_amount(swap violas btc token amount microamount(1000000))
+        data += getLengthData(length: amount, appendBytesCount: 8).bytes.reversed()
+        // times(retry swap violas btc token number of times)
+        data += Data.init(Array<UInt8>(hex: "0000"))
         print(data.hex)
         return data
     }
