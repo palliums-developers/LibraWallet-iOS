@@ -20,12 +20,13 @@ struct LibraRawTransaction {
     /// 交易过期时间
     fileprivate let expirationTime: Int
     /// 交易脚本
-    fileprivate let payLoad: Data
+    fileprivate let payload: Data
     /// Module名称
     fileprivate let module: String
+    /// 链名字
+    fileprivate let chainID: Int
     
-    init(senderAddres: String, sequenceNumber: Int, maxGasAmount: Int64, gasUnitPrice: Int64, expirationTime: Int, payLoad: Data, module: String) {
-        
+    init(senderAddres: String, sequenceNumber: Int, maxGasAmount: Int64, gasUnitPrice: Int64, expirationTime: Int, payload: Data, module: String, chainID: Int) {
         self.senderAddress = senderAddres
         
         self.sequenceNumber = sequenceNumber
@@ -36,10 +37,13 @@ struct LibraRawTransaction {
         
         self.expirationTime = expirationTime
         
-        self.payLoad = payLoad
+        self.payload = payload
         
         self.module = module
+        
+        self.chainID = chainID
     }
+    
     func serialize() -> Data {
         var result = Data()
         // senderAddress
@@ -47,7 +51,7 @@ struct LibraRawTransaction {
         // sequenceNumber(固定8个字节)
         result += LibraUtils.getLengthData(length: sequenceNumber, appendBytesCount: 8)
         // TransactionPayload
-        result += self.payLoad
+        result += self.payload
         // maxGasAmount(固定8个字节)
         result += LibraUtils.getLengthData(length: Int(maxGasAmount), appendBytesCount: 8)
         // gasUnitPrice(固定8个字节)
@@ -56,6 +60,8 @@ struct LibraRawTransaction {
         result += getModuleType(module: module)
         // expirationTime(固定8个字节)
         result += LibraUtils.getLengthData(length: expirationTime, appendBytesCount: 8)
+        // chainID
+        result += LibraUtils.getLengthData(length: chainID, appendBytesCount: 1)
         return result
     }
     func getModuleType(module: String) -> Data {

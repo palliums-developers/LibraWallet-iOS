@@ -7,12 +7,12 @@
 //
 
 import Foundation
-struct LibraTransactionWriteSet {
-    fileprivate let accessPaths: [LibraTransactionAccessPath]
+struct LibraWriteSet {
+    fileprivate let accessPaths: [LibraAccessPath]
     
     fileprivate let writeHeaderData: Data = Data.init(hex: "00")
     
-    init(accessPaths: [LibraTransactionAccessPath]) {
+    init(accessPaths: [LibraAccessPath]) {
         self.accessPaths = accessPaths
     }
     func serialize() -> Data {

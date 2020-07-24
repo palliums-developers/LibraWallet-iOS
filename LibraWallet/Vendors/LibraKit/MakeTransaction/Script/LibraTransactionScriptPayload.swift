@@ -8,7 +8,7 @@
 
 import UIKit
 
-class LibraTransactionScript: NSObject {
+class LibraTransactionScriptPayload: NSObject {
     fileprivate let code: Data
     
     fileprivate let typeTags: [LibraTypeTag]
@@ -18,13 +18,11 @@ class LibraTransactionScript: NSObject {
     fileprivate let programPrefixData: Data = Data.init(hex: "01")
     
     init(code: Data, typeTags: [LibraTypeTag], argruments: [LibraTransactionArgument]) {
-        
         self.code = code
         
         self.typeTags = typeTags
         
         self.argruments = argruments
-        
     }
     func serialize() -> Data {
         var result = Data()

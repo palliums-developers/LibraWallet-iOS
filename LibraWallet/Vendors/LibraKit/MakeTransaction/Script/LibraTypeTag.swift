@@ -60,7 +60,6 @@ struct LibraTypeTag {
     }
     init(structData: LibraStructTag) {
         self.typeTag = .Struct
-        
         self.value = structData.address
         self.module = structData.module
         self.name = structData.name
@@ -98,7 +97,6 @@ struct LibraTypeTag {
             result += self.name.data(using: String.Encoding.utf8)!
             // 追加argument数量
             result += LibraUtils.uleb128Format(length: self.typeParams.count)
-
         }
         return result
     }

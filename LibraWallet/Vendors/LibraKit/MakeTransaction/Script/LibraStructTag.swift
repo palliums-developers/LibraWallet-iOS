@@ -14,13 +14,20 @@ enum LibraStructTagType {
 }
 struct LibraStructTag {
     var address: String
+    
     var module: String
+    
     var name: String
+    
     var typeParams: [String]
+    
     init(address: String, module: String, name: String, typeParams: [String]) {
         self.address = address
+        
         self.module = module
+        
         self.name = name
+        
         self.typeParams = typeParams
     }
 }
@@ -43,6 +50,5 @@ extension LibraStructTag {
             self.name = module
             self.typeParams = [String]()
         }
-        
     }
 }

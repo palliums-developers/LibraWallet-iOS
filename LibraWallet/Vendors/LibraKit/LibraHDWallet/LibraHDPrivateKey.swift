@@ -34,11 +34,13 @@ struct LibraHDPrivateKey {
         publicKeyData += wallet.publicKey.raw
         // 交易第四部分-签名数据
         // 4.1待签数据追加盐
+        //
         var sha3Data = Data.init(Array<UInt8>(hex: (LibraSignSalt.sha3(SHA3.Variant.sha256))))
         // 4.2待签数据追加
         sha3Data.append(transactionRaw.bytes, count: transactionRaw.bytes.count)
         // 4.3签名数据
-        let sign = Ed25519.sign(message: sha3Data.sha3(.sha256).bytes, secretKey: raw.bytes)
+//        let sign = Ed25519.sign(message: sha3Data.sha3(.sha256).bytes, secretKey: raw.bytes)
+        let sign = Ed25519.sign(message: sha3Data.bytes, secretKey: raw.bytes)
         
         var signData = Data()
         // 4.4追加签名长度

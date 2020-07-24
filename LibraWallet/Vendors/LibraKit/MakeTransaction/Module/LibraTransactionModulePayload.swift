@@ -20,8 +20,6 @@ struct LibraTransactionModule {
         var result = Data()
         // 追加类型
         result += programPrefixData
-//        // 追加code长度
-//        result += LibraUtils.uleb128Format(length: self.code.bytes.count)
         // 追加code数据
         result += self.code
         return result

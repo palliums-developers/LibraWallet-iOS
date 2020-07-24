@@ -93,4 +93,27 @@ struct LibraUtils {
         let convert = binary2dec(num: tempString)
         return convert
     }
+    static func getMoveCode(name: String) -> String {
+        // 1.获取Bundle路径
+        let marketContractBundlePath = Bundle.main.path(forResource:"LibraContracts", ofType:"bundle") ?? ""
+        guard marketContractBundlePath.isEmpty == false else {
+            return ""
+        }
+        // 2.获取Bundle
+        guard let marketContractBundle = Bundle.init(path: marketContractBundlePath) else {
+            return ""
+        }
+        // 3.获取Bundle下合约
+        guard let path = marketContractBundle.path(forResource:name, ofType:"mv", inDirectory:""), path.isEmpty == false else {
+            return ""
+        }
+        // 4.读取此合约
+        do {
+            let data = try Data.init(contentsOf: URL.init(fileURLWithPath: path))
+            return data.toHexString()
+        } catch {
+            print(error.localizedDescription)
+            return ""
+        }
+    }
 }
