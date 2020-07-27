@@ -12,13 +12,13 @@ struct LibraContractEvent {
     // EventKey（key长度24字节）
     fileprivate let key: String
     //
-    fileprivate let sequenceNumber: Int
+    fileprivate let sequenceNumber: UInt64
     
     fileprivate let typeTag: LibraTypeTag
     
     fileprivate let eventData: String
     
-    init(key: String, sequenceNumber: Int, typeTag: LibraTypeTag, eventData: String) {
+    init(key: String, sequenceNumber: UInt64, typeTag: LibraTypeTag, eventData: String) {
         self.key = key
         
         self.sequenceNumber = sequenceNumber

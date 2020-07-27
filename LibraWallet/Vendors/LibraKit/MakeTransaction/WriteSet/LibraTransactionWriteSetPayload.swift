@@ -8,57 +8,33 @@
 
 import UIKit
 enum LibraWriteSetPayloadCode {
-    case direct
-    case script
+    /// LibraWriteSet, [LibraContractEvent]
+    case direct(LibraWriteSet, [LibraContractEvent])
+    /// Address, LibraTransactionScriptPayload
+    case script(String, LibraTransactionScriptPayload)
 }
 extension LibraWriteSetPayloadCode {
     public var raw: Data {
         switch self {
         case .direct:
-            return Data.init(hex: "00")
+            return Data.init(Array<UInt8>(hex: "00"))
         case .script:
-            return Data.init(hex: "01")
+            return Data.init(Array<UInt8>(hex: "01"))
         }
     }
 }
 struct LibraTransactionWriteSetPayload {
     fileprivate let code: LibraWriteSetPayloadCode
-    
-    fileprivate let address: String
-    
-    fileprivate let script: LibraTransactionScriptPayload
-    
-    fileprivate let writeSet: LibraWriteSet
-    
-    fileprivate let events: [LibraContractEvent]
-    
-    init(code: LibraWriteSetPayloadCode, address: String, script: LibraTransactionScriptPayload) {
+
+    init(code: LibraWriteSetPayloadCode) {
         self.code = code
-        
-        self.address = address
-        
-        self.script = script
-        
-        self.writeSet = LibraWriteSet.init(accessPaths: [LibraAccessPath]())
-        
-        self.events = [LibraContractEvent]()
-    }
-    init(code: LibraWriteSetPayloadCode, writeSet: LibraWriteSet, events: [LibraContractEvent]) {
-        self.code = code
-        
-        self.address = ""
-        
-        self.script = LibraTransactionScriptPayload.init(code: Data(), typeTags: [LibraTypeTag](), argruments: [LibraTransactionArgument]())
-        
-        self.writeSet = writeSet
-        
-        self.events = events
     }
     func serialize() -> Data {
         var result = Data()
         // 追加类型
         result += code.raw
-        if code == .direct {
+        switch code {
+        case .direct(let writeSet, let events):
             // 追加writeSet
             result += writeSet.serialize()
             // 追加events长度
@@ -68,13 +44,11 @@ struct LibraTransactionWriteSetPayload {
                 result += event.serialize()
             }
             return result
-        } else {
+        case .script(let address, let script):
             // 追加address
             result += Data.init(Array<UInt8>(hex: address))
             // 追加script
             result += script.serialize()
-            
-            
             return result
         }
     }

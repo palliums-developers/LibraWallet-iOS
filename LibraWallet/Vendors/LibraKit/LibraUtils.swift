@@ -9,7 +9,7 @@
 import UIKit
 import BigInt
 struct LibraUtils {
-    static func getLengthData(length: Int, appendBytesCount: Int) -> Data {
+    static func getLengthData(length: UInt64, appendBytesCount: Int) -> Data {
         var newData = Data()
         let lengthData = BigUInt(length).serialize()
         // 补全长度

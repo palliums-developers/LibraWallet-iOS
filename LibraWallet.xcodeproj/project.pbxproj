@@ -688,9 +688,9 @@
 		3617836D24449B80003C6588 /* WriteSet */ = {
 			isa = PBXGroup;
 			children = (
+				363D90ED24CAA6C500F6374C /* LibraTransactionWriteSetPayload.swift */,
 				9DC901F72327A3B60097FD85 /* LibraWriteSet.swift */,
 				9DC901F1232788C30097FD85 /* LibraAccessPath.swift */,
-				363D90ED24CAA6C500F6374C /* LibraTransactionWriteSetPayload.swift */,
 				363D90EF24CAAC6700F6374C /* LibraContractEvent.swift */,
 			);
 			path = WriteSet;

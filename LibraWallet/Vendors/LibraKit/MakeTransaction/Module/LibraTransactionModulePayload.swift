@@ -8,18 +8,14 @@
 
 import UIKit
 
-struct LibraTransactionModule {
+struct LibraTransactionModulePayload {
     fileprivate let code: Data
-
-    fileprivate let programPrefixData: Data = Data.init(hex: "02")
     
     init(code: Data) {
         self.code = code
     }
     func serialize() -> Data {
         var result = Data()
-        // 追加类型
-        result += programPrefixData
         // 追加code数据
         result += self.code
         return result

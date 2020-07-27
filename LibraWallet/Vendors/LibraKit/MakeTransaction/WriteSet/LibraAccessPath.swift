@@ -7,37 +7,33 @@
 //
 
 import Foundation
-enum LibraWriteType {
+enum LibraWriteOp {
     case Deletion
-    case Value
+    case Value(Data)
 }
-extension LibraWriteType {
+extension LibraWriteOp {
     public var raw: Data {
         switch self {
         case .Deletion:
-            return Data.init(hex: "00")
+            return Data.init(Array<UInt8>(hex: "00"))
         case .Value:
-            return Data.init(hex: "01")
+            return Data.init(Array<UInt8>(hex: "01"))
         }
     }
 }
 struct LibraAccessPath {
     fileprivate let address: String
-    
+
     fileprivate let path: String
     
-    fileprivate let writeType: LibraWriteType
+    fileprivate let writeOp: LibraWriteOp
     
-    fileprivate let value: Data?
-   
-    init(address: String, path: String, writeType: LibraWriteType, value: Data? = nil) {
+    init(address: String, path: String, writeOp: LibraWriteOp) {
         self.address = address
-        
+
         self.path = path
         
-        self.writeType = writeType
-        
-        self.value = value
+        self.writeOp = writeOp
     }
     func serialize() -> Data {
         var result = Data()
@@ -49,11 +45,14 @@ struct LibraAccessPath {
         result += LibraUtils.uleb128Format(length: pathData.bytes.count)
         result += pathData
         // 追加类型
-        result += writeType.raw
-        if let tempValue = value {
-            result += LibraUtils.uleb128Format(length: tempValue.bytes.count)
-            result += tempValue
+        result += writeOp.raw
+        switch writeOp {
+        case .Deletion:
+            return result
+        case .Value(let value):
+            result += LibraUtils.uleb128Format(length: value.bytes.count)
+            result += value
+            return result
         }
-        return result
     }
 }

@@ -16,13 +16,13 @@ public final class LibraHDWallet {
     /// 私钥
     let privateKey: LibraHDPrivateKey
     /// 深度
-    let depth: Int
+    let depth: UInt64
     /// 通过种子私钥创建钱包
     /// - Parameters:
     ///   - seed: 种子
     ///   - privateKey: 私钥Data
     ///   - depth: 深度
-    private init (seed: [UInt8], privateKey: [UInt8], depth: Int) {
+    private init (seed: [UInt8], privateKey: [UInt8], depth: UInt64) {
         self.seed = seed
         
         self.depth = depth
@@ -37,7 +37,7 @@ public final class LibraHDWallet {
     ///   - seed: 种子
     ///   - depth: 深度
     /// - Throws: 创建失败
-    public convenience init(seed: [UInt8], depth: Int = 0) throws {
+    public convenience init(seed: [UInt8], depth: UInt64 = 0) throws {
         
         let depthData = LibraUtils.getLengthData(length: depth, appendBytesCount: 8)
         

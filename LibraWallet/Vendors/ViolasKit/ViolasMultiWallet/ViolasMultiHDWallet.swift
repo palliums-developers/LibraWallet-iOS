@@ -44,7 +44,7 @@ struct ViolasMultiHDWallet {
     init(models: [ViolasSeedAndDepth], threshold: Int, multiPublicKey: ViolasMultiPublicKey? = nil) throws {
         var privateKeys = [ViolasMultiPrivateKeyModel]()
         for model in models {
-            let depthData = LibraUtils.getLengthData(length: model.depth, appendBytesCount: 8)
+            let depthData = ViolasUtils.getLengthData(length: model.depth, appendBytesCount: 8)
             let tempInfo = Data() + Array("LIBRA WALLET: derived key$".utf8) + depthData.bytes
             do {
                 let privateKey = try HKDF.init(password: model.seed,

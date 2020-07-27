@@ -8,95 +8,78 @@
 
 import UIKit
 enum LibraTypeTags {
-    case Bool
-    case U8
-    case U64
-    case U128
-    case Address
+    case Bool(Bool)
+    case U8(Int)
+    case U64(UInt64)
+    case U128(String)
+    case Address(String)
     // 加密签名
-    case Signer
-    case Vector//Vector(Box<TypeTag>)
-    case Struct
+    case Signer(String)
+    case Vector(String)//Vector(Box<TypeTag>)
+    case Struct(LibraStructTag)
 }
 extension LibraTypeTags {
     public var data: Data {
         switch self {
         case .Bool:
-            return Data.init(hex: "00")
+            return Data.init(Array<UInt8>(hex: "00"))
         case .U8:
-            return Data.init(hex: "01")
+            return Data.init(Array<UInt8>(hex: "01"))
         case .U64:
-            return Data.init(hex: "02")
+            return Data.init(Array<UInt8>(hex: "02"))
         case .U128:
-            return Data.init(hex: "03")
+            return Data.init(Array<UInt8>(hex: "03"))
         case .Address:
-            return Data.init(hex: "04")
+            return Data.init(Array<UInt8>(hex: "04"))
         case .Signer:
-            return Data.init(hex: "05")
+            return Data.init(Array<UInt8>(hex: "05"))
         case .Vector:
-            return Data.init(hex: "06")
+            return Data.init(Array<UInt8>(hex: "06"))
         case .Struct:
-            return Data.init(hex: "07")
+            return Data.init(Array<UInt8>(hex: "07"))
         }
     }
 }
 struct LibraTypeTag {
-    fileprivate let value: String
-        
-    fileprivate let module: String
-        
-    fileprivate let name: String
-    
-    fileprivate let typeParams: [String]
     
     fileprivate let typeTag: LibraTypeTags
-        
-    init(typeTag: LibraTypeTags, value: String, module: String, name: String, typeParams: [String]) {
+    
+    init(typeTag: LibraTypeTags) {
         self.typeTag = typeTag
-        self.value = value
-        self.module = module
-        self.name = name
-        self.typeParams = typeParams
-    }
-    init(structData: LibraStructTag) {
-        self.typeTag = .Struct
-        self.value = structData.address
-        self.module = structData.module
-        self.name = structData.name
-        self.typeParams = structData.typeParams
     }
     func serialize() -> Data {
         var result = Data()
         // 追加类型
         result += self.typeTag.data
         switch self.typeTag {
-        case .Bool:
-            result += LibraUtils.getLengthData(length: Int(self.value)!, appendBytesCount: 1)
-        case .U8:
-            result += LibraUtils.getLengthData(length: Int(self.value)!, appendBytesCount: 1)
-        case .U64:
-            result += LibraUtils.getLengthData(length: Int(self.value)!, appendBytesCount: 8)
-        case .U128:
-            result += LibraUtils.getLengthData(length: Int(self.value)!, appendBytesCount: 16)
-        case .Address:
-            result += Data.init(Array<UInt8>(hex: self.value))
-        case .Signer:
+        case .Bool(let value):
+            result += LibraUtils.getLengthData(length: NSDecimalNumber.init(value: value).uint64Value, appendBytesCount: 1)
+        case .U8(let value):
+            result += LibraUtils.getLengthData(length: NSDecimalNumber.init(value: value).uint64Value, appendBytesCount: 1)
+        case .U64(let value):
+            result += LibraUtils.getLengthData(length: value, appendBytesCount: 8)
+        case .U128(let value):
+            result += LibraUtils.getLengthData(length: NSDecimalNumber.init(string: value).uint64Value, appendBytesCount: 16)
+        case .Address(let value):
+            result += Data.init(Array<UInt8>(hex: value))
+        case .Signer(let value):
             #warning("待验证")
-            result += Data.init(Array<UInt8>(hex: self.value))
-        case .Vector:
-            let data = Data.init(Array<UInt8>(hex: self.value))
-            result += LibraUtils.getLengthData(length: data.bytes.count, appendBytesCount: 1)
+            result += Data.init(Array<UInt8>(hex: value))
+        case .Vector(let value):
+            #warning("待验证")
+            let data = Data.init(Array<UInt8>(hex: value))
+            result += LibraUtils.getLengthData(length: UInt64(data.bytes.count), appendBytesCount: 1)
             result += data
-        case .Struct:
-            result += Data.init(Array<UInt8>(hex: self.value))
+        case .Struct(let value):
+            result += Data.init(Array<UInt8>(hex: value.address))
             //
-            result += LibraUtils.uleb128Format(length: self.module.data(using: String.Encoding.utf8)!.bytes.count)
-            result += self.module.data(using: String.Encoding.utf8)!
+            result += LibraUtils.uleb128Format(length: value.module.data(using: String.Encoding.utf8)!.bytes.count)
+            result += value.module.data(using: String.Encoding.utf8)!
             //
-            result += LibraUtils.uleb128Format(length: self.name.data(using: String.Encoding.utf8)!.bytes.count)
-            result += self.name.data(using: String.Encoding.utf8)!
+            result += LibraUtils.uleb128Format(length: value.name.data(using: String.Encoding.utf8)!.bytes.count)
+            result += value.name.data(using: String.Encoding.utf8)!
             // 追加argument数量
-            result += LibraUtils.uleb128Format(length: self.typeParams.count)
+            result += LibraUtils.uleb128Format(length: value.typeParams.count)
         }
         return result
     }

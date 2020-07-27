@@ -7,40 +7,40 @@
 //
 
 import UIKit
-
-struct LibraTransactionPayload {
-    enum transactionPayload {
-        case writeSet
-        case script
-        case module
-    }
-    fileprivate var type: transactionPayload
-    fileprivate var writeSet: LibraTransactionWriteSetPayload?
-    
-    fileprivate var script: LibraTransactionScriptPayload?
-    
-    fileprivate var module: LibraTransactionModule?
-    
-    init(type: transactionPayload, writeSet: LibraTransactionWriteSetPayload? = nil, script: LibraTransactionScriptPayload? = nil, module: LibraTransactionModule? = nil) {
-        self.type = type
-        switch type {
+enum transactionPayload {
+    case writeSet(LibraTransactionWriteSetPayload)
+    case script(LibraTransactionScriptPayload)
+    case module(LibraTransactionModulePayload)
+}
+extension transactionPayload {
+    public var raw: Data {
+        switch self {
         case .writeSet:
-            self.writeSet = writeSet
+            return Data.init(Array<UInt8>(hex: "00"))
         case .script:
-            self.script = script
+            return Data.init(Array<UInt8>(hex: "01"))
         case .module:
-            self.module = module
+            return Data.init(Array<UInt8>(hex: "02"))
         }
+    }
+}
+struct LibraTransactionPayload {
+
+    fileprivate var payload: transactionPayload
+
+    init(payload: transactionPayload) {
+        self.payload = payload
     }
     func serialize() -> Data {
         var result = Data()
-        switch type {
-        case .writeSet:
-            result += writeSet!.serialize()
-        case .script:
-            result += script!.serialize()
-        case .module:
-            result += module!.serialize()
+        result += payload.raw
+        switch payload {
+        case .writeSet(let writeSet):
+            result += writeSet.serialize()
+        case .script(let script):
+            result += script.serialize()
+        case .module(let module):
+            result += module.serialize()
         }
         return result
     }

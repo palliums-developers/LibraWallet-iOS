@@ -8,60 +8,55 @@
 
 import Foundation
 enum LibraArgumentCode {
-    case U8
-    case U64
-    case U128
-    case Address
-    case U8Vector
-    case Bool
+    case U8(String)
+    case U64(String)
+    case U128(String)
+    case Address(String)
+    case U8Vector(Data)
+    case Bool(Bool)
 }
 extension LibraArgumentCode {
     public var raw: Data {
         switch self {
         case .U8:
-            return Data.init(hex: "00")
+            return Data.init(Array<UInt8>(hex: "00"))
         case .U64:
-            return Data.init(hex: "01")
+            return Data.init(Array<UInt8>(hex: "01"))
         case .U128:
-            return Data.init(hex: "02")
+            return Data.init(Array<UInt8>(hex: "02"))
         case .Address:
-            return Data.init(hex: "03")
+            return Data.init(Array<UInt8>(hex: "03"))
         case .U8Vector:
-            return Data.init(hex: "04")
+            return Data.init(Array<UInt8>(hex: "04"))
         case .Bool:
-            return Data.init(hex: "05")
+            return Data.init(Array<UInt8>(hex: "05"))
         }
     }
 }
 struct LibraTransactionArgument {
     fileprivate let code: LibraArgumentCode
-    
-    fileprivate let value: String
-    
-    init(code: LibraArgumentCode, value: String) {
+        
+    init(code: LibraArgumentCode) {
         self.code = code
         
-        self.value = value
     }
     func serialize() -> Data {
         var result = Data()
         result += self.code.raw
         switch self.code {
-        case .U8:
-            result += LibraUtils.getLengthData(length: Int(self.value)!, appendBytesCount: 1)
-        case .U64:
-            result += LibraUtils.getLengthData(length: Int(self.value)!, appendBytesCount: 8)
-        case .U128:
-            result += LibraUtils.getLengthData(length: Int(self.value)!, appendBytesCount: 16)
-        case .Address:
-            let data = Data.init(Array<UInt8>(hex: self.value))
-            result += data
-        case .U8Vector:
-            let data = Data.init(Array<UInt8>(hex: self.value))
-            result += LibraUtils.uleb128Format(length: data.bytes.count)
-            result += data
-        case .Bool:
-            result += LibraUtils.getLengthData(length: Int(self.value)!, appendBytesCount: 1)
+        case .U8(let value):
+            result += LibraUtils.getLengthData(length: NSDecimalNumber.init(string: value).uint64Value, appendBytesCount: 1)
+        case .U64(let value):
+            result += LibraUtils.getLengthData(length: NSDecimalNumber.init(string: value).uint64Value, appendBytesCount: 8)
+        case .U128(let value):
+            result += LibraUtils.getLengthData(length: NSDecimalNumber.init(string: value).uint64Value, appendBytesCount: 16)
+        case .Address(let address):
+            result += Data.init(Array<UInt8>(hex: address))
+        case .U8Vector(let value):
+            result += LibraUtils.uleb128Format(length: value.bytes.count)
+            result += value
+        case .Bool(let value):
+            result += LibraUtils.getLengthData(length: NSDecimalNumber.init(value: value).uint64Value, appendBytesCount: 1)
         }
         return result
     }

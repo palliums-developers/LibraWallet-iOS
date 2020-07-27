@@ -9,18 +9,14 @@
 import Foundation
 struct LibraWriteSet {
     fileprivate let accessPaths: [LibraAccessPath]
-    
-    fileprivate let writeHeaderData: Data = Data.init(hex: "00")
-    
+        
     init(accessPaths: [LibraAccessPath]) {
         self.accessPaths = accessPaths
     }
     func serialize() -> Data {
         var result = Data()
-        // 追加类型
-        result += writeHeaderData
         // 追加accessPaths数量
-        result += LibraUtils.uleb128Format(length: accessPaths.count)//LibraUtils.getLengthData(length: accessPaths.count, appendBytesCount: 4)
+        result += LibraUtils.uleb128Format(length: accessPaths.count)
         // 追加accessPaths数组数据
         for accessPath in accessPaths {
             result += accessPath.serialize()

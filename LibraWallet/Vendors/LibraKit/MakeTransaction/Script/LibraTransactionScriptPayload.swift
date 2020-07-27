@@ -8,15 +8,13 @@
 
 import UIKit
 
-class LibraTransactionScriptPayload: NSObject {
+struct LibraTransactionScriptPayload {
     fileprivate let code: Data
     
     fileprivate let typeTags: [LibraTypeTag]
         
     fileprivate let argruments: [LibraTransactionArgument]
-        
-    fileprivate let programPrefixData: Data = Data.init(hex: "01")
-    
+
     init(code: Data, typeTags: [LibraTypeTag], argruments: [LibraTransactionArgument]) {
         self.code = code
         
@@ -26,8 +24,6 @@ class LibraTransactionScriptPayload: NSObject {
     }
     func serialize() -> Data {
         var result = Data()
-        // 追加类型
-        result += programPrefixData
         // 追加code长度
         result += LibraUtils.uleb128Format(length: self.code.bytes.count)
         // 追加code数据
