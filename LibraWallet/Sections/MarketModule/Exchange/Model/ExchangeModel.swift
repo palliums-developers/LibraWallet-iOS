@@ -301,30 +301,31 @@ extension ExchangeModel {
 //MARK: - 获取支持列表
 extension ExchangeModel {
     func getMarketTokens(btcAddress: String, violasAddress: String, libraAddress: String) {
-        let quene = DispatchQueue.init(label: "MarketSupportTokenQuene")
-        let semaphore = DispatchSemaphore.init(value: 1)
-        quene.async {
-            semaphore.wait()
-            self.getMarketSupportTokens(semaphore: semaphore)
-        }
-        quene.async {
-            semaphore.wait()
-            self.getBTCBalance(address: btcAddress, semaphore: semaphore)
-        }
-        quene.async {
-            semaphore.wait()
-            self.getViolasBalance(address: violasAddress, semaphore: semaphore)
-        }
-        quene.async {
-            semaphore.wait()
-            self.getLibraBalance(address: libraAddress, semaphore: semaphore)
-        }
-        quene.async {
-            semaphore.wait()
-            self.handleMarketTokenState(semaphore: semaphore)
+        let group = DispatchGroup.init()
+        let quene = DispatchQueue.init(label: "SupportTokenQuene")
+        quene.async(group: group, qos: .default, flags: [], execute: {
+            group.enter()
+            self.getMarketSupportTokens(group: group)
+        })
+        quene.async(group: group, qos: .default, flags: [], execute: {
+            group.enter()
+            self.getBTCBalance(address: btcAddress, group: group)
+        })
+        quene.async(group: group, qos: .default, flags: [], execute: {
+            group.enter()
+            self.getViolasBalance(address: violasAddress, group: group)
+        })
+        quene.async(group: group, qos: .default, flags: [], execute: {
+            group.enter()
+            self.getLibraBalance(address: libraAddress, group: group)
+        })
+        group.notify(queue: quene) {
+            print("回到该队列中执行")
+            print("\(Thread.current)")
+            self.handleMarketTokenState()
         }
     }
-    private func getMarketSupportTokens(semaphore: DispatchSemaphore) {
+    private func getMarketSupportTokens(group: DispatchGroup) {
         let request = mainProvide.request(.MarketSupportTokens) {[weak self](result) in
             switch  result {
             case let .success(response):
@@ -337,7 +338,7 @@ extension ExchangeModel {
                         //                            return
                         //                        }
                         self?.marketTokens = json.data
-                        semaphore.signal()
+                        group.leave()
                     } else {
                         print("GetMarketSupportTokens_状态异常")
                         if let message = json.message, message.isEmpty == false {
@@ -364,7 +365,7 @@ extension ExchangeModel {
         }
         self.requests.append(request)
     }
-    func getBTCBalance(address: String, semaphore: DispatchSemaphore) {
+    func getBTCBalance(address: String, group: DispatchGroup) {
         let request = mainProvide.request(.TrezorBTCBalance(address)) {[weak self](result) in
             switch  result {
             case let .success(response):
@@ -373,7 +374,7 @@ extension ExchangeModel {
 //                    let data = setKVOData(type: "UpdateBTCBalance", data: json)
 //                    self?.setValue(data, forKey: "dataDic")
                     self?.accountBTCAmount = json.balance
-                    semaphore.signal()
+                    group.leave()
                 } catch {
                     print("UpdateBTCBalance_解析异常\(error.localizedDescription)")
                     let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "UpdateBTCBalance")
@@ -390,7 +391,7 @@ extension ExchangeModel {
         }
         self.requests.append(request)
     }
-    private func getViolasBalance(address: String, semaphore: DispatchSemaphore) {
+    private func getViolasBalance(address: String, group: DispatchGroup) {
         let request = mainProvide.request(.GetViolasAccountInfo(address)) {[weak self](result) in
             switch  result {
             case let .success(response):
@@ -402,7 +403,7 @@ extension ExchangeModel {
                         print("激活失败")
                     } else {
                         self?.accountViolasTokens = json.result?.balances
-                        semaphore.signal()
+                        group.leave()
                     }
                 } catch {
                     print("UpdateViolasBalance_解析异常\(error.localizedDescription)")
@@ -420,7 +421,7 @@ extension ExchangeModel {
         }
         self.requests.append(request)
     }
-    func getLibraBalance(address: String, semaphore: DispatchSemaphore) {
+    func getLibraBalance(address: String, group: DispatchGroup) {
         let request = mainProvide.request(.GetLibraAccountBalance(address)) {[weak self](result) in
             switch  result {
             case let .success(response):
@@ -432,7 +433,7 @@ extension ExchangeModel {
                         print("激活失败")
                     } else {
                         self?.accountLibraTokens = json.result?.balances
-                        semaphore.signal()
+                        group.leave()
                     }
                 } catch {
                     print("解析异常\(error.localizedDescription)")
@@ -450,7 +451,7 @@ extension ExchangeModel {
         }
         self.requests.append(request)
     }
-    private func handleMarketTokenState(semaphore: DispatchSemaphore) {
+    private func handleMarketTokenState() {
         var tempTokens = [MarketSupportTokensDataModel]()
         if let tempBTCModels = self.marketTokens?.btc, tempBTCModels.isEmpty == false {
             var model = tempBTCModels[0]
@@ -494,9 +495,6 @@ extension ExchangeModel {
             let data = setKVOData(type: "SupportViolasTokens", data: tempTokens)
             self.setValue(data, forKey: "dataDic")
         })
-        
-        semaphore.signal()
-        
     }
 }
 //MARK: - 发送Violas兑换Libra交易
