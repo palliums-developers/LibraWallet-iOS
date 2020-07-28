@@ -107,7 +107,7 @@ class BTCManager: NSObject {
         // module_address
         data += Data.init(Array<UInt8>(hex: (tokenContract)))
         // out_amount(swap violas btc token amount microamount(1000000))
-        data += getLengthData(length: amount, appendBytesCount: 8).bytes.reversed()
+        data += getLengthData(length: UInt64(amount), appendBytesCount: 8).bytes.reversed()
         // times(retry swap violas btc token number of times)
         data += Data.init(Array<UInt8>(hex: "0000"))
         print(data.hex)
@@ -117,11 +117,11 @@ class BTCManager: NSObject {
         var scriptData: Data = Data()
         scriptData += OpCode.OP_RETURN
         scriptData += OpCode.OP_PUSHDATA1
-        scriptData += getLengthData(length: script.count, appendBytesCount: 1)
+        scriptData += getLengthData(length: UInt64(script.count), appendBytesCount: 1)
         scriptData += script
         return scriptData
     }
-    private func getLengthData(length: Int, appendBytesCount: Int) -> Data {
+    private func getLengthData(length: UInt64, appendBytesCount: Int) -> Data {
         var newData = Data()
         let lengthData = BigUInt(length).serialize()
         // 补全长度

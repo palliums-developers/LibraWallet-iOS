@@ -31,7 +31,7 @@ class LibraSDKTests: XCTestCase {
             // Put the code you want to measure the time of here.
         }
     }
-    func testLibra() {
+    func testLibraKit() {
         //LibraTransactionArgument
         // u64
         let amount = LibraTransactionArgument.init(code: .U64("9213671392124193148")).serialize().toHexString().uppercased()
@@ -182,7 +182,7 @@ class LibraSDKTests: XCTestCase {
                                              threshold: 1)
         XCTAssertEqual(wallet.publicKey.toLegacy(), "cd35f1a78093554f5dc9c61301f204e4")
     }
-    func testLibraKit() {
+    func testLibraKitSSO() {
         let mnemonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
         do {
             let seed = try ViolasMnemonic.seed(mnemonic: mnemonic)
