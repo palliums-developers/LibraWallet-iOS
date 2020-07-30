@@ -391,6 +391,5 @@ class LibraSDKTests: XCTestCase {
     func testA() {
         let a: Array<UInt8> = [165, 87, 66, 216, 60, 179, 202, 135, 205,248,242,49,242,45,215,85,52,162,88,139,23,75,32,230,220,65,41,46,146,206,121,229]
         print(Data.init(a).toHexString())
-        
     }
 }

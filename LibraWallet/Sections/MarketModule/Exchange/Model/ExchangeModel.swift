@@ -9,6 +9,26 @@
 import UIKit
 import Moya
 import BitcoinKit
+struct PoolLiquidityCoinBDataModel: Codable {
+    var index: Int?
+    var name: String?
+    var value: Int64?
+}
+struct PoolLiquidityCoinADataModel: Codable {
+    var index: Int?
+    var name: String?
+    var value: Int64?
+}
+struct PoolLiquidityDataModel: Codable {
+    var coina: PoolLiquidityCoinADataModel?
+    var coinb: PoolLiquidityCoinBDataModel?
+    var liquidity_total_supply: Int64?
+}
+struct PoolLiquidityMainModel: Codable {
+    var code: Int?
+    var message: String?
+    var data: [PoolLiquidityDataModel]?
+}
 struct MarketSupportMappingTokensAssetsDataModel: Codable {
     var address: String?
     var module: String?

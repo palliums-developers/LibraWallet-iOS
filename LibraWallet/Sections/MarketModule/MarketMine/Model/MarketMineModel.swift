@@ -8,11 +8,25 @@
 
 import UIKit
 import Moya
+struct MarketMineMainTokensCoinBDataModel: Codable {
+    var index: Int?
+    var module: String?
+    var module_address: String?
+    var name: String?
+    var show_name: String?
+    var value: Int64?
+}
+struct MarketMineMainTokensCoinADataModel: Codable {
+    var index: Int?
+    var module: String?
+    var module_address: String?
+    var name: String?
+    var show_name: String?
+    var value: Int64?
+}
 struct MarketMineMainTokensDataModel: Codable {
-    var coin_a_index: Int?
-    var coin_a_name: String?
-    var coin_b_index: Int?
-    var coin_b_name: String?
+    var coin_a: MarketMineMainTokensCoinADataModel?
+    var coin_b: MarketMineMainTokensCoinBDataModel?
     var token: Int64?
 }
 struct MarketMineMainDataModel: Codable {

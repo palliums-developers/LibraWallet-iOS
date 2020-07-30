@@ -192,7 +192,7 @@ extension AssetsPoolViewController {
                 }
                 var tempDropperData = [String]()
                 for item in tempData.balance! {
-                    let tokenNameString = (item.coin_a_name ?? "---") + "/" + (item.coin_b_name ?? "---")
+                    let tokenNameString = (item.coin_a?.show_name ?? "---") + "/" + (item.coin_b?.show_name ?? "---")
                     tempDropperData.append(tokenNameString)
                 }
                 self?.currentTokens = tempData.balance

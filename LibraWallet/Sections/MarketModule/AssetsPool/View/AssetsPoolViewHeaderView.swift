@@ -478,8 +478,8 @@ class AssetsPoolViewHeaderView: UIView {
                 self.delegate?.removeLiquidityConfirm(token: NSDecimalNumber.init(string: inputAmountTextField.text ?? "0").doubleValue,
                                                       amountIn: amountA.doubleValue,
                                                       amountOut: amountB.doubleValue,
-                                                      inputModelName: tokenModel?.coin_a_name ?? "",
-                                                      outputModelName: tokenModel?.coin_b_name ?? "")
+                                                      inputModelName: tokenModel?.coin_a?.module ?? "",
+                                                      outputModelName: tokenModel?.coin_b?.module ?? "")
             }
         }
     }
@@ -493,7 +493,7 @@ class AssetsPoolViewHeaderView: UIView {
                                           scale: 4,
                                           unit: 1000000)
             inputTokenAssetsLabel.text = localLanguage(keyString: "wallet_market_assets_pool_token_title") + amount.stringValue
-            let content = (tokenModel?.coin_a_name ?? "---") + "/" + (tokenModel?.coin_b_name ?? "---")
+            let content = (tokenModel?.coin_a?.show_name ?? "---") + "/" + (tokenModel?.coin_b?.show_name ?? "---")
             inputTokenButton.setTitle(content, for: UIControl.State.normal)
             // 调整位置
             inputTokenButton.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 9, height: 5.5))
@@ -758,8 +758,8 @@ extension AssetsPoolViewHeaderView: UITextFieldDelegate {
                 // 转入
                 self.viewState = .AssetsPoolTransferInBaseOnInputBRequestRate
                 self.delegate?.dealTransferOutAmount(amount: NSDecimalNumber.init(string: textField.text).doubleValue,
-                                                     coinAModule: tokenModel?.coin_a_name ?? "",
-                                                     coinBModule: tokenModel?.coin_b_name ?? "")
+                                                     coinAModule: tokenModel?.coin_a?.module ?? "",
+                                                     coinBModule: tokenModel?.coin_b?.module ?? "")
             }
             
         } else if textField.tag == 20 {
