@@ -57,8 +57,55 @@ class ExchangeViewController: UIViewController {
     var successL2VMappingClosure: (([MarketSupportMappingTokensDataModel])->())?
     var successB2VMappingClosure: (([MarketSupportMappingTokensDataModel])->())?
     var successB2LMappingClosure: (([MarketSupportMappingTokensDataModel])->())?
+    func startAutoRefreshExchangeRate(inputCoinA: MarketSupportTokensDataModel, outputCoinB: MarketSupportTokensDataModel) {
+        self.timer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(refreshExchangeRate), userInfo: nil, repeats: true)
+        RunLoop.current.add(self.timer!, forMode: .common)
+    }
+    func stopAutoRefreshExchangeRate() {
+        self.timer?.invalidate()
+        self.timer = nil
+    }
+    @objc func refreshExchangeRate() {
+        self.dataModel.getPoolTotalLiquidity(inputCoinA: self.detailView.headerView.transferInInputTokenA!, inputCoinB: self.detailView.headerView.transferInInputTokenB!)
+    }
+    private var timer: Timer?
+    private var firstRequestRate: Bool = true
+    private var handleOutputAmountClosure: (()->())?
+    private var handleInputAmountClosure: (()->())?
+//    private var pathAToB: Bool = true
 }
 extension ExchangeViewController: ExchangeViewHeaderViewDelegate {
+    func fliterBestOutputAmount(inputAmount: Int64) {
+        self.dataModel.fliterBestOutput(inputAAmount: inputAmount,
+                                        inputCoinA: (self.detailView.headerView.transferInInputTokenA?.index)!,
+                                        paths: self.dataModel.shortPath)
+    }
+    func fliterBestInputAmount(outputAmount: Int64) {
+        self.dataModel.fliterBestInput(outputAAmount: outputAmount,
+                                       outputCoinA: (self.detailView.headerView.transferInInputTokenB?.index)!,
+                                       pathModel: self.detailView.headerView.exchangeModel!.models,
+                                       path:self.detailView.headerView.exchangeModel!.path)
+        
+    }
+    
+    func dealTransferOutAmount(inputModule: MarketSupportTokensDataModel, outputModule: MarketSupportTokensDataModel) {
+        if self.dataModel.shortPath.isEmpty == true {
+            self.detailView.toastView?.show(tag: 299)
+            if firstRequestRate == true {
+                self.refreshExchangeRate()
+                firstRequestRate = false
+            }
+            self.startAutoRefreshExchangeRate(inputCoinA: inputModule, outputCoinB: outputModule)
+        } else {
+            if let amountString = self.detailView.headerView.inputAmountTextField.text, amountString.isEmpty == false {
+                let amount = NSDecimalNumber.init(string: amountString).multiplying(by: NSDecimalNumber.init(value: 1000000)).int64Value
+                self.dataModel.fliterBestOutput(inputAAmount: amount,
+                                               inputCoinA: inputModule.index!,
+                                               paths: self.dataModel.shortPath)
+            }
+        }
+    }
+    
     func MappingBTCToViolasConfirm(amountIn: Double, amountOut: Double, inputModel: MarketSupportTokensDataModel, outputModel: MarketSupportTokensDataModel) {
         self.detailView.toastView?.show(tag: 99)
         self.dataModel.getMappingTokenList()
@@ -204,14 +251,6 @@ extension ExchangeViewController: ExchangeViewHeaderViewDelegate {
     func MappingLibraToBTCConfirm(amountIn: Double, amountOut: Double, inputModel: MarketSupportTokensDataModel, outputModel: MarketSupportTokensDataModel) {
         
     }
-    
-    func dealTransferOutAmount(amount: Int64, inputModule: String, outputModule: String) {
-        self.detailView.toastView?.show(tag: 99)
-        self.dataModel.getExchangeInfo(amount: amount * 1000000,
-                                       inputModule: inputModule,
-                                       outputModule: outputModule)
-    }
-    
 
     func selectInputToken() {
         self.detailView.toastView?.show(tag: 99)
@@ -229,14 +268,13 @@ extension ExchangeViewController: ExchangeViewHeaderViewDelegate {
     func swapInputOutputToken() {
         print("Swap")
     }
-    
-    
 }
 extension ExchangeViewController {
     func initKVO() {
         self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
             guard let dataDic = change.newValue, dataDic.count != 0 else {
                 self?.detailView.toastView?.hide(tag: 99)
+                self?.detailView.toastView?.hide(tag: 299)
                 self?.detailView.hideToastActivity()
                 return
             }
@@ -245,6 +283,7 @@ extension ExchangeViewController {
                 // 隐藏请求指示
                 self?.detailView.hideToastActivity()
                 self?.detailView.toastView?.hide(tag: 99)
+                self?.detailView.toastView?.hide(tag: 299)
                 if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
                     // 网络无法访问
                     print(error.localizedDescription)
@@ -324,11 +363,13 @@ extension ExchangeViewController {
                 alert.show(tag: 199)
                 alert.showAnimation()
             } else if type == "GetExchangeInfo" {
-                guard let tempData = dataDic.value(forKey: "data") as? ExchangeInfoDataModel else {
+                guard let tempData = dataDic.value(forKey: "data") as? ExchangeInfoModel else {
                     return
                 }
                 self?.detailView.headerView.exchangeModel = tempData
             } else if type == "SendViolasTransaction" {
+                self?.detailView.headerView.inputAmountTextField.text = ""
+                self?.detailView.headerView.outputAmountTextField.text = ""
                 self?.detailView.makeToast("发送成功", position: .center)
             } else if type == "GetMappingTokenList" {
                 guard let tempData = dataDic.value(forKey: "data") as? [MarketSupportMappingTokensDataModel] else {
@@ -353,13 +394,23 @@ extension ExchangeViewController {
                 }
             } else if type == "SendViolasToLibraMappingTransaction" {
                 self?.detailView.headerView.viewState = .Normal
+                self?.detailView.headerView.inputAmountTextField.text = ""
+                self?.detailView.headerView.outputAmountTextField.text = ""
                 self?.detailView.makeToast("发送成功", position: .center)
             } else if type == "SendLibraToViolasTransaction" {
                 self?.detailView.headerView.viewState = .Normal
+                self?.detailView.headerView.inputAmountTextField.text = ""
+                self?.detailView.headerView.outputAmountTextField.text = ""
                 self?.detailView.makeToast("发送成功", position: .center)
             } else if type == "SendBTCTransaction" {
                 self?.detailView.headerView.viewState = .Normal
+                self?.detailView.headerView.inputAmountTextField.text = ""
+                self?.detailView.headerView.outputAmountTextField.text = ""
                 self?.detailView.makeToast("发送成功", position: .center)
+            } else if type == "GetPoolTotalLiquidity" {
+                print("获取流动性成功")
+                self?.detailView.toastView?.hide(tag: 299)
+                return
             }
             self?.detailView.hideToastActivity()
             self?.detailView.toastView?.hide(tag: 99)

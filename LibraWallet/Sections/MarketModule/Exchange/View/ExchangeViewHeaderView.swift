@@ -19,7 +19,9 @@ protocol ExchangeViewHeaderViewDelegate: NSObjectProtocol {
     func selectInputToken()
     func selectOutoutToken()
     func swapInputOutputToken()
-    func dealTransferOutAmount(amount: Int64, inputModule: String, outputModule: String)
+    func dealTransferOutAmount(inputModule: MarketSupportTokensDataModel, outputModule: MarketSupportTokensDataModel)
+    func fliterBestOutputAmount(inputAmount: Int64)
+    func fliterBestInputAmount(outputAmount: Int64)
 }
 
 class ExchangeViewHeaderView: UIView {
@@ -37,6 +39,8 @@ class ExchangeViewHeaderView: UIView {
         case ViolasToViolasSwap
         case BTCToLibraSwap
         case BTCToViolasSwap
+        case handleBestOutputAmount
+        case handleBestInputAmount
     }
     var viewState: ExchangeViewState = .Normal
 
@@ -381,7 +385,7 @@ class ExchangeViewHeaderView: UIView {
                                                             amountOutMin: amountB,
                                                             inputModelName: transferInInputTokenA?.name ?? "",
                                                             outputModelName: transferInInputTokenB?.name ?? "",
-                                                            path: path)
+                                                            path: (self.exchangeModel?.path)!)
             } else if tempInputTokenA.chainType == 1 && tempInputTokenB.chainType == 0 {
                 self.viewState = .ViolasToLibraSwap
                 self.delegate?.MappingViolasToLibraConfirm(amountIn: amountA,
@@ -441,6 +445,10 @@ class ExchangeViewHeaderView: UIView {
                                           unit: 1000000)
             inputTokenAssetsLabel.text = localLanguage(keyString: "wallet_market_assets_pool_token_title") + amount.stringValue
             self.viewState = .Normal
+            if let tokenA = transferInInputTokenA, let tokenB = transferInInputTokenB {
+                self.delegate?.dealTransferOutAmount(inputModule: tokenA,
+                                                     outputModule: tokenB)
+            }
         }
     }
     /// 资金池转入ModelB
@@ -463,30 +471,55 @@ class ExchangeViewHeaderView: UIView {
                                           unit: 1000000)
             outputTokenAssetsLabel.text = localLanguage(keyString: "wallet_market_assets_pool_token_title") + amount.stringValue
             self.viewState = .Normal
+            
+            if let tokenA = transferInInputTokenA, let tokenB = transferInInputTokenB {
+                self.delegate?.dealTransferOutAmount(inputModule: tokenA,
+                                                     outputModule: tokenB)
+            }
         }
     }
     /// 兑换比例
-    var exchangeModel: ExchangeInfoDataModel? {
+    var exchangeModel: ExchangeInfoModel? {
         didSet {
             guard let model = exchangeModel else {
                 return
             }
-            outputAmountTextField.text = getDecimalNumber(amount: NSDecimalNumber.init(value: model.amount ?? 0),
-                                                          scale: 4,
-                                                          unit: 1000000).stringValue
-            let inputAmount = NSDecimalNumber.init(string: inputAmountTextField.text ?? "0").multiplying(by: NSDecimalNumber.init(value: 1000000))
-            let outputAmount = NSDecimalNumber.init(value: model.amount ?? 0)
-            let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
-                                                                 scale: 4,
-                                                                 raiseOnExactness: false,
-                                                                 raiseOnOverflow: false,
-                                                                 raiseOnUnderflow: false,
-                                                                 raiseOnDivideByZero: false)
-            let rate = outputAmount.dividing(by: inputAmount, withBehavior: numberConfig)
-            exchangeRateLabel.text = localLanguage(keyString: "wallet_market_exchange_rate_title") + rate.stringValue
-            feeLabel.text = localLanguage(keyString: "wallet_market_exchange_fee_title") + getDecimalNumber(amount: NSDecimalNumber.init(value: model.fee ?? 0),
-                                                                                                            scale: 4,
-                                                                                                            unit: 1000000).stringValue
+            if viewState == .handleBestOutputAmount {
+                outputAmountTextField.text = getDecimalNumber(amount: NSDecimalNumber.init(value: model.output),
+                                                              scale: 4,
+                                                              unit: 1000000).stringValue
+                let inputAmount = NSDecimalNumber.init(string: inputAmountTextField.text ?? "0").multiplying(by: NSDecimalNumber.init(value: 1000000))
+                let outputAmount = NSDecimalNumber.init(value: model.output )
+                let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
+                                                                     scale: 4,
+                                                                     raiseOnExactness: false,
+                                                                     raiseOnOverflow: false,
+                                                                     raiseOnUnderflow: false,
+                                                                     raiseOnDivideByZero: false)
+                let rate = outputAmount.dividing(by: inputAmount, withBehavior: numberConfig)
+                exchangeRateLabel.text = localLanguage(keyString: "wallet_market_exchange_rate_title") + rate.stringValue
+                feeLabel.text = localLanguage(keyString: "wallet_market_exchange_fee_title") + getDecimalNumber(amount: NSDecimalNumber.init(value: model.fee ),
+                                                                                                                scale: 4,
+                                                                                                                unit: 1000000).stringValue
+            } else {
+                inputAmountTextField.text = getDecimalNumber(amount: NSDecimalNumber.init(value: model.input),
+                                                              scale: 4,
+                                                              unit: 1000000).stringValue
+                let inputAmount = NSDecimalNumber.init(string: outputAmountTextField.text ?? "0").multiplying(by: NSDecimalNumber.init(value: 1000000))
+                let outputAmount = NSDecimalNumber.init(value: model.input )
+                let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
+                                                                     scale: 4,
+                                                                     raiseOnExactness: false,
+                                                                     raiseOnOverflow: false,
+                                                                     raiseOnUnderflow: false,
+                                                                     raiseOnDivideByZero: false)
+                let rate = outputAmount.dividing(by: inputAmount, withBehavior: numberConfig)
+                exchangeRateLabel.text = localLanguage(keyString: "wallet_market_exchange_rate_title") + rate.stringValue
+                feeLabel.text = localLanguage(keyString: "wallet_market_exchange_fee_title") + getDecimalNumber(amount: NSDecimalNumber.init(value: model.fee ),
+                                                                                                                scale: 4,
+                                                                                                                unit: 1000000).stringValue
+            }
+            self.viewState = .Normal
         }
     }
     /// 语言切换
@@ -513,9 +546,11 @@ extension ExchangeViewHeaderView: UITextFieldDelegate {
         if textField.tag == 10 {
             if textLength == 0 {
                 inputAmountTextField.text = ""
+                outputAmountTextField.text = ""
             }
         } else {
             if textLength == 0 {
+                inputAmountTextField.text = ""
                 outputAmountTextField.text = ""
             }
         }
@@ -547,20 +582,36 @@ extension ExchangeViewHeaderView: UITextFieldDelegate {
         }
         return true
     }
-    func textFieldDidEndEditing(_ textField: UITextField) {
+    func textFieldDidChangeSelection(_ textField: UITextField) {
         if textField.tag == 10 {
-            print("123")
-            self.delegate?.dealTransferOutAmount(amount: NSDecimalNumber.init(string: textField.text).int64Value,
-                                                 inputModule: transferInInputTokenA?.show_name ?? "",
-                                                 outputModule: transferInInputTokenB?.show_name ?? "")
-
-        } else if textField.tag == 20 {
-//            if self.changeTypeButton.titleLabel?.text == localLanguage(keyString: localLanguage(keyString: "wallet_assets_pool_transfer_in_title")) {
-//                // 转入
-//                self.delegate?.dealTransferOutAmount(amount: NSDecimalNumber.init(string: textField.text).int64Value,
-//                                                     coinAModule: transferInInputTokenA?.name ?? "",
-//                                                     coinBModule: transferInInputTokenB?.name ?? "")
-//            }
+            if textField.text?.isEmpty == false {
+                self.viewState = .handleBestOutputAmount
+                let amount = NSDecimalNumber.init(string: textField.text ?? "0").multiplying(by: NSDecimalNumber.init(value: 1000000)).int64Value
+                self.delegate?.fliterBestOutputAmount(inputAmount: amount)
+            }
+        } else {
+            if textField.text?.isEmpty == false {
+                self.viewState = .handleBestInputAmount
+                let amount = NSDecimalNumber.init(string: textField.text ?? "0").multiplying(by: NSDecimalNumber.init(value: 1000000)).int64Value
+                self.delegate?.fliterBestInputAmount(outputAmount: amount)
+            }
         }
+        
     }
+//    func textFieldDidEndEditing(_ textField: UITextField) {
+//        if textField.tag == 10 {
+//            print("123")
+////            self.delegate?.dealTransferOutAmount(amount: NSDecimalNumber.init(string: textField.text).int64Value,
+////                                                 inputModule: transferInInputTokenA?.show_name ?? "",
+////                                                 outputModule: transferInInputTokenB?.show_name ?? "")
+//
+//        } else if textField.tag == 20 {
+////            if self.changeTypeButton.titleLabel?.text == localLanguage(keyString: localLanguage(keyString: "wallet_assets_pool_transfer_in_title")) {
+////                // 转入
+////                self.delegate?.dealTransferOutAmount(amount: NSDecimalNumber.init(string: textField.text).int64Value,
+////                                                     coinAModule: transferInInputTokenA?.name ?? "",
+////                                                     coinBModule: transferInInputTokenB?.name ?? "")
+////            }
+//        }
+//    }
 }

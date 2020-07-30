@@ -9,13 +9,21 @@
 import UIKit
 import Moya
 import BitcoinKit
+struct ExchangeInfoModel {
+    var input: Int64
+    var output: Int64
+    var path: [UInt8]
+    var outputWithoutFee: Int64
+    var fee: Int64
+    var models: [PoolLiquidityDataModel]
+}
 struct PoolLiquidityCoinBDataModel: Codable {
-    var index: Int?
+    var index: UInt8?
     var name: String?
     var value: Int64?
 }
 struct PoolLiquidityCoinADataModel: Codable {
-    var index: Int?
+    var index: UInt8?
     var name: String?
     var value: Int64?
 }
@@ -70,7 +78,7 @@ struct ExchangeInfoMainModel: Codable {
 }
 struct MarketSupportTokensDataModel: Codable {
     /// 币序列号
-    var index: Int?
+    var index: UInt8?
     /// 币图标
     var icon: String?
     /// 合约地址
@@ -108,7 +116,7 @@ class ExchangeModel: NSObject {
     private var accountLibraTokens: [LibraBalanceModel]?
     private var accountBTCAmount: String?
     var utxos: [TrezorBTCUTXOMainModel]?
-    
+    var totalLiquidity: [PoolLiquidityDataModel]?
     func getExchangeTransactions(address: String, page: Int, pageSize: Int, requestStatus: Int) {
         let type = requestStatus == 0 ? "ExchangeTransactionsOrigin":"ExchangeTransactionsMore"
         let request = mainProvide.request(.ExchangeTransactions(address, page, pageSize)) {[weak self](result) in
@@ -198,6 +206,8 @@ class ExchangeModel: NSObject {
         requests.removeAll()
         print("ExchangeModel销毁了")
     }
+    var shortPath = [[PoolLiquidityDataModel]]()
+    var tempArray = [PoolLiquidityDataModel]()
 }
 extension ExchangeModel {
     func sendSwapViolasTransaction(sendAddress: String, amountIn: Double, AmountOutMin: Double, path: [UInt8], fee: Double, mnemonic: [String], moduleA: String, moduleB: String, feeModule: String) {
@@ -327,10 +337,10 @@ extension ExchangeModel {
             group.enter()
             self.getMarketSupportTokens(group: group)
         })
-        quene.async(group: group, qos: .default, flags: [], execute: {
-            group.enter()
-            self.getBTCBalance(address: btcAddress, group: group)
-        })
+//        quene.async(group: group, qos: .default, flags: [], execute: {
+//            group.enter()
+//            self.getBTCBalance(address: btcAddress, group: group)
+//        })
         quene.async(group: group, qos: .default, flags: [], execute: {
             group.enter()
             self.getViolasBalance(address: violasAddress, group: group)
@@ -845,5 +855,213 @@ extension ExchangeModel {
             }
         }
         self.requests.append(request)
+    }
+}
+//MARK: - 获取资金池流动性
+extension ExchangeModel {
+    func getPoolTotalLiquidity(inputCoinA: MarketSupportTokensDataModel, inputCoinB: MarketSupportTokensDataModel) {
+        let request = mainProvide.request(.PoolTotalLiquidity) {[weak self](result) in
+            switch  result {
+            case let .success(response):
+                do {
+                    let json = try response.map(PoolLiquidityMainModel.self)
+                    if json.code == 2000 {
+                        guard let violasTokens = json.data, violasTokens.isEmpty == false else {
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .dataEmpty), type: "GetPoolTotalLiquidity")
+                            self?.setValue(data, forKey: "dataDic")
+                            return
+                        }
+                        self?.totalLiquidity = json.data
+                        self?.handleLiquidity(inputCoinA: inputCoinA, outputCoinB: inputCoinB, data: json.data!)
+                    } else {
+                        print("GetPoolTotalLiquidity_状态异常")
+                        if let message = json.message, message.isEmpty == false {
+                            let data = setKVOData(error: LibraWalletError.error(message), type: "GetPoolTotalLiquidity")
+                            self?.setValue(data, forKey: "dataDic")
+                        } else {
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "GetPoolTotalLiquidity")
+                            self?.setValue(data, forKey: "dataDic")
+                        }
+                    }
+                } catch {
+                    print("GetPoolTotalLiquidity_解析异常\(error.localizedDescription)")
+                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetPoolTotalLiquidity")
+                    self?.setValue(data, forKey: "dataDic")
+                }
+            case let .failure(error):
+                guard error.errorCode != -999 else {
+                    print("网络请求已取消")
+                    return
+                }
+                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "GetPoolTotalLiquidity")
+                self?.setValue(data, forKey: "dataDic")
+            }
+        }
+        self.requests.append(request)
+    }
+    func handleLiquidity(inputCoinA: MarketSupportTokensDataModel, outputCoinB: MarketSupportTokensDataModel, data: [PoolLiquidityDataModel]) {
+        shortPath.removeAll()
+        let date1 = Date().timeIntervalSince1970
+        let tempData = data
+        let fliterPrifix0Data = tempData.filter {
+            $0.coina?.index == inputCoinA.index || $0.coinb?.index == inputCoinA.index
+        }
+        let fliterWithout0Data = tempData.filter {
+            $0.coina?.index != inputCoinA.index && $0.coinb?.index != inputCoinA.index
+        }
+        for item in fliterPrifix0Data {
+            print("\(item)")
+            // 初始符合
+            tempArray.removeAll()
+            tempArray.append(item)
+            // 判断路径结束是否符合
+            if item.coinb?.index == outputCoinB.index {
+                // 结束符合
+                shortPath.append(tempArray)
+                tempArray.removeAll()
+            } else {
+                // 结束不符合,进入路径搜索
+                fliterPath(inputCoinA: (item.coinb?.index)!, outputCoinB: outputCoinB.index!, data: fliterWithout0Data, originData: fliterWithout0Data)
+            }
+        }
+        let date2 = Date().timeIntervalSince1970
+        print("time\(Int((date2 - date1) * 1000))ms")
+        let data = setKVOData(type: "GetPoolTotalLiquidity")
+        self.setValue(data, forKey: "dataDic")
+    }
+    func fliterPath(inputCoinA: UInt8, outputCoinB: UInt8, data: [PoolLiquidityDataModel], originData: [PoolLiquidityDataModel]) {
+        let tempData = data
+        if data.count == 0 {
+            print(shortPath)
+            return
+        } else {
+            for item in tempData {
+                // 判断当前路径是否符合要求的起始路径
+                if (item.coina?.index == inputCoinA || item.coinb?.index == inputCoinA) {
+                    // 初始符合
+                    tempArray.append(item)
+                    // 判断路径是否符合要求的结束路径
+                    if item.coinb?.index == outputCoinB || item.coina?.index == outputCoinB {
+                        // 查询结束
+                        shortPath.append(tempArray)
+                        if tempArray.count == 3 {
+                            tempArray.removeLast(2)
+                            return
+                        } else {
+                            tempArray.removeLast()
+                            continue
+                        }
+                    } else {
+                        guard tempArray.count < 3 else {
+                            tempArray.removeLast()
+                            continue
+                        }
+                        // 初始不符合
+                        // 删除本身
+                        let lastArray = originData.filter {
+                            $0.coina?.value != item.coina?.value && $0.coinb?.value != item.coinb?.value
+                        }
+                        // 筛选接下来初始Index
+                        let index = item.coina?.index == inputCoinA ? (item.coinb?.index):(item.coina?.index)
+                        let tempppp = lastArray.filter {
+                            $0.coina?.index == index || $0.coinb?.index == index
+                        }
+                        fliterPath(inputCoinA: index!, outputCoinB: outputCoinB, data: tempppp, originData: originData)
+                    }
+                }
+            }
+        }
+    }
+    func fliterBestOutput(inputAAmount: Int64, inputCoinA: UInt8, paths: [[PoolLiquidityDataModel]]) {
+        
+        let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
+                                                       scale: 6,
+                                                       raiseOnExactness: false,
+                                                       raiseOnOverflow: false,
+                                                       raiseOnUnderflow: false,
+                                                       raiseOnDivideByZero: false)
+        var tempArray = [ExchangeInfoModel]()
+        for path in paths {
+            var output: Int64 = inputAAmount
+            var outputWithoutFee: Int64 = inputAAmount
+            var nextIndex = inputCoinA
+            var pathArray: [UInt8] = [inputCoinA]
+            var fee: Int64 = 0
+            for item in path {
+                if item.coina?.index == nextIndex {
+                    let amountInWithFee = NSDecimalNumber.init(value: output).multiplying(by: NSDecimalNumber.init(value: 997))
+                    let numerator = amountInWithFee.multiplying(by: NSDecimalNumber.init(value: item.coinb?.value ?? 0))
+                    let denominator = (NSDecimalNumber.init(value: item.coina?.value ?? 0).multiplying(by: NSDecimalNumber.init(value: 1000))).adding(amountInWithFee)
+                    output = numerator.dividing(by: denominator, withBehavior: numberConfig).int64Value
+                    // fee
+                    nextIndex = (item.coinb?.index)!
+                    let amountInWithoutFee = NSDecimalNumber.init(value: outputWithoutFee).multiplying(by: NSDecimalNumber.init(value: 1000))
+                    let numeratorWithoutFee = amountInWithoutFee.multiplying(by: NSDecimalNumber.init(value: item.coinb?.value ?? 0))
+                    let denominatorWithoutFee = (NSDecimalNumber.init(value: item.coina?.value ?? 0).multiplying(by: NSDecimalNumber.init(value: 1000))).adding(amountInWithoutFee)
+                    outputWithoutFee = numeratorWithoutFee.dividing(by: denominatorWithoutFee, withBehavior: numberConfig).int64Value
+                } else {
+                    let amountInWithFee = NSDecimalNumber.init(value: output).multiplying(by: NSDecimalNumber.init(value: 997))
+                    let numerator = amountInWithFee.multiplying(by: NSDecimalNumber.init(value: item.coina?.value ?? 0))
+                    let denominator = NSDecimalNumber.init(value: item.coinb?.value ?? 0).multiplying(by: NSDecimalNumber.init(value: 1000)).adding(amountInWithFee)
+                    output = numerator.dividing(by: denominator, withBehavior: numberConfig).int64Value
+                    nextIndex = (item.coina?.index)!
+                    // fee
+                    let amountInWithoutFee = NSDecimalNumber.init(value: outputWithoutFee).multiplying(by: NSDecimalNumber.init(value: 1000))
+                    let numeratorWithoutFee = amountInWithoutFee.multiplying(by: NSDecimalNumber.init(value: item.coina?.value ?? 0))
+                    let denominatorWithoutFee = (NSDecimalNumber.init(value: item.coinb?.value ?? 0).multiplying(by: NSDecimalNumber.init(value: 1000))).adding(amountInWithoutFee)
+                    outputWithoutFee = numeratorWithoutFee.dividing(by: denominatorWithoutFee, withBehavior: numberConfig).int64Value
+                }
+                pathArray.append(nextIndex)
+            }
+            fee = outputWithoutFee - output
+            let tempModel = ExchangeInfoModel.init(input: inputAAmount, output: output, path: pathArray, outputWithoutFee: outputWithoutFee, fee: fee, models: path)
+            tempArray.append(tempModel)
+        }
+        let tempaaa = tempArray.sorted { (item1, item2) in
+            item1.output > item2.output
+        }
+        print(tempaaa)
+        let data = setKVOData(type: "GetExchangeInfo", data: tempaaa.first)
+        self.setValue(data, forKey: "dataDic")
+        
+    }
+    func fliterBestInput(outputAAmount: Int64, outputCoinA: UInt8, pathModel: [PoolLiquidityDataModel], path: [UInt8]) {
+        let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
+                                                       scale: 6,
+                                                       raiseOnExactness: false,
+                                                       raiseOnOverflow: false,
+                                                       raiseOnUnderflow: false,
+                                                       raiseOnDivideByZero: false)
+        var output: Int64 = outputAAmount
+        var outputWithoutFee: Int64 = outputAAmount
+        var nextIndex = outputCoinA
+        var fee: Int64 = 0
+        for item in pathModel.reversed() {
+            if item.coina?.index == nextIndex {
+                let a = (NSDecimalNumber.init(value: item.coina?.value ?? 0).multiplying(by: NSDecimalNumber.init(value: 1000))).multiplying(by: NSDecimalNumber.init(value: output))
+                let b = (NSDecimalNumber.init(value: item.coinb?.value ?? 0).subtracting(NSDecimalNumber.init(value: output))).multiplying(by: NSDecimalNumber.init(value: 997))
+                output = (a.dividing(by: b, withBehavior: numberConfig)).adding(NSDecimalNumber.init(value: 1)).int64Value
+                // fee
+                nextIndex = (item.coinb?.index)!
+                let aWithoutFee = (NSDecimalNumber.init(value: item.coina?.value ?? 0).multiplying(by: NSDecimalNumber.init(value: 1000))).multiplying(by: NSDecimalNumber.init(value: output))
+                let bWithoutFee = (NSDecimalNumber.init(value: item.coinb?.value ?? 0).subtracting(NSDecimalNumber.init(value: output))).multiplying(by: NSDecimalNumber.init(value: 1000))
+                outputWithoutFee = (aWithoutFee.dividing(by: bWithoutFee, withBehavior: numberConfig)).adding(NSDecimalNumber.init(value: 1)).int64Value
+            } else {
+                let a = (NSDecimalNumber.init(value: item.coinb?.value ?? 0).multiplying(by: NSDecimalNumber.init(value: 1000))).multiplying(by: NSDecimalNumber.init(value: output))
+                let b = (NSDecimalNumber.init(value: item.coina?.value ?? 0).subtracting(NSDecimalNumber.init(value: output))).multiplying(by: NSDecimalNumber.init(value: 997))
+                output = (a.dividing(by: b, withBehavior: numberConfig)).adding(NSDecimalNumber.init(value: 1)).int64Value
+                // fee
+                nextIndex = (item.coina?.index)!
+                let aWithoutFee = (NSDecimalNumber.init(value: item.coinb?.value ?? 0).multiplying(by: NSDecimalNumber.init(value: 1000))).multiplying(by: NSDecimalNumber.init(value: output))
+                let bWithoutFee = (NSDecimalNumber.init(value: item.coina?.value ?? 0).subtracting(NSDecimalNumber.init(value: output))).multiplying(by: NSDecimalNumber.init(value: 1000))
+                outputWithoutFee = (aWithoutFee.dividing(by: bWithoutFee, withBehavior: numberConfig)).adding(NSDecimalNumber.init(value: 1)).int64Value
+            }
+        }
+        fee = output - outputWithoutFee
+        let tempModel = ExchangeInfoModel.init(input: output, output: outputAAmount, path: path, outputWithoutFee: outputWithoutFee, fee: fee, models: pathModel)
+
+        let data = setKVOData(type: "GetExchangeInfo", data: tempModel)
+        self.setValue(data, forKey: "dataDic")
+        
     }
 }

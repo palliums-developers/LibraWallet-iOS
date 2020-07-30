@@ -83,6 +83,7 @@
 		36836D3724B304700031AC6E /* ExchangeTransactionDetailTableViewMananger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36836D3624B304700031AC6E /* ExchangeTransactionDetailTableViewMananger.swift */; };
 		36836D3924B3059B0031AC6E /* ExchangeTransactionDetailHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36836D3824B3059B0031AC6E /* ExchangeTransactionDetailHeaderView.swift */; };
 		36836D3B24B305D00031AC6E /* ExchangeTransactionDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36836D3A24B305D00031AC6E /* ExchangeTransactionDetailTableViewCell.swift */; };
+		368CD5E324D26F4E0092F12E /* MarketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368CD5E224D26F4E0092F12E /* MarketManager.swift */; };
 		36B43A7223BDE967008E2EEA /* LBXScanError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B43A7123BDE967008E2EEA /* LBXScanError.swift */; };
 		36B466A62476563800CFF438 /* ScanSignTransactionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B466A52476563800CFF438 /* ScanSignTransactionViewController.swift */; };
 		36B466A82476565000CFF438 /* ScanSendTransactionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B466A72476565000CFF438 /* ScanSendTransactionViewController.swift */; };
@@ -391,6 +392,7 @@
 		36836D3624B304700031AC6E /* ExchangeTransactionDetailTableViewMananger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeTransactionDetailTableViewMananger.swift; sourceTree = "<group>"; };
 		36836D3824B3059B0031AC6E /* ExchangeTransactionDetailHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeTransactionDetailHeaderView.swift; sourceTree = "<group>"; };
 		36836D3A24B305D00031AC6E /* ExchangeTransactionDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeTransactionDetailTableViewCell.swift; sourceTree = "<group>"; };
+		368CD5E224D26F4E0092F12E /* MarketManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketManager.swift; sourceTree = "<group>"; };
 		36B43A7123BDE967008E2EEA /* LBXScanError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LBXScanError.swift; sourceTree = "<group>"; };
 		36B466A52476563800CFF438 /* ScanSignTransactionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanSignTransactionViewController.swift; sourceTree = "<group>"; };
 		36B466A72476565000CFF438 /* ScanSendTransactionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanSendTransactionViewController.swift; sourceTree = "<group>"; };
@@ -1231,6 +1233,14 @@
 				36836D3624B304700031AC6E /* ExchangeTransactionDetailTableViewMananger.swift */,
 			);
 			path = TableViewManager;
+			sourceTree = "<group>";
+		};
+		368CD5E124D26F360092F12E /* MarketManager */ = {
+			isa = PBXGroup;
+			children = (
+				368CD5E224D26F4E0092F12E /* MarketManager.swift */,
+			);
+			path = MarketManager;
 			sourceTree = "<group>";
 		};
 		36B46699247654B900CFF438 /* ScanSendRawTransaction */ = {
@@ -2810,6 +2820,7 @@
 		9DC9023B2328E7E60097FD85 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				368CD5E124D26F360092F12E /* MarketManager */,
 				9D6264702356F91A00A79B3D /* WalletManager */,
 				3667A799247500DE0000F119 /* WalletConnect */,
 				9D6264752356F96600A79B3D /* CryptoManager */,
@@ -3324,6 +3335,7 @@
 				9D1A614C233204E2009DDA07 /* BaseViewController.swift in Sources */,
 				36828CC324B707D40085A165 /* AssetsPoolTransactionDetailView.swift in Sources */,
 				3650F0BC248A46360086F578 /* TransactionDetailView.swift in Sources */,
+				368CD5E324D26F4E0092F12E /* MarketManager.swift in Sources */,
 				36DA3FCE23B5E5C6001D7733 /* UIButton + imageTitleLocation.swift in Sources */,
 				9D9B4A1723604A7200354EF0 /* CustomActionViewProtocol.swift in Sources */,
 				9DB515A823A327640069A909 /* ViolasMnemonic.swift in Sources */,

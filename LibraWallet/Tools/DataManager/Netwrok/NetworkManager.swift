@@ -86,6 +86,10 @@ enum mainRequest {
     case ExchangeTransferInfo(String, String, Int64)
     /// 获取交易所支持映射币
     case MarketSupportMappingTokens
+    /// 获取资金池流动性
+    case PoolLiquidity(String, String)
+    /// 获取资金池全部流动性
+    case PoolTotalLiquidity
 }
 extension mainRequest:TargetType {
     var baseURL: URL {
@@ -135,7 +139,9 @@ extension mainRequest:TargetType {
              .AssetsPoolTransferOutInfo(_, _, _, _),
              .AssetsPoolTransferInInfo(_, _, _),
              .ExchangeTransferInfo(_, _, _),
-             .MarketSupportMappingTokens:
+             .MarketSupportMappingTokens,
+             .PoolLiquidity(_, _),
+             .PoolTotalLiquidity:
             if PUBLISH_VERSION == true {
                 return URL(string:"https://api.violas.io")!
             } else {
@@ -226,8 +232,12 @@ extension mainRequest:TargetType {
             return "/1.0/market/pool/deposit/trial"
         case .ExchangeTransferInfo(_, _, _):
             return "/1.0/market/exchange/trial"
-        case . MarketSupportMappingTokens:
+        case .MarketSupportMappingTokens:
             return "/1.0/market/exchange/crosschain/address/info"
+        case .PoolLiquidity(_, _):
+            return "/1.0/market/pool/reserve/info"
+        case .PoolTotalLiquidity:
+            return "/1.0/market/pool/reserve/infos"
         }
     }
     var method: Moya.Method {
@@ -269,7 +279,9 @@ extension mainRequest:TargetType {
              .AssetsPoolTransferOutInfo(_, _, _, _),
              .AssetsPoolTransferInInfo(_, _, _),
              .ExchangeTransferInfo(_, _, _),
-             .MarketSupportMappingTokens:
+             .MarketSupportMappingTokens,
+             .PoolLiquidity(_, _),
+             .PoolTotalLiquidity:
             return .get
         }
     }
@@ -442,7 +454,12 @@ extension mainRequest:TargetType {
                                       encoding: URLEncoding.queryString)
         case .MarketSupportMappingTokens:
             return .requestPlain
-            
+        case .PoolLiquidity(let coinA, let coinB):
+            return .requestParameters(parameters: ["coin_a":coinA,
+                                                   "coin_b":coinB],
+                                      encoding: URLEncoding.queryString)
+        case .PoolTotalLiquidity:
+            return .requestPlain
         }
     }
     var headers: [String : String]? {
