@@ -8,12 +8,16 @@
 
 import UIKit
 import Moya
-//struct AssetsPoolTransferInInfoDataModel: Codable {
-//    /// 兑换数量
-//    var amount: Int64?
-//    /// 输入币名
-//    var rate: Double?
-//}
+struct AssetsPoolsInfoDataModel: Codable {
+    var coina: PoolLiquidityCoinADataModel?
+    var coinb: PoolLiquidityCoinBDataModel?
+    var liquidity_total_supply: Int64?
+}
+struct AssetsPoolsInfoMainModel: Codable {
+    var code: Int?
+    var message: String?
+    var data: AssetsPoolsInfoDataModel?
+}
 struct AssetsPoolTransferInInfoMainModel: Codable {
     var code: Int?
     var message: String?
@@ -65,6 +69,7 @@ class AssetsPoolModel: NSObject {
     private var sequenceNumber: Int?
     private var marketTokens: [MarketSupportTokensDataModel]?
     private var accountTokens: [ViolasBalanceModel]?
+    var tokenModel: AssetsPoolsInfoDataModel?
     func getAssetsPoolTransactions(address: String, page: Int, pageSize: Int, requestStatus: Int) {
         let type = requestStatus == 0 ? "AssetsPoolTransactionsOrigin":"AssetsPoolTransactionsMore"
         let request = mainProvide.request(.AssetsPoolTransactions(address, page, pageSize)) {[weak self](result) in
@@ -513,5 +518,48 @@ extension AssetsPoolModel {
 
         semaphore.signal()
 
+    }
+}
+extension AssetsPoolModel {
+    func getPoolLiquidity(coinA: String, coinB: String) {
+        let request = mainProvide.request(.PoolLiquidity(coinA, coinB)) {[weak self](result) in
+            switch  result {
+            case let .success(response):
+                do {
+                    let json = try response.map(AssetsPoolsInfoMainModel.self)
+                    if json.code == 2000 {
+                        guard let token = json.data else {
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .dataEmpty), type: "GetPoolTokenInfo")
+                            self?.setValue(data, forKey: "dataDic")
+                            return
+                        }
+                        self?.tokenModel = token
+                        let data = setKVOData(type: "GetPoolTokenInfo", data: token)
+                        self?.setValue(data, forKey: "dataDic")
+                    } else {
+                        print("GetPoolTokenInfo_状态异常")
+                        if let message = json.message, message.isEmpty == false {
+                            let data = setKVOData(error: LibraWalletError.error(message), type: "GetPoolTokenInfo")
+                            self?.setValue(data, forKey: "dataDic")
+                        } else {
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "GetPoolTokenInfo")
+                            self?.setValue(data, forKey: "dataDic")
+                        }
+                    }
+                } catch {
+                    print("GetPoolTokenInfo_解析异常\(error.localizedDescription)")
+                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetPoolTokenInfo")
+                    self?.setValue(data, forKey: "dataDic")
+                }
+            case let .failure(error):
+                guard error.errorCode != -999 else {
+                    print("网络请求已取消")
+                    return
+                }
+                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "GetLibraTokens")
+                self?.setValue(data, forKey: "dataDic")
+            }
+        }
+        self.requests.append(request)
     }
 }

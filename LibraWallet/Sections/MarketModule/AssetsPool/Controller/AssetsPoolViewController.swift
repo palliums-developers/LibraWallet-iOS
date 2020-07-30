@@ -126,11 +126,12 @@ extension AssetsPoolViewController: AssetsPoolViewHeaderViewDelegate {
                                                              amount: Int64(amount * 1000000))
         } else {
             // 转出
-            self.detailView.toastView?.show(tag: 99)
-            self.dataModel.getMarketAssetsPoolTransferOutRate(address: WalletManager.shared.violasAddress ?? "",
-                                                              coinA: coinAModule,
-                                                              coinB: coinBModule,
-                                                              amount: Int64(amount * 1000000))
+//            self.detailView.toastView?.show(tag: 99)
+//            self.dataModel.getMarketAssetsPoolTransferOutRate(address: WalletManager.shared.violasAddress ?? "",
+//                                                              coinA: coinAModule,
+//                                                              coinB: coinBModule,
+//                                                              amount: Int64(amount * 1000000))
+            
         }
         
     }
@@ -215,7 +216,9 @@ extension AssetsPoolViewController {
                 guard let tempData = dataDic.value(forKey: "data") as? AssetsPoolTransferOutInfoDataModel else {
                     return
                 }
+//                self?.detailView.headerView.transferOutModel = tempData
                 self?.detailView.headerView.transferOutModel = tempData
+
                 
             } else if type == "SupportViolasTokens" {
                 guard let datas = dataDic.value(forKey: "data") as? [MarketSupportTokensDataModel] else {
@@ -270,6 +273,11 @@ extension AssetsPoolViewController {
                 }
                 self?.detailView.headerView.viewState = .Normal
                 
+            } else if type == "GetPoolTokenInfo" {
+                guard let tempData = dataDic.value(forKey: "data") as? AssetsPoolsInfoDataModel else {
+                    return
+                }
+                self?.detailView.headerView.removeLiquidityInfoModel = tempData
             }
             self?.detailView.hideToastActivity()
             self?.detailView.toastView?.hide(tag: 99)
@@ -279,5 +287,8 @@ extension AssetsPoolViewController {
 extension AssetsPoolViewController: DropperDelegate {
     func DropperSelectedRow(_ path: IndexPath, contents: String) {
         self.detailView.headerView.tokenModel = self.currentTokens?[path.row]
+        self.detailView.toastView?.show(tag: 99)
+        self.dataModel.getPoolLiquidity(coinA: self.currentTokens?[path.row].coin_a?.module ?? "",
+                                        coinB: self.currentTokens?[path.row].coin_b?.module ?? "")
     }
 }

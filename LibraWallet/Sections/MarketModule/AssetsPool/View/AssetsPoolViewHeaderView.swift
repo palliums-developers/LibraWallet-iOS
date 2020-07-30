@@ -522,6 +522,7 @@ class AssetsPoolViewHeaderView: UIView {
             outputCoinBAmountLabel.text = amountB.stringValue + (model.coin_b_name ?? "---")
         }
     }
+    var removeLiquidityInfoModel: AssetsPoolsInfoDataModel?
     /// 资金池转入ModelA
     var transferInInputTokenA: MarketSupportTokensDataModel? {
         didSet {
@@ -757,9 +758,9 @@ extension AssetsPoolViewHeaderView: UITextFieldDelegate {
                 // 转出
                 // 转入
                 self.viewState = .AssetsPoolTransferInBaseOnInputBRequestRate
-                self.delegate?.dealTransferOutAmount(amount: NSDecimalNumber.init(string: textField.text).doubleValue,
-                                                     coinAModule: tokenModel?.coin_a?.module ?? "",
-                                                     coinBModule: tokenModel?.coin_b?.module ?? "")
+//                self.delegate?.dealTransferOutAmount(amount: NSDecimalNumber.init(string: textField.text).doubleValue,
+//                                                     coinAModule: tokenModel?.coin_a?.module ?? "",
+//                                                     coinBModule: tokenModel?.coin_b?.module ?? "")
             }
             
         } else if textField.tag == 20 {
@@ -784,6 +785,35 @@ extension AssetsPoolViewHeaderView: UITextFieldDelegate {
                                                      coinBModule: transferInInputTokenA?.name ?? "")
             } 
         }
+    }
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        if textField.tag == 10 {
+            guard let model = removeLiquidityInfoModel else {
+                return
+            }
+            let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
+                                                           scale: 4,
+                                                           raiseOnExactness: false,
+                                                           raiseOnOverflow: false,
+                                                           raiseOnUnderflow: false,
+                                                           raiseOnDivideByZero: false)
+            let totalToken = NSDecimalNumber.init(value: model.liquidity_total_supply ?? 0)
+            let amount = NSDecimalNumber.init(string: textField.text ?? "0").multiplying(by: NSDecimalNumber.init(value: 1000000))
+            let rate = amount.dividing(by: totalToken, withBehavior: numberConfig)
+            let amountA = NSDecimalNumber.init(value: model.coina?.value ?? 0).multiplying(by: rate).dividing(by: NSDecimalNumber.init(value: 1000000), withBehavior: numberConfig)
+//            let amountA = getDecimalNumber(amount: NSDecimalNumber.init(value: model.coin_a_value ?? 0),
+//                                           scale: 4,
+//                                           unit: 1000000)
+            outputCoinAAmountLabel.text = amountA.stringValue + (model.coina?.name ?? "---")
+            let amountB = NSDecimalNumber.init(value: model.coinb?.value ?? 0).multiplying(by: rate).dividing(by: NSDecimalNumber.init(value: 1000000), withBehavior: numberConfig)
+//            let amountB = getDecimalNumber(amount: NSDecimalNumber.init(value: model.coin_b_value ?? 0),
+//                                           scale: 4,
+//                                           unit: 1000000)
+            outputCoinBAmountLabel.text = amountB.stringValue + (model.coinb?.name ?? "---")
+        } else {
+            
+        }
+        
     }
 }
 //wallet_assets_pool_transfer_in_title = "Transfer-In"
