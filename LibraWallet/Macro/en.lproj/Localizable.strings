@@ -264,10 +264,14 @@ wallet_market_exchange_transactions_title = "Exchange Transactions";
 wallet_market_exchange_transaction_status_success_title = "Successful";
 wallet_market_exchange_transaction_status_failed_title = "Failed";
 wallet_market_exchange_transaction_retry_button_title = "Retry";
-wallet_market_assets_pool_token_title = "Tokens: ";
-wallet_market_exchange_token_title = "Assets: ";
+wallet_market_exchange_token_title = "Balance: ";
+wallet_market_assets_pool_add_liquidity_token_title = "Balance：";
+wallet_market_assets_pool_remove_liquidity_token_title = "Tokens: ";
 wallet_market_assets_pool_add_liquidity_fee_title = "Add liquidity to get fee income";
 wallet_market_assets_pool_exchange_rate_title = "Rate: ";
+wallet_market_assets_pool_add_liquidity_confirm_button_title = "Confirm";
+wallet_market_assets_pool_remove_liquidity_confirm_button_title = "Confirm";
+wallet_market_assets_pool_input_amount_title = "Deposit";
 
 /************* 资金池交易记录 *******************/
 wallet_assets_pool_transfer_in_title = "Add Liquidity";
@@ -401,6 +405,12 @@ wallet_scan_login_alert_success_title = "Login Successful";
 wallet_connect_connect_time_invalid_title = "Connection failed, please try again later";
 wallet_connect_disconnect_success_title = "Logout Successful";
 wallet_connect_publish_success_title = "Publish Successful";
+
+// 交易所添加流动性
+wallet_assets_pool_add_liquidity_unselect_first_deposit_token_content = "Please select a deposit token";
+wallet_assets_pool_add_liquidity_unselect_second_deposit_token_content = "Please select other deposit token";
+// 交易所移除流动性
+wallet_assets_pool_remove_liquidity_unselect_token = "Please select a withdraw token";
 
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "Safety Warning";

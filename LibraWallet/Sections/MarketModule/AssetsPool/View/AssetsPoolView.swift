@@ -26,7 +26,7 @@ class AssetsPoolView: UIView {
         super.layoutSubviews()
         headerView.snp.makeConstraints { (make) in
             make.top.left.right.equalTo(self)
-            make.height.equalTo(404)
+            make.bottom.equalTo(self)
         }
     }
     //MARK: - 懒加载对象

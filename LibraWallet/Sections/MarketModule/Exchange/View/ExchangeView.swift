@@ -25,7 +25,7 @@ class ExchangeView: UIView {
         super.layoutSubviews()
         headerView.snp.makeConstraints { (make) in
             make.top.left.right.equalTo(self)
-            make.height.equalTo(404)
+            make.bottom.equalTo(self)
         }
     }
     func changeHeaderViewDefault(hideLeftModel: Bool) {

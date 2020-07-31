@@ -112,12 +112,14 @@ class LibraSDKTests: XCTestCase {
 
     }
     func testLibraWallet() {
-        let mnemonic = ["trouble", "menu", "nephew", "group", "alert", "recipe", "hotel", "fatigue", "wet", "shadow", "say", "fold", "huge", "olive", "solution", "enjoy", "garden", "appear", "vague", "joy", "great", "keep", "cactus", "melt"]
-        //        let mnemonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
+//        let mnemonic = ["trouble", "menu", "nephew", "group", "alert", "recipe", "hotel", "fatigue", "wet", "shadow", "say", "fold", "huge", "olive", "solution", "enjoy", "garden", "appear", "vague", "joy", "great", "keep", "cactus", "melt"]
+                let mnemonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
         do {
             let seed = try LibraMnemonic.seed(mnemonic: mnemonic)
             let wallet = try LibraHDWallet.init(seed: seed, depth: 0)
             let walletAddress = wallet.publicKey.toLegacy()
+//            2e797751e6ae643d129a854f8c739b72783a439b523f2545d3a71622c9e74b38
+//            783a439b523f2545d3a71622c9e74b38
             XCTAssertEqual(walletAddress, "2e9829f376318154bff603ebc8e0b743")
         } catch {
             print(error.localizedDescription)
@@ -139,6 +141,7 @@ class LibraSDKTests: XCTestCase {
     }
     func testKeychainReinstallGetPasswordAndMnemonic() {
         let mnemonic = ["legal","winner","thank","year","wave","sausage","worth","useful","legal","winner","thank","year","wave","sausage","worth","useful","legal","will"]
+//        let mnemonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
         do {
             let seed = try LibraMnemonic.seed(mnemonic: mnemonic)
             
