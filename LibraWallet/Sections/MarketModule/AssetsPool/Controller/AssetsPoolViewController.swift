@@ -46,6 +46,13 @@ class AssetsPoolViewController: UIViewController {
     
 }
 extension AssetsPoolViewController: AssetsPoolViewHeaderViewDelegate {
+    
+    func getPoolLiquidity(inputModuleName: String, outputModuleName: String) {
+        self.detailView.toastView?.show(tag: 99)
+        self.dataModel.getPoolLiquidity(coinA: inputModuleName,
+                                        coinB: outputModuleName)
+    }
+    
     func addLiquidityConfirm(amountIn: Double, amountOut: Double, inputModelName: String, outputModelName: String) {
         WalletManager.unlockWallet(controller: self, successful: { [weak self](mnemonic) in
             self?.detailView.toastView?.show(tag: 99)
@@ -131,9 +138,9 @@ extension AssetsPoolViewController: AssetsPoolViewHeaderViewDelegate {
 //                                                              coinA: coinAModule,
 //                                                              coinB: coinBModule,
 //                                                              amount: Int64(amount * 1000000))
-            
+
         }
-        
+
     }
     
 }
@@ -277,7 +284,7 @@ extension AssetsPoolViewController {
                 guard let tempData = dataDic.value(forKey: "data") as? AssetsPoolsInfoDataModel else {
                     return
                 }
-                self?.detailView.headerView.removeLiquidityInfoModel = tempData
+                self?.detailView.headerView.liquidityInfoModel = tempData
             }
             self?.detailView.hideToastActivity()
             self?.detailView.toastView?.hide(tag: 99)
