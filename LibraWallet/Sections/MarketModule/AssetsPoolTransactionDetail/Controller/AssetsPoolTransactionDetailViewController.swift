@@ -31,26 +31,24 @@ class AssetsPoolTransactionDetailViewController: BaseViewController {
     deinit {
         print("AssetsPoolTransactionDetailViewController销毁了")
     }
-    //网络请求、数据模型
+    /// 网络请求、数据模型
     lazy var dataModel: AssetsPoolTransactionDetailModel = {
         let model = AssetsPoolTransactionDetailModel.init()
         return model
     }()
-    //tableView管理类
+    /// tableView管理类
     lazy var tableViewManager: AssetsPoolTransactionDetailTableViewMananger = {
         let manager = AssetsPoolTransactionDetailTableViewMananger.init()
         //        manager.delegate = self
         return manager
     }()
-    //子View
+    /// 子View
     lazy var detailView : AssetsPoolTransactionDetailView = {
         let view = AssetsPoolTransactionDetailView.init()
         view.tableView.delegate = self.tableViewManager
         view.tableView.dataSource = self.tableViewManager
         return view
     }()
-    var firstIn: Bool = true
-    var wallet: Token?
-    var cancelIndexPath: IndexPath?
+    /// 数据模型
     var model: AssetsPoolTransactionsDataModel?
 }

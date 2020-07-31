@@ -49,7 +49,7 @@ class ExchangeTransactionsViewController: BaseViewController {
     /// tableView管理类
     lazy var tableViewManager: ExchangeTransactionsTableViewManager = {
         let manager = ExchangeTransactionsTableViewManager.init()
-        //        manager.delegate = self
+        manager.delegate = self
         return manager
     }()
     /// 子View
@@ -79,6 +79,15 @@ class ExchangeTransactionsViewController: BaseViewController {
                                                pageSize: 10,
                                                requestStatus: 1)
     }
+}
+extension ExchangeTransactionsViewController: ExchangeTransactionsTableViewManagerDelegate {
+    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: ExchangeTransactionsDataModel) {
+        let vc = ExchangeTransactionDetailViewController()
+        vc.model = model
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    
 }
 extension ExchangeTransactionsViewController {
     func initKVO() {

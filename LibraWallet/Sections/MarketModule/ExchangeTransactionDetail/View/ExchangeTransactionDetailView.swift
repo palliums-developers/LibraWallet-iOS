@@ -35,8 +35,11 @@ class ExchangeTransactionDetailView: UIView {
         tableView.estimatedSectionHeaderHeight = 0;
         tableView.backgroundColor = UIColor.white
         tableView.isScrollEnabled = false
+        tableView.isUserInteractionEnabled = false
         tableView.register(ExchangeTransactionDetailTableViewCell.classForCoder(), forCellReuseIdentifier: "NormalCell")
         tableView.register(ExchangeTransactionDetailHeaderView.classForCoder(), forHeaderFooterViewReuseIdentifier: "Header")
+        tableView.register(ExchangeTransactionDetailFooterView.classForCoder(), forHeaderFooterViewReuseIdentifier: "Footer")
+
         return tableView
     }()
     var toastView: ToastView? {

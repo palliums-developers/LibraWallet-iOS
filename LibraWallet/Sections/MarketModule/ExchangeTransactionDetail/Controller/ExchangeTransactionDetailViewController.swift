@@ -13,6 +13,9 @@ class ExchangeTransactionDetailViewController: BaseViewController {
         super.viewDidLoad()
         self.title = localLanguage(keyString: "wallet_market_exchange_transaction_detail_navigationbar_title")
         self.view.addSubview(detailView)
+        self.tableViewManager.model = self.model
+        self.tableViewManager.dataModels = self.dataModel.getCustomModel(model: self.model!)
+        self.detailView.tableView.reloadData()
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -28,25 +31,23 @@ class ExchangeTransactionDetailViewController: BaseViewController {
     deinit {
         print("ExchangeTransactionDetailViewController销毁了")
     }
-    //网络请求、数据模型
+    /// 网络请求、数据模型
     lazy var dataModel: ExchangeTransactionDetailModel = {
         let model = ExchangeTransactionDetailModel.init()
         return model
     }()
-    //tableView管理类
+    /// tableView管理类
     lazy var tableViewManager: ExchangeTransactionDetailTableViewMananger = {
         let manager = ExchangeTransactionDetailTableViewMananger.init()
 //        manager.delegate = self
         return manager
     }()
-    //子View
+    /// 子View
     lazy var detailView : ExchangeTransactionDetailView = {
         let view = ExchangeTransactionDetailView.init()
         view.tableView.delegate = self.tableViewManager
         view.tableView.dataSource = self.tableViewManager
         return view
     }()
-    var firstIn: Bool = true
-    var wallet: Token?
-    var cancelIndexPath: IndexPath?
+    var model: ExchangeTransactionsDataModel?
 }

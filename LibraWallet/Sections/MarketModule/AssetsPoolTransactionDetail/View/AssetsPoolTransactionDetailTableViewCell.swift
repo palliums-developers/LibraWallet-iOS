@@ -1,15 +1,14 @@
 //
-//  ExchangeTransactionDetailTableViewCell.swift
+//  AssetsPoolTransactionDetailTableViewCell.swift
 //  LibraWallet
 //
-//  Created by wangyingdong on 2020/7/6.
+//  Created by wangyingdong on 2020/7/31.
 //  Copyright © 2020 palliums. All rights reserved.
 //
 
 import UIKit
 
-class ExchangeTransactionDetailTableViewCell: UITableViewCell {
-    //    weak var delegate: AddAssetViewTableViewCellDelegate?
+class AssetsPoolTransactionDetailTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(titleLabel)
@@ -19,7 +18,7 @@ class ExchangeTransactionDetailTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
-        print("AssetsPoolTableViewCell销毁了")
+        print("AssetsPoolTransactionDetailTableViewCell销毁了")
     }
     //pragma MARK: 布局
     override func layoutSubviews() {

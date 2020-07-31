@@ -18,9 +18,9 @@ class ExchangeTransactionsTableViewCell: UITableViewCell {
         contentView.addSubview(outputAmountLabel)
         contentView.addSubview(dateLabel)
         contentView.addSubview(spaceLabel)
-        if reuseIdentifier == "FailedCell" {
-            contentView.addSubview(retryButton)
-        }
+//        if reuseIdentifier == "FailedCell" {
+//            contentView.addSubview(retryButton)
+//        }
         // 添加语言变换通知
         NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
     }
@@ -61,13 +61,13 @@ class ExchangeTransactionsTableViewCell: UITableViewCell {
             make.right.equalTo(contentView.snp.right).offset(-16)
             make.height.equalTo(0.5)
         }
-        if reuseIdentifier == "FailedCell" {
-            retryButton.snp.makeConstraints { (make) in
-                make.centerY.equalTo(stateLabel)
-                make.left.equalTo(stateLabel.snp.right).offset(7)
-                make.size.equalTo(CGSize.init(width: 42, height: 18))
-            }
-        }
+//        if reuseIdentifier == "FailedCell" {
+//            retryButton.snp.makeConstraints { (make) in
+//                make.centerY.equalTo(stateLabel)
+//                make.left.equalTo(stateLabel.snp.right).offset(7)
+//                make.size.equalTo(CGSize.init(width: 42, height: 18))
+//            }
+//        }
     }
     // MARK: - 懒加载对象
     lazy var stateLabel: UILabel = {

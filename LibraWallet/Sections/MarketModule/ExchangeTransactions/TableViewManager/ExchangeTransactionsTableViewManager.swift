@@ -7,8 +7,11 @@
 //
 
 import UIKit
-
+protocol ExchangeTransactionsTableViewManagerDelegate: NSObjectProtocol {
+    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: ExchangeTransactionsDataModel)
+}
 class ExchangeTransactionsTableViewManager: NSObject {
+    weak var delegate: ExchangeTransactionsTableViewManagerDelegate?
     var dataModels: [ExchangeTransactionsDataModel]?
     deinit {
         print("ExchangeTransactionsTableViewManager销毁了")
@@ -20,10 +23,10 @@ extension ExchangeTransactionsTableViewManager: UITableViewDelegate {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
-        //        guard let model = self.dataModel else {
-        //            return
-        //        }
-        //        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, model: model[indexPath.row])
+        guard let model = self.dataModels else {
+            return
+        }
+        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, model: model[indexPath.row])
     }
 }
 extension ExchangeTransactionsTableViewManager: UITableViewDataSource {

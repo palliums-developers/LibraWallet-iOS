@@ -35,8 +35,10 @@ class AssetsPoolTransactionDetailView: UIView {
         tableView.estimatedSectionHeaderHeight = 0;
         tableView.backgroundColor = UIColor.white
         tableView.isScrollEnabled = false
-        tableView.register(AssetsPoolTableViewCell.classForCoder(), forCellReuseIdentifier: "NormalCell")
-        tableView.register(AssetsPoolTableViewCell.classForCoder(), forCellReuseIdentifier: "FailedCell")
+        tableView.isUserInteractionEnabled = false
+        tableView.register(AssetsPoolTransactionDetailTableViewCell.classForCoder(), forCellReuseIdentifier: "NormalCell")
+        tableView.register(AssetsPoolTransactionDetailHeaderView.classForCoder(), forHeaderFooterViewReuseIdentifier: "Header")
+        tableView.register(AssetsPoolTransactionDetailFooterView.classForCoder(), forHeaderFooterViewReuseIdentifier: "Footer")
         return tableView
     }()
     var toastView: ToastView? {

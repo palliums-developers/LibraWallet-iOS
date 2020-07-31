@@ -9,15 +9,15 @@
 import UIKit
 import Moya
 class ExchangeTransactionDetailModel: NSObject {
-    func getCustomModel(model: AssetsPoolTransactionsDataModel) -> [TransactionDetailCustomDataModel] {
+    func getCustomModel(model: ExchangeTransactionsDataModel) -> [TransactionDetailCustomDataModel] {
         //         汇率
         //         手续费
         //         矿工费用
         //         下单时间
         //         成交时间
         var tempModels = [TransactionDetailCustomDataModel]()
-        let inputAmount = NSDecimalNumber.init(value: model.amounta ?? 0)
-        let outputAmount = NSDecimalNumber.init(value: model.amountb ?? 0)
+        let inputAmount = NSDecimalNumber.init(value: model.input_amount ?? 0)
+        let outputAmount = NSDecimalNumber.init(value: model.output_amount ?? 0)
         let numberConfig = NSDecimalNumberHandler.init(roundingMode: .up,
                                                        scale: 4,
                                                        raiseOnExactness: false,
@@ -25,11 +25,9 @@ class ExchangeTransactionDetailModel: NSObject {
                                                        raiseOnUnderflow: false,
                                                        raiseOnDivideByZero: false)
         let rate = outputAmount.dividing(by: inputAmount, withBehavior: numberConfig)
-           tempModels.append(TransactionDetailCustomDataModel.init(name: localLanguage(keyString: "wallet_market_transaction_content_exchange_rate_title"),
-                                                                   value: "1:\(rate.stringValue)"))
-//        let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model.token ?? 0),
-//                                      scale: 4,
-//                                      unit: 1000000)
+        let rateValue = rate.stringValue == "NaN" ? "---":"1:\(rate.stringValue)"
+        tempModels.append(TransactionDetailCustomDataModel.init(name: localLanguage(keyString: "wallet_market_transaction_content_exchange_rate_title"),
+                                                                value: rateValue))
         tempModels.append(TransactionDetailCustomDataModel.init(name: localLanguage(keyString: "wallet_market_transaction_content_order_fee_title"),
                                                                 value: "---"))
         tempModels.append(TransactionDetailCustomDataModel.init(name: localLanguage(keyString: "wallet_market_transaction_content_miner_fee_title"),

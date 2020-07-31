@@ -137,7 +137,7 @@ class WalletTransactionsTableViewCell: UITableViewCell {
                 // 收款
                 amountLabel.text = "+" + amount
                 amountLabel.textColor = UIColor.init(hex: color)
-                transactionTypeImageView.image = UIImage.init(named: "transfer_sign")
+                transactionTypeImageView.image = UIImage.init(named: "receive_sign")
                 addressLabel.text = model.vout?.first?.addresses?.first
             }
         }
