@@ -11,7 +11,7 @@ import MJRefresh
 class ExchangeTransactionsViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor.white
+        self.title = localLanguage(keyString: "wallet_market_exchange_transactions_navigationbar_title")
         // 加载子View
         self.view.addSubview(detailView)
         // 初始化KVO
@@ -67,11 +67,17 @@ class ExchangeTransactionsViewController: BaseViewController {
     @objc func refreshData() {
         dataOffset = 0
         detailView.tableView.mj_footer?.resetNoMoreData()
-        self.dataModel.getExchangeTransactions(address: "fa279f2615270daed6061313a48360f7", page: dataOffset, pageSize: 10, requestStatus: 0)
+        self.dataModel.getExchangeTransactions(address: WalletManager.shared.violasAddress ?? "",
+                                               page: dataOffset,
+                                               pageSize: 10,
+                                               requestStatus: 0)
     }
     @objc func getMoreData() {
         dataOffset += 10
-        self.dataModel.getExchangeTransactions(address: "fa279f2615270daed6061313a48360f7", page: dataOffset, pageSize: 10, requestStatus: 1)
+        self.dataModel.getExchangeTransactions(address: WalletManager.shared.violasAddress ?? "",
+                                               page: dataOffset,
+                                               pageSize: 10,
+                                               requestStatus: 1)
     }
 }
 extension ExchangeTransactionsViewController {

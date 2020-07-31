@@ -437,6 +437,11 @@ wallet_order_center_navigationbar_title = "订单";
 wallet_order_center_detail_navigationbar_title = "订单详情";
 wallet_mapping_navigationbar_title = "兑换";
 wallet_mapping_receive_wallet_navigationbar_title = "钱包选择";
+wallet_market_exchange_transactions_navigationbar_title = "兑换记录";
+wallet_market_exchange_transaction_detail_navigationbar_title = "兑换详情";
+wallet_market_assets_pool_mine_navigationbar_title = "我的资金池";
+wallet_market_assets_pool_transactions_navigationbar_title = "资金池记录";
+wallet_market_assets_pool_transaction_detail_navigationbar_title = "详情";
 
 /************* App错误 *******************/
 // 请求遇到错误

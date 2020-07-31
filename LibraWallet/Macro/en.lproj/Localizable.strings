@@ -434,6 +434,11 @@ wallet_order_center_navigationbar_title = "Order";
 wallet_order_center_detail_navigationbar_title = "Order detail";
 wallet_mapping_navigationbar_title = "Mapping";
 wallet_mapping_receive_wallet_navigationbar_title = "Wallets";
+wallet_market_exchange_transactions_navigationbar_title = "Exchange Transactions";
+wallet_market_exchange_transaction_detail_navigationbar_title = "Exchange Detail";
+wallet_market_assets_pool_mine_navigationbar_title = "My Assets Pool";
+wallet_market_assets_pool_transactions_navigationbar_title = "Pool Transactions";
+wallet_market_assets_pool_transaction_detail_navigationbar_title = "Detail";
 
 /************* App错误 *******************/
 // 请求遇到错误

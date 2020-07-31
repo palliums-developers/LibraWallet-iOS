@@ -11,6 +11,7 @@ import UIKit
 class ExchangeTransactionDetailViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = localLanguage(keyString: "wallet_market_exchange_transaction_detail_navigationbar_title")
         self.view.addSubview(detailView)
     }
     override func viewWillLayoutSubviews() {

@@ -11,6 +11,7 @@ import UIKit
 class AssetsPoolTransactionDetailViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = localLanguage(keyString: "wallet_market_assets_pool_transaction_detail_navigationbar_title")
         self.view.addSubview(detailView)
         self.tableViewManager.model = self.model
         self.tableViewManager.dataModels = self.dataModel.getCustomModel(model: self.model!)

@@ -111,6 +111,18 @@ class LibraSDKTests: XCTestCase {
         XCTAssertEqual(scriptRaw.serialize().toHexString().lowercased(), Data.init(rawTransactioinScriptCheckData).toHexString())
 
     }
+    func testLibraWallet() {
+        let mnemonic = ["trouble", "menu", "nephew", "group", "alert", "recipe", "hotel", "fatigue", "wet", "shadow", "say", "fold", "huge", "olive", "solution", "enjoy", "garden", "appear", "vague", "joy", "great", "keep", "cactus", "melt"]
+        //        let mnemonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
+        do {
+            let seed = try LibraMnemonic.seed(mnemonic: mnemonic)
+            let wallet = try LibraHDWallet.init(seed: seed, depth: 0)
+            let walletAddress = wallet.publicKey.toLegacy()
+            XCTAssertEqual(walletAddress, "2e9829f376318154bff603ebc8e0b743")
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
     func testED25519() {
         let mnemonic = ["net", "dice", "divide", "amount", "stamp", "flock", "brave", "nuclear", "fox", "aim", "father", "apology"]
         do {

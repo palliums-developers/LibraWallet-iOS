@@ -12,6 +12,7 @@ class MarketMineViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = localLanguage(keyString: "wallet_market_assets_pool_mine_navigationbar_title")
         // 加载子View
         self.view.addSubview(detailView)
         self.initKVO()
@@ -45,7 +46,7 @@ class MarketMineViewController: BaseViewController {
     var observer: NSKeyValueObservation?
     func requestData() {
         self.detailView.makeToastActivity(.center)
-        self.dataModel.getMarketMineTokens(address: "fa279f2615270daed6061313a48360f7")
+        self.dataModel.getMarketMineTokens(address: WalletManager.shared.violasAddress ?? "")
     }
 }
 extension MarketMineViewController {
