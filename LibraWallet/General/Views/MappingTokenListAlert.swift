@@ -26,17 +26,28 @@ class MappingTokenListAlert: UIView {
         self.init(frame: CGRect.zero)
         self.actionClosure = successClosure
         self.dataModels = data
+        self.originModels = data
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyBoardWillShow(_ :)),
+                                               name: UIResponder.keyboardWillShowNotification,
+                                               object: nil)
+
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyBoardWillHide(_ :)),
+                                               name: UIResponder.keyboardWillHideNotification,
+                                               object: nil)
     }
     deinit {
         print("MappingTokenListAlert销毁了")
+        NotificationCenter.default.removeObserver(self)
     }
     //MARK: - 布局
     override func layoutSubviews() {
         super.layoutSubviews()
         whiteBackgroundView.snp.makeConstraints { (make) in
             make.left.right.equalTo(self)
-            make.height.equalTo(500)
-            make.bottom.equalTo(self).offset(500).priority(250)
+            make.height.equalTo(319)
+            make.bottom.equalTo(self).offset(319).priority(250)
         }
         searchBar.snp.makeConstraints { (make) in
             make.top.equalTo(whiteBackgroundView).offset(18)
@@ -47,6 +58,7 @@ class MappingTokenListAlert: UIView {
         tableView.snp.makeConstraints { (make) in
             make.top.equalTo(searchBar.snp.bottom).offset(10)
             make.left.right.bottom.equalTo(whiteBackgroundView)
+            make.bottom.equalTo(whiteBackgroundView).offset(-34)
         }
     }
     //MARK: - 懒加载对象
@@ -55,7 +67,14 @@ class MappingTokenListAlert: UIView {
         let view = UIView.init()
         view.backgroundColor = UIColor.white
         view.isUserInteractionEnabled = true
+        view.addGestureRecognizer(tap)
         return view
+    }()
+    lazy var tap: UIGestureRecognizer = {
+       let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.tapRecognized(_:)))
+        tapGesture.cancelsTouchesInView = false
+//        tapGesture.delegate = self
+        return tapGesture
     }()
     lazy var searchBar: UISearchBar = {
         let bar = UISearchBar.init()
@@ -66,7 +85,7 @@ class MappingTokenListAlert: UIView {
         bar.searchBarStyle = .minimal
         bar.setSearchFieldBackgroundImage(UIImage().imageWithColor(color: UIColor.init(hex: "F8F8F8"), width: mainWidth - 30, height: 30), for: UIControl.State.normal)
         bar.delegate = self
-        bar.isUserInteractionEnabled = false
+        bar.keyboardType = .alphabet
         return bar
     }()
     lazy var tableView: UITableView = {
@@ -94,7 +113,48 @@ class MappingTokenListAlert: UIView {
 //        self.hideAnimation(tag: 99)
 //    }
     var dataModels: [MarketSupportTokensDataModel]?
+    var originModels: [MarketSupportTokensDataModel]?
     var pickerRow: Int?
+    //MARK:键盘通知相关操作
+    @objc func keyBoardWillShow(_ notification:Notification){
+
+        DispatchQueue.main.async {
+
+            let user_info = notification.userInfo
+            let keyboardRect = (user_info?[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+            
+            UIView.animate(withDuration: 0.3, animations: {
+                self.whiteBackgroundView.snp.remakeConstraints { (make) in
+                    make.bottom.equalTo(self.snp.bottom).offset(-(keyboardRect.size.height))
+                    make.left.right.equalTo(self)
+                    make.height.equalTo(319)
+                }
+                self.layoutIfNeeded()
+                
+            })
+        }
+    }
+
+    @objc func keyBoardWillHide(_ notification:Notification){
+        DispatchQueue.main.async {
+            UIView.animate(withDuration: 0.3, animations: {
+                self.whiteBackgroundView.snp.remakeConstraints { (make) in
+                    make.bottom.equalTo(self.snp.bottom)
+                    make.left.right.equalTo(self)
+                    make.height.equalTo(319)
+                }
+                self.layoutIfNeeded()
+            })
+        }
+    }
+    @objc internal func tapRecognized(_ gesture: UITapGestureRecognizer) {
+        
+        if gesture.state == .ended {
+
+            //Resigning currently responder textField.
+            self.searchBar.resignFirstResponder()
+        }
+    }
 }
 extension MappingTokenListAlert: actionViewProtocol {
     
@@ -165,7 +225,18 @@ extension MappingTokenListAlert: UITableViewDataSource {
     }
 }
 extension MappingTokenListAlert: UISearchBarDelegate {
-    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        print(searchText)
+        let tempModel = self.dataModels?.filter({
+            $0.show_name?.lowercased().contains(searchText.lowercased()) == true
+        })
+        if searchText.isEmpty == true {
+            self.dataModels = self.originModels
+        } else {
+            self.dataModels = tempModel
+        }
+        self.tableView.reloadData()
+    }
 }
 class TokenListCell: UITableViewCell {
     //    weak var delegate: AddAssetViewTableViewCellDelegate?
@@ -290,23 +361,24 @@ class TokenListCell: UITableViewCell {
 extension MappingTokenListAlert: actionViewAnimationProtocol {
     func showAnimation() {
         DispatchQueue.main.asyncAfter(deadline: .now()+0.001) {
-            UIView.animate(withDuration: 0.3, animations: {
+            UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: .curveEaseOut, animations: {
                 self.whiteBackgroundView.snp.remakeConstraints { (make) in
                     make.bottom.equalTo(self.snp.bottom).offset(0);
                     make.left.right.equalTo(self)
-                    make.height.equalTo(500)
+                    make.height.equalTo(319)
                 }
                 self.layoutIfNeeded()
-            })
+            }, completion: nil)
+            
         }
     }
     func hideAnimation(tag: Int) {
         DispatchQueue.main.asyncAfter(deadline: .now()+0.001) {
             UIView.animate(withDuration: 0.3, animations: {
                 self.whiteBackgroundView.snp.remakeConstraints { (make) in
-                    make.bottom.equalTo(self.snp.bottom).offset(319);
+                    make.bottom.equalTo(self).offset(319);
                     make.left.right.equalTo(self)
-                    make.height.equalTo(500)
+                    make.height.equalTo(319)
                 }
                 self.layoutIfNeeded()
             }, completion: { (status) in

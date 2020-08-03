@@ -20,7 +20,7 @@ extension actionViewProtocol where Self: UIView {
             let blurView = UIVisualEffectView(effect: blurEffect)
             blurView.frame.size = CGSize(width: window.frame.size.width, height: window.frame.size.height)
             blurView.center = window.center
-            blurView.alpha = 0.3
+            blurView.alpha = 0.2
             
             blurView.isUserInteractionEnabled = true
             let tap = UITapGestureRecognizer.init()
