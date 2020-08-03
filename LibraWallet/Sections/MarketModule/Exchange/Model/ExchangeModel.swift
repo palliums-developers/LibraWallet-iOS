@@ -1038,23 +1038,23 @@ extension ExchangeModel {
         var fee: Int64 = 0
         for item in pathModel.reversed() {
             if item.coina?.index == nextIndex {
-                let a = (NSDecimalNumber.init(value: item.coina?.value ?? 0).multiplying(by: NSDecimalNumber.init(value: 1000))).multiplying(by: NSDecimalNumber.init(value: output))
-                let b = (NSDecimalNumber.init(value: item.coinb?.value ?? 0).subtracting(NSDecimalNumber.init(value: output))).multiplying(by: NSDecimalNumber.init(value: 997))
-                output = (a.dividing(by: b, withBehavior: numberConfig)).adding(NSDecimalNumber.init(value: 1)).int64Value
-                // fee
-                nextIndex = (item.coinb?.index)!
-                let aWithoutFee = (NSDecimalNumber.init(value: item.coina?.value ?? 0).multiplying(by: NSDecimalNumber.init(value: 1000))).multiplying(by: NSDecimalNumber.init(value: output))
-                let bWithoutFee = (NSDecimalNumber.init(value: item.coinb?.value ?? 0).subtracting(NSDecimalNumber.init(value: output))).multiplying(by: NSDecimalNumber.init(value: 1000))
-                outputWithoutFee = (aWithoutFee.dividing(by: bWithoutFee, withBehavior: numberConfig)).adding(NSDecimalNumber.init(value: 1)).int64Value
-            } else {
                 let a = (NSDecimalNumber.init(value: item.coinb?.value ?? 0).multiplying(by: NSDecimalNumber.init(value: 1000))).multiplying(by: NSDecimalNumber.init(value: output))
                 let b = (NSDecimalNumber.init(value: item.coina?.value ?? 0).subtracting(NSDecimalNumber.init(value: output))).multiplying(by: NSDecimalNumber.init(value: 997))
-                output = (a.dividing(by: b, withBehavior: numberConfig)).adding(NSDecimalNumber.init(value: 1)).int64Value
+                output = (a.dividing(by: b, withBehavior: numberConfig)).int64Value
                 // fee
-                nextIndex = (item.coina?.index)!
+                nextIndex = (item.coinb?.index)!
                 let aWithoutFee = (NSDecimalNumber.init(value: item.coinb?.value ?? 0).multiplying(by: NSDecimalNumber.init(value: 1000))).multiplying(by: NSDecimalNumber.init(value: output))
                 let bWithoutFee = (NSDecimalNumber.init(value: item.coina?.value ?? 0).subtracting(NSDecimalNumber.init(value: output))).multiplying(by: NSDecimalNumber.init(value: 1000))
                 outputWithoutFee = (aWithoutFee.dividing(by: bWithoutFee, withBehavior: numberConfig)).adding(NSDecimalNumber.init(value: 1)).int64Value
+            } else {
+                let a = (NSDecimalNumber.init(value: item.coina?.value ?? 0).multiplying(by: NSDecimalNumber.init(value: 1000))).multiplying(by: NSDecimalNumber.init(value: output))
+                let b = (NSDecimalNumber.init(value: item.coinb?.value ?? 0).subtracting(NSDecimalNumber.init(value: output))).multiplying(by: NSDecimalNumber.init(value: 997))
+                output = (a.dividing(by: b, withBehavior: numberConfig)).int64Value
+                // fee
+                nextIndex = (item.coina?.index)!
+                let aWithoutFee = (NSDecimalNumber.init(value: item.coina?.value ?? 0).multiplying(by: NSDecimalNumber.init(value: 1000))).multiplying(by: NSDecimalNumber.init(value: output))
+                let bWithoutFee = (NSDecimalNumber.init(value: item.coinb?.value ?? 0).subtracting(NSDecimalNumber.init(value: output))).multiplying(by: NSDecimalNumber.init(value: 1000))
+                outputWithoutFee = (aWithoutFee.dividing(by: bWithoutFee, withBehavior: numberConfig)).int64Value
             }
         }
         fee = output - outputWithoutFee
