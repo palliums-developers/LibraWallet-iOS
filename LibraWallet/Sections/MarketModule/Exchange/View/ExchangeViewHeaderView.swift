@@ -43,7 +43,6 @@ class ExchangeViewHeaderView: UIView {
         case handleBestInputAmount
     }
     var viewState: ExchangeViewState = .Normal
-
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.white
@@ -499,7 +498,7 @@ class ExchangeViewHeaderView: UIView {
                 let rate = outputAmount.dividing(by: inputAmount, withBehavior: numberConfig)
                 exchangeRateLabel.text = localLanguage(keyString: "wallet_market_exchange_rate_title") + rate.stringValue
                 feeLabel.text = localLanguage(keyString: "wallet_market_exchange_fee_title") + getDecimalNumber(amount: NSDecimalNumber.init(value: model.fee),
-                                                                                                                scale: 4,
+                                                                                                                scale: 6,
                                                                                                                 unit: 1000000).stringValue
             } else {
                 inputAmountTextField.text = getDecimalNumber(amount: NSDecimalNumber.init(value: model.input),
@@ -516,7 +515,7 @@ class ExchangeViewHeaderView: UIView {
                 let rate = outputAmount.dividing(by: inputAmount, withBehavior: numberConfig)
                 exchangeRateLabel.text = localLanguage(keyString: "wallet_market_exchange_rate_title") + rate.stringValue
                 feeLabel.text = localLanguage(keyString: "wallet_market_exchange_fee_title") + getDecimalNumber(amount: NSDecimalNumber.init(value: model.fee),
-                                                                                                                scale: 4,
+                                                                                                                scale: 6,
                                                                                                                 unit: 1000000).stringValue
             }
             self.viewState = .Normal

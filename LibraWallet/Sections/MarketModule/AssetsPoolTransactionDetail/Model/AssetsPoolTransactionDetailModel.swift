@@ -15,14 +15,14 @@ class AssetsPoolTransactionDetailModel: NSObject {
     func getCustomModel(model: AssetsPoolTransactionsDataModel) -> [TransactionDetailCustomDataModel] {
         var tempModels = [TransactionDetailCustomDataModel]()
         let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model.token ?? 0),
-                                            scale: 4,
+                                            scale: 6,
                                             unit: 1000000)
         tempModels.append(TransactionDetailCustomDataModel.init(name: localLanguage(keyString: "wallet_market_transaction_content_token_title"),
                                                            value: amount.stringValue))
         let inputAmount = NSDecimalNumber.init(value: model.amounta ?? 0)
         let outputAmount = NSDecimalNumber.init(value: model.amountb ?? 0)
         let numberConfig = NSDecimalNumberHandler.init(roundingMode: .up,
-                                                       scale: 4,
+                                                       scale: 6,
                                                        raiseOnExactness: false,
                                                        raiseOnOverflow: false,
                                                        raiseOnUnderflow: false,

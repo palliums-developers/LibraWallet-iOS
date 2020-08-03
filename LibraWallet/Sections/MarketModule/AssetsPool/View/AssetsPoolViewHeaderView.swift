@@ -459,10 +459,10 @@ class AssetsPoolViewHeaderView: UIView {
                 // 转出
                 self.inputAmountTextField.resignFirstResponder()
                 let amountA = getDecimalNumber(amount: NSDecimalNumber.init(value: transferOutModel?.coin_a_value ?? 0),
-                                               scale: 4,
+                                               scale: 6,
                                                unit: 1000000)
                 let amountB = getDecimalNumber(amount: NSDecimalNumber.init(value: transferOutModel?.coin_b_value ?? 0),
-                                               scale: 4,
+                                               scale: 6,
                                                unit: 1000000)
                 // 转出
                 self.delegate?.removeLiquidityConfirm(token: NSDecimalNumber.init(string: inputAmountTextField.text ?? "0").doubleValue,
@@ -480,7 +480,7 @@ class AssetsPoolViewHeaderView: UIView {
                 return
             }
             let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model.token ?? 0),
-                                          scale: 4,
+                                          scale: 6,
                                           unit: 1000000)
             inputTokenAssetsLabel.text = localLanguage(keyString: "wallet_market_assets_pool_remove_liquidity_token_title") + amount.stringValue
             let content = (tokenModel?.coin_a?.show_name ?? "---") + "/" + (tokenModel?.coin_b?.show_name ?? "---")
@@ -502,12 +502,12 @@ class AssetsPoolViewHeaderView: UIView {
                 return
             }
             let amountA = getDecimalNumber(amount: NSDecimalNumber.init(value: model.coin_a_value ?? 0),
-                                          scale: 4,
+                                          scale: 6,
                                           unit: 1000000)
             outputCoinAAmountLabel.text = amountA.stringValue + (model.coin_a_name ?? "---")
             
             let amountB = getDecimalNumber(amount: NSDecimalNumber.init(value: model.coin_b_value ?? 0),
-                                          scale: 4,
+                                          scale: 6,
                                           unit: 1000000)
             outputCoinBAmountLabel.text = amountB.stringValue + (model.coin_b_name ?? "---")
         }
@@ -520,7 +520,7 @@ class AssetsPoolViewHeaderView: UIView {
             let coinAAmount = NSDecimalNumber.init(value: model.coina?.value ?? 0)
             let coinBAmount = NSDecimalNumber.init(value: model.coinb?.value ?? 0)
             let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
-                                                            scale: 4,
+                                                            scale: 6,
                                                             raiseOnExactness: false,
                                                             raiseOnOverflow: false,
                                                             raiseOnUnderflow: false,
@@ -545,7 +545,7 @@ class AssetsPoolViewHeaderView: UIView {
                 make.size.equalTo(CGSize.init(width: width, height: 22))
             }
             let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model.amount ?? 0),
-                                          scale: 4,
+                                          scale: 6,
                                           unit: 1000000)
             inputTokenAssetsLabel.text = localLanguage(keyString: "wallet_market_assets_pool_add_liquidity_token_title") + amount.stringValue
             // 重置View 状态
@@ -575,7 +575,7 @@ class AssetsPoolViewHeaderView: UIView {
                 make.size.equalTo(CGSize.init(width: width, height: 22))
             }
             let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model.amount ?? 0),
-                                          scale: 4,
+                                          scale: 6,
                                           unit: 1000000)
             outputTokenAssetsLabel.text = localLanguage(keyString: "wallet_market_assets_pool_add_liquidity_token_title") + amount.stringValue
             
@@ -755,7 +755,7 @@ extension AssetsPoolViewHeaderView: UITextFieldDelegate {
         }
         if content.contains(".") {
             let firstContent = content.split(separator: ".").first?.description ?? "0"
-            if (textLength - firstContent.count) < 6 {
+            if (textLength - firstContent.count) < 8 {
                 return handleInputAmount(textField: textField, content: (content.isEmpty == true ? "0":content) + string)
             } else {
                 return false
@@ -812,7 +812,7 @@ extension AssetsPoolViewHeaderView: UITextFieldDelegate {
                 let coinAValue = NSDecimalNumber.init(value: model.coina?.value ?? 0)
                 let rate = amount.dividing(by: coinAValue)
                 let amountB = getDecimalNumber(amount: NSDecimalNumber.init(value: model.coinb?.value ?? 0).multiplying(by: rate),
-                                               scale: 4,
+                                               scale: 6,
                                                unit: 1000000)
                 outputAmountTextField.text = amountB.stringValue
                 self.viewState = .Normal
@@ -828,11 +828,11 @@ extension AssetsPoolViewHeaderView: UITextFieldDelegate {
                 let amount = NSDecimalNumber.init(string: text).multiplying(by: NSDecimalNumber.init(value: 1000000))
                 let rate = amount.dividing(by: totalToken)
                 let amountA = getDecimalNumber(amount: NSDecimalNumber.init(value: model.coina?.value ?? 0).multiplying(by: rate),
-                                               scale: 4,
+                                               scale: 6,
                                                unit: 1000000)
                 outputCoinAAmountLabel.text = amountA.stringValue + (model.coina?.name ?? "---")
                 let amountB = getDecimalNumber(amount: NSDecimalNumber.init(value: model.coinb?.value ?? 0).multiplying(by: rate),
-                                               scale: 4,
+                                               scale: 6,
                                                unit: 1000000)
                 outputCoinBAmountLabel.text = amountB.stringValue + (model.coinb?.name ?? "---")
                 self.viewState = .Normal
@@ -860,7 +860,7 @@ extension AssetsPoolViewHeaderView: UITextFieldDelegate {
                 let coinBValue = NSDecimalNumber.init(value: model.coinb?.value ?? 0)
                 let rate = amount.dividing(by: coinBValue)
                 let amountA = getDecimalNumber(amount: NSDecimalNumber.init(value: model.coina?.value ?? 0).multiplying(by: rate),
-                                               scale: 4,
+                                               scale: 6,
                                                unit: 1000000)
                 inputAmountTextField.text = amountA.stringValue
                 self.viewState = .Normal
@@ -870,21 +870,34 @@ extension AssetsPoolViewHeaderView: UITextFieldDelegate {
     func handleInputAmount(textField: UITextField, content: String) -> Bool {
         let amount = NSDecimalNumber.init(string: content).multiplying(by: NSDecimalNumber.init(value: 1000000)).int64Value
         if textField.tag == 10 {
-            if amount <= transferInInputTokenA?.amount ?? 0 {
-                return true
+            if self.changeTypeButton.titleLabel?.text == localLanguage(keyString: localLanguage(keyString: "wallet_assets_pool_transfer_in_title")) {
+                if amount <= transferInInputTokenA?.amount ?? 0 {
+                    return true
+                } else {
+                    let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: transferInInputTokenA?.amount ?? 0),
+                                                  scale: 6,
+                                                  unit: 1000000)
+                    textField.text = amount.stringValue
+                    return false
+                }
             } else {
-                let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: transferInInputTokenA?.amount ?? 0),
-                                              scale: 4,
-                                              unit: 1000000)
-                textField.text = amount.stringValue
-                return false
+                if amount <= tokenModel?.token ?? 0 {
+                    return true
+                } else {
+                    let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: tokenModel?.token ?? 0),
+                                                  scale: 6,
+                                                  unit: 1000000)
+                    textField.text = amount.stringValue
+                    return false
+                }
             }
+            
         } else {
             if amount <= transferInInputTokenB?.amount ?? 0 {
                 return true
             } else {
                 let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: transferInInputTokenB?.amount ?? 0),
-                                              scale: 4,
+                                              scale: 6,
                                               unit: 1000000)
                 textField.text = amount.stringValue
                 return false

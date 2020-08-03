@@ -55,7 +55,7 @@ class MarketMineTableViewCell: UITableViewCell {
         didSet {
             tokenNameLabel.text = (model?.coin_a?.show_name ?? "---") + "-" + (model?.coin_b?.show_name ?? "---")
             let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model?.token ?? 0),
-                                          scale: 4,
+                                          scale: 6,
                                           unit: 1000000)
             tokenAmountLabel.text = amount.stringValue
         }

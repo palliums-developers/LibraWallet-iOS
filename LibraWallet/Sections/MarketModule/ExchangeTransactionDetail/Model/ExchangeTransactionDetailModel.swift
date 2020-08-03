@@ -19,7 +19,7 @@ class ExchangeTransactionDetailModel: NSObject {
         let inputAmount = NSDecimalNumber.init(value: model.input_amount ?? 0)
         let outputAmount = NSDecimalNumber.init(value: model.output_amount ?? 0)
         let numberConfig = NSDecimalNumberHandler.init(roundingMode: .up,
-                                                       scale: 4,
+                                                       scale: 6,
                                                        raiseOnExactness: false,
                                                        raiseOnOverflow: false,
                                                        raiseOnUnderflow: false,

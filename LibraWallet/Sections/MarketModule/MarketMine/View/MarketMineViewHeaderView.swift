@@ -136,7 +136,7 @@ class MarketMineViewHeaderView: UIView {
     var model: Int64? {
         didSet {
             let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model ?? 0),
-                                          scale: 4,
+                                          scale: 6,
                                           unit: 1000000)
             tokenAmountTextField.text = amount.stringValue
         }

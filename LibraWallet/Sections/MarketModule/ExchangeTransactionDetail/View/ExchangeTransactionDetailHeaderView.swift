@@ -75,7 +75,7 @@ class ExchangeTransactionDetailHeaderView: UITableViewHeaderFooterView {
         didSet {
             // 设置输入数量
             let inputAmount = getDecimalNumber(amount: NSDecimalNumber.init(value: model?.input_amount ?? 0),
-                                               scale: 4,
+                                               scale: 6,
                                                unit: 1000000)
             let inputAmountString = NSAttributedString(string: inputAmount.stringValue,
                                                        attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "333333"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: .bold)])
@@ -86,7 +86,7 @@ class ExchangeTransactionDetailHeaderView: UITableViewHeaderFooterView {
             inputAmountLabel.attributedText = tempInputAtt
             // 设置输出数量
             let outputAmount = getDecimalNumber(amount: NSDecimalNumber.init(value: model?.output_amount ?? 0),
-                                                scale: 4,
+                                                scale: 6,
                                                 unit: 1000000)
             let outputAmountString = NSAttributedString(string: outputAmount.stringValue,
                                                         attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "333333"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: .bold)])
