@@ -40,6 +40,8 @@
 		3646E4FD24D3EFEE00B8C20B /* AssetsPoolTransactionDetailHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3646E4FC24D3EFEE00B8C20B /* AssetsPoolTransactionDetailHeaderView.swift */; };
 		3646E4FF24D3EFFB00B8C20B /* AssetsPoolTransactionDetailFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3646E4FE24D3EFFB00B8C20B /* AssetsPoolTransactionDetailFooterView.swift */; };
 		3646E50124D3F07C00B8C20B /* AssetsPoolTransactionDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3646E50024D3F07C00B8C20B /* AssetsPoolTransactionDetailTableViewCell.swift */; };
+		3646E50424D7C0FD00B8C20B /* AssetsPoolViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3646E50324D7C0FD00B8C20B /* AssetsPoolViewModel.swift */; };
+		3646E50724D90A7800B8C20B /* ExchangeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3646E50624D90A7800B8C20B /* ExchangeViewModel.swift */; };
 		3650F0A624888FAE0086F578 /* WalletMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3650F0A524888FAE0086F578 /* WalletMainViewController.swift */; };
 		3650F0A824888FC40086F578 /* WalletMainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3650F0A724888FC40086F578 /* WalletMainModel.swift */; };
 		3650F0AA24888FD40086F578 /* WalletMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3650F0A924888FD40086F578 /* WalletMainView.swift */; };
@@ -353,6 +355,8 @@
 		3646E4FC24D3EFEE00B8C20B /* AssetsPoolTransactionDetailHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsPoolTransactionDetailHeaderView.swift; sourceTree = "<group>"; };
 		3646E4FE24D3EFFB00B8C20B /* AssetsPoolTransactionDetailFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsPoolTransactionDetailFooterView.swift; sourceTree = "<group>"; };
 		3646E50024D3F07C00B8C20B /* AssetsPoolTransactionDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsPoolTransactionDetailTableViewCell.swift; sourceTree = "<group>"; };
+		3646E50324D7C0FD00B8C20B /* AssetsPoolViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsPoolViewModel.swift; sourceTree = "<group>"; };
+		3646E50624D90A7800B8C20B /* ExchangeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeViewModel.swift; sourceTree = "<group>"; };
 		3650F0A524888FAE0086F578 /* WalletMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletMainViewController.swift; sourceTree = "<group>"; };
 		3650F0A724888FC40086F578 /* WalletMainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletMainModel.swift; sourceTree = "<group>"; };
 		3650F0A924888FD40086F578 /* WalletMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletMainView.swift; sourceTree = "<group>"; };
@@ -842,6 +846,22 @@
 			path = TableViewManager;
 			sourceTree = "<group>";
 		};
+		3646E50224D7C0DF00B8C20B /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				3646E50324D7C0FD00B8C20B /* AssetsPoolViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		3646E50524D90A6600B8C20B /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				3646E50624D90A7800B8C20B /* ExchangeViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		364BB570242CD27700B9BE17 /* MappingModule */ = {
 			isa = PBXGroup;
 			children = (
@@ -1075,6 +1095,7 @@
 		36828CD924B74BFA0085A165 /* Exchange */ = {
 			isa = PBXGroup;
 			children = (
+				3646E50524D90A6600B8C20B /* ViewModel */,
 				36828CDC24B74C0C0085A165 /* Controller */,
 				36828CDB24B74C060085A165 /* Model */,
 				36828CDA24B74C010085A165 /* View */,
@@ -1135,6 +1156,7 @@
 		3682E5C124AC30D4007CA2CA /* AssetsPool */ = {
 			isa = PBXGroup;
 			children = (
+				3646E50224D7C0DF00B8C20B /* ViewModel */,
 				3682E5C424AC36C1007CA2CA /* Controller */,
 				3682E5C324AC36BC007CA2CA /* Model */,
 				3682E5C224AC36B4007CA2CA /* View */,
@@ -3343,6 +3365,7 @@
 				9DB515C123A32F3E0069A909 /* ViolasTransactionWriteSet.swift in Sources */,
 				9DC4886F232222CF005FF254 /* LBXScanWrapper.swift in Sources */,
 				9DB515B223A32BC50069A909 /* ViolasHDPrivateKey.swift in Sources */,
+				3646E50424D7C0FD00B8C20B /* AssetsPoolViewModel.swift in Sources */,
 				361783652444683B003C6588 /* ViolasTypeTag.swift in Sources */,
 				9DB515BD23A32E8C0069A909 /* ViolasTransactionArgument.swift in Sources */,
 				9DC48869232222CF005FF254 /* LBXScanNetAnimation.swift in Sources */,
@@ -3430,6 +3453,7 @@
 				9DA0265023700A6C0084905B /* BackupMnemonicViewModel.swift in Sources */,
 				9D5B4E72236BCBEE00F4D99C /* AddAssetViewController.swift in Sources */,
 				9DC06A6E2373FEB900BCE1FE /* ViolasManager.swift in Sources */,
+				3646E50724D90A7800B8C20B /* ExchangeViewModel.swift in Sources */,
 				9D9B49E8236031F700354EF0 /* SettingTableViewCell.swift in Sources */,
 				3642EB7123CC654500C7B04A /* Serialization.swift in Sources */,
 				36F8270B24BEAA7E0007ACC3 /* Dropper.swift in Sources */,

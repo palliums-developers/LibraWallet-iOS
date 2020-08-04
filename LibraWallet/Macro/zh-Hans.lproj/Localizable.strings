@@ -274,6 +274,8 @@ wallet_market_assets_pool_exchange_rate_title = "兑换率：";
 wallet_market_assets_pool_add_liquidity_confirm_button_title = "转入";
 wallet_market_assets_pool_remove_liquidity_confirm_button_title = "转出";
 wallet_market_assets_pool_input_amount_title = "转入";
+wallet_market_assets_pool_output_token_title = "资金池通证";
+wallet_market_assets_pool_output_amount_title = "转出";
 
 /************* 资金池交易记录 *******************/
 wallet_assets_pool_transfer_in_title = "转入";
@@ -412,8 +414,15 @@ wallet_connect_publish_success_title = "注册成功";
 // 交易所添加流动性
 wallet_assets_pool_add_liquidity_unselect_first_deposit_token_content = "请选择一个存款稳定币";
 wallet_assets_pool_add_liquidity_unselect_second_deposit_token_content = "请选择另一个存款稳定币";
+wallet_assets_pool_add_liquidity_token_unpublish_content = " 尚未激活，请激活充值后重试";
+
 // 交易所移除流动性
 wallet_assets_pool_remove_liquidity_unselect_token = "请选择通证";
+wallet_assets_pool_remove_liquidity_not_enough_token = "您的通证不足";
+
+// 交易所兑换
+wallet_market_exchange_input_token_unselect = "请选择一个付出兑换的稳定币";
+wallet_market_exchange_output_token_unselect = "请选择一个想要兑换的稳定币";
 
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "安全提醒";

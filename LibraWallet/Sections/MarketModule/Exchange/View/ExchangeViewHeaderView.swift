@@ -9,19 +9,13 @@
 import UIKit
 import Localize_Swift
 protocol ExchangeViewHeaderViewDelegate: NSObjectProtocol {
-    func MappingBTCToViolasConfirm(amountIn: Double, amountOut: Double, inputModel: MarketSupportTokensDataModel, outputModel: MarketSupportTokensDataModel)
-    func MappingBTCToLibraConfirm(amountIn: Double, amountOut: Double, inputModel: MarketSupportTokensDataModel, outputModel: MarketSupportTokensDataModel)
-    func MappingViolasToViolasConfirm(amountIn: Double, amountOutMin: Double, inputModelName: String, outputModelName: String, path: [UInt8])
-    func MappingViolasToLibraConfirm(amountIn: Double, amountOut: Double, inputModel: MarketSupportTokensDataModel, outputModel: MarketSupportTokensDataModel)
-    func MappingViolasToBTCConfirm(amountIn: Double, amountOut: Double, inputModel: MarketSupportTokensDataModel, outputModel: MarketSupportTokensDataModel)
-    func MappingLibraToViolasConfirm(amountIn: Double, amountOut: Double, inputModel: MarketSupportTokensDataModel, outputModel: MarketSupportTokensDataModel)
-    func MappingLibraToBTCConfirm(amountIn: Double, amountOut: Double, inputModel: MarketSupportTokensDataModel, outputModel: MarketSupportTokensDataModel)
     func selectInputToken()
     func selectOutoutToken()
     func swapInputOutputToken()
     func dealTransferOutAmount(inputModule: MarketSupportTokensDataModel, outputModule: MarketSupportTokensDataModel)
     func fliterBestOutputAmount(inputAmount: Int64)
     func fliterBestInputAmount(outputAmount: Int64)
+    func exchangeConfirm()
 }
 
 class ExchangeViewHeaderView: UIView {
@@ -322,9 +316,13 @@ class ExchangeViewHeaderView: UIView {
     @objc func buttonClick(button: UIButton) {
         if button.tag == 10 {
             self.viewState = .ExchangeSelectAToken
+            self.inputAmountTextField.resignFirstResponder()
+            self.outputAmountTextField.resignFirstResponder()
             self.delegate?.selectInputToken()
         } else if button.tag == 20 {
             self.viewState = .ExchangeSelectBToken
+            self.inputAmountTextField.resignFirstResponder()
+            self.outputAmountTextField.resignFirstResponder()
             self.delegate?.selectOutoutToken()
         } else if button.tag == 30 {
             self.viewState = .ExchangeSwap
@@ -332,96 +330,7 @@ class ExchangeViewHeaderView: UIView {
         } else if button.tag == 100 {
             self.inputAmountTextField.resignFirstResponder()
             self.outputAmountTextField.resignFirstResponder()
-            // ModelA不为空
-            guard let tempInputTokenA = transferInInputTokenA else {
-                self.makeToast("请选择第一个输入通证后输入",
-                               position: .center)
-                return
-            }
-            // ModelB不为空
-            guard let tempInputTokenB = transferInInputTokenB else {
-                self.makeToast("请选择第二个输入通证后输入",
-                               position: .center)
-                return
-            }
-            // 金额不为空检查
-            guard let amountAString = self.inputAmountTextField.text, amountAString.isEmpty == false else {
-                self.makeToast(LibraWalletError.WalletTransfer(reason: .amountEmpty).localizedDescription,
-                               position: .center)
-                return
-            }
-            // 金额是否纯数字检查
-            guard isPurnDouble(string: amountAString) == true else {
-                self.makeToast(LibraWalletError.WalletTransfer(reason: .amountInvalid).localizedDescription,
-                               position: .center)
-                return
-            }
-            // 转换数字
-            let amountA = NSDecimalNumber.init(string: amountAString).doubleValue
-            
-            // 金额不为空检查
-            guard let amountBString = self.outputAmountTextField.text, amountBString.isEmpty == false else {
-                self.makeToast(LibraWalletError.WalletTransfer(reason: .amountEmpty).localizedDescription,
-                               position: .center)
-                return
-            }
-            // 金额是否纯数字检查
-            guard isPurnDouble(string: amountBString) == true else {
-                self.makeToast(LibraWalletError.WalletTransfer(reason: .amountInvalid).localizedDescription,
-                               position: .center)
-                return
-            }
-            // 转换数字
-            let amountB = NSDecimalNumber.init(string: amountBString).doubleValue
-            if tempInputTokenA.chainType == 1 && tempInputTokenB.chainType == 1 {
-                guard let path = exchangeModel?.path, path.isEmpty == false, path.count > 2 else {
-                    self.makeToast("路径为空",
-                                   position: .center)
-                    return
-                }
-                self.viewState = .ViolasToViolasSwap
-                self.delegate?.MappingViolasToViolasConfirm(amountIn: amountA,
-                                                            amountOutMin: amountB,
-                                                            inputModelName: transferInInputTokenA?.name ?? "",
-                                                            outputModelName: transferInInputTokenB?.name ?? "",
-                                                            path: (self.exchangeModel?.path)!)
-            } else if tempInputTokenA.chainType == 1 && tempInputTokenB.chainType == 0 {
-                self.viewState = .ViolasToLibraSwap
-                self.delegate?.MappingViolasToLibraConfirm(amountIn: amountA,
-                                                           amountOut: amountB,
-                                                           inputModel: tempInputTokenA,
-                                                           outputModel: tempInputTokenB)
-            } else if tempInputTokenA.chainType == 1 && tempInputTokenB.chainType == 2 {
-                self.viewState = .ViolasToBTCSwap
-                self.delegate?.MappingViolasToBTCConfirm(amountIn: amountA,
-                                                         amountOut: amountB,
-                                                         inputModel: tempInputTokenA,
-                                                         outputModel: tempInputTokenB)
-            } else if tempInputTokenA.chainType == 0 && tempInputTokenB.chainType == 1 {
-                self.viewState = .LibraToViolasSwap
-                self.delegate?.MappingLibraToViolasConfirm(amountIn: amountA,
-                                                           amountOut: amountB,
-                                                           inputModel: tempInputTokenA,
-                                                           outputModel: tempInputTokenB)
-            } else if tempInputTokenA.chainType == 0 && tempInputTokenB.chainType == 2 {
-                self.viewState = .LibraToBTCSwap
-                self.delegate?.MappingLibraToBTCConfirm(amountIn: amountA,
-                                                        amountOut: amountB,
-                                                        inputModel: tempInputTokenA,
-                                                        outputModel: tempInputTokenB)
-            } else if tempInputTokenA.chainType == 2 && tempInputTokenB.chainType == 0 {
-                self.viewState = .BTCToLibraSwap
-                self.delegate?.MappingBTCToLibraConfirm(amountIn: amountA,
-                                                        amountOut: amountB,
-                                                        inputModel: tempInputTokenA,
-                                                        outputModel: tempInputTokenB)
-            } else if tempInputTokenA.chainType == 2 && tempInputTokenB.chainType == 1 {
-                self.viewState = .BTCToViolasSwap
-                self.delegate?.MappingBTCToViolasConfirm(amountIn: amountA,
-                                                         amountOut: amountB,
-                                                         inputModel: tempInputTokenA,
-                                                         outputModel: tempInputTokenB)
-            }
+            self.delegate?.exchangeConfirm()
         }
     }
     /// 资金池转入ModelA
@@ -496,10 +405,9 @@ class ExchangeViewHeaderView: UIView {
                                                                      raiseOnUnderflow: false,
                                                                      raiseOnDivideByZero: false)
                 let rate = outputAmount.dividing(by: inputAmount, withBehavior: numberConfig)
-                exchangeRateLabel.text = localLanguage(keyString: "wallet_market_exchange_rate_title") + rate.stringValue
-                feeLabel.text = localLanguage(keyString: "wallet_market_exchange_fee_title") + getDecimalNumber(amount: NSDecimalNumber.init(value: model.fee),
-                                                                                                                scale: 6,
-                                                                                                                unit: 1000000).stringValue
+                exchangeRateLabel.text = localLanguage(keyString: "wallet_market_exchange_rate_title") + "1:\(rate.stringValue)"
+                let fee = NSDecimalNumber.init(value: model.fee).dividing(by: NSDecimalNumber.init(value: model.input), withBehavior: numberConfig).multiplying(by: NSDecimalNumber.init(value: 100))
+                feeLabel.text = localLanguage(keyString: "wallet_market_exchange_fee_title") + fee.stringValue + "%"
             } else {
                 inputAmountTextField.text = getDecimalNumber(amount: NSDecimalNumber.init(value: model.input),
                                                               scale: 6,
@@ -513,10 +421,9 @@ class ExchangeViewHeaderView: UIView {
                                                                      raiseOnUnderflow: false,
                                                                      raiseOnDivideByZero: false)
                 let rate = outputAmount.dividing(by: inputAmount, withBehavior: numberConfig)
-                exchangeRateLabel.text = localLanguage(keyString: "wallet_market_exchange_rate_title") + rate.stringValue
-                feeLabel.text = localLanguage(keyString: "wallet_market_exchange_fee_title") + getDecimalNumber(amount: NSDecimalNumber.init(value: model.fee),
-                                                                                                                scale: 6,
-                                                                                                                unit: 1000000).stringValue
+                exchangeRateLabel.text = localLanguage(keyString: "wallet_market_exchange_rate_title") + "1:\(rate.stringValue)"
+                let fee = NSDecimalNumber.init(value: model.fee).dividing(by: NSDecimalNumber.init(value: model.input), withBehavior: numberConfig).multiplying(by: NSDecimalNumber.init(value: 100))
+                feeLabel.text = localLanguage(keyString: "wallet_market_exchange_fee_title") + fee.stringValue + "%"
             }
             self.viewState = .Normal
         }
@@ -582,17 +489,16 @@ extension ExchangeViewHeaderView: UITextFieldDelegate {
         }
     }
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        #warning("待翻译")
         // 转入
         guard inputTokenButton.titleLabel?.text != localLanguage(keyString: "wallet_market_exchange_input_token_button_title") else {
             textField.resignFirstResponder()
-            self.makeToast("请选择付出稳定币",
+            self.makeToast(localLanguage(keyString: "wallet_market_exchange_input_token_unselect"),
                            position: .center)
             return false
         }
         guard outputTokenButton.titleLabel?.text != localLanguage(keyString: "wallet_market_exchange_output_token_button_title") else {
             textField.resignFirstResponder()
-            self.makeToast("请选择兑换稳定币",
+            self.makeToast(localLanguage(keyString: "wallet_market_exchange_output_token_unselect"),
                            position: .center)
             return false
         }

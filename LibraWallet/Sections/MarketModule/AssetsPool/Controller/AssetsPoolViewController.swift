@@ -33,6 +33,10 @@ class AssetsPoolViewController: UIViewController {
         let model = AssetsPoolModel.init()
         return model
     }()
+    lazy var viewModel: AssetsPoolViewModel = {
+        let model = AssetsPoolViewModel.init()
+        return model
+    }()
     /// 子View
     lazy var detailView : AssetsPoolView = {
         let view = AssetsPoolView.init()

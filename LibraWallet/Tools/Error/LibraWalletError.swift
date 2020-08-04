@@ -250,6 +250,14 @@ public enum LibraWalletError: Error {
         case payAmountEmpty
         /// 兑换稳定币数量为空
         case exchangeAmountEmpty
+        
+//        /// 尚未选择通证
+//        case unselectToken
+//        /// 通证不足
+//        case tokenAmountNotEnough
+//        /// 通证超限
+//        case tokenAmountMaxLimit
+        
     }
     case WalletMarket(reason: ExchangeMarketError)
     

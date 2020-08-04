@@ -297,25 +297,21 @@ extension ViolasManager {
     }
 }
 //MARK: - 映射
-#warning("模块待测试")
 extension ViolasManager {
-    public static func getVBTCToBTCTransactionHex(sendAddress: String, amount: Double, fee: Double, mnemonic: [String], contact: String, sequenceNumber: Int, btcAddress: String, feeModule: String) throws -> String {
+    public static func getViolasToBTCTransactionHex(sendAddress: String, module: String, amountIn: Double, amountOut: Double, fee: Double, mnemonic: [String], sequenceNumber: Int, exchangeCenterAddress: String, btcReceiveAddress: String, feeModule: String, type: String) throws -> String {
         do {
             let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
             // 拼接交易
-            let argument0 = ViolasTransactionArgument.init(code: .U64,
-                                                           value: "3")
-            let argument1 = ViolasTransactionArgument.init(code: .Address,
-                                                           value: "cae5f8464c564aabb684ecbcc19153e9")
-            let argument2 = ViolasTransactionArgument.init(code: .U64,
-                                                           value: "\(Int(amount * 1000000))")
-            let data = "{\"flag\":\"violas\",\"type\":\"v2b\",\"to_address\":\"\(btcAddress)\",\"state\":\"start\"}".data(using: .utf8)!
-            let argument3 = ViolasTransactionArgument.init(code: .U8Vector,
+            let argument0 = ViolasTransactionArgument.init(code: .Address,
+                                                           value: exchangeCenterAddress)
+            let argument1 = ViolasTransactionArgument.init(code: .U64,
+                                                           value: "\(Int(amountIn * 1000000))")
+            let data = "{\"flag\":\"violas\",\"type\":\"\(type)\",\"times\": 0, \"to_address\":\"\(btcReceiveAddress)\",\"out_amount\":\"\(Int(amountOut * 100000000))\",\"state\":\"start\"}".data(using: .utf8)!
+            let argument2 = ViolasTransactionArgument.init(code: .U8Vector,
                                                            value: data.toHexString())
-            let script = ViolasTransactionScript.init(code: ViolasManager.getCodeData(move: ViolasStableCoinScriptWithDataCode, address: contact),
-                                                       typeTags: [ViolasTypeTag](),
-                                                       argruments: [argument0, argument1, argument2, argument3])
-
+            let script = ViolasTransactionScript.init(code: Data.init(hex: ViolasStableCoinScriptWithDataCode),
+                                                      typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .Normal(module)))],
+                                                      argruments: [argument0, argument1, argument2])
             let rawTransaction = ViolasRawTransaction.init(senderAddres: sendAddress,
                                                            sequenceNumber: sequenceNumber,
                                                            maxGasAmount: 1000000,

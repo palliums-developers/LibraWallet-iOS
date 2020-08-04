@@ -13,7 +13,7 @@ protocol AssetsPoolViewHeaderViewDelegate: NSObjectProtocol {
     func removeLiquidityConfirm(token: Double, amountIn: Double, amountOut: Double, inputModelName: String, outputModelName: String)
     func selectInputToken()
     func selectOutoutToken()
-//    func swapInputOutputToken()
+    //    func swapInputOutputToken()
     func changeTrasferInOut()
     func dealTransferOutAmount(amount: Double, coinAModule: String, coinBModule: String)
     
@@ -35,7 +35,7 @@ class AssetsPoolViewHeaderView: UIView {
         case AssetsPoolTransferOutRemoveLiquidity
     }
     var viewState: AssetsPoolViewHeaderViewState = .Normal
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.white
@@ -161,7 +161,7 @@ class AssetsPoolViewHeaderView: UIView {
             make.left.equalTo(outputTokenBackgroundView).offset(11)
             make.right.equalTo(outputTokenBackgroundView.snp.right).offset(-11)
             make.bottom.equalTo(outputCoinBAmountLabel.snp.top)
-
+            
             make.height.equalTo(24)
         }
         outputCoinBAmountLabel.snp.makeConstraints { (make) in
@@ -397,13 +397,13 @@ class AssetsPoolViewHeaderView: UIView {
                 self.outputAmountTextField.resignFirstResponder()
                 // ModelA不为空
                 guard let tempInputTokenA = transferInInputTokenA else {
-                    self.makeToast("请选择第一个输入通证后输入",
+                    self.makeToast(localLanguage(keyString: "wallet_assets_pool_add_liquidity_unselect_first_deposit_token_content"),
                                    position: .center)
                     return
                 }
                 // ModelB不为空
                 guard let tempInputTokenB = transferInInputTokenB else {
-                    self.makeToast("请选择第二个输入通证后输入",
+                    self.makeToast(localLanguage(keyString: "wallet_assets_pool_add_liquidity_unselect_second_deposit_token_content"),
                                    position: .center)
                     return
                 }
@@ -436,9 +436,7 @@ class AssetsPoolViewHeaderView: UIView {
                 }
                 // 转换数字
                 let amountB = NSDecimalNumber.init(string: amountBString).doubleValue
-                
-                
-                
+                // 筛选Index排序
                 var leastModuleA = tempInputTokenA
                 var otherModuleB = tempInputTokenB
                 var tempAmountA = amountA
@@ -449,6 +447,17 @@ class AssetsPoolViewHeaderView: UIView {
                     tempAmountA = amountB
                     tempAmountB = amountA
                 }
+                // 检查是否激活稳定币
+                guard tempInputTokenA.activeState == true else {
+                    self.makeToast((tempInputTokenA.show_name ?? "---") + localLanguage(keyString: "wallet_assets_pool_add_liquidity_token_unpublish_content"),
+                                   position: .center)
+                    return
+                }
+                guard tempInputTokenB.activeState == true else {
+                    self.makeToast((tempInputTokenB.show_name ?? "---") + localLanguage(keyString: "wallet_assets_pool_add_liquidity_token_unpublish_content"),
+                                   position: .center)
+                    return
+                }
                 // 转入
                 self.viewState = .AssetsPoolTransferInConfirm
                 self.delegate?.addLiquidityConfirm(amountIn: tempAmountA,
@@ -458,18 +467,49 @@ class AssetsPoolViewHeaderView: UIView {
             } else {
                 // 转出
                 self.inputAmountTextField.resignFirstResponder()
+                guard let token = tokenModel else {
+                    self.makeToast(localLanguage(keyString: "wallet_assets_pool_remove_liquidity_unselect_token"),
+                                   position: .center)
+                    return
+                }
+                guard let totalToken = token.token, totalToken > 0 else {
+                    self.makeToast(localLanguage(keyString: "wallet_assets_pool_remove_liquidity_not_enough_token"),
+                                   position: .center)
+                    return
+                }
+                // 金额不为空检查
+                guard let amountAString = self.inputAmountTextField.text, amountAString.isEmpty == false else {
+                    self.makeToast(LibraWalletError.WalletTransfer(reason: .amountEmpty).localizedDescription,
+                                   position: .center)
+                    return
+                }
+                // 金额是否纯数字检查
+                guard isPurnDouble(string: amountAString) == true else {
+                    self.makeToast(LibraWalletError.WalletTransfer(reason: .amountInvalid).localizedDescription,
+                                   position: .center)
+                    return
+                }
+                // 转换数字
+                let tokenAmount = NSDecimalNumber.init(string: amountAString).doubleValue
                 let amountA = getDecimalNumber(amount: NSDecimalNumber.init(value: transferOutModel?.coin_a_value ?? 0),
                                                scale: 6,
                                                unit: 1000000)
                 let amountB = getDecimalNumber(amount: NSDecimalNumber.init(value: transferOutModel?.coin_b_value ?? 0),
                                                scale: 6,
                                                unit: 1000000)
+                let tempAmount = NSDecimalNumber.init(string: amountAString).multiplying(by: NSDecimalNumber.init(value: 1000000)).int64Value
+                
+                guard tempAmount <= (token.token ?? 0) else {
+                    self.makeToast(localLanguage(keyString: "wallet_assets_pool_remove_liquidity_not_enough_token"),
+                                   position: .center)
+                    return
+                }
                 // 转出
-                self.delegate?.removeLiquidityConfirm(token: NSDecimalNumber.init(string: inputAmountTextField.text ?? "0").doubleValue,
+                self.delegate?.removeLiquidityConfirm(token: tokenAmount,
                                                       amountIn: amountA.doubleValue,
                                                       amountOut: amountB.doubleValue,
-                                                      inputModelName: tokenModel?.coin_a?.module ?? "",
-                                                      outputModelName: tokenModel?.coin_b?.module ?? "")
+                                                      inputModelName: token.coin_a?.module ?? "",
+                                                      outputModelName: token.coin_b?.module ?? "")
             }
         }
     }
@@ -502,13 +542,13 @@ class AssetsPoolViewHeaderView: UIView {
                 return
             }
             let amountA = getDecimalNumber(amount: NSDecimalNumber.init(value: model.coin_a_value ?? 0),
-                                          scale: 6,
-                                          unit: 1000000)
+                                           scale: 6,
+                                           unit: 1000000)
             outputCoinAAmountLabel.text = amountA.stringValue + (model.coin_a_name ?? "---")
             
             let amountB = getDecimalNumber(amount: NSDecimalNumber.init(value: model.coin_b_value ?? 0),
-                                          scale: 6,
-                                          unit: 1000000)
+                                           scale: 6,
+                                           unit: 1000000)
             outputCoinBAmountLabel.text = amountB.stringValue + (model.coin_b_name ?? "---")
         }
     }
@@ -520,11 +560,11 @@ class AssetsPoolViewHeaderView: UIView {
             let coinAAmount = NSDecimalNumber.init(value: model.coina?.value ?? 0)
             let coinBAmount = NSDecimalNumber.init(value: model.coinb?.value ?? 0)
             let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
-                                                            scale: 6,
-                                                            raiseOnExactness: false,
-                                                            raiseOnOverflow: false,
-                                                            raiseOnUnderflow: false,
-                                                            raiseOnDivideByZero: false)
+                                                           scale: 6,
+                                                           raiseOnExactness: false,
+                                                           raiseOnOverflow: false,
+                                                           raiseOnUnderflow: false,
+                                                           raiseOnDivideByZero: false)
             let rate = coinBAmount.dividing(by: coinAAmount, withBehavior: numberConfig)
             self.exchangeRateLabel.text = localLanguage(keyString: "wallet_market_assets_pool_exchange_rate_title") + "1:\(rate.stringValue)"
         }
@@ -610,12 +650,12 @@ class AssetsPoolViewHeaderView: UIView {
                                           unit: 1000000)
             inputTokenAssetsLabel.text = localLanguage(keyString: "wallet_market_exchange_token_title") + amount.stringValue
         }
-//        inputTokenButton.snp.remakeConstraints { (make) in
-//            make.right.equalTo(inputTokenBackgroundView.snp.right).offset(-11)
-//            make.bottom.equalTo(inputTokenBackgroundView.snp.bottom).offset(-11)
-//            let width = libraWalletTool.ga_widthForComment(content: content, fontSize: 12, height: 22) + 8 + 19
-//            make.size.equalTo(CGSize.init(width: width, height: 22))
-//        }
+        //        inputTokenButton.snp.remakeConstraints { (make) in
+        //            make.right.equalTo(inputTokenBackgroundView.snp.right).offset(-11)
+        //            make.bottom.equalTo(inputTokenBackgroundView.snp.bottom).offset(-11)
+        //            let width = libraWalletTool.ga_widthForComment(content: content, fontSize: 12, height: 22) + 8 + 19
+        //            make.size.equalTo(CGSize.init(width: width, height: 22))
+        //        }
         if transferInInputTokenB == nil {
             outputTokenButton.setTitle(localLanguage(keyString: "wallet_market_exchange_output_token_button_title"), for: UIControl.State.normal)
             outputTokenButton.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 9, height: 5.5))
@@ -626,12 +666,12 @@ class AssetsPoolViewHeaderView: UIView {
                                           unit: 1000000)
             outputTokenAssetsLabel.text = localLanguage(keyString: "wallet_market_exchange_token_title") + amount.stringValue
         }
-//        outputTokenButton.snp.remakeConstraints { (make) in
-//            make.right.equalTo(outputTokenBackgroundView.snp.right).offset(-11)
-//            make.bottom.equalTo(outputTokenBackgroundView.snp.bottom).offset(-11)
-//            let width = libraWalletTool.ga_widthForComment(content: localLanguage(keyString: "wallet_market_exchange_output_token_button_title"), fontSize: 12, height: 22) + 8 + 19
-//            make.size.equalTo(CGSize.init(width: width, height: 22))
-//        }
+        //        outputTokenButton.snp.remakeConstraints { (make) in
+        //            make.right.equalTo(outputTokenBackgroundView.snp.right).offset(-11)
+        //            make.bottom.equalTo(outputTokenBackgroundView.snp.bottom).offset(-11)
+        //            let width = libraWalletTool.ga_widthForComment(content: localLanguage(keyString: "wallet_market_exchange_output_token_button_title"), fontSize: 12, height: 22) + 8 + 19
+        //            make.size.equalTo(CGSize.init(width: width, height: 22))
+        //        }
     }
 }
 extension AssetsPoolViewHeaderView: DropperDelegate {
@@ -717,6 +757,8 @@ extension AssetsPoolViewHeaderView: DropperDelegate {
         // 重置数量
         outputAmountTextField.text = ""
         confirmButton.setTitle(localLanguage(keyString: "wallet_market_assets_pool_add_liquidity_confirm_button_title"), for: UIControl.State.normal)
+        inputTitleLabel.text = localLanguage(keyString: "wallet_market_assets_pool_input_amount_title")
+        outputTitleLabel.text = localLanguage(keyString: "wallet_market_assets_pool_input_amount_title")
     }
     func resetAssetsPoolTransferOutView() {
         // 重置输入TokenA按钮
@@ -736,6 +778,8 @@ extension AssetsPoolViewHeaderView: DropperDelegate {
         // 重置数量
         inputAmountTextField.text = ""
         confirmButton.setTitle(localLanguage(keyString: "wallet_market_assets_pool_remove_liquidity_confirm_button_title"), for: UIControl.State.normal)
+        inputTitleLabel.text = localLanguage(keyString: "wallet_market_assets_pool_output_token_title")
+        outputTitleLabel.text = localLanguage(keyString: "wallet_market_assets_pool_output_amount_title")
     }
 }
 extension AssetsPoolViewHeaderView: UITextFieldDelegate {

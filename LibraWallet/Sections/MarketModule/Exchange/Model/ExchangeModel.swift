@@ -247,14 +247,14 @@ extension ExchangeModel {
             case let .success(response):
                 do {
                     let json = try response.map(BalanceViolasMainModel.self)
-                    if json.result != nil {
+                    if json.error == nil {
                         self?.sequenceNumber = json.result?.sequence_number ?? 0
                         semaphore.signal()
                     } else {
-                        print("SendLibraTransaction_状态异常")
+                        print("GetViolasSequenceNumber_状态异常")
                         DispatchQueue.main.async(execute: {
                             if let message = json.error?.message, message.isEmpty == false {
-                                let data = setKVOData(error: LibraWalletError.error(message), type: "SendLibraTransaction")
+                                let data = setKVOData(error: LibraWalletError.error(message), type: "GetViolasSequenceNumber")
                                 self?.setValue(data, forKey: "dataDic")
                             } else {
                                 let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "SendLibraTransaction")
@@ -294,7 +294,6 @@ extension ExchangeModel {
                             self?.setValue(data, forKey: "dataDic")
                         })
                     } else {
-//
                         print("\(type)_状态异常")
                         DispatchQueue.main.async(execute: {
                             if let message = json.error?.message, message.isEmpty == false {
@@ -855,6 +854,41 @@ extension ExchangeModel {
             }
         }
         self.requests.append(request)
+    }
+}
+//MARK: - 发送Violas兑换BTC交易
+extension ExchangeModel {
+    func sendSwapViolasToBTCTransaction(sendAddress: String, amountIn: Double, AmountOut: Double, fee: Double, mnemonic: [String], moduleInput: String, feeModule: String, exchangeCenterAddress: String, receiveAddress: String, type: String) {
+        let semaphore = DispatchSemaphore.init(value: 1)
+        let queue = DispatchQueue.init(label: "SendQueue")
+        queue.async {
+            semaphore.wait()
+            self.getViolasSequenceNumber(sendAddress: sendAddress, semaphore: semaphore)
+        }
+        queue.async {
+            semaphore.wait()
+            do {
+                let signature = try ViolasManager.getViolasToBTCTransactionHex(sendAddress: sendAddress,
+                                                                               module: moduleInput,
+                                                                               amountIn: amountIn,
+                                                                               amountOut: AmountOut,
+                                                                               fee: fee,
+                                                                               mnemonic: mnemonic,
+                                                                               sequenceNumber: self.sequenceNumber ?? 0,
+                                                                               exchangeCenterAddress: exchangeCenterAddress,
+                                                                               btcReceiveAddress: receiveAddress,
+                                                                               feeModule: feeModule,
+                                                                               type: type)
+                self.makeViolasTransaction(signature: signature, type: "SendViolasToLibraMappingTransaction")
+            } catch {
+                print(error.localizedDescription)
+                DispatchQueue.main.async(execute: {
+                    let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "SendViolasToLibraMappingTransaction")
+                    self.setValue(data, forKey: "dataDic")
+                })
+            }
+            semaphore.signal()
+        }
     }
 }
 //MARK: - 获取资金池流动性
