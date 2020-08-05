@@ -284,6 +284,6 @@ extension AddAssetViewController {
         let wallet = tokens?.filter({
             $0.tokenType == .Violas
         })
-        self.dataModel.getSupportToken(walletAddress: wallet?.first?.tokenAddress ?? "", localTokens: self.tokens!)
+        self.dataModel.getSupportToken(localTokens: self.tokens!)
     }
 }

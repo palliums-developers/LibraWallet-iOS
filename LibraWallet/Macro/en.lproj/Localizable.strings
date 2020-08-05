@@ -417,8 +417,11 @@ wallet_assets_pool_remove_liquidity_unselect_token = "Please select a withdraw t
 wallet_assets_pool_remove_liquidity_not_enough_token = "Please check your tokens amount";
 // 交易所兑换
 wallet_market_exchange_input_token_unselect = "Please select a input token";
+wallet_market_exchange_input_token_unactived = "Input token unactived, Please check";
 wallet_market_exchange_output_token_unselect = "Please select a output token";
-
+wallet_market_exchange_output_token_unactived = "Output token unactived, Whether to activate and exchange right now";
+wallet_market_exchange_submit_exchange_successful = "Exchange order submit successful";
+wallet_market_exchange_submit_exchange_failed = "Exchange order submit failed";
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "Safety Warning";
 wallet_alert_backup_warning_detail_title = "You have not yet backup the mnemonic words of your identity wallet. Please backup them as soon as possible.\nThe mnemonic words can be used to recover funds in your identity wallet in case you have removed this App or forget the password or have lost or demaged your phone";

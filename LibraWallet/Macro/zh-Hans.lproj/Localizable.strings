@@ -422,8 +422,11 @@ wallet_assets_pool_remove_liquidity_not_enough_token = "您的通证不足";
 
 // 交易所兑换
 wallet_market_exchange_input_token_unselect = "请选择一个付出兑换的稳定币";
+wallet_market_exchange_input_token_unactived = "您选择的付出币尚未激活";
 wallet_market_exchange_output_token_unselect = "请选择一个想要兑换的稳定币";
-
+wallet_market_exchange_output_token_unactived = "您想要兑换的稳定币尚未激活，是否立即激活并兑换";
+wallet_market_exchange_submit_exchange_successful = "兑换订单提交成功";
+wallet_market_exchange_submit_exchange_failed = "兑换订单提交失败";
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "安全提醒";
 wallet_alert_backup_warning_detail_title = "您的身份助记词未备份，请务必备份助记词\n助记词可用于恢复身份下钱包资产，防止忘记密码、应用删除、手机丢失等情况导致资产损失";

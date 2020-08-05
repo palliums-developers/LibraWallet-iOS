@@ -97,7 +97,7 @@ class TransactionDetailModel: NSObject {
         tempArray.append(TransactionDetailDataModel.init(type: "CellAddress",
                                                          title: localLanguage(keyString: "wallet_transaction_detail_receive_address_title"),
                                                          value: transaction.vout?.first?.addresses?.first ?? "---"))
-        tempArray.append(TransactionDetailDataModel.init(type: "CellNormal",
+        tempArray.append(TransactionDetailDataModel.init(type: "CellAddress",
                                                          title: localLanguage(keyString: "wallet_transaction_detail_version_title"),
                                                          value: transaction.txid ?? "---"))
         return tempArray

@@ -348,9 +348,13 @@ class ExchangeViewHeaderView: UIView {
                 let width = libraWalletTool.ga_widthForComment(content: model.show_name ?? "---", fontSize: 12, height: 22) + 8 + 19
                 make.size.equalTo(CGSize.init(width: width, height: 22))
             }
+            var unit = 1000000
+            if model.chainType == 2 {
+                unit = 100000000
+            }
             let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model.amount ?? 0),
                                           scale: 6,
-                                          unit: 1000000)
+                                          unit: unit)
             inputTokenAssetsLabel.text = localLanguage(keyString: "wallet_market_exchange_token_title") + amount.stringValue
             self.viewState = .Normal
             if let tokenA = transferInInputTokenA, let tokenB = transferInInputTokenB {
@@ -374,9 +378,13 @@ class ExchangeViewHeaderView: UIView {
                 let width = libraWalletTool.ga_widthForComment(content: model.show_name ?? "---", fontSize: 12, height: 22) + 8 + 19
                 make.size.equalTo(CGSize.init(width: width, height: 22))
             }
+            var unit = 1000000
+            if model.chainType == 2 {
+                unit = 100000000
+            }
             let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model.amount ?? 0),
                                           scale: 6,
-                                          unit: 1000000)
+                                          unit: unit)
             outputTokenAssetsLabel.text = localLanguage(keyString: "wallet_market_exchange_token_title") + amount.stringValue
             self.viewState = .Normal
             
