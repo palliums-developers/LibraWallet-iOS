@@ -380,7 +380,7 @@ extension ExchangeModel {
                 token.activeState = false
                 token.amount = 0
                 token.chainType = 1
-                for activeToken in self.accountViolasTokens! {
+                for activeToken in (self.accountViolasTokens ?? [ViolasBalanceModel]()) {
                     if token.module == activeToken.currency {
                         token.activeState = true
                         token.amount = activeToken.amount
@@ -395,7 +395,7 @@ extension ExchangeModel {
                 token.activeState = false
                 token.amount = 0
                 token.chainType = 0
-                for activeToken in self.accountLibraTokens! {
+                for activeToken in (self.accountLibraTokens ?? [LibraBalanceModel]()) {
                     if token.module == activeToken.currency {
                         token.activeState = true
                         token.amount = activeToken.amount

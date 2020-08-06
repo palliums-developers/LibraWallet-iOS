@@ -335,7 +335,7 @@ extension ViolasManager {
             let argument1 = ViolasTransactionArgument.init(code: .U64,
                                                            value: "\(Int(amountIn * 1000000))")
             // metadata
-            let data = "{\"flag\":\"violas\",\"type\":\"\(type)\",\"times\": 0, \"to_address\":\"00000000000000000000000000000000\(libraReceiveAddress)\",\"out_amount\":\"\(Int(amountOut * 1000000))\",\"state\":\"start\"}".data(using: .utf8)!
+            let data = "{\"flag\":\"violas\",\"type\":\"\(type)\",\"times\": 0, \"to_address\":\"\(libraReceiveAddress)\",\"out_amount\":\"\(Int(amountOut * 1000000))\",\"state\":\"start\"}".data(using: .utf8)!
             let argument2 = ViolasTransactionArgument.init(code: .U8Vector,
                                                            value: data.toHexString())
             // metadata_signature

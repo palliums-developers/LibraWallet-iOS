@@ -51,7 +51,7 @@ extension ExchangeViewModel {
             self.view?.toastView?.show(tag: 99)
             self.dataModel.sendSwapViolasTransaction(sendAddress: WalletManager.shared.violasAddress ?? "",
                                                      amountIn: inputAmount.doubleValue,
-                                                     AmountOutMin: outputAmount.doubleValue,
+                                                     AmountOutMin: outputAmount.multiplying(by: NSDecimalNumber.init(value: 0.99)).doubleValue,
                                                      path: (self.view?.headerView.exchangeModel?.path)!,
                                                      fee: 0,
                                                      mnemonic: mnemonic,
@@ -65,7 +65,7 @@ extension ExchangeViewModel {
             self.view?.toastView?.show(tag: 99)
             self.dataModel.sendSwapViolasToLibraTransaction(sendAddress: WalletManager.shared.violasAddress ?? "",
                                                             amountIn: inputAmount.doubleValue,
-                                                            AmountOut: outputAmount.doubleValue,
+                                                            AmountOut: outputAmount.multiplying(by: NSDecimalNumber.init(value: 0.99)).doubleValue,
                                                             fee: 0,
                                                             mnemonic: mnemonic,
                                                             moduleInput: inputModule.module ?? "",
@@ -94,7 +94,7 @@ extension ExchangeViewModel {
             self.view?.toastView?.show(tag: 99)
             self.dataModel.sendLibraToViolasMappingTransaction(sendAddress: WalletManager.shared.libraAddress ?? "",
                                                                amountIn: inputAmount.doubleValue,
-                                                               amountOut: outputAmount.doubleValue,
+                                                               amountOut: outputAmount.multiplying(by: NSDecimalNumber.init(value: 0.99)).doubleValue,
                                                                fee: 0,
                                                                mnemonic: mnemonic,
                                                                moduleInput: inputModule.module ?? "",
@@ -112,7 +112,7 @@ extension ExchangeViewModel {
             let wallet = try! BTCManager().getWallet(mnemonic: mnemonic)
             self.dataModel.makeTransaction(wallet: wallet,
                                            amountIn: inputAmount.doubleValue,
-                                           amountOut: outputAmount.doubleValue,
+                                           amountOut: outputAmount.multiplying(by: NSDecimalNumber.init(value: 0.99)).doubleValue,
                                            fee: 0.0002,
                                            mnemonic: mnemonic,
                                            moduleOutput: outputModule.module ?? "",
@@ -126,7 +126,7 @@ extension ExchangeViewModel {
             let wallet = try! BTCManager().getWallet(mnemonic: mnemonic)
             self.dataModel.makeTransaction(wallet: wallet,
                                            amountIn: inputAmount.doubleValue,
-                                           amountOut: outputAmount.doubleValue,
+                                           amountOut: outputAmount.multiplying(by: NSDecimalNumber.init(value: 0.99)).doubleValue,
                                            fee: 0.0002,
                                            mnemonic: mnemonic,
                                            moduleOutput: outputModule.module ?? "",
@@ -135,6 +135,7 @@ extension ExchangeViewModel {
                                            chainType: "violas")
         }
     }
+    #warning("以后启用")
 //    func handleConfirmCondition() throws -> (NSDecimalNumber, NSDecimalNumber, MarketSupportTokensDataModel, MarketSupportTokensDataModel) {
 //        guard let tempInputTokenA = self.view?.headerView.transferInInputTokenA else {
 //            throw LibraWalletError.error(localLanguage(keyString: "wallet_market_exchange_input_token_unselect"))
@@ -148,13 +149,16 @@ extension ExchangeViewModel {
 //            throw LibraWalletError.WalletTransfer(reason: .amountEmpty)
 //
 //        }
+//        guard let tokenAActiveState = tempInputTokenA.activeState, tokenAActiveState == true else {
+//            throw LibraWalletError.error(localLanguage(keyString: "wallet_market_exchange_input_token_unactived"))
+//        }
 //        // 金额是否纯数字检查
 //        guard isPurnDouble(string: amountAString) == true else {
 //            throw LibraWalletError.WalletTransfer(reason: .amountInvalid)
 //        }
 //        // 转换数字
 //        let amountIn = NSDecimalNumber.init(string: amountAString)
-//        
+//
 //        // 金额不为空检查
 //        guard let amountBString = self.view?.headerView.outputAmountTextField.text, amountBString.isEmpty == false else {
 //            throw LibraWalletError.WalletTransfer(reason: .amountEmpty)
@@ -220,14 +224,24 @@ extension ExchangeViewModel: ExchangeViewHeaderViewDelegate {
         }
         // 转换数字
         let amountOut = NSDecimalNumber.init(string: amountBString)
+        var leastModuleA = tempInputTokenA
+        var otherModuleB = tempInputTokenB
+//        var tempAmountA = amountIn
+//        var tempAmountB = amountOut
+        if (tempInputTokenA.index ?? 0) > (tempInputTokenB.index ?? 0) {
+            leastModuleA = tempInputTokenB
+            otherModuleB = tempInputTokenA
+//            tempAmountA = amountOut
+//            tempAmountB = amountIn
+        }
         self.controllerClosure = { [weak self] controller in
             if let tokenBActiveState = tempInputTokenB.activeState, tokenBActiveState == true {
                 // 已激活
                 WalletManager.unlockWallet(controller: controller, successful: { [weak self](mnemonic) in
                     self?.handleRequest(inputAmount: amountIn,
                                         outputAmount: amountOut,
-                                        inputModule: tempInputTokenA,
-                                        outputModule: tempInputTokenB,
+                                        inputModule: leastModuleA,
+                                        outputModule: otherModuleB,
                                         mnemonic: mnemonic,
                                         outputModuleActiveState: true)
                 }) { [weak self](error) in
@@ -244,8 +258,8 @@ extension ExchangeViewModel: ExchangeViewHeaderViewDelegate {
                     WalletManager.unlockWallet(controller: controller, successful: { [weak self](mnemonic) in
                         self?.handleRequest(inputAmount: amountIn,
                                             outputAmount: amountOut,
-                                            inputModule: tempInputTokenA,
-                                            outputModule: tempInputTokenB,
+                                            inputModule: leastModuleA,
+                                            outputModule: otherModuleB,
                                             mnemonic: mnemonic,
                                             outputModuleActiveState: false)
                     }) { [weak self](error) in
@@ -261,9 +275,30 @@ extension ExchangeViewModel: ExchangeViewHeaderViewDelegate {
                 })
                 controller.present(alertContr, animated: true, completion: nil)
             }
-            
+
         }
         self.delegate?.getController()
+//        var rootViewController = UIApplication.shared.keyWindow?.rootViewController
+//        if let navigationController = rootViewController as? UINavigationController {
+//            rootViewController = navigationController.viewControllers.first
+//        }
+//        if let tabBarController = rootViewController as? UITabBarController {
+//            rootViewController = tabBarController.selectedViewController
+//        }
+//        WalletManager.unlockWallet(controller: rootViewController!, successful: { [weak self](mnemonic) in
+//            self?.handleRequest(inputAmount: amountIn,
+//                                outputAmount: amountOut,
+//                                inputModule: tempInputTokenA,
+//                                outputModule: tempInputTokenB,
+//                                mnemonic: mnemonic,
+//                                outputModuleActiveState: true)
+//        }) { [weak self](error) in
+//            guard error != "Cancel" else {
+//                self?.view?.toastView?.hide(tag: 99)
+//                return
+//            }
+//            self?.view?.makeToast(error, position: .center)
+//        }
     }
     func MappingBTCToViolasConfirm(amountIn: Double, amountOut: Double, inputModel: MarketSupportTokensDataModel, outputModel: MarketSupportTokensDataModel) {
         self.view?.headerView.inputAmountTextField.resignFirstResponder()
