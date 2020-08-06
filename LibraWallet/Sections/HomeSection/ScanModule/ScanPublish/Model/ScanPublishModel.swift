@@ -23,7 +23,7 @@ class ScanPublishModel: NSObject {
             semaphore.wait()
             do {
                 let signature = try ViolasManager.getWalletConnectTransactionHex(mnemonic: mnemonic,
-                                                                                 sequenceNumber: self.sequenceNumber!,
+                                                                                 sequenceNumber: UInt64(self.sequenceNumber!),
                                                                                  model: model,
                                                                                  module: module)
                 self.makeViolasTransaction(signature: signature)

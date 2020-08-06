@@ -20,7 +20,7 @@ class BaseTabBarViewController: UITabBarController {
             // Fallback on earlier versions
         }
         addAllChildViewController()
-        self.selectedIndex = 1
+        self.selectedIndex = 0
         // 添加语言变换通知
          NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
     }

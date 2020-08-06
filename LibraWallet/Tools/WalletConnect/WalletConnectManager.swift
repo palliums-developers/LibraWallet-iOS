@@ -8,6 +8,13 @@
 
 import Foundation
 import WalletConnectSwift
+struct WCBTCRawTransaction: Codable {
+    var from: String?
+    var amount: String?
+    var payeeAddress: String?
+    var changeAddress: String?
+    var script: String?
+}
 struct WCSignTransactionModel: Codable {
     var address: String?
     var message: String?
@@ -32,6 +39,32 @@ struct WCRawTransaction: Codable {
     var sequenceNumber: Int64?
     var expirationTime: Int64?
     var gasCurrencyCode: String?
+    var chainId: Int?
+}
+struct WCLibraArguments: Codable {
+    var type: String?
+    var value: String?
+}
+struct WCLibraTypeArguments: Codable {
+    var address: String?
+    var module: String?
+    var name: String?
+    var typeParams: [String]?
+}
+struct WCLibraPayload: Codable {
+    var code: String?
+    var tyArgs: [WCLibraTypeArguments]?
+    var args: [WCLibraArguments]?
+}
+struct WCLibraRawTransaction: Codable {
+    var from: String?
+    var payload: WCLibraPayload?
+    var maxGasAmount: UInt64?
+    var gasUnitPrice: UInt64?
+    var sequenceNumber: UInt64?
+    var expirationTime: UInt64?
+    var gasCurrencyCode: String?
+    var chainId: Int?
 }
 struct WCDataModel {
     var from: String
@@ -120,6 +153,8 @@ class WalletConnectManager: NSObject {
         ser.register(handler: SendTransactionHandler())
         ser.register(handler: GetAccountHandler())
         ser.register(handler: SignTransactionHandler())
+        ser.register(handler: SendLibraTransactionHandler())
+        ser.register(handler: SendBTCTransactionHandler())
         return ser
     }()
 
@@ -241,6 +276,21 @@ class SendTransactionHandler: RequestHandler {
                             print(signature)
                         }
                         appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
+                    } else if model.payload?.code == "a11ceb0b010006010002030207040902050b0d071817082f10000000010001020101000205060c030303030002090009010845786368616e67650d6164645f6c6971756964697479000000000000000000000000000000010201010001070b000a010a020a030a04380002" {
+                        let vc = ScanSwapViewController()
+                        vc.model = model
+                        vc.reject = {
+                            WalletConnectManager.shared.walletConnectServer.send(.reject(request))
+                        }
+                        vc.confirm = { (signature) in
+                            do {
+                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))//
+                            } catch {
+                                print(error.localizedDescription)
+                            }
+                            print(signature)
+                        }
+                        appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
                     } else {
                         let vc = ScanSendTransactionViewController()
                         vc.model = model
@@ -257,6 +307,69 @@ class SendTransactionHandler: RequestHandler {
                         }
                         appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
                     }
+                }
+            }
+        } catch {
+            WalletConnectManager.shared.walletConnectServer.send(.invalid(request))
+            return
+        }
+    }
+}
+
+class SendBTCTransactionHandler: RequestHandler {
+    func canHandle(request: Request) -> Bool {
+        return request.method == "_bitcoin_sendTransaction"
+    }
+    func handle(request: Request) {
+        do {
+            let model = try request.parameter(of: WCBTCRawTransaction.self, at: 0)
+            DispatchQueue.main.async {
+                if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+                    let vc = ScanSendTransactionViewController()
+                    vc.btcModel = model
+                    vc.reject = {
+                        WalletConnectManager.shared.walletConnectServer.send(.reject(request))
+                    }
+                    vc.confirm = { (signature) in
+                        do {
+                            WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))//
+                        } catch {
+                            print(error.localizedDescription)
+                        }
+                        print(signature)
+                    }
+                    appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
+                }
+            }
+        } catch {
+            WalletConnectManager.shared.walletConnectServer.send(.invalid(request))
+            return
+        }
+    }
+}
+class SendLibraTransactionHandler: RequestHandler {
+    func canHandle(request: Request) -> Bool {
+        return request.method == "_libra_sendTransaction"
+    }
+    func handle(request: Request) {
+        do {
+            let model = try request.parameter(of: WCLibraRawTransaction.self, at: 0)
+            DispatchQueue.main.async {
+                if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+                    let vc = ScanSendTransactionViewController()
+                    vc.libraModel = model
+                    vc.reject = {
+                        WalletConnectManager.shared.walletConnectServer.send(.reject(request))
+                    }
+                    vc.confirm = { (signature) in
+                        do {
+                            WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))//
+                        } catch {
+                            print(error.localizedDescription)
+                        }
+                        print(signature)
+                    }
+                    appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
                 }
             }
         } catch {

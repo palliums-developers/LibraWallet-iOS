@@ -56,6 +56,16 @@ class ScanSendTransactionViewController: BaseViewController {
             self.detailView.model = model
         }
     }
+    var libraModel: WCLibraRawTransaction? {
+        didSet {
+            self.detailView.libraModel = libraModel
+        }
+    }
+    var btcModel: WCBTCRawTransaction? {
+        didSet {
+            self.detailView.btcModel = btcModel
+        }
+    }
     var reject: (() -> Void)?
     var confirm: ((String) -> Void)?
     var needReject: Bool? = true
@@ -128,7 +138,31 @@ extension ScanSendTransactionViewController: ScanSendTransactionViewDelegate {
                 self?.detailView.makeToast(error,
                                            position: .center)
             }
-
+        } else if let libra = self.libraModel {
+            WalletManager.unlockWallet(controller: self, successful: { [weak self] (mnemonic) in
+                self?.detailView.toastView?.show(tag: 99)
+                    self?.dataModel.sendLibraTransaction(model: libra, mnemonic: mnemonic, module: "LBR")
+            }) { [weak self] (error) in
+                guard error != "Cancel" else {
+                    self?.detailView.toastView?.hide(tag: 99)
+                    return
+                }
+                self?.detailView.makeToast(error,
+                                           position: .center)
+            }
+        } else if let btc = self.btcModel {
+            WalletManager.unlockWallet(controller: self, successful: { [weak self] (mnemonic) in
+                self?.detailView.toastView?.show(tag: 99)
+                let wallet = try! BTCManager().getWallet(mnemonic: mnemonic)
+                self?.dataModel.makeTransaction(wallet: wallet, amount: NSDecimalNumber.init(string: btc.amount ?? "0").uint64Value, fee: 0.002, toAddress: btc.payeeAddress ?? "", changeAddress: btc.changeAddress ?? "")
+            }) { [weak self] (error) in
+                guard error != "Cancel" else {
+                    self?.detailView.toastView?.hide(tag: 99)
+                    return
+                }
+                self?.detailView.makeToast(error,
+                                           position: .center)
+            }
         } else {
             #warning("报错待处理")
         }

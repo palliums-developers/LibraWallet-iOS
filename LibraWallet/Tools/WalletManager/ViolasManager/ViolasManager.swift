@@ -361,7 +361,7 @@ extension ViolasManager {
 }
 //MARK: - WalletConnect
 extension ViolasManager {
-    public static func getWalletConnectTransactionHex(mnemonic: [String], sequenceNumber: Int, model: WCRawTransaction, module: String) throws -> String {
+    public static func getWalletConnectTransactionHex(mnemonic: [String], sequenceNumber: UInt64, model: WCRawTransaction, module: String) throws -> String {
         do {
             let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
             var tempArguments = [ViolasTransactionArgument]()
@@ -390,9 +390,9 @@ extension ViolasManager {
                                                       typeTagsString: model.payload?.tyArgs ?? [String](),
                                                       argruments: tempArguments)
             let rawTransaction = ViolasRawTransaction.init(senderAddres: model.from ?? "",
-                                                           sequenceNumber: sequenceNumber,
+                                                           sequenceNumber: Int(sequenceNumber),
                                                            maxGasAmount: model.maxGasAmount ?? 1000000,
-                                                           gasUnitPrice: model.gasUnitPrice ?? 0,
+                                                           gasUnitPrice: model.gasUnitPrice ?? 1,
                                                            expirationTime: Int(model.expirationTime ?? (Int64(Date().timeIntervalSince1970) + 600)),
                                                            payLoad: script.serialize(),
                                                            module: module)

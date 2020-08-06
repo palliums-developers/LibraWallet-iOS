@@ -164,6 +164,7 @@ extension LibraManager {
         }
     }
 }
+
 extension LibraManager {
     
     public static func getLibraToViolasMappingTransactionHex(sendAddress: String, module: String, amountIn: Double, amountOut: Double, fee: Double, mnemonic: [String], sequenceNumber: Int, exchangeCenterAddress: String, violasReceiveAddress: String, feeModule: String, type: String) throws -> String {
@@ -198,7 +199,54 @@ extension LibraManager {
         }
     }
 }
-
+//MARK: - WalletConnect
+extension LibraManager {
+    public static func getWalletConnectTransactionHex(mnemonic: [String], sequenceNumber: UInt64, model: WCLibraRawTransaction, module: String) throws -> String {
+        do {
+            let wallet = try LibraManager.getWallet(mnemonic: mnemonic)
+            var tempArguments = [LibraTransactionArgument]()
+            if let args = model.payload?.args, args.count > 0 {
+                for item in args {
+                    if item.type?.lowercased() == "address" {
+                        let argument = LibraTransactionArgument.init(code: .Address(item.value ?? ""))
+                        tempArguments.append(argument)
+                    } else if item.type?.lowercased() == "bool" {
+                        let argument = LibraTransactionArgument.init(code: .Bool(NSDecimalNumber.init(string: item.value).boolValue))
+                        tempArguments.append(argument)
+                    } else if item.type?.lowercased() == "bytes" {
+                        let argument = LibraTransactionArgument.init(code: .U8Vector(Data.init(hex: item.value ?? "")))
+                        tempArguments.append(argument)
+                    } else if item.type?.lowercased() == "number" {
+                        let argument = LibraTransactionArgument.init(code: .U64(item.value ?? ""))
+                        tempArguments.append(argument)
+                    }
+                }
+            }
+            let tempTypeTags = model.payload?.tyArgs.map({ item in
+                item.map {
+                    LibraTypeTag.init(typeTag: .Struct(LibraStructTag.init(address: $0.address ?? "", module: $0.module ?? "", name: $0.name ?? "", typeParams: [String]())))
+                }
+            }) ?? [LibraTypeTag]()
+            let script = LibraTransactionScriptPayload.init(code: Data.init(hex: model.payload?.code ?? ""),
+                                                            typeTags: tempTypeTags,
+                                                            argruments: tempArguments)
+            let transactionPayload = LibraTransactionPayload.init(payload: .script(script))
+            let rawTransaction = LibraRawTransaction.init(senderAddres: model.from ?? "",
+                                                           sequenceNumber: sequenceNumber,
+                                                           maxGasAmount: model.maxGasAmount ?? 1000000,
+                                                           gasUnitPrice: model.gasUnitPrice ?? 0,
+                                                           expirationTime: (UInt64(Date().timeIntervalSince1970) + 600),
+                                                           payload: transactionPayload,
+                                                           module: module,
+                                                           chainID: model.chainId ?? 2)
+            // 签名交易
+            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            return signature.toHexString()
+        } catch {
+            throw error
+        }
+    }
+}
 extension LibraManager {
     public static func derializeTransaction(tx: String) -> WCDataModel {
         let txData = Data.init(Array<UInt8>(hex: tx))

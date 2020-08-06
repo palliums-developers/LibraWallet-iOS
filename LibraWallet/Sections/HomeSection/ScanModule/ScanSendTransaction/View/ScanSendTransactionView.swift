@@ -81,8 +81,8 @@ class ScanSendTransactionView: UIView {
             make.left.equalTo(walletWhiteBackgroundView).offset(14)
         }
         transactionReceiveAddressLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(spaceLabel.snp.bottom).offset(12)
-            make.left.equalTo(walletWhiteBackgroundView).offset(100)
+            make.top.equalTo(transactionReceiveAddressTitleLabel.snp.bottom).offset(12)
+            make.left.equalTo(walletWhiteBackgroundView).offset(14)
             make.right.equalTo(walletWhiteBackgroundView.snp.right).offset(-14)
         }
         confirmButton.snp.makeConstraints { (make) in
@@ -150,7 +150,7 @@ class ScanSendTransactionView: UIView {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "333333")
         label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
-        label.text = "Violas"
+        label.text = "---"
         label.numberOfLines = 0
         return label
     }()
@@ -227,10 +227,10 @@ class ScanSendTransactionView: UIView {
                         transactionReceiveAddressLabel.text = item.value
                     } else if item.type?.lowercased() == "bool" {
 
-                    } else if item.type?.lowercased() == "bytes" {
-                    } else if item.type?.lowercased() == "number" {
+                    } else if item.type?.lowercased() == "vector" {
+                    } else if item.type?.lowercased() == "u64" {
                         let amount = getDecimalNumber(amount: NSDecimalNumber.init(string: item.value),
-                                                      scale: 4,
+                                                      scale: 6,
                                                       unit: 1000000)
                         transactionAmountLabel.text = amount.stringValue
                     }
@@ -240,6 +240,38 @@ class ScanSendTransactionView: UIView {
                 let (_, module) = ViolasManager.readTypeTags(data: Data.init(hex: typeArgument.first ?? "") ?? Data(), typeTagCount: typeArgument.count)
                 transactionAmountUnitLabel.text = module
             }
+        }
+    }
+    var libraModel: WCLibraRawTransaction? {
+         didSet {
+             if let args = libraModel?.payload?.args, args.count > 0 {
+                 for item in args {
+                     if item.type?.lowercased() == "address" {
+                         transactionReceiveAddressLabel.text = item.value
+                     } else if item.type?.lowercased() == "bool" {
+
+                     } else if item.type?.lowercased() == "vector" {
+                     } else if item.type?.lowercased() == "u64" {
+                         let amount = getDecimalNumber(amount: NSDecimalNumber.init(string: item.value),
+                                                       scale: 6,
+                                                       unit: 1000000)
+                         transactionAmountLabel.text = amount.stringValue
+                     }
+                 }
+             }
+            transactionAmountUnitLabel.text = libraModel?.payload?.tyArgs?.first?.module
+         }
+     }
+    var btcModel: WCBTCRawTransaction? {
+        didSet {
+            let amount = getDecimalNumber(amount: NSDecimalNumber.init(string: btcModel?.amount ?? "0"),
+                                          scale: 6,
+                                          unit: 100000000)
+            transactionAmountLabel.text = amount.stringValue
+
+            transactionReceiveAddressLabel.text = btcModel?.payeeAddress
+
+           transactionAmountUnitLabel.text = "Bitcoin"
         }
     }
 }

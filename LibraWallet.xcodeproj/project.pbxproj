@@ -42,6 +42,9 @@
 		3646E50124D3F07C00B8C20B /* AssetsPoolTransactionDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3646E50024D3F07C00B8C20B /* AssetsPoolTransactionDetailTableViewCell.swift */; };
 		3646E50424D7C0FD00B8C20B /* AssetsPoolViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3646E50324D7C0FD00B8C20B /* AssetsPoolViewModel.swift */; };
 		3646E50724D90A7800B8C20B /* ExchangeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3646E50624D90A7800B8C20B /* ExchangeViewModel.swift */; };
+		3646E50D24DBF5B300B8C20B /* ScanSwapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3646E50C24DBF5B300B8C20B /* ScanSwapViewController.swift */; };
+		3646E50F24DBF5C600B8C20B /* ScanSwapModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3646E50E24DBF5C600B8C20B /* ScanSwapModel.swift */; };
+		3646E51124DBF5D400B8C20B /* ScanSwapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3646E51024DBF5D400B8C20B /* ScanSwapView.swift */; };
 		3650F0A624888FAE0086F578 /* WalletMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3650F0A524888FAE0086F578 /* WalletMainViewController.swift */; };
 		3650F0A824888FC40086F578 /* WalletMainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3650F0A724888FC40086F578 /* WalletMainModel.swift */; };
 		3650F0AA24888FD40086F578 /* WalletMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3650F0A924888FD40086F578 /* WalletMainView.swift */; };
@@ -357,6 +360,9 @@
 		3646E50024D3F07C00B8C20B /* AssetsPoolTransactionDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsPoolTransactionDetailTableViewCell.swift; sourceTree = "<group>"; };
 		3646E50324D7C0FD00B8C20B /* AssetsPoolViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsPoolViewModel.swift; sourceTree = "<group>"; };
 		3646E50624D90A7800B8C20B /* ExchangeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeViewModel.swift; sourceTree = "<group>"; };
+		3646E50C24DBF5B300B8C20B /* ScanSwapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanSwapViewController.swift; sourceTree = "<group>"; };
+		3646E50E24DBF5C600B8C20B /* ScanSwapModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanSwapModel.swift; sourceTree = "<group>"; };
+		3646E51024DBF5D400B8C20B /* ScanSwapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanSwapView.swift; sourceTree = "<group>"; };
 		3650F0A524888FAE0086F578 /* WalletMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletMainViewController.swift; sourceTree = "<group>"; };
 		3650F0A724888FC40086F578 /* WalletMainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletMainModel.swift; sourceTree = "<group>"; };
 		3650F0A924888FD40086F578 /* WalletMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletMainView.swift; sourceTree = "<group>"; };
@@ -862,6 +868,40 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
+		3646E50824DBF56E00B8C20B /* ScanSwap */ = {
+			isa = PBXGroup;
+			children = (
+				3646E50924DBF58900B8C20B /* Controller */,
+				3646E50A24DBF58F00B8C20B /* Model */,
+				3646E50B24DBF59600B8C20B /* View */,
+			);
+			path = ScanSwap;
+			sourceTree = "<group>";
+		};
+		3646E50924DBF58900B8C20B /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				3646E50C24DBF5B300B8C20B /* ScanSwapViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		3646E50A24DBF58F00B8C20B /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				3646E50E24DBF5C600B8C20B /* ScanSwapModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		3646E50B24DBF59600B8C20B /* View */ = {
+			isa = PBXGroup;
+			children = (
+				3646E51024DBF5D400B8C20B /* ScanSwapView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		364BB570242CD27700B9BE17 /* MappingModule */ = {
 			isa = PBXGroup;
 			children = (
@@ -874,6 +914,7 @@
 		364BB571242CD2A300B9BE17 /* ScanModule */ = {
 			isa = PBXGroup;
 			children = (
+				3646E50824DBF56E00B8C20B /* ScanSwap */,
 				3682E5D224AC9D42007CA2CA /* ScanPublish */,
 				3682E5B624A865A3007CA2CA /* ScanLogout */,
 				36E95D84242A084B0004B86D /* ScanLogin */,
@@ -3285,6 +3326,7 @@
 				3682E5C824AC36FB007CA2CA /* AssetsPoolViewController.swift in Sources */,
 				9DC06A3F2372A9B100BCE1FE /* MarketViewController.swift in Sources */,
 				3646E4FD24D3EFEE00B8C20B /* AssetsPoolTransactionDetailHeaderView.swift in Sources */,
+				3646E50F24DBF5C600B8C20B /* ScanSwapModel.swift in Sources */,
 				9D9B49AA235DA76100354EF0 /* AddressManagerViewController.swift in Sources */,
 				9D08AD4D2330D8F5004687E8 /* TransactionDetailWebView.swift in Sources */,
 				3650F0C1248F2A850086F578 /* TransactionDetailTableViewCell.swift in Sources */,
@@ -3334,6 +3376,7 @@
 				9D628A86239A495500E222FB /* PrivateAlertView.swift in Sources */,
 				36F826F324BD9F060007ACC3 /* ExchangeTransactionsModel.swift in Sources */,
 				3650F0A624888FAE0086F578 /* WalletMainViewController.swift in Sources */,
+				3646E51124DBF5D400B8C20B /* ScanSwapView.swift in Sources */,
 				9DB515AE23A32B7C0069A909 /* ViolasNetwork.swift in Sources */,
 				9D9B4A06236048A000354EF0 /* AboutUsViewController.swift in Sources */,
 				9DC4887E2322320B005FF254 /* ScanView.swift in Sources */,
@@ -3343,6 +3386,7 @@
 				9DC901F2232788C30097FD85 /* LibraAccessPath.swift in Sources */,
 				9DBC267823408D55009650EA /* ed25519_ge.swift in Sources */,
 				9DFFA88323683C5700EA74F9 /* WalletTransactionsTableViewManager.swift in Sources */,
+				3646E50D24DBF5B300B8C20B /* ScanSwapViewController.swift in Sources */,
 				36828CC624B708900085A165 /* AssetsPoolTransactionDetailTableViewMananger.swift in Sources */,
 				3646E50124D3F07C00B8C20B /* AssetsPoolTransactionDetailTableViewCell.swift in Sources */,
 				3667A79B2475011F0000F119 /* WalletConnectManager.swift in Sources */,
