@@ -518,7 +518,7 @@ extension ExchangeModel {
             tempArray.removeAll()
             tempArray.append(item)
             // 判断路径结束是否符合
-            if item.coinb?.index == outputCoinB.index {
+            if item.coinb?.index == outputCoinB.index || item.coina?.index == outputCoinB.index {
                 // 结束符合
                 shortPath.append(tempArray)
                 tempArray.removeAll()
@@ -625,11 +625,11 @@ extension ExchangeModel {
             fee = outputWithoutFee - output
             let tempModel = ExchangeInfoModel.init(input: inputAAmount, output: output, path: pathArray, outputWithoutFee: outputWithoutFee, fee: fee, models: path)
             tempArray.append(tempModel)
+            print(pathArray)
         }
         let tempaaa = tempArray.sorted { (item1, item2) in
             item1.output > item2.output
         }
-        print(tempaaa)
         let data = setKVOData(type: "GetExchangeInfo", data: tempaaa.first)
         self.setValue(data, forKey: "dataDic")
         
