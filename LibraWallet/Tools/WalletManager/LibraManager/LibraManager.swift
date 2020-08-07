@@ -213,10 +213,10 @@ extension LibraManager {
                     } else if item.type?.lowercased() == "bool" {
                         let argument = LibraTransactionArgument.init(code: .Bool(NSDecimalNumber.init(string: item.value).boolValue))
                         tempArguments.append(argument)
-                    } else if item.type?.lowercased() == "bytes" {
+                    } else if item.type?.lowercased() == "vector" {
                         let argument = LibraTransactionArgument.init(code: .U8Vector(Data.init(hex: item.value ?? "")))
                         tempArguments.append(argument)
-                    } else if item.type?.lowercased() == "number" {
+                    } else if item.type?.lowercased() == "u64" {
                         let argument = LibraTransactionArgument.init(code: .U64(item.value ?? ""))
                         tempArguments.append(argument)
                     }

@@ -142,7 +142,6 @@ extension ScanSendTransactionModel {
         queue.async {
             semaphore.wait()
             self.getLibraSequenceNumber(sendAddress: model.from ?? "", semaphore: semaphore)
-            
         }
         queue.async {
             semaphore.wait()
@@ -242,7 +241,7 @@ extension ScanSendTransactionModel {
     }
 }
 extension ScanSendTransactionModel {
-    func makeTransaction(wallet: HDWallet, amount: UInt64, fee: Double, toAddress: String, changeAddress: String) {
+    func makeTransaction(wallet: HDWallet, amount: UInt64, fee: Double, toAddress: String, changeAddress: String, script: String) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
         queue.async {
@@ -250,7 +249,7 @@ extension ScanSendTransactionModel {
         }
         queue.async {
             semaphore.wait()
-            self.selectUTXOMakeSignature(utxos: self.utxos!, wallet: wallet, amount: amount, fee: fee, toAddress: toAddress, changeAddress: changeAddress)
+            self.selectUTXOWithScriptSignature(utxos: self.utxos!, wallet: wallet, amount: amount, fee: fee, toAddress: toAddress, changeAddress: changeAddress, script: script)
             semaphore.signal()
         }
     }
@@ -291,13 +290,11 @@ extension ScanSendTransactionModel {
         }
         self.requests.append(request)
     }
-    private func selectUTXOMakeSignature(utxos: [TrezorBTCUTXOMainModel], wallet: HDWallet, amount: UInt64, fee: Double, toAddress: String, changeAddress: String) {
+    private func selectUTXOWithScriptSignature(utxos: [TrezorBTCUTXOMainModel], wallet: HDWallet, amount: UInt64, fee: Double, toAddress: String, changeAddress: String, script: String) {
         let feee: UInt64 = UInt64(fee * 100000000)
-        //        let change: UInt64     =  balance - amountt - feee
         
         // 个人公钥
         let lockingScript = Script.buildPublicKeyHashOut(pubKeyHash: wallet.pubKeys.first!.pubkeyHash)
-        
         //
         let inputs = utxos.map { item in
             UnspentTransaction.init(output: TransactionOutput.init(value: NSDecimalNumber.init(string: item.value ?? "0").uint64Value, lockingScript: lockingScript),
@@ -314,13 +311,41 @@ extension ScanSendTransactionModel {
         
         let toAddressResult = try! BitcoinAddress(legacy: toAddress)
         
-        let transaction = TransactionBuilder.build(from: plan, toAddress: toAddressResult, changeAddress: changeAddress as! Address)
+        let transaction = customBuild(from: plan, toAddress: toAddressResult, changeAddress: try! BitcoinAddress.init(legacy: changeAddress))
+        // 添加脚本
+//        let script = BTCManager().getBTCScript(address: mappingReceiveAddress, type: type, tokenContract: mappingContract, amount: Int(amountOut * 1000000))
+        let data = Data.init(Array<UInt8>(hex: script))
+        let opReturn = TransactionOutput.init(value: 0, lockingScript: data)
         
-        let signature = TransactionSigner.init(unspentTransactions: plan.unspentTransactions, transaction: transaction, sighashHelper: BTCSignatureHashHelper(hashType: .ALL))
+        var tempOutputs = transaction.outputs
+        tempOutputs.append(opReturn)
+        let transactionResult = Transaction.init(version: transaction.version, inputs: transaction.inputs, outputs: tempOutputs, lockTime: transaction.lockTime)
+        
+        let signature = TransactionSigner.init(unspentTransactions: plan.unspentTransactions, transaction: transactionResult, sighashHelper: BTCSignatureHashHelper(hashType: .ALL))
         let result = try? signature.sign(with: wallet.privKeys)
         print(result!.serialized().toHexString())
         
         self.sendBTCTransaction(signature: result!.serialized().toHexString())
+    }
+    private func customBuild(from plan: TransactionPlan, toAddress: Address, changeAddress: Address) -> Transaction {
+        let toLockScript: Data = Script(address: toAddress)!.data
+        var outputs: [TransactionOutput] = [
+            TransactionOutput(value: plan.amount, lockingScript: toLockScript)
+        ]
+        if plan.change > 0 {
+            let changeLockScript: Data = Script(address: changeAddress)!.data
+            outputs.insert(TransactionOutput(value: plan.change, lockingScript: changeLockScript), at: 0)
+        }
+        
+        let unsignedInputs: [TransactionInput] = plan.unspentTransactions.map {
+            TransactionInput(
+                previousOutput: $0.outpoint,
+                signatureScript: Data(),
+                sequence: UInt32.max
+            )
+        }
+        
+        return Transaction(version: 2, inputs: unsignedInputs, outputs: outputs, lockTime: 0)
     }
     private func sendBTCTransaction(signature: String) {
         let request = mainProvide.request(.TrezorBTCPushTransaction(signature)) {[weak self](result) in

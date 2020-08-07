@@ -277,6 +277,39 @@ class SendTransactionHandler: RequestHandler {
                         }
                         appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
                     } else if model.payload?.code == "a11ceb0b010006010002030207040902050b0d071817082f10000000010001020101000205060c030303030002090009010845786368616e67650d6164645f6c6971756964697479000000000000000000000000000000010201010001070b000a010a020a030a04380002" {
+                        // 添加流动性
+                        let vc = ScanSwapViewController()
+                        vc.model = model
+                        vc.reject = {
+                            WalletConnectManager.shared.walletConnectServer.send(.reject(request))
+                        }
+                        vc.confirm = { (signature) in
+                            do {
+                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))//
+                            } catch {
+                                print(error.localizedDescription)
+                            }
+                            print(signature)
+                        }
+                        appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
+                    } else if model.payload?.code == "a11ceb0b010006010002030207040902050b0c07171a083110000000010001020101000204060c0303030002090009010845786368616e67651072656d6f76655f6c6971756964697479000000000000000000000000000000010201010001060b000a010a020a03380002" {
+                        // 移除流动性
+                        let vc = ScanSwapViewController()
+                        vc.model = model
+                        vc.reject = {
+                            WalletConnectManager.shared.walletConnectServer.send(.reject(request))
+                        }
+                        vc.confirm = { (signature) in
+                            do {
+                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))//
+                            } catch {
+                                print(error.localizedDescription)
+                            }
+                            print(signature)
+                        }
+                        appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
+                    } else if model.payload?.code == "a11ceb0b010006010002030207040902050b10071b0e082910000000010001020101000206060c0503030a020a020002090009010845786368616e67650473776170000000000000000000000000000000010201010001080b000a010a020a030b040b05380002" {
+                        // 交换
                         let vc = ScanSwapViewController()
                         vc.model = model
                         vc.reject = {

@@ -1,14 +1,15 @@
 //
-//  ScanSendTransactionViewController.swift
+//  ScanSwapViewController.swift
 //  LibraWallet
 //
-//  Created by wangyingdong on 2020/5/21.
+//  Created by wangyingdong on 2020/8/6.
 //  Copyright © 2020 palliums. All rights reserved.
 //
 
 import UIKit
 import Toast_Swift
-class ScanSendTransactionViewController: BaseViewController {
+
+class ScanSwapViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.addSubview(detailView)
@@ -34,19 +35,19 @@ class ScanSendTransactionViewController: BaseViewController {
         }
     }
     deinit {
-        print("ScanSendTransactionViewController销毁了")
+        print("ScanSwapViewController销毁了")
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.barStyle = .default
     }
-    private lazy var detailView : ScanSendTransactionView = {
-        let view = ScanSendTransactionView.init()
+    private lazy var detailView : ScanSwapView = {
+        let view = ScanSwapView.init()
         view.delegate = self
         return view
     }()
-    lazy var dataModel: ScanSendTransactionModel = {
-        let model = ScanSendTransactionModel.init()
+    lazy var dataModel: ScanSwapModel = {
+        let model = ScanSwapModel.init()
         return model
     }()
     /// 数据监听KVO
@@ -56,26 +57,16 @@ class ScanSendTransactionViewController: BaseViewController {
             self.detailView.model = model
         }
     }
-    var libraModel: WCLibraRawTransaction? {
-        didSet {
-            self.detailView.libraModel = libraModel
-        }
-    }
-    var btcModel: WCBTCRawTransaction? {
-        didSet {
-            self.detailView.btcModel = btcModel
-        }
-    }
     var reject: (() -> Void)?
     var confirm: ((String) -> Void)?
     var needReject: Bool? = true
 }
-extension ScanSendTransactionViewController {
+extension ScanSwapViewController {
     func initKVO() {
         self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
             guard let dataDic = change.newValue, dataDic.count != 0 else {
                 self?.detailView.hideToastActivity()
-//                self?.endLoading()
+                //                self?.endLoading()
                 return
             }
             let type = dataDic.value(forKey: "type") as! String
@@ -103,25 +94,18 @@ extension ScanSendTransactionViewController {
             }
             if type == "SendViolasTransaction" {
                 self?.detailView.toastView?.hide(tag: 99)
-                self?.view.makeToast(localLanguage(keyString: "wallet_transfer_success_alert"), duration: toastDuration, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
-                    self?.needReject = false
-                    if let confirmAction = self?.confirm {
-                        confirmAction("success")
-                    }
-                    self?.dismiss(animated: true, completion: nil)
-                })
-            } else if type == "SendLibraTransaction" {
-                self?.detailView.toastView?.hide(tag: 99)
-                self?.view.makeToast(localLanguage(keyString: "wallet_transfer_success_alert"), duration: toastDuration, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
-                    self?.needReject = false
-                    if let confirmAction = self?.confirm {
-                        confirmAction("success")
-                    }
-                    self?.dismiss(animated: true, completion: nil)
-                })
-            } else if type == "SendBTCTransaction" {
-                self?.detailView.toastView?.hide(tag: 99)
-                self?.view.makeToast(localLanguage(keyString: "wallet_transfer_success_alert"), duration: toastDuration, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
+                var content = localLanguage(keyString: "wallet_market_exchange_submit_exchange_successful")
+                if self?.model?.payload?.code == "a11ceb0b010006010002030207040902050b0d071817082f10000000010001020101000205060c030303030002090009010845786368616e67650d6164645f6c6971756964697479000000000000000000000000000000010201010001070b000a010a020a030a04380002" {
+                    // 添加流动性
+                    content = localLanguage(keyString: "wallet_assets_pool_add_liquidity_successful")
+                } else if self?.model?.payload?.code == "a11ceb0b010006010002030207040902050b0c07171a083110000000010001020101000204060c0303030002090009010845786368616e67651072656d6f76655f6c6971756964697479000000000000000000000000000000010201010001060b000a010a020a03380002" {
+                    // 移除流动性
+                    content = localLanguage(keyString: "wallet_assets_pool_remove_liquidity_successful")
+
+                } else {
+                    // 交换
+                }
+                self?.view.makeToast(content, duration: toastDuration, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
                     self?.needReject = false
                     if let confirmAction = self?.confirm {
                         confirmAction("success")
@@ -133,7 +117,7 @@ extension ScanSendTransactionViewController {
     }
 }
 
-extension ScanSendTransactionViewController: ScanSendTransactionViewDelegate {
+extension ScanSwapViewController: ScanSendTransactionViewDelegate {
     func cancelLogin() {
         self.dismiss(animated: true, completion: {
             if let rejectC = self.reject {
@@ -147,7 +131,15 @@ extension ScanSendTransactionViewController: ScanSendTransactionViewDelegate {
         if let raw = self.model {
             WalletManager.unlockWallet(controller: self, successful: { [weak self] (mnemonic) in
                 self?.detailView.toastView?.show(tag: 99)
-                self?.dataModel.sendViolasTransaction(model: raw, mnemonic: mnemonic, module: "LBR")
+                if raw.payload?.code == "a11ceb0b010006010002030207040902050b0d071817082f10000000010001020101000205060c030303030002090009010845786368616e67650d6164645f6c6971756964697479000000000000000000000000000000010201010001070b000a010a020a030a04380002" {
+                    // 添加流动性
+                    self?.dataModel.sendAddLiquidityViolasTransaction(model: raw, mnemonic: mnemonic, feeModule: "LBR")
+                } else if raw.payload?.code == "a11ceb0b010006010002030207040902050b0c07171a083110000000010001020101000204060c0303030002090009010845786368616e67651072656d6f76655f6c6971756964697479000000000000000000000000000000010201010001060b000a010a020a03380002" {
+                    // 移除流动性
+                } else {
+                    // 交换
+                }
+//                self?.dataModel.sendViolasTransaction(model: raw, mnemonic: mnemonic, module: "LBR")
             }) { [weak self] (error) in
                 guard error != "Cancel" else {
                     self?.detailView.toastView?.hide(tag: 99)
@@ -156,31 +148,7 @@ extension ScanSendTransactionViewController: ScanSendTransactionViewDelegate {
                 self?.detailView.makeToast(error,
                                            position: .center)
             }
-        } else if let libra = self.libraModel {
-            WalletManager.unlockWallet(controller: self, successful: { [weak self] (mnemonic) in
-                self?.detailView.toastView?.show(tag: 99)
-                    self?.dataModel.sendLibraTransaction(model: libra, mnemonic: mnemonic, module: "LBR")
-            }) { [weak self] (error) in
-                guard error != "Cancel" else {
-                    self?.detailView.toastView?.hide(tag: 99)
-                    return
-                }
-                self?.detailView.makeToast(error,
-                                           position: .center)
-            }
-        } else if let btc = self.btcModel {
-            WalletManager.unlockWallet(controller: self, successful: { [weak self] (mnemonic) in
-                self?.detailView.toastView?.show(tag: 99)
-                let wallet = try! BTCManager().getWallet(mnemonic: mnemonic)
-                self?.dataModel.makeTransaction(wallet: wallet, amount: NSDecimalNumber.init(string: btc.amount ?? "0").uint64Value, fee: 0.002, toAddress: btc.payeeAddress ?? "", changeAddress: btc.changeAddress ?? "", script: btc.script ?? "")
-            }) { [weak self] (error) in
-                guard error != "Cancel" else {
-                    self?.detailView.toastView?.hide(tag: 99)
-                    return
-                }
-                self?.detailView.makeToast(error,
-                                           position: .center)
-            }
+            
         } else {
             #warning("报错待处理")
         }

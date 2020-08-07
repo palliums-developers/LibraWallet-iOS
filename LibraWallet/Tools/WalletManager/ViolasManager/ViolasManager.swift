@@ -235,18 +235,18 @@ extension ViolasManager {
         }
     }
     /// 获取交易所添加流动性交易Hex
-    public static func getMarketAddLiquidityTransactionHex(sendAddress: String, fee: Double, mnemonic: [String], amounta_desired: Double, amountb_desired: Double, amounta_min: Double, amountb_min: Double, sequenceNumber: Int, moduleA: String, moduleB: String, feeModule: String) throws -> String {
+    public static func getMarketAddLiquidityTransactionHex(sendAddress: String, fee: Double, mnemonic: [String], amounta_desired: UInt64, amountb_desired: UInt64, amounta_min: UInt64, amountb_min: UInt64, sequenceNumber: Int, moduleA: String, moduleB: String, feeModule: String) throws -> String {
         do {
             let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
             // 拼接交易
             let argument0 = ViolasTransactionArgument.init(code: .U64,
-                                                           value: "\(Int(amounta_desired * 1000000))")
+                                                           value: "\(amounta_desired)")
             let argument1 = ViolasTransactionArgument.init(code: .U64,
-                                                           value: "\(Int(amountb_desired * 1000000))")
+                                                           value: "\(amountb_desired)")
             let argument2 = ViolasTransactionArgument.init(code: .U64,
-                                                           value: "\(Int(amounta_min * 1000000))")
+                                                           value: "\(amounta_min)")
             let argument3 = ViolasTransactionArgument.init(code: .U64,
-                                                           value: "\(Int(amountb_min * 1000000))")
+                                                           value: "\(amountb_min)")
             //Data.init(hex: ViolasManager.getLocalMoveCode(name: "add_liquidity"))
             let script = ViolasTransactionScript.init(code: ViolasManager.getCodeData(move: ViolasManager.getLocalMoveCode(name: "add_liquidity"), address: "00000000000000000000000000000001"),
                                                       typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .Normal(moduleA))),
@@ -267,16 +267,16 @@ extension ViolasManager {
         }
     }
     /// 获取交易所取消流动性交易Hex
-    public static func getMarketRemoveLiquidityTransactionHex(sendAddress: String, fee: Double, mnemonic: [String], liquidity: Double, amounta_min: Double, amountb_min: Double, sequenceNumber: Int, moduleA: String, moduleB: String, feeModule: String) throws -> String {
+    public static func getMarketRemoveLiquidityTransactionHex(sendAddress: String, fee: Double, mnemonic: [String], liquidity: UInt64, amounta_min: UInt64, amountb_min: UInt64, sequenceNumber: Int, moduleA: String, moduleB: String, feeModule: String) throws -> String {
         do {
             let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
             // 拼接交易
             let argument0 = ViolasTransactionArgument.init(code: .U64,
-                                                           value: "\(Int(liquidity * 1000000))")
+                                                           value: "\(liquidity)")
             let argument1 = ViolasTransactionArgument.init(code: .U64,
-                                                           value: "\(Int(amounta_min * 1000000))")
+                                                           value: "\(amounta_min)")
             let argument2 = ViolasTransactionArgument.init(code: .U64,
-                                                           value: "\(Int(amountb_min * 1000000))")
+                                                           value: "\(amountb_min)")
             let script = ViolasTransactionScript.init(code: ViolasManager.getCodeData(move: ViolasManager.getLocalMoveCode(name: "remove_liquidity"), address: "00000000000000000000000000000001"),
                                                       typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .Normal(moduleA))),
                                                                  ViolasTypeTag.init(structData: ViolasStructTag.init(type: .Normal(moduleB)))],
@@ -371,17 +371,17 @@ extension ViolasManager {
                         let argument = ViolasTransactionArgument.init(code: .Address,
                                                                       value: item.value ?? "")
                         tempArguments.append(argument)
+                    } else if item.type?.lowercased() == "u64" {
+                        let argument = ViolasTransactionArgument.init(code: .U64,
+                                                                      value: "\(Int(item.value ?? "0")!)")
+                        tempArguments.append(argument)
                     } else if item.type?.lowercased() == "bool" {
                         let argument = ViolasTransactionArgument.init(code: .Bool,
                                                                       value: item.value ?? "")
                         tempArguments.append(argument)
-                    } else if item.type?.lowercased() == "bytes" {
+                    } else if item.type?.lowercased() == "vector" {
                         let argument = ViolasTransactionArgument.init(code: .U8Vector,
                                                                       value: item.value ?? "")
-                        tempArguments.append(argument)
-                    } else if item.type?.lowercased() == "number" {
-                        let argument = ViolasTransactionArgument.init(code: .U64,
-                                                                      value: "\(Int(item.value ?? "0")!)")
                         tempArguments.append(argument)
                     }
                 }
