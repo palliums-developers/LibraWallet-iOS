@@ -57,14 +57,14 @@ extension AssetsPoolViewController: AssetsPoolViewHeaderViewDelegate {
                                         coinB: outputModuleName)
     }
     
-    func addLiquidityConfirm(amountIn: Double, amountOut: Double, inputModelName: String, outputModelName: String) {
+    func addLiquidityConfirm(amountIn: UInt64, amountOut: UInt64, inputModelName: String, outputModelName: String) {
         WalletManager.unlockWallet(controller: self, successful: { [weak self](mnemonic) in
             self?.detailView.toastView?.show(tag: 99)
             self?.dataModel.sendAddLiquidityViolasTransaction(sendAddress: WalletManager.shared.violasAddress ?? "",
-                                                              amounta_desired: Double(amountIn),
-                                                              amountb_desired: Double(amountOut),
-                                                              amounta_min: Double(amountIn) * 0.995,
-                                                              amountb_min: Double(amountOut) * 0.995,
+                                                              amounta_desired: amountIn,
+                                                              amountb_desired: amountOut,
+                                                              amounta_min: UInt64(Double(amountIn) * 0.995),
+                                                              amountb_min: UInt64(Double(amountOut) * 0.995),
                                                               fee: 0,
                                                               mnemonic: mnemonic,
                                                               moduleA: inputModelName,

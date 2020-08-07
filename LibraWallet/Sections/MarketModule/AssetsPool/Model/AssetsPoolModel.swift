@@ -126,7 +126,7 @@ class AssetsPoolModel: NSObject {
     }
 }
 extension AssetsPoolModel {
-    func sendAddLiquidityViolasTransaction(sendAddress: String, amounta_desired: Double, amountb_desired: Double, amounta_min: Double, amountb_min: Double, fee: Double, mnemonic: [String], moduleA: String, moduleB: String, feeModule: String) {
+    func sendAddLiquidityViolasTransaction(sendAddress: String, amounta_desired: UInt64, amountb_desired: UInt64, amounta_min: UInt64, amountb_min: UInt64, fee: Double, mnemonic: [String], moduleA: String, moduleB: String, feeModule: String) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
         queue.async {
@@ -139,10 +139,10 @@ extension AssetsPoolModel {
                 let signature = try ViolasManager.getMarketAddLiquidityTransactionHex(sendAddress: sendAddress,
                                                                                       fee: fee,
                                                                                       mnemonic: mnemonic,
-                                                                                      amounta_desired: (NSDecimalNumber.init(value: amounta_desired).multiplying(by: NSDecimalNumber.init(value: 1000000))).uint64Value,
-                                                                                      amountb_desired: (NSDecimalNumber.init(value: amountb_desired).multiplying(by: NSDecimalNumber.init(value: 1000000))).uint64Value,
-                                                                                      amounta_min: (NSDecimalNumber.init(value: amounta_min).multiplying(by: NSDecimalNumber.init(value: 1000000))).uint64Value,
-                                                                                      amountb_min: (NSDecimalNumber.init(value: amountb_min).multiplying(by: NSDecimalNumber.init(value: 1000000))).uint64Value,
+                                                                                      amounta_desired: amounta_desired,
+                                                                                      amountb_desired: amountb_desired,
+                                                                                      amounta_min: amounta_min,
+                                                                                      amountb_min: amountb_min,
                                                                                       sequenceNumber: self.sequenceNumber ?? 0,
                                                                                       moduleA: moduleA,
                                                                                       moduleB: moduleB,

@@ -9,7 +9,7 @@
 import UIKit
 import Localize_Swift
 protocol AssetsPoolViewHeaderViewDelegate: NSObjectProtocol {
-    func addLiquidityConfirm(amountIn: Double, amountOut: Double, inputModelName: String, outputModelName: String)
+    func addLiquidityConfirm(amountIn: UInt64, amountOut: UInt64, inputModelName: String, outputModelName: String)
     func removeLiquidityConfirm(token: Double, amountIn: Double, amountOut: Double, inputModelName: String, outputModelName: String)
     func selectInputToken()
     func selectOutoutToken()
@@ -420,7 +420,7 @@ class AssetsPoolViewHeaderView: UIView {
                     return
                 }
                 // 转换数字
-                let amountA = NSDecimalNumber.init(string: amountAString).doubleValue
+                let amountA = NSDecimalNumber.init(string: amountAString)
                 
                 // 金额不为空检查
                 guard let amountBString = self.outputAmountTextField.text, amountBString.isEmpty == false else {
@@ -435,7 +435,29 @@ class AssetsPoolViewHeaderView: UIView {
                     return
                 }
                 // 转换数字
-                let amountB = NSDecimalNumber.init(string: amountBString).doubleValue
+                let amountB = NSDecimalNumber.init(string: amountBString)
+                guard amountA.int64Value > 0 else {
+                    self.makeToast(LibraWalletError.WalletTransfer(reason: .amountInvalid).localizedDescription,
+                                         position: .center)
+                    return
+                }
+                guard amountB.int64Value > 0 else {
+                    self.makeToast(LibraWalletError.WalletTransfer(reason: .amountInvalid).localizedDescription,
+                                         position: .center)
+                    return
+                }
+                // 金额超限检测
+                guard amountA.multiplying(by: NSDecimalNumber.init(value: 1000000)).int64Value < (tempInputTokenA.amount ?? 0) else {
+                    self.makeToast(LibraWalletError.WalletTransfer(reason: .amountOverload).localizedDescription,
+                                         position: .center)
+                    return
+                }
+                // 金额超限检测
+                guard amountB.multiplying(by: NSDecimalNumber.init(value: 1000000)).int64Value < (tempInputTokenB.amount ?? 0) else {
+                    self.makeToast(LibraWalletError.WalletTransfer(reason: .amountOverload).localizedDescription,
+                                         position: .center)
+                    return
+                }
                 // 筛选Index排序
                 var leastModuleA = tempInputTokenA
                 var otherModuleB = tempInputTokenB
@@ -460,8 +482,8 @@ class AssetsPoolViewHeaderView: UIView {
                 }
                 // 转入
                 self.viewState = .AssetsPoolTransferInConfirm
-                self.delegate?.addLiquidityConfirm(amountIn: tempAmountA,
-                                                   amountOut: tempAmountB,
+                self.delegate?.addLiquidityConfirm(amountIn: tempAmountA.uint64Value,
+                                                   amountOut: tempAmountB.uint64Value,
                                                    inputModelName: leastModuleA.module ?? "",
                                                    outputModelName: otherModuleB.module ?? "")
             } else {
