@@ -224,6 +224,29 @@ extension ExchangeViewModel: ExchangeViewHeaderViewDelegate {
         }
         // 转换数字
         let amountOut = NSDecimalNumber.init(string: amountBString)
+        guard amountIn.int64Value > 0 else {
+            self.view?.makeToast(LibraWalletError.WalletTransfer(reason: .amountInvalid).localizedDescription,
+                                 position: .center)
+            return
+        }
+        guard amountOut.int64Value > 0 else {
+            self.view?.makeToast(LibraWalletError.WalletTransfer(reason: .amountInvalid).localizedDescription,
+                                 position: .center)
+            return
+        }
+        // 金额超限检测
+        guard amountIn.multiplying(by: NSDecimalNumber.init(value: 1000000)).int64Value < (tempInputTokenA.amount ?? 0) else {
+            self.view?.makeToast(LibraWalletError.WalletTransfer(reason: .amountOverload).localizedDescription,
+                                 position: .center)
+            return
+        }
+        // 金额超限检测
+        guard amountOut.multiplying(by: NSDecimalNumber.init(value: 1000000)).int64Value < (tempInputTokenB.amount ?? 0) else {
+            self.view?.makeToast(LibraWalletError.WalletTransfer(reason: .amountOverload).localizedDescription,
+                                 position: .center)
+            return
+        }
+        
         var leastModuleA = tempInputTokenA
         var otherModuleB = tempInputTokenB
 //        var tempAmountA = amountIn
