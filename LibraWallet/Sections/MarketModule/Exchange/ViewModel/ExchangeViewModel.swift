@@ -14,7 +14,6 @@ class ExchangeViewModel: NSObject {
     weak var delegate: ExchangeViewModelDelegate?
     override init() {
         super.init()
-//        self.initKVO()
     }
     func startAutoRefreshExchangeRate(inputCoinA: MarketSupportTokensDataModel, outputCoinB: MarketSupportTokensDataModel) {
         self.timer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(refreshExchangeRate), userInfo: nil, repeats: true)
@@ -30,6 +29,8 @@ class ExchangeViewModel: NSObject {
     var view: ExchangeView? {
         didSet {
             view?.headerView.delegate = self
+            view?.headerView.inputAmountTextField.delegate = self
+            view?.headerView.outputAmountTextField.delegate = self
         }
     }
     /// 网络请求、数据模型
@@ -43,6 +44,7 @@ class ExchangeViewModel: NSObject {
     private var timer: Timer?
     var controllerClosure: ((UIViewController)->())?
 }
+// MARK: - 逻辑处理
 extension ExchangeViewModel {
     func handleRequest(inputAmount: NSDecimalNumber, outputAmount: NSDecimalNumber, inputModule: MarketSupportTokensDataModel, outputModule: MarketSupportTokensDataModel, mnemonic: [String], outputModuleActiveState: Bool) {
         if inputModule.chainType == 1 && outputModule.chainType == 1 {
@@ -175,6 +177,7 @@ extension ExchangeViewModel {
         
     }
 }
+// MARK: - HeaderView代理逻辑
 extension ExchangeViewModel: ExchangeViewHeaderViewDelegate {
     func exchangeConfirm() {
         // ModelA不为空
@@ -249,13 +252,11 @@ extension ExchangeViewModel: ExchangeViewHeaderViewDelegate {
         
         var leastModuleA = tempInputTokenA
         var otherModuleB = tempInputTokenB
-//        var tempAmountA = amountIn
-//        var tempAmountB = amountOut
         if (tempInputTokenA.index ?? 0) > (tempInputTokenB.index ?? 0) {
-            leastModuleA = tempInputTokenB
-            otherModuleB = tempInputTokenA
-//            tempAmountA = amountOut
-//            tempAmountB = amountIn
+            if tempInputTokenA.chainType == 1 {
+                leastModuleA = tempInputTokenB
+                otherModuleB = tempInputTokenA
+            }
         }
         self.controllerClosure = { [weak self] controller in
             if let tokenBActiveState = tempInputTokenB.activeState, tokenBActiveState == true {
@@ -389,6 +390,97 @@ extension ExchangeViewModel: ExchangeViewHeaderViewDelegate {
                                        paths: self.dataModel.shortPath)
     }
 }
+// MARK: - TextField逻辑
+extension ExchangeViewModel: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let content = textField.text else {
+            return true
+        }
+        let textLength = content.count + string.count - range.length
+        if textField.tag == 10 {
+            if textLength == 0 {
+                self.view?.headerView.inputAmountTextField.text = ""
+                self.view?.headerView.outputAmountTextField.text = ""
+            }
+        } else {
+            if textLength == 0 {
+                self.view?.headerView.inputAmountTextField.text = ""
+                self.view?.headerView.outputAmountTextField.text = ""
+            }
+        }
+        if content.contains(".") {
+            let firstContent = content.split(separator: ".").first?.description ?? "0"
+            if (textLength - firstContent.count) < 8 {
+                return handleInputAmount(textField: textField, content: (content.isEmpty == true ? "0":content) + string)
+            } else {
+                return false
+            }
+        } else {
+            if textLength <= ApplyTokenAmountLengthLimit {
+                return handleInputAmount(textField: textField, content: (content.isEmpty == true ? "0":content) + string)
+            } else {
+                return false
+            }
+        }
+    }
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        // 转入
+        guard self.view?.headerView.inputTokenButton.titleLabel?.text != localLanguage(keyString: "wallet_market_exchange_input_token_button_title") else {
+            textField.resignFirstResponder()
+            self.view?.makeToast(localLanguage(keyString: "wallet_market_exchange_input_token_unselect"),
+                           position: .center)
+            return false
+        }
+        guard self.view?.headerView.outputTokenButton.titleLabel?.text != localLanguage(keyString: "wallet_market_exchange_output_token_button_title") else {
+            textField.resignFirstResponder()
+            self.view?.makeToast(localLanguage(keyString: "wallet_market_exchange_output_token_unselect"),
+                           position: .center)
+            return false
+        }
+        return true
+    }
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        if textField.tag == 10 {
+            if textField.text?.isEmpty == false {
+                self.view?.headerView.viewState = .handleBestOutputAmount
+                let amount = NSDecimalNumber.init(string: textField.text ?? "0").multiplying(by: NSDecimalNumber.init(value: 1000000)).int64Value
+                self.fliterBestOutputAmount(inputAmount: amount)
+            }
+        } else {
+            if textField.text?.isEmpty == false {
+                self.view?.headerView.viewState = .handleBestInputAmount
+                let amount = NSDecimalNumber.init(string: textField.text ?? "0").multiplying(by: NSDecimalNumber.init(value: 1000000)).int64Value
+                self.fliterBestInputAmount(outputAmount: amount)
+            }
+        }
+        
+    }
+    func handleInputAmount(textField: UITextField, content: String) -> Bool {
+         let amount = NSDecimalNumber.init(string: content).multiplying(by: NSDecimalNumber.init(value: 1000000)).int64Value
+         if textField.tag == 10 {
+             if amount <= self.view?.headerView.transferInInputTokenA?.amount ?? 0 {
+                 return true
+             } else {
+                 let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: self.view?.headerView.transferInInputTokenA?.amount ?? 0),
+                                               scale: 6,
+                                               unit: 1000000)
+                 textField.text = amount.stringValue
+                 return false
+             }
+         } else {
+             if amount <= self.view?.headerView.transferInInputTokenB?.amount ?? 0 {
+                 return true
+             } else {
+                 let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: self.view?.headerView.transferInInputTokenB?.amount ?? 0),
+                                               scale: 6,
+                                               unit: 1000000)
+                 textField.text = amount.stringValue
+                 return false
+             }
+         }
+     }
+}
+// MARK: - 网络请求
 extension ExchangeViewModel {
     func initKVO() {
         self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
@@ -516,4 +608,3 @@ extension ExchangeViewModel {
         })
     }
 }
-//wallet_market_exchange_submit_exchange_failed = "Exchange order submit failed";
