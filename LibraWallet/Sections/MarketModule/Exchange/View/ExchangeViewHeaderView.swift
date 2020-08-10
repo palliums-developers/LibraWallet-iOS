@@ -98,10 +98,10 @@ class ExchangeViewHeaderView: UIView {
             make.right.equalTo(inputTokenBackgroundView.snp.right).offset(-88)
         }
         inputTokenButton.snp.makeConstraints { (make) in
-            make.right.equalTo(inputTokenBackgroundView.snp.right).offset(-11)
-            make.bottom.equalTo(inputTokenBackgroundView.snp.bottom).offset(-11)
+            make.right.equalTo(inputTokenBackgroundView.snp.right).offset(-11).priority(250)
+            make.bottom.equalTo(inputTokenBackgroundView.snp.bottom).offset(-11).priority(250)
             let width = libraWalletTool.ga_widthForComment(content: localLanguage(keyString: "wallet_market_exchange_input_token_button_title"), fontSize: 12, height: 22) + 8 + 19
-            make.size.equalTo(CGSize.init(width: width, height: 22))
+            make.size.equalTo(CGSize.init(width: width, height: 22)).priority(250)
         }
         swapButton.snp.makeConstraints { (make) in
             make.top.equalTo(inputTokenBackgroundView.snp.bottom).offset(6)
@@ -134,10 +134,10 @@ class ExchangeViewHeaderView: UIView {
             make.right.equalTo(outputTokenBackgroundView.snp.right).offset(-88)
         }
         outputTokenButton.snp.makeConstraints { (make) in
-            make.right.equalTo(outputTokenBackgroundView.snp.right).offset(-11)
-            make.bottom.equalTo(outputTokenBackgroundView.snp.bottom).offset(-11)
+            make.right.equalTo(outputTokenBackgroundView.snp.right).offset(-11).priority(250)
+            make.bottom.equalTo(outputTokenBackgroundView.snp.bottom).offset(-11).priority(250)
             let width = libraWalletTool.ga_widthForComment(content: localLanguage(keyString: "wallet_market_exchange_output_token_button_title"), fontSize: 12, height: 22) + 8 + 19
-            make.size.equalTo(CGSize.init(width: width, height: 22))
+            make.size.equalTo(CGSize.init(width: width, height: 22)).priority(250)
         }
         exchangeRateLabel.snp.makeConstraints { (make) in
             make.left.equalTo(outputTokenBackgroundView).offset(15)
@@ -447,6 +447,12 @@ class ExchangeViewHeaderView: UIView {
         if transferInInputTokenA == nil {
             inputTokenButton.setTitle(localLanguage(keyString: "wallet_market_exchange_input_token_button_title"), for: UIControl.State.normal)
             inputTokenButton.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 9, height: 5.5))
+            inputTokenButton.snp.remakeConstraints { (make) in
+                make.right.equalTo(inputTokenBackgroundView.snp.right).offset(-11)
+                make.bottom.equalTo(inputTokenBackgroundView.snp.bottom).offset(-11)
+                let width = libraWalletTool.ga_widthForComment(content: localLanguage(keyString: "wallet_market_exchange_input_token_button_title"), fontSize: 12, height: 22) + 8 + 19
+                make.size.equalTo(CGSize.init(width: width, height: 22))
+            }
             inputTokenAssetsLabel.text = localLanguage(keyString: "wallet_market_exchange_token_title") + "---"
         } else {
             let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: transferInInputTokenA?.amount ?? 0),
@@ -457,6 +463,12 @@ class ExchangeViewHeaderView: UIView {
         if transferInInputTokenB == nil {
             outputTokenButton.setTitle(localLanguage(keyString: "wallet_market_exchange_output_token_button_title"), for: UIControl.State.normal)
             outputTokenButton.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 9, height: 5.5))
+            outputTokenButton.snp.remakeConstraints { (make) in
+                make.right.equalTo(outputTokenBackgroundView.snp.right).offset(-11)
+                make.bottom.equalTo(outputTokenBackgroundView.snp.bottom).offset(-11)
+                let width = libraWalletTool.ga_widthForComment(content: localLanguage(keyString: "wallet_market_exchange_output_token_button_title"), fontSize: 12, height: 22) + 8 + 19
+                make.size.equalTo(CGSize.init(width: width, height: 22))
+            }
             outputTokenAssetsLabel.text = localLanguage(keyString: "wallet_market_exchange_token_title") + "---"
         } else {
             let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: transferInInputTokenB?.amount ?? 0),

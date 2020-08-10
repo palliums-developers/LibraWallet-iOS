@@ -653,18 +653,37 @@ class AssetsPoolViewHeaderView: UIView {
     }
     /// 自动试算模式
     var autoCalculateMode: Bool = true
+    var addLiquidityMode: Bool = true
     /// 语言切换
     @objc func setText() {
-        if changeTypeButton.titleLabel?.text == localLanguage(keyString: "wallet_assets_pool_transfer_in_title") {
+        //  刷新类型切换大小
+        if addLiquidityMode == true {
             changeTypeButton.setTitle(localLanguage(keyString: "wallet_assets_pool_transfer_in_title"), for: UIControl.State.normal)
+            inputTitleLabel.text = localLanguage(keyString: "wallet_market_assets_pool_input_amount_title")
+            outputTitleLabel.text = localLanguage(keyString: "wallet_market_assets_pool_input_amount_title")
         } else {
             changeTypeButton.setTitle(localLanguage(keyString: "wallet_assets_pool_transfer_out_title"), for: UIControl.State.normal)
+            inputTitleLabel.text = localLanguage(keyString: "wallet_market_assets_pool_output_token_title")
+            outputTitleLabel.text = localLanguage(keyString: "wallet_market_assets_pool_output_amount_title")
         }
         changeTypeButton.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 9, height: 5.5))
+        changeTypeButton.snp.remakeConstraints { (make) in
+            make.left.equalTo(inputTokenBackgroundView.snp.left).offset(5)
+            make.bottom.equalTo(inputTokenBackgroundView.snp.top).offset(-6)
+            let width = libraWalletTool.ga_widthForComment(content: changeTypeButton.titleLabel?.text ?? "", fontSize: 12, height: 20) + 8 + 19
+            make.size.equalTo(CGSize.init(width: width, height: 20))
+        }
+
         feeLabel.text = localLanguage(keyString: "wallet_market_assets_pool_add_liquidity_fee_title")
         if transferInInputTokenA == nil {
             inputTokenButton.setTitle(localLanguage(keyString: "wallet_market_exchange_input_token_button_title"), for: UIControl.State.normal)
             inputTokenButton.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 9, height: 5.5))
+            inputTokenButton.snp.remakeConstraints { (make) in
+                make.right.equalTo(inputTokenBackgroundView.snp.right).offset(-11)
+                make.bottom.equalTo(inputTokenBackgroundView.snp.bottom).offset(-11)
+                let width = libraWalletTool.ga_widthForComment(content: localLanguage(keyString: "wallet_market_exchange_input_token_button_title"), fontSize: 12, height: 22) + 8 + 19
+                make.size.equalTo(CGSize.init(width: width, height: 22))
+            }
             inputTokenAssetsLabel.text = localLanguage(keyString: "wallet_market_exchange_token_title") + "---"
         } else {
             let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: transferInInputTokenA?.amount ?? 0),
@@ -672,15 +691,16 @@ class AssetsPoolViewHeaderView: UIView {
                                           unit: 1000000)
             inputTokenAssetsLabel.text = localLanguage(keyString: "wallet_market_exchange_token_title") + amount.stringValue
         }
-        //        inputTokenButton.snp.remakeConstraints { (make) in
-        //            make.right.equalTo(inputTokenBackgroundView.snp.right).offset(-11)
-        //            make.bottom.equalTo(inputTokenBackgroundView.snp.bottom).offset(-11)
-        //            let width = libraWalletTool.ga_widthForComment(content: content, fontSize: 12, height: 22) + 8 + 19
-        //            make.size.equalTo(CGSize.init(width: width, height: 22))
-        //        }
+
         if transferInInputTokenB == nil {
             outputTokenButton.setTitle(localLanguage(keyString: "wallet_market_exchange_output_token_button_title"), for: UIControl.State.normal)
             outputTokenButton.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 9, height: 5.5))
+            outputTokenButton.snp.remakeConstraints { (make) in
+                make.right.equalTo(outputTokenBackgroundView.snp.right).offset(-11)
+                make.bottom.equalTo(outputTokenBackgroundView.snp.bottom).offset(-11)
+                let width = libraWalletTool.ga_widthForComment(content: localLanguage(keyString: "wallet_market_exchange_output_token_button_title"), fontSize: 12, height: 22) + 8 + 19
+                make.size.equalTo(CGSize.init(width: width, height: 22))
+            }
             outputTokenAssetsLabel.text = localLanguage(keyString: "wallet_market_exchange_token_title") + "---"
         } else {
             let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: transferInInputTokenB?.amount ?? 0),
@@ -688,12 +708,21 @@ class AssetsPoolViewHeaderView: UIView {
                                           unit: 1000000)
             outputTokenAssetsLabel.text = localLanguage(keyString: "wallet_market_exchange_token_title") + amount.stringValue
         }
-        //        outputTokenButton.snp.remakeConstraints { (make) in
-        //            make.right.equalTo(outputTokenBackgroundView.snp.right).offset(-11)
-        //            make.bottom.equalTo(outputTokenBackgroundView.snp.bottom).offset(-11)
-        //            let width = libraWalletTool.ga_widthForComment(content: localLanguage(keyString: "wallet_market_exchange_output_token_button_title"), fontSize: 12, height: 22) + 8 + 19
-        //            make.size.equalTo(CGSize.init(width: width, height: 22))
-        //        }
+        if liquidityInfoModel == nil {
+            exchangeRateLabel.text = localLanguage(keyString: "wallet_market_assets_pool_exchange_rate_title") + "---"
+        } else {
+            let coinAAmount = NSDecimalNumber.init(value: liquidityInfoModel?.coina?.value ?? 0)
+            let coinBAmount = NSDecimalNumber.init(value: liquidityInfoModel?.coinb?.value ?? 0)
+            let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
+                                                           scale: 6,
+                                                           raiseOnExactness: false,
+                                                           raiseOnOverflow: false,
+                                                           raiseOnUnderflow: false,
+                                                           raiseOnDivideByZero: false)
+            let rate = coinBAmount.dividing(by: coinAAmount, withBehavior: numberConfig)
+            exchangeRateLabel.text = localLanguage(keyString: "wallet_market_assets_pool_exchange_rate_title") + "1:\(rate.stringValue)"
+        }
+
     }
 }
 extension AssetsPoolViewHeaderView: DropperDelegate {
@@ -701,6 +730,7 @@ extension AssetsPoolViewHeaderView: DropperDelegate {
         print(contents)
         if contents == localLanguage(keyString: localLanguage(keyString: "wallet_assets_pool_transfer_in_title")) {
             // 转入
+            self.addLiquidityMode = true
             outputTokenButton.alpha = 1
             changeTypeButton.setTitle(localLanguage(keyString: "wallet_assets_pool_transfer_in_title"), for: UIControl.State.normal)
             // 调整位置
@@ -720,6 +750,7 @@ extension AssetsPoolViewHeaderView: DropperDelegate {
             resetAssetsPoolTransferInView()
         } else {
             // 转出
+            self.addLiquidityMode = false
             outputTokenButton.alpha = 0
             changeTypeButton.setTitle(localLanguage(keyString: "wallet_assets_pool_transfer_out_title"), for: UIControl.State.normal)
             outputAmountTextField.alpha = 0
