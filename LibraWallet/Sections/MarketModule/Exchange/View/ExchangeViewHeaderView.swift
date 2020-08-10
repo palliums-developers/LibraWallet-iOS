@@ -197,7 +197,6 @@ class ExchangeViewHeaderView: UIView {
         textField.attributedPlaceholder = NSAttributedString(string: "0.00",
                                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C2C2C2"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20)])
         textField.keyboardType = .decimalPad
-//        textField.delegate = self
         textField.tag = 10
         return textField
     }()
@@ -260,7 +259,6 @@ class ExchangeViewHeaderView: UIView {
         textField.attributedPlaceholder = NSAttributedString(string: "0.00",
                                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C2C2C2"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20)])
         textField.keyboardType = .decimalPad
-//        textField.delegate = self
         textField.tag = 20
         return textField
     }()
@@ -304,7 +302,6 @@ class ExchangeViewHeaderView: UIView {
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
         button.backgroundColor = UIColor.init(hex: "15C794")
         let width = UIScreen.main.bounds.width - 69 - 69
-        
         button.layer.insertSublayer(colorGradualChange(size: CGSize.init(width: width, height: 40)), at: 0)
         button.layer.cornerRadius = 5
         button.layer.masksToBounds = true
@@ -405,27 +402,27 @@ class ExchangeViewHeaderView: UIView {
                 let inputAmount = NSDecimalNumber.init(string: inputAmountTextField.text ?? "0").multiplying(by: NSDecimalNumber.init(value: 1000000))
                 let outputAmount = NSDecimalNumber.init(value: model.output )
                 let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
-                                                                     scale: 6,
-                                                                     raiseOnExactness: false,
-                                                                     raiseOnOverflow: false,
-                                                                     raiseOnUnderflow: false,
-                                                                     raiseOnDivideByZero: false)
+                                                               scale: 6,
+                                                               raiseOnExactness: false,
+                                                               raiseOnOverflow: false,
+                                                               raiseOnUnderflow: false,
+                                                               raiseOnDivideByZero: false)
                 let rate = outputAmount.dividing(by: inputAmount, withBehavior: numberConfig)
                 exchangeRateLabel.text = localLanguage(keyString: "wallet_market_exchange_rate_title") + "1:\(rate.stringValue)"
                 let fee = NSDecimalNumber.init(value: model.fee).dividing(by: NSDecimalNumber.init(value: model.input), withBehavior: numberConfig).multiplying(by: NSDecimalNumber.init(value: 100))
                 feeLabel.text = localLanguage(keyString: "wallet_market_exchange_fee_title") + fee.stringValue + "%"
             } else {
                 inputAmountTextField.text = getDecimalNumber(amount: NSDecimalNumber.init(value: model.input),
-                                                              scale: 6,
-                                                              unit: 1000000).stringValue
+                                                             scale: 6,
+                                                             unit: 1000000).stringValue
                 let inputAmount = NSDecimalNumber.init(string: outputAmountTextField.text ?? "0").multiplying(by: NSDecimalNumber.init(value: 1000000))
                 let outputAmount = NSDecimalNumber.init(value: model.input )
                 let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
-                                                                     scale: 6,
-                                                                     raiseOnExactness: false,
-                                                                     raiseOnOverflow: false,
-                                                                     raiseOnUnderflow: false,
-                                                                     raiseOnDivideByZero: false)
+                                                               scale: 6,
+                                                               raiseOnExactness: false,
+                                                               raiseOnOverflow: false,
+                                                               raiseOnUnderflow: false,
+                                                               raiseOnDivideByZero: false)
                 let rate = outputAmount.dividing(by: inputAmount, withBehavior: numberConfig)
                 exchangeRateLabel.text = localLanguage(keyString: "wallet_market_exchange_rate_title") + "1:\(rate.stringValue)"
                 let fee = NSDecimalNumber.init(value: model.fee).dividing(by: NSDecimalNumber.init(value: model.input), withBehavior: numberConfig).multiplying(by: NSDecimalNumber.init(value: 100))
@@ -441,9 +438,7 @@ class ExchangeViewHeaderView: UIView {
         outputTitleLabel.text = localLanguage(keyString: "wallet_market_exchange_output_amount_title")
         exchangeRateLabel.text = localLanguage(keyString: "wallet_market_exchange_rate_title") + "---"
         minerFeeLabel.text = localLanguage(keyString: "wallet_market_exchange_miner_fee_title") + "---"
-        confirmButton.setTitle(localLanguage(keyString: "wallet_market_exchange_button_title"), for: UIControl.State.normal)
-//        exchangeTransactionsTitleLabel.text = localLanguage(keyString: "wallet_market_exchange_transactions_title")
-        
+        confirmButton.setTitle(localLanguage(keyString: "wallet_market_exchange_button_title"), for: UIControl.State.normal)        
         if transferInInputTokenA == nil {
             inputTokenButton.setTitle(localLanguage(keyString: "wallet_market_exchange_input_token_button_title"), for: UIControl.State.normal)
             inputTokenButton.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 9, height: 5.5))

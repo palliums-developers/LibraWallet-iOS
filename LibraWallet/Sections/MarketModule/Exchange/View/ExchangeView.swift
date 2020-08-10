@@ -28,22 +28,9 @@ class ExchangeView: UIView {
             make.bottom.equalTo(self)
         }
     }
-    func changeHeaderViewDefault(hideLeftModel: Bool) {
-        //        guard let headerView = tableView.headerView(forSection: 0) as? MarketExchangeHeaderView else {
-        //            return
-        //        }
-        //        if hideLeftModel == true {
-        //            headerView.leftTokenModel = nil
-        //        }
-        //        headerView.rightTokenModel = nil
-        //        headerView.exchangeRateLabel.text = "---"
-        //        headerView.leftAmountTextField.text = ""
-        //        headerView.rightAmountTextField.text = ""
-    }
     //MARK: - 懒加载对象
-    lazy var headerView : ExchangeViewHeaderView = {
+    lazy var headerView: ExchangeViewHeaderView = {
         let header = ExchangeViewHeaderView.init()
-        
         return header
     }()
     var toastView: ToastView? {

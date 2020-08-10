@@ -15,17 +15,6 @@ class ExchangeViewModel: NSObject {
     override init() {
         super.init()
     }
-    func startAutoRefreshExchangeRate(inputCoinA: MarketSupportTokensDataModel, outputCoinB: MarketSupportTokensDataModel) {
-        self.timer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(refreshExchangeRate), userInfo: nil, repeats: true)
-        RunLoop.current.add(self.timer!, forMode: .common)
-    }
-    func stopAutoRefreshExchangeRate() {
-        self.timer?.invalidate()
-        self.timer = nil
-    }
-    @objc func refreshExchangeRate() {
-        self.dataModel.getPoolTotalLiquidity(inputCoinA: (self.view?.headerView.transferInInputTokenA)!, inputCoinB: (self.view?.headerView.transferInInputTokenB)!)
-    }
     var view: ExchangeView? {
         didSet {
             view?.headerView.delegate = self
@@ -40,9 +29,26 @@ class ExchangeViewModel: NSObject {
     }()
     /// 数据监听KVO
     var observer: NSKeyValueObservation?
+    ///
     private var firstRequestRate: Bool = true
+    /// timer
     private var timer: Timer?
+    
     var controllerClosure: ((UIViewController)->())?
+}
+// MARK: - 网络请求逻辑处理
+extension ExchangeViewModel {
+    func startAutoRefreshExchangeRate(inputCoinA: MarketSupportTokensDataModel, outputCoinB: MarketSupportTokensDataModel) {
+        self.timer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(refreshExchangeRate), userInfo: nil, repeats: true)
+        RunLoop.current.add(self.timer!, forMode: .common)
+    }
+    func stopAutoRefreshExchangeRate() {
+        self.timer?.invalidate()
+        self.timer = nil
+    }
+    @objc func refreshExchangeRate() {
+        self.dataModel.getPoolTotalLiquidity(inputCoinA: (self.view?.headerView.transferInInputTokenA)!, inputCoinB: (self.view?.headerView.transferInInputTokenB)!)
+    }
 }
 // MARK: - 逻辑处理
 extension ExchangeViewModel {
@@ -105,7 +111,7 @@ extension ExchangeViewModel {
                                                                feeModule: inputModule.module ?? "",
                                                                outputModuleActiveState: outputModuleActiveState)
         } else if inputModule.chainType == 0 && outputModule.chainType == 2 {
-             print("LibraToBTCSwap暂不支持")
+            print("LibraToBTCSwap暂不支持")
             self.view?.headerView.viewState = .LibraToBTCSwap
         } else if inputModule.chainType == 2 && outputModule.chainType == 0 {
             print("BTCToLibraSwap")
@@ -138,42 +144,42 @@ extension ExchangeViewModel {
         }
     }
     #warning("以后启用")
-//    func handleConfirmCondition() throws -> (NSDecimalNumber, NSDecimalNumber, MarketSupportTokensDataModel, MarketSupportTokensDataModel) {
-//        guard let tempInputTokenA = self.view?.headerView.transferInInputTokenA else {
-//            throw LibraWalletError.error(localLanguage(keyString: "wallet_market_exchange_input_token_unselect"))
-//        }
-//        // ModelB不为空
-//        guard let tempInputTokenB = self.view?.headerView.transferInInputTokenB else {
-//            throw LibraWalletError.error(localLanguage(keyString: "wallet_market_exchange_output_token_unselect"))
-//        }
-//        // 金额不为空检查
-//        guard let amountAString = self.view?.headerView.inputAmountTextField.text, amountAString.isEmpty == false else {
-//            throw LibraWalletError.WalletTransfer(reason: .amountEmpty)
-//
-//        }
-//        guard let tokenAActiveState = tempInputTokenA.activeState, tokenAActiveState == true else {
-//            throw LibraWalletError.error(localLanguage(keyString: "wallet_market_exchange_input_token_unactived"))
-//        }
-//        // 金额是否纯数字检查
-//        guard isPurnDouble(string: amountAString) == true else {
-//            throw LibraWalletError.WalletTransfer(reason: .amountInvalid)
-//        }
-//        // 转换数字
-//        let amountIn = NSDecimalNumber.init(string: amountAString)
-//
-//        // 金额不为空检查
-//        guard let amountBString = self.view?.headerView.outputAmountTextField.text, amountBString.isEmpty == false else {
-//            throw LibraWalletError.WalletTransfer(reason: .amountEmpty)
-//        }
-//        // 金额是否纯数字检查
-//        guard isPurnDouble(string: amountBString) == true else {
-//            throw LibraWalletError.error(LibraWalletError.WalletTransfer(reason: .amountInvalid).localizedDescription)
-//        }
-//        // 转换数字
-//        let amountOut = NSDecimalNumber.init(string: amountBString)
-//        return (amountIn, amountOut, tempInputTokenA, tempInputTokenB)
-//    }
-    func handleUnlockWallet(tokenActiveState: Bool) {
+    //    func handleConfirmCondition() throws -> (NSDecimalNumber, NSDecimalNumber, MarketSupportTokensDataModel, MarketSupportTokensDataModel) {
+    //        guard let tempInputTokenA = self.view?.headerView.transferInInputTokenA else {
+    //            throw LibraWalletError.error(localLanguage(keyString: "wallet_market_exchange_input_token_unselect"))
+    //        }
+    //        // ModelB不为空
+    //        guard let tempInputTokenB = self.view?.headerView.transferInInputTokenB else {
+    //            throw LibraWalletError.error(localLanguage(keyString: "wallet_market_exchange_output_token_unselect"))
+    //        }
+    //        // 金额不为空检查
+    //        guard let amountAString = self.view?.headerView.inputAmountTextField.text, amountAString.isEmpty == false else {
+    //            throw LibraWalletError.WalletTransfer(reason: .amountEmpty)
+    //
+    //        }
+    //        guard let tokenAActiveState = tempInputTokenA.activeState, tokenAActiveState == true else {
+    //            throw LibraWalletError.error(localLanguage(keyString: "wallet_market_exchange_input_token_unactived"))
+    //        }
+    //        // 金额是否纯数字检查
+    //        guard isPurnDouble(string: amountAString) == true else {
+    //            throw LibraWalletError.WalletTransfer(reason: .amountInvalid)
+    //        }
+    //        // 转换数字
+    //        let amountIn = NSDecimalNumber.init(string: amountAString)
+    //
+    //        // 金额不为空检查
+    //        guard let amountBString = self.view?.headerView.outputAmountTextField.text, amountBString.isEmpty == false else {
+    //            throw LibraWalletError.WalletTransfer(reason: .amountEmpty)
+    //        }
+    //        // 金额是否纯数字检查
+    //        guard isPurnDouble(string: amountBString) == true else {
+    //            throw LibraWalletError.error(LibraWalletError.WalletTransfer(reason: .amountInvalid).localizedDescription)
+    //        }
+    //        // 转换数字
+    //        let amountOut = NSDecimalNumber.init(string: amountBString)
+    //        return (amountIn, amountOut, tempInputTokenA, tempInputTokenB)
+    //    }
+    func handleUnlockWallet(inputAmount: NSDecimalNumber, outputAmount: NSDecimalNumber, inputModule: MarketSupportTokensDataModel, outputModule: MarketSupportTokensDataModel, mnemonic: [String], outputModuleActiveState: Bool) {
         
     }
 }
@@ -299,30 +305,30 @@ extension ExchangeViewModel: ExchangeViewHeaderViewDelegate {
                 })
                 controller.present(alertContr, animated: true, completion: nil)
             }
-
+            
         }
         self.delegate?.getController()
-//        var rootViewController = UIApplication.shared.keyWindow?.rootViewController
-//        if let navigationController = rootViewController as? UINavigationController {
-//            rootViewController = navigationController.viewControllers.first
-//        }
-//        if let tabBarController = rootViewController as? UITabBarController {
-//            rootViewController = tabBarController.selectedViewController
-//        }
-//        WalletManager.unlockWallet(controller: rootViewController!, successful: { [weak self](mnemonic) in
-//            self?.handleRequest(inputAmount: amountIn,
-//                                outputAmount: amountOut,
-//                                inputModule: tempInputTokenA,
-//                                outputModule: tempInputTokenB,
-//                                mnemonic: mnemonic,
-//                                outputModuleActiveState: true)
-//        }) { [weak self](error) in
-//            guard error != "Cancel" else {
-//                self?.view?.toastView?.hide(tag: 99)
-//                return
-//            }
-//            self?.view?.makeToast(error, position: .center)
-//        }
+        //        var rootViewController = UIApplication.shared.keyWindow?.rootViewController
+        //        if let navigationController = rootViewController as? UINavigationController {
+        //            rootViewController = navigationController.viewControllers.first
+        //        }
+        //        if let tabBarController = rootViewController as? UITabBarController {
+        //            rootViewController = tabBarController.selectedViewController
+        //        }
+        //        WalletManager.unlockWallet(controller: rootViewController!, successful: { [weak self](mnemonic) in
+        //            self?.handleRequest(inputAmount: amountIn,
+        //                                outputAmount: amountOut,
+        //                                inputModule: tempInputTokenA,
+        //                                outputModule: tempInputTokenB,
+        //                                mnemonic: mnemonic,
+        //                                outputModuleActiveState: true)
+        //        }) { [weak self](error) in
+        //            guard error != "Cancel" else {
+        //                self?.view?.toastView?.hide(tag: 99)
+        //                return
+        //            }
+        //            self?.view?.makeToast(error, position: .center)
+        //        }
     }
     func MappingBTCToViolasConfirm(amountIn: Double, amountOut: Double, inputModel: MarketSupportTokensDataModel, outputModel: MarketSupportTokensDataModel) {
         self.view?.headerView.inputAmountTextField.resignFirstResponder()
@@ -378,7 +384,6 @@ extension ExchangeViewModel: ExchangeViewHeaderViewDelegate {
     }
     
     func fliterBestInputAmount(outputAmount: Int64) {
-//        self.view?.toastView?.show(tag: 99)
         guard outputAmount > 0 else {
             return
         }
@@ -428,13 +433,13 @@ extension ExchangeViewModel: UITextFieldDelegate {
         guard self.view?.headerView.inputTokenButton.titleLabel?.text != localLanguage(keyString: "wallet_market_exchange_input_token_button_title") else {
             textField.resignFirstResponder()
             self.view?.makeToast(localLanguage(keyString: "wallet_market_exchange_input_token_unselect"),
-                           position: .center)
+                                 position: .center)
             return false
         }
         guard self.view?.headerView.outputTokenButton.titleLabel?.text != localLanguage(keyString: "wallet_market_exchange_output_token_button_title") else {
             textField.resignFirstResponder()
             self.view?.makeToast(localLanguage(keyString: "wallet_market_exchange_output_token_unselect"),
-                           position: .center)
+                                 position: .center)
             return false
         }
         return true
@@ -456,29 +461,29 @@ extension ExchangeViewModel: UITextFieldDelegate {
         
     }
     func handleInputAmount(textField: UITextField, content: String) -> Bool {
-         let amount = NSDecimalNumber.init(string: content).multiplying(by: NSDecimalNumber.init(value: 1000000)).int64Value
-         if textField.tag == 10 {
-             if amount <= self.view?.headerView.transferInInputTokenA?.amount ?? 0 {
-                 return true
-             } else {
-                 let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: self.view?.headerView.transferInInputTokenA?.amount ?? 0),
-                                               scale: 6,
-                                               unit: 1000000)
-                 textField.text = amount.stringValue
-                 return false
-             }
-         } else {
-             if amount <= self.view?.headerView.transferInInputTokenB?.amount ?? 0 {
-                 return true
-             } else {
-                 let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: self.view?.headerView.transferInInputTokenB?.amount ?? 0),
-                                               scale: 6,
-                                               unit: 1000000)
-                 textField.text = amount.stringValue
-                 return false
-             }
-         }
-     }
+        let amount = NSDecimalNumber.init(string: content).multiplying(by: NSDecimalNumber.init(value: 1000000)).int64Value
+        if textField.tag == 10 {
+            if amount <= self.view?.headerView.transferInInputTokenA?.amount ?? 0 {
+                return true
+            } else {
+                let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: self.view?.headerView.transferInInputTokenA?.amount ?? 0),
+                                              scale: 6,
+                                              unit: 1000000)
+                textField.text = amount.stringValue
+                return false
+            }
+        } else {
+            if amount <= self.view?.headerView.transferInInputTokenB?.amount ?? 0 {
+                return true
+            } else {
+                let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: self.view?.headerView.transferInInputTokenB?.amount ?? 0),
+                                              scale: 6,
+                                              unit: 1000000)
+                textField.text = amount.stringValue
+                return false
+            }
+        }
+    }
 }
 // MARK: - 网络请求
 extension ExchangeViewModel {
