@@ -147,14 +147,23 @@ class ExchangeTransactionDetailFooterView: UITableViewHeaderFooterView {
     var model: ExchangeTransactionsDataModel? {
         didSet {
             exchangeTitleLabel.text = localLanguage(keyString: "wallet_market_transaction_status_exchanging_title")
-            
             if model?.status == 4001 {
+                // 已完成
                 retryButton.alpha = 0
                 finalTitleLabel.textColor = UIColor.init(hex: "13B788")
                 finalIndicatorImageView.image = UIImage.init(named: "transaction_detail_finish")
                 finalTitleLabel.text = localLanguage(keyString: "wallet_market_transaction_status_exchange_fsuccessful_title")
+            } else if model?.status == 4002 {
+                // 兑换中
+                finalIndicatorImageView.alpha = 0
+                finalTitleLabel.alpha = 0
+            } else if model?.status == 4004 {
+                // 已取消
+                finalIndicatorImageView.image = UIImage.init(named: "transaction_detail_finish")
+                finalTitleLabel.text = localLanguage(keyString: "wallet_market_exchange_transaction_status_cancel_title")
             } else {
-                retryButton.alpha = 1
+                // 兑换失败
+                retryButton.alpha = 0
                 finalIndicatorImageView.image = UIImage.init(named: "transaction_detail_failed")
                 finalTitleLabel.text = localLanguage(keyString: "wallet_market_transaction_status_exchange_failed_title")
             }

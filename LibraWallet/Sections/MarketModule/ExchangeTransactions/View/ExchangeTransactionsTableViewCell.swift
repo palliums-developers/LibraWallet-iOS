@@ -18,18 +18,12 @@ class ExchangeTransactionsTableViewCell: UITableViewCell {
         contentView.addSubview(outputAmountLabel)
         contentView.addSubview(dateLabel)
         contentView.addSubview(spaceLabel)
-//        if reuseIdentifier == "FailedCell" {
-//            contentView.addSubview(retryButton)
-//        }
-        // 添加语言变换通知
-        NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
         print("ExchangeTransactionsTableViewCell销毁了")
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
     }
     //pragma MARK: 布局
     override func layoutSubviews() {
@@ -137,10 +131,19 @@ class ExchangeTransactionsTableViewCell: UITableViewCell {
             dateLabel.text = timestampToDateString(timestamp: model?.date ?? 0,
                                                    dateFormat: "MM.dd HH:mm")
             if model?.status == 4001 {
+                // 已完成
                 stateLabel.textColor = UIColor.init(hex: "13B788")
                 stateLabel.text = localLanguage(keyString: "wallet_market_exchange_transaction_status_success_title")
-                
+            } else if model?.status == 4002 {
+                // 兑换中
+                stateLabel.textColor = UIColor.init(hex: "FB8F0B")
+                stateLabel.text = localLanguage(keyString: "wallet_market_exchange_transaction_status_processing_title")
+            } else if model?.status == 4004 {
+                // 已取消
+                stateLabel.textColor = UIColor.init(hex: "E54040")
+                stateLabel.text = localLanguage(keyString: "wallet_market_exchange_transaction_status_cancel_title")
             } else {
+                // 兑换失败
                 stateLabel.textColor = UIColor.init(hex: "E54040")
                 stateLabel.text = localLanguage(keyString: "wallet_market_exchange_transaction_status_failed_title")
             }
@@ -153,14 +156,5 @@ class ExchangeTransactionsTableViewCell: UITableViewCell {
                 spaceLabel.alpha = 0
             }
         }
-    }
-    /// 语言切换
-    @objc func setText() {
-        if model?.status == 4001 {
-            stateLabel.text = localLanguage(keyString: "wallet_market_exchange_transaction_status_success_title")
-        } else {
-            stateLabel.text = localLanguage(keyString: "wallet_market_exchange_transaction_status_failed_title")
-        }
-        retryButton.setTitle(localLanguage(keyString: "wallet_market_exchange_transaction_retry_button_title"), for: UIControl.State.normal)
     }
 }

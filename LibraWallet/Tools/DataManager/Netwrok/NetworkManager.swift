@@ -53,8 +53,6 @@ enum mainRequest {
     /// 获取映射交易记录（地址、偏移量、数量、类型（0：violas，1：Libra，2：BTC）
     case GetMappingTransactions(String, Int, Int, String)
     
-    /// 扫码登录
-    case SubmitScanLoginData(String, String)
     /// 获取Violas账户信息
     case GetViolasAccountInfo(String)
     /// 获取BTC价格
@@ -90,6 +88,13 @@ enum mainRequest {
     case PoolLiquidity(String, String)
     /// 获取资金池全部流动性
     case PoolTotalLiquidity
+    
+    /// 获取BTC映射交易（临时）
+    case BTCCrossChainTransactions(String, Int, Int)
+    /// 获取Violas映射交易（临时）
+    case ViolasCrossChainTransactions(String, Int, Int)
+    /// 获取Libra映射交易（临时）
+    case LibraCrossChainTransactions(String, Int, Int)
 }
 extension mainRequest:TargetType {
     var baseURL: URL {
@@ -124,8 +129,7 @@ extension mainRequest:TargetType {
              .GetViolasTokenList,
              .GetMappingInfo(_),
              .GetMappingTokenList(_),
-             .GetMappingTransactions(_, _, _, _),
-             .SubmitScanLoginData(_, _):
+             .GetMappingTransactions(_, _, _, _):
             if PUBLISH_VERSION == true {
                 return URL(string:"https://api.violas.io")!
             } else {
@@ -159,6 +163,10 @@ extension mainRequest:TargetType {
         case .GetLibraAccountBalance(_),
              .SendLibraTransaction(_):
             return URL(string:"https://client.testnet.libra.org")!
+        case .BTCCrossChainTransactions(_, _, _),
+             .ViolasCrossChainTransactions(_, _, _),
+             .LibraCrossChainTransactions(_, _, _):
+            return URL(string:"http://18.136.139.151")!
         }
     }
     var path: String {
@@ -204,8 +212,6 @@ extension mainRequest:TargetType {
             return "/1.0/crosschain/modules"
         case .GetMappingTransactions(_, _, _, _):
             return "/1.0/crosschain/transactions"
-        case .SubmitScanLoginData(_, _):
-            return "/1.0/violas/singin"
         case .GetViolasAccountInfo(_):
             return ""
         case .GetBTCPrice:
@@ -238,6 +244,12 @@ extension mainRequest:TargetType {
             return "/1.0/market/pool/reserve/info"
         case .PoolTotalLiquidity:
             return "/1.0/market/pool/reserve/infos"
+        case .BTCCrossChainTransactions(_, _, _):
+            return "/"
+        case .ViolasCrossChainTransactions(_, _, _):
+            return "/"
+        case .LibraCrossChainTransactions(_, _, _):
+            return "/"
         }
     }
     var method: Moya.Method {
@@ -245,7 +257,6 @@ extension mainRequest:TargetType {
         case .SendLibraTransaction(_),
              .SendViolasTransaction(_),
              .SendBTCTransaction(_),
-             .SubmitScanLoginData(_, _),
              .GetLibraAccountBalance(_),
              .GetViolasAccountInfo(_):
             return .post
@@ -281,7 +292,10 @@ extension mainRequest:TargetType {
              .ExchangeTransferInfo(_, _, _),
              .MarketSupportMappingTokens,
              .PoolLiquidity(_, _),
-             .PoolTotalLiquidity:
+             .PoolTotalLiquidity,
+             .BTCCrossChainTransactions(_, _, _),
+             .ViolasCrossChainTransactions(_, _, _),
+             .LibraCrossChainTransactions(_, _, _):
             return .get
         }
     }
@@ -385,11 +399,6 @@ extension mainRequest:TargetType {
                                                    "offset":offset,
                                                    "type":type],
                                       encoding: URLEncoding.queryString)
-        case .SubmitScanLoginData(let walletAddress, let sessionID):
-            return .requestParameters(parameters: ["wallets": walletAddress,
-                                                   "session_id": sessionID,
-                                                   "type":2],
-                                      encoding: JSONEncoding.default)
         case .GetViolasAccountInfo(let address):
             return .requestParameters(parameters: ["jsonrpc":"2.0",
                                                    "method":"get_account_state",
@@ -460,6 +469,27 @@ extension mainRequest:TargetType {
                                       encoding: URLEncoding.queryString)
         case .PoolTotalLiquidity:
             return .requestPlain
+        case .BTCCrossChainTransactions(let address, let page, let offset):
+            return .requestParameters(parameters: ["opt":"record",
+                                                   "sender":address,
+                                                   "chain":"btc",
+                                                   "cursor":page,
+                                                   "limit":offset],
+                                      encoding: URLEncoding.queryString)
+        case .ViolasCrossChainTransactions(let address, let page, let offset):
+            return .requestParameters(parameters: ["opt":"record",
+                                                   "sender":address,
+                                                   "chain":"violas",
+                                                   "cursor":page,
+                                                   "limit":offset],
+                                      encoding: URLEncoding.queryString)
+        case .LibraCrossChainTransactions(let address, let page, let offset):
+            return .requestParameters(parameters: ["opt":"record",
+                                                   "sender":address,
+                                                   "chain":"libra",
+                                                   "cursor":page,
+                                                   "limit":offset],
+                                      encoding: URLEncoding.queryString)
         }
     }
     var headers: [String : String]? {

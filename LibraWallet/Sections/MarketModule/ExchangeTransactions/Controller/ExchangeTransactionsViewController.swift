@@ -67,17 +67,23 @@ class ExchangeTransactionsViewController: BaseViewController {
     @objc func refreshData() {
         dataOffset = 0
         detailView.tableView.mj_footer?.resetNoMoreData()
-        self.dataModel.getExchangeTransactions(address: WalletManager.shared.violasAddress ?? "",
-                                               page: dataOffset,
-                                               pageSize: 10,
-                                               requestStatus: 0)
+//        self.dataModel.getExchangeTransactions(address: WalletManager.shared.violasAddress ?? "",
+//                                               page: dataOffset,
+//                                               pageSize: 10,
+//                                               requestStatus: 0)
+        self.dataModel.getAllExchangeTrans(page: dataOffset,
+                                           pageSize: 10,
+                                           requestStatus: 0)
     }
     @objc func getMoreData() {
         dataOffset += 10
-        self.dataModel.getExchangeTransactions(address: WalletManager.shared.violasAddress ?? "",
-                                               page: dataOffset,
-                                               pageSize: 10,
-                                               requestStatus: 1)
+//        self.dataModel.getExchangeTransactions(address: WalletManager.shared.violasAddress ?? "",
+//                                               page: dataOffset,
+//                                               pageSize: 10,
+//                                               requestStatus: 1)
+        self.dataModel.getAllExchangeTrans(page: dataOffset,
+                                           pageSize: 10,
+                                           requestStatus: 1)
     }
 }
 extension ExchangeTransactionsViewController: ExchangeTransactionsTableViewManagerDelegate {
