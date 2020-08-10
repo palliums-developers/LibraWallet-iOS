@@ -220,10 +220,10 @@ extension ExchangeModel {
             group.enter()
             self.getMarketSupportTokens(group: group)
         })
-        quene.async(group: group, qos: .default, flags: [], execute: {
-            group.enter()
-            self.getBTCBalance(address: btcAddress, group: group)
-        })
+//        quene.async(group: group, qos: .default, flags: [], execute: {
+//            group.enter()
+//            self.getBTCBalance(address: btcAddress, group: group)
+//        })
         quene.async(group: group, qos: .default, flags: [], execute: {
             group.enter()
             self.getViolasBalance(address: violasAddress, group: group)

@@ -174,7 +174,7 @@ extension LibraManager {
             let argument0 = LibraTransactionArgument.init(code: .Address(exchangeCenterAddress))
             let argument1 = LibraTransactionArgument.init(code: .U64("\(UInt64(amountIn * 1000000))"))
             // metadata
-            let data = "{\"flag\":\"libra\",\"type\":\"\(type)\",\"times\": 0, \"to_address\":\"00000000000000000000000000000000\(violasReceiveAddress)\",\"out_amount\":\"\(Int(amountOut * 1000000))\",\"state\":\"start\"}".data(using: .utf8)!
+            let data = "{\"flag\":\"libra\",\"type\":\"\(type)\",\"times\": 1000, \"to_address\":\"00000000000000000000000000000000\(violasReceiveAddress)\",\"out_amount\":\"\(Int(amountOut * 1000000))\",\"state\":\"start\"}".data(using: .utf8)!
             let argument2 = LibraTransactionArgument.init(code: .U8Vector(data))
             // metadata_signature
             let argument3 = LibraTransactionArgument.init(code: .U8Vector(Data()))
