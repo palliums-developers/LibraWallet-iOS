@@ -436,12 +436,12 @@ class AssetsPoolViewHeaderView: UIView {
                 }
                 // 转换数字
                 let amountB = NSDecimalNumber.init(string: amountBString)
-                guard amountA.int64Value > 0 else {
+                guard amountA.doubleValue > 0 else {
                     self.makeToast(LibraWalletError.WalletTransfer(reason: .amountInvalid).localizedDescription,
                                          position: .center)
                     return
                 }
-                guard amountB.int64Value > 0 else {
+                guard amountB.doubleValue > 0 else {
                     self.makeToast(LibraWalletError.WalletTransfer(reason: .amountInvalid).localizedDescription,
                                          position: .center)
                     return

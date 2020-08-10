@@ -233,12 +233,12 @@ extension ExchangeViewModel: ExchangeViewHeaderViewDelegate {
         }
         // 转换数字
         let amountOut = NSDecimalNumber.init(string: amountBString)
-        guard amountIn.int64Value > 0 else {
+        guard amountIn.doubleValue > 0 else {
             self.view?.makeToast(LibraWalletError.WalletTransfer(reason: .amountInvalid).localizedDescription,
                                  position: .center)
             return
         }
-        guard amountOut.int64Value > 0 else {
+        guard amountOut.doubleValue > 0 else {
             self.view?.makeToast(LibraWalletError.WalletTransfer(reason: .amountInvalid).localizedDescription,
                                  position: .center)
             return
