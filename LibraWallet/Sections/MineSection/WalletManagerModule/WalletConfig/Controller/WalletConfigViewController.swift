@@ -89,7 +89,7 @@ extension WalletConfigViewController: WalletConfigTableViewManagerDelegate {
         if button.isOn == true {
             // 打开
             let alert = libraWalletTool.passowordCheckAlert(rootAddress: "", passwordContent: { (password) in
-                KeychainManager().addBiometric(password: password, success: { (result, error) in
+                KeychainManager.addBiometric(password: password, success: { (result, error) in
                     if result == "Success" {
                         let result = DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: WalletManager.shared.walletID!, state: button.isOn)
                         guard result == true else {
@@ -118,19 +118,31 @@ extension WalletConfigViewController: WalletConfigTableViewManagerDelegate {
             BioMetricAuthenticator.authenticateWithBioMetrics(reason: str) { (result) in
                 switch result {
                 case .success( _):
-                    KeychainManager().removeBiometric(password: "", success: { (result, error) in
-                        if result == "Success" {
-                            let result = DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: WalletManager.shared.walletID!, state: button.isOn)
-                            guard result == true else {
-                                button.setOn(!button.isOn, animated: true)
-                                return
-                            }
-                            WalletManager.shared.changeWalletBiometricLock(state: button.isOn)
-                        } else {
-                            self.detailView.makeToast(error, position: .center)
+                    do {
+                        try KeychainManager.removeBiometric()
+                        let result = DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: WalletManager.shared.walletID!, state: button.isOn)
+                        guard result == true else {
                             button.setOn(!button.isOn, animated: true)
+                            return
                         }
-                    })
+                        WalletManager.shared.changeWalletBiometricLock(state: button.isOn)
+                    } catch {
+                        self.detailView.makeToast(error.localizedDescription, position: .center)
+                        button.setOn(!button.isOn, animated: true)
+                    }
+//                    KeychainManager().removeBiometric(password: "", success: { (result, error) in
+//                        if result == "Success" {
+//                            let result = DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: WalletManager.shared.walletID!, state: button.isOn)
+//                            guard result == true else {
+//                                button.setOn(!button.isOn, animated: true)
+//                                return
+//                            }
+//                            WalletManager.shared.changeWalletBiometricLock(state: button.isOn)
+//                        } else {
+//                            self.detailView.makeToast(error, position: .center)
+//                            button.setOn(!button.isOn, animated: true)
+//                        }
+//                    })
                     print("success")
                 case .failure(let error):
                     button.setOn(!button.isOn, animated: true)
