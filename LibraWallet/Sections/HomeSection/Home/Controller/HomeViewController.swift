@@ -303,6 +303,31 @@ extension HomeViewController: HomeHeaderViewDelegate {
         }
         self.navigationController?.pushViewController(vc, animated: true)
     }
+    func transfer() {
+        let vc = TransferViewController()
+        vc.actionClosure = {
+        //            self.dataModel.getLocalUserInfo()
+        }
+//        vc.wallet = self.wallet
+//        vc.title = (self.wallet?.tokenName ?? "") + localLanguage(keyString: "wallet_transfer_navigation_title")
+        vc.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func receive() {
+        let vc = WalletReceiveViewController()
+        //        vc.wallet = self.wallet
+        vc.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func mapping() {
+        
+        let vc = TokenMappingViewController()
+        //        vc.wallet = self.wallet
+        vc.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
 }
 extension HomeViewController: HomeWithoutWalletViewDelegate {
     func createWallet() {

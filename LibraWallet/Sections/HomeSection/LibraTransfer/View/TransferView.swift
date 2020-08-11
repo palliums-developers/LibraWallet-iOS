@@ -153,32 +153,32 @@ class TransferView: UIView {
         let holderView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: 7, height: 48))
         textField.leftView = holderView
         textField.leftViewMode = .always
-//        textField.rightView = coinSelectButton
-//        textField.rightViewMode = .always
+        textField.rightView = coinSelectButton
+        textField.rightViewMode = .always
         return textField
     }()
-//    lazy var coinSelectButton: UIButton = {
-//        let button = UIButton.init(frame: CGRect.init(x: 0, y: 0, width: 50, height: 22))
-//        // 设置字体
-//        button.setTitle(localLanguage(keyString: "123"), for: UIControl.State.normal)
-//        button.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
-//        button.setTitleColor(UIColor.init(hex: "7038FD"), for: UIControl.State.normal)
-////        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
-//        button.setImage(UIImage.init(named: "arrow_down"), for: UIControl.State.normal)
-//        // 调整位置
-//        button.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 9, height: 5.5))
-//        button.layer.borderColor = UIColor.init(hex: "7038FD").cgColor
-//        button.layer.borderWidth = 0.5
-//        button.layer.cornerRadius = 5
-//        button.tag = 10
-//        return button
-//    }()
+    lazy var coinSelectButton: UIButton = {
+        let button = UIButton.init(frame: CGRect.init(x: 0, y: 0, width: 200, height: 50))
+        // 设置字体
+        button.setTitle(localLanguage(keyString: "VLSUSD"), for: UIControl.State.normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
+        button.setTitleColor(UIColor.init(hex: "7038FD"), for: UIControl.State.normal)
+//        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
+        button.setImage(UIImage.init(named: "arrow_down"), for: UIControl.State.normal)
+        // 调整位置
+        button.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 9, height: 5.5))
+        button.layer.borderColor = UIColor.init(hex: "7038FD").cgColor
+        button.layer.borderWidth = 0.5
+        button.layer.cornerRadius = 7
+        button.tag = 10
+        return button
+    }()
     lazy var walletBalanceLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.center
         label.textColor = UIColor.init(hex: "5C5C5C")
         label.font = UIFont.systemFont(ofSize: 12, weight: .regular)
-        label.text = localLanguage(keyString: "wallet_transfer_balance_title") + " --- Libra"
+        label.text = localLanguage(keyString: "wallet_transfer_balance_title") + " ---"
         return label
     }()
     lazy var addressTitleLabel: UILabel = {
