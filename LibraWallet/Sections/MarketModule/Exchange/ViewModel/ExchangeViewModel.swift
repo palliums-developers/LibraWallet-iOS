@@ -7,11 +7,7 @@
 //
 
 import UIKit
-protocol ExchangeViewModelDelegate: NSObjectProtocol {
-    func getController()
-}
 class ExchangeViewModel: NSObject {
-    weak var delegate: ExchangeViewModelDelegate?
     override init() {
         super.init()
     }
@@ -33,8 +29,6 @@ class ExchangeViewModel: NSObject {
     private var firstRequestRate: Bool = true
     /// timer
     private var timer: Timer?
-    
-    var controllerClosure: ((UIViewController)->())?
 }
 // MARK: - 网络请求逻辑处理
 extension ExchangeViewModel {
@@ -52,6 +46,22 @@ extension ExchangeViewModel {
 }
 // MARK: - 逻辑处理
 extension ExchangeViewModel {
+    func handleUnlockWallet(inputAmount: NSDecimalNumber, outputAmount: NSDecimalNumber, inputModule: MarketSupportTokensDataModel, outputModule: MarketSupportTokensDataModel, outputModuleActiveState: Bool) {
+        WalletManager.unlockWallet(successful: { [weak self](mnemonic) in
+            self?.handleRequest(inputAmount: inputAmount,
+                                outputAmount: outputAmount,
+                                inputModule: inputModule,
+                                outputModule: outputModule,
+                                mnemonic: mnemonic,
+                                outputModuleActiveState: true)
+        }) { [weak self](error) in
+            guard error != "Cancel" else {
+                self?.view?.toastView?.hide(tag: 99)
+                return
+            }
+            self?.view?.makeToast(error, position: .center)
+        }
+    }
     func handleRequest(inputAmount: NSDecimalNumber, outputAmount: NSDecimalNumber, inputModule: MarketSupportTokensDataModel, outputModule: MarketSupportTokensDataModel, mnemonic: [String], outputModuleActiveState: Bool) {
         if inputModule.chainType == 1 && outputModule.chainType == 1 {
             print("ViolasToViolasSwap")
@@ -144,44 +154,57 @@ extension ExchangeViewModel {
         }
     }
     #warning("以后启用")
-    //    func handleConfirmCondition() throws -> (NSDecimalNumber, NSDecimalNumber, MarketSupportTokensDataModel, MarketSupportTokensDataModel) {
-    //        guard let tempInputTokenA = self.view?.headerView.transferInInputTokenA else {
-    //            throw LibraWalletError.error(localLanguage(keyString: "wallet_market_exchange_input_token_unselect"))
-    //        }
-    //        // ModelB不为空
-    //        guard let tempInputTokenB = self.view?.headerView.transferInInputTokenB else {
-    //            throw LibraWalletError.error(localLanguage(keyString: "wallet_market_exchange_output_token_unselect"))
-    //        }
-    //        // 金额不为空检查
-    //        guard let amountAString = self.view?.headerView.inputAmountTextField.text, amountAString.isEmpty == false else {
-    //            throw LibraWalletError.WalletTransfer(reason: .amountEmpty)
-    //
-    //        }
-    //        guard let tokenAActiveState = tempInputTokenA.activeState, tokenAActiveState == true else {
-    //            throw LibraWalletError.error(localLanguage(keyString: "wallet_market_exchange_input_token_unactived"))
-    //        }
-    //        // 金额是否纯数字检查
-    //        guard isPurnDouble(string: amountAString) == true else {
-    //            throw LibraWalletError.WalletTransfer(reason: .amountInvalid)
-    //        }
-    //        // 转换数字
-    //        let amountIn = NSDecimalNumber.init(string: amountAString)
-    //
-    //        // 金额不为空检查
-    //        guard let amountBString = self.view?.headerView.outputAmountTextField.text, amountBString.isEmpty == false else {
-    //            throw LibraWalletError.WalletTransfer(reason: .amountEmpty)
-    //        }
-    //        // 金额是否纯数字检查
-    //        guard isPurnDouble(string: amountBString) == true else {
-    //            throw LibraWalletError.error(LibraWalletError.WalletTransfer(reason: .amountInvalid).localizedDescription)
-    //        }
-    //        // 转换数字
-    //        let amountOut = NSDecimalNumber.init(string: amountBString)
-    //        return (amountIn, amountOut, tempInputTokenA, tempInputTokenB)
-    //    }
-    func handleUnlockWallet(inputAmount: NSDecimalNumber, outputAmount: NSDecimalNumber, inputModule: MarketSupportTokensDataModel, outputModule: MarketSupportTokensDataModel, mnemonic: [String], outputModuleActiveState: Bool) {
-        
-    }
+//    func handleConfirmCondition() throws -> (NSDecimalNumber, NSDecimalNumber, MarketSupportTokensDataModel, MarketSupportTokensDataModel) {
+//        // ModelA不为空
+//        guard let tempInputTokenA = self.view?.headerView.transferInInputTokenA else {
+//            throw LibraWalletError.error(localLanguage(keyString: "wallet_market_exchange_input_token_unselect"))
+//        }
+//        // ModelB不为空
+//        guard let tempInputTokenB = self.view?.headerView.transferInInputTokenB else {
+//            throw LibraWalletError.error(localLanguage(keyString: "wallet_market_exchange_output_token_unselect"))
+//        }
+//        // 付出币激活状态
+//        guard let tokenAActiveState = tempInputTokenA.activeState, tokenAActiveState == true else {
+//            throw LibraWalletError.error(localLanguage(keyString: "wallet_market_exchange_input_token_unactived"))
+//        }
+//        // 金额不为空检查
+//        guard let amountAString = self.view?.headerView.inputAmountTextField.text, amountAString.isEmpty == false else {
+//            throw LibraWalletError.WalletTransfer(reason: .amountEmpty)
+//
+//        }
+//        // 金额是否纯数字检查
+//        guard isPurnDouble(string: amountAString) == true else {
+//            throw LibraWalletError.WalletTransfer(reason: .amountInvalid)
+//        }
+//        // 转换数字
+//        let amountIn = NSDecimalNumber.init(string: amountAString)
+//
+//        // 金额不为空检查
+//        guard let amountBString = self.view?.headerView.outputAmountTextField.text, amountBString.isEmpty == false else {
+//            throw LibraWalletError.WalletTransfer(reason: .amountEmpty)
+//        }
+//        // 金额是否纯数字检查
+//        guard isPurnDouble(string: amountBString) == true else {
+//            throw LibraWalletError.WalletTransfer(reason: .amountInvalid)
+//        }
+//        // 转换数字
+//        let amountOut = NSDecimalNumber.init(string: amountBString)
+//        guard amountIn.int64Value > 0 else {
+//            throw LibraWalletError.WalletTransfer(reason: .amountInvalid)
+//        }
+//        guard amountOut.int64Value > 0 else {
+//            throw LibraWalletError.WalletTransfer(reason: .amountInvalid)
+//        }
+//        // 金额超限检测
+//        guard amountIn.multiplying(by: NSDecimalNumber.init(value: 1000000)).int64Value < (tempInputTokenA.amount ?? 0) else {
+//            throw LibraWalletError.WalletTransfer(reason: .amountOverload)
+//        }
+//        // 金额超限检测
+//        guard amountOut.multiplying(by: NSDecimalNumber.init(value: 1000000)).int64Value < (tempInputTokenB.amount ?? 0) else {
+//            throw LibraWalletError.WalletTransfer(reason: .amountOverload)
+//        }
+//        return (amountIn, amountOut, tempInputTokenA, tempInputTokenB)
+//    }
 }
 // MARK: - HeaderView代理逻辑
 extension ExchangeViewModel: ExchangeViewHeaderViewDelegate {
@@ -264,71 +287,35 @@ extension ExchangeViewModel: ExchangeViewHeaderViewDelegate {
                 otherModuleB = tempInputTokenA
             }
         }
-        self.controllerClosure = { [weak self] controller in
-            if let tokenBActiveState = tempInputTokenB.activeState, tokenBActiveState == true {
-                // 已激活
-                WalletManager.unlockWallet(controller: controller, successful: { [weak self](mnemonic) in
-                    self?.handleRequest(inputAmount: amountIn,
+        if let tokenBActiveState = tempInputTokenB.activeState, tokenBActiveState == true {
+            // 已激活
+            self.handleUnlockWallet(inputAmount: amountIn,
+                                    outputAmount: amountOut,
+                                    inputModule: leastModuleA,
+                                    outputModule: otherModuleB,
+                                    outputModuleActiveState: true)
+        } else {
+            // 未激活
+            let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_alert_delete_address_title"), message: localLanguage(keyString: "wallet_market_exchange_output_token_unactived"), preferredStyle: .alert)
+            alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_alert_delete_address_confirm_button_title"), style: .default){ [weak self] clickHandler in
+                self?.handleUnlockWallet(inputAmount: amountIn,
                                         outputAmount: amountOut,
                                         inputModule: leastModuleA,
                                         outputModule: otherModuleB,
-                                        mnemonic: mnemonic,
-                                        outputModuleActiveState: true)
-                }) { [weak self](error) in
-                    guard error != "Cancel" else {
-                        self?.view?.toastView?.hide(tag: 99)
-                        return
-                    }
-                    self?.view?.makeToast(error, position: .center)
-                }
-            } else {
-                // 未激活
-                let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_alert_delete_address_title"), message: localLanguage(keyString: "wallet_market_exchange_output_token_unactived"), preferredStyle: .alert)
-                alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_alert_delete_address_confirm_button_title"), style: .default){ [weak self] clickHandler in
-                    WalletManager.unlockWallet(controller: controller, successful: { [weak self](mnemonic) in
-                        self?.handleRequest(inputAmount: amountIn,
-                                            outputAmount: amountOut,
-                                            inputModule: leastModuleA,
-                                            outputModule: otherModuleB,
-                                            mnemonic: mnemonic,
-                                            outputModuleActiveState: false)
-                    }) { [weak self](error) in
-                        guard error != "Cancel" else {
-                            self?.view?.toastView?.hide(tag: 99)
-                            return
-                        }
-                        self?.view?.makeToast(error, position: .center)
-                    }
-                })
-                alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_alert_delete_address_cancel_button_title"), style: .cancel){ clickHandler in
-                    NSLog("点击了取消")
-                })
-                controller.present(alertContr, animated: true, completion: nil)
+                                        outputModuleActiveState: false)
+            })
+            alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_alert_delete_address_cancel_button_title"), style: .cancel){ clickHandler in
+                NSLog("点击了取消")
+            })
+            var rootViewController = UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.rootViewController
+            if let navigationController = rootViewController as? UINavigationController {
+                rootViewController = navigationController.viewControllers.first
             }
-            
+            if let tabBarController = rootViewController as? UITabBarController {
+                rootViewController = tabBarController.selectedViewController
+            }
+            rootViewController?.present(alertContr, animated: true, completion: nil)
         }
-        self.delegate?.getController()
-        //        var rootViewController = UIApplication.shared.keyWindow?.rootViewController
-        //        if let navigationController = rootViewController as? UINavigationController {
-        //            rootViewController = navigationController.viewControllers.first
-        //        }
-        //        if let tabBarController = rootViewController as? UITabBarController {
-        //            rootViewController = tabBarController.selectedViewController
-        //        }
-        //        WalletManager.unlockWallet(controller: rootViewController!, successful: { [weak self](mnemonic) in
-        //            self?.handleRequest(inputAmount: amountIn,
-        //                                outputAmount: amountOut,
-        //                                inputModule: tempInputTokenA,
-        //                                outputModule: tempInputTokenB,
-        //                                mnemonic: mnemonic,
-        //                                outputModuleActiveState: true)
-        //        }) { [weak self](error) in
-        //            guard error != "Cancel" else {
-        //                self?.view?.toastView?.hide(tag: 99)
-        //                return
-        //            }
-        //            self?.view?.makeToast(error, position: .center)
-        //        }
     }
     func MappingBTCToViolasConfirm(amountIn: Double, amountOut: Double, inputModel: MarketSupportTokensDataModel, outputModel: MarketSupportTokensDataModel) {
         self.view?.headerView.inputAmountTextField.resignFirstResponder()

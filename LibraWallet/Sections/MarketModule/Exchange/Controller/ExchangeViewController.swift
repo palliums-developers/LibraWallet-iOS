@@ -51,14 +51,6 @@ class ExchangeViewController: UIViewController {
     lazy var viewModel: ExchangeViewModel = {
         let viewModel = ExchangeViewModel.init()
         viewModel.view = self.detailView
-        viewModel.delegate = self
         return viewModel
     }()
-}
-extension ExchangeViewController: ExchangeViewModelDelegate {
-    func getController() {
-        if let action = self.viewModel.controllerClosure {
-            action(self)
-        }
-    }
 }
