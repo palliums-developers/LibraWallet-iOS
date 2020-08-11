@@ -30,7 +30,6 @@
 		3623AB8023FC0CB3004A01BF /* MappingTransactionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB7F23FC0CB3004A01BF /* MappingTransactionsView.swift */; };
 		3623AB8223FC0CC7004A01BF /* MappingTransactionsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB8123FC0CC7004A01BF /* MappingTransactionsTableViewCell.swift */; };
 		3623AB8523FC0CE2004A01BF /* MappingTransactionsTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB8423FC0CE2004A01BF /* MappingTransactionsTableViewManager.swift */; };
-		3623AB8723FE96F7004A01BF /* HomeTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB8623FE96F7004A01BF /* HomeTableViewHeader.swift */; };
 		363D90EE24CAA6C500F6374C /* LibraTransactionWriteSetPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363D90ED24CAA6C500F6374C /* LibraTransactionWriteSetPayload.swift */; };
 		363D90F024CAAC6700F6374C /* LibraContractEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363D90EF24CAAC6700F6374C /* LibraContractEvent.swift */; };
 		363D90F224CAB7C300F6374C /* LibraContracts.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 363D90F124CAB7C300F6374C /* LibraContracts.bundle */; };
@@ -348,7 +347,6 @@
 		3623AB7F23FC0CB3004A01BF /* MappingTransactionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MappingTransactionsView.swift; sourceTree = "<group>"; };
 		3623AB8123FC0CC7004A01BF /* MappingTransactionsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MappingTransactionsTableViewCell.swift; sourceTree = "<group>"; };
 		3623AB8423FC0CE2004A01BF /* MappingTransactionsTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MappingTransactionsTableViewManager.swift; sourceTree = "<group>"; };
-		3623AB8623FE96F7004A01BF /* HomeTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewHeader.swift; sourceTree = "<group>"; };
 		363D90ED24CAA6C500F6374C /* LibraTransactionWriteSetPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraTransactionWriteSetPayload.swift; sourceTree = "<group>"; };
 		363D90EF24CAAC6700F6374C /* LibraContractEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraContractEvent.swift; sourceTree = "<group>"; };
 		363D90F124CAB7C300F6374C /* LibraContracts.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = LibraContracts.bundle; sourceTree = "<group>"; };
@@ -2870,7 +2868,6 @@
 				9DC9023E2328EA480097FD85 /* HomeView.swift */,
 				9D5D13C423692D3800A2C6AF /* HomeHeaderView.swift */,
 				9D5B4E5D236976D500F4D99C /* HomeTableViewCell.swift */,
-				3623AB8623FE96F7004A01BF /* HomeTableViewHeader.swift */,
 				3650F0C2248F7ED30086F578 /* HomeWithoutWalletView.swift */,
 			);
 			path = View;
@@ -3311,7 +3308,6 @@
 				36F8270A24BEAA7E0007ACC3 /* DropperDelegate.swift in Sources */,
 				9DC4886E232222CF005FF254 /* LBXPermissions.swift in Sources */,
 				9D9B4A652366D65800354EF0 /* WalletConfigModel.swift in Sources */,
-				3623AB8723FE96F7004A01BF /* HomeTableViewHeader.swift in Sources */,
 				9D628A8C239A4A2B00E222FB /* PrivateLegalViewController.swift in Sources */,
 				9DC8778D237958EB006378C3 /* LibraManager.swift in Sources */,
 				9D9B4A502366953600354EF0 /* ImportWalletView.swift in Sources */,

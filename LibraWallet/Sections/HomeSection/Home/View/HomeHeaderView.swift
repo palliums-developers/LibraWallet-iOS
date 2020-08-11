@@ -22,6 +22,12 @@ class HomeHeaderView: UIView {
         addSubview(coinTitleLabel)
         addSubview(addCoinButton)
         
+//        addSubview(transferButton)
+//        addSubview(spaceLabelOne)
+//        addSubview(receiveButton)
+//        addSubview(spaceLabelTwo)
+//        addSubview(exchangeButton)
+        
         // 添加语言变换通知
         NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(addConnect), name: NSNotification.Name("WalletConnectDidConnect"), object: nil)
@@ -49,14 +55,46 @@ class HomeHeaderView: UIView {
         }
         walletConnectStateButton.snp.makeConstraints { (make) in
             make.bottom.equalTo(coinBackgroundView.snp.top).offset(-9)
+//            make.bottom.equalTo(coinBackgroundView.snp.top).offset(-49)
             make.right.equalTo(self.snp.right).offset(-20)
             make.size.equalTo(CGSize.init(width: 120, height: 24))
         }
+//
+//        transferButton.snp.makeConstraints { (make) in
+//            make.left.equalTo(self)
+//            make.width.equalTo(receiveButton)
+//            make.bottom.equalTo(coinBackgroundView.snp.top).offset(-10)
+//            make.height.equalTo(40)
+//        }
+//        spaceLabelOne.snp.makeConstraints { (make) in
+//            make.left.equalTo(transferButton.snp.right)
+//            make.centerY.equalTo(transferButton)
+//            make.size.equalTo(CGSize.init(width: 0.5, height: 12))
+//        }
+//        receiveButton.snp.makeConstraints { (make) in
+//            make.left.equalTo(spaceLabelOne.snp.right)
+//            make.width.equalTo(exchangeButton)
+//            make.bottom.equalTo(coinBackgroundView.snp.top).offset(-10)
+//            make.height.equalTo(40)
+//        }
+//        spaceLabelTwo.snp.makeConstraints { (make) in
+//            make.left.equalTo(receiveButton.snp.right)
+//            make.centerY.equalTo(receiveButton)
+//            make.size.equalTo(CGSize.init(width: 0.5, height: 12))
+//        }
+//        exchangeButton.snp.makeConstraints { (make) in
+//            make.left.equalTo(spaceLabelTwo.snp.right)
+//            make.right.equalTo(self.snp.right)
+//            make.bottom.equalTo(coinBackgroundView.snp.top).offset(-10)
+//            make.height.equalTo(40)
+//            make.width.equalTo(transferButton)
+//        }
+        
         // 第三部分
         coinBackgroundView.snp.makeConstraints { (make) in
             make.bottom.equalTo(self.snp.bottom)
             make.left.right.equalTo(self)
-            make.height.equalTo(64)
+            make.height.equalTo(51)
         }
         coinTitleLabel.snp.makeConstraints { (make) in
             make.centerY.equalTo(addCoinButton)
@@ -65,6 +103,7 @@ class HomeHeaderView: UIView {
         addCoinButton.snp.makeConstraints { (make) in
             make.bottom.equalTo(coinBackgroundView.snp.bottom).offset(-11)
             make.right.equalTo(coinBackgroundView.snp.right).offset(-28)
+            make.size.equalTo(CGSize.init(width: 22, height: 22))
         }
         coinBackgroundView.corner(byRoundingCorners: [UIRectCorner.topLeft, UIRectCorner.topRight], radii: 24)
     }
@@ -72,7 +111,7 @@ class HomeHeaderView: UIView {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "FFFFFF")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 28), weight: .medium)
+        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 28), weight: .bold)
         label.text = "$ 0.00"
         return label
     }()
@@ -102,8 +141,8 @@ class HomeHeaderView: UIView {
     lazy var coinTitleLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
-        label.textColor = UIColor.init(hex: "3D3949")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: .regular)
+        label.textColor = UIColor.init(hex: "3B3B3B")
+        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: .regular)
         label.text = localLanguage(keyString: "wallet_home_wallet_asset_title")
         return label
     }()
@@ -115,7 +154,50 @@ class HomeHeaderView: UIView {
         button.backgroundColor = UIColor.white
         return button
     }()
-    
+//    private lazy var transferButton : UIButton = {
+//        let button = UIButton.init()
+//        button.setImage(UIImage.init(named: "wallet_transfer"), for: UIControl.State.normal)
+//        button.setTitle(localLanguage(keyString: "wallet_home_transfer_button_title"), for: UIControl.State.normal)
+//        button.setTitleColor(UIColor.white, for: UIControl.State.normal)
+//        button.titleLabel?.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
+//        button.imagePosition(at: .left, space: 8, imageViewSize: CGSize.init(width: 16, height: 16))
+////        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
+//        button.tag = 20
+//        return button
+//    }()
+//    lazy var spaceLabelOne: UILabel = {
+//        let label = UILabel.init()
+//        label.backgroundColor = UIColor.white
+//        return label
+//    }()
+//    private lazy var receiveButton : UIButton = {
+//        let button = UIButton.init()
+//        button.setImage(UIImage.init(named: "wallet_receive"), for: UIControl.State.normal)
+//        button.setTitle(localLanguage(keyString: "wallet_home_receive_button_title"), for: UIControl.State.normal)
+//        button.setTitleColor(UIColor.white, for: UIControl.State.normal)
+//        button.titleLabel?.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
+//        button.imagePosition(at: .left, space: 8, imageViewSize: CGSize.init(width: 16, height: 16))
+//
+////        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
+//        button.tag = 20
+//        return button
+//    }()
+//    lazy var spaceLabelTwo: UILabel = {
+//        let label = UILabel.init()
+//        label.backgroundColor = UIColor.white
+//        return label
+//    }()
+//    private lazy var exchangeButton : UIButton = {
+//        let button = UIButton.init()
+//        button.setImage(UIImage.init(named: "wallet_mapping"), for: UIControl.State.normal)
+//        button.setTitle(localLanguage(keyString: "wallet_home_mapping_button_title"), for: UIControl.State.normal)
+//        button.setTitleColor(UIColor.white, for: UIControl.State.normal)
+//        button.titleLabel?.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
+//        button.imagePosition(at: .left, space: 8, imageViewSize: CGSize.init(width: 16, height: 16))
+////        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
+//        button.tag = 20
+//        return button
+//    }()
     @objc func buttonClick(button: UIButton) {
         if button.tag == 10 {
             // WalletConnect

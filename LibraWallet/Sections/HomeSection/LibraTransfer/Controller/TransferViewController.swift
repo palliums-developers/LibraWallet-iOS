@@ -12,6 +12,7 @@ class TransferViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = (self.wallet?.tokenName ?? "") + " " + localLanguage(keyString: "wallet_transfer_navigation_title")
+        self.view.backgroundColor = UIColor.init(hex: "F7F7F9")
         
         self.view.addSubview(detailView)
         self.detailView.wallet = self.wallet

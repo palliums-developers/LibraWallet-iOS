@@ -121,21 +121,22 @@ class TransferView: UIView {
     private lazy var walletWhiteBackgroundView: UIView = {
         let view = UIView.init()
         view.backgroundColor = UIColor.white
-        // 定义阴影颜色
-        view.layer.shadowColor = UIColor.init(hex: "3D3949").cgColor
-        // 阴影的模糊半径
-        view.layer.shadowRadius = 3
-        // 阴影的偏移量
-        view.layer.shadowOffset = CGSize(width: 0, height: 0)
-        // 阴影的透明度，默认为0，不设置则不会显示阴影****
-        view.layer.shadowOpacity = 0.1
+//        // 定义阴影颜色
+//        view.layer.shadowColor = UIColor.init(hex: "3D3949").cgColor
+//        // 阴影的模糊半径
+//        view.layer.shadowRadius = 3
+//        // 阴影的偏移量
+//        view.layer.shadowOffset = CGSize(width: 0, height: 0)
+//        // 阴影的透明度，默认为0，不设置则不会显示阴影****
+//        view.layer.shadowOpacity = 0.1
         return view
     }()
     lazy var amountTitleLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
-        label.textColor = UIColor.init(hex: "3C3848")
-        label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        label.textColor = UIColor.init(hex: "5C5C5C")
+        label.font = UIFont.systemFont(ofSize: 12, weight: .regular)
+        label.text = localLanguage(keyString: "wallet_transfer_amount_title")
         return label
     }()
     lazy var amountTextField: WYDTextField = {
@@ -143,7 +144,7 @@ class TransferView: UIView {
         textField.textAlignment = NSTextAlignment.left
         textField.textColor = UIColor.init(hex: "333333")
         textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_transfer_amount_textfield_placeholder"),
-                                                             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C4C3C7"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16)])
+                                                             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "BABABA"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)])
         textField.delegate = self
         textField.keyboardType = .decimalPad
         textField.tintColor = DefaultGreenColor
@@ -152,21 +153,39 @@ class TransferView: UIView {
         let holderView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: 7, height: 48))
         textField.leftView = holderView
         textField.leftViewMode = .always
+//        textField.rightView = coinSelectButton
+//        textField.rightViewMode = .always
         return textField
     }()
+//    lazy var coinSelectButton: UIButton = {
+//        let button = UIButton.init(frame: CGRect.init(x: 0, y: 0, width: 50, height: 22))
+//        // 设置字体
+//        button.setTitle(localLanguage(keyString: "123"), for: UIControl.State.normal)
+//        button.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
+//        button.setTitleColor(UIColor.init(hex: "7038FD"), for: UIControl.State.normal)
+////        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
+//        button.setImage(UIImage.init(named: "arrow_down"), for: UIControl.State.normal)
+//        // 调整位置
+//        button.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 9, height: 5.5))
+//        button.layer.borderColor = UIColor.init(hex: "7038FD").cgColor
+//        button.layer.borderWidth = 0.5
+//        button.layer.cornerRadius = 5
+//        button.tag = 10
+//        return button
+//    }()
     lazy var walletBalanceLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.center
-        label.textColor = UIColor.init(hex: "3C3848")
-        label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        label.textColor = UIColor.init(hex: "5C5C5C")
+        label.font = UIFont.systemFont(ofSize: 12, weight: .regular)
         label.text = localLanguage(keyString: "wallet_transfer_balance_title") + " --- Libra"
         return label
     }()
     lazy var addressTitleLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
-        label.textColor = UIColor.init(hex: "3C3848")
-        label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        label.textColor = UIColor.init(hex: "5C5C5C")
+        label.font = UIFont.systemFont(ofSize: 12, weight: .regular)
         label.text = localLanguage(keyString: "wallet_transfer_address_title")
         return label
     }()
@@ -175,8 +194,7 @@ class TransferView: UIView {
         textField.textAlignment = NSTextAlignment.left
         textField.textColor = UIColor.init(hex: "333333")
         textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_transfer_address_libra_textfield_placeholder"),
-                                                             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C4C3C7"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16)])
-        //        textField.delegate = self
+                                                             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "BABABA"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)])
         textField.keyboardType = .default
         textField.tintColor = DefaultGreenColor
         textField.layer.borderColor = UIColor.init(hex: "D8D7DA").cgColor
@@ -231,15 +249,15 @@ class TransferView: UIView {
     }()
     lazy var transferSpeedLeftTitleLabel: UILabel = {
         let label = UILabel.init()
-        label.textColor = UIColor.init(hex: "3C3848")
-        label.font = UIFont.systemFont(ofSize: 12)
+        label.textColor = UIColor.init(hex: "999999")
+        label.font = UIFont.systemFont(ofSize: 10)
         label.text = localLanguage(keyString: "wallet_transfer_transaction_fee_least_title")
         return label
     }()
     lazy var transferSpeedRightTitleLabel: UILabel = {
         let label = UILabel.init()
-        label.textColor = UIColor.init(hex: "263C4E")
-        label.font = UIFont.systemFont(ofSize: 12)
+        label.textColor = UIColor.init(hex: "999999")
+        label.font = UIFont.systemFont(ofSize: 10)
         label.text = localLanguage(keyString: "wallet_transfer_transaction_fee_max_title")
         return label
     }()
@@ -354,7 +372,7 @@ class TransferView: UIView {
             guard let model = wallet else {
                 return
             }
-            amountTitleLabel.text = wallet?.tokenName
+//            amountTitleLabel.text = wallet?.tokenName
             let balance = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.tokenBalance )),
                                                  scale: 6,
                                                  unit: 1000000)

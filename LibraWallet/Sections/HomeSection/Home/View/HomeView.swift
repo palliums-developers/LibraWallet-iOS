@@ -43,6 +43,16 @@ class HomeView: UIView {
             let height = 163 - navigationBarHeight + 63
             make.height.equalTo(height)
         }
+//        topBackgroundImageView.snp.makeConstraints { (make) in
+//            make.top.left.right.equalTo(self)
+//            make.height.equalTo((232 * ratio))
+//        }
+//        headerView.snp.makeConstraints { (make) in
+//            make.top.equalTo(self).offset(navigationBarHeight)
+//            make.left.right.equalTo(self)
+//            let height = 202 - navigationBarHeight + 51
+//            make.height.equalTo(height)
+//        }
         tableView.snp.makeConstraints { (make) in
             make.top.equalTo(headerView.snp.bottom)
             make.left.right.bottom.equalTo(self)
@@ -86,7 +96,7 @@ class HomeView: UIView {
 
         tableView.backgroundColor = UIColor.white
         tableView.register(HomeTableViewCell.classForCoder(), forCellReuseIdentifier: "CellNormal")
-        tableView.register(HomeTableViewHeader.classForCoder(), forHeaderFooterViewReuseIdentifier: "Header")
+//        tableView.register(HomeTableViewHeader.classForCoder(), forHeaderFooterViewReuseIdentifier: "Header")
         return tableView
     }()
     lazy var importOrCreateView: HomeWithoutWalletView = {

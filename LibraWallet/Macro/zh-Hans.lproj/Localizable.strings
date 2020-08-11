@@ -15,6 +15,7 @@ wallet_home_wallet_type_last_title = " 钱包";
 wallet_home_current_balance_title = "当前资产";
 wallet_home_transfer_button_title = "转账";
 wallet_home_receive_button_title = "收款";
+wallet_home_mapping_button_title = "映射";
 wallet_home_last_transaction_date_title = "交易记录";
 wallet_home_wallet_asset_title = "资产";
 wallet_home_wallet_total_asset_title = "总资产";
