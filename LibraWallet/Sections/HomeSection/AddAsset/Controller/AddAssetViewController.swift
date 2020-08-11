@@ -215,7 +215,7 @@ extension AddAssetViewController {
             self.present(navi, animated: true, completion: nil)
         }
 
-        self.detailView.toastView?.show(tag: 99)
+//        self.detailView.toastView?.show(tag: 99)
 //        self.dataModel.publishViolasToken(sendAddress: "fa279f2615270daed6061313a48360f7",
 //                                          mnemonic: ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"],
 //                                          type: .Violas,
