@@ -145,7 +145,7 @@ extension WalletMainViewController: WalletMainViewFooterViewDelegate {
             vc.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController(vc, animated: true)
         } else if wallet?.tokenType == .Libra {
-            let vc = TransferViewController()
+            let vc = LibraTransferViewController()
             vc.actionClosure = {
             //            self.dataModel.getLocalUserInfo()
             }

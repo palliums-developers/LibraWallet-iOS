@@ -1,5 +1,5 @@
 //
-//  TransferView.swift
+//  LibraTransferView.swift
 //  LibraWallet
 //
 //  Created by palliums on 2019/9/6.
@@ -7,13 +7,14 @@
 //
 
 import UIKit
-protocol TransferViewDelegate: NSObjectProtocol {
+protocol LibraTransferViewDelegate: NSObjectProtocol {
     func scanAddressQRcode()
     func chooseAddress()
     func confirmTransfer(amount: Double, address: String, fee: Double)
+    func chooseCoin()
 }
-class TransferView: UIView {
-    weak var delegate: TransferViewDelegate?
+class LibraTransferView: UIView {
+    weak var delegate: LibraTransferViewDelegate?
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(scrollView)
@@ -40,7 +41,7 @@ class TransferView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
-        print("TransferView销毁了")
+        print("LibraTransferView销毁了")
     }
     //MARK: - 布局
     override func layoutSubviews() {
@@ -380,7 +381,7 @@ class TransferView: UIView {
         }
     }
 }
-extension TransferView: UITextFieldDelegate {
+extension LibraTransferView: UITextFieldDelegate {
    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
        guard let content = textField.text else {
            return true

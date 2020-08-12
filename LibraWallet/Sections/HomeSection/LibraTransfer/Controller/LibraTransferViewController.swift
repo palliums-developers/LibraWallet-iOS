@@ -1,5 +1,5 @@
 //
-//  TransferViewController.swift
+//  LibraTransferViewController.swift
 //  LibraWallet
 //
 //  Created by palliums on 2019/9/5.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TransferViewController: BaseViewController {
+class LibraTransferViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = (self.wallet?.tokenName ?? "") + " " + localLanguage(keyString: "wallet_transfer_navigation_title")
@@ -37,14 +37,14 @@ class TransferViewController: BaseViewController {
         print("TransferViewController销毁了")
     }
     /// 子View
-    private lazy var detailView : TransferView = {
-        let view = TransferView.init()
+    private lazy var detailView : LibraTransferView = {
+        let view = LibraTransferView.init()
         view.delegate = self
         return view
     }()
     /// 网络请求、数据模型
-    lazy var dataModel: TransferModel = {
-        let model = TransferModel.init()
+    lazy var dataModel: LibraTransferModel = {
+        let model = LibraTransferModel.init()
         return model
     }()
     typealias successClosure = () -> Void
@@ -71,7 +71,7 @@ class TransferViewController: BaseViewController {
     var observer: NSKeyValueObservation?
 }
 //MARK: - 子View代理方法列表
-extension TransferViewController: TransferViewDelegate {
+extension LibraTransferViewController: LibraTransferViewDelegate {
     func scanAddressQRcode() {
         let vc = ScanViewController()
         vc.actionClosure = { address in
@@ -127,9 +127,22 @@ extension TransferViewController: TransferViewDelegate {
                                        position: .center)
         }
     }
+    func chooseCoin() {
+//        let alert = MappingTokenListAlert.init(data: tempData) { (model) in
+//            print(model)
+//            if self?.view?.headerView.viewState == .ExchangeSelectAToken {
+//                self?.view?.headerView.transferInInputTokenA = model
+//            } else {
+//                self?.view?.headerView.transferInInputTokenB = model
+//            }
+//            self?.view?.headerView.viewState = .Normal
+//        }
+//        alert.show(tag: 199)
+//        alert.showAnimation()
+    }
 }
 //MARK: - 网络请求数据处理中心
-extension TransferViewController {
+extension LibraTransferViewController {
     //MARK: - KVO
     func initKVO() {
         self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in

@@ -178,7 +178,7 @@ extension HomeViewController {
         self.navigationController?.pushViewController(vc, animated: true)
     }
     func showLibraTransferViewController(address: String, tokenModel: Token, amount: Int64?) {
-        let vc = TransferViewController()
+        let vc = LibraTransferViewController()
         vc.actionClosure = {
             //            self.dataModel.getLocalUserInfo()
         }
@@ -304,7 +304,7 @@ extension HomeViewController: HomeHeaderViewDelegate {
         self.navigationController?.pushViewController(vc, animated: true)
     }
     func transfer() {
-        let vc = TransferViewController()
+        let vc = LibraTransferViewController()
         vc.actionClosure = {
         //            self.dataModel.getLocalUserInfo()
         }

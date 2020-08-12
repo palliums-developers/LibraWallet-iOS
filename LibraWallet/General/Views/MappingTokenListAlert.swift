@@ -37,6 +37,21 @@ class MappingTokenListAlert: UIView {
                                                name: UIResponder.keyboardWillHideNotification,
                                                object: nil)
     }
+    convenience init(data: [Token], successClosure: @escaping successClosure) {
+        self.init(frame: CGRect.zero)
+        self.actionClosure = successClosure
+//        self.dataModels = data
+//        self.originModels = data
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyBoardWillShow(_ :)),
+                                               name: UIResponder.keyboardWillShowNotification,
+                                               object: nil)
+
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyBoardWillHide(_ :)),
+                                               name: UIResponder.keyboardWillHideNotification,
+                                               object: nil)
+    }
     deinit {
         print("MappingTokenListAlert销毁了")
         NotificationCenter.default.removeObserver(self)
