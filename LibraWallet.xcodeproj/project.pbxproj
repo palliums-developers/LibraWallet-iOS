@@ -2716,7 +2716,7 @@
 				9DC902372328E78A0097FD85 /* Home */,
 				3650F0A1248763830086F578 /* WalletDetail */,
 				3650F0B2248A42470086F578 /* Transaction */,
-				9DC4885623220D73005FF254 /* Receive */,
+				9DC4885623220D73005FF254 /* WalletReceive */,
 				9DC488702322246E005FF254 /* LibraTransfer */,
 				9D68D2FA237D25CA005B7593 /* ViolasTransfer */,
 				9D68D2EC237CF019005B7593 /* BTCTransfer */,
@@ -2744,13 +2744,13 @@
 			path = LibraKit;
 			sourceTree = "<group>";
 		};
-		9DC4885623220D73005FF254 /* Receive */ = {
+		9DC4885623220D73005FF254 /* WalletReceive */ = {
 			isa = PBXGroup;
 			children = (
 				9DC4885823220D89005FF254 /* Controller */,
 				9DC4885723220D84005FF254 /* View */,
 			);
-			path = Receive;
+			path = WalletReceive;
 			sourceTree = "<group>";
 		};
 		9DC4885723220D84005FF254 /* View */ = {
