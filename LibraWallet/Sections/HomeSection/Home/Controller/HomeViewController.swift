@@ -316,14 +316,14 @@ extension HomeViewController: HomeHeaderViewDelegate {
     }
     
     func receive() {
-        let vc = WalletReceiveViewController()
+        let vc = ReceiveViewController()
         //        vc.wallet = self.wallet
+        vc.tokens = self.tableViewManager.dataModel
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
     func mapping() {
-        
         let vc = TokenMappingViewController()
         //        vc.wallet = self.wallet
         vc.hidesBottomBarWhenPushed = true

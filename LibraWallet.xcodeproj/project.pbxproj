@@ -24,6 +24,8 @@
 		3622F20724E4003E00CFB754 /* TransferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3622F20624E4003E00CFB754 /* TransferView.swift */; };
 		3622F20A24E4007E00CFB754 /* TransferViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3622F20924E4007E00CFB754 /* TransferViewModel.swift */; };
 		3622F20C24E4DE8600CFB754 /* TransferTokensAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3622F20B24E4DE8600CFB754 /* TransferTokensAlert.swift */; };
+		3622F21224E539DB00CFB754 /* ReceiveViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3622F21124E539DB00CFB754 /* ReceiveViewController.swift */; };
+		3622F21424E539ED00CFB754 /* ReceiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3622F21324E539ED00CFB754 /* ReceiveView.swift */; };
 		3623AB5D23ED70CF004A01BF /* TokenMappingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB5C23ED70CF004A01BF /* TokenMappingView.swift */; };
 		3623AB5F23ED70E2004A01BF /* TokenMappingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB5E23ED70E2004A01BF /* TokenMappingModel.swift */; };
 		3623AB6123ED70F5004A01BF /* TokenMappingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB6023ED70F5004A01BF /* TokenMappingViewController.swift */; };
@@ -346,6 +348,8 @@
 		3622F20624E4003E00CFB754 /* TransferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferView.swift; sourceTree = "<group>"; };
 		3622F20924E4007E00CFB754 /* TransferViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferViewModel.swift; sourceTree = "<group>"; };
 		3622F20B24E4DE8600CFB754 /* TransferTokensAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferTokensAlert.swift; sourceTree = "<group>"; };
+		3622F21124E539DB00CFB754 /* ReceiveViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiveViewController.swift; sourceTree = "<group>"; };
+		3622F21324E539ED00CFB754 /* ReceiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiveView.swift; sourceTree = "<group>"; };
 		3623AB5C23ED70CF004A01BF /* TokenMappingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMappingView.swift; sourceTree = "<group>"; };
 		3623AB5E23ED70E2004A01BF /* TokenMappingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMappingModel.swift; sourceTree = "<group>"; };
 		3623AB6023ED70F5004A01BF /* TokenMappingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMappingViewController.swift; sourceTree = "<group>"; };
@@ -821,6 +825,31 @@
 				3622F20924E4007E00CFB754 /* TransferViewModel.swift */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		3622F20E24E539B100CFB754 /* Receive */ = {
+			isa = PBXGroup;
+			children = (
+				3622F20F24E539BA00CFB754 /* Controller */,
+				3622F21024E539C400CFB754 /* View */,
+			);
+			path = Receive;
+			sourceTree = "<group>";
+		};
+		3622F20F24E539BA00CFB754 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				3622F21124E539DB00CFB754 /* ReceiveViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		3622F21024E539C400CFB754 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				3622F21324E539ED00CFB754 /* ReceiveView.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		3623AB5823ED7062004A01BF /* TokenMapping */ = {
@@ -2712,6 +2741,7 @@
 		9DC06A6F2374059100BCE1FE /* HomeSection */ = {
 			isa = PBXGroup;
 			children = (
+				3622F20E24E539B100CFB754 /* Receive */,
 				3622F1FE24E3FBB300CFB754 /* Transfer */,
 				9DC902372328E78A0097FD85 /* Home */,
 				3650F0A1248763830086F578 /* WalletDetail */,
@@ -3337,6 +3367,7 @@
 				9D626480235719A400A79B3D /* WelcomeViewController.swift in Sources */,
 				3650F0AE2488908E0086F578 /* WalletMainViewFooterView.swift in Sources */,
 				9D68D2FF237D25FD005B7593 /* ViolasTransferView.swift in Sources */,
+				3622F21224E539DB00CFB754 /* ReceiveViewController.swift in Sources */,
 				9DC06A2523715ADB00BCE1FE /* BackupWarningAlert.swift in Sources */,
 				9D9B49BF235EE03C00354EF0 /* EmptyDataPlaceholderView.swift in Sources */,
 				36F826FF24BDA1DF0007ACC3 /* AssetsPoolTransactionsTableViewManager.swift in Sources */,
@@ -3415,6 +3446,7 @@
 				9D9B49F12360388200354EF0 /* LanguageTabViewManager.swift in Sources */,
 				36178322243F1455003C6588 /* LibraMultiHDWallet.swift in Sources */,
 				9DB515B623A32C3A0069A909 /* ViolasHDWallet.swift in Sources */,
+				3622F21424E539ED00CFB754 /* ReceiveView.swift in Sources */,
 				9DC902472328FDB90097FD85 /* DataBaseManager.swift in Sources */,
 				9D5B4E70236BCBDB00F4D99C /* AddAssetModel.swift in Sources */,
 				9D5B4E5E236976D500F4D99C /* HomeTableViewCell.swift in Sources */,

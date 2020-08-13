@@ -58,7 +58,7 @@ class TransferTokensAlert: UIView {
         tableView.snp.makeConstraints { (make) in
             make.top.equalTo(searchBar.snp.bottom).offset(10)
             make.left.right.bottom.equalTo(whiteBackgroundView)
-            make.bottom.equalTo(whiteBackgroundView).offset(-34)
+            make.bottom.equalTo(whiteBackgroundView)
         }
     }
     //MARK: - 懒加载对象
