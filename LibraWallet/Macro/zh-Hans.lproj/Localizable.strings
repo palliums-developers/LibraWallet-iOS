@@ -37,13 +37,14 @@ wallet_transfer_balance_title = "余额：";
 wallet_transfer_amount_textfield_placeholder = "输入金额";
 wallet_transfer_address_title = "收款地址";
 wallet_transfer_address_contact_title = "地址簿";
-wallet_transfer_address_btc_textfield_placeholder = "输入BTC收款地址";
-wallet_transfer_address_libra_textfield_placeholder = "输入Libra收款地址";
-wallet_transfer_address_violas_textfield_placeholder = "输入Violas收款地址";
+wallet_transfer_address_btc_textfield_placeholder = "输入收款地址";
+wallet_transfer_address_libra_textfield_placeholder = "输入收款地址";
+wallet_transfer_address_violas_textfield_placeholder = "输入收款地址";
 wallet_transfer_transaction_fee_title = "手续费";
 wallet_transfer_transaction_fee_least_title = "慢";
 wallet_transfer_transaction_fee_max_title = "快";
 wallet_transfer_confirm_button_title = "确认转账";
+wallet_transfer_token_default_title = "选择币种";
 
 /************* 交易历史 *******************/
 wallet_transactions_date_title = "日期";
@@ -553,6 +554,7 @@ wallet_check_password_invalid_error = "密码需同时包含大小写字母、�
 wallet_check_password_empty_error = "密码为空";
 wallet_check_password_failed_error = "密码不正确";
 // 转账相关
+wallet_transfer_token_invalid_error = "请选择要转账的币";
 wallet_transfer_amount_invalid_error = "转账数量无效";
 wallet_transfer_amount_empty_error = "转账数量为空";
 wallet_transfer_amount_overload_error = "数量超过自己余额";

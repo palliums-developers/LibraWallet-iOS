@@ -181,6 +181,7 @@ public enum LibraWalletError: Error {
     case WalletCheckPassword(reason: CheckPasswordError)
     
     public enum TransferError {
+        case tokenInvalid
         /// 数量无效
         case amountInvalid
         /// 数量为空
@@ -213,9 +214,9 @@ public enum LibraWalletError: Error {
         case violasModuleInvalid
         /// Libra地址无效
         case libraAddressInvalid
-        /// Violas稳定币名字为空
+        /// Libra稳定币名字为空
         case libraTokenNameEmpty
-        /// Violas稳定币合约未开启或不支持
+        /// Libra稳定币合约未开启或不支持
         case libraModuleInvalid
         /// 解析失败，不支持
         case handleInvalid
@@ -531,6 +532,8 @@ extension LibraWalletError.CheckPasswordError {
 extension LibraWalletError.TransferError {
     var localizedDescription: String {
         switch self {
+        case .tokenInvalid:
+            return localLanguage(keyString: "wallet_transfer_token_invalid_error")
         case .amountInvalid:
             return localLanguage(keyString: "wallet_transfer_amount_invalid_error")
         case .amountEmpty:

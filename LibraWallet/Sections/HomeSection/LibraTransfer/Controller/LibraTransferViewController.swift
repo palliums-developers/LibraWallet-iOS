@@ -127,19 +127,6 @@ extension LibraTransferViewController: LibraTransferViewDelegate {
                                        position: .center)
         }
     }
-    func chooseCoin() {
-//        let alert = MappingTokenListAlert.init(data: tempData) { (model) in
-//            print(model)
-//            if self?.view?.headerView.viewState == .ExchangeSelectAToken {
-//                self?.view?.headerView.transferInInputTokenA = model
-//            } else {
-//                self?.view?.headerView.transferInInputTokenB = model
-//            }
-//            self?.view?.headerView.viewState = .Normal
-//        }
-//        alert.show(tag: 199)
-//        alert.showAnimation()
-    }
 }
 //MARK: - 网络请求数据处理中心
 extension LibraTransferViewController {

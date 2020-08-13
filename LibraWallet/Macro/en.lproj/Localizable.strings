@@ -37,13 +37,14 @@ wallet_transfer_balance_title = "Balance: ";
 wallet_transfer_amount_textfield_placeholder = "Enter Amount";
 wallet_transfer_address_title = "Receiving Address";
 wallet_transfer_address_contact_title = "Address Book";
-wallet_transfer_address_btc_textfield_placeholder = "Enter BTC Address";
-wallet_transfer_address_libra_textfield_placeholder = "Enter Libra Address";
-wallet_transfer_address_violas_textfield_placeholder = "Enter Violas Address";
+wallet_transfer_address_btc_textfield_placeholder = "Enter Address";
+wallet_transfer_address_libra_textfield_placeholder = "Enter Address";
+wallet_transfer_address_violas_textfield_placeholder = "Enter Address";
 wallet_transfer_transaction_fee_title = "Fee";
 wallet_transfer_transaction_fee_least_title = "Slow";
 wallet_transfer_transaction_fee_max_title = "Fast";
 wallet_transfer_confirm_button_title = "Confirm";
+wallet_transfer_token_default_title = "Select a token";
 
 /************* 交易历史 *******************/
 wallet_transactions_date_title = "Date";
@@ -547,6 +548,7 @@ wallet_check_password_invalid_error = "Invalid Wallet Access Code";
 wallet_check_password_empty_error = "Empty Wallet Access Code";
 wallet_check_password_failed_error = "Incorrect Wallet Access Code";
 // 转账相关
+wallet_transfer_token_invalid_error = "Please select a token";
 wallet_transfer_amount_invalid_error = "Invalid Transfer Amount";
 wallet_transfer_amount_empty_error = "Empty Transfer Amount";
 wallet_transfer_amount_overload_error = "Transfer Amount Greater than Balance";

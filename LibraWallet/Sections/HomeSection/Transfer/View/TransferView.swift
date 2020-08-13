@@ -1,19 +1,20 @@
 //
-//  LibraTransferView.swift
+//  TransferView.swift
 //  LibraWallet
 //
-//  Created by palliums on 2019/9/6.
-//  Copyright © 2019 palliums. All rights reserved.
+//  Created by wangyingdong on 2020/8/12.
+//  Copyright © 2020 palliums. All rights reserved.
 //
 
 import UIKit
-protocol LibraTransferViewDelegate: NSObjectProtocol {
+protocol TransferViewDelegate: NSObjectProtocol {
     func scanAddressQRcode()
     func chooseAddress()
-    func confirmTransfer(amount: Double, address: String, fee: Double)
+    func confirmTransfer()
+    func chooseCoin()
 }
-class LibraTransferView: UIView {
-    weak var delegate: LibraTransferViewDelegate?
+class TransferView: UIView {
+    weak var delegate: TransferViewDelegate?
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(scrollView)
@@ -26,14 +27,14 @@ class LibraTransferView: UIView {
         walletWhiteBackgroundView.addSubview(addressTitleLabel)
         walletWhiteBackgroundView.addSubview(addressTextField)
         walletWhiteBackgroundView.addSubview(addressContactButton)
-
+        
         walletWhiteBackgroundView.addSubview(transferFeeTitleLabel)
-
+        
         walletWhiteBackgroundView.addSubview(transferSpeedLeftTitleLabel)
         walletWhiteBackgroundView.addSubview(transferSpeedRightTitleLabel)
         walletWhiteBackgroundView.addSubview(transferFeeLabel)
         walletWhiteBackgroundView.addSubview(transferFeeSlider)
-
+        
         walletWhiteBackgroundView.addSubview(confirmButton)
     }
     required init?(coder aDecoder: NSCoder) {
@@ -80,7 +81,7 @@ class LibraTransferView: UIView {
         }
         addressContactButton.snp.makeConstraints { (make) in
             make.bottom.equalTo(addressTextField.snp.top).offset(-7)
-            make.right.equalTo(walletWhiteBackgroundView.snp.right).offset(-19)
+            make.right.equalTo(walletWhiteBackgroundView.snp.right).offset(-22)
             make.size.equalTo(CGSize.init(width: 20, height: 20))
         }
         transferFeeTitleLabel.snp.makeConstraints { (make) in
@@ -121,14 +122,6 @@ class LibraTransferView: UIView {
     private lazy var walletWhiteBackgroundView: UIView = {
         let view = UIView.init()
         view.backgroundColor = UIColor.white
-//        // 定义阴影颜色
-//        view.layer.shadowColor = UIColor.init(hex: "3D3949").cgColor
-//        // 阴影的模糊半径
-//        view.layer.shadowRadius = 3
-//        // 阴影的偏移量
-//        view.layer.shadowOffset = CGSize(width: 0, height: 0)
-//        // 阴影的透明度，默认为0，不设置则不会显示阴影****
-//        view.layer.shadowOpacity = 0.1
         return view
     }()
     lazy var amountTitleLabel: UILabel = {
@@ -153,7 +146,32 @@ class LibraTransferView: UIView {
         let holderView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: 7, height: 48))
         textField.leftView = holderView
         textField.leftViewMode = .always
+        let rightView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: 120, height: 48))
+        rightView.addSubview(coinSelectButton)
+        textField.rightView = rightView
+        textField.rightViewMode = .always
         return textField
+    }()
+    lazy var rightTokenView: UIView = {
+        let view = UIView.init()
+        return view
+    }()
+    lazy var coinSelectButton: UIButton = {
+        let width = 9 + libraWalletTool.ga_widthForComment(content: localLanguage(keyString: "wallet_transfer_token_default_title"), fontSize: 12, height: 22) + 9 + 7
+        let button = UIButton.init(frame: CGRect.init(x: 120 - width - 9, y: (24 - 11), width: width, height: 22))
+        // 设置字体
+        button.setTitle(localLanguage(keyString: "wallet_transfer_token_default_title"), for: UIControl.State.normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
+        button.setTitleColor(UIColor.init(hex: "7038FD"), for: UIControl.State.normal)
+        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
+        button.setImage(UIImage.init(named: "arrow_down"), for: UIControl.State.normal)
+        // 调整位置
+        button.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 9, height: 5.5))
+        button.layer.borderColor = UIColor.init(hex: "7038FD").cgColor
+        button.layer.borderWidth = 0.5
+        button.layer.cornerRadius = 11
+        button.tag = 40
+        return button
     }()
     lazy var walletBalanceLabel: UILabel = {
         let label = UILabel.init()
@@ -184,7 +202,9 @@ class LibraTransferView: UIView {
         let holderView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: 7, height: 48))
         textField.leftView = holderView
         textField.leftViewMode = .always
-        textField.rightView = addressScanButton
+        let rightView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: 33, height: 48))
+        rightView.addSubview(addressScanButton)
+        textField.rightView = rightView
         textField.rightViewMode = .always
         return textField
     }()
@@ -192,7 +212,7 @@ class LibraTransferView: UIView {
         let button = UIButton.init(frame: CGRect.init(x: 0, y: 0, width: 28, height: 48))
         button.setImage(UIImage.init(named: "scan"), for: UIControl.State.normal)
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
-        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -4, bottom: 0, right: 4)
+//        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -4, bottom: 0, right: 4)
         button.tag = 10
         return button
     }()
@@ -212,7 +232,7 @@ class LibraTransferView: UIView {
     }()
     lazy var transferFeeSlider: TransferFeeSliderCustom = {
         let slide = TransferFeeSliderCustom.init()
-        slide.value = 0.2
+        slide.value = 0
         slide.setThumbImage(UIImage.init(named: "slide_button"), for: UIControl.State.normal)
         slide.setThumbImage(UIImage.init(named: "slide_button"), for: UIControl.State.highlighted)
         slide.setMinimumTrackImage(UIImage().imageWithColor(color: UIColor.init(hex: "9339F3")), for: UIControl.State.normal)
@@ -248,9 +268,9 @@ class LibraTransferView: UIView {
         label.textColor = UIColor.init(hex: "3C3848")
         label.font = UIFont.boldSystemFont(ofSize: 10)
         label.textAlignment = NSTextAlignment.center
-        let fee = Float(transferFeeMax - transferFeeMin) * Float(0.2) + Float(transferFeeMin)
-        let fee8 = NSString.init(format: "%.8f", fee)
-        label.text = "\(fee8) Libra"
+//        let fee = Float(transferFeeMax - transferFeeMin) * Float(0.2) + Float(transferFeeMin)
+//        let fee8 = NSString.init(format: "%.8f", fee)
+        label.text = "0.00"
         return label
     }()
     lazy var confirmButton: UIButton = {
@@ -261,10 +281,11 @@ class LibraTransferView: UIView {
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
         button.backgroundColor = UIColor.init(hex: "15C794")
         let width = UIScreen.main.bounds.width - 69 - 69
-
+        
         button.layer.insertSublayer(colorGradualChange(size: CGSize.init(width: width, height: 40)), at: 0)
         button.layer.cornerRadius = 5
         button.layer.masksToBounds = true
+        button.tag = 20
         return button
     }()
     @objc func buttonClick(button: UIButton) {
@@ -274,60 +295,11 @@ class LibraTransferView: UIView {
         } else if button.tag == 15 {
             // 常用地址
             self.delegate?.chooseAddress()
-        } else {
-            // 金额不为空检查
-            guard let amountString = self.amountTextField.text, amountString.isEmpty == false else {
-                self.makeToast(LibraWalletError.WalletTransfer(reason: .amountEmpty).localizedDescription,
-                               position: .center)
-                return
-            }
-            // 金额是否纯数字检查
-            guard isPurnDouble(string: amountString) == true else {
-                self.makeToast(LibraWalletError.WalletTransfer(reason: .amountInvalid).localizedDescription,
-                               position: .center)
-                return
-            }
-            // 转换数字
-            let amount = NSDecimalNumber.init(string: amountString).doubleValue
-            guard amount != 0 else {
-                self.makeToast(LibraWalletError.WalletTransfer(reason: .libraAmountLeast).localizedDescription,
-                               position: .center)
-                return
-            }
-            // 手续费转换
-            let feeString = self.transferFeeLabel.text
-            let fee = Double(feeString!.replacingOccurrences(of: " Libra", with: ""))!
-            #warning("暂时不用手续费")
-            // 金额大于我的金额
-            guard (amount) <= Double(wallet?.tokenBalance ?? 0) else {
-               self.makeToast(LibraWalletError.WalletTransfer(reason: .amountOverload).localizedDescription,
-                              position: .center)
-               return
-            }
-            // 地址是否为空
-            guard let address = self.addressTextField.text, address.isEmpty == false else {
-               self.makeToast(LibraWalletError.WalletTransfer(reason: .addressEmpty).localizedDescription,
-                              position: .center)
-               return
-            }
-            // 是否有效地址
-            guard LibraManager.isValidLibraAddress(address: address) else {
-                self.makeToast(LibraWalletError.WalletTransfer(reason: .addressInvalid).localizedDescription,
-                               position: .center)
-                return
-            }
-            // 检查是否向自己转账
-            guard address != self.wallet?.tokenAddress else {
-                self.makeToast(LibraWalletError.WalletTransfer(reason: .transferToSelf).localizedDescription,
-                               position: .center)
-                return
-            }
-            
-            self.amountTextField.resignFirstResponder()
-            self.addressTextField.resignFirstResponder()
-            self.transferFeeSlider.resignFirstResponder()
+        } else if button.tag == 20 {
             // 确认提交
-            self.delegate?.confirmTransfer(amount: amount, address: address, fee: fee)
+            self.delegate?.confirmTransfer()
+        } else if button.tag == 40 {
+            self.delegate?.chooseCoin()
         }
     }
     lazy var backgroundLayer: CAGradientLayer = {
@@ -345,38 +317,83 @@ class LibraTransferView: UIView {
     }
     var originFee: Int64?
     @objc func slideValueDidChange(slide: UISlider) {
-        let fee = Float(transferFeeMax - transferFeeMin) * slide.value + Float(transferFeeMin)
-        let fee8 = NSString.init(format: "%.8f", fee)
-        self.transferFeeLabel.text = "\(fee8) Libra"
+//        let fee = Float(transferFeeMax - transferFeeMin) * slide.value + Float(transferFeeMin)
+//        let fee8 = NSString.init(format: "%.8f", fee)
+//        self.transferFeeLabel.text = "\(fee8) Libra"
+        guard let model = token else {
+            return
+        }
+        let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
+                                                       scale: 6,
+                                                       raiseOnExactness: false,
+                                                       raiseOnOverflow: false,
+                                                       raiseOnUnderflow: false,
+                                                       raiseOnDivideByZero: false)
+        if model.tokenType == .Libra {
+            transferFeeSlider.value = 0.2
+            let region = NSDecimalNumber.init(value: 10).subtracting(NSDecimalNumber.init(value: 0))
+            let fee = region.multiplying(by: NSDecimalNumber(value: slide.value)).adding(NSDecimalNumber.init(value: 0))
+            let feeString = fee.multiplying(by: NSDecimalNumber.init(value: 1), withBehavior: numberConfig).stringValue
+            transferFeeLabel.text = feeString + " " + model.tokenName
+        } else if model.tokenType == .Violas {
+            let region = NSDecimalNumber.init(value: 10).subtracting(NSDecimalNumber.init(value: 0))
+            let fee = region.multiplying(by: NSDecimalNumber(value: slide.value)).adding(NSDecimalNumber.init(value: 0))
+            let feeString = fee.multiplying(by: NSDecimalNumber.init(value: 1), withBehavior: numberConfig).stringValue
+            transferFeeLabel.text = feeString + " " + model.tokenName
+        } else if model.tokenType == .BTC {
+            let region = NSDecimalNumber.init(value: transferFeeMax).subtracting(NSDecimalNumber.init(value: transferFeeMin))
+            let fee = region.multiplying(by: NSDecimalNumber(value: slide.value)).adding(NSDecimalNumber.init(value: transferFeeMin))
+            let feeString = fee.multiplying(by: NSDecimalNumber.init(value: 1), withBehavior: numberConfig).stringValue
+            transferFeeLabel.text = feeString + " " + model.tokenName
+        }
     }
-    var wallet: Token? {
+    var token: Token? {
         didSet {
-            guard let model = wallet else {
+            guard let model = token else {
                 return
             }
-//            amountTitleLabel.text = wallet?.tokenName
             let balance = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.tokenBalance )),
                                                  scale: 6,
                                                  unit: 1000000)
-            walletBalanceLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + balance + " Libra"
+            walletBalanceLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + balance + " \(model.tokenName)"
+            coinSelectButton.setTitle(model.tokenName, for: UIControl.State.normal)
+            coinSelectButton.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 9, height: 5.5))
+            let oldFrame = coinSelectButton.frame
+            let width = 9 + libraWalletTool.ga_widthForComment(content: model.tokenName, fontSize: 12, height: 22) + 9 + 7
+            coinSelectButton.frame = CGRect.init(x: 120 - width - 9, y: oldFrame.origin.y, width: width, height: oldFrame.size.height)
+            
+            if model.tokenType == .Libra {
+                transferFeeSlider.value = 0.2
+                let region = NSDecimalNumber.init(value: 10).subtracting(NSDecimalNumber.init(value: 0))
+                let fee = region.multiplying(by: 0.2).adding(NSDecimalNumber.init(value: 0))
+                transferFeeLabel.text = fee.stringValue + " " + model.tokenName
+            } else if model.tokenType == .Violas {
+                let region = NSDecimalNumber.init(value: 10).subtracting(NSDecimalNumber.init(value: 0))
+                let fee = region.multiplying(by: 0.2).adding(NSDecimalNumber.init(value: 0))
+                transferFeeLabel.text = fee.stringValue + " " + model.tokenName
+            } else if model.tokenType == .BTC {
+                let region = NSDecimalNumber.init(value: transferFeeMax).subtracting(NSDecimalNumber.init(value: transferFeeMin))
+                let fee = region.multiplying(by: 0.2).adding(NSDecimalNumber.init(value: transferFeeMin))
+                transferFeeLabel.text = fee.stringValue + " " + model.tokenName
+            }
         }
     }
 }
-extension LibraTransferView: UITextFieldDelegate {
-   func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-       guard let content = textField.text else {
-           return true
-       }
-       let textLength = content.count + string.count - range.length
-       if content.contains(".") {
-           let firstContent = content.split(separator: ".").first?.description ?? "0"
-           if (textLength - firstContent.count) < 8 {
-               return true
-           } else {
-               return false
-           }
-       } else {
-           return textLength <= ApplyTokenAmountLengthLimit
-       }
-   }
+extension TransferView: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let content = textField.text else {
+            return true
+        }
+        let textLength = content.count + string.count - range.length
+        if content.contains(".") {
+            let firstContent = content.split(separator: ".").first?.description ?? "0"
+            if (textLength - firstContent.count) < 8 {
+                return true
+            } else {
+                return false
+            }
+        } else {
+            return textLength <= ApplyTokenAmountLengthLimit
+        }
+    }
 }

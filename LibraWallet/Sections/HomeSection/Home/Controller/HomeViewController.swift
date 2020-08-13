@@ -304,12 +304,13 @@ extension HomeViewController: HomeHeaderViewDelegate {
         self.navigationController?.pushViewController(vc, animated: true)
     }
     func transfer() {
-        let vc = LibraTransferViewController()
-        vc.actionClosure = {
-        //            self.dataModel.getLocalUserInfo()
-        }
+        let vc = TransferViewController()
+//        vc.actionClosure = {
+//        //            self.dataModel.getLocalUserInfo()
+//        }
 //        vc.wallet = self.wallet
 //        vc.title = (self.wallet?.tokenName ?? "") + localLanguage(keyString: "wallet_transfer_navigation_title")
+        vc.tokens = self.tableViewManager.dataModel
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
