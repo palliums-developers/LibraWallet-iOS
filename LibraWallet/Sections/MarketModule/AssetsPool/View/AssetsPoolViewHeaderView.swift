@@ -466,8 +466,7 @@ class AssetsPoolViewHeaderView: UIView {
                 if (tempInputTokenA.index ?? 0) > (tempInputTokenB.index ?? 0) {
                     leastModuleA = tempInputTokenB
                     otherModuleB = tempInputTokenA
-                    tempAmountA = amountB
-                    tempAmountB = amountA
+
                 }
                 // 检查是否激活稳定币
                 guard tempInputTokenA.activeState == true else {
@@ -482,8 +481,8 @@ class AssetsPoolViewHeaderView: UIView {
                 }
                 // 转入
                 self.viewState = .AssetsPoolTransferInConfirm
-                self.delegate?.addLiquidityConfirm(amountIn: tempAmountA.uint64Value,
-                                                   amountOut: tempAmountB.uint64Value,
+                self.delegate?.addLiquidityConfirm(amountIn: tempAmountA.multiplying(by: NSDecimalNumber.init(value: 1000000)).uint64Value,
+                                                   amountOut: tempAmountB.multiplying(by: NSDecimalNumber.init(value: 1000000)).uint64Value,
                                                    inputModelName: leastModuleA.module ?? "",
                                                    outputModelName: otherModuleB.module ?? "")
             } else {

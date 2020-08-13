@@ -53,7 +53,7 @@ extension ExchangeViewModel {
                                 inputModule: inputModule,
                                 outputModule: outputModule,
                                 mnemonic: mnemonic,
-                                outputModuleActiveState: true)
+                                outputModuleActiveState: outputModuleActiveState)
         }) { [weak self](error) in
             guard error != "Cancel" else {
                 self?.view?.toastView?.hide(tag: 99)
@@ -273,11 +273,11 @@ extension ExchangeViewModel: ExchangeViewHeaderViewDelegate {
             return
         }
         // 金额超限检测
-        guard amountOut.multiplying(by: NSDecimalNumber.init(value: 1000000)).int64Value < (tempInputTokenB.amount ?? 0) else {
-            self.view?.makeToast(LibraWalletError.WalletTransfer(reason: .amountOverload).localizedDescription,
-                                 position: .center)
-            return
-        }
+//        guard amountOut.multiplying(by: NSDecimalNumber.init(value: 1000000)).int64Value < (tempInputTokenB.amount ?? 0) else {
+//            self.view?.makeToast(LibraWalletError.WalletTransfer(reason: .amountOverload).localizedDescription,
+//                                 position: .center)
+//            return
+//        }
         
         var leastModuleA = tempInputTokenA
         var otherModuleB = tempInputTokenB
