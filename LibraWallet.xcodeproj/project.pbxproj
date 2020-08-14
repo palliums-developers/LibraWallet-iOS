@@ -26,6 +26,8 @@
 		3622F20C24E4DE8600CFB754 /* TransferTokensAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3622F20B24E4DE8600CFB754 /* TransferTokensAlert.swift */; };
 		3622F21224E539DB00CFB754 /* ReceiveViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3622F21124E539DB00CFB754 /* ReceiveViewController.swift */; };
 		3622F21424E539ED00CFB754 /* ReceiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3622F21324E539ED00CFB754 /* ReceiveView.swift */; };
+		3622F21724E6628E00CFB754 /* TokenMappingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3622F21624E6628E00CFB754 /* TokenMappingViewModel.swift */; };
+		3622F21924E66A6400CFB754 /* MappingTokensAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3622F21824E66A6400CFB754 /* MappingTokensAlert.swift */; };
 		3623AB5D23ED70CF004A01BF /* TokenMappingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB5C23ED70CF004A01BF /* TokenMappingView.swift */; };
 		3623AB5F23ED70E2004A01BF /* TokenMappingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB5E23ED70E2004A01BF /* TokenMappingModel.swift */; };
 		3623AB6123ED70F5004A01BF /* TokenMappingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB6023ED70F5004A01BF /* TokenMappingViewController.swift */; };
@@ -350,6 +352,8 @@
 		3622F20B24E4DE8600CFB754 /* TransferTokensAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferTokensAlert.swift; sourceTree = "<group>"; };
 		3622F21124E539DB00CFB754 /* ReceiveViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiveViewController.swift; sourceTree = "<group>"; };
 		3622F21324E539ED00CFB754 /* ReceiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiveView.swift; sourceTree = "<group>"; };
+		3622F21624E6628E00CFB754 /* TokenMappingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMappingViewModel.swift; sourceTree = "<group>"; };
+		3622F21824E66A6400CFB754 /* MappingTokensAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MappingTokensAlert.swift; sourceTree = "<group>"; };
 		3623AB5C23ED70CF004A01BF /* TokenMappingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMappingView.swift; sourceTree = "<group>"; };
 		3623AB5E23ED70E2004A01BF /* TokenMappingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMappingModel.swift; sourceTree = "<group>"; };
 		3623AB6023ED70F5004A01BF /* TokenMappingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMappingViewController.swift; sourceTree = "<group>"; };
@@ -852,9 +856,18 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		3622F21524E6627300CFB754 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				3622F21624E6628E00CFB754 /* TokenMappingViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		3623AB5823ED7062004A01BF /* TokenMapping */ = {
 			isa = PBXGroup;
 			children = (
+				3622F21524E6627300CFB754 /* ViewModel */,
 				3623AB5B23ED70AA004A01BF /* Controller */,
 				3623AB5A23ED70A4004A01BF /* Model */,
 				3623AB5923ED709E004A01BF /* View */,
@@ -1914,6 +1927,7 @@
 				9D628A9B239E48A200E222FB /* TokenPickerViewAlert.swift */,
 				3623AB7523FBFC79004A01BF /* MappingTokenListAlert.swift */,
 				3622F20B24E4DE8600CFB754 /* TransferTokensAlert.swift */,
+				3622F21824E66A6400CFB754 /* MappingTokensAlert.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3450,6 +3464,7 @@
 				9DC902472328FDB90097FD85 /* DataBaseManager.swift in Sources */,
 				9D5B4E70236BCBDB00F4D99C /* AddAssetModel.swift in Sources */,
 				9D5B4E5E236976D500F4D99C /* HomeTableViewCell.swift in Sources */,
+				3622F21924E66A6400CFB754 /* MappingTokensAlert.swift in Sources */,
 				3617837024449D85003C6588 /* LibraTransactionModulePayload.swift in Sources */,
 				36828CD324B736860085A165 /* MarketMineTableViewManager.swift in Sources */,
 				3682E5D924AC9DC0007CA2CA /* ScanPublishView.swift in Sources */,
@@ -3488,6 +3503,7 @@
 				9DC06A2D2371786B00BCE1FE /* CheckBackupViewController.swift in Sources */,
 				3622F20524E4000500CFB754 /* TransferModel.swift in Sources */,
 				36F42EB1243C80DE00DBBF8F /* LibraMultiPrivateKey.swift in Sources */,
+				3622F21724E6628E00CFB754 /* TokenMappingViewModel.swift in Sources */,
 				9DA8E2A22317ABC400E28D07 /* AppDelegate.swift in Sources */,
 				9D9B49C9235FFA8E00354EF0 /* MineModel.swift in Sources */,
 				9DC4886B232222CF005FF254 /* LBXScanViewController.swift in Sources */,

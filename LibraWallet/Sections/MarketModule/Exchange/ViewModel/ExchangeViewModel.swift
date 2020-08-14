@@ -82,8 +82,8 @@ extension ExchangeViewModel {
             self.view?.headerView.viewState = .ViolasToLibraSwap
             self.view?.toastView?.show(tag: 99)
             self.dataModel.sendSwapViolasToLibraTransaction(sendAddress: WalletManager.shared.violasAddress ?? "",
-                                                            amountIn: inputAmount.doubleValue,
-                                                            AmountOut: outputAmount.multiplying(by: NSDecimalNumber.init(value: 0.99)).doubleValue,
+                                                            amountIn: inputAmount.uint64Value,
+                                                            AmountOut: outputAmount.multiplying(by: NSDecimalNumber.init(value: 0.99)).uint64Value,
                                                             fee: 0,
                                                             mnemonic: mnemonic,
                                                             moduleInput: inputModule.module ?? "",
@@ -111,8 +111,8 @@ extension ExchangeViewModel {
             self.view?.headerView.viewState = .LibraToViolasSwap
             self.view?.toastView?.show(tag: 99)
             self.dataModel.sendLibraToViolasMappingTransaction(sendAddress: WalletManager.shared.libraAddress ?? "",
-                                                               amountIn: inputAmount.doubleValue,
-                                                               amountOut: outputAmount.multiplying(by: NSDecimalNumber.init(value: 0.99)).doubleValue,
+                                                               amountIn: inputAmount.uint64Value,
+                                                               amountOut: outputAmount.multiplying(by: NSDecimalNumber.init(value: 0.99)).uint64Value,
                                                                fee: 0,
                                                                mnemonic: mnemonic,
                                                                moduleInput: inputModule.module ?? "",
@@ -289,8 +289,8 @@ extension ExchangeViewModel: ExchangeViewHeaderViewDelegate {
         }
         if let tokenBActiveState = tempInputTokenB.activeState, tokenBActiveState == true {
             // 已激活
-            self.handleUnlockWallet(inputAmount: amountIn,
-                                    outputAmount: amountOut,
+            self.handleUnlockWallet(inputAmount: amountIn.multiplying(by: NSDecimalNumber.init(value: 1000000)),
+                                    outputAmount: amountOut.multiplying(by: NSDecimalNumber.init(value: 1000000)),
                                     inputModule: leastModuleA,
                                     outputModule: otherModuleB,
                                     outputModuleActiveState: true)
@@ -298,8 +298,8 @@ extension ExchangeViewModel: ExchangeViewHeaderViewDelegate {
             // 未激活
             let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_alert_delete_address_title"), message: localLanguage(keyString: "wallet_market_exchange_output_token_unactived"), preferredStyle: .alert)
             alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_alert_delete_address_confirm_button_title"), style: .default){ [weak self] clickHandler in
-                self?.handleUnlockWallet(inputAmount: amountIn,
-                                        outputAmount: amountOut,
+                self?.handleUnlockWallet(inputAmount: amountIn.multiplying(by: NSDecimalNumber.init(value: 1000000)),
+                                        outputAmount: amountOut.multiplying(by: NSDecimalNumber.init(value: 1000000)),
                                         inputModule: leastModuleA,
                                         outputModule: otherModuleB,
                                         outputModuleActiveState: false)

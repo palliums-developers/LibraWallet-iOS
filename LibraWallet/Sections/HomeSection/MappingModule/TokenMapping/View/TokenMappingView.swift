@@ -42,7 +42,7 @@ class TokenMappingView: UIView {
         headerView.snp.makeConstraints { (make) in
             make.left.equalTo(self).offset(15)
             make.right.equalTo(self).offset(-15)
-            make.height.equalTo((444 * ratio))
+            make.height.equalTo((436 * ratio))
             make.top.equalTo(scrollView).offset(30)
         }
         bottomView.snp.makeConstraints { (make) in

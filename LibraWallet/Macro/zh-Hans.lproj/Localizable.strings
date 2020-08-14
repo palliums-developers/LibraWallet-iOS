@@ -197,6 +197,10 @@ wallet_market_order_detail_state_processing_title = "处理中";
 wallet_market_order_detail_fill_order_title = "成交记录";
 
 /************* 映射 *******************/
+wallet_mapping_balance_title = "可用余额：";
+wallet_mapping_input_amount_textfield_placeholder = "转出数量";
+wallet_mapping_mapping_rate_title = "汇率";
+wallet_mapping_mapping_miner_fees_title = "矿工费用：";
 wallet_mapping_confirm_title = "确认";
 wallet_mapping_transactions_title = "查看交易记录";
 

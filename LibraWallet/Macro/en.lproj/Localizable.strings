@@ -195,6 +195,10 @@ wallet_market_order_detail_state_processing_title = "Progressing";
 wallet_market_order_detail_fill_order_title = "Finished order";
 
 /************* 映射 *******************/
+wallet_mapping_balance_title = "Balance: ";
+wallet_mapping_input_amount_textfield_placeholder = "Input amount";
+wallet_mapping_mapping_rate_title = "Mapping Rate: ";
+wallet_mapping_mapping_miner_fees_title = "Miner Fees: ";
 wallet_mapping_confirm_title = "Confirm";
 wallet_mapping_transactions_title = "Transactions";
 

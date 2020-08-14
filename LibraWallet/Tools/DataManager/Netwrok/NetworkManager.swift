@@ -47,7 +47,7 @@ enum mainRequest {
     case GetViolasTokenList
     
     /// 查询映射信息
-    case GetMappingInfo(String)
+    case GetMappingInfo
     /// 获取当前已开启映射币（钱包地址）
     case GetMappingTokenList(String)
     /// 获取映射交易记录（地址、偏移量、数量、类型（0：violas，1：Libra，2：BTC）
@@ -127,7 +127,7 @@ extension mainRequest:TargetType {
              .GetViolasAccountSequenceNumber(_),
              .GetViolasTransactions(_, _, _, _, _),
              .GetViolasTokenList,
-             .GetMappingInfo(_),
+             .GetMappingInfo,
              .GetMappingTokenList(_),
              .GetMappingTransactions(_, _, _, _):
             if PUBLISH_VERSION == true {
@@ -206,8 +206,8 @@ extension mainRequest:TargetType {
             return ""
         case .GetViolasTokenList:
             return "/1.0/violas/currency"
-        case .GetMappingInfo(_):
-            return "/1.0/crosschain/info"
+        case .GetMappingInfo:
+            return "/1.0/mapping/address/info"
         case .GetMappingTokenList(_):
             return "/1.0/crosschain/modules"
         case .GetMappingTransactions(_, _, _, _):
@@ -273,7 +273,7 @@ extension mainRequest:TargetType {
              .GetViolasAccountBalance(_, _),
              .GetViolasAccountSequenceNumber(_),
              .GetViolasTransactions(_, _, _, _, _),
-             .GetMappingInfo(_),
+             .GetMappingInfo,
              .GetMappingTokenList(_),
              .GetMappingTransactions(_, _, _, _),
              .GetViolasTokenList,
@@ -387,9 +387,8 @@ extension mainRequest:TargetType {
                                       encoding: JSONEncoding.default)
         case .GetViolasTokenList:
             return .requestPlain
-        case .GetMappingInfo(let type):
-            return .requestParameters(parameters: ["type":type.lowercased()],
-                                      encoding: URLEncoding.queryString)
+        case .GetMappingInfo:
+            return .requestPlain
         case .GetMappingTokenList(let walletAddress):
             return .requestParameters(parameters: ["address": walletAddress],
                                       encoding: URLEncoding.queryString)

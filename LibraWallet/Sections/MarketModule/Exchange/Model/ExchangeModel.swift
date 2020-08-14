@@ -829,7 +829,7 @@ extension ExchangeModel {
 }
 //MARK: - 发送Violas兑换Libra交易
 extension ExchangeModel {
-    func sendSwapViolasToLibraTransaction(sendAddress: String, amountIn: Double, AmountOut: Double, fee: Double, mnemonic: [String], moduleInput: String, moduleOutput: String, feeModule: String, receiveAddress: String, outputModuleActiveState: Bool) {
+    func sendSwapViolasToLibraTransaction(sendAddress: String, amountIn: UInt64, AmountOut: UInt64, fee: Double, mnemonic: [String], moduleInput: String, moduleOutput: String, feeModule: String, receiveAddress: String, outputModuleActiveState: Bool) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
         if outputModuleActiveState == false {
@@ -924,7 +924,7 @@ extension ExchangeModel {
 }
 //MARK: - 发送Libra兑换Violas交易
 extension ExchangeModel {
-    func sendLibraToViolasMappingTransaction(sendAddress: String, amountIn: Double, amountOut: Double, fee: Double, mnemonic: [String], moduleInput: String, moduleOutput: String, violasReceiveAddress: String, feeModule: String, outputModuleActiveState: Bool) {
+    func sendLibraToViolasMappingTransaction(sendAddress: String, amountIn: UInt64, amountOut: UInt64, fee: Double, mnemonic: [String], moduleInput: String, moduleOutput: String, violasReceiveAddress: String, feeModule: String, outputModuleActiveState: Bool) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
         if outputModuleActiveState == false {
