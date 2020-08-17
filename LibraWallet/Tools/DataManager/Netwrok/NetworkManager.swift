@@ -50,8 +50,8 @@ enum mainRequest {
     case GetMappingInfo
     /// 获取当前已开启映射币（钱包地址）
     case GetMappingTokenList(String)
-    /// 获取映射交易记录（地址、偏移量、数量、类型（0：violas，1：Libra，2：BTC）
-    case GetMappingTransactions(String, Int, Int, String)
+    /// 获取映射交易记录（地址、偏移量、数量）
+    case GetMappingTransactions(String, Int, Int)
     
     /// 获取Violas账户信息
     case GetViolasAccountInfo(String)
@@ -129,7 +129,7 @@ extension mainRequest:TargetType {
              .GetViolasTokenList,
              .GetMappingInfo,
              .GetMappingTokenList(_),
-             .GetMappingTransactions(_, _, _, _):
+             .GetMappingTransactions(_, _, _):
             if PUBLISH_VERSION == true {
                 return URL(string:"https://api.violas.io")!
             } else {
@@ -210,8 +210,8 @@ extension mainRequest:TargetType {
             return "/1.0/mapping/address/info"
         case .GetMappingTokenList(_):
             return "/1.0/crosschain/modules"
-        case .GetMappingTransactions(_, _, _, _):
-            return "/1.0/crosschain/transactions"
+        case .GetMappingTransactions(_, _, _):
+            return "/1.0/mapping/transaction"
         case .GetViolasAccountInfo(_):
             return ""
         case .GetBTCPrice:
@@ -275,7 +275,7 @@ extension mainRequest:TargetType {
              .GetViolasTransactions(_, _, _, _, _),
              .GetMappingInfo,
              .GetMappingTokenList(_),
-             .GetMappingTransactions(_, _, _, _),
+             .GetMappingTransactions(_, _, _),
              .GetViolasTokenList,
              .GetLibraTokenList,
              .GetBTCPrice,
@@ -392,11 +392,10 @@ extension mainRequest:TargetType {
         case .GetMappingTokenList(let walletAddress):
             return .requestParameters(parameters: ["address": walletAddress],
                                       encoding: URLEncoding.queryString)
-        case .GetMappingTransactions(let walletAddress, let offset, let limit, let type):
+        case .GetMappingTransactions(let walletAddress, let offset, let limit):
             return .requestParameters(parameters: ["address": walletAddress,
                                                    "limit": limit,
-                                                   "offset":offset,
-                                                   "type":type],
+                                                   "offset":offset],
                                       encoding: URLEncoding.queryString)
         case .GetViolasAccountInfo(let address):
             return .requestParameters(parameters: ["jsonrpc":"2.0",

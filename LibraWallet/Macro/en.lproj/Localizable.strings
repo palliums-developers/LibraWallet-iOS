@@ -203,12 +203,11 @@ wallet_mapping_confirm_title = "Confirm";
 wallet_mapping_transactions_title = "Transactions";
 
 /************* 映射交易列表 *******************/
-wallet_mapping_transactions_date_title = "Date";
-wallet_mapping_transactions_amount_title = "Amount";
-wallet_mapping_transactions_state_title = "Mapping";
-wallet_mapping_transactions_state_ongoing_title = "progressing";
-wallet_mapping_transactions_state_success_title = "Success";
-wallet_mapping_transactions_state_failed_title = "Failed";
+wallet_mapping_transactions_state_processing_title = "Mapping Pending";
+wallet_mapping_transactions_state_success_title = "Mapping Successful";
+wallet_mapping_transactions_state_failed_title = "Mapping Failed";
+wallet_mapping_transactions_state_canceled_title = "Mapping Canceled";
+wallet_mapping_transactions_fees_title = "Miner Fees: ";
 
 /************* WalletConnect *******************/
 wallet_wallet_connect_login_title = "Web ViolasPay Wallet Sign In";

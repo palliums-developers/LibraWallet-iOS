@@ -205,12 +205,11 @@ wallet_mapping_confirm_title = "确认";
 wallet_mapping_transactions_title = "查看交易记录";
 
 /************* 映射交易列表 *******************/
-wallet_mapping_transactions_date_title = "日期";
-wallet_mapping_transactions_amount_title = "数量";
-wallet_mapping_transactions_state_title = "映射";
-wallet_mapping_transactions_state_ongoing_title = "进行中";
-wallet_mapping_transactions_state_success_title = "成功";
-wallet_mapping_transactions_state_failed_title = "失败";
+wallet_mapping_transactions_state_processing_title = "映射中";
+wallet_mapping_transactions_state_success_title = "映射成功";
+wallet_mapping_transactions_state_failed_title = "映射失败";
+wallet_mapping_transactions_state_canceled_title = "映射取消";
+wallet_mapping_transactions_fees_title = "矿工费：";
 
 /************* WalletConnect *******************/
 wallet_wallet_connect_login_title = "网页ViolasPay钱包登录确认";
