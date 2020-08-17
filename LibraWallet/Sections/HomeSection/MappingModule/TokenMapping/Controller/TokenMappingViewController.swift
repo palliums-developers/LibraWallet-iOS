@@ -37,6 +37,9 @@ class TokenMappingViewController: BaseViewController {
         self.navigationWhiteMode()
         self.navigationController?.navigationBar.barStyle = .black
     }
+    deinit {
+        print("TokenMappingViewController销毁了")
+    }
     /// 子View
     private lazy var detailView : TokenMappingView = {
         let view = TokenMappingView.init()

@@ -12,11 +12,13 @@ class TokenMappingViewModel: NSObject {
     override init() {
         super.init()
     }
+    deinit {
+        print("TokenMappingViewModel销毁了")
+    }
     var view: TokenMappingView? {
         didSet {
             view?.headerView.delegate = self
             view?.headerView.inputAmountTextField.delegate = self
-//            view?.headerView.outputAmountTextField.delegate = self
         }
     }
     /// 网络请求、数据模型
@@ -50,9 +52,10 @@ extension TokenMappingViewModel {
     }
     func handleRequest(inputAmount: NSDecimalNumber, outputAmount: NSDecimalNumber, model: TokenMappingListDataModel, mnemonic: [String], outputModuleActiveState: Bool) {
         if model.from_coin?.coin_type?.lowercased() == "violas" && model.to_coin?.coin_type?.lowercased() == "libra" {
-            self.dataModel.sendViolasToLibraTransaction(sendAddress: WalletManager.shared.violasAddress ?? "",
+            self.dataModel.sendViolasMappingTransaction(sendAddress: WalletManager.shared.violasAddress ?? "",
                                                         receiveAddress: WalletManager.shared.libraAddress ?? "",
                                                         module: model.from_coin?.assert?.module ?? "",
+                                                        moduleOutput: model.to_coin?.assert?.module ?? "",
                                                         amountIn: inputAmount.multiplying(by: NSDecimalNumber.init(value: 1000000)).uint64Value,
                                                         amountOut: outputAmount.multiplying(by: NSDecimalNumber.init(value: 1000000)).uint64Value,
                                                         fee: 0,
@@ -61,16 +64,17 @@ extension TokenMappingViewModel {
                                                         centerAddress: model.receiver_address ?? "",
                                                         outputModuleActiveState: outputModuleActiveState)
         } else if model.from_coin?.coin_type?.lowercased() == "libra" && model.from_coin?.coin_type?.lowercased() == "violas" {
-            self.dataModel.sendLibraToViolasTransaction(sendAddress: WalletManager.shared.libraAddress ?? "",
-                                                        receiveAddress: WalletManager.shared.violasAddress ?? "",
-                                                        module: model.from_coin?.assert?.module ?? "",
-                                                        amountIn: inputAmount.multiplying(by: NSDecimalNumber.init(value: 1000000)).uint64Value,
-                                                        amountOut: outputAmount.multiplying(by: NSDecimalNumber.init(value: 1000000)).uint64Value,
-                                                        fee: 0,
-                                                        mnemonic: mnemonic,
-                                                        type: model.lable ?? "",
-                                                        centerAddress: model.receiver_address ?? "",
-                                                        outputModuleActiveState: outputModuleActiveState)
+            self.dataModel.sendLibraMappingTransaction(sendAddress: WalletManager.shared.libraAddress ?? "",
+                                                       receiveAddress: WalletManager.shared.violasAddress ?? "",
+                                                       module: model.from_coin?.assert?.module ?? "",
+                                                       moduleOutput: model.to_coin?.assert?.module ?? "",
+                                                       amountIn: inputAmount.multiplying(by: NSDecimalNumber.init(value: 1000000)).uint64Value,
+                                                       amountOut: outputAmount.multiplying(by: NSDecimalNumber.init(value: 1000000)).uint64Value,
+                                                       fee: 0,
+                                                       mnemonic: mnemonic,
+                                                       type: model.lable ?? "",
+                                                       centerAddress: model.receiver_address ?? "",
+                                                       outputModuleActiveState: outputModuleActiveState)
         } else if model.from_coin?.coin_type?.lowercased() == "btc" {
             
         }
