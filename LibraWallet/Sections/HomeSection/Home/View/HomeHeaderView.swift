@@ -232,6 +232,10 @@ class HomeHeaderView: UIView {
         self.assetLabel.text = "$ \(assetsModel!)"
     }
     @objc func setText() {
+        coinTitleLabel.text = localLanguage(keyString: "wallet_home_wallet_asset_title")
+        transferButton.setTitle(localLanguage(keyString: "wallet_home_transfer_button_title"), for: UIControl.State.normal)
+        receiveButton.setTitle(localLanguage(keyString: "wallet_home_receive_button_title"), for: UIControl.State.normal)
+        exchangeButton.setTitle(localLanguage(keyString: "wallet_home_mapping_button_title"), for: UIControl.State.normal)
     }
     @objc func addConnect() {
         self.walletConnectStateButton.alpha = 1
