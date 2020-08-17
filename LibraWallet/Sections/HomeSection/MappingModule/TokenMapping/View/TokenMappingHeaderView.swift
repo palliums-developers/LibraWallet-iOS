@@ -10,7 +10,6 @@ import UIKit
 protocol TokenMappingHeaderViewDelegate: NSObjectProtocol {
     func chooseToken()
     func confirmTransfer()
-    func showMappingTokenList()
 }
 class TokenMappingHeaderView: UIView {
     weak var delegate: TokenMappingHeaderViewDelegate?
@@ -260,12 +259,6 @@ class TokenMappingHeaderView: UIView {
             // 兑换
             self.delegate?.confirmTransfer()
         }
-    }
-    @objc func selectExchangeToken(button: UIButton) {
-//        guard self.walletType == .Violas else {
-//            return
-//        }
-//        self.delegate?.showMappingTokenList()
     }
     var rate: Double? {
         didSet {

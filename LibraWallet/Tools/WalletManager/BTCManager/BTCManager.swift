@@ -92,7 +92,7 @@ class BTCManager: NSObject {
         }
         return true
     }
-    func getBTCScript(address: String, type: String, tokenContract: String, amount: Int) -> Data {
+    func getBTCScript(address: String, type: String, tokenContract: String, amount: UInt64) -> Data {
         var data = Data()
         data += "violas".data(using: .utf8)!
         // Version(版本)
@@ -107,7 +107,7 @@ class BTCManager: NSObject {
         // module_address
         data += Data.init(Array<UInt8>(hex: (tokenContract)))
         // out_amount(swap violas btc token amount microamount(1000000))
-        data += getLengthData(length: UInt64(amount), appendBytesCount: 8).bytes.reversed()
+        data += getLengthData(length: amount, appendBytesCount: 8).bytes.reversed()
         // times(retry swap violas btc token number of times)
         data += Data.init(Array<UInt8>(hex: "0000"))
         print(data.hex)

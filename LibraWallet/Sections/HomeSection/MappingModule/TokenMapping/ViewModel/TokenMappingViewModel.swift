@@ -37,11 +37,12 @@ class TokenMappingViewModel: NSObject {
 extension TokenMappingViewModel {
     func handleUnlockWallet(inputAmount: NSDecimalNumber, outputAmount: NSDecimalNumber, model: TokenMappingListDataModel, outputModuleActiveState: Bool) {
         WalletManager.unlockWallet(successful: { [weak self](mnemonic) in
+            self?.view?.toastView?.show(tag: 99)
             self?.handleRequest(inputAmount: inputAmount,
                                 outputAmount: outputAmount,
                                 model: model,
                                 mnemonic: mnemonic,
-                                outputModuleActiveState: true)
+                                outputModuleActiveState: outputModuleActiveState)
         }) { [weak self](error) in
             guard error != "Cancel" else {
                 self?.view?.toastView?.hide(tag: 99)
@@ -51,7 +52,7 @@ extension TokenMappingViewModel {
         }
     }
     func handleRequest(inputAmount: NSDecimalNumber, outputAmount: NSDecimalNumber, model: TokenMappingListDataModel, mnemonic: [String], outputModuleActiveState: Bool) {
-        if model.from_coin?.coin_type?.lowercased() == "violas" && model.to_coin?.coin_type?.lowercased() == "libra" {
+        if model.from_coin?.coin_type?.lowercased() == "violas" {
             self.dataModel.sendViolasMappingTransaction(sendAddress: WalletManager.shared.violasAddress ?? "",
                                                         receiveAddress: WalletManager.shared.libraAddress ?? "",
                                                         module: model.from_coin?.assert?.module ?? "",
@@ -63,7 +64,7 @@ extension TokenMappingViewModel {
                                                         type: model.lable ?? "",
                                                         centerAddress: model.receiver_address ?? "",
                                                         outputModuleActiveState: outputModuleActiveState)
-        } else if model.from_coin?.coin_type?.lowercased() == "libra" && model.from_coin?.coin_type?.lowercased() == "violas" {
+        } else if model.from_coin?.coin_type?.lowercased() == "libra" {
             self.dataModel.sendLibraMappingTransaction(sendAddress: WalletManager.shared.libraAddress ?? "",
                                                        receiveAddress: WalletManager.shared.violasAddress ?? "",
                                                        module: model.from_coin?.assert?.module ?? "",
@@ -76,7 +77,21 @@ extension TokenMappingViewModel {
                                                        centerAddress: model.receiver_address ?? "",
                                                        outputModuleActiveState: outputModuleActiveState)
         } else if model.from_coin?.coin_type?.lowercased() == "btc" {
-            
+            let wallet = try! BTCManager().getWallet(mnemonic: mnemonic)
+            let chainType = model.to_coin?.coin_type?.lowercased() == "libra" ? "libra":"violas"
+            let receiveAddress = model.to_coin?.coin_type?.lowercased() == "libra" ? (WalletManager.shared.libraAddress ?? ""):(WalletManager.shared.violasAddress ?? "")
+            self.dataModel.sendBTCMappingTransaction(wallet: wallet,
+                                                     amountIn: inputAmount.multiplying(by: NSDecimalNumber.init(value: 100000000)).uint64Value,
+                                                     amountOut: outputAmount.multiplying(by: NSDecimalNumber.init(value: 1000000)).uint64Value,
+                                                     fee: 0.0002,
+                                                     mnemonic: mnemonic,
+                                                     moduleOutput: model.to_coin?.assert?.module ?? "",
+                                                     mappingReceiveAddress: receiveAddress,
+                                                     outputModuleActiveState: outputModuleActiveState,
+                                                     moduleAddress: model.to_coin?.assert?.address ?? "",
+                                                     type: model.lable ?? "",
+                                                     centerAddress: model.receiver_address ?? "",
+                                                     chainType: chainType)
         }
     }
 }
@@ -128,13 +143,34 @@ extension TokenMappingViewModel: TokenMappingHeaderViewDelegate {
             self.view?.makeToast(LibraWalletError.WalletMarket(reason: .payAmountMaxLimit).localizedDescription, position: .center)
             return
         }
-        self.handleUnlockWallet(inputAmount: inputAmount, outputAmount: outputAmount, model: model, outputModuleActiveState: model.from_coin?.assert?.active_state ?? false)
+        if let tokenBActiveState = model.to_coin?.assert?.active_state, tokenBActiveState == true {
+            // 已激活
+            self.handleUnlockWallet(inputAmount: inputAmount,
+                                    outputAmount: outputAmount,
+                                    model: model,
+                                    outputModuleActiveState: true)
+        } else {
+            // 未激活
+            let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_alert_delete_address_title"), message: localLanguage(keyString: "wallet_mapping_output_token_unactived"), preferredStyle: .alert)
+            alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_alert_delete_address_confirm_button_title"), style: .default){ [weak self] clickHandler in
+                self?.handleUnlockWallet(inputAmount: inputAmount,
+                                        outputAmount: outputAmount,
+                                        model: model,
+                                        outputModuleActiveState: false)
+            })
+            alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_alert_delete_address_cancel_button_title"), style: .cancel){ clickHandler in
+                NSLog("点击了取消")
+            })
+            var rootViewController = UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.rootViewController
+            if let navigationController = rootViewController as? UINavigationController {
+                rootViewController = navigationController.viewControllers.first
+            }
+            if let tabBarController = rootViewController as? UITabBarController {
+                rootViewController = tabBarController.selectedViewController
+            }
+            rootViewController?.present(alertContr, animated: true, completion: nil)
+        }
     }
-    
-    func showMappingTokenList() {
-        
-    }
-    
 }
 //MARK: - 网络请求数据处理中心
 extension TokenMappingViewModel {
@@ -194,48 +230,23 @@ extension TokenMappingViewModel {
                     alert.showAnimation()
                 }
             } else if type == "SendBTCTransaction" {
+                self?.view?.headerView.inputAmountTextField.text = ""
+                self?.view?.headerView.outputAmountTextField.text  = "0"
                 self?.view?.toastView?.hide(tag: 99)
-                self?.view?.makeToast(localLanguage(keyString: "wallet_transfer_success_alert"), position: .center)
+                self?.view?.makeToast(localLanguage(keyString: "wallet_mapping_submit_successful"), position: .center)
             } else if type == "SendLibraTransaction" {
+                self?.view?.headerView.inputAmountTextField.text = ""
+                self?.view?.headerView.outputAmountTextField.text  = "0"
                 self?.view?.toastView?.hide(tag: 99)
-                self?.view?.makeToast(localLanguage(keyString: "wallet_transfer_success_alert"), position: .center)
-            } else if type == "SendVBTCTransaction" {
+                self?.view?.makeToast(localLanguage(keyString: "wallet_mapping_submit_successful"), position: .center)
+            } else if type == "SendViolasTransaction" {
+                self?.view?.headerView.inputAmountTextField.text = ""
+                self?.view?.headerView.outputAmountTextField.text  = "0"
                 self?.view?.toastView?.hide(tag: 99)
-                self?.view?.makeToast(localLanguage(keyString: "wallet_transfer_success_alert"), position: .center)
-            } else if type == "SendVLibraTransaction" {
-                self?.view?.toastView?.hide(tag: 99)
-                self?.view?.makeToast(localLanguage(keyString: "wallet_transfer_success_alert"), position: .center)
-            } else if type == "GetWalletEnableCoin" {
-                if let tempData = dataDic.value(forKey: "data") as? Bool {
-                    print(tempData)
-                    if let action = self?.actionClosure {
-                        action(tempData)
-                    }
-                }
-            } else if type == "SendPublishTransaction" {
-                if let action = self?.finishClosure {
-                    action()
-                }
-            } else if type == "MappingTokenList" {
-//                if let tempData = dataDic.value(forKey: "data") as? [TokenMappingListDataModel] {
-//                    print(tempData)
-//                    self?.detailView.toastView?.hide(tag: 99)
-//                    let alert = MappingTokenListAlert.init(data: tempData) { (model) in
-//                        print(model)
-//                        self?.detailView.headerView.reverseModel = model
-//                    }
-//                    alert.show(tag: 99)
-//                    alert.showAnimation()
-//                }
+                self?.view?.makeToast(localLanguage(keyString: "wallet_mapping_submit_successful"), position: .center)
             }
         })
-//        if wallet?.tokenType == .BTC || wallet?.tokenType == .Libra {
-//            self.view?.toastView?.show(tag: 99)
-//            self.dataModel.getMappingInfo()
-//        } else {
-//            // 获取当前钱包已映射稳定币列表
-//            self.dataModel.getMappingTokenList(walletAddress: "b45d3e7e8079eb16cd7111b676f0c32294135e4190261240e3fd7b96fe1b9b89")
-//        }
+//        wallet_mapping_submit_failed = "Transaction Submitted Failed";
     }
     private func showMappingFunctionAlert() {
 //        let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_mapping_info_alert_title"), message: LibraWalletError.WalletMapping(reason: .mappingFounctionInvalid).localizedDescription, preferredStyle: .alert)

@@ -443,6 +443,11 @@ wallet_market_exchange_output_token_unselect = "请选择一个想要兑换的�
 wallet_market_exchange_output_token_unactived = "您想要兑换的稳定币尚未激活，是否立即激活并兑换";
 wallet_market_exchange_submit_exchange_successful = "兑换订单提交成功";
 wallet_market_exchange_submit_exchange_failed = "兑换订单提交失败";
+
+//映射
+wallet_mapping_submit_successful = "映射订单提交成功";
+wallet_mapping_submit_failed = "映射订单提交失败";
+wallet_mapping_output_token_unactived = "您想要映射的稳定币尚未激活，是否立即激活并映射";
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "安全提醒";
 wallet_alert_backup_warning_detail_title = "您的身份助记词未备份，请务必备份助记词\n助记词可用于恢复身份下钱包资产，防止忘记密码、应用删除、手机丢失等情况导致资产损失";

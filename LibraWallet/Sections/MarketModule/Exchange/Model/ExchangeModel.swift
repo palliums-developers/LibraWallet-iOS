@@ -1060,7 +1060,7 @@ extension ExchangeModel {
 
 //MARK: - BTC跨链映射
 extension ExchangeModel {
-    func makeTransaction(wallet: HDWallet, amountIn: Double, amountOut: Double, fee: Double, mnemonic: [String], moduleOutput: String, mappingReceiveAddress: String, outputModuleActiveState: Bool, chainType: String) {
+    func makeTransaction(wallet: HDWallet, amountIn: UInt64, amountOut: UInt64, fee: Double, mnemonic: [String], moduleOutput: String, mappingReceiveAddress: String, outputModuleActiveState: Bool, chainType: String) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
         if outputModuleActiveState == false {
@@ -1162,8 +1162,8 @@ extension ExchangeModel {
         }
         self.requests.append(request)
     }
-    private func selectUTXOWithScriptSignature(utxos: [TrezorBTCUTXOMainModel], wallet: HDWallet, amountIn: Double, amountOut: Double, fee: Double, toAddress: String, mappingReceiveAddress: String, mappingContract: String, type: String) {
-        let amountt: UInt64 = UInt64(amountIn * 100000000)
+    private func selectUTXOWithScriptSignature(utxos: [TrezorBTCUTXOMainModel], wallet: HDWallet, amountIn: UInt64, amountOut: UInt64, fee: Double, toAddress: String, mappingReceiveAddress: String, mappingContract: String, type: String) {
+//        let amountt: UInt64 = UInt64(amountIn * 100000000)
         let feee: UInt64 = UInt64(fee * 100000000)
         
         // 个人公钥
@@ -1173,20 +1173,20 @@ extension ExchangeModel {
             UnspentTransaction.init(output: TransactionOutput.init(value: NSDecimalNumber.init(string: item.value ?? "0").uint64Value, lockingScript: lockingScript),
                                     outpoint: TransactionOutPoint.init(hash: Data(Data(hex: item.txid!)!.reversed()), index: item.vout!))
         }
-        let select = UnspentTransactionSelector.select(from: inputs, targetValue: amountt + feee, feePerByte: 30)
+        let select = UnspentTransactionSelector.select(from: inputs, targetValue: amountIn + feee, feePerByte: 30)
         
         let allUTXOAmount = select.reduce(0) {
             $0 + $1.output.value
         }
-        let change = allUTXOAmount - feee - amountt
+        let change = allUTXOAmount - feee - amountIn
         
-        let plan = TransactionPlan.init(unspentTransactions: select, amount: amountt, fee: feee, change: UInt64(change))
+        let plan = TransactionPlan.init(unspentTransactions: select, amount: amountIn, fee: feee, change: UInt64(change))
         
         let toAddressResult = try! BitcoinAddress(legacy: toAddress)
         
         let transaction = customBuild(from: plan, toAddress: toAddressResult, changeAddress: wallet.addresses.first!)
         // 添加脚本
-        let script = BTCManager().getBTCScript(address: mappingReceiveAddress, type: type, tokenContract: mappingContract, amount: Int(amountOut * 1000000))
+        let script = BTCManager().getBTCScript(address: mappingReceiveAddress, type: type, tokenContract: mappingContract, amount: amountOut)
         let data = BTCManager().getData(script: script)
         let opReturn = TransactionOutput.init(value: 0, lockingScript: data)
         

@@ -438,6 +438,11 @@ wallet_market_exchange_output_token_unselect = "Please select a output token";
 wallet_market_exchange_output_token_unactived = "Output token unactived, Whether to activate and exchange right now";
 wallet_market_exchange_submit_exchange_successful = "Transaction Submitted";
 wallet_market_exchange_submit_exchange_failed = "Transaction Submitted Failed";
+
+//映射
+wallet_mapping_submit_successful = "Transaction Submitted";
+wallet_mapping_submit_failed = "Transaction Submitted Failed";
+wallet_mapping_output_token_unactived = "Output token unactived, Whether to activate and mapping right now";
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "Safety Warning";
 wallet_alert_backup_warning_detail_title = "You have not yet backup the mnemonic words of your identity wallet. Please backup them as soon as possible.\nThe mnemonic words can be used to recover funds in your identity wallet in case you have removed this App or forget the password or have lost or demaged your phone";

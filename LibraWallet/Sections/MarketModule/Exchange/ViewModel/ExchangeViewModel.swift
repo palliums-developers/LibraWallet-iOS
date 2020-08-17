@@ -129,8 +129,8 @@ extension ExchangeViewModel {
             self.view?.toastView?.show(tag: 99)
             let wallet = try! BTCManager().getWallet(mnemonic: mnemonic)
             self.dataModel.makeTransaction(wallet: wallet,
-                                           amountIn: inputAmount.doubleValue,
-                                           amountOut: outputAmount.multiplying(by: NSDecimalNumber.init(value: 0.99)).doubleValue,
+                                           amountIn: inputAmount.multiplying(by: NSDecimalNumber.init(value: 100)).uint64Value,
+                                           amountOut: outputAmount.multiplying(by: NSDecimalNumber.init(value: 0.99)).uint64Value,
                                            fee: 0.0002,
                                            mnemonic: mnemonic,
                                            moduleOutput: outputModule.module ?? "",
@@ -143,8 +143,8 @@ extension ExchangeViewModel {
             self.view?.toastView?.show(tag: 99)
             let wallet = try! BTCManager().getWallet(mnemonic: mnemonic)
             self.dataModel.makeTransaction(wallet: wallet,
-                                           amountIn: inputAmount.doubleValue,
-                                           amountOut: outputAmount.multiplying(by: NSDecimalNumber.init(value: 0.99)).doubleValue,
+                                           amountIn: inputAmount.multiplying(by: NSDecimalNumber.init(value: 100)).uint64Value,
+                                           amountOut: outputAmount.multiplying(by: NSDecimalNumber.init(value: 0.99)).uint64Value,
                                            fee: 0.0002,
                                            mnemonic: mnemonic,
                                            moduleOutput: outputModule.module ?? "",
