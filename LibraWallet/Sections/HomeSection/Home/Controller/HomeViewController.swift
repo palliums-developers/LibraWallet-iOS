@@ -178,7 +178,7 @@ extension HomeViewController {
         self.navigationController?.pushViewController(vc, animated: true)
     }
     func showLibraTransferViewController(address: String, tokenModel: Token, amount: Int64?) {
-        let vc = TransferViewController()
+        let vc = LibraTransferViewController()
         vc.actionClosure = {
             //            self.dataModel.getLocalUserInfo()
         }
@@ -301,6 +301,32 @@ extension HomeViewController: HomeHeaderViewDelegate {
             self.dataModel.getLocalTokens()
             print("刷新首页数据")
         }
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    func transfer() {
+        let vc = TransferViewController()
+//        vc.actionClosure = {
+//        //            self.dataModel.getLocalUserInfo()
+//        }
+//        vc.wallet = self.wallet
+//        vc.title = (self.wallet?.tokenName ?? "") + localLanguage(keyString: "wallet_transfer_navigation_title")
+        vc.tokens = self.tableViewManager.dataModel
+        vc.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func receive() {
+        let vc = ReceiveViewController()
+        //        vc.wallet = self.wallet
+        vc.tokens = self.tableViewManager.dataModel
+        vc.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func mapping() {
+        let vc = TokenMappingViewController()
+        //        vc.wallet = self.wallet
+        vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }

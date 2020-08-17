@@ -90,7 +90,7 @@ class AddressManagerViewController: BaseViewController {
         return button
     }()
     var myContext = 0
-    /// 展示地址类型
+    /// 展示地址类型(0=Libra、1=Violas、2=BTC)
     var addressType: String?
 }
 extension AddressManagerViewController {

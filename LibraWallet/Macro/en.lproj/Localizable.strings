@@ -37,13 +37,14 @@ wallet_transfer_balance_title = "Balance: ";
 wallet_transfer_amount_textfield_placeholder = "Enter Amount";
 wallet_transfer_address_title = "Receiving Address";
 wallet_transfer_address_contact_title = "Address Book";
-wallet_transfer_address_btc_textfield_placeholder = "Enter BTC Address";
-wallet_transfer_address_libra_textfield_placeholder = "Enter Libra Address";
-wallet_transfer_address_violas_textfield_placeholder = "Enter Violas Address";
+wallet_transfer_address_btc_textfield_placeholder = "Enter Address";
+wallet_transfer_address_libra_textfield_placeholder = "Enter Address";
+wallet_transfer_address_violas_textfield_placeholder = "Enter Address";
 wallet_transfer_transaction_fee_title = "Fee";
 wallet_transfer_transaction_fee_least_title = "Slow";
 wallet_transfer_transaction_fee_max_title = "Fast";
 wallet_transfer_confirm_button_title = "Confirm";
+wallet_transfer_token_default_title = "Select a token";
 
 /************* 交易历史 *******************/
 wallet_transactions_date_title = "Date";
@@ -194,16 +195,19 @@ wallet_market_order_detail_state_processing_title = "Progressing";
 wallet_market_order_detail_fill_order_title = "Finished order";
 
 /************* 映射 *******************/
+wallet_mapping_balance_title = "Balance: ";
+wallet_mapping_input_amount_textfield_placeholder = "Input amount";
+wallet_mapping_mapping_rate_title = "Mapping Rate: ";
+wallet_mapping_mapping_miner_fees_title = "Miner Fees: ";
 wallet_mapping_confirm_title = "Confirm";
 wallet_mapping_transactions_title = "Transactions";
 
 /************* 映射交易列表 *******************/
-wallet_mapping_transactions_date_title = "Date";
-wallet_mapping_transactions_amount_title = "Amount";
-wallet_mapping_transactions_state_title = "Mapping";
-wallet_mapping_transactions_state_ongoing_title = "progressing";
-wallet_mapping_transactions_state_success_title = "Success";
-wallet_mapping_transactions_state_failed_title = "Failed";
+wallet_mapping_transactions_state_processing_title = "Mapping Pending";
+wallet_mapping_transactions_state_success_title = "Mapping Successful";
+wallet_mapping_transactions_state_failed_title = "Mapping Failed";
+wallet_mapping_transactions_state_canceled_title = "Mapping Canceled";
+wallet_mapping_transactions_fees_title = "Miner Fees: ";
 
 /************* WalletConnect *******************/
 wallet_wallet_connect_login_title = "Web ViolasPay Wallet Sign In";
@@ -433,6 +437,11 @@ wallet_market_exchange_output_token_unselect = "Please select a output token";
 wallet_market_exchange_output_token_unactived = "Output token unactived, Whether to activate and exchange right now";
 wallet_market_exchange_submit_exchange_successful = "Transaction Submitted";
 wallet_market_exchange_submit_exchange_failed = "Transaction Submitted Failed";
+
+//映射
+wallet_mapping_submit_successful = "Transaction Submitted";
+wallet_mapping_submit_failed = "Transaction Submitted Failed";
+wallet_mapping_output_token_unactived = "Output token unactived, Whether to activate and mapping right now";
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "Safety Warning";
 wallet_alert_backup_warning_detail_title = "You have not yet backup the mnemonic words of your identity wallet. Please backup them as soon as possible.\nThe mnemonic words can be used to recover funds in your identity wallet in case you have removed this App or forget the password or have lost or demaged your phone";
@@ -547,6 +556,7 @@ wallet_check_password_invalid_error = "Invalid Wallet Access Code";
 wallet_check_password_empty_error = "Empty Wallet Access Code";
 wallet_check_password_failed_error = "Incorrect Wallet Access Code";
 // 转账相关
+wallet_transfer_token_invalid_error = "Please select a token";
 wallet_transfer_amount_invalid_error = "Invalid Transfer Amount";
 wallet_transfer_amount_empty_error = "Empty Transfer Amount";
 wallet_transfer_amount_overload_error = "Transfer Amount Greater than Balance";

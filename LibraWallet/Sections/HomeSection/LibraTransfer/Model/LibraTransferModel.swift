@@ -1,5 +1,5 @@
 //
-//  TransferModel.swift
+//  LibraTransferModel.swift
 //  LibraWallet
 //
 //  Created by palliums on 2019/9/16.
@@ -20,7 +20,7 @@ struct LibraTransferMainModel: Codable {
     var error: LibraTransferErrorModel?
 }
 
-class TransferModel: NSObject {
+class LibraTransferModel: NSObject {
     @objc dynamic var dataDic: NSMutableDictionary = [:]
     private var requests: [Cancellable] = []
     private var sequenceNumber: Int?
@@ -137,6 +137,6 @@ class TransferModel: NSObject {
             cancellable.cancel()
         }
         requests.removeAll()
-        print("TransferModel销毁了")
+        print("LibraTransferModel销毁了")
     }
 }

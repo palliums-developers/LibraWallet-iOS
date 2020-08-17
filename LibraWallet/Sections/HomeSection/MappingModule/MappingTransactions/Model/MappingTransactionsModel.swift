@@ -8,17 +8,18 @@
 
 import UIKit
 import Moya
+struct MappingTransactionsMainDataDetailModel: Codable {
+    var amount: Int64
+    var chain: String?
+    var name: String?
+    var show_name: String?
+}
 struct MappingTransactionsMainDataModel: Codable {
-    ///
-    var date: Int?
-    ///
-    var amount: Int?
-    ///
+    var amount_from: MappingTransactionsMainDataDetailModel?
+    var amount_to: MappingTransactionsMainDataDetailModel?
+    var confirmed_time: Int64?
     var status: Int?
-    ///
-    var address: String?
-    ///
-    var coin: String?
+    var version_or_block_height: Int64?
 }
 struct MappingTransactionsMainModel: Codable {
     var code: Int?
@@ -28,9 +29,9 @@ struct MappingTransactionsMainModel: Codable {
 class MappingTransactionsModel: NSObject {
     private var requests: [Cancellable] = []
     @objc dynamic var dataDic: NSMutableDictionary = [:]
-    func getMappingTransactions(walletAddress: String, page: Int, pageSize: Int, requestType: String, requestStatus: Int) {
+    func getMappingTransactions(walletAddress: String, page: Int, pageSize: Int, requestStatus: Int) {
         let type = requestStatus == 0 ? "MappingTransactionsOrigin":"MappingTransactionsMore"
-        let request = mainProvide.request(.GetMappingTransactions(walletAddress, page, pageSize, requestType)) {[weak self](result) in
+        let request = mainProvide.request(.GetMappingTransactions(walletAddress, page, pageSize)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {

@@ -37,13 +37,14 @@ wallet_transfer_balance_title = "余额：";
 wallet_transfer_amount_textfield_placeholder = "输入金额";
 wallet_transfer_address_title = "收款地址";
 wallet_transfer_address_contact_title = "地址簿";
-wallet_transfer_address_btc_textfield_placeholder = "输入BTC收款地址";
-wallet_transfer_address_libra_textfield_placeholder = "输入Libra收款地址";
-wallet_transfer_address_violas_textfield_placeholder = "输入Violas收款地址";
+wallet_transfer_address_btc_textfield_placeholder = "输入收款地址";
+wallet_transfer_address_libra_textfield_placeholder = "输入收款地址";
+wallet_transfer_address_violas_textfield_placeholder = "输入收款地址";
 wallet_transfer_transaction_fee_title = "手续费";
 wallet_transfer_transaction_fee_least_title = "慢";
 wallet_transfer_transaction_fee_max_title = "快";
 wallet_transfer_confirm_button_title = "确认转账";
+wallet_transfer_token_default_title = "选择币种";
 
 /************* 交易历史 *******************/
 wallet_transactions_date_title = "日期";
@@ -196,16 +197,19 @@ wallet_market_order_detail_state_processing_title = "处理中";
 wallet_market_order_detail_fill_order_title = "成交记录";
 
 /************* 映射 *******************/
+wallet_mapping_balance_title = "可用余额：";
+wallet_mapping_input_amount_textfield_placeholder = "转出数量";
+wallet_mapping_mapping_rate_title = "汇率";
+wallet_mapping_mapping_miner_fees_title = "矿工费用：";
 wallet_mapping_confirm_title = "确认";
 wallet_mapping_transactions_title = "查看交易记录";
 
 /************* 映射交易列表 *******************/
-wallet_mapping_transactions_date_title = "日期";
-wallet_mapping_transactions_amount_title = "数量";
-wallet_mapping_transactions_state_title = "映射";
-wallet_mapping_transactions_state_ongoing_title = "进行中";
-wallet_mapping_transactions_state_success_title = "成功";
-wallet_mapping_transactions_state_failed_title = "失败";
+wallet_mapping_transactions_state_processing_title = "映射中";
+wallet_mapping_transactions_state_success_title = "映射成功";
+wallet_mapping_transactions_state_failed_title = "映射失败";
+wallet_mapping_transactions_state_canceled_title = "映射取消";
+wallet_mapping_transactions_fees_title = "矿工费：";
 
 /************* WalletConnect *******************/
 wallet_wallet_connect_login_title = "网页ViolasPay钱包登录确认";
@@ -438,6 +442,11 @@ wallet_market_exchange_output_token_unselect = "请选择一个想要兑换的�
 wallet_market_exchange_output_token_unactived = "您想要兑换的稳定币尚未激活，是否立即激活并兑换";
 wallet_market_exchange_submit_exchange_successful = "兑换订单提交成功";
 wallet_market_exchange_submit_exchange_failed = "兑换订单提交失败";
+
+//映射
+wallet_mapping_submit_successful = "映射订单提交成功";
+wallet_mapping_submit_failed = "映射订单提交失败";
+wallet_mapping_output_token_unactived = "您想要映射的稳定币尚未激活，是否立即激活并映射";
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "安全提醒";
 wallet_alert_backup_warning_detail_title = "您的身份助记词未备份，请务必备份助记词\n助记词可用于恢复身份下钱包资产，防止忘记密码、应用删除、手机丢失等情况导致资产损失";
@@ -553,6 +562,7 @@ wallet_check_password_invalid_error = "密码需同时包含大小写字母、�
 wallet_check_password_empty_error = "密码为空";
 wallet_check_password_failed_error = "密码不正确";
 // 转账相关
+wallet_transfer_token_invalid_error = "请选择要转账的币";
 wallet_transfer_amount_invalid_error = "转账数量无效";
 wallet_transfer_amount_empty_error = "转账数量为空";
 wallet_transfer_amount_overload_error = "数量超过自己余额";

@@ -148,7 +148,7 @@ class HomeModel: NSObject {
                     return
                 }
                 // 更新Libra数量
-                self.getLibraBalance(tokenID: libraToken.first!.tokenID, address: libraToken.first!.tokenAddress, authKey: violasToken.first!.tokenAuthenticationKey, tokens: tokens)
+                self.getLibraBalance(tokenID: libraToken.first!.tokenID, address: libraToken.first!.tokenAddress, authKey: libraToken.first!.tokenAuthenticationKey, tokens: tokens)
             })
             quene.async(group: group, qos: .default, flags: [], execute: {
                 guard btcToken.isEmpty == false else {

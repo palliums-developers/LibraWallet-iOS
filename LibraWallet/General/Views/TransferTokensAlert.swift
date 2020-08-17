@@ -1,24 +1,28 @@
 //
-//  MappingTokenListAlert.swift
+//  TransferTokensAlert.swift
 //  LibraWallet
 //
-//  Created by wangyingdong on 2020/2/18.
+//  Created by wangyingdong on 2020/8/13.
 //  Copyright © 2020 palliums. All rights reserved.
 //
 
 import UIKit
 
-class MappingTokenListAlert: UIView {
+class TransferTokensAlert: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.addSubview(whiteBackgroundView)
         whiteBackgroundView.addSubview(searchBar)
         whiteBackgroundView.addSubview(tableView)
+        //        whiteBackgroundView.addSubview(pickerView)
+        //
+        //        whiteBackgroundView.addSubview(cancelButton)
+        
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    convenience init(data: [MarketSupportTokensDataModel], successClosure: @escaping successClosure) {
+    convenience init(data: [Token], successClosure: @escaping successClosure) {
         self.init(frame: CGRect.zero)
         self.actionClosure = successClosure
         self.dataModels = data
@@ -27,7 +31,7 @@ class MappingTokenListAlert: UIView {
                                                selector: #selector(keyBoardWillShow(_ :)),
                                                name: UIResponder.keyboardWillShowNotification,
                                                object: nil)
-
+        
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(keyBoardWillHide(_ :)),
                                                name: UIResponder.keyboardWillHideNotification,
@@ -54,7 +58,7 @@ class MappingTokenListAlert: UIView {
         tableView.snp.makeConstraints { (make) in
             make.top.equalTo(searchBar.snp.bottom).offset(10)
             make.left.right.bottom.equalTo(whiteBackgroundView)
-            make.bottom.equalTo(whiteBackgroundView).offset(-34)
+            make.bottom.equalTo(whiteBackgroundView)
         }
     }
     //MARK: - 懒加载对象
@@ -69,13 +73,13 @@ class MappingTokenListAlert: UIView {
     lazy var tap: UIGestureRecognizer = {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.tapRecognized(_:)))
         tapGesture.cancelsTouchesInView = false
-//        tapGesture.delegate = self
+        //        tapGesture.delegate = self
         return tapGesture
     }()
     lazy var searchBar: UISearchBar = {
         let bar = UISearchBar.init()
         bar.placeholder = localLanguage(keyString: "搜索Token")
-//        bar.backgroundColor = UIColor.red//UIColor.init(hex: "F8F8F8")
+        //        bar.backgroundColor = UIColor.red//UIColor.init(hex: "F8F8F8")
         bar.tintColor = DefaultGreenColor
         bar.backgroundImage = UIImage().imageWithColor(color: UIColor.init(hex: "F8F8F8"))
         bar.searchBarStyle = .minimal
@@ -91,32 +95,32 @@ class MappingTokenListAlert: UIView {
         tableView.estimatedSectionHeaderHeight = 0;
         tableView.contentInsetAdjustmentBehavior = UIScrollView.ContentInsetAdjustmentBehavior.never
         tableView.backgroundColor = UIColor.clear
-        tableView.register(TokenListCell.classForCoder(), forCellReuseIdentifier: "NormalCell")
+        tableView.register(TokensListCell.classForCoder(), forCellReuseIdentifier: "NormalCell")
         tableView.dataSource = self
         tableView.delegate = self
         return tableView
     }()
-    typealias successClosure = (MarketSupportTokensDataModel) -> Void
-    var actionClosure: successClosure?
-//    @objc func buttonClick(button: UIButton) {
-//        guard let model = dataModels?[pickerRow] else {
-//            self.hideAnimation(tag: 99)
-//            return
-//        }
-//        if let action = self.actionClosure {
-//            action(model)
-//        }
-//        self.hideAnimation(tag: 99)
-//    }
-    var dataModels: [MarketSupportTokensDataModel]?
-    var originModels: [MarketSupportTokensDataModel]?
     
+    typealias successClosure = (Token) -> Void
+    var actionClosure: successClosure?
+    //    @objc func buttonClick(button: UIButton) {
+    //        guard let model = dataModels?[pickerRow] else {
+    //            self.hideAnimation(tag: 99)
+    //            return
+    //        }
+    //        if let action = self.actionClosure {
+    //            action(model)
+    //        }
+    //        self.hideAnimation(tag: 99)
+    //    }
+    var dataModels: [Token]?
+    var originModels: [Token]?
     var pickerRow: Int?
     //MARK:键盘通知相关操作
     @objc func keyBoardWillShow(_ notification:Notification){
-
+        
         DispatchQueue.main.async {
-
+            
             let user_info = notification.userInfo
             let keyboardRect = (user_info?[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
             
@@ -131,6 +135,7 @@ class MappingTokenListAlert: UIView {
             })
         }
     }
+    
     @objc func keyBoardWillHide(_ notification:Notification){
         DispatchQueue.main.async {
             UIView.animate(withDuration: 0.3, animations: {
@@ -146,15 +151,16 @@ class MappingTokenListAlert: UIView {
     @objc internal func tapRecognized(_ gesture: UITapGestureRecognizer) {
         
         if gesture.state == .ended {
+            
             //Resigning currently responder textField.
             self.searchBar.resignFirstResponder()
         }
     }
 }
-extension MappingTokenListAlert: actionViewProtocol {
+extension TransferTokensAlert: actionViewProtocol {
     
 }
-extension MappingTokenListAlert: UITableViewDelegate {
+extension TransferTokensAlert: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 62
     }
@@ -166,11 +172,11 @@ extension MappingTokenListAlert: UITableViewDelegate {
         var indexPaths = [IndexPath]()
         if let selectRow = pickerRow {
             let tempIndexPath = IndexPath.init(row: selectRow, section: 0)
-            let cell = tableView.cellForRow(at: tempIndexPath) as! TokenListCell
+            let cell = tableView.cellForRow(at: tempIndexPath) as! TokensListCell
             cell.showSelectState = false
             indexPaths.append(tempIndexPath)
         }
-        let cell = tableView.cellForRow(at: indexPath) as! TokenListCell
+        let cell = tableView.cellForRow(at: indexPath) as! TokensListCell
         cell.showSelectState = true
         indexPaths.append(indexPath)
         pickerRow = indexPath.row
@@ -184,14 +190,13 @@ extension MappingTokenListAlert: UITableViewDelegate {
         }
     }
 }
-extension MappingTokenListAlert: UITableViewDataSource {
+extension TransferTokensAlert: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dataModels?.count ?? 0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        //        let identifier = "NormalCell"
         let identifier = "NormalCell"
-        if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? TokenListCell {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? TokensListCell {
             if let data = dataModels, data.isEmpty == false {
                 cell.model = data[indexPath.row]
                 cell.hideSpcaeLineState = (data.count - 1) == indexPath.row ? true:false
@@ -204,7 +209,7 @@ extension MappingTokenListAlert: UITableViewDataSource {
             cell.selectionStyle = .none
             return cell
         } else {
-            let cell = TokenListCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
+            let cell = TokensListCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
             if let data = dataModels, data.isEmpty == false {
                 cell.model = data[indexPath.row]
                 cell.hideSpcaeLineState = (data.count - 1) == indexPath.row ? true:false
@@ -219,11 +224,11 @@ extension MappingTokenListAlert: UITableViewDataSource {
         }
     }
 }
-extension MappingTokenListAlert: UISearchBarDelegate {
+extension TransferTokensAlert: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         print(searchText)
         let tempModel = self.dataModels?.filter({
-            $0.show_name?.lowercased().contains(searchText.lowercased()) == true
+            $0.tokenName.lowercased().contains(searchText.lowercased()) == true
         })
         if searchText.isEmpty == true {
             self.dataModels = self.originModels
@@ -233,7 +238,7 @@ extension MappingTokenListAlert: UISearchBarDelegate {
         self.tableView.reloadData()
     }
 }
-class TokenListCell: UITableViewCell {
+class TokensListCell: UITableViewCell {
     //    weak var delegate: AddAssetViewTableViewCellDelegate?
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -244,12 +249,14 @@ class TokenListCell: UITableViewCell {
         contentView.addSubview(selectIndicatorImageView)
         contentView.addSubview(spaceLabel)
         // 添加语言变换通知
+        //        NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
         print("TokenListCell销毁了")
+        //        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
     }
     //pragma MARK: 布局
     override func layoutSubviews() {
@@ -326,18 +333,23 @@ class TokenListCell: UITableViewCell {
             }
         }
     }
-    var model: MarketSupportTokensDataModel? {
+    var model: Token? {
         didSet {
-            tokenNameLabel.text = model?.show_name
-            if let iconName = model?.icon, iconName.isEmpty == false {
-                let url = URL(string: iconName)
-                transactionTypeImageView.kf.setImage(with: url, placeholder: UIImage.init(named: "wallet_icon_default"))
+            tokenNameLabel.text = model?.tokenName
+            if let iconName = model?.tokenIcon, iconName.isEmpty == false {
+                if iconName.hasPrefix("http") {
+                    let url = URL(string: iconName)
+                    transactionTypeImageView.kf.setImage(with: url, placeholder: UIImage.init(named: "wallet_icon_default"))
+                } else {
+                    transactionTypeImageView.image = UIImage.init(named: iconName)
+                }
+                
             }
             var unit = 1000000
-            if model?.chainType == 2 {
+            if model?.tokenType == .BTC {
                 unit = 100000000
             }
-            amountLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + getDecimalNumberAmount(amount: NSDecimalNumber.init(value: model?.amount ?? 0),
+            amountLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + getDecimalNumberAmount(amount: NSDecimalNumber.init(value: model?.tokenBalance ?? 0),
                                                                                                                   scale: 6,
                                                                                                                   unit: unit)
         }
@@ -351,8 +363,11 @@ class TokenListCell: UITableViewCell {
             }
         }
     }
+    /// 语言切换
+    @objc func setText() {
+    }
 }
-extension MappingTokenListAlert: actionViewAnimationProtocol {
+extension TransferTokensAlert: actionViewAnimationProtocol {
     func showAnimation() {
         DispatchQueue.main.asyncAfter(deadline: .now()+0.001) {
             UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: .curveEaseOut, animations: {

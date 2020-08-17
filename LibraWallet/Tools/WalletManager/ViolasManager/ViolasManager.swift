@@ -326,16 +326,16 @@ extension ViolasManager {
             throw error
         }
     }
-    public static func getViolasToLibraMappingTransactionHex(sendAddress: String, module: String, amountIn: Double, amountOut: Double, fee: Double, mnemonic: [String], sequenceNumber: Int, exchangeCenterAddress: String, libraReceiveAddress: String, feeModule: String, type: String) throws -> String {
+    public static func getViolasToLibraMappingTransactionHex(sendAddress: String, module: String, amountIn: UInt64, amountOut: UInt64, fee: Double, mnemonic: [String], sequenceNumber: Int, exchangeCenterAddress: String, libraReceiveAddress: String, feeModule: String, type: String) throws -> String {
         do {
             let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
             // 拼接交易
             let argument0 = ViolasTransactionArgument.init(code: .Address,
                                                            value: exchangeCenterAddress)
             let argument1 = ViolasTransactionArgument.init(code: .U64,
-                                                           value: "\(Int(amountIn * 1000000))")
+                                                           value: "\(amountIn)")
             // metadata
-            let data = "{\"flag\":\"violas\",\"type\":\"\(type)\",\"times\": 1000, \"to_address\":\"\(libraReceiveAddress)\",\"out_amount\":\"\(Int(amountOut * 1000000))\",\"state\":\"start\"}".data(using: .utf8)!
+            let data = "{\"flag\":\"violas\",\"type\":\"\(type)\",\"times\": 1000, \"to_address\":\"\(libraReceiveAddress)\",\"out_amount\":\"\(amountOut)\",\"state\":\"start\"}".data(using: .utf8)!
             let argument2 = ViolasTransactionArgument.init(code: .U8Vector,
                                                            value: data.toHexString())
             // metadata_signature

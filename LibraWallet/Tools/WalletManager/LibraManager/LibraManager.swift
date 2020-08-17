@@ -167,14 +167,14 @@ extension LibraManager {
 
 extension LibraManager {
     
-    public static func getLibraToViolasMappingTransactionHex(sendAddress: String, module: String, amountIn: Double, amountOut: Double, fee: Double, mnemonic: [String], sequenceNumber: Int, exchangeCenterAddress: String, violasReceiveAddress: String, feeModule: String, type: String) throws -> String {
+    public static func getLibraToViolasMappingTransactionHex(sendAddress: String, module: String, amountIn: UInt64, amountOut: UInt64, fee: Double, mnemonic: [String], sequenceNumber: Int, exchangeCenterAddress: String, violasReceiveAddress: String, feeModule: String, type: String) throws -> String {
         do {
             let wallet = try LibraManager.getWallet(mnemonic: mnemonic)
             // 拼接交易
             let argument0 = LibraTransactionArgument.init(code: .Address(exchangeCenterAddress))
-            let argument1 = LibraTransactionArgument.init(code: .U64("\(UInt64(amountIn * 1000000))"))
+            let argument1 = LibraTransactionArgument.init(code: .U64("\(amountIn)"))
             // metadata
-            let data = "{\"flag\":\"libra\",\"type\":\"\(type)\",\"times\": 1000, \"to_address\":\"00000000000000000000000000000000\(violasReceiveAddress)\",\"out_amount\":\"\(Int(amountOut * 1000000))\",\"state\":\"start\"}".data(using: .utf8)!
+            let data = "{\"flag\":\"libra\",\"type\":\"\(type)\",\"times\": 1000, \"to_address\":\"00000000000000000000000000000000\(violasReceiveAddress)\",\"out_amount\":\"\(amountOut)\",\"state\":\"start\"}".data(using: .utf8)!
             let argument2 = LibraTransactionArgument.init(code: .U8Vector(data))
             // metadata_signature
             let argument3 = LibraTransactionArgument.init(code: .U8Vector(Data()))

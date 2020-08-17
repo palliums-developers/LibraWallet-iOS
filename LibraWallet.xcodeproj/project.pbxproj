@@ -19,11 +19,19 @@
 		361783672444684F003C6588 /* ViolasStructTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361783662444684F003C6588 /* ViolasStructTag.swift */; };
 		3617836B24449B53003C6588 /* ViolasTransactionModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3617836A24449B53003C6588 /* ViolasTransactionModule.swift */; };
 		3617837024449D85003C6588 /* LibraTransactionModulePayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3617836F24449D85003C6588 /* LibraTransactionModulePayload.swift */; };
+		3622F20324E3FFF400CFB754 /* TransferViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3622F20224E3FFF400CFB754 /* TransferViewController.swift */; };
+		3622F20524E4000500CFB754 /* TransferModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3622F20424E4000500CFB754 /* TransferModel.swift */; };
+		3622F20724E4003E00CFB754 /* TransferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3622F20624E4003E00CFB754 /* TransferView.swift */; };
+		3622F20A24E4007E00CFB754 /* TransferViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3622F20924E4007E00CFB754 /* TransferViewModel.swift */; };
+		3622F20C24E4DE8600CFB754 /* TransferTokensAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3622F20B24E4DE8600CFB754 /* TransferTokensAlert.swift */; };
+		3622F21224E539DB00CFB754 /* ReceiveViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3622F21124E539DB00CFB754 /* ReceiveViewController.swift */; };
+		3622F21424E539ED00CFB754 /* ReceiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3622F21324E539ED00CFB754 /* ReceiveView.swift */; };
+		3622F21724E6628E00CFB754 /* TokenMappingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3622F21624E6628E00CFB754 /* TokenMappingViewModel.swift */; };
+		3622F21924E66A6400CFB754 /* MappingTokensAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3622F21824E66A6400CFB754 /* MappingTokensAlert.swift */; };
 		3623AB5D23ED70CF004A01BF /* TokenMappingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB5C23ED70CF004A01BF /* TokenMappingView.swift */; };
 		3623AB5F23ED70E2004A01BF /* TokenMappingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB5E23ED70E2004A01BF /* TokenMappingModel.swift */; };
 		3623AB6123ED70F5004A01BF /* TokenMappingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB6023ED70F5004A01BF /* TokenMappingViewController.swift */; };
 		3623AB6323F15F5F004A01BF /* TokenMappingHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB6223F15F5F004A01BF /* TokenMappingHeaderView.swift */; };
-		3623AB6523F15F79004A01BF /* TokenMappingBottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB6423F15F79004A01BF /* TokenMappingBottomView.swift */; };
 		3623AB7623FBFC79004A01BF /* MappingTokenListAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB7523FBFC79004A01BF /* MappingTokenListAlert.swift */; };
 		3623AB7C23FC0C93004A01BF /* MappingTransactionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB7B23FC0C93004A01BF /* MappingTransactionsViewController.swift */; };
 		3623AB7E23FC0CA4004A01BF /* MappingTransactionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB7D23FC0CA4004A01BF /* MappingTransactionsModel.swift */; };
@@ -167,7 +175,7 @@
 		9D7124342329EA1C009DED52 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9D7124362329EA1C009DED52 /* Localizable.strings */; };
 		9D712441232F621B009DED52 /* LibraWalletTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D712440232F621B009DED52 /* LibraWalletTool.swift */; };
 		9D712443232F7662009DED52 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D712442232F7662009DED52 /* Assets.xcassets */; };
-		9D712445232F7C36009DED52 /* TransferModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D712444232F7C36009DED52 /* TransferModel.swift */; };
+		9D712445232F7C36009DED52 /* LibraTransferModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D712444232F7C36009DED52 /* LibraTransferModel.swift */; };
 		9D9B49AA235DA76100354EF0 /* AddressManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9B499C235DA76100354EF0 /* AddressManagerViewController.swift */; };
 		9D9B49AB235DA76100354EF0 /* AddressManagerTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9B499D235DA76100354EF0 /* AddressManagerTableViewManager.swift */; };
 		9D9B49AC235DA76100354EF0 /* AddressManagerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9B499F235DA76100354EF0 /* AddressManagerModel.swift */; };
@@ -268,7 +276,7 @@
 		9DC4880B2320E6C1005FF254 /* LibraHDPrivateKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4880A2320E6C1005FF254 /* LibraHDPrivateKey.swift */; };
 		9DC4880D2320EDF8005FF254 /* LibraUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4880C2320EDF8005FF254 /* LibraUtils.swift */; };
 		9DC4884923211180005FF254 /* WalletManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4884823211180005FF254 /* WalletManager.swift */; };
-		9DC4884B232111E9005FF254 /* TransferViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4884A232111E9005FF254 /* TransferViewController.swift */; };
+		9DC4884B232111E9005FF254 /* LibraTransferViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4884A232111E9005FF254 /* LibraTransferViewController.swift */; };
 		9DC4884F2321F051005FF254 /* LibraWordList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4884E2321F051005FF254 /* LibraWordList.swift */; };
 		9DC4885523220D6D005FF254 /* WalletReceiveViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4885423220D6D005FF254 /* WalletReceiveViewController.swift */; };
 		9DC4885A23220DA6005FF254 /* WalletReceiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4885923220DA6005FF254 /* WalletReceiveView.swift */; };
@@ -281,7 +289,7 @@
 		9DC4886D232222CF005FF254 /* LBXScanViewStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC48866232222CE005FF254 /* LBXScanViewStyle.swift */; };
 		9DC4886E232222CF005FF254 /* LBXPermissions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC48867232222CE005FF254 /* LBXPermissions.swift */; };
 		9DC4886F232222CF005FF254 /* LBXScanWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC48868232222CE005FF254 /* LBXScanWrapper.swift */; };
-		9DC488752322249E005FF254 /* TransferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488742322249E005FF254 /* TransferView.swift */; };
+		9DC488752322249E005FF254 /* LibraTransferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488742322249E005FF254 /* LibraTransferView.swift */; };
 		9DC4887C23223204005FF254 /* ScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4887B23223204005FF254 /* ScanViewController.swift */; };
 		9DC4887E2322320B005FF254 /* ScanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4887D2322320B005FF254 /* ScanView.swift */; };
 		9DC8778D237958EB006378C3 /* LibraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC8778C237958EB006378C3 /* LibraManager.swift */; };
@@ -336,11 +344,19 @@
 		361783662444684F003C6588 /* ViolasStructTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasStructTag.swift; sourceTree = "<group>"; };
 		3617836A24449B53003C6588 /* ViolasTransactionModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViolasTransactionModule.swift; sourceTree = "<group>"; };
 		3617836F24449D85003C6588 /* LibraTransactionModulePayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraTransactionModulePayload.swift; sourceTree = "<group>"; };
+		3622F20224E3FFF400CFB754 /* TransferViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferViewController.swift; sourceTree = "<group>"; };
+		3622F20424E4000500CFB754 /* TransferModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferModel.swift; sourceTree = "<group>"; };
+		3622F20624E4003E00CFB754 /* TransferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferView.swift; sourceTree = "<group>"; };
+		3622F20924E4007E00CFB754 /* TransferViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferViewModel.swift; sourceTree = "<group>"; };
+		3622F20B24E4DE8600CFB754 /* TransferTokensAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferTokensAlert.swift; sourceTree = "<group>"; };
+		3622F21124E539DB00CFB754 /* ReceiveViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiveViewController.swift; sourceTree = "<group>"; };
+		3622F21324E539ED00CFB754 /* ReceiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiveView.swift; sourceTree = "<group>"; };
+		3622F21624E6628E00CFB754 /* TokenMappingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMappingViewModel.swift; sourceTree = "<group>"; };
+		3622F21824E66A6400CFB754 /* MappingTokensAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MappingTokensAlert.swift; sourceTree = "<group>"; };
 		3623AB5C23ED70CF004A01BF /* TokenMappingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMappingView.swift; sourceTree = "<group>"; };
 		3623AB5E23ED70E2004A01BF /* TokenMappingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMappingModel.swift; sourceTree = "<group>"; };
 		3623AB6023ED70F5004A01BF /* TokenMappingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMappingViewController.swift; sourceTree = "<group>"; };
 		3623AB6223F15F5F004A01BF /* TokenMappingHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMappingHeaderView.swift; sourceTree = "<group>"; };
-		3623AB6423F15F79004A01BF /* TokenMappingBottomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMappingBottomView.swift; sourceTree = "<group>"; };
 		3623AB7523FBFC79004A01BF /* MappingTokenListAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MappingTokenListAlert.swift; sourceTree = "<group>"; };
 		3623AB7B23FC0C93004A01BF /* MappingTransactionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MappingTransactionsViewController.swift; sourceTree = "<group>"; };
 		3623AB7D23FC0CA4004A01BF /* MappingTransactionsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MappingTransactionsModel.swift; sourceTree = "<group>"; };
@@ -490,7 +506,7 @@
 		9D7124372329EA3E009DED52 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		9D712440232F621B009DED52 /* LibraWalletTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraWalletTool.swift; sourceTree = "<group>"; };
 		9D712442232F7662009DED52 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		9D712444232F7C36009DED52 /* TransferModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferModel.swift; sourceTree = "<group>"; };
+		9D712444232F7C36009DED52 /* LibraTransferModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraTransferModel.swift; sourceTree = "<group>"; };
 		9D9B499C235DA76100354EF0 /* AddressManagerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddressManagerViewController.swift; sourceTree = "<group>"; };
 		9D9B499D235DA76100354EF0 /* AddressManagerTableViewManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddressManagerTableViewManager.swift; sourceTree = "<group>"; };
 		9D9B499F235DA76100354EF0 /* AddressManagerModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddressManagerModel.swift; sourceTree = "<group>"; };
@@ -598,7 +614,7 @@
 		9DC4880A2320E6C1005FF254 /* LibraHDPrivateKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraHDPrivateKey.swift; sourceTree = "<group>"; };
 		9DC4880C2320EDF8005FF254 /* LibraUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraUtils.swift; sourceTree = "<group>"; };
 		9DC4884823211180005FF254 /* WalletManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletManager.swift; sourceTree = "<group>"; };
-		9DC4884A232111E9005FF254 /* TransferViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferViewController.swift; sourceTree = "<group>"; };
+		9DC4884A232111E9005FF254 /* LibraTransferViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraTransferViewController.swift; sourceTree = "<group>"; };
 		9DC4884E2321F051005FF254 /* LibraWordList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraWordList.swift; sourceTree = "<group>"; };
 		9DC4885423220D6D005FF254 /* WalletReceiveViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletReceiveViewController.swift; sourceTree = "<group>"; };
 		9DC4885923220DA6005FF254 /* WalletReceiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletReceiveView.swift; sourceTree = "<group>"; };
@@ -611,7 +627,7 @@
 		9DC48866232222CE005FF254 /* LBXScanViewStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LBXScanViewStyle.swift; sourceTree = "<group>"; };
 		9DC48867232222CE005FF254 /* LBXPermissions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LBXPermissions.swift; sourceTree = "<group>"; };
 		9DC48868232222CE005FF254 /* LBXScanWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LBXScanWrapper.swift; sourceTree = "<group>"; };
-		9DC488742322249E005FF254 /* TransferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferView.swift; sourceTree = "<group>"; };
+		9DC488742322249E005FF254 /* LibraTransferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraTransferView.swift; sourceTree = "<group>"; };
 		9DC4887B23223204005FF254 /* ScanViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanViewController.swift; sourceTree = "<group>"; };
 		9DC4887D2322320B005FF254 /* ScanView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanView.swift; sourceTree = "<group>"; };
 		9DC8778C237958EB006378C3 /* LibraManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraManager.swift; sourceTree = "<group>"; };
@@ -770,9 +786,86 @@
 			path = LibraMultiHDWallet;
 			sourceTree = "<group>";
 		};
+		3622F1FE24E3FBB300CFB754 /* Transfer */ = {
+			isa = PBXGroup;
+			children = (
+				3622F20824E4005200CFB754 /* ViewModel */,
+				3622F1FF24E3FBC300CFB754 /* Controller */,
+				3622F20024E3FBCA00CFB754 /* Model */,
+				3622F20124E3FBD200CFB754 /* View */,
+			);
+			path = Transfer;
+			sourceTree = "<group>";
+		};
+		3622F1FF24E3FBC300CFB754 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				3622F20224E3FFF400CFB754 /* TransferViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		3622F20024E3FBCA00CFB754 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				3622F20424E4000500CFB754 /* TransferModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		3622F20124E3FBD200CFB754 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				3622F20624E4003E00CFB754 /* TransferView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		3622F20824E4005200CFB754 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				3622F20924E4007E00CFB754 /* TransferViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		3622F20E24E539B100CFB754 /* Receive */ = {
+			isa = PBXGroup;
+			children = (
+				3622F20F24E539BA00CFB754 /* Controller */,
+				3622F21024E539C400CFB754 /* View */,
+			);
+			path = Receive;
+			sourceTree = "<group>";
+		};
+		3622F20F24E539BA00CFB754 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				3622F21124E539DB00CFB754 /* ReceiveViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		3622F21024E539C400CFB754 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				3622F21324E539ED00CFB754 /* ReceiveView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		3622F21524E6627300CFB754 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				3622F21624E6628E00CFB754 /* TokenMappingViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		3623AB5823ED7062004A01BF /* TokenMapping */ = {
 			isa = PBXGroup;
 			children = (
+				3622F21524E6627300CFB754 /* ViewModel */,
 				3623AB5B23ED70AA004A01BF /* Controller */,
 				3623AB5A23ED70A4004A01BF /* Model */,
 				3623AB5923ED709E004A01BF /* View */,
@@ -785,7 +878,6 @@
 			children = (
 				3623AB5C23ED70CF004A01BF /* TokenMappingView.swift */,
 				3623AB6223F15F5F004A01BF /* TokenMappingHeaderView.swift */,
-				3623AB6423F15F79004A01BF /* TokenMappingBottomView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1831,6 +1923,8 @@
 				9D628A85239A495500E222FB /* PrivateAlertView.swift */,
 				9D628A9B239E48A200E222FB /* TokenPickerViewAlert.swift */,
 				3623AB7523FBFC79004A01BF /* MappingTokenListAlert.swift */,
+				3622F20B24E4DE8600CFB754 /* TransferTokensAlert.swift */,
+				3622F21824E66A6400CFB754 /* MappingTokensAlert.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2658,10 +2752,12 @@
 		9DC06A6F2374059100BCE1FE /* HomeSection */ = {
 			isa = PBXGroup;
 			children = (
+				3622F20E24E539B100CFB754 /* Receive */,
+				3622F1FE24E3FBB300CFB754 /* Transfer */,
 				9DC902372328E78A0097FD85 /* Home */,
 				3650F0A1248763830086F578 /* WalletDetail */,
 				3650F0B2248A42470086F578 /* Transaction */,
-				9DC4885623220D73005FF254 /* Receive */,
+				9DC4885623220D73005FF254 /* WalletReceive */,
 				9DC488702322246E005FF254 /* LibraTransfer */,
 				9D68D2FA237D25CA005B7593 /* ViolasTransfer */,
 				9D68D2EC237CF019005B7593 /* BTCTransfer */,
@@ -2689,13 +2785,13 @@
 			path = LibraKit;
 			sourceTree = "<group>";
 		};
-		9DC4885623220D73005FF254 /* Receive */ = {
+		9DC4885623220D73005FF254 /* WalletReceive */ = {
 			isa = PBXGroup;
 			children = (
 				9DC4885823220D89005FF254 /* Controller */,
 				9DC4885723220D84005FF254 /* View */,
 			);
-			path = Receive;
+			path = WalletReceive;
 			sourceTree = "<group>";
 		};
 		9DC4885723220D84005FF254 /* View */ = {
@@ -2765,7 +2861,7 @@
 		9DC4887123222482005FF254 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				9DC488742322249E005FF254 /* TransferView.swift */,
+				9DC488742322249E005FF254 /* LibraTransferView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -2773,7 +2869,7 @@
 		9DC4887223222487005FF254 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				9D712444232F7C36009DED52 /* TransferModel.swift */,
+				9D712444232F7C36009DED52 /* LibraTransferModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -2781,7 +2877,7 @@
 		9DC488732322248C005FF254 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				9DC4884A232111E9005FF254 /* TransferViewController.swift */,
+				9DC4884A232111E9005FF254 /* LibraTransferViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -3282,6 +3378,7 @@
 				9D626480235719A400A79B3D /* WelcomeViewController.swift in Sources */,
 				3650F0AE2488908E0086F578 /* WalletMainViewFooterView.swift in Sources */,
 				9D68D2FF237D25FD005B7593 /* ViolasTransferView.swift in Sources */,
+				3622F21224E539DB00CFB754 /* ReceiveViewController.swift in Sources */,
 				9DC06A2523715ADB00BCE1FE /* BackupWarningAlert.swift in Sources */,
 				9D9B49BF235EE03C00354EF0 /* EmptyDataPlaceholderView.swift in Sources */,
 				36F826FF24BDA1DF0007ACC3 /* AssetsPoolTransactionsTableViewManager.swift in Sources */,
@@ -3301,7 +3398,6 @@
 				9D9B4A4A2362F4DC00354EF0 /* MineHeaderView.swift in Sources */,
 				36EBF016245055D8007FD4C5 /* ActiveAccountViewController.swift in Sources */,
 				9DFFA87F23683C3400EA74F9 /* WalletTransactionsModel.swift in Sources */,
-				3623AB6523F15F79004A01BF /* TokenMappingBottomView.swift in Sources */,
 				9D68D305237D49E5005B7593 /* LibraTransactionScriptPayload.swift in Sources */,
 				3650F0A824888FC40086F578 /* WalletMainModel.swift in Sources */,
 				9DC4885A23220DA6005FF254 /* WalletReceiveView.swift in Sources */,
@@ -3320,6 +3416,7 @@
 				36828CCC24B736240085A165 /* MarketMineView.swift in Sources */,
 				36F826FC24BD9FD90007ACC3 /* ExchangeTransactionsTableViewManager.swift in Sources */,
 				3682E5C824AC36FB007CA2CA /* AssetsPoolViewController.swift in Sources */,
+				3622F20324E3FFF400CFB754 /* TransferViewController.swift in Sources */,
 				9DC06A3F2372A9B100BCE1FE /* MarketViewController.swift in Sources */,
 				3646E4FD24D3EFEE00B8C20B /* AssetsPoolTransactionDetailHeaderView.swift in Sources */,
 				3646E50F24DBF5C600B8C20B /* ScanSwapModel.swift in Sources */,
@@ -3359,9 +3456,11 @@
 				9D9B49F12360388200354EF0 /* LanguageTabViewManager.swift in Sources */,
 				36178322243F1455003C6588 /* LibraMultiHDWallet.swift in Sources */,
 				9DB515B623A32C3A0069A909 /* ViolasHDWallet.swift in Sources */,
+				3622F21424E539ED00CFB754 /* ReceiveView.swift in Sources */,
 				9DC902472328FDB90097FD85 /* DataBaseManager.swift in Sources */,
 				9D5B4E70236BCBDB00F4D99C /* AddAssetModel.swift in Sources */,
 				9D5B4E5E236976D500F4D99C /* HomeTableViewCell.swift in Sources */,
+				3622F21924E66A6400CFB754 /* MappingTokensAlert.swift in Sources */,
 				3617837024449D85003C6588 /* LibraTransactionModulePayload.swift in Sources */,
 				36828CD324B736860085A165 /* MarketMineTableViewManager.swift in Sources */,
 				3682E5D924AC9DC0007CA2CA /* ScanPublishView.swift in Sources */,
@@ -3376,6 +3475,7 @@
 				9DB515AE23A32B7C0069A909 /* ViolasNetwork.swift in Sources */,
 				9D9B4A06236048A000354EF0 /* AboutUsViewController.swift in Sources */,
 				9DC4887E2322320B005FF254 /* ScanView.swift in Sources */,
+				3622F20C24E4DE8600CFB754 /* TransferTokensAlert.swift in Sources */,
 				36828CDE24B74C270085A165 /* ExchangeView.swift in Sources */,
 				36178363244465EB003C6588 /* ViolasMultiPublicKey.swift in Sources */,
 				9D5B4E78236BCE1700F4D99C /* AddAssetViewTableViewCell.swift in Sources */,
@@ -3397,7 +3497,9 @@
 				36F8270C24BEAA7E0007ACC3 /* DropperExtensions.swift in Sources */,
 				9D9B49B1235DA76100354EF0 /* AddAddressView.swift in Sources */,
 				9DC06A2D2371786B00BCE1FE /* CheckBackupViewController.swift in Sources */,
+				3622F20524E4000500CFB754 /* TransferModel.swift in Sources */,
 				36F42EB1243C80DE00DBBF8F /* LibraMultiPrivateKey.swift in Sources */,
+				3622F21724E6628E00CFB754 /* TokenMappingViewModel.swift in Sources */,
 				9DA8E2A22317ABC400E28D07 /* AppDelegate.swift in Sources */,
 				9D9B49C9235FFA8E00354EF0 /* MineModel.swift in Sources */,
 				9DC4886B232222CF005FF254 /* LBXScanViewController.swift in Sources */,
@@ -3405,6 +3507,7 @@
 				9DB515C123A32F3E0069A909 /* ViolasTransactionWriteSet.swift in Sources */,
 				9DC4886F232222CF005FF254 /* LBXScanWrapper.swift in Sources */,
 				9DB515B223A32BC50069A909 /* ViolasHDPrivateKey.swift in Sources */,
+				3622F20A24E4007E00CFB754 /* TransferViewModel.swift in Sources */,
 				3646E50424D7C0FD00B8C20B /* AssetsPoolViewModel.swift in Sources */,
 				361783652444683B003C6588 /* ViolasTypeTag.swift in Sources */,
 				9DB515BD23A32E8C0069A909 /* ViolasTransactionArgument.swift in Sources */,
@@ -3505,9 +3608,10 @@
 				9D9B49F32360388C00354EF0 /* LanguageView.swift in Sources */,
 				9D08AD372330BA75004687E8 /* NetworkManager.swift in Sources */,
 				36F8270924BEAA7E0007ACC3 /* DropperCell.swift in Sources */,
-				9DC4884B232111E9005FF254 /* TransferViewController.swift in Sources */,
+				9DC4884B232111E9005FF254 /* LibraTransferViewController.swift in Sources */,
 				3682E5D124AC81DC007CA2CA /* AssetsPoolTableViewCell.swift in Sources */,
 				36836D3924B3059B0031AC6E /* ExchangeTransactionDetailHeaderView.swift in Sources */,
+				3622F20724E4003E00CFB754 /* TransferView.swift in Sources */,
 				9D628A8D239A4A2B00E222FB /* PrivateLegalView.swift in Sources */,
 				9D628A9C239E48A200E222FB /* TokenPickerViewAlert.swift in Sources */,
 				9D5B4E7A236BD22600F4D99C /* AddAssetTableViewHeader.swift in Sources */,
@@ -3535,8 +3639,8 @@
 				9DC487FF2320AFB8005FF254 /* LibraError.swift in Sources */,
 				36B466AE2476568E00CFF438 /* ScanSendRawTransactionView.swift in Sources */,
 				9D68D303237D261B005B7593 /* ViolasTransferViewController.swift in Sources */,
-				9DC488752322249E005FF254 /* TransferView.swift in Sources */,
-				9D712445232F7C36009DED52 /* TransferModel.swift in Sources */,
+				9DC488752322249E005FF254 /* LibraTransferView.swift in Sources */,
+				9D712445232F7C36009DED52 /* LibraTransferModel.swift in Sources */,
 				9DC4887C23223204005FF254 /* ScanViewController.swift in Sources */,
 				9D9B49D32360268E00354EF0 /* BaseTabBarViewController.swift in Sources */,
 				36828CE024B74C380085A165 /* ExchangeModel.swift in Sources */,

@@ -57,7 +57,7 @@ class MappingTransactionsViewController: BaseViewController {
         transactionRequest(refresh: true)
     }
     override func hasContent() -> Bool {
-       if let tempModels = self.tableViewManager.models, tempModels.isEmpty == false {
+       if let tempModels = self.tableViewManager.dataModels, tempModels.isEmpty == false {
             return true
         } else {
             return false
@@ -90,8 +90,6 @@ class MappingTransactionsViewController: BaseViewController {
     var observer: NSKeyValueObservation?
     /// 数据偏移量，每次偏移10个
     var dataOffset: Int = 0
-    /// 查询交易记录钱包
-    var wallet: Token?
 }
 //MARK: - TableView Header和Footer刷新方法
 extension MappingTransactionsViewController {
@@ -106,18 +104,8 @@ extension MappingTransactionsViewController {
     }
     func transactionRequest(refresh: Bool) {
         let requestState = refresh == true ? 0:1
-        var requestType = ""
-        switch wallet?.tokenType {
-        case .Violas:
-            requestType = "0"
-        case .Libra:
-            requestType = "1"
-        case .BTC:
-            requestType = "2"
-        default:
-            requestType = ""
-        }
-        dataModel.getMappingTransactions(walletAddress: wallet?.tokenAddress ?? "", page: dataOffset, pageSize: 10, requestType: requestType, requestStatus: requestState)
+        let address = "\(WalletManager.shared.violasAddress ?? ""),\(WalletManager.shared.libraAddress ?? ""),\(WalletManager.shared.btcAddress ?? "")"
+        dataModel.getMappingTransactions(walletAddress: address, page: dataOffset, pageSize: 10, requestStatus: requestState)
     }
 }
 //MARK: - 网络请求数据处理中心
@@ -161,29 +149,26 @@ extension MappingTransactionsViewController {
                 guard let tempData = dataDic.value(forKey: "data") as? [MappingTransactionsMainDataModel] else {
                     return
                 }
-                self?.tableViewManager.models = tempData
+                self?.tableViewManager.dataModels = tempData
                 self?.detailView.tableView.reloadData()
             } else if type == "MappingTransactionsMore" {
                 guard let tempData = dataDic.value(forKey: "data") as? [MappingTransactionsMainDataModel] else {
                     return
                 }
-                if let oldData = self?.tableViewManager.models, oldData.isEmpty == false {
-                    let tempArray = NSMutableArray.init(array: oldData)
+                if let oldData = self?.tableViewManager.dataModels, oldData.isEmpty == false {
+                    var tempArray = oldData
                     var insertIndexPath = [IndexPath]()
-
                     for index in 0..<tempData.count {
-                        let indexPath = IndexPath.init(row: 0, section: oldData.count + index)
+                        let indexPath = IndexPath.init(row: oldData.count + index, section: 0)
                         insertIndexPath.append(indexPath)
                     }
-                    tempArray.addObjects(from: tempData)
-                    self?.tableViewManager.models = tempArray as? [MappingTransactionsMainDataModel]
+                    tempArray += tempData
+                    self?.tableViewManager.dataModels = tempArray
                     self?.detailView.tableView.beginUpdates()
-                    for index in 0..<tempData.count {
-                        self?.detailView.tableView.insertSections(IndexSet.init(integer: oldData.count + index), with: UITableView.RowAnimation.bottom)
-                    }
+                    self?.detailView.tableView.insertRows(at: insertIndexPath, with: UITableView.RowAnimation.bottom)
                     self?.detailView.tableView.endUpdates()
                 } else {
-                    self?.tableViewManager.models = tempData
+                    self?.tableViewManager.dataModels = tempData
                     self?.detailView.tableView.reloadData()
                 }
                 self?.detailView.tableView.mj_footer?.endRefreshing()
