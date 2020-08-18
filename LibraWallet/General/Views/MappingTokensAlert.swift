@@ -166,9 +166,10 @@ extension MappingTokensAlert: UITableViewDelegate {
         var indexPaths = [IndexPath]()
         if let selectRow = pickerRow {
             let tempIndexPath = IndexPath.init(row: selectRow, section: 0)
-            let cell = tableView.cellForRow(at: tempIndexPath) as! TokensCell
-            cell.showSelectState = false
-            indexPaths.append(tempIndexPath)
+            if let oldCell = tableView.cellForRow(at: tempIndexPath) as? TokensCell {
+                oldCell.showSelectState = false
+                indexPaths.append(tempIndexPath)
+            }
         }
         let cell = tableView.cellForRow(at: indexPath) as! TokensCell
         cell.showSelectState = true

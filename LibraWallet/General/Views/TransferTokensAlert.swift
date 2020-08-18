@@ -172,9 +172,10 @@ extension TransferTokensAlert: UITableViewDelegate {
         var indexPaths = [IndexPath]()
         if let selectRow = pickerRow {
             let tempIndexPath = IndexPath.init(row: selectRow, section: 0)
-            let cell = tableView.cellForRow(at: tempIndexPath) as! TokensListCell
-            cell.showSelectState = false
-            indexPaths.append(tempIndexPath)
+            if let oldCell = tableView.cellForRow(at: tempIndexPath) as? TokensListCell {
+                oldCell.showSelectState = false
+                indexPaths.append(tempIndexPath)
+            }
         }
         let cell = tableView.cellForRow(at: indexPath) as! TokensListCell
         cell.showSelectState = true
