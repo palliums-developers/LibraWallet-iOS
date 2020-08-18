@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ReceiveViewController: UIViewController {
+class ReceiveViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.init(hex: "F7F7F9")
