@@ -12,7 +12,7 @@ import BitcoinKit
 class TransferModel: NSObject {
     @objc dynamic var dataDic: NSMutableDictionary = [:]
     private var requests: [Cancellable] = []
-    private var sequenceNumber: Int?
+    private var sequenceNumber: UInt64?
     private var utxos: [TrezorBTCUTXOMainModel]?
     deinit {
         requests.forEach { cancellable in
@@ -24,7 +24,7 @@ class TransferModel: NSObject {
 }
 //MARK: - Libra
 extension TransferModel {
-    func sendLibraTransaction(sendAddress: String, receiveAddress: String, amount: Double, fee: Double, mnemonic: [String], module: String) {
+    func sendLibraTransaction(sendAddress: String, receiveAddress: String, amount: UInt64, fee: UInt64, mnemonic: [String], module: String) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
         queue.async {
@@ -39,7 +39,7 @@ extension TransferModel {
                                                                          amount: amount,
                                                                          fee: fee,
                                                                          mnemonic: mnemonic,
-                                                                         sequenceNumber: Int(self.sequenceNumber!),
+                                                                         sequenceNumber: self.sequenceNumber ?? 0,
                                                                          module: module)
                 self.makeLibraTransaction(signature: signature)
             } catch {
@@ -127,7 +127,7 @@ extension TransferModel {
 }
 //MARK: - Violas
 extension TransferModel {
-    func sendViolasTransaction(sendAddress: String, receiveAddress: String, amount: Double, fee: Double, mnemonic: [String], module: String) {
+    func sendViolasTransaction(sendAddress: String, receiveAddress: String, amount: UInt64, fee: UInt64, mnemonic: [String], module: String) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
         queue.async {
@@ -142,7 +142,7 @@ extension TransferModel {
                                                                            amount: amount,
                                                                            fee: fee,
                                                                            mnemonic: mnemonic,
-                                                                           sequenceNumber: Int(self.sequenceNumber!),
+                                                                           sequenceNumber: self.sequenceNumber ?? 0,
                                                                            module: module)
                 self.makeViolasTransaction(signature: signature)
             } catch {
@@ -244,7 +244,7 @@ extension TransferModel {
 }
 //MARK: - BTC
 extension TransferModel {
-    func makeTransaction(wallet: HDWallet, amount: Double, fee: Double, toAddress: String) {
+    func makeTransaction(wallet: HDWallet, amount: UInt64, fee: UInt64, toAddress: String) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
         queue.async {
@@ -286,9 +286,7 @@ extension TransferModel {
         }
         self.requests.append(request)
     }
-    private func selectUTXOMakeSignature(utxos: [TrezorBTCUTXOMainModel], wallet: HDWallet, amount: Double, fee: Double, toAddress: String) {
-        let amountt: UInt64 = UInt64(amount * 100000000)
-        let feee: UInt64 = UInt64(fee * 100000000)
+    private func selectUTXOMakeSignature(utxos: [TrezorBTCUTXOMainModel], wallet: HDWallet, amount: UInt64, fee: UInt64, toAddress: String) {
         //        let change: UInt64     =  balance - amountt - feee
         
         // 个人公钥
@@ -299,14 +297,14 @@ extension TransferModel {
             UnspentTransaction.init(output: TransactionOutput.init(value: NSDecimalNumber.init(string: item.value ?? "0").uint64Value, lockingScript: lockingScript),
                                     outpoint: TransactionOutPoint.init(hash: Data(Data(hex: item.txid!)!.reversed()), index: item.vout!))
         }
-        let select = UnspentTransactionSelector.select(from: inputs, targetValue: amountt + feee, feePerByte: 30)
+        let select = UnspentTransactionSelector.select(from: inputs, targetValue: amount + fee, feePerByte: 30)
         
         let allUTXOAmount = select.reduce(0) {
             $0 + $1.output.value
         }
-        let change = allUTXOAmount - feee - amountt
+        let change = allUTXOAmount - fee - amount
         
-        let plan = TransactionPlan.init(unspentTransactions: select, amount: amountt, fee: feee, change: UInt64(change))
+        let plan = TransactionPlan.init(unspentTransactions: select, amount: amount, fee: fee, change: UInt64(change))
         
         let toAddressResult = try! BitcoinAddress(legacy: toAddress)
         

@@ -12,7 +12,7 @@ import Moya
 class ScanPublishModel: NSObject {
     private var requests: [Cancellable] = []
     @objc dynamic var dataDic: NSMutableDictionary = [:]
-    private var sequenceNumber: Int?
+    private var sequenceNumber: UInt64?
     func sendViolasTransaction(model: WCRawTransaction,  mnemonic: [String], module: String) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
@@ -24,6 +24,7 @@ class ScanPublishModel: NSObject {
             do {
                 let signature = try ViolasManager.getWalletConnectTransactionHex(mnemonic: mnemonic,
                                                                                  sequenceNumber: UInt64(self.sequenceNumber!),
+                                                                                 fee: 1,
                                                                                  model: model,
                                                                                  module: module)
                 self.makeViolasTransaction(signature: signature)
@@ -45,7 +46,7 @@ class ScanPublishModel: NSObject {
                 do {
                     let json = try response.map(BalanceViolasMainModel.self)
                     if json.result != nil {
-                        self?.sequenceNumber = Int(json.result?.sequence_number ?? 0)
+                        self?.sequenceNumber = json.result?.sequence_number ?? 0
                         semaphore.signal()
                     } else {
                         print("GetViolasSequenceNumber_状态异常")

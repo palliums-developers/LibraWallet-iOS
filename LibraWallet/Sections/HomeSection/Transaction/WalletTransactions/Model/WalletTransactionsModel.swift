@@ -131,7 +131,7 @@ struct LibraDataModel: Codable {
     /// 发送方
     var sender: String?
     /// 交易序列号
-    var sequence_number: Int?
+    var sequence_number: UInt64?
     /// 交易执行状态
     var status: String?
     /// 类型超多，不一一展示

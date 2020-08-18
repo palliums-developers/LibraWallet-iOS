@@ -12,7 +12,7 @@ import Moya
 class ScanSwapModel: NSObject {
     private var requests: [Cancellable] = []
     @objc dynamic var dataDic: NSMutableDictionary = [:]
-    private var sequenceNumber: Int?
+    private var sequenceNumber: UInt64?
     func sendViolasTransaction(model: WCRawTransaction,  mnemonic: [String], module: String) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
@@ -25,6 +25,7 @@ class ScanSwapModel: NSObject {
             do {
                 let signature = try ViolasManager.getWalletConnectTransactionHex(mnemonic: mnemonic,
                                                                                  sequenceNumber: UInt64(self.sequenceNumber!),
+                                                                                 fee: 1,
                                                                                  model: model,
                                                                                  module: module)
                 self.makeViolasTransaction(signature: signature)
@@ -45,7 +46,7 @@ class ScanSwapModel: NSObject {
                 do {
                     let json = try response.map(BalanceViolasMainModel.self)
                     if json.result != nil {
-                        self?.sequenceNumber = Int(json.result?.sequence_number ?? 0)
+                        self?.sequenceNumber = json.result?.sequence_number ?? 0
                         semaphore.signal()
                     } else {
                         print("GetViolasSequenceNumber_状态异常")
@@ -143,20 +144,20 @@ extension ScanSwapModel {
             semaphore.wait()
             do {
                 let (_, module1) = ViolasManager.readTypeTags(data: Data.init(hex: model.payload?.tyArgs?[0] ?? "") ?? Data(), typeTagCount: 1)
-
+                
                 let (_, module2) = ViolasManager.readTypeTags(data: Data.init(hex: model.payload?.tyArgs?[1] ?? "") ?? Data(), typeTagCount: 1)
-
+                
                 let signature = try ViolasManager.getMarketAddLiquidityTransactionHex(sendAddress: model.from ?? "",
-                                                                                      fee: 0,
                                                                                       mnemonic: mnemonic,
-                                                                                      amounta_desired: NSDecimalNumber.init(string: model.payload?.args?[0].value ?? "0").uint64Value,
-                                                                                      amountb_desired: NSDecimalNumber.init(string: model.payload?.args?[1].value ?? "0").uint64Value,
-                                                                                      amounta_min: NSDecimalNumber.init(string: model.payload?.args?[2].value ?? "0").uint64Value,
-                                                                                      amountb_min: NSDecimalNumber.init(string: model.payload?.args?[3].value ?? "0").uint64Value,
+                                                                                      feeModule: module1,
+                                                                                      fee: 0,
                                                                                       sequenceNumber: self.sequenceNumber ?? 0,
-                                                                                      moduleA: module1,
-                                                                                      moduleB: module2,
-                                                                                      feeModule: module1)
+                                                                                      desiredAmountA: NSDecimalNumber.init(string: model.payload?.args?[0].value ?? "0").uint64Value,
+                                                                                      desiredAmountB: NSDecimalNumber.init(string: model.payload?.args?[1].value ?? "0").uint64Value,
+                                                                                      minAmountA: NSDecimalNumber.init(string: model.payload?.args?[2].value ?? "0").uint64Value,
+                                                                                      minAmountB: NSDecimalNumber.init(string: model.payload?.args?[3].value ?? "0").uint64Value,
+                                                                                      inputModuleA: module1,
+                                                                                      inputModuleB: module2)
                 self.makeViolasTransaction(signature: signature)
             } catch {
                 print(error.localizedDescription)
@@ -179,19 +180,19 @@ extension ScanSwapModel {
             semaphore.wait()
             do {
                 let (_, module1) = ViolasManager.readTypeTags(data: Data.init(hex: model.payload?.tyArgs?[0] ?? "") ?? Data(), typeTagCount: 1)
-
+                
                 let (_, module2) = ViolasManager.readTypeTags(data: Data.init(hex: model.payload?.tyArgs?[1] ?? "") ?? Data(), typeTagCount: 1)
                 
                 let signature = try ViolasManager.getMarketRemoveLiquidityTransactionHex(sendAddress: model.from ?? "",
-                                                                                          fee: 0,
-                                                                                          mnemonic: mnemonic,
-                                                                                          liquidity: NSDecimalNumber.init(string: model.payload?.args?[0].value ?? "0").uint64Value,
-                                                                                          amounta_min: NSDecimalNumber.init(string: model.payload?.args?[1].value ?? "0").uint64Value,
-                                                                                          amountb_min: NSDecimalNumber.init(string: model.payload?.args?[2].value ?? "0").uint64Value,
-                                                                                          sequenceNumber: self.sequenceNumber ?? 0,
-                                                                                          moduleA: module1,
-                                                                                          moduleB: module2,
-                                                                                          feeModule: module1)
+                                                                                         mnemonic: mnemonic,
+                                                                                         feeModule: module1,
+                                                                                         fee: 0,
+                                                                                         sequenceNumber: self.sequenceNumber ?? 0,
+                                                                                         liquidity: NSDecimalNumber.init(string: model.payload?.args?[0].value ?? "0").uint64Value,
+                                                                                         minAmountA: NSDecimalNumber.init(string: model.payload?.args?[1].value ?? "0").uint64Value,
+                                                                                         minAmountB: NSDecimalNumber.init(string: model.payload?.args?[2].value ?? "0").uint64Value,
+                                                                                         inputModuleA: module1,
+                                                                                         inputModuleB: module2)
                 self.makeViolasTransaction(signature: signature)
             } catch {
                 print(error.localizedDescription)

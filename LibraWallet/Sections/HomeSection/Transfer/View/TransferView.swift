@@ -41,7 +41,7 @@ class TransferView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
-        print("LibraTransferView销毁了")
+        print("TransferView销毁了")
     }
     //MARK: - 布局
     override func layoutSubviews() {
@@ -118,7 +118,6 @@ class TransferView: UIView {
         let scrollView = UIScrollView.init()
         return scrollView
     }()
-    
     private lazy var walletWhiteBackgroundView: UIView = {
         let view = UIView.init()
         view.backgroundColor = UIColor.white
@@ -212,7 +211,6 @@ class TransferView: UIView {
         let button = UIButton.init(frame: CGRect.init(x: 0, y: 0, width: 28, height: 48))
         button.setImage(UIImage.init(named: "scan"), for: UIControl.State.normal)
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
-//        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -4, bottom: 0, right: 4)
         button.tag = 10
         return button
     }()
@@ -268,8 +266,6 @@ class TransferView: UIView {
         label.textColor = UIColor.init(hex: "3C3848")
         label.font = UIFont.boldSystemFont(ofSize: 10)
         label.textAlignment = NSTextAlignment.center
-//        let fee = Float(transferFeeMax - transferFeeMin) * Float(0.2) + Float(transferFeeMin)
-//        let fee8 = NSString.init(format: "%.8f", fee)
         label.text = "0.00"
         return label
     }()
@@ -330,13 +326,12 @@ class TransferView: UIView {
                                                        raiseOnUnderflow: false,
                                                        raiseOnDivideByZero: false)
         if model.tokenType == .Libra {
-            transferFeeSlider.value = 0.2
-            let region = NSDecimalNumber.init(value: 10).subtracting(NSDecimalNumber.init(value: 0))
+            let region = NSDecimalNumber.init(value: 0.0001).subtracting(NSDecimalNumber.init(value: 0))
             let fee = region.multiplying(by: NSDecimalNumber(value: slide.value)).adding(NSDecimalNumber.init(value: 0))
             let feeString = fee.multiplying(by: NSDecimalNumber.init(value: 1), withBehavior: numberConfig).stringValue
             transferFeeLabel.text = feeString + " " + model.tokenName
         } else if model.tokenType == .Violas {
-            let region = NSDecimalNumber.init(value: 10).subtracting(NSDecimalNumber.init(value: 0))
+            let region = NSDecimalNumber.init(value: 0.0001).subtracting(NSDecimalNumber.init(value: 0))
             let fee = region.multiplying(by: NSDecimalNumber(value: slide.value)).adding(NSDecimalNumber.init(value: 0))
             let feeString = fee.multiplying(by: NSDecimalNumber.init(value: 1), withBehavior: numberConfig).stringValue
             transferFeeLabel.text = feeString + " " + model.tokenName
@@ -364,11 +359,11 @@ class TransferView: UIView {
             
             if model.tokenType == .Libra {
                 transferFeeSlider.value = 0.2
-                let region = NSDecimalNumber.init(value: 10).subtracting(NSDecimalNumber.init(value: 0))
+                let region = NSDecimalNumber.init(value: 0.0001).subtracting(NSDecimalNumber.init(value: 0))
                 let fee = region.multiplying(by: 0.2).adding(NSDecimalNumber.init(value: 0))
                 transferFeeLabel.text = fee.stringValue + " " + model.tokenName
             } else if model.tokenType == .Violas {
-                let region = NSDecimalNumber.init(value: 10).subtracting(NSDecimalNumber.init(value: 0))
+                let region = NSDecimalNumber.init(value: 0.0001).subtracting(NSDecimalNumber.init(value: 0))
                 let fee = region.multiplying(by: 0.2).adding(NSDecimalNumber.init(value: 0))
                 transferFeeLabel.text = fee.stringValue + " " + model.tokenName
             } else if model.tokenType == .BTC {

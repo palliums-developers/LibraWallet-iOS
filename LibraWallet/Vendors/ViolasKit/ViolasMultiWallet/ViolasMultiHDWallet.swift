@@ -10,7 +10,7 @@ import UIKit
 import CryptoSwift
 struct ViolasSeedAndDepth {
     var seed:[UInt8]
-    var depth: Int
+    var depth: UInt64
     var sequence: Int
 }
 struct ViolasMultiHDWallet {

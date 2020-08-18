@@ -66,7 +66,7 @@ struct AssetsPoolTransactionsMainModel: Codable {
 class AssetsPoolModel: NSObject {
     private var requests: [Cancellable] = []
     @objc dynamic var dataDic: NSMutableDictionary = [:]
-    private var sequenceNumber: Int?
+    private var sequenceNumber: UInt64?
     private var marketTokens: [MarketSupportTokensDataModel]?
     private var accountTokens: [ViolasBalanceModel]?
     var tokenModel: AssetsPoolsInfoDataModel?
@@ -126,7 +126,7 @@ class AssetsPoolModel: NSObject {
     }
 }
 extension AssetsPoolModel {
-    func sendAddLiquidityViolasTransaction(sendAddress: String, amounta_desired: UInt64, amountb_desired: UInt64, amounta_min: UInt64, amountb_min: UInt64, fee: Double, mnemonic: [String], moduleA: String, moduleB: String, feeModule: String) {
+    func sendAddLiquidityViolasTransaction(sendAddress: String, amounta_desired: UInt64, amountb_desired: UInt64, amounta_min: UInt64, amountb_min: UInt64, fee: UInt64, mnemonic: [String], moduleA: String, moduleB: String, feeModule: String) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
         queue.async {
@@ -137,16 +137,16 @@ extension AssetsPoolModel {
             semaphore.wait()
             do {
                 let signature = try ViolasManager.getMarketAddLiquidityTransactionHex(sendAddress: sendAddress,
-                                                                                      fee: fee,
                                                                                       mnemonic: mnemonic,
-                                                                                      amounta_desired: amounta_desired,
-                                                                                      amountb_desired: amountb_desired,
-                                                                                      amounta_min: amounta_min,
-                                                                                      amountb_min: amountb_min,
+                                                                                      feeModule: feeModule,
+                                                                                      fee: fee,
                                                                                       sequenceNumber: self.sequenceNumber ?? 0,
-                                                                                      moduleA: moduleA,
-                                                                                      moduleB: moduleB,
-                                                                                      feeModule: feeModule)
+                                                                                      desiredAmountA: amounta_desired,
+                                                                                      desiredAmountB: amountb_desired,
+                                                                                      minAmountA: amounta_min,
+                                                                                      minAmountB: amountb_min,
+                                                                                      inputModuleA: moduleA,
+                                                                                      inputModuleB: moduleB)
                 self.makeViolasTransaction(signature: signature)
             } catch {
                 print(error.localizedDescription)
@@ -158,7 +158,7 @@ extension AssetsPoolModel {
             semaphore.signal()
         }
     }
-    func sendRemoveLiquidityViolasTransaction(sendAddress: String, liquidity: Double, amounta_min: Double, amountb_min: Double, fee: Double, mnemonic: [String], moduleA: String, moduleB: String, feeModule: String) {
+    func sendRemoveLiquidityViolasTransaction(sendAddress: String, liquidity: Double, amounta_min: Double, amountb_min: Double, fee: UInt64, mnemonic: [String], moduleA: String, moduleB: String, feeModule: String) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
         queue.async {
@@ -169,15 +169,15 @@ extension AssetsPoolModel {
             semaphore.wait()
             do {
                 let signature = try ViolasManager.getMarketRemoveLiquidityTransactionHex(sendAddress: sendAddress,
-                                                                                          fee: fee,
-                                                                                          mnemonic: mnemonic,
-                                                                                          liquidity: (NSDecimalNumber.init(value: liquidity).multiplying(by: NSDecimalNumber.init(value: 1000000))).uint64Value,
-                                                                                          amounta_min: (NSDecimalNumber.init(value: amounta_min).multiplying(by: NSDecimalNumber.init(value: 1000000))).uint64Value,
-                                                                                          amountb_min: (NSDecimalNumber.init(value: amountb_min).multiplying(by: NSDecimalNumber.init(value: 1000000))).uint64Value,
-                                                                                          sequenceNumber: self.sequenceNumber ?? 0,
-                                                                                          moduleA: moduleA,
-                                                                                          moduleB: moduleB,
-                                                                                          feeModule: feeModule)
+                                                                                         mnemonic: mnemonic,
+                                                                                         feeModule: feeModule,
+                                                                                         fee: fee,
+                                                                                         sequenceNumber: self.sequenceNumber ?? 0,
+                                                                                         liquidity: (NSDecimalNumber.init(value: liquidity).multiplying(by: NSDecimalNumber.init(value: 1000000))).uint64Value,
+                                                                                         minAmountA: (NSDecimalNumber.init(value: amounta_min).multiplying(by: NSDecimalNumber.init(value: 1000000))).uint64Value,
+                                                                                         minAmountB: (NSDecimalNumber.init(value: amountb_min).multiplying(by: NSDecimalNumber.init(value: 1000000))).uint64Value,
+                                                                                         inputModuleA: moduleA,
+                                                                                         inputModuleB: moduleB)
                 self.makeViolasTransaction(signature: signature)
             } catch {
                 print(error.localizedDescription)

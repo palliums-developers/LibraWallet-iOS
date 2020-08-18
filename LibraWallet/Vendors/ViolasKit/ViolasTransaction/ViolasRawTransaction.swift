@@ -12,19 +12,19 @@ struct ViolasRawTransaction {
     
     fileprivate let senderAddress: String
     
-    fileprivate let sequenceNumber: Int
+    fileprivate let sequenceNumber: UInt64
     
-    fileprivate let maxGasAmount: Int64
+    fileprivate let maxGasAmount: UInt64
     
-    fileprivate let gasUnitPrice: Int64
+    fileprivate let gasUnitPrice: UInt64
     
-    fileprivate let expirationTime: Int
+    fileprivate let expirationTime: UInt64
     
     fileprivate let payLoad: Data
     
     fileprivate let module: String
     
-    init(senderAddres: String, sequenceNumber: Int, maxGasAmount: Int64, gasUnitPrice: Int64, expirationTime: Int, payLoad: Data, module: String) {
+    init(senderAddres: String, sequenceNumber: UInt64, maxGasAmount: UInt64, gasUnitPrice: UInt64, expirationTime: UInt64, payLoad: Data, module: String) {
         
         self.senderAddress = senderAddres
         
@@ -49,9 +49,9 @@ struct ViolasRawTransaction {
         // TransactionPayload
         result += self.payLoad
         // maxGasAmount
-        result += ViolasUtils.getLengthData(length: Int(maxGasAmount), appendBytesCount: 8)
+        result += ViolasUtils.getLengthData(length: maxGasAmount, appendBytesCount: 8)
         // gasUnitPrice
-        result += ViolasUtils.getLengthData(length: Int(gasUnitPrice), appendBytesCount: 8)
+        result += ViolasUtils.getLengthData(length: gasUnitPrice, appendBytesCount: 8)
         // ViolasTypeTag
         result += getModuleType(module: module)
         // expirationTime

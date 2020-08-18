@@ -140,7 +140,6 @@ class TokenMappingHeaderView: UIView {
         rightView.addSubview(coinSelectButton)
         textField.rightView = rightView
         textField.rightViewMode = .always
-        textField.delegate = self
         textField.tag = 10
         return textField
     }()
@@ -184,7 +183,6 @@ class TokenMappingHeaderView: UIView {
         rightView.addSubview(outputTokenUnitTitleLabel)
         textField.rightView = rightView
         textField.rightViewMode = .always
-        textField.delegate = self
         textField.tag = 20
         return textField
     }()
@@ -260,24 +258,6 @@ class TokenMappingHeaderView: UIView {
             self.delegate?.confirmTransfer()
         }
     }
-    var rate: Double? {
-        didSet {
-//            let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
-//                                                           scale: 4,
-//                                                           raiseOnExactness: false,
-//                                                           raiseOnOverflow: false,
-//                                                           raiseOnUnderflow: false,
-//                                                           raiseOnDivideByZero: false)
-//            self.exchangeRateLabel.text =  NSDecimalNumber.init(value: rate ?? 0).multiplying(by: NSDecimalNumber.init(value: 1), withBehavior: numberConfig).stringValue
-        }
-    }
-    var models: [TokenMappingListDataModel]? {
-        didSet {
-//            self.leftCoinButton.setTitle(model?.pay_name, for: UIControl.State.normal)
-//            self.rightCoinButton.setTitle(model?.name, for: UIControl.State.normal)
-//            self.exchangeRateLabel.text = "1\(model?.pay_name ?? "") = \(model?.rate ?? 0)\(model?.pay_name ?? "")"
-        }
-    }
     var inputModel: TokenMappingListDataModel? {
         didSet {
             guard let model = inputModel else {
@@ -300,41 +280,4 @@ class TokenMappingHeaderView: UIView {
             mappingRateLabel.text = "1" + " \(model.from_coin?.assert?.show_name ?? "---")" + "=" + " \(model.mapping_rate ?? 1)" + " \(model.to_coin?.assert?.show_name ?? "---")"
         }
     }
-}
-extension TokenMappingHeaderView: UITextFieldDelegate {
-//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-//        guard let content = textField.text else {
-//            return true
-//        }
-//        let textLength = content.count + string.count - range.length
-//        if textField.tag == 10 {
-//            if textLength == 0 {
-//                rightAmountTextField.text = ""
-//            }
-//        } else {
-//            if textLength == 0 {
-//                leftAmountTextField.text = ""
-//            }
-//        }
-//        if content.contains(".") {
-//            let firstContent = content.split(separator: ".").first?.description ?? "0"
-//            if (textLength - firstContent.count) < 6 {
-//                return true
-//            } else {
-//                return false
-//            }
-//        } else {
-//            return textLength <= ApplyTokenAmountLengthLimit
-//        }
-//
-//    }
-//    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-//        if self.leftCoinButton.titleLabel?.text != "---" && self.rightCoinButton.titleLabel?.text != "---" {
-//            print("true")
-//            return true
-//        } else {
-//            print("false")
-//            return false
-//        }
-//    }
 }

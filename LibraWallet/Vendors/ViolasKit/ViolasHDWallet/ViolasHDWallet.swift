@@ -16,10 +16,10 @@ public final class ViolasHDWallet {
     
     let privateKey: ViolasHDPrivateKey
     
-    let depth: Int
+    let depth: UInt64
     
     // 通过种子创建钱包
-    public init (seed: [UInt8], privateKey: [UInt8], depth: Int) {
+    public init (seed: [UInt8], privateKey: [UInt8], depth: UInt64) {
         self.seed = seed
         
         self.depth = depth
@@ -29,7 +29,7 @@ public final class ViolasHDWallet {
         self.publicKey = self.privateKey.extendedPublicKey()
         
     }
-    public convenience init(seed: [UInt8], depth: Int = 0) throws {
+    public convenience init(seed: [UInt8], depth: UInt64 = 0) throws {
         
         let depthData = ViolasUtils.getLengthData(length: depth, appendBytesCount: 8)
         

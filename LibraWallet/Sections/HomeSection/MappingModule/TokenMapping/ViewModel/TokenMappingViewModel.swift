@@ -59,7 +59,7 @@ extension TokenMappingViewModel {
                                                         moduleOutput: model.to_coin?.assert?.module ?? "",
                                                         amountIn: inputAmount.multiplying(by: NSDecimalNumber.init(value: 1000000)).uint64Value,
                                                         amountOut: outputAmount.multiplying(by: NSDecimalNumber.init(value: 1000000)).uint64Value,
-                                                        fee: 0,
+                                                        fee: 1,
                                                         mnemonic: mnemonic,
                                                         type: model.lable ?? "",
                                                         centerAddress: model.receiver_address ?? "",
@@ -71,7 +71,7 @@ extension TokenMappingViewModel {
                                                        moduleOutput: model.to_coin?.assert?.module ?? "",
                                                        amountIn: inputAmount.multiplying(by: NSDecimalNumber.init(value: 1000000)).uint64Value,
                                                        amountOut: outputAmount.multiplying(by: NSDecimalNumber.init(value: 1000000)).uint64Value,
-                                                       fee: 0,
+                                                       fee: 1,
                                                        mnemonic: mnemonic,
                                                        type: model.lable ?? "",
                                                        centerAddress: model.receiver_address ?? "",
@@ -215,7 +215,6 @@ extension TokenMappingViewModel {
             if type == "MappingInfo" {
                 self?.view?.toastView?.hide(tag: 99)
                 if let tempData = dataDic.value(forKey: "data") as? [TokenMappingListDataModel] {
-                    self?.view?.headerView.models = tempData
                     let alert = MappingTokensAlert.init(data: tempData) { (model) in
                         print(model)
                         self?.view?.headerView.inputModel = model

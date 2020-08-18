@@ -74,13 +74,13 @@ struct ViolasTypeTag {
         
         switch self.typeTag {
         case .Bool:
-            result += ViolasUtils.getLengthData(length: Int(self.value)!, appendBytesCount: 1)
+            result += ViolasUtils.getLengthData(length: UInt64(self.value)!, appendBytesCount: 1)
         case .U8:
-            result += ViolasUtils.getLengthData(length: Int(self.value)!, appendBytesCount: 1)
+            result += ViolasUtils.getLengthData(length: UInt64(self.value)!, appendBytesCount: 1)
         case .U64:
-            result += ViolasUtils.getLengthData(length: Int(self.value)!, appendBytesCount: 8)
+            result += ViolasUtils.getLengthData(length: UInt64(self.value)!, appendBytesCount: 8)
         case .U128:
-            result += ViolasUtils.getLengthData(length: Int(self.value)!, appendBytesCount: 16)
+            result += ViolasUtils.getLengthData(length: UInt64(self.value)!, appendBytesCount: 16)
         case .Address:
             result += Data.init(Array<UInt8>(hex: self.value))
         case .Signer:

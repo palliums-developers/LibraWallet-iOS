@@ -44,7 +44,7 @@ struct BalanceLibraModel: Codable {
     ///
     var sent_events_key: String?
     ///
-    var sequence_number: Int?
+    var sequence_number: UInt64?
 }
 struct BalanceLibraMainModel: Codable {
     /// 请求ID
@@ -73,7 +73,7 @@ struct BalanceViolasModel: Codable {
     ///
     var sent_events_key: String?
     ///
-    var sequence_number: Int?
+    var sequence_number: UInt64?
 }
 struct BalanceViolasMainModel: Codable {
     /// 请求ID

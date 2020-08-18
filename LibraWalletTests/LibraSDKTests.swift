@@ -340,8 +340,8 @@ class LibraSDKTests: XCTestCase {
                                                                                amounta_min: 1,
                                                                                amountb_min: 1,
                                                                                sequenceNumber: 67,
-                                                                               moduleA: "VLSUSD",
-                                                                               moduleB: "VLSGBP",
+                                                                               inputModuleA: "VLSUSD",
+                                                                               inputModuleB: "VLSGBP",
                                                                                feeModule: "LBR")
         //        let signature = try! ViolasManager.getMarketRemoveLiquidityTransactionHex(sendAddress: "fa279f2615270daed6061313a48360f7",
         //                                                                                  fee: 0,

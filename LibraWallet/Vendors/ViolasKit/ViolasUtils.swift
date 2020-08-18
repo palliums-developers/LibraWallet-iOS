@@ -9,7 +9,7 @@
 import UIKit
 import BigInt
 struct ViolasUtils {
-    static func getLengthData(length: Int, appendBytesCount: Int) -> Data {
+    static func getLengthData(length: UInt64, appendBytesCount: Int) -> Data {
         var newData = Data()
         let lengthData = BigUInt(length).serialize()
         // 补全长度
@@ -28,7 +28,6 @@ struct ViolasUtils {
             return Data.init(hex: "00")
         }
         let erjinzhi = String.init(BigUInt(length), radix: 2)
-        print(erjinzhi)
         let result = erjinzhi.count / 7
         let remainder = erjinzhi.count % 7
         var tempString = String.init()

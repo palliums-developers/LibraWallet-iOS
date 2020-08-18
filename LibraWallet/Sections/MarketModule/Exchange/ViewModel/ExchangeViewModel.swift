@@ -68,10 +68,10 @@ extension ExchangeViewModel {
             self.view?.headerView.viewState = .ViolasToViolasSwap
             self.view?.toastView?.show(tag: 99)
             self.dataModel.sendSwapViolasTransaction(sendAddress: WalletManager.shared.violasAddress ?? "",
-                                                     amountIn: inputAmount.doubleValue,
-                                                     AmountOutMin: outputAmount.multiplying(by: NSDecimalNumber.init(value: 0.99)).doubleValue,
+                                                     amountIn: inputAmount.uint64Value,
+                                                     AmountOutMin: outputAmount.multiplying(by: NSDecimalNumber.init(value: 0.99)).uint64Value,
                                                      path: (self.view?.headerView.exchangeModel?.path)!,
-                                                     fee: 0,
+                                                     fee: 1,
                                                      mnemonic: mnemonic,
                                                      moduleA: inputModule.module ?? "",
                                                      moduleB: outputModule.module ?? "",
@@ -96,8 +96,8 @@ extension ExchangeViewModel {
             self.view?.headerView.viewState = .ViolasToBTCSwap
             self.view?.toastView?.show(tag: 99)
             self.dataModel.sendSwapViolasToBTCTransaction(sendAddress: WalletManager.shared.violasAddress ?? "",
-                                                          amountIn: inputAmount.doubleValue,
-                                                          AmountOut: outputAmount.doubleValue,
+                                                          amountIn: inputAmount.uint64Value,
+                                                          AmountOut: outputAmount.multiplying(by: NSDecimalNumber.init(value: 100)).uint64Value,
                                                           fee: 0,
                                                           mnemonic: mnemonic,
                                                           moduleInput: inputModule.module ?? "",

@@ -10,7 +10,7 @@ import UIKit
 protocol LibraTransferViewDelegate: NSObjectProtocol {
     func scanAddressQRcode()
     func chooseAddress()
-    func confirmTransfer(amount: Double, address: String, fee: Double)
+    func confirmTransfer(amount: UInt64, address: String, fee: UInt64)
 }
 class LibraTransferView: UIView {
     weak var delegate: LibraTransferViewDelegate?
@@ -288,7 +288,7 @@ class LibraTransferView: UIView {
                 return
             }
             // 转换数字
-            let amount = NSDecimalNumber.init(string: amountString).doubleValue
+            let amount = NSDecimalNumber.init(string: amountString).multiplying(by: NSDecimalNumber.init(value: 1000000))
             guard amount != 0 else {
                 self.makeToast(LibraWalletError.WalletTransfer(reason: .libraAmountLeast).localizedDescription,
                                position: .center)
@@ -296,10 +296,10 @@ class LibraTransferView: UIView {
             }
             // 手续费转换
             let feeString = self.transferFeeLabel.text
-            let fee = Double(feeString!.replacingOccurrences(of: " Libra", with: ""))!
+            let fee = UInt64(feeString!.replacingOccurrences(of: " Libra", with: ""))!
             #warning("暂时不用手续费")
             // 金额大于我的金额
-            guard (amount) <= Double(wallet?.tokenBalance ?? 0) else {
+            guard amount.int64Value <= (wallet?.tokenBalance ?? 0) else {
                self.makeToast(LibraWalletError.WalletTransfer(reason: .amountOverload).localizedDescription,
                               position: .center)
                return
@@ -327,7 +327,7 @@ class LibraTransferView: UIView {
             self.addressTextField.resignFirstResponder()
             self.transferFeeSlider.resignFirstResponder()
             // 确认提交
-            self.delegate?.confirmTransfer(amount: amount, address: address, fee: fee)
+            self.delegate?.confirmTransfer(amount: amount.uint64Value, address: address, fee: fee)
         }
     }
     lazy var backgroundLayer: CAGradientLayer = {

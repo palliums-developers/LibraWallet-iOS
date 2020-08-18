@@ -41,7 +41,7 @@ struct TokenMappingListMainModel: Codable {
 class TokenMappingModel: NSObject {
     private var requests: [Cancellable] = []
     @objc dynamic var dataDic: NSMutableDictionary = [:]
-    private var sequenceNumber: Int?
+    private var sequenceNumber: UInt64?
     private var accountViolasTokens: [ViolasBalanceModel]?
     private var accountLibraTokens: [LibraBalanceModel]?
     private var accountBTCAmount: String?
@@ -77,6 +77,7 @@ extension TokenMappingModel {
                     do {
                         let signature = try LibraManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
                                                                                        sequenceNumber: self.sequenceNumber ?? 0,
+                                                                                       fee: 0,
                                                                                        module: moduleOutput)
                         self.makeLibraTransaction(signature: signature, type: "SendPublishOutputModuleLibraTransaction", semaphore: semaphore)
                     } catch {
@@ -89,8 +90,9 @@ extension TokenMappingModel {
                 } else {
                     do {
                         let signature = try ViolasManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
+                                                                                        fee: 0,
                                                                                         sequenceNumber: self.sequenceNumber ?? 0,
-                                                                                        module: moduleOutput)
+                                                                                        inputModule: moduleOutput)
                         self.makeViolasTransaction(signature: signature, type: "SendPublishOutputModuleViolasTransaction", semaphore: semaphore)
                     } catch {
                         print(error.localizedDescription)
@@ -250,7 +252,7 @@ extension TokenMappingModel {
 
 //MARK: - Libra映射Violas、BTC
 extension TokenMappingModel {
-    func sendLibraMappingTransaction(sendAddress: String, receiveAddress: String, module: String, moduleOutput: String, amountIn: UInt64, amountOut: UInt64, fee: Double, mnemonic: [String], type: String, centerAddress: String, outputModuleActiveState: Bool) {
+    func sendLibraMappingTransaction(sendAddress: String, receiveAddress: String, module: String, moduleOutput: String, amountIn: UInt64, amountOut: UInt64, fee: UInt64, mnemonic: [String], type: String, centerAddress: String, outputModuleActiveState: Bool) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
         if outputModuleActiveState == false {
@@ -262,8 +264,9 @@ extension TokenMappingModel {
                 semaphore.wait()
                 do {
                     let signature = try ViolasManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
+                                                                                    fee: 0,
                                                                                     sequenceNumber: self.sequenceNumber ?? 0,
-                                                                                    module: moduleOutput)
+                                                                                    inputModule: moduleOutput)
                     self.makeViolasTransaction(signature: signature, type: "SendPublishOutputModuleViolasTransaction", semaphore: semaphore)
                 } catch {
                     print(error.localizedDescription)
@@ -281,17 +284,17 @@ extension TokenMappingModel {
         queue.async {
             semaphore.wait()
             do {
-                let signature = try LibraManager.getLibraToViolasMappingTransactionHex(sendAddress: sendAddress,
-                                                                                       module: module,
-                                                                                       amountIn: amountIn,
-                                                                                       amountOut: amountOut,
-                                                                                       fee: fee,
-                                                                                       mnemonic: mnemonic,
-                                                                                       sequenceNumber: self.sequenceNumber ?? 0,
-                                                                                       exchangeCenterAddress: centerAddress,
-                                                                                       violasReceiveAddress: receiveAddress,
-                                                                                       feeModule: module,
-                                                                                       type: type)
+                let signature = try LibraManager.getLibraMappingTransactionHex(sendAddress: sendAddress,
+                                                                               mnemonic: mnemonic,
+                                                                               feeModule: module,
+                                                                               fee: fee,
+                                                                               sequenceNumber: self.sequenceNumber ?? 0,
+                                                                               inputModule: module,
+                                                                               inputAmount: amountIn,
+                                                                               outputAmount: amountOut,
+                                                                               centerAddress: centerAddress,
+                                                                               receiveAddress: receiveAddress,
+                                                                               mappingType: type)
                 self.makeLibraTransaction(signature: signature, type: "SendLibraTransaction")
             } catch {
                 print(error.localizedDescription)
@@ -381,7 +384,7 @@ extension TokenMappingModel {
 }
 //MARK: - Viola映射Libra、BTC
 extension TokenMappingModel {
-    func sendViolasMappingTransaction(sendAddress: String, receiveAddress: String, module: String, moduleOutput: String, amountIn: UInt64, amountOut: UInt64, fee: Double, mnemonic: [String], type: String, centerAddress: String, outputModuleActiveState: Bool) {
+    func sendViolasMappingTransaction(sendAddress: String, receiveAddress: String, module: String, moduleOutput: String, amountIn: UInt64, amountOut: UInt64, fee: UInt64, mnemonic: [String], type: String, centerAddress: String, outputModuleActiveState: Bool) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
         if outputModuleActiveState == false {
@@ -394,6 +397,7 @@ extension TokenMappingModel {
                 do {
                     let signature = try LibraManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
                                                                                    sequenceNumber: self.sequenceNumber ?? 0,
+                                                                                   fee: 0,
                                                                                    module: moduleOutput)
                     self.makeLibraTransaction(signature: signature, type: "SendPublishOutputModuleLibraTransaction", semaphore: semaphore)
                 } catch {
@@ -412,22 +416,22 @@ extension TokenMappingModel {
         queue.async {
             semaphore.wait()
             do {
-                let signature = try ViolasManager.getViolasToLibraMappingTransactionHex(sendAddress: sendAddress,
-                                                                                        module: module,
-                                                                                        amountIn: amountIn,
-                                                                                        amountOut: amountOut,
-                                                                                        fee: fee,
-                                                                                        mnemonic: mnemonic,
-                                                                                        sequenceNumber: self.sequenceNumber ?? 0,
-                                                                                        exchangeCenterAddress: centerAddress,
-                                                                                        libraReceiveAddress: receiveAddress,
-                                                                                        feeModule: module,
-                                                                                        type: type)
-                self.makeViolasTransaction(signature: signature, type: "SendVLibraTransaction")
+                let signature = try ViolasManager.getViolasMappingTransactionHex(sendAddress: sendAddress,
+                                                                                 mnemonic: mnemonic,
+                                                                                 feeModule: module,
+                                                                                 fee: fee,
+                                                                                 sequenceNumber: self.sequenceNumber ?? 0,
+                                                                                 inputModule: module,
+                                                                                 inputAmount: amountIn,
+                                                                                 outputAmount: amountOut,
+                                                                                 centerAddress: centerAddress,
+                                                                                 receiveAddress: receiveAddress,
+                                                                                 mappingType: type)
+                self.makeViolasTransaction(signature: signature, type: "SendViolasTransaction")
             } catch {
                 print(error.localizedDescription)
                 DispatchQueue.main.async(execute: {
-                    let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "SendVLibraTransaction")
+                    let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "SendViolasTransaction")
                     self.setValue(data, forKey: "dataDic")
                 })
             }

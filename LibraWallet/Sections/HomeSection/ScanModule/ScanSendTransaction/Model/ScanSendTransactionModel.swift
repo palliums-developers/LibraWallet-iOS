@@ -26,6 +26,7 @@ class ScanSendTransactionModel: NSObject {
             do {
                 let signature = try ViolasManager.getWalletConnectTransactionHex(mnemonic: mnemonic,
                                                                                  sequenceNumber: self.sequenceNumber!,
+                                                                                 fee: 1,
                                                                                  model: model,
                                                                                  module: module)
                 self.makeViolasTransaction(signature: signature)

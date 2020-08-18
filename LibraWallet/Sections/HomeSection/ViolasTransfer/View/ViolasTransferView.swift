@@ -10,7 +10,7 @@ import UIKit
 protocol ViolasTransferViewDelegate: NSObjectProtocol {
     func scanAddressQRcode()
     func chooseAddress()
-    func confirmTransfer(amount: Double, address: String, fee: Double)
+    func confirmTransfer(amount: UInt64, address: String, fee: UInt64)
 }
 class ViolasTransferView: UIView {
     weak var delegate: ViolasTransferViewDelegate?
@@ -305,14 +305,14 @@ class ViolasTransferView: UIView {
                 return
             }
             // 转换数字
-            let amount = NSDecimalNumber.init(string: amountString).doubleValue
+            let amount = NSDecimalNumber.init(string: amountString)
             guard amount != 0 else {
                 self.makeToast(LibraWalletError.WalletTransfer(reason: .violasAmountLeast).localizedDescription,
                                position: .center)
                 return
             }
             // 手续费转换
-            let fee = NSDecimalNumber.init(string: self.transferFeeLabel.text ?? "0.0").doubleValue
+            let fee = NSDecimalNumber.init(string: self.transferFeeLabel.text ?? "0.0").uint64Value
 //            let fee = Double(feeString!.replacingOccurrences(of: "", with: ""))!
             #warning("暂时不用手续费")
             // 金额大于我的金额
@@ -328,7 +328,7 @@ class ViolasTransferView: UIView {
                                                            raiseOnDivideByZero: false)
             let balance = NSDecimalNumber.init(value: wallet?.tokenBalance ?? 0).dividing(by: NSDecimalNumber.init(value: unit), withBehavior: numberConfig)
             // 平台币
-            guard (amount) <= balance.doubleValue else {
+            guard (amount.doubleValue) <= balance.doubleValue else {
                 self.makeToast(LibraWalletError.WalletTransfer(reason: .amountOverload).localizedDescription,
                                position: .center)
                 return
@@ -352,7 +352,7 @@ class ViolasTransferView: UIView {
                 return
             }
             // 确认提交
-            self.delegate?.confirmTransfer(amount: amount, address: address, fee: fee)
+            self.delegate?.confirmTransfer(amount: amount.multiplying(by: NSDecimalNumber.init(value: unit)).uint64Value, address: address, fee: fee)
         }
     }
     lazy var backgroundLayer: CAGradientLayer = {

@@ -25,8 +25,8 @@ struct ViolaSendTransactionMainModel: Codable {
 class ViolasTransferModel: NSObject {
     @objc dynamic var dataDic: NSMutableDictionary = [:]
     private var requests: [Cancellable] = []
-    private var sequenceNumber: Int?
-    func sendViolasTransaction(sendAddress: String, receiveAddress: String, amount: Double, fee: Double, mnemonic: [String], module: String) {
+    private var sequenceNumber: UInt64?
+    func sendViolasTransaction(sendAddress: String, receiveAddress: String, amount: UInt64, fee: UInt64, mnemonic: [String], module: String) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
         queue.async {
@@ -41,7 +41,7 @@ class ViolasTransferModel: NSObject {
                                                                            amount: amount,
                                                                            fee: fee,
                                                                            mnemonic: mnemonic,
-                                                                           sequenceNumber: Int(self.sequenceNumber!),
+                                                                           sequenceNumber: self.sequenceNumber ?? 0,
                                                                            module: module)
                 self.makeViolasTransaction(signature: signature)
             } catch {

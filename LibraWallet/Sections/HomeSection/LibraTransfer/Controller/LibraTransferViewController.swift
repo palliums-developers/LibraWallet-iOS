@@ -109,13 +109,13 @@ extension LibraTransferViewController: LibraTransferViewDelegate {
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
-    func confirmTransfer(amount: Double, address: String, fee: Double) {
+    func confirmTransfer(amount: UInt64, address: String, fee: UInt64) {
         WalletManager.unlockWallet(controller: self, successful: { [weak self] (mnemonic) in
             self?.detailView.toastView?.show(tag: 99)
             self?.dataModel.sendLibraTransaction(sendAddress: self?.wallet?.tokenAddress ?? "",
                                                  receiveAddress: address,
                                                  amount: amount,
-                                                 fee: 0.1,
+                                                 fee: 1,
                                                  mnemonic: mnemonic,
                                                  module: self?.wallet?.tokenModule ?? "")
         }) { [weak self] (error) in

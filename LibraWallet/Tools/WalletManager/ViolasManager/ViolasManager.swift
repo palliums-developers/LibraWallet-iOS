@@ -11,8 +11,8 @@ import BigInt
 
 struct ViolasManager {
     /// 获取助词数组
-    ///
-    /// - Returns: 助词数组
+    /// - Throws: 异常
+    /// - Returns: 助记词
     public static func getLibraMnemonic() throws -> [String] {
         do {
             let mnemonic = try LibraMnemonic.generate(strength: .default, language: .english)
@@ -23,8 +23,8 @@ struct ViolasManager {
         }
     }
     /// 获取Violas钱包对象
-    ///
-    /// - Parameter mnemonic: 助词数组
+    /// - Parameter mnemonic: 助记词
+    /// - Throws: 异常
     /// - Returns: 钱包对象
     public static func getWallet(mnemonic: [String]) throws -> ViolasHDWallet {
         do {
@@ -37,6 +37,7 @@ struct ViolasManager {
     }
     /// 校验地址是否有效
     /// - Parameter address: 地址
+    /// - Returns: 结果
     public static func isValidViolasAddress(address: String) -> Bool {
         guard (address.count == 32 || address.count == 64)  else {
             // 位数异常
@@ -84,89 +85,15 @@ extension ViolasManager {
     /// 计算位置
     /// - Parameter contract: 合约地址
     func getViolasTokenContractLocation(code: String, contract: String) -> Int {
-        //7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614
         //位置-1所得正好
         let code = getProgramCode(content: code)
         let range: Range = code.toHexString().range(of: contract)!
         let location: Int = code.toHexString().distance(from: code.toHexString().startIndex, to: range.lowerBound)
         return (location / 2) - 1
-        
     }
-}
-//MARK: - 平台币
-extension ViolasManager {
-    /// 获取Violas交易Hex
-    /// - Parameters:
-    ///   - sendAddress: 发送地址
-    ///   - receiveAddress: 接受地址
-    ///   - amount: 数量
-    ///   - fee: 手续费
-    ///   - mnemonic: 助记词
-    ///   - sequenceNumber: 序列码
-    public static func getDefaultTransactionHex(sendAddress: String, receiveAddress: String, amount: Double, fee: Double, mnemonic: [String], sequenceNumber: Int, module: String) throws -> String {
-        do {
-            let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
-            let (_, address) = try ViolasManager.splitAddress(address: receiveAddress)
-
-            let argument0 = ViolasTransactionArgument.init(code: .Address,
-                                                          value: address)
-            let argument1 = ViolasTransactionArgument.init(code: .U64,
-                                                          value: "\(Int(amount * 1000000))")
-            // metadata
-            let argument2 = ViolasTransactionArgument.init(code: .U8Vector,
-                                                          value: "")
-            // metadata_signature
-            let argument3 = ViolasTransactionArgument.init(code: .U8Vector,
-                                                          value: "")
-            let script = ViolasTransactionScript.init(code: Data.init(hex: ViolasStableCoinScriptWithDataCode),
-                                                      typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .Normal(module)))],
-                                                      argruments: [argument0, argument1, argument2, argument3])
-            let rawTransaction = ViolasRawTransaction.init(senderAddres: sendAddress,
-                                                           sequenceNumber: sequenceNumber,
-                                                           maxGasAmount: 1000000,
-                                                           gasUnitPrice: 0,
-                                                           expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 600),
-                                                           payLoad: script.serialize(),
-                                                           module: module)
-            // 签名交易
-            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
-            return signature.toHexString()
-        } catch {
-            throw error
-        }
-    }
-}
-//MARK: - 稳定币
-extension ViolasManager {
-    /// 获取注册稳定币交易Hex
-    /// - Parameters:
-    ///   - mnemonic: 助记词
-    ///   - contact: 合约地址
-    ///   - sequenceNumber: 序列码
-    public static func getPublishTokenTransactionHex(mnemonic: [String], sequenceNumber: Int, module: String) throws -> String {
-        do {
-            let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
-            // 拼接交易
-            let script = ViolasTransactionScript.init(code: Data.init(hex: ViolasPublishScriptCode),
-                                                      typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .Normal(module)))],
-                                                      argruments: [])
-            let rawTransaction = ViolasRawTransaction.init(senderAddres: wallet.publicKey.toLegacy(),
-                                                           sequenceNumber: sequenceNumber,
-                                                           maxGasAmount: 1000000,
-                                                           gasUnitPrice: 0,
-                                                           expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 600),
-                                                           payLoad: script.serialize(),
-                                                           module: "LBR")
-            // 签名交易
-            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
-            return signature.toHexString()
-        } catch {
-            throw error
-        }
-    }
-}
-//MARK: - 交易所
-extension ViolasManager {
+    /// 获取合约
+    /// - Parameter name: 合约名字
+    /// - Returns: 合约Hex
     private static func getLocalMoveCode(name: String) -> String {
         // 1.获取Bundle路径
         let marketContractBundlePath = Bundle.main.path(forResource:"MarketContracts", ofType:"bundle") ?? ""
@@ -190,41 +117,123 @@ extension ViolasManager {
             return ""
         }
     }
-    /// 获取交易所兑换交易Hex
+}
+//MARK: - 稳定币
+extension ViolasManager {
+    /// 获取Violas交易Hex
     /// - Parameters:
     ///   - sendAddress: 发送地址
-    ///   - amount: 付出数量
+    ///   - receiveAddress: 接收地址
+    ///   - amount: 数量
     ///   - fee: 手续费
     ///   - mnemonic: 助记词
-    ///   - contact: 合约地址
-    ///   - exchangeTokenContract: 兑换合约地址
-    ///   - exchangeTokenAmount: 兑换数量
     ///   - sequenceNumber: 序列码
-    public static func getMarketSwapTransactionHex(sendAddress: String, amountIn: Double, amountOutMin: Double, path: [UInt8], fee: Double, mnemonic: [String], sequenceNumber: Int, moduleA: String, moduleB: String, feeModule: String) throws -> String {
+    ///   - module: 使用Module
+    /// - Throws: 异常
+    /// - Returns: 签名
+    public static func getDefaultTransactionHex(sendAddress: String, receiveAddress: String, amount: UInt64, fee: UInt64, mnemonic: [String], sequenceNumber: UInt64, module: String) throws -> String {
+        do {
+            let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
+            let (_, address) = try ViolasManager.splitAddress(address: receiveAddress)
+            
+            let argument0 = ViolasTransactionArgument.init(code: .Address,
+                                                           value: address)
+            let argument1 = ViolasTransactionArgument.init(code: .U64,
+                                                           value: "\(amount)")
+            // metadata
+            let argument2 = ViolasTransactionArgument.init(code: .U8Vector,
+                                                           value: "")
+            // metadata_signature
+            let argument3 = ViolasTransactionArgument.init(code: .U8Vector,
+                                                           value: "")
+            let script = ViolasTransactionScript.init(code: Data.init(hex: ViolasStableCoinScriptWithDataCode),
+                                                      typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .Normal(module)))],
+                                                      argruments: [argument0, argument1, argument2, argument3])
+            let rawTransaction = ViolasRawTransaction.init(senderAddres: sendAddress,
+                                                           sequenceNumber: sequenceNumber,
+                                                           maxGasAmount: 1000000,
+                                                           gasUnitPrice: fee,
+                                                           expirationTime: NSDecimalNumber.init(value: Date().timeIntervalSince1970 + 600).uint64Value,
+                                                           payLoad: script.serialize(),
+                                                           module: module)
+            // 签名交易
+            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            return signature.toHexString()
+        } catch {
+            throw error
+        }
+    }
+    /// 注册稳定币交易Hex
+    /// - Parameters:
+    ///   - mnemonic: 助记词
+    ///   - fee: 手续费
+    ///   - sequenceNumber: 序列码
+    ///   - inputModule: 注册Module
+    /// - Throws: 异常
+    /// - Returns: 签名
+    public static func getPublishTokenTransactionHex(mnemonic: [String], fee: UInt64, sequenceNumber: UInt64, inputModule: String) throws -> String {
+        do {
+            let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
+            // 拼接交易
+            let script = ViolasTransactionScript.init(code: Data.init(hex: ViolasPublishScriptCode),
+                                                      typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .Normal(inputModule)))],
+                                                      argruments: [])
+            let rawTransaction = ViolasRawTransaction.init(senderAddres: wallet.publicKey.toLegacy(),
+                                                           sequenceNumber: sequenceNumber,
+                                                           maxGasAmount: 1000000,
+                                                           gasUnitPrice: fee,
+                                                           expirationTime: NSDecimalNumber.init(value: Date().timeIntervalSince1970 + 600).uint64Value,
+                                                           payLoad: script.serialize(),
+                                                           module: "LBR")
+            // 签名交易
+            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            return signature.toHexString()
+        } catch {
+            throw error
+        }
+    }
+}
+//MARK: - 交易所
+extension ViolasManager {
+    /// 交易所兑换交易Hex
+    /// - Parameters:
+    ///   - sendAddress: 发送地址
+    ///   - mnemonic: 助记词
+    ///   - feeModule: 手续费Module
+    ///   - fee: 手续费
+    ///   - sequenceNumber: 序列码
+    ///   - inputAmount: 输入数量
+    ///   - outputAmountMin: 最少兑回数量
+    ///   - path: 兑换路径
+    ///   - inputModule: 输入Module
+    ///   - outputModule: 输出Module
+    /// - Throws: 异常
+    /// - Returns: 签名
+    public static func getMarketSwapTransactionHex(sendAddress: String, mnemonic: [String], feeModule: String, fee: UInt64, sequenceNumber: UInt64, inputAmount: UInt64, outputAmountMin: UInt64, path: [UInt8], inputModule: String, outputModule: String) throws -> String {
         do {
             let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
             // 拼接交易
             let argument0 = ViolasTransactionArgument.init(code: .Address,
                                                            value: sendAddress)
             let argument1 = ViolasTransactionArgument.init(code: .U64,
-                                                           value: "\(Int(amountIn * 1000000))")
+                                                           value: "\(inputAmount)")
             let argument2 = ViolasTransactionArgument.init(code: .U64,
-                                                           value: "\(Int(amountOutMin * 1000000))")
-//            let mBytes:[UInt8]  =  [0,1];
+                                                           value: "\(outputAmountMin)")
+            //            let mBytes:[UInt8]  =  [0,1];
             let data:Data = Data(bytes: path, count: path.count);
             let argument3 = ViolasTransactionArgument.init(code: .U8Vector,
                                                            value: data.toHexString())
             let argument4 = ViolasTransactionArgument.init(code: .U8Vector,
                                                            value: "")
             let script = ViolasTransactionScript.init(code: ViolasManager.getCodeData(move: ViolasManager.getLocalMoveCode(name: "swap"), address: "00000000000000000000000000000001"),
-                                                      typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .Normal(moduleA))),
-                                                                 ViolasTypeTag.init(structData: ViolasStructTag.init(type: .Normal(moduleB)))],
+                                                      typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .Normal(inputModule))),
+                                                                 ViolasTypeTag.init(structData: ViolasStructTag.init(type: .Normal(outputModule)))],
                                                       argruments: [argument0, argument1, argument2, argument3, argument4])
             let rawTransaction = ViolasRawTransaction.init(senderAddres: sendAddress,
                                                            sequenceNumber: sequenceNumber,
                                                            maxGasAmount: 1000000,
-                                                           gasUnitPrice: 1,
-                                                           expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 600),
+                                                           gasUnitPrice: fee,
+                                                           expirationTime: NSDecimalNumber.init(value: Date().timeIntervalSince1970 + 600).uint64Value,
                                                            payLoad: script.serialize(),
                                                            module: feeModule)
             // 签名交易
@@ -234,29 +243,43 @@ extension ViolasManager {
             throw error
         }
     }
-    /// 获取交易所添加流动性交易Hex
-    public static func getMarketAddLiquidityTransactionHex(sendAddress: String, fee: Double, mnemonic: [String], amounta_desired: UInt64, amountb_desired: UInt64, amounta_min: UInt64, amountb_min: UInt64, sequenceNumber: Int, moduleA: String, moduleB: String, feeModule: String) throws -> String {
+    /// 交易所添加流动性交易Hex
+    /// - Parameters:
+    ///   - sendAddress: 发送地址
+    ///   - mnemonic: 助记词
+    ///   - feeModule: 手续费Module
+    ///   - fee: 手续费
+    ///   - sequenceNumber: 序列码
+    ///   - desiredAmountA: 期望兑换A数量
+    ///   - desiredAmountB: 期望兑换B数量
+    ///   - minAmountA: 最少兑换A数量
+    ///   - minAmountB: 最少兑换B数量
+    ///   - inputModuleA: 输入ModuleA
+    ///   - inputModuleB: 输入ModuleB
+    /// - Throws: 异常
+    /// - Returns: 签名
+    public static func getMarketAddLiquidityTransactionHex(sendAddress: String, mnemonic: [String], feeModule: String, fee: UInt64, sequenceNumber: UInt64, desiredAmountA: UInt64, desiredAmountB: UInt64, minAmountA: UInt64, minAmountB: UInt64, inputModuleA: String, inputModuleB: String) throws -> String {
         do {
             let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
             // 拼接交易
             let argument0 = ViolasTransactionArgument.init(code: .U64,
-                                                           value: "\(amounta_desired)")
+                                                           value: "\(desiredAmountA)")
             let argument1 = ViolasTransactionArgument.init(code: .U64,
-                                                           value: "\(amountb_desired)")
+                                                           value: "\(desiredAmountB)")
             let argument2 = ViolasTransactionArgument.init(code: .U64,
-                                                           value: "\(amounta_min)")
+                                                           value: "\(minAmountA)")
             let argument3 = ViolasTransactionArgument.init(code: .U64,
-                                                           value: "\(amountb_min)")
+                                                           value: "\(minAmountB)")
             //Data.init(hex: ViolasManager.getLocalMoveCode(name: "add_liquidity"))
             let script = ViolasTransactionScript.init(code: ViolasManager.getCodeData(move: ViolasManager.getLocalMoveCode(name: "add_liquidity"), address: "00000000000000000000000000000001"),
-                                                      typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .Normal(moduleA))),
-                                                                 ViolasTypeTag.init(structData: ViolasStructTag.init(type: .Normal(moduleB)))],
+                                                      typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .Normal(inputModuleA))),
+                                                                 ViolasTypeTag.init(structData: ViolasStructTag.init(type: .Normal(inputModuleB)))],
                                                       argruments: [argument0, argument1, argument2, argument3])
             let rawTransaction = ViolasRawTransaction.init(senderAddres: sendAddress,
                                                            sequenceNumber: sequenceNumber,
                                                            maxGasAmount: 1000000,
-                                                           gasUnitPrice: 1,
-                                                           expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 600),
+                                                           gasUnitPrice: fee,
+                                                           expirationTime: NSDecimalNumber.init(value: Date().timeIntervalSince1970 + 600).uint64Value,
                                                            payLoad: script.serialize(),
                                                            module: feeModule)
             // 签名交易
@@ -266,26 +289,39 @@ extension ViolasManager {
             throw error
         }
     }
-    /// 获取交易所取消流动性交易Hex
-    public static func getMarketRemoveLiquidityTransactionHex(sendAddress: String, fee: Double, mnemonic: [String], liquidity: UInt64, amounta_min: UInt64, amountb_min: UInt64, sequenceNumber: Int, moduleA: String, moduleB: String, feeModule: String) throws -> String {
+    /// 交易所取消流动性交易Hex
+    /// - Parameters:
+    ///   - sendAddress: 发送地址
+    ///   - mnemonic: 助记词
+    ///   - feeModule: 手续费Module
+    ///   - fee: 手续费
+    ///   - sequenceNumber: 序列码
+    ///   - liquidity: 流动性
+    ///   - minAmountA: 最少输出数量A
+    ///   - minAmountB: 最少输出数量B
+    ///   - inputModuleA: 输出ModuleA
+    ///   - inputModuleB: 输出ModuleB
+    /// - Throws: 异常
+    /// - Returns: 签名
+    public static func getMarketRemoveLiquidityTransactionHex(sendAddress: String, mnemonic: [String], feeModule: String, fee: UInt64, sequenceNumber: UInt64, liquidity: UInt64, minAmountA: UInt64, minAmountB: UInt64, inputModuleA: String, inputModuleB: String) throws -> String {
         do {
             let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
             // 拼接交易
             let argument0 = ViolasTransactionArgument.init(code: .U64,
                                                            value: "\(liquidity)")
             let argument1 = ViolasTransactionArgument.init(code: .U64,
-                                                           value: "\(amounta_min)")
+                                                           value: "\(minAmountA)")
             let argument2 = ViolasTransactionArgument.init(code: .U64,
-                                                           value: "\(amountb_min)")
+                                                           value: "\(minAmountB)")
             let script = ViolasTransactionScript.init(code: ViolasManager.getCodeData(move: ViolasManager.getLocalMoveCode(name: "remove_liquidity"), address: "00000000000000000000000000000001"),
-                                                      typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .Normal(moduleA))),
-                                                                 ViolasTypeTag.init(structData: ViolasStructTag.init(type: .Normal(moduleB)))],
+                                                      typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .Normal(inputModuleA))),
+                                                                 ViolasTypeTag.init(structData: ViolasStructTag.init(type: .Normal(inputModuleB)))],
                                                       argruments: [argument0, argument1, argument2])
             let rawTransaction = ViolasRawTransaction.init(senderAddres: sendAddress,
                                                            sequenceNumber: sequenceNumber,
                                                            maxGasAmount: 1000000,
-                                                           gasUnitPrice: 1,
-                                                           expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 600),
+                                                           gasUnitPrice: fee,
+                                                           expirationTime: NSDecimalNumber.init(value: Date().timeIntervalSince1970 + 600).uint64Value,
                                                            payLoad: script.serialize(),
                                                            module: feeModule)
             // 签名交易
@@ -296,59 +332,46 @@ extension ViolasManager {
         }
     }
 }
-//MARK: - 映射
+//MARK: - Violas映射Libra、BTC
 extension ViolasManager {
-    public static func getViolasToBTCTransactionHex(sendAddress: String, module: String, amountIn: Double, amountOut: Double, fee: Double, mnemonic: [String], sequenceNumber: Int, exchangeCenterAddress: String, btcReceiveAddress: String, feeModule: String, type: String) throws -> String {
+    /// Violas映射交易Hex
+    /// - Parameters:
+    ///   - sendAddress: 发送地址
+    ///   - mnemonic: 助记词
+    ///   - feeModule: 手续费Module
+    ///   - fee: 手续费
+    ///   - sequenceNumber: 序列吗
+    ///   - inputModule: 输入Module
+    ///   - inputAmount: 输入数量
+    ///   - outputAmount: 输出Module
+    ///   - centerAddress: 兑换中心地址
+    ///   - receiveAddress: 接收地址
+    ///   - mappingType: 映射类型
+    /// - Throws: 异常
+    /// - Returns: 签名
+    public static func getViolasMappingTransactionHex(sendAddress: String, mnemonic: [String], feeModule: String, fee: UInt64, sequenceNumber: UInt64, inputModule: String, inputAmount: UInt64, outputAmount: UInt64, centerAddress: String, receiveAddress: String, mappingType: String) throws -> String {
         do {
             let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
             // 拼接交易
             let argument0 = ViolasTransactionArgument.init(code: .Address,
-                                                           value: exchangeCenterAddress)
+                                                           value: centerAddress)
             let argument1 = ViolasTransactionArgument.init(code: .U64,
-                                                           value: "\(Int(amountIn * 1000000))")
-            let data = "{\"flag\":\"violas\",\"type\":\"\(type)\",\"times\": 1000, \"to_address\":\"\(btcReceiveAddress)\",\"out_amount\":\"\(Int(amountOut * 100000000))\",\"state\":\"start\"}".data(using: .utf8)!
-            let argument2 = ViolasTransactionArgument.init(code: .U8Vector,
-                                                           value: data.toHexString())
-            let script = ViolasTransactionScript.init(code: Data.init(hex: ViolasStableCoinScriptWithDataCode),
-                                                      typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .Normal(module)))],
-                                                      argruments: [argument0, argument1, argument2])
-            let rawTransaction = ViolasRawTransaction.init(senderAddres: sendAddress,
-                                                           sequenceNumber: sequenceNumber,
-                                                           maxGasAmount: 1000000,
-                                                           gasUnitPrice: 1,
-                                                           expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 600),
-                                                           payLoad: script.serialize(),
-                                                           module: feeModule)
-            // 签名交易
-            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
-            return signature.toHexString()
-        } catch {
-            throw error
-        }
-    }
-    public static func getViolasToLibraMappingTransactionHex(sendAddress: String, module: String, amountIn: UInt64, amountOut: UInt64, fee: Double, mnemonic: [String], sequenceNumber: Int, exchangeCenterAddress: String, libraReceiveAddress: String, feeModule: String, type: String) throws -> String {
-        do {
-            let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
-            // 拼接交易
-            let argument0 = ViolasTransactionArgument.init(code: .Address,
-                                                           value: exchangeCenterAddress)
-            let argument1 = ViolasTransactionArgument.init(code: .U64,
-                                                           value: "\(amountIn)")
+                                                           value: "\(inputAmount)")
             // metadata
-            let data = "{\"flag\":\"violas\",\"type\":\"\(type)\",\"times\": 1000, \"to_address\":\"\(libraReceiveAddress)\",\"out_amount\":\"\(amountOut)\",\"state\":\"start\"}".data(using: .utf8)!
+            let data = "{\"flag\":\"violas\",\"type\":\"\(mappingType)\",\"times\": 1000, \"to_address\":\"\(receiveAddress)\",\"out_amount\":\"\(outputAmount)\",\"state\":\"start\"}".data(using: .utf8)!
             let argument2 = ViolasTransactionArgument.init(code: .U8Vector,
                                                            value: data.toHexString())
             // metadata_signature
             let argument3 = ViolasTransactionArgument.init(code: .U8Vector,
                                                            value: "")
             let script = ViolasTransactionScript.init(code: Data.init(hex: ViolasStableCoinScriptWithDataCode),
-                                                      typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .Normal(module)))],
+                                                      typeTags: [ViolasTypeTag.init(structData: ViolasStructTag.init(type: .Normal(inputModule)))],
                                                       argruments: [argument0, argument1, argument2, argument3])
             let rawTransaction = ViolasRawTransaction.init(senderAddres: sendAddress,
                                                            sequenceNumber: sequenceNumber,
                                                            maxGasAmount: 1000000,
-                                                           gasUnitPrice: 1,
-                                                           expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 600),
+                                                           gasUnitPrice: fee,
+                                                           expirationTime: NSDecimalNumber.init(value: Date().timeIntervalSince1970 + 600).uint64Value,
                                                            payLoad: script.serialize(),
                                                            module: feeModule)
             // 签名交易
@@ -361,7 +384,7 @@ extension ViolasManager {
 }
 //MARK: - WalletConnect
 extension ViolasManager {
-    public static func getWalletConnectTransactionHex(mnemonic: [String], sequenceNumber: UInt64, model: WCRawTransaction, module: String) throws -> String {
+    public static func getWalletConnectTransactionHex(mnemonic: [String], sequenceNumber: UInt64, fee: UInt64, model: WCRawTransaction, module: String) throws -> String {
         do {
             let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
             var tempArguments = [ViolasTransactionArgument]()
@@ -390,10 +413,10 @@ extension ViolasManager {
                                                       typeTagsString: model.payload?.tyArgs ?? [String](),
                                                       argruments: tempArguments)
             let rawTransaction = ViolasRawTransaction.init(senderAddres: model.from ?? "",
-                                                           sequenceNumber: Int(sequenceNumber),
+                                                           sequenceNumber: sequenceNumber,
                                                            maxGasAmount: model.maxGasAmount ?? 1000000,
-                                                           gasUnitPrice: model.gasUnitPrice ?? 1,
-                                                           expirationTime: Int(model.expirationTime ?? (Int64(Date().timeIntervalSince1970) + 600)),
+                                                           gasUnitPrice: model.gasUnitPrice ?? fee,
+                                                           expirationTime: model.expirationTime ?? UInt64(Date().timeIntervalSince1970 + 600),
                                                            payLoad: script.serialize(),
                                                            module: module)
             // 签名交易
@@ -415,7 +438,6 @@ extension ViolasManager {
             throw error
         }
     }
-
 }
 extension ViolasManager {
     public static func derializeTransaction(tx: String) -> WCDataModel {

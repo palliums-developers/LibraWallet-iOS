@@ -34,10 +34,10 @@ struct WCPayload: Codable {
 struct WCRawTransaction: Codable {
     var from: String?
     var payload: WCPayload?
-    var maxGasAmount: Int64?
-    var gasUnitPrice: Int64?
-    var sequenceNumber: Int64?
-    var expirationTime: Int64?
+    var maxGasAmount: UInt64?
+    var gasUnitPrice: UInt64?
+    var sequenceNumber: UInt64?
+    var expirationTime: UInt64?
     var gasCurrencyCode: String?
     var chainId: Int?
 }

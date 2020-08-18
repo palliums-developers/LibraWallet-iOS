@@ -12,7 +12,6 @@ protocol TransferViewModelDelegate: NSObjectProtocol {
 }
 class TransferViewModel: NSObject {
     weak var delegate: TransferViewModelDelegate?
-    
     /// 数据监听KVO
     var observer: NSKeyValueObservation?
     typealias successClosure = () -> Void
@@ -102,6 +101,9 @@ extension TransferViewModel {
 }
 extension TransferViewModel: TransferViewDelegate {
     func scanAddressQRcode() {
+        self.view?.amountTextField.resignFirstResponder()
+        self.view?.addressTextField.resignFirstResponder()
+        self.view?.transferFeeSlider.resignFirstResponder()
         self.controllerClosure = { con in
             let vc = ScanViewController()
             vc.actionClosure = { address in
@@ -157,6 +159,10 @@ extension TransferViewModel: TransferViewDelegate {
     }
     
     func chooseAddress() {
+        self.view?.amountTextField.resignFirstResponder()
+        self.view?.addressTextField.resignFirstResponder()
+        self.view?.transferFeeSlider.resignFirstResponder()
+        
         self.controllerClosure = { con in
             let vc = AddressManagerViewController()
             vc.actionClosure = { address in
@@ -197,23 +203,22 @@ extension TransferViewModel: TransferViewDelegate {
                                  position: .center)
             return
         }
+        var unit = 1000000
+        if token.tokenType == .BTC {
+            unit = 100000000
+        }
         // 转换数字
-        let amount = NSDecimalNumber.init(string: amountString)
-        guard amount.doubleValue != 0 else {
+        let amount = NSDecimalNumber.init(string: amountString).multiplying(by: NSDecimalNumber.init(value: unit))
+        guard amount.int64Value != 0 else {
             self.view?.makeToast(LibraWalletError.WalletTransfer(reason: .libraAmountLeast).localizedDescription,
                                  position: .center)
             return
         }
         // 手续费转换
         let feeString = self.view?.transferFeeLabel.text
-        let fee = NSDecimalNumber.init(string: "\(feeString?.split(separator: " ").first)")
-        #warning("暂时不用手续费")
+        let fee = NSDecimalNumber.init(string: "\(feeString?.split(separator: " ").first ?? "0")").multiplying(by: NSDecimalNumber.init(value: unit))
         // 金额大于我的金额
-        var unit = 1000000
-        if token.tokenType == .BTC {
-            unit = 100000000
-        }
-        guard amount.multiplying(by: NSDecimalNumber.init(value: unit)).int64Value <= token.tokenBalance else {
+        guard amount.int64Value <= token.tokenBalance else {
             self.view?.makeToast(LibraWalletError.WalletTransfer(reason: .amountOverload).localizedDescription,
                                  position: .center)
             return
@@ -249,24 +254,24 @@ extension TransferViewModel: TransferViewDelegate {
                 print("Send Violas Transaction")
                 self?.dataModel.sendViolasTransaction(sendAddress: token.tokenAddress,
                                                       receiveAddress: address,
-                                                      amount: amount.doubleValue,
-                                                      fee: fee.doubleValue,
+                                                      amount: amount.uint64Value,
+                                                      fee: fee.uint64Value,
                                                       mnemonic: mnemonic,
                                                       module: token.tokenModule)
             case .Libra:
                 print("Send Libra Transaction")
                 self?.dataModel.sendLibraTransaction(sendAddress: token.tokenAddress,
                                                      receiveAddress: address,
-                                                     amount: amount.doubleValue,
-                                                     fee: fee.doubleValue,
+                                                     amount: amount.uint64Value,
+                                                     fee: fee.uint64Value,
                                                      mnemonic: mnemonic,
                                                      module: token.tokenModule)
             case .BTC:
                 print("Send BTC Transaction")
                 let wallet = try! BTCManager().getWallet(mnemonic: mnemonic)
                 self?.dataModel.makeTransaction(wallet: wallet,
-                                                amount: amount.doubleValue,
-                                                fee: fee.doubleValue,
+                                                amount: amount.uint64Value,
+                                                fee: fee.uint64Value,
                                                 toAddress: address)
             }
         }) { [weak self] (error) in
@@ -278,6 +283,9 @@ extension TransferViewModel: TransferViewDelegate {
         }
     }
     func chooseCoin() {
+        self.view?.amountTextField.resignFirstResponder()
+        self.view?.addressTextField.resignFirstResponder()
+        self.view?.transferFeeSlider.resignFirstResponder()
         guard let tempTokens = self.tokens, tempTokens.isEmpty == false else {
             return
         }
