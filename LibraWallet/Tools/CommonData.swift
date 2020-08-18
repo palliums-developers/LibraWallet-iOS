@@ -13,19 +13,6 @@ import Toast_Swift
 import Localize_Swift
 /************* Libra节点 *******************/
 
-let MarketAddress = "c71caa520e123d122c310177c08fa0d2"
-
-let ViolasMainContract = "e1be1ab8360a35a0259f1c93e3eac736"
-
-func getProgramCode(content: String) -> Data {
-//    let temp = stringValueDic(content)
-//    let code = temp!["code"] as! [UInt8]
-//    let dataArray = "\(code ?? "")".split(separator: ",")
-    
-    let data = Data.init(Array<UInt8>(hex: content))//Data.init(bytes: content, count: code.count)
-    
-    return data
-}
 func stringValueDic(_ str: String) -> [String : Any]? {
     let data = str.data(using: String.Encoding.utf8)
     if let dict = try? JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as? [String : Any] {
@@ -38,9 +25,6 @@ func stringValueDic(_ str: String) -> [String : Any]? {
 let defaultBackgroundColor = UIColor.white
 let DefaultSpaceColor = UIColor.init(hex: "DEDEDE")
 let DefaultGreenColor = UIColor.init(hex: "9339F3")
-let DefaultFontColor = UIColor.init(hex: "3D3949")
-// 主色50%
-let DefaultFontMiddleColor = UIColor.init(hex: "9D9CA3")
 ///******************* 全局设置语言 *******************/
 /// 全局设置语言
 ///
@@ -213,7 +197,7 @@ func helpCenterURL() -> String {
         return "https://help.sealpay.io/en/help.html"
     }
 }
-///************* 获取身份钱包 *******************/
+///************* 设置WalletConnect *******************/
 func setWalletConnectSession(session: Data) {
     UserDefaults.standard.set(session, forKey: "WalletConnectSession")
 }
@@ -264,8 +248,6 @@ let PasswordMaxLimit = 20
 let NameMaxLimit = 20
 /// 发币数量位数
 let ApplyTokenAmountLengthLimit = 12
-/// 最大发币9000亿
-let ApplyTokenMaxLimit: Int64 = 900000000000
 
 let officialAddress = "https://violas.io"
 let officialEmail = "violas.team@violas.io"

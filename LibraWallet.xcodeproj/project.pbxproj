@@ -162,7 +162,6 @@
 		9D628A86239A495500E222FB /* PrivateAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628A85239A495500E222FB /* PrivateAlertView.swift */; };
 		9D628A8C239A4A2B00E222FB /* PrivateLegalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628A89239A4A2B00E222FB /* PrivateLegalViewController.swift */; };
 		9D628A8D239A4A2B00E222FB /* PrivateLegalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628A8B239A4A2B00E222FB /* PrivateLegalView.swift */; };
-		9D628A9C239E48A200E222FB /* TokenPickerViewAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628A9B239E48A200E222FB /* TokenPickerViewAlert.swift */; };
 		9D628AC7239F9F6D00E222FB /* ViolasSocketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628AC6239F9F6D00E222FB /* ViolasSocketManager.swift */; };
 		9D628AC923A086D100E222FB /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D628AC823A086D100E222FB /* MessageUI.framework */; };
 		9D68D2F5237D24DD005B7593 /* BTCTransferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D68D2F4237D24DD005B7593 /* BTCTransferView.swift */; };
@@ -492,7 +491,6 @@
 		9D628A85239A495500E222FB /* PrivateAlertView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrivateAlertView.swift; sourceTree = "<group>"; };
 		9D628A89239A4A2B00E222FB /* PrivateLegalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrivateLegalViewController.swift; sourceTree = "<group>"; };
 		9D628A8B239A4A2B00E222FB /* PrivateLegalView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrivateLegalView.swift; sourceTree = "<group>"; };
-		9D628A9B239E48A200E222FB /* TokenPickerViewAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenPickerViewAlert.swift; sourceTree = "<group>"; };
 		9D628AC6239F9F6D00E222FB /* ViolasSocketManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasSocketManager.swift; sourceTree = "<group>"; };
 		9D628AC823A086D100E222FB /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		9D68D2F4237D24DD005B7593 /* BTCTransferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTCTransferView.swift; sourceTree = "<group>"; };
@@ -1921,7 +1919,6 @@
 				9DC06A2423715ADB00BCE1FE /* BackupWarningAlert.swift */,
 				9DC8778E23796884006378C3 /* ToastView.swift */,
 				9D628A85239A495500E222FB /* PrivateAlertView.swift */,
-				9D628A9B239E48A200E222FB /* TokenPickerViewAlert.swift */,
 				3623AB7523FBFC79004A01BF /* MappingTokenListAlert.swift */,
 				3622F20B24E4DE8600CFB754 /* TransferTokensAlert.swift */,
 				3622F21824E66A6400CFB754 /* MappingTokensAlert.swift */,
@@ -2752,8 +2749,6 @@
 		9DC06A6F2374059100BCE1FE /* HomeSection */ = {
 			isa = PBXGroup;
 			children = (
-				3622F20E24E539B100CFB754 /* Receive */,
-				3622F1FE24E3FBB300CFB754 /* Transfer */,
 				9DC902372328E78A0097FD85 /* Home */,
 				3650F0A1248763830086F578 /* WalletDetail */,
 				3650F0B2248A42470086F578 /* Transaction */,
@@ -2763,6 +2758,8 @@
 				9D68D2EC237CF019005B7593 /* BTCTransfer */,
 				9D5B4E66236BCB4000F4D99C /* AddAsset */,
 				364BB571242CD2A300B9BE17 /* ScanModule */,
+				3622F20E24E539B100CFB754 /* Receive */,
+				3622F1FE24E3FBB300CFB754 /* Transfer */,
 				364BB570242CD27700B9BE17 /* MappingModule */,
 			);
 			path = HomeSection;
@@ -3613,7 +3610,6 @@
 				36836D3924B3059B0031AC6E /* ExchangeTransactionDetailHeaderView.swift in Sources */,
 				3622F20724E4003E00CFB754 /* TransferView.swift in Sources */,
 				9D628A8D239A4A2B00E222FB /* PrivateLegalView.swift in Sources */,
-				9D628A9C239E48A200E222FB /* TokenPickerViewAlert.swift in Sources */,
 				9D5B4E7A236BD22600F4D99C /* AddAssetTableViewHeader.swift in Sources */,
 				9D68D2F9237D24FF005B7593 /* BTCTransferViewController.swift in Sources */,
 				36828CE424B74C6E0085A165 /* ExchangeViewHeaderView.swift in Sources */,

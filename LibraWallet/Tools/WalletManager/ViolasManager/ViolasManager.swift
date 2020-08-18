@@ -73,7 +73,7 @@ extension ViolasManager {
         // 生成待替换数据
         let replaceData = Data.init(Array<UInt8>(hex: address))
         // 原始数据
-        var code = getProgramCode(content: move)
+        var code = Data.init(Array<UInt8>(hex: move))
         // 计算位置
         let location = ViolasManager().getViolasTokenContractLocation(code: move, contract: "7257c2417e4d1038e1817c8f283ace2e")
         // 设置替换区间
@@ -86,7 +86,7 @@ extension ViolasManager {
     /// - Parameter contract: 合约地址
     func getViolasTokenContractLocation(code: String, contract: String) -> Int {
         //位置-1所得正好
-        let code = getProgramCode(content: code)
+        let code = Data.init(Array<UInt8>(hex: code))
         let range: Range = code.toHexString().range(of: contract)!
         let location: Int = code.toHexString().distance(from: code.toHexString().startIndex, to: range.lowerBound)
         return (location / 2) - 1

@@ -60,7 +60,7 @@ class BTCManagerTests: XCTestCase {
         XCTAssertEqual(result4, false)
     }
     func testCaculll() {
-        let code = getProgramCode(content: ViolasPublishScriptCode)
+        let code = Data.init(Array<UInt8>(hex: ViolasPublishScriptCode))
         print(code.toHexString())
         let range: Range = code.toHexString().range(of: "7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614")!
         let location: Int = code.toHexString().distance(from: code.toHexString().startIndex, to: range.lowerBound)
@@ -72,7 +72,7 @@ class BTCManagerTests: XCTestCase {
         print(data.toHexString())
     }
     func testExchange() {
-        let code = getProgramCode(content: ViolasStableCoinScriptWithDataCode)
+        let code = Data.init(Array<UInt8>(hex: ViolasStableCoinScriptWithDataCode))
         print(code.toHexString())
         let range: Range = code.toHexString().range(of: "7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614")!
         let location: Int = code.toHexString().distance(from: code.toHexString().startIndex, to: range.lowerBound)
