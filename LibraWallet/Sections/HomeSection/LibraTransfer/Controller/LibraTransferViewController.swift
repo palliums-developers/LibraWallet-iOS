@@ -115,7 +115,7 @@ extension LibraTransferViewController: LibraTransferViewDelegate {
             self?.dataModel.sendLibraTransaction(sendAddress: self?.wallet?.tokenAddress ?? "",
                                                  receiveAddress: address,
                                                  amount: amount,
-                                                 fee: 1,
+                                                 fee: fee,
                                                  mnemonic: mnemonic,
                                                  module: self?.wallet?.tokenModule ?? "")
         }) { [weak self] (error) in

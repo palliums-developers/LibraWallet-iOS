@@ -190,7 +190,6 @@ class ViolasTransferView: UIView {
         textField.textColor = UIColor.init(hex: "333333")
         textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_transfer_address_violas_textfield_placeholder"),
                                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C4C3C7"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16)])
-        //        textField.delegate = self
         textField.keyboardType = .default
         textField.tintColor = DefaultGreenColor
         textField.layer.borderColor = UIColor.init(hex: "D8D7DA").cgColor
@@ -262,9 +261,7 @@ class ViolasTransferView: UIView {
         label.textColor = UIColor.init(hex: "3C3848")
         label.font = UIFont.boldSystemFont(ofSize: 10)
         label.textAlignment = NSTextAlignment.center
-        let fee = Float(transferFeeMax - transferFeeMin) * Float(0.2) + Float(transferFeeMin)
-        let fee8 = NSString.init(format: "%.8f", fee)
-        label.text = "\(fee8)"
+        label.text = "0.00"
         return label
     }()
     lazy var confirmButton: UIButton = {
@@ -312,9 +309,8 @@ class ViolasTransferView: UIView {
                 return
             }
             // 手续费转换
-            let fee = NSDecimalNumber.init(string: self.transferFeeLabel.text ?? "0.0").uint64Value
-//            let fee = Double(feeString!.replacingOccurrences(of: "", with: ""))!
-            #warning("暂时不用手续费")
+            let feeString = self.transferFeeLabel.text
+            let fee = NSDecimalNumber.init(string: "\(feeString?.split(separator: " ").first ?? "0")").multiplying(by: NSDecimalNumber.init(value: 1000000))
             // 金额大于我的金额
                 var unit = 1000000
             if wallet?.tokenType == .BTC {
@@ -352,7 +348,7 @@ class ViolasTransferView: UIView {
                 return
             }
             // 确认提交
-            self.delegate?.confirmTransfer(amount: amount.multiplying(by: NSDecimalNumber.init(value: unit)).uint64Value, address: address, fee: fee)
+            self.delegate?.confirmTransfer(amount: amount.multiplying(by: NSDecimalNumber.init(value: unit)).uint64Value, address: address, fee: fee.uint64Value)
         }
     }
     lazy var backgroundLayer: CAGradientLayer = {
@@ -371,9 +367,16 @@ class ViolasTransferView: UIView {
     var originFee: Int64?
     
     @objc func slideValueDidChange(slide: UISlider) {
-        let fee = Float(transferFeeMax - transferFeeMin) * slide.value + Float(transferFeeMin)
-        let fee8 = NSString.init(format: "%.8f", fee)
-        self.transferFeeLabel.text = "\(fee8)"
+        let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
+                                                       scale: 6,
+                                                       raiseOnExactness: false,
+                                                       raiseOnOverflow: false,
+                                                       raiseOnUnderflow: false,
+                                                       raiseOnDivideByZero: false)
+        let region = NSDecimalNumber.init(value: 0.0001).subtracting(NSDecimalNumber.init(value: 0))
+        let fee = region.multiplying(by: NSDecimalNumber(value: slide.value)).adding(NSDecimalNumber.init(value: 0))
+        let feeString = fee.multiplying(by: NSDecimalNumber.init(value: 1), withBehavior: numberConfig).stringValue
+        transferFeeLabel.text = feeString + " " + (wallet?.tokenName ?? "")
     }
     var wallet: Token? {
         didSet {
@@ -388,7 +391,17 @@ class ViolasTransferView: UIView {
             let balance = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.tokenBalance )),
                                                  scale: 6,
                                                  unit: unit)
-            walletBalanceLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + balance + " " + (wallet?.tokenName ?? "")
+            walletBalanceLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + balance + " " + model.tokenName
+            let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
+                                                           scale: 6,
+                                                           raiseOnExactness: false,
+                                                           raiseOnOverflow: false,
+                                                           raiseOnUnderflow: false,
+                                                           raiseOnDivideByZero: false)
+            let region = NSDecimalNumber.init(value: 0.0001).subtracting(NSDecimalNumber.init(value: 0))
+            let fee = region.multiplying(by: NSDecimalNumber(value: 0.2)).adding(NSDecimalNumber.init(value: 0))
+            let feeString = fee.multiplying(by: NSDecimalNumber.init(value: 1), withBehavior: numberConfig).stringValue
+            transferFeeLabel.text = feeString + " " + (wallet?.tokenName ?? "")
         }
     }
     var sendViolasTokenState: Bool?

@@ -248,9 +248,7 @@ class LibraTransferView: UIView {
         label.textColor = UIColor.init(hex: "3C3848")
         label.font = UIFont.boldSystemFont(ofSize: 10)
         label.textAlignment = NSTextAlignment.center
-        let fee = Float(transferFeeMax - transferFeeMin) * Float(0.2) + Float(transferFeeMin)
-        let fee8 = NSString.init(format: "%.8f", fee)
-        label.text = "\(fee8) Libra"
+        label.text = "0.00"
         return label
     }()
     lazy var confirmButton: UIButton = {
@@ -296,8 +294,7 @@ class LibraTransferView: UIView {
             }
             // 手续费转换
             let feeString = self.transferFeeLabel.text
-            let fee = UInt64(feeString!.replacingOccurrences(of: " Libra", with: ""))!
-            #warning("暂时不用手续费")
+            let fee = NSDecimalNumber.init(string: "\(feeString?.split(separator: " ").first ?? "0")").multiplying(by: NSDecimalNumber.init(value: 1000000))
             // 金额大于我的金额
             guard amount.int64Value <= (wallet?.tokenBalance ?? 0) else {
                self.makeToast(LibraWalletError.WalletTransfer(reason: .amountOverload).localizedDescription,
@@ -327,7 +324,7 @@ class LibraTransferView: UIView {
             self.addressTextField.resignFirstResponder()
             self.transferFeeSlider.resignFirstResponder()
             // 确认提交
-            self.delegate?.confirmTransfer(amount: amount.uint64Value, address: address, fee: fee)
+            self.delegate?.confirmTransfer(amount: amount.uint64Value, address: address, fee: fee.uint64Value)
         }
     }
     lazy var backgroundLayer: CAGradientLayer = {
@@ -345,20 +342,36 @@ class LibraTransferView: UIView {
     }
     var originFee: Int64?
     @objc func slideValueDidChange(slide: UISlider) {
-        let fee = Float(transferFeeMax - transferFeeMin) * slide.value + Float(transferFeeMin)
-        let fee8 = NSString.init(format: "%.8f", fee)
-        self.transferFeeLabel.text = "\(fee8) Libra"
+        let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
+                                                       scale: 6,
+                                                       raiseOnExactness: false,
+                                                       raiseOnOverflow: false,
+                                                       raiseOnUnderflow: false,
+                                                       raiseOnDivideByZero: false)
+        let region = NSDecimalNumber.init(value: 0.0001).subtracting(NSDecimalNumber.init(value: 0))
+        let fee = region.multiplying(by: NSDecimalNumber(value: slide.value)).adding(NSDecimalNumber.init(value: 0))
+        let feeString = fee.multiplying(by: NSDecimalNumber.init(value: 1), withBehavior: numberConfig).stringValue
+        transferFeeLabel.text = feeString + " " + (wallet?.tokenName ?? "")
     }
     var wallet: Token? {
         didSet {
             guard let model = wallet else {
                 return
             }
-//            amountTitleLabel.text = wallet?.tokenName
             let balance = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.tokenBalance )),
                                                  scale: 6,
                                                  unit: 1000000)
-            walletBalanceLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + balance + " Libra"
+            walletBalanceLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + balance + " " + model.tokenName
+            let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
+                                                           scale: 6,
+                                                           raiseOnExactness: false,
+                                                           raiseOnOverflow: false,
+                                                           raiseOnUnderflow: false,
+                                                           raiseOnDivideByZero: false)
+            let region = NSDecimalNumber.init(value: 0.0001).subtracting(NSDecimalNumber.init(value: 0))
+            let fee = region.multiplying(by: NSDecimalNumber(value: 0.2)).adding(NSDecimalNumber.init(value: 0))
+            let feeString = fee.multiplying(by: NSDecimalNumber.init(value: 1), withBehavior: numberConfig).stringValue
+            transferFeeLabel.text = feeString + " " + (wallet?.tokenName ?? "")
         }
     }
 }
