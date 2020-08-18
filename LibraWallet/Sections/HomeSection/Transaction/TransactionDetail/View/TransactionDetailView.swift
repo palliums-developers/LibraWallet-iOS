@@ -336,7 +336,7 @@ class TransactionDetailView: UIView {
                 return
             }
             transactionDateLabel.text = timestampToDateString(timestamp: model.expiration_time ?? 0, dateFormat: "yyyy-MM-dd HH:mm:ss")
-            if libraTransaction?.status == 4001 {
+            if libraTransaction?.status == "Executed" {
                 switch model.type {
                 case 0:
                     //ADD_CURRENCY_TO_ACCOUNT

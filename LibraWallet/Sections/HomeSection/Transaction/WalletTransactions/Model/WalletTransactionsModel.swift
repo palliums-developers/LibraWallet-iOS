@@ -133,7 +133,7 @@ struct LibraDataModel: Codable {
     /// 交易序列号
     var sequence_number: Int?
     /// 交易执行状态
-    var status: Int?
+    var status: String?
     /// 类型超多，不一一展示
     var type: Int?
     /// 交易序列号
