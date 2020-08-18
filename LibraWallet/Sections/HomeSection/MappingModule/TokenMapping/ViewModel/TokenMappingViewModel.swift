@@ -222,7 +222,7 @@ extension TokenMappingViewModel {
                     }
                     if self?.view?.headerView.coinSelectButton.titleLabel?.text != localLanguage(keyString: "wallet_transfer_token_default_title") {
                         let index = tempData.firstIndex {
-                            $0.from_coin?.assert?.show_name == (self?.view?.headerView.coinSelectButton.titleLabel?.text ?? "")
+                            $0.from_coin?.assert?.show_name == self?.view?.headerView.inputModel?.from_coin?.assert?.show_name && $0.from_coin?.coin_type == self?.view?.headerView.inputModel?.from_coin?.coin_type
                         }
                         alert.pickerRow = index
                     }
