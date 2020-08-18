@@ -103,7 +103,7 @@ class ImportWalletModel: NSObject {
                                      tokenIcon: "violas_icon",
                                      tokenContract: "00000000000000000000000000000001",
                                      tokenModule: "LBR",
-                                     tokenModuleName: "T",
+                                     tokenModuleName: "LBR",
                                      tokenEnable: true,
                                      tokenPrice: "0.0")
             let result = DataBaseManager.DBManager.insertToken(token: token)
