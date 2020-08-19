@@ -11,12 +11,9 @@ wallet_tabbar_market_title = "Market";
 wallet_tabbar_mine_title = "My Profile";
 
 /************* 首页 *******************/
-wallet_home_wallet_type_last_title = " Wallet";
-wallet_home_current_balance_title = "Balance";
 wallet_home_transfer_button_title = "Transfer";
 wallet_home_receive_button_title = "Receive";
 wallet_home_mapping_button_title = "Mapping";
-wallet_home_last_transaction_date_title = "Transactions";
 wallet_home_wallet_asset_title = "Assets";
 wallet_home_wallet_total_asset_title = "Total";
 wallet_home_exchange_title = "Exchange";
@@ -40,63 +37,40 @@ wallet_transfer_address_contact_title = "Address Book";
 wallet_transfer_address_btc_textfield_placeholder = "Enter Address";
 wallet_transfer_address_libra_textfield_placeholder = "Enter Address";
 wallet_transfer_address_violas_textfield_placeholder = "Enter Address";
-wallet_transfer_transaction_fee_title = "Fee";
+wallet_transfer_transaction_fee_title = "Fees";
 wallet_transfer_transaction_fee_least_title = "Slow";
 wallet_transfer_transaction_fee_max_title = "Fast";
 wallet_transfer_confirm_button_title = "Confirm";
 wallet_transfer_token_default_title = "Select a token";
 
 /************* 交易历史 *******************/
-wallet_transactions_date_title = "Date";
-wallet_transactions_amount_title = "Amount";
-wallet_transactions_transfer_title = "Transfer";
-wallet_transactions_receive_title = "Receive";
-wallet_transactions_check_detail_on_chain = "Browser";
-wallet_transactions_publish_title = "Open Account";
-wallet_transactions_make_coin_title = "Publish";
 wallet_transactions_empty_default_title = "No Transaction Yet";
 
 /************* 已存在身份钱包创建钱包 *******************/
-wallet_add_wallet_btc_title = "Create a Bitcoin Wallet";
-wallet_add_wallet_libra_title = "Create a Libra Wallet";
-wallet_add_wallet_violas_title = "Create a Violas Wallet";
-wallet_add_wallet_nickname_textfield_placeholder = "Input Wallet Name";
 wallet_add_wallet_password_textfield_placeholder = "Enter wallet access code";
 wallet_add_wallet_password_confirm_textfield_placeholder = "Enter wallet access code again";
 wallet_add_wallet_confirm_button_title = "Create";
 
 /************* 已存在身份钱包导入钱包 *******************/
-wallet_import_wallet_btc_title = "Import Bitcoin Wallet";
-wallet_import_wallet_libra_title = "Import Libra Wallet";
-wallet_import_wallet_violas_title = "Import Violas Wallet";
 wallet_import_mnemonic_textview_placeholder = "Import Mnemonic Words Separated by a Space";
 wallet_import_wallet_confirm_button_title = "Start Import";
 wallet_import_wallet_legal_content_title = "I agree to the Service Agreement and Privacy Policy";
-
-/************* 钱包管理 *******************/
-wallet_manager_identity_wallet_header_title = "Identity Wallet";
-wallet_manager_import_or_create_wallet_header_title = "Create/Import";
 
 /************* 钱包详情 *******************/
 wallet_manager_detail_delete_button_title = "Delete";
 wallet_manager_detail_export_mnemonic_title = "Export Mnemonic Words";
 wallet_manager_biological_face_id_title = "Face ID";
 wallet_manager_biological_finger_touch_id_title = "Touch ID";
-
-/************* 钱包管理修改名称 *******************/
-wallet_manager_detail_change_wallet_name_title = "Change Wallet Name";
-wallet_manager_detail_change_wallet_name_textfield_placeholder = "Input Wallet Name";
-wallet_manager_detail_change_wallet_name_button_title = "Confirm Change";
-wallet_manager_detail_change_wallet_name_cancel_button_title = "Cancel";
+wallet_biometric_alert_fingerprint_describe = "Confirm the fingerprint for authentication.";
+wallet_biometric_alert_face_id_describe = "Confirm your face for identity verification.";
 
 /************* 地址簿 *******************/
 wallet_address_add_remarks_title = "Note";
 wallet_address_add_remarks_textfield_placeholder = "Note Should be Less than 20 Characters";
 wallet_address_add_address_title = "Address";
 wallet_address_add_address_textfield_placeholder = "Input Address";
-wallet_address_add_confirm_button_title = "Confirm to Add";
+wallet_address_add_confirm_button_title = "Confirm";
 wallet_address_add_type_title = "Type";
-wallet_address_add_type_button_title = "Select";
 
 /************* 备份助记词警告 *******************/
 wallet_backup_mnemonic_warning_title = "Backup Mnemonic Words";
@@ -126,23 +100,6 @@ wallet_alert_welcome_confirm_button_title = "Enter";
 wallet_create_choose_type_create_button_title = "Create Wallet";
 wallet_create_choose_type_import_button_title = "Import Wallet";
 
-/************* 创建钱包页面 *******************/
-wallet_create_name_textfield_placeholder = "Input Nickname";
-wallet_create_password_textfield_placeholder = "Enter wallet access code";
-wallet_create_password_confirm_textfield_placeholder = "Enter wallet access code again";
-wallet_create_confirm_button_title = "Create";
-
-/************* 市场 *******************/
-wallet_market_transfer_amount_textfield_placeholder = "Transfer Amount";
-wallet_market_receive_amount_textfield_placeholder = "Receive Amount";
-wallet_market_receive_address_title = "Receiving Address";
-wallet_market_receive_address_textfield_placeholder = "Input Receiving Address";
-wallet_market_exchange_fee_title = "Exchange Rate";
-wallet_market_exchange_fee_describe_title = "1BTC = 1Vbtc";
-wallet_market_exchange_confirm_title = "Exchange";
-wallet_market_pay_amount_least_title = "Least pay amount：";
-wallet_market_exchange_amount_least_title = "Least exchange amount：";
-
 /************* 关于我们 *******************/
 wallet_about_us_navigation_right_bar_title = "Question & Feedback";
 wallet_mine_about_us_official_address = "Official site";
@@ -158,49 +115,14 @@ wallet_setting_help_center_title = "Feedback";
 /************* 地址页面 *******************/
 wallet_address_manager_empty_data_title = "No Address Yet";
 
-/************* 稳定币管理 *******************/
-wallet_add_token_registered_title = "(Registered)";
-
-/************* 交易所 *******************/
-wallet_market_mine_commission_title = "Mine commission";
-wallet_market_order_center_title = "All";
-wallet_market_other_commission_title = "Others commission";
-wallet_market_trade_name_title = "Market";
-wallet_market_trade_amount_title = "Amount";
-wallet_market_trade_price_title = "Price";
-wallet_market_empty_default_describe = "The current wallet does not support exchange transactions, the exchange only supports Violas wallet transactions";
-
-/************* 订单中心 *******************/
-wallet_market_processing_order_title = "Unfinished";
-wallet_market_done_order_title = "Completed";
-wallet_market_order_price_title = "Price";
-wallet_market_order_amount_title = "Amount";
-wallet_market_order_date_title = "Date";
-wallet_market_order_fill_amount_title = "Fill amount";
-wallet_market_order_fee_title = "Fee";
-wallet_market_order_state_cancel_title = "Cancel";
-wallet_market_order_state_canceled_title = "canceled";
-wallet_market_order_state_done_title = "Done";
-
-/************* 订单详情 *******************/
-wallet_market_order_detail_price_title = "Price";
-wallet_market_order_detail_amount_title = "Amount";
-wallet_market_order_detail_date_title = "Date";
-wallet_market_order_detail_fill_amount_title = "Fill amount";
-wallet_market_order_detail_fee_title = "Fee";
-wallet_market_order_detail_state_cancel_title = "Cancel";
-wallet_market_order_detail_state_canceled_title = "Canceled";
-wallet_market_order_detail_state_done_title = "Finished";
-wallet_market_order_detail_state_processing_title = "Progressing";
-wallet_market_order_detail_fill_order_title = "Finished order";
-
 /************* 映射 *******************/
 wallet_mapping_balance_title = "Balance: ";
-wallet_mapping_input_amount_textfield_placeholder = "Input amount";
+wallet_mapping_input_amount_textfield_placeholder = "Enter mapping amount";
 wallet_mapping_mapping_rate_title = "Mapping Rate: ";
 wallet_mapping_mapping_miner_fees_title = "Miner Fees: ";
 wallet_mapping_confirm_title = "Confirm";
-wallet_mapping_transactions_title = "Transactions";
+wallet_mapping_pay_amount_least_title = "Least pay amount：";
+wallet_mapping_exchange_amount_least_title = "Least exchange amount：";
 
 /************* 映射交易列表 *******************/
 wallet_mapping_transactions_state_processing_title = "Mapping Pending";
@@ -244,20 +166,19 @@ wallet_transaction_detail_receive_success_title = "Receive Successful";
 wallet_transaction_detail_uncheck_title = "Processing";
 wallet_transaction_detail_publish_success_title = "Stablecoin Publish Successful";
 wallet_transaction_detail_mint_authority_success_title = "Mint Approval Successful";
-wallet_transaction_detail_active_success_title = "Wallet Active Successful";
 wallet_transaction_detail_transaction_failed_title = "Transaction Failed";
 wallet_transaction_detail_unknow_success_title = "Transaction Successful";
-wallet_transaction_detail_amount_title = "Amount:";
-wallet_transaction_detail_gas_title = "Gas Fee:";
-wallet_transaction_detail_transfer_address_title = "Transfer:";
-wallet_transaction_detail_receive_address_title = "Receiver:";
+wallet_transaction_detail_amount_title = "Amount: ";
+wallet_transaction_detail_gas_title = "Gas Fee: ";
+wallet_transaction_detail_transfer_address_title = "Transfer: ";
+wallet_transaction_detail_receive_address_title = "Receiver: ";
 wallet_transaction_detail_version_title = "No.";
 wallet_transaction_detail_explorer_check_title = "Browser for more detailed information >";
 
 /************* 添加资产 *******************/
 wallet_add_assets_get_test_coin_title = "Get Test Coin";
 
-/************* 交易所（最新） *******************/
+/************* 交易所兑换 *******************/
 wallet_market_exchange_navigation_title = "Swap";
 wallet_market_assets_pool_navigation_title = "Pool";
 wallet_market_exchange_input_amount_title = "From";
@@ -268,13 +189,16 @@ wallet_market_exchange_miner_fee_title = "Miner Fees: ";
 wallet_market_exchange_button_title = "Swap";
 wallet_market_exchange_input_token_button_title = "Select a token";
 wallet_market_exchange_output_token_button_title = "Select a token";
-wallet_market_exchange_transactions_title = "Swap Transactions";
+wallet_market_exchange_token_title = "Balance: ";
+
+/************* 交易所兑换交易记录 *******************/
 wallet_market_exchange_transaction_status_success_title = "Successful";
 wallet_market_exchange_transaction_status_failed_title = "Failed";
 wallet_market_exchange_transaction_status_processing_title = "Swapping";
 wallet_market_exchange_transaction_status_cancel_title = "Canceled";
 wallet_market_exchange_transaction_retry_button_title = "Retry";
-wallet_market_exchange_token_title = "Balance: ";
+
+/************* 交易所资金池 *******************/
 wallet_market_assets_pool_add_liquidity_token_title = "Balance：";
 wallet_market_assets_pool_remove_liquidity_token_title = "Tokens: ";
 wallet_market_assets_pool_add_liquidity_fee_title = "Add liquidity to get fee income";
@@ -285,16 +209,15 @@ wallet_market_assets_pool_input_amount_title = "Deposit";
 wallet_market_assets_pool_output_token_title = "Assets Pool Token";
 wallet_market_assets_pool_output_amount_title = "Withdraw";
 wallet_market_assets_pool_output_token_wallet_connect_title = "Tokens：";
-
-/************* 资金池交易记录 *******************/
 wallet_assets_pool_transfer_in_title = "Add Liquidity";
 wallet_assets_pool_transfer_out_title = "Remove Liquidity";
+
+/************* 资金池交易记录 *******************/
 wallet_assets_pool_transaction_token_title = "Token: ";
 wallet_assets_pool_transaction_status_transfer_in_success_title = "Deposit Successful";
 wallet_assets_pool_transaction_status_transfer_in_failed_title = "Deposit Failed";
 wallet_assets_pool_transaction_status_transfer_out_success_title = "Withdraw Successful";
 wallet_assets_pool_transaction_status_transfer_out_failed_title = "Withdraw Failed";
-wallet_assets_pool_transaction_status_transfer_processing_title = "Transfer Processing";
 wallet_assets_pool_transaction_status_transfer_invalid_title = "Status Invalid";
 
 /************* 资金池个人中心 *******************/
@@ -303,7 +226,7 @@ wallet_market_mine_assets_pool_transfer_in_title = "Add Liquidity";
 wallet_market_mine_assets_pool_transfer_out_title = "Remove Liquidity";
 wallet_market_mine_assets_pool_token_assets_transactions_title = "Tokens";
 
-/************* 交易所交易记录详情 *******************/
+/************* 交易所资金池交易记录详情 *******************/
 wallet_market_transaction_status_submitted_title = "Submitted";
 wallet_market_transaction_status_packing_title = "Packing";
 wallet_market_transaction_status_transfer_in_successful_title = "Deposit Successful";
@@ -313,8 +236,6 @@ wallet_market_transaction_status_transfer_out_failed_title = "Withdraw Failed";
 wallet_market_transaction_status_exchange_failed_title = "Swap Failed";
 wallet_market_transaction_status_exchange_fsuccessful_title = "Swap Successful";
 wallet_market_transaction_status_exchanging_title = "Swapping";
-wallet_market_transaction_input_amount_title = "Input";
-wallet_market_transaction_output_amount_title = "Output";
 wallet_market_transaction_content_token_title = "Token: ";
 wallet_market_transaction_content_exchange_rate_title = "Rate: ";
 wallet_market_transaction_content_miner_fee_title = "Miner Fees: ";
@@ -324,11 +245,10 @@ wallet_market_transaction_content_order_fee_title = "Fees: ";
 
 /************* 弹出提示 *******************/
 // 转账弹出提示
-wallet_transfer_success_alert = "Transfer Successful";
+wallet_transfer_success_alert = "Transaction Submitted";
 // 解锁钱包
 wallet_type_in_password_title = "Tips";
 wallet_type_in_password_content = "Input Wallet Access Code";
-wallet_type_in_watting_publish_wallet_password_content = "Input Watting Publish Wallet Access Code";
 wallet_type_in_password_textfield_placeholder = "Wallet Access Code";
 wallet_type_in_password_cancel_button_title = "Cancel";
 wallet_type_in_password_confirm_button_title = "Confirm";
@@ -346,57 +266,27 @@ wallet_import_wallet_success_title = "Import Wallet Successful";
 // 创建钱包
 wallet_create_wallet_success_title = "Create Wallet Successful";
 // 删除钱包
-wallet_delete_wallet_success_title = "Remove Wallet Successful";
+wallet_delete_wallet_success_title = "Delete Wallet Successful";
 wallet_alert_delete_wallet_title = "Warning";
-wallet_alert_delete_wallet_content = "Confirm to Remove Wallet";
+wallet_alert_delete_wallet_content = "Confirm to Delete Wallet";
 wallet_alert_delete_wallet_cancel_button_title = "Cancel";
 wallet_alert_delete_wallet_confirm_button_title = "Confirm";
 // 助记词检查
 wallet_check_mnemonic_success_title = "Backup Success";
-// 添加地址选择类型
-wallet_address_add_type_action_alert_content = "Select";
-wallet_address_add_type_action_alert_cancel_button_title = "Cancel";
 // 服务协议
 wallet_service_legal_loaded_error_title = "Load Failed";
 wallet_service_legal_loaded_error_cancel_button_title = "Confirm";
-// 选择创建还是导入Action
-wallet_add_wallet_alert_choose_import_or_create_title = "Select";
-wallet_add_wallet_alert_import_action_title = "Import";
-wallet_add_wallet_alert_create_action_title = "Create";
-wallet_add_wallet_alert_cancel_action_title = "Cancel";
-// 修改钱包名字
-wallet_manager_change_wallet_name_alert_title = "Tips";
-wallet_manager_change_wallet_name_alert_content = "Confirm Wallet Name Change";
-wallet_manager_change_wallet_name_alert_cancel_button_title = "Cancel";
-wallet_manager_change_wallet_name_alert_confirm_button_title = "Keep";
-wallet_manager_change_wallet_name_success_title = "Change Success";
 // 注册代币
 wallet_add_asset_alert_title = "Tips";
 wallet_add_asset_alert_content = "First Open Requires Gas Fee. Continue to Open?";
 wallet_add_asset_alert_cancel_button_title = "Cancel";
 wallet_add_asset_alert_confirm_button_title = "Confirm";
-wallet_add_asset_alert_success_title = "Open Success";
-// 欢迎页面
-wallet_welcome_alert_title = "Welcome to";
-wallet_welcome_alert_describe = "Wallet";
-wallet_welcome_alert_confirm_button_title = "Entrance";
+wallet_add_asset_alert_success_title = "Open Successful";
 // 删除地址
 wallet_alert_delete_address_title = "Tips";
 wallet_alert_delete_address_content = "Confirm to delete address?";
 wallet_alert_delete_address_cancel_button_title = "Cancel";
 wallet_alert_delete_address_confirm_button_title = "Confirm";
-// 交易所支持稳定币页面
-wallet_alert_market_support_token_list_title = "Select";
-wallet_alert_market_support_token_cancel_button_title = "Confirm";
-// 提示注册稳定币
-wallet_market_alert_register_token_title = "Tips";
-wallet_market_alert_register_token_content = "Haven't registered any stablecoins, do you want to register now?";
-//挂单成功
-wallet_market_alert_make_order_success_title = "Successful";
-wallet_market_alert_cancel_order_success_title = "Cancel Successful";
-//订单中心撤销订单提示
-wallet_market_order_center_cancel_order_alert_title = "Tips";
-wallet_market_order_center_cancel_order_alert_content = "Are you sure you want to cancel the currently outstanding order?";
 // 用户协议与隐私保护
 wallet_user_and_private_agreement_title = "User Agreement & Private Agreement";
 wallet_user_agreement_title = "Service Agreement";
@@ -418,7 +308,6 @@ wallet_scan_login_alert_success_title = "Login Successful";
 wallet_connect_connect_time_invalid_title = "Connection failed, please try again later";
 wallet_connect_disconnect_success_title = "Logout Successful";
 wallet_connect_publish_success_title = "Publish Successful";
-
 // 交易所添加流动性
 wallet_assets_pool_add_liquidity_unselect_first_deposit_token_content = "Please select a deposit token";
 wallet_assets_pool_add_liquidity_unselect_second_deposit_token_content = "Please select other deposit token";
@@ -437,11 +326,11 @@ wallet_market_exchange_output_token_unselect = "Please select a output token";
 wallet_market_exchange_output_token_unactived = "Output token unactived, Whether to activate and exchange right now";
 wallet_market_exchange_submit_exchange_successful = "Transaction Submitted";
 wallet_market_exchange_submit_exchange_failed = "Transaction Submitted Failed";
-
 //映射
 wallet_mapping_submit_successful = "Transaction Submitted";
 wallet_mapping_submit_failed = "Transaction Submitted Failed";
 wallet_mapping_output_token_unactived = "Output token unactived, Whether to activate and mapping right now";
+
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "Safety Warning";
 wallet_alert_backup_warning_detail_title = "You have not yet backup the mnemonic words of your identity wallet. Please backup them as soon as possible.\nThe mnemonic words can be used to recover funds in your identity wallet in case you have removed this App or forget the password or have lost or demaged your phone";

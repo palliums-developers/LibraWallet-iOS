@@ -125,7 +125,7 @@ extension ImportWalletViewController {
             if type == "ImportWallet" {
                 // 加载本地默认钱包
                 if let tempData = dataDic.value(forKey: "data") as? CreateWalletModel {
-                    self?.view.makeToast(localLanguage(keyString: "wallet_create_wallet_success_title"), duration: 0.5, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
+                    self?.view.makeToast(localLanguage(keyString: "wallet_import_wallet_success_title"), duration: 0.5, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
                         _ = DataBaseManager.DBManager.getLocalWallets()
                         if let success = self?.successImportClosure {
                             success()

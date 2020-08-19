@@ -62,25 +62,6 @@ class SettingTableViewCell: UITableViewCell {
         return label
     }()
     //MARK: - 设置数据
-//    var model: Transaction? {
-//        didSet {
-//            guard let tempModel = model else {
-//                return
-//            }
-//            var amountState = ""
-//            var amountColor = DefaultGreenColor
-//            if tempModel.event == "received" {
-//                nameLabel.text = localLanguage(keyString: "wallet_transactions_receive_title")
-//                amountState = "+"
-//            } else {
-//                amountState = "-"
-//                amountColor = UIColor.init(hex: "FF4C4C")
-//                nameLabel.text = localLanguage(keyString: "wallet_transactions_transfer_title")
-//
-//            }
-//            dateLabel.text = tempModel.date
-//        }
-//    }
     var model: [String: String]? {
         didSet {
             self.nameLabel.text = model!["name"]

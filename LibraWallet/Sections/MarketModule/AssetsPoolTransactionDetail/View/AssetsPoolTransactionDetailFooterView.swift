@@ -133,7 +133,7 @@ class AssetsPoolTransactionDetailFooterView: UITableViewHeaderFooterView {
     }()
     lazy var retryButton: UIButton = {
         let button = UIButton.init(type: UIButton.ButtonType.custom)
-        button.setTitle(localLanguage(keyString: "wallet_market_exchange_confirm_title"), for: UIControl.State.normal)
+//        button.setTitle(localLanguage(keyString: "wallet_market_exchange_confirm_title"), for: UIControl.State.normal)
         button.setTitleColor(UIColor.white, for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
         //        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
@@ -184,7 +184,7 @@ class AssetsPoolTransactionDetailFooterView: UITableViewHeaderFooterView {
                 finalIndicatorImageView.image = UIImage.init(named: "transaction_detail_finish")
                 finalTitleLabel.text = localLanguage(keyString: "wallet_market_transaction_status_exchange_fsuccessful_title")
             } else {
-                retryButton.alpha = 1
+                retryButton.alpha = 0
                 finalIndicatorImageView.image = UIImage.init(named: "transaction_detail_failed")
                 finalTitleLabel.text = localLanguage(keyString: "wallet_market_transaction_status_exchange_failed_title")
             }

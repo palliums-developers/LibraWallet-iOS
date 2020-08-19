@@ -118,7 +118,7 @@ extension TokenMappingViewModel: TokenMappingHeaderViewDelegate {
         }
         let inputAmount = NSDecimalNumber.init(string: inputAmountString)
         guard inputAmount.doubleValue != 0 else {
-            self.view?.makeToast(localLanguage(keyString: "wallet_market_pay_amount_least_title") + "\(transferViolasLeast)", position: .center)
+            self.view?.makeToast(localLanguage(keyString: "wallet_mapping_pay_amount_least_title") + "\(transferViolasLeast)", position: .center)
             return
         }
         guard let outputAmountString = self.view?.headerView.outputAmountTextField.text, outputAmountString.isEmpty == false else {
@@ -131,7 +131,7 @@ extension TokenMappingViewModel: TokenMappingHeaderViewDelegate {
         }
         let outputAmount = NSDecimalNumber.init(string: outputAmountString)
         guard outputAmount.doubleValue != 0 else {
-            self.view?.makeToast(localLanguage(keyString: "wallet_market_exchange_amount_least_title") + "\(transferViolasLeast)", position: .center)
+            self.view?.makeToast(localLanguage(keyString: "wallet_mapping_exchange_amount_least_title") + "\(transferViolasLeast)", position: .center)
             return
         }
         // 判断余额是否充足
