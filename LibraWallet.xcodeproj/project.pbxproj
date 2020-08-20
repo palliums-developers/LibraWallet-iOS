@@ -38,6 +38,20 @@
 		3623AB8023FC0CB3004A01BF /* MappingTransactionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB7F23FC0CB3004A01BF /* MappingTransactionsView.swift */; };
 		3623AB8223FC0CC7004A01BF /* MappingTransactionsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB8123FC0CC7004A01BF /* MappingTransactionsTableViewCell.swift */; };
 		3623AB8523FC0CE2004A01BF /* MappingTransactionsTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB8423FC0CE2004A01BF /* MappingTransactionsTableViewManager.swift */; };
+		362DC4B324ED0212008B5A64 /* BankViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362DC4B224ED0212008B5A64 /* BankViewController.swift */; };
+		362DC4B524ED0226008B5A64 /* BankModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362DC4B424ED0226008B5A64 /* BankModel.swift */; };
+		362DC4B724ED0236008B5A64 /* BankView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362DC4B624ED0236008B5A64 /* BankView.swift */; };
+		362DC4C124ED0E86008B5A64 /* WithdrawMarketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362DC4C024ED0E86008B5A64 /* WithdrawMarketViewController.swift */; };
+		362DC4C324ED0E96008B5A64 /* WithdrawMarketModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362DC4C224ED0E96008B5A64 /* WithdrawMarketModel.swift */; };
+		362DC4C524ED0EA3008B5A64 /* WithdrawMarketView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362DC4C424ED0EA3008B5A64 /* WithdrawMarketView.swift */; };
+		362DC4C724ED0EB3008B5A64 /* WithdrawMarketTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362DC4C624ED0EB3008B5A64 /* WithdrawMarketTableViewCell.swift */; };
+		362DC4CA24ED0EE1008B5A64 /* WithdrawMarketTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362DC4C924ED0EE1008B5A64 /* WithdrawMarketTableViewManager.swift */; };
+		362DC4CD24ED0F05008B5A64 /* DepositMarketTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362DC4CC24ED0F05008B5A64 /* DepositMarketTableViewManager.swift */; };
+		362DC4CF24ED0F19008B5A64 /* DepositMarketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362DC4CE24ED0F19008B5A64 /* DepositMarketViewController.swift */; };
+		362DC4D124ED0F28008B5A64 /* DepositMarketModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362DC4D024ED0F28008B5A64 /* DepositMarketModel.swift */; };
+		362DC4D324ED0F36008B5A64 /* DepositMarketView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362DC4D224ED0F36008B5A64 /* DepositMarketView.swift */; };
+		362DC4D524ED0F50008B5A64 /* DepositMarketTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362DC4D424ED0F50008B5A64 /* DepositMarketTableViewCell.swift */; };
+		362DC4D724ED12D1008B5A64 /* BankViewHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362DC4D624ED12D1008B5A64 /* BankViewHeaderView.swift */; };
 		363D90EE24CAA6C500F6374C /* LibraTransactionWriteSetPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363D90ED24CAA6C500F6374C /* LibraTransactionWriteSetPayload.swift */; };
 		363D90F024CAAC6700F6374C /* LibraContractEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363D90EF24CAAC6700F6374C /* LibraContractEvent.swift */; };
 		363D90F224CAB7C300F6374C /* LibraContracts.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 363D90F124CAB7C300F6374C /* LibraContracts.bundle */; };
@@ -362,6 +376,20 @@
 		3623AB7F23FC0CB3004A01BF /* MappingTransactionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MappingTransactionsView.swift; sourceTree = "<group>"; };
 		3623AB8123FC0CC7004A01BF /* MappingTransactionsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MappingTransactionsTableViewCell.swift; sourceTree = "<group>"; };
 		3623AB8423FC0CE2004A01BF /* MappingTransactionsTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MappingTransactionsTableViewManager.swift; sourceTree = "<group>"; };
+		362DC4B224ED0212008B5A64 /* BankViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankViewController.swift; sourceTree = "<group>"; };
+		362DC4B424ED0226008B5A64 /* BankModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankModel.swift; sourceTree = "<group>"; };
+		362DC4B624ED0236008B5A64 /* BankView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankView.swift; sourceTree = "<group>"; };
+		362DC4C024ED0E86008B5A64 /* WithdrawMarketViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawMarketViewController.swift; sourceTree = "<group>"; };
+		362DC4C224ED0E96008B5A64 /* WithdrawMarketModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawMarketModel.swift; sourceTree = "<group>"; };
+		362DC4C424ED0EA3008B5A64 /* WithdrawMarketView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawMarketView.swift; sourceTree = "<group>"; };
+		362DC4C624ED0EB3008B5A64 /* WithdrawMarketTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawMarketTableViewCell.swift; sourceTree = "<group>"; };
+		362DC4C924ED0EE1008B5A64 /* WithdrawMarketTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawMarketTableViewManager.swift; sourceTree = "<group>"; };
+		362DC4CC24ED0F05008B5A64 /* DepositMarketTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositMarketTableViewManager.swift; sourceTree = "<group>"; };
+		362DC4CE24ED0F19008B5A64 /* DepositMarketViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositMarketViewController.swift; sourceTree = "<group>"; };
+		362DC4D024ED0F28008B5A64 /* DepositMarketModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositMarketModel.swift; sourceTree = "<group>"; };
+		362DC4D224ED0F36008B5A64 /* DepositMarketView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositMarketView.swift; sourceTree = "<group>"; };
+		362DC4D424ED0F50008B5A64 /* DepositMarketTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositMarketTableViewCell.swift; sourceTree = "<group>"; };
+		362DC4D624ED12D1008B5A64 /* BankViewHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankViewHeaderView.swift; sourceTree = "<group>"; };
 		363D90ED24CAA6C500F6374C /* LibraTransactionWriteSetPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraTransactionWriteSetPayload.swift; sourceTree = "<group>"; };
 		363D90EF24CAAC6700F6374C /* LibraContractEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraContractEvent.swift; sourceTree = "<group>"; };
 		363D90F124CAB7C300F6374C /* LibraContracts.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = LibraContracts.bundle; sourceTree = "<group>"; };
@@ -936,6 +964,139 @@
 			isa = PBXGroup;
 			children = (
 				3623AB8423FC0CE2004A01BF /* MappingTransactionsTableViewManager.swift */,
+			);
+			path = TableViewManager;
+			sourceTree = "<group>";
+		};
+		362DC4AD24ED014C008B5A64 /* BankSection */ = {
+			isa = PBXGroup;
+			children = (
+				362DC4B924ED03BD008B5A64 /* WithdrawMarket */,
+				362DC4B824ED03A0008B5A64 /* DepositMarket */,
+				362DC4AE24ED016B008B5A64 /* Bank */,
+			);
+			path = BankSection;
+			sourceTree = "<group>";
+		};
+		362DC4AE24ED016B008B5A64 /* Bank */ = {
+			isa = PBXGroup;
+			children = (
+				362DC4B124ED01FC008B5A64 /* Controller */,
+				362DC4B024ED01F6008B5A64 /* Model */,
+				362DC4AF24ED01F2008B5A64 /* View */,
+			);
+			path = Bank;
+			sourceTree = "<group>";
+		};
+		362DC4AF24ED01F2008B5A64 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				362DC4B624ED0236008B5A64 /* BankView.swift */,
+				362DC4D624ED12D1008B5A64 /* BankViewHeaderView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		362DC4B024ED01F6008B5A64 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				362DC4B424ED0226008B5A64 /* BankModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		362DC4B124ED01FC008B5A64 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				362DC4B224ED0212008B5A64 /* BankViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		362DC4B824ED03A0008B5A64 /* DepositMarket */ = {
+			isa = PBXGroup;
+			children = (
+				362DC4CB24ED0EE9008B5A64 /* TableViewManager */,
+				362DC4BF24ED03E5008B5A64 /* Controller */,
+				362DC4BC24ED03D2008B5A64 /* Model */,
+				362DC4BA24ED03C8008B5A64 /* View */,
+			);
+			path = DepositMarket;
+			sourceTree = "<group>";
+		};
+		362DC4B924ED03BD008B5A64 /* WithdrawMarket */ = {
+			isa = PBXGroup;
+			children = (
+				362DC4C824ED0EC7008B5A64 /* TableViewManager */,
+				362DC4BE24ED03DC008B5A64 /* Controller */,
+				362DC4BD24ED03D7008B5A64 /* Model */,
+				362DC4BB24ED03CC008B5A64 /* View */,
+			);
+			path = WithdrawMarket;
+			sourceTree = "<group>";
+		};
+		362DC4BA24ED03C8008B5A64 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				362DC4D224ED0F36008B5A64 /* DepositMarketView.swift */,
+				362DC4D424ED0F50008B5A64 /* DepositMarketTableViewCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		362DC4BB24ED03CC008B5A64 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				362DC4C424ED0EA3008B5A64 /* WithdrawMarketView.swift */,
+				362DC4C624ED0EB3008B5A64 /* WithdrawMarketTableViewCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		362DC4BC24ED03D2008B5A64 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				362DC4D024ED0F28008B5A64 /* DepositMarketModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		362DC4BD24ED03D7008B5A64 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				362DC4C224ED0E96008B5A64 /* WithdrawMarketModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		362DC4BE24ED03DC008B5A64 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				362DC4C024ED0E86008B5A64 /* WithdrawMarketViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		362DC4BF24ED03E5008B5A64 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				362DC4CE24ED0F19008B5A64 /* DepositMarketViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		362DC4C824ED0EC7008B5A64 /* TableViewManager */ = {
+			isa = PBXGroup;
+			children = (
+				362DC4C924ED0EE1008B5A64 /* WithdrawMarketTableViewManager.swift */,
+			);
+			path = TableViewManager;
+			sourceTree = "<group>";
+		};
+		362DC4CB24ED0EE9008B5A64 /* TableViewManager */ = {
+			isa = PBXGroup;
+			children = (
+				362DC4CC24ED0F05008B5A64 /* DepositMarketTableViewManager.swift */,
 			);
 			path = TableViewManager;
 			sourceTree = "<group>";
@@ -2935,6 +3096,7 @@
 		9DC902362328E7820097FD85 /* Sections */ = {
 			isa = PBXGroup;
 			children = (
+				362DC4AD24ED014C008B5A64 /* BankSection */,
 				9D1A6147233204B1009DDA07 /* Base */,
 				9DC87792237A529D006378C3 /* FirstInSection */,
 				9DC06A6F2374059100BCE1FE /* HomeSection */,
@@ -3426,6 +3588,7 @@
 				9D9B4A07236048A000354EF0 /* AboutUsTableViewHeader.swift in Sources */,
 				9DFFA88123683C4400EA74F9 /* WalletTransactionsViewController.swift in Sources */,
 				9D68D307238039D7005B7593 /* BTCTransferModel.swift in Sources */,
+				362DC4C524ED0EA3008B5A64 /* WithdrawMarketView.swift in Sources */,
 				3682E5C624AC36DC007CA2CA /* AssetsPoolView.swift in Sources */,
 				9D9B4A132360491C00354EF0 /* HelpCenterView.swift in Sources */,
 				9DA0265B23710FDB0084905B /* WelcomeAlert.swift in Sources */,
@@ -3454,6 +3617,7 @@
 				36178322243F1455003C6588 /* LibraMultiHDWallet.swift in Sources */,
 				9DB515B623A32C3A0069A909 /* ViolasHDWallet.swift in Sources */,
 				3622F21424E539ED00CFB754 /* ReceiveView.swift in Sources */,
+				362DC4D124ED0F28008B5A64 /* DepositMarketModel.swift in Sources */,
 				9DC902472328FDB90097FD85 /* DataBaseManager.swift in Sources */,
 				9D5B4E70236BCBDB00F4D99C /* AddAssetModel.swift in Sources */,
 				9D5B4E5E236976D500F4D99C /* HomeTableViewCell.swift in Sources */,
@@ -3463,6 +3627,7 @@
 				3682E5D924AC9DC0007CA2CA /* ScanPublishView.swift in Sources */,
 				36F826EF24BD9ED50007ACC3 /* ExchangeTransactionsViewController.swift in Sources */,
 				9DC4880D2320EDF8005FF254 /* LibraUtils.swift in Sources */,
+				362DC4B724ED0236008B5A64 /* BankView.swift in Sources */,
 				9DC4886D232222CF005FF254 /* LBXScanViewStyle.swift in Sources */,
 				9DC8778F23796884006378C3 /* ToastView.swift in Sources */,
 				9D628A86239A495500E222FB /* PrivateAlertView.swift in Sources */,
@@ -3476,6 +3641,7 @@
 				36828CDE24B74C270085A165 /* ExchangeView.swift in Sources */,
 				36178363244465EB003C6588 /* ViolasMultiPublicKey.swift in Sources */,
 				9D5B4E78236BCE1700F4D99C /* AddAssetViewTableViewCell.swift in Sources */,
+				362DC4D324ED0F36008B5A64 /* DepositMarketView.swift in Sources */,
 				9DC901F2232788C30097FD85 /* LibraAccessPath.swift in Sources */,
 				9DBC267823408D55009650EA /* ed25519_ge.swift in Sources */,
 				9DFFA88323683C5700EA74F9 /* WalletTransactionsTableViewManager.swift in Sources */,
@@ -3492,6 +3658,7 @@
 				9DC4880B2320E6C1005FF254 /* LibraHDPrivateKey.swift in Sources */,
 				36828CC124B707C80085A165 /* AssetsPoolTransactionDetailModel.swift in Sources */,
 				36F8270C24BEAA7E0007ACC3 /* DropperExtensions.swift in Sources */,
+				362DC4C724ED0EB3008B5A64 /* WithdrawMarketTableViewCell.swift in Sources */,
 				9D9B49B1235DA76100354EF0 /* AddAddressView.swift in Sources */,
 				9DC06A2D2371786B00BCE1FE /* CheckBackupViewController.swift in Sources */,
 				3622F20524E4000500CFB754 /* TransferModel.swift in Sources */,
@@ -3509,9 +3676,11 @@
 				361783652444683B003C6588 /* ViolasTypeTag.swift in Sources */,
 				9DB515BD23A32E8C0069A909 /* ViolasTransactionArgument.swift in Sources */,
 				9DC48869232222CF005FF254 /* LBXScanNetAnimation.swift in Sources */,
+				362DC4B524ED0226008B5A64 /* BankModel.swift in Sources */,
 				3623AB7623FBFC79004A01BF /* MappingTokenListAlert.swift in Sources */,
 				9D1A614C233204E2009DDA07 /* BaseViewController.swift in Sources */,
 				36828CC324B707D40085A165 /* AssetsPoolTransactionDetailView.swift in Sources */,
+				362DC4C324ED0E96008B5A64 /* WithdrawMarketModel.swift in Sources */,
 				3650F0BC248A46360086F578 /* TransactionDetailView.swift in Sources */,
 				368CD5E324D26F4E0092F12E /* MarketManager.swift in Sources */,
 				36DA3FCE23B5E5C6001D7733 /* UIButton + imageTitleLocation.swift in Sources */,
@@ -3532,6 +3701,7 @@
 				9DFFA87D23683C1D00EA74F9 /* WalletTransactionsView.swift in Sources */,
 				3650F0C3248F7ED30086F578 /* HomeWithoutWalletView.swift in Sources */,
 				3623AB6323F15F5F004A01BF /* TokenMappingHeaderView.swift in Sources */,
+				362DC4D724ED12D1008B5A64 /* BankViewHeaderView.swift in Sources */,
 				9D9B4A5A2366D1C400354EF0 /* WalletConfigView.swift in Sources */,
 				9D68D2F5237D24DD005B7593 /* BTCTransferView.swift in Sources */,
 				9D9B49AC235DA76100354EF0 /* AddressManagerModel.swift in Sources */,
@@ -3562,6 +3732,7 @@
 				36828CD524B736D10085A165 /* MarketMineViewHeaderView.swift in Sources */,
 				3623AB8023FC0CB3004A01BF /* MappingTransactionsView.swift in Sources */,
 				9D68D301237D260E005B7593 /* ViolasTransferModel.swift in Sources */,
+				362DC4C124ED0E86008B5A64 /* WithdrawMarketViewController.swift in Sources */,
 				36828CBF24B707B90085A165 /* AssetsPoolTransactionDetailViewController.swift in Sources */,
 				9DC902432328FC4A0097FD85 /* HomeModel.swift in Sources */,
 				363D90F024CAAC6700F6374C /* LibraContractEvent.swift in Sources */,
@@ -3599,6 +3770,7 @@
 				36F8270B24BEAA7E0007ACC3 /* Dropper.swift in Sources */,
 				3617836B24449B53003C6588 /* ViolasTransactionModule.swift in Sources */,
 				9DC4886C232222CF005FF254 /* LBXScanLineAnimation.swift in Sources */,
+				362DC4CD24ED0F05008B5A64 /* DepositMarketTableViewManager.swift in Sources */,
 				9DB515B423A32C130069A909 /* ViolasHDPublicKey.swift in Sources */,
 				9D9B49FC236046CF00354EF0 /* ServiceLegalView.swift in Sources */,
 				9DC902452328FCD00097FD85 /* LibraWalletError.swift in Sources */,
@@ -3614,6 +3786,7 @@
 				9D68D2F9237D24FF005B7593 /* BTCTransferViewController.swift in Sources */,
 				36828CE424B74C6E0085A165 /* ExchangeViewHeaderView.swift in Sources */,
 				3650F0BA248A46280086F578 /* TransactionDetailModel.swift in Sources */,
+				362DC4CA24ED0EE1008B5A64 /* WithdrawMarketTableViewManager.swift in Sources */,
 				9D712441232F621B009DED52 /* LibraWalletTool.swift in Sources */,
 				9D626482235719A400A79B3D /* WelcomePageView.swift in Sources */,
 				36836D3324B301320031AC6E /* ExchangeTransactionDetailModel.swift in Sources */,
@@ -3624,11 +3797,13 @@
 				36B43A7223BDE967008E2EEA /* LBXScanError.swift in Sources */,
 				3617835F244465B7003C6588 /* ViolasMultiHDWallet.swift in Sources */,
 				3650F0BF248A46F20086F578 /* TransactionDetailTableViewManager.swift in Sources */,
+				362DC4CF24ED0F19008B5A64 /* DepositMarketViewController.swift in Sources */,
 				9DC4884923211180005FF254 /* WalletManager.swift in Sources */,
 				36B466B6247656E400CFF438 /* ScanSendTransactionModel.swift in Sources */,
 				9D9B49AB235DA76100354EF0 /* AddressManagerTableViewManager.swift in Sources */,
 				9D5B4E6E236BCBC200F4D99C /* AddAssetView.swift in Sources */,
 				3650F0B12488986A0086F578 /* WalletMainTableViewManager.swift in Sources */,
+				362DC4B324ED0212008B5A64 /* BankViewController.swift in Sources */,
 				9D5B4E602369788500F4D99C /* HomeTableViewManager.swift in Sources */,
 				36B466B0247656A000CFF438 /* ScanSendTransactionView.swift in Sources */,
 				9D9B4A08236048A000354EF0 /* AboutUsView.swift in Sources */,
@@ -3637,6 +3812,7 @@
 				9D68D303237D261B005B7593 /* ViolasTransferViewController.swift in Sources */,
 				9DC488752322249E005FF254 /* LibraTransferView.swift in Sources */,
 				9D712445232F7C36009DED52 /* LibraTransferModel.swift in Sources */,
+				362DC4D524ED0F50008B5A64 /* DepositMarketTableViewCell.swift in Sources */,
 				9DC4887C23223204005FF254 /* ScanViewController.swift in Sources */,
 				9D9B49D32360268E00354EF0 /* BaseTabBarViewController.swift in Sources */,
 				36828CE024B74C380085A165 /* ExchangeModel.swift in Sources */,

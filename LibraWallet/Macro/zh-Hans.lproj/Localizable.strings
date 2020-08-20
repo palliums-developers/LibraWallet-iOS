@@ -243,6 +243,14 @@ wallet_market_transaction_content_order_time_title = "下单时间：";
 wallet_market_transaction_content_order_done_time_title = "成交时间：";
 wallet_market_transaction_content_order_fee_title = "手续费：";
 
+/************* 数字银行首页 *******************/
+wallet_bank_total_deposit_title = "存款总额（$）";
+wallet_bank_deposit_amount_title = "可借总额（$）";
+wallet_bank_total_benefit_title = "累计收益（$）";
+wallet_bank_yesterday_earnings_button_title = "昨日收益";
+wallet_bank_deposit_market_title = "存款市场";
+wallet_bank_loan_market_title = "借款市场";
+
 /************* 弹出提示 *******************/
 // 转账弹出提示
 wallet_transfer_success_alert = "转账成功";
