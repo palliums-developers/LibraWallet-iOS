@@ -57,10 +57,11 @@ class HomeHeaderView: UIView {
             }
         }
         walletConnectStateButton.snp.makeConstraints { (make) in
-            make.bottom.equalTo(coinBackgroundView.snp.top).offset(-9)
-//            make.bottom.equalTo(coinBackgroundView.snp.top).offset(-49)
+//            make.bottom.equalTo(coinBackgroundView.snp.top).offset(-9)
+            make.bottom.equalTo(coinBackgroundView.snp.top).offset(-49)
             make.right.equalTo(self.snp.right).offset(-20)
-            make.size.equalTo(CGSize.init(width: 120, height: 24))
+            let width = 14 + 10 + 4 + libraWalletTool.ga_widthForComment(content: localLanguage(keyString: "wallet_wallet_connect_state_title"), fontSize: 12, height: 24) + 8
+            make.size.equalTo(CGSize.init(width: width, height: 24))
         }
         
         transferButton.snp.makeConstraints { (make) in
