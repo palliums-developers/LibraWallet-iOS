@@ -52,6 +52,12 @@
 		362DC4D324ED0F36008B5A64 /* DepositMarketView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362DC4D224ED0F36008B5A64 /* DepositMarketView.swift */; };
 		362DC4D524ED0F50008B5A64 /* DepositMarketTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362DC4D424ED0F50008B5A64 /* DepositMarketTableViewCell.swift */; };
 		362DC4D724ED12D1008B5A64 /* BankViewHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362DC4D624ED12D1008B5A64 /* BankViewHeaderView.swift */; };
+		362DC4DF24EE67A8008B5A64 /* DepositOrdersTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362DC4DE24EE67A7008B5A64 /* DepositOrdersTableViewManager.swift */; };
+		362DC4E124EE67BA008B5A64 /* DepositOrdersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362DC4E024EE67BA008B5A64 /* DepositOrdersViewController.swift */; };
+		362DC4E324EE67D2008B5A64 /* DepositOrdersModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362DC4E224EE67D2008B5A64 /* DepositOrdersModel.swift */; };
+		362DC4E524EE67E0008B5A64 /* DepositOrdersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362DC4E424EE67E0008B5A64 /* DepositOrdersView.swift */; };
+		362DC4E724EE6811008B5A64 /* DepositOrdersTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362DC4E624EE6811008B5A64 /* DepositOrdersTableViewCell.swift */; };
+		362DC4E924EE6E38008B5A64 /* DepositOrdersTableViewHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362DC4E824EE6E38008B5A64 /* DepositOrdersTableViewHeaderView.swift */; };
 		363D90EE24CAA6C500F6374C /* LibraTransactionWriteSetPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363D90ED24CAA6C500F6374C /* LibraTransactionWriteSetPayload.swift */; };
 		363D90F024CAAC6700F6374C /* LibraContractEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363D90EF24CAAC6700F6374C /* LibraContractEvent.swift */; };
 		363D90F224CAB7C300F6374C /* LibraContracts.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 363D90F124CAB7C300F6374C /* LibraContracts.bundle */; };
@@ -390,6 +396,12 @@
 		362DC4D224ED0F36008B5A64 /* DepositMarketView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositMarketView.swift; sourceTree = "<group>"; };
 		362DC4D424ED0F50008B5A64 /* DepositMarketTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositMarketTableViewCell.swift; sourceTree = "<group>"; };
 		362DC4D624ED12D1008B5A64 /* BankViewHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankViewHeaderView.swift; sourceTree = "<group>"; };
+		362DC4DE24EE67A7008B5A64 /* DepositOrdersTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositOrdersTableViewManager.swift; sourceTree = "<group>"; };
+		362DC4E024EE67BA008B5A64 /* DepositOrdersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositOrdersViewController.swift; sourceTree = "<group>"; };
+		362DC4E224EE67D2008B5A64 /* DepositOrdersModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositOrdersModel.swift; sourceTree = "<group>"; };
+		362DC4E424EE67E0008B5A64 /* DepositOrdersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositOrdersView.swift; sourceTree = "<group>"; };
+		362DC4E624EE6811008B5A64 /* DepositOrdersTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositOrdersTableViewCell.swift; sourceTree = "<group>"; };
+		362DC4E824EE6E38008B5A64 /* DepositOrdersTableViewHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositOrdersTableViewHeaderView.swift; sourceTree = "<group>"; };
 		363D90ED24CAA6C500F6374C /* LibraTransactionWriteSetPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraTransactionWriteSetPayload.swift; sourceTree = "<group>"; };
 		363D90EF24CAAC6700F6374C /* LibraContractEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraContractEvent.swift; sourceTree = "<group>"; };
 		363D90F124CAB7C300F6374C /* LibraContracts.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = LibraContracts.bundle; sourceTree = "<group>"; };
@@ -971,6 +983,8 @@
 		362DC4AD24ED014C008B5A64 /* BankSection */ = {
 			isa = PBXGroup;
 			children = (
+				362DC4D924EE64BD008B5A64 /* LoanOrders */,
+				362DC4D824EE649A008B5A64 /* DepositOrders */,
 				362DC4B924ED03BD008B5A64 /* WithdrawMarket */,
 				362DC4B824ED03A0008B5A64 /* DepositMarket */,
 				362DC4AE24ED016B008B5A64 /* Bank */,
@@ -1097,6 +1111,58 @@
 			isa = PBXGroup;
 			children = (
 				362DC4CC24ED0F05008B5A64 /* DepositMarketTableViewManager.swift */,
+			);
+			path = TableViewManager;
+			sourceTree = "<group>";
+		};
+		362DC4D824EE649A008B5A64 /* DepositOrders */ = {
+			isa = PBXGroup;
+			children = (
+				362DC4DD24EE6507008B5A64 /* TableViewManager */,
+				362DC4DC24EE64F5008B5A64 /* Controller */,
+				362DC4DB24EE64F0008B5A64 /* Model */,
+				362DC4DA24EE64EB008B5A64 /* View */,
+			);
+			path = DepositOrders;
+			sourceTree = "<group>";
+		};
+		362DC4D924EE64BD008B5A64 /* LoanOrders */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = LoanOrders;
+			sourceTree = "<group>";
+		};
+		362DC4DA24EE64EB008B5A64 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				362DC4E424EE67E0008B5A64 /* DepositOrdersView.swift */,
+				362DC4E624EE6811008B5A64 /* DepositOrdersTableViewCell.swift */,
+				362DC4E824EE6E38008B5A64 /* DepositOrdersTableViewHeaderView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		362DC4DB24EE64F0008B5A64 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				362DC4E224EE67D2008B5A64 /* DepositOrdersModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		362DC4DC24EE64F5008B5A64 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				362DC4E024EE67BA008B5A64 /* DepositOrdersViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		362DC4DD24EE6507008B5A64 /* TableViewManager */ = {
+			isa = PBXGroup;
+			children = (
+				362DC4DE24EE67A7008B5A64 /* DepositOrdersTableViewManager.swift */,
 			);
 			path = TableViewManager;
 			sourceTree = "<group>";
@@ -3539,6 +3605,7 @@
 				9D68D2FF237D25FD005B7593 /* ViolasTransferView.swift in Sources */,
 				3622F21224E539DB00CFB754 /* ReceiveViewController.swift in Sources */,
 				9DC06A2523715ADB00BCE1FE /* BackupWarningAlert.swift in Sources */,
+				362DC4E924EE6E38008B5A64 /* DepositOrdersTableViewHeaderView.swift in Sources */,
 				9D9B49BF235EE03C00354EF0 /* EmptyDataPlaceholderView.swift in Sources */,
 				36F826FF24BDA1DF0007ACC3 /* AssetsPoolTransactionsTableViewManager.swift in Sources */,
 				3682E5BA24A865DB007CA2CA /* ScanLogoutViewController.swift in Sources */,
@@ -3552,6 +3619,7 @@
 				3682E5DB24AC9E09007CA2CA /* ScanPublishModel.swift in Sources */,
 				9D9B4A672366D93900354EF0 /* WalletConfigTableViewCell.swift in Sources */,
 				9D626481235719A400A79B3D /* WelcomeView.swift in Sources */,
+				362DC4E124EE67BA008B5A64 /* DepositOrdersViewController.swift in Sources */,
 				9DFFA8752368316900EA74F9 /* SettingViewHeader.swift in Sources */,
 				9DA0265923702AFE0084905B /* BackupWarningView.swift in Sources */,
 				9D9B4A4A2362F4DC00354EF0 /* MineHeaderView.swift in Sources */,
@@ -3651,6 +3719,7 @@
 				3667A79B2475011F0000F119 /* WalletConnectManager.swift in Sources */,
 				9D9B49D12360036000354EF0 /* MineTableViewCell.swift in Sources */,
 				9DC06A452372A9F200BCE1FE /* MarketModel.swift in Sources */,
+				362DC4E524EE67E0008B5A64 /* DepositOrdersView.swift in Sources */,
 				9DC4886023220E47005FF254 /* QRCodeGenerator.swift in Sources */,
 				9DA02646236FFCF60084905B /* BackupMnemonicModel.swift in Sources */,
 				3646E4FF24D3EFFB00B8C20B /* AssetsPoolTransactionDetailFooterView.swift in Sources */,
@@ -3667,6 +3736,7 @@
 				9DA8E2A22317ABC400E28D07 /* AppDelegate.swift in Sources */,
 				9D9B49C9235FFA8E00354EF0 /* MineModel.swift in Sources */,
 				9DC4886B232222CF005FF254 /* LBXScanViewController.swift in Sources */,
+				362DC4E324EE67D2008B5A64 /* DepositOrdersModel.swift in Sources */,
 				36F826F124BD9EEB0007ACC3 /* ExchangeTransactionsView.swift in Sources */,
 				9DB515C123A32F3E0069A909 /* ViolasTransactionWriteSet.swift in Sources */,
 				9DC4886F232222CF005FF254 /* LBXScanWrapper.swift in Sources */,
@@ -3736,6 +3806,7 @@
 				36828CBF24B707B90085A165 /* AssetsPoolTransactionDetailViewController.swift in Sources */,
 				9DC902432328FC4A0097FD85 /* HomeModel.swift in Sources */,
 				363D90F024CAAC6700F6374C /* LibraContractEvent.swift in Sources */,
+				362DC4DF24EE67A8008B5A64 /* DepositOrdersTableViewManager.swift in Sources */,
 				361783672444684F003C6588 /* ViolasStructTag.swift in Sources */,
 				9D9B49F52360389200354EF0 /* LanguageTableViewCell.swift in Sources */,
 				9D9B49CF235FFADB00354EF0 /* MineTableViewManager.swift in Sources */,
@@ -3807,6 +3878,7 @@
 				9D5B4E602369788500F4D99C /* HomeTableViewManager.swift in Sources */,
 				36B466B0247656A000CFF438 /* ScanSendTransactionView.swift in Sources */,
 				9D9B4A08236048A000354EF0 /* AboutUsView.swift in Sources */,
+				362DC4E724EE6811008B5A64 /* DepositOrdersTableViewCell.swift in Sources */,
 				9DC487FF2320AFB8005FF254 /* LibraError.swift in Sources */,
 				36B466AE2476568E00CFF438 /* ScanSendRawTransactionView.swift in Sources */,
 				9D68D303237D261B005B7593 /* ViolasTransferViewController.swift in Sources */,

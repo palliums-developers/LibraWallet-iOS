@@ -20,24 +20,23 @@ class BaseTabBarViewController: UITabBarController {
             // Fallback on earlier versions
         }
         addAllChildViewController()
-        self.selectedIndex = 0
+        self.selectedIndex = 2
         // 添加语言变换通知
          NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
     }
     private func addAllChildViewController(){
         let home = HomeViewController.init()
         
-//        let market = AssetsPoolViewController.init()
         let market = MarketViewController.init()
 
+        let bank = BankViewController.init()
         
         let mine = MineViewController.init()
         
         addChildViewController(childViewController: home, imageName: "tabbar_wallet_normal", selectedImageName: "tabbar_wallet_highlight", title: localLanguage(keyString: "wallet_tabbar_wallet_title"))
         addChildViewController(childViewController: market, imageName: "tabbar_market_normal", selectedImageName: "tabbar_market_highlight", title: localLanguage(keyString: "wallet_tabbar_market_title"))
+        addChildViewController(childViewController: bank, imageName: "tabbar_market_normal", selectedImageName: "tabbar_market_highlight", title: localLanguage(keyString: "wallet_tabbar_market_title"))
         addChildViewController(childViewController: mine, imageName: "tabbar_mine_normal", selectedImageName: "tabbar_mine_highlight", title: localLanguage(keyString: "wallet_tabbar_mine_title"))
-        
-        
     }
     private func addChildViewController(childViewController:UIViewController, imageName:String, selectedImageName:String, title:String){
         childViewController.tabBarItem.title = title

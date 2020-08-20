@@ -141,7 +141,7 @@ class BankViewController: UIViewController {
      lazy var transactionsButton: UIButton = {
          let button = UIButton(type: .custom)
          button.setImage(UIImage.init(named: "wallet_detail_indicator"), for: UIControl.State.normal)
-//         button.addTarget(self, action: #selector(scanToTransfer), for: .touchUpInside)
+         button.addTarget(self, action: #selector(checkOrder), for: .touchUpInside)
          return button
      }()
 }
@@ -183,5 +183,10 @@ extension BankViewController {
         rightBarButtonItem.width = 15
         // 返回按钮设置成功
         self.navigationItem.rightBarButtonItems = [rightBarButtonItem, scanView]
+    }
+    @objc func checkOrder() {
+        let vc = DepositOrdersViewController.init()
+        vc.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }

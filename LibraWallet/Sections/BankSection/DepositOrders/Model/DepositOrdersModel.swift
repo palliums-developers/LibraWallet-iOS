@@ -1,15 +1,15 @@
 //
-//  DepositMarketModel.swift
+//  DepositOrdersModel.swift
 //  LibraWallet
 //
-//  Created by wangyingdong on 2020/8/19.
+//  Created by wangyingdong on 2020/8/20.
 //  Copyright © 2020 palliums. All rights reserved.
 //
 
 import UIKit
 import Moya
 
-class DepositMarketModel: NSObject {
+class DepositOrdersModel: NSObject {
     private var requests: [Cancellable] = []
     @objc var dataDic: NSMutableDictionary = [:]
     deinit {
@@ -17,6 +17,6 @@ class DepositMarketModel: NSObject {
             cancellable.cancel()
         }
         requests.removeAll()
-        print("DepositMarketModel销毁了")
+        print("DepositOrdersModel销毁了")
     }
 }

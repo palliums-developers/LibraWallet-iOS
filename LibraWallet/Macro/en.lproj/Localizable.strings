@@ -251,6 +251,14 @@ wallet_bank_yesterday_earnings_button_title = "Yesterday's earnings";
 wallet_bank_deposit_market_title = "Deposit Market";
 wallet_bank_loan_market_title = "Loan Market";
 
+/************* 数字银行存款订单 *******************/
+wallet_deposit_orders_title = "Current Deposit";
+wallet_deposit_orders_order_state_title = "Increasing";
+wallet_deposit_orders_order_withdraw_button_title = "Withdraw";
+wallet_deposit_orders_total_amount_title = "Principal";
+wallet_deposit_orders_income_title = "Earnings";
+wallet_deposit_orders_annualized_return_title = "Annualized Return";
+
 /************* 弹出提示 *******************/
 // 转账弹出提示
 wallet_transfer_success_alert = "Transaction Submitted";
