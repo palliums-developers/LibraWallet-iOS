@@ -136,8 +136,10 @@ extension ScanSwapViewController: ScanSendTransactionViewDelegate {
                     self?.dataModel.sendAddLiquidityViolasTransaction(model: raw, mnemonic: mnemonic, feeModule: "LBR")
                 } else if raw.payload?.code == "a11ceb0b010006010002030207040902050b0c07171a083110000000010001020101000204060c0303030002090009010845786368616e67651072656d6f76655f6c6971756964697479000000000000000000000000000000010201010001060b000a010a020a03380002" {
                     // 移除流动性
+                    self?.dataModel.sendRemoveLiquidityViolasTransaction(model: raw, mnemonic: mnemonic, feeModule: "LBR")
                 } else {
                     // 交换
+                    self?.dataModel.sendSwapViolasTransaction(model: raw, mnemonic: mnemonic, module: "LBR")
                 }
 //                self?.dataModel.sendViolasTransaction(model: raw, mnemonic: mnemonic, module: "LBR")
             }) { [weak self] (error) in

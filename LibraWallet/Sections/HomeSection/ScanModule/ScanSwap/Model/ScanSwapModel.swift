@@ -13,7 +13,7 @@ class ScanSwapModel: NSObject {
     private var requests: [Cancellable] = []
     @objc dynamic var dataDic: NSMutableDictionary = [:]
     private var sequenceNumber: UInt64?
-    func sendViolasTransaction(model: WCRawTransaction,  mnemonic: [String], module: String) {
+    func sendSwapViolasTransaction(model: WCRawTransaction,  mnemonic: [String], module: String) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
         queue.async {
@@ -23,11 +23,22 @@ class ScanSwapModel: NSObject {
         queue.async {
             semaphore.wait()
             do {
-                let signature = try ViolasManager.getWalletConnectTransactionHex(mnemonic: mnemonic,
-                                                                                 sequenceNumber: UInt64(self.sequenceNumber!),
-                                                                                 fee: 1,
-                                                                                 model: model,
-                                                                                 module: module)
+                let (_, module1) = ViolasManager.readTypeTags(data: Data.init(hex: model.payload?.tyArgs?[0] ?? "") ?? Data(), typeTagCount: 1)
+                
+                let (_, module2) = ViolasManager.readTypeTags(data: Data.init(hex: model.payload?.tyArgs?[1] ?? "") ?? Data(), typeTagCount: 1)
+                
+                let path = Data.init(Array<UInt8>(hex: model.payload?.args?[3].value ?? ""))
+                
+                let signature = try ViolasManager.getMarketSwapTransactionHex(sendAddress: model.from ?? "",
+                                                                              mnemonic: mnemonic,
+                                                                              feeModule: model.gasCurrencyCode ?? "LBR",
+                                                                              fee: model.gasUnitPrice ?? 0,
+                                                                              sequenceNumber: self.sequenceNumber ?? 0,
+                                                                              inputAmount: NSDecimalNumber.init(string: model.payload?.args?[1].value ?? "0").uint64Value,
+                                                                              outputAmountMin: NSDecimalNumber.init(string: model.payload?.args?[2].value ?? "0").multiplying(by: NSDecimalNumber.init(value: 0.99)).uint64Value,
+                                                                              path: path.bytes,
+                                                                              inputModule: module1,
+                                                                              outputModule: module2)
                 self.makeViolasTransaction(signature: signature)
             } catch {
                 print(error.localizedDescription)
@@ -154,8 +165,8 @@ extension ScanSwapModel {
                                                                                       sequenceNumber: self.sequenceNumber ?? 0,
                                                                                       desiredAmountA: NSDecimalNumber.init(string: model.payload?.args?[0].value ?? "0").uint64Value,
                                                                                       desiredAmountB: NSDecimalNumber.init(string: model.payload?.args?[1].value ?? "0").uint64Value,
-                                                                                      minAmountA: NSDecimalNumber.init(string: model.payload?.args?[2].value ?? "0").uint64Value,
-                                                                                      minAmountB: NSDecimalNumber.init(string: model.payload?.args?[3].value ?? "0").uint64Value,
+                                                                                      minAmountA: NSDecimalNumber.init(string: model.payload?.args?[2].value ?? "0").multiplying(by: NSDecimalNumber.init(value: 0.99)).uint64Value,
+                                                                                      minAmountB: NSDecimalNumber.init(string: model.payload?.args?[3].value ?? "0").multiplying(by: NSDecimalNumber.init(value: 0.99)).uint64Value,
                                                                                       inputModuleA: module1,
                                                                                       inputModuleB: module2)
                 self.makeViolasTransaction(signature: signature)
@@ -189,8 +200,8 @@ extension ScanSwapModel {
                                                                                          fee: 0,
                                                                                          sequenceNumber: self.sequenceNumber ?? 0,
                                                                                          liquidity: NSDecimalNumber.init(string: model.payload?.args?[0].value ?? "0").uint64Value,
-                                                                                         minAmountA: NSDecimalNumber.init(string: model.payload?.args?[1].value ?? "0").uint64Value,
-                                                                                         minAmountB: NSDecimalNumber.init(string: model.payload?.args?[2].value ?? "0").uint64Value,
+                                                                                         minAmountA: NSDecimalNumber.init(string: model.payload?.args?[1].value ?? "0").multiplying(by: NSDecimalNumber.init(value: 0.99)).uint64Value,
+                                                                                         minAmountB: NSDecimalNumber.init(string: model.payload?.args?[2].value ?? "0").multiplying(by: NSDecimalNumber.init(value: 0.99)).uint64Value,
                                                                                          inputModuleA: module1,
                                                                                          inputModuleB: module2)
                 self.makeViolasTransaction(signature: signature)
