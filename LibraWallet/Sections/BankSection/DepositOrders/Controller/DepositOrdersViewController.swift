@@ -156,7 +156,7 @@ extension DepositOrdersViewController {
         self.navigationItem.rightBarButtonItems = [rightBarButtonItem, scanView]
     }
     @objc func checkOrder() {
-        let vc = DepositOrdersViewController.init()
+        let vc = DepositListViewController.init()
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }

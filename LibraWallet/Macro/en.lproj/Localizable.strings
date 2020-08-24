@@ -254,10 +254,20 @@ wallet_bank_loan_market_title = "Loan Market";
 /************* 数字银行存款订单 *******************/
 wallet_deposit_orders_title = "Current Deposit";
 wallet_deposit_orders_order_state_title = "Increasing";
-wallet_deposit_orders_order_withdraw_button_title = "Withdraw";
+wallet_deposit_orders_order_withdraw_button_title = "Withdrawal";
 wallet_deposit_orders_total_amount_title = "Principal";
 wallet_deposit_orders_income_title = "Earnings";
 wallet_deposit_orders_annualized_return_title = "Annualized Return";
+
+/************* 数字银行存款明细 *******************/
+wallet_deposit_list_order_token_select_title = "All Token";
+wallet_deposit_list_order_status_title = "All Status";
+wallet_deposit_list_order_status_withdrawal_finish_title = "Withdraw Done";
+wallet_deposit_list_order_status_withdrawal_failed_title = "Withdraw Failed";
+wallet_deposit_list_order_status_withdrawal_processing_title = "Withdraw Processing";
+wallet_deposit_list_order_status_deposit_finish_title = "Deposit Done";
+wallet_deposit_list_order_status_deposit_failed_title = "Deposit Failed";
+wallet_deposit_list_order_status_deposit_processing_title = "Deposit Processing";
 
 /************* 弹出提示 *******************/
 // 转账弹出提示
