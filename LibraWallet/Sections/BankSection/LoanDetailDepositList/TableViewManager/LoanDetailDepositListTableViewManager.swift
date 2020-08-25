@@ -1,5 +1,5 @@
 //
-//  LoanListTableViewManager.swift
+//  LoanDetailDepositListTableViewManager.swift
 //  LibraWallet
 //
 //  Created by wangyingdong on 2020/8/24.
@@ -7,44 +7,53 @@
 //
 
 import UIKit
-//protocol LoanListTableViewManagerDelegate: NSObjectProtocol {
-//    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath)
-//}
-class LoanListTableViewManager: NSObject {
-//    weak var delegate: LoanListTableViewManagerDelegate?
+
+class LoanDetailDepositListTableViewManager: NSObject {
+    //    weak var delegate: HomeTableViewManagerDelegate?
     /// 数据
     var dataModels: [Token]?
     deinit {
-        print("LoanListTableViewManager销毁了")
+        print("LoanDetailDepositListTableViewManager销毁了")
     }
 }
-extension LoanListTableViewManager: UITableViewDelegate {
+extension LoanDetailDepositListTableViewManager: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 80
+        return 54
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
         guard let model = self.dataModels else {
             return
         }
-//        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath)
+        //        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, model: model[indexPath.row])
+    }
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 27
+    }
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let identifier = "Header"
+        if let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier) {
+            return header
+        } else {
+            let header = LoanDetailDepositListTableViewHeaderView.init(reuseIdentifier: identifier)
+            return header
+        }
     }
 }
-extension LoanListTableViewManager: UITableViewDataSource {
+extension LoanDetailDepositListTableViewManager: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 10//dataModel?.count ?? 0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let identifier = "CellNormal"
-        if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? LoanListTableViewCell {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? LoanDetailDepositListTableViewCell {
             cell.selectionStyle = .none;
             //            if let data = dataModel, data.isEmpty == false {
             //                cell.model = data[indexPath.row]
             //            }
-            //            cell.hideSpcaeLineState = (data.count - 1) == indexPath.row ? true:false
             return cell
         } else {
-            let cell = LoanListTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
+            let cell = LoanDetailDepositListTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
             cell.selectionStyle = .none;
             //            if let data = dataModel, data.isEmpty == false {
             //                cell.model = data[indexPath.row]

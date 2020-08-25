@@ -8,7 +8,7 @@
 
 import UIKit
 
-class LoanListViewController: UIViewController {
+class LoanListViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.white

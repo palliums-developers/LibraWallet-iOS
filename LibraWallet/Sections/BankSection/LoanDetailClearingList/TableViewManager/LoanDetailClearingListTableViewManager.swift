@@ -1,5 +1,5 @@
 //
-//  LoanListTableViewManager.swift
+//  LoanDetailClearingListTableViewManager.swift
 //  LibraWallet
 //
 //  Created by wangyingdong on 2020/8/24.
@@ -7,18 +7,16 @@
 //
 
 import UIKit
-//protocol LoanListTableViewManagerDelegate: NSObjectProtocol {
-//    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath)
-//}
-class LoanListTableViewManager: NSObject {
-//    weak var delegate: LoanListTableViewManagerDelegate?
+
+class LoanDetailClearingListTableViewManager: NSObject {
+    //    weak var delegate: HomeTableViewManagerDelegate?
     /// 数据
     var dataModels: [Token]?
     deinit {
-        print("LoanListTableViewManager销毁了")
+        print("LoanDetailClearingListTableViewManager销毁了")
     }
 }
-extension LoanListTableViewManager: UITableViewDelegate {
+extension LoanDetailClearingListTableViewManager: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
     }
@@ -27,24 +25,23 @@ extension LoanListTableViewManager: UITableViewDelegate {
         guard let model = self.dataModels else {
             return
         }
-//        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath)
+        //        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, model: model[indexPath.row])
     }
 }
-extension LoanListTableViewManager: UITableViewDataSource {
+extension LoanDetailClearingListTableViewManager: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 10//dataModel?.count ?? 0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let identifier = "CellNormal"
-        if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? LoanListTableViewCell {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? LoanDetailClearingListTableViewCell {
             cell.selectionStyle = .none;
             //            if let data = dataModel, data.isEmpty == false {
             //                cell.model = data[indexPath.row]
             //            }
-            //            cell.hideSpcaeLineState = (data.count - 1) == indexPath.row ? true:false
             return cell
         } else {
-            let cell = LoanListTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
+            let cell = LoanDetailClearingListTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
             cell.selectionStyle = .none;
             //            if let data = dataModel, data.isEmpty == false {
             //                cell.model = data[indexPath.row]

@@ -269,6 +269,22 @@ wallet_deposit_list_order_status_deposit_finish_title = "Deposit Done";
 wallet_deposit_list_order_status_deposit_failed_title = "Deposit Failed";
 wallet_deposit_list_order_status_deposit_processing_title = "Deposit Processing";
 
+/************* 数字银行借款订单 *******************/
+wallet_bank_loan_orders_title = "Current Loan";
+wallet_bank_loan_order_amount_title = "Remaining Payment Amount";
+
+/************* 数字银行借款详情 *******************/
+wallet_bank_loan_detail_remaining_payment_amount_title = "Remaining Payment Amount";
+wallet_bank_loan_detail_loan_detail_title = "Loan Details";
+wallet_bank_loan_detail_deposit_detail_title = "Deposit Details";
+wallet_bank_loan_detail_clearing_detail_title = "Clearing Details";
+wallet_bank_loan_detail_loan_detail_time_title = "Time";
+wallet_bank_loan_detail_loan_detail_amount_title = "Amount";
+wallet_bank_loan_detail_loan_detail_status_title = "Status";
+wallet_bank_loan_detail_clearing_detail_clearing_amount_title = "Clearing Amount";
+wallet_bank_loan_detail_clearing_detail_deduction_amount_title = "Deduction Amount";
+wallet_bank_loan_detail_clearing_detail_status_title = "clearinged";
+
 /************* 弹出提示 *******************/
 // 转账弹出提示
 wallet_transfer_success_alert = "Transaction Submitted";
