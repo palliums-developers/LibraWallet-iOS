@@ -285,6 +285,19 @@ wallet_bank_loan_detail_clearing_detail_clearing_amount_title = "被清算";
 wallet_bank_loan_detail_clearing_detail_deduction_amount_title = "已抵扣";
 wallet_bank_loan_detail_clearing_detail_status_title = "已清算";
 
+/************* 数字银行还款 *******************/
+wallet_bank_repayment_button_title = "立即还款";
+wallet_bank_repayment_title = "我要还";
+wallet_bank_repayment_textfield_placeholder_a = "起";
+wallet_bank_repayment_textfield_placeholder_b = "每";
+wallet_bank_repayment_textfield_placeholder_c = "递增";
+wallet_bank_repayment_repayment_amount_title = "待还金额：";
+wallet_bank_repayment_repayment_amount_total_button_title = "全部";
+wallet_bank_repayment_loan_rate_title = "借贷率";
+wallet_bank_repayment_miner_fees_title = "矿工费用";
+wallet_bank_repayment_pay_account_title = "还款账户";
+wallet_bank_repayment_pay_account_content = "账户余额";
+
 /************* 弹出提示 *******************/
 // 转账弹出提示
 wallet_transfer_success_alert = "转账成功";
