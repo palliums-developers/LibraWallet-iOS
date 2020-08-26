@@ -1225,7 +1225,7 @@
 			path = TableViewManager;
 			sourceTree = "<group>";
 		};
-		361BD9C624F5042100C4C54E /* Deposit */ = {
+		361BD9C624F5042100C4C54E /* Repayment */ = {
 			isa = PBXGroup;
 			children = (
 				361BD9D724F509D300C4C54E /* TableViewManager */,
@@ -1234,7 +1234,7 @@
 				361BD9C824F5042F00C4C54E /* Model */,
 				361BD9C724F5042A00C4C54E /* View */,
 			);
-			path = Deposit;
+			path = Repayment;
 			sourceTree = "<group>";
 		};
 		361BD9C724F5042A00C4C54E /* View */ = {
@@ -1438,7 +1438,7 @@
 		362DC4AD24ED014C008B5A64 /* BankSection */ = {
 			isa = PBXGroup;
 			children = (
-				361BD9C624F5042100C4C54E /* Deposit */,
+				361BD9C624F5042100C4C54E /* Repayment */,
 				361BD99724F3BBD100C4C54E /* LoanDetailClearingList */,
 				361BD99624F3BBC100C4C54E /* LoanDetailDepositList */,
 				361BD99524F3BB8900C4C54E /* LoanDetailLoanList */,
