@@ -298,6 +298,19 @@ wallet_bank_repayment_miner_fees_title = "Miner Fees";
 wallet_bank_repayment_pay_account_title = "Repayment Account";
 wallet_bank_repayment_pay_account_content = "Account Balance";
 
+/************* 数字银行存款 *******************/
+wallet_bank_deposit_button_title = "Deposit";
+wallet_bank_deposit_title = "I want to deposit";
+wallet_bank_deposit_amount_title = "Balance: ";
+wallet_bank_deposit_limit_amount_title = "Daily Limit: ";
+wallet_bank_deposit_year_rate_title = "Annual deposit interest rate";
+wallet_bank_deposit_pledge_rate_title = "Pledge Rate";
+wallet_bank_deposit_pledge_rate_descript_title = "Pledge rate = Number of loans/Number of deposit";
+wallet_bank_deposit_pay_account_title = "Deposit way";
+wallet_bank_deposit_pay_account_content = "Account Balance";
+wallet_bank_deposit_describe_title = "Product Introduce";
+wallet_bank_deposit_question_title = "Q&A";
+
 /************* 弹出提示 *******************/
 // 转账弹出提示
 wallet_transfer_success_alert = "Transaction Submitted";

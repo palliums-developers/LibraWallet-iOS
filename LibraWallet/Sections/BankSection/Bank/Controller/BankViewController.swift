@@ -191,9 +191,11 @@ extension BankViewController {
 //        let vc = LoanOrdersViewController.init()
 //        vc.hidesBottomBarWhenPushed = true
 //        self.navigationController?.pushViewController(vc, animated: true)
-        let vc = RepaymentViewController.init()
+//        let vc = RepaymentViewController.init()
+//        vc.hidesBottomBarWhenPushed = true
+//        self.navigationController?.pushViewController(vc, animated: true)
+        let vc = DepositViewController.init()
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
-        
     }
 }

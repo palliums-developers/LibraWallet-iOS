@@ -298,6 +298,19 @@ wallet_bank_repayment_miner_fees_title = "矿工费用";
 wallet_bank_repayment_pay_account_title = "还款账户";
 wallet_bank_repayment_pay_account_content = "账户余额";
 
+/************* 数字银行存款 *******************/
+wallet_bank_deposit_button_title = "立即存款";
+wallet_bank_deposit_title = "我要存";
+wallet_bank_deposit_amount_title = "可用余额：";
+wallet_bank_deposit_limit_amount_title = "每日限额：";
+wallet_bank_deposit_year_rate_title = "存款年利率";
+wallet_bank_deposit_pledge_rate_title = "质押率";
+wallet_bank_deposit_pledge_rate_descript_title = "质押率=借贷数量/存款数量";
+wallet_bank_deposit_pay_account_title = "支付方式";
+wallet_bank_deposit_pay_account_content = "钱包余额";
+wallet_bank_deposit_describe_title = "产品说明";
+wallet_bank_deposit_question_title = "常见问题";
+
 /************* 弹出提示 *******************/
 // 转账弹出提示
 wallet_transfer_success_alert = "转账成功";
