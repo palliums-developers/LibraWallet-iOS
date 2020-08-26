@@ -311,6 +311,18 @@ wallet_bank_deposit_pay_account_content = "钱包余额";
 wallet_bank_deposit_describe_title = "产品说明";
 wallet_bank_deposit_question_title = "常见问题";
 
+/************* 数字银行借贷 *******************/
+wallet_bank_loan_button_title = "立即借款";
+wallet_bank_loan_title = "我要借";
+wallet_bank_loan_balance_title = "可借额度：";
+wallet_bank_loan_year_rate_title = "借款利率";
+wallet_bank_loan_pledge_rate_title = "质押率";
+wallet_bank_loan_pledge_rate_descript_title = "质押率=借贷数量/存款数量";
+wallet_bank_loan_pay_account_title = "质押账户";
+wallet_bank_loan_pay_account_content = "银行余额";
+wallet_bank_loan_describe_title = "产品说明";
+wallet_bank_loan_question_title = "常见问题";
+
 /************* 弹出提示 *******************/
 // 转账弹出提示
 wallet_transfer_success_alert = "转账成功";

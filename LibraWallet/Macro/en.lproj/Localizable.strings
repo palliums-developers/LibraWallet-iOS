@@ -311,6 +311,18 @@ wallet_bank_deposit_pay_account_content = "Account Balance";
 wallet_bank_deposit_describe_title = "Product Introduce";
 wallet_bank_deposit_question_title = "Q&A";
 
+/************* 数字银行借贷 *******************/
+wallet_bank_loan_button_title = "Loan";
+wallet_bank_loan_title = "I want to loan";
+wallet_bank_loan_balance_title = "Lending Quota：";
+wallet_bank_loan_year_rate_title = "Loan Rate";
+wallet_bank_loan_pledge_rate_title = "Pledge Rate";
+wallet_bank_loan_pledge_rate_descript_title = "Pledge rate = Number of loans/Number of deposit";
+wallet_bank_loan_pay_account_title = "Pledge account";
+wallet_bank_loan_pay_account_content = "Bank Balance";
+wallet_bank_loan_describe_title = "Product Introduce";
+wallet_bank_loan_question_title = "Q&A";
+
 /************* 弹出提示 *******************/
 // 转账弹出提示
 wallet_transfer_success_alert = "Transaction Submitted";

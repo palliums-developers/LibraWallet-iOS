@@ -74,6 +74,15 @@
 		361BD9ED24F60C7A00C4C54E /* DepositTableViewHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361BD9EC24F60C7A00C4C54E /* DepositTableViewHeaderView.swift */; };
 		361BD9EF24F60D1200C4C54E /* DepositDescribeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361BD9EE24F60D1200C4C54E /* DepositDescribeTableViewCell.swift */; };
 		361BD9F124F60F4800C4C54E /* DepositQuestionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361BD9F024F60F4800C4C54E /* DepositQuestionTableViewCell.swift */; };
+		361BD9F924F645B000C4C54E /* LoanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361BD9F824F645B000C4C54E /* LoanView.swift */; };
+		361BD9FB24F645C200C4C54E /* LoanTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361BD9FA24F645C200C4C54E /* LoanTableViewCell.swift */; };
+		361BD9FD24F645DD00C4C54E /* LoanTableViewHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361BD9FC24F645DD00C4C54E /* LoanTableViewHeaderView.swift */; };
+		361BD9FF24F645F900C4C54E /* LoanDescribeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361BD9FE24F645F900C4C54E /* LoanDescribeTableViewCell.swift */; };
+		361BDA0124F6460B00C4C54E /* LoanQuestionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361BDA0024F6460B00C4C54E /* LoanQuestionTableViewCell.swift */; };
+		361BDA0324F6461A00C4C54E /* LoanModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361BDA0224F6461A00C4C54E /* LoanModel.swift */; };
+		361BDA0524F6462600C4C54E /* LoanViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361BDA0424F6462600C4C54E /* LoanViewModel.swift */; };
+		361BDA0724F6463700C4C54E /* LoanTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361BDA0624F6463700C4C54E /* LoanTableViewManager.swift */; };
+		361BDA0924F6464500C4C54E /* LoanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361BDA0824F6464500C4C54E /* LoanViewController.swift */; };
 		3622F20324E3FFF400CFB754 /* TransferViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3622F20224E3FFF400CFB754 /* TransferViewController.swift */; };
 		3622F20524E4000500CFB754 /* TransferModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3622F20424E4000500CFB754 /* TransferModel.swift */; };
 		3622F20724E4003E00CFB754 /* TransferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3622F20624E4003E00CFB754 /* TransferView.swift */; };
@@ -473,6 +482,15 @@
 		361BD9EC24F60C7A00C4C54E /* DepositTableViewHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositTableViewHeaderView.swift; sourceTree = "<group>"; };
 		361BD9EE24F60D1200C4C54E /* DepositDescribeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositDescribeTableViewCell.swift; sourceTree = "<group>"; };
 		361BD9F024F60F4800C4C54E /* DepositQuestionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositQuestionTableViewCell.swift; sourceTree = "<group>"; };
+		361BD9F824F645B000C4C54E /* LoanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanView.swift; sourceTree = "<group>"; };
+		361BD9FA24F645C200C4C54E /* LoanTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanTableViewCell.swift; sourceTree = "<group>"; };
+		361BD9FC24F645DD00C4C54E /* LoanTableViewHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanTableViewHeaderView.swift; sourceTree = "<group>"; };
+		361BD9FE24F645F900C4C54E /* LoanDescribeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanDescribeTableViewCell.swift; sourceTree = "<group>"; };
+		361BDA0024F6460B00C4C54E /* LoanQuestionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanQuestionTableViewCell.swift; sourceTree = "<group>"; };
+		361BDA0224F6461A00C4C54E /* LoanModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanModel.swift; sourceTree = "<group>"; };
+		361BDA0424F6462600C4C54E /* LoanViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanViewModel.swift; sourceTree = "<group>"; };
+		361BDA0624F6463700C4C54E /* LoanTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanTableViewManager.swift; sourceTree = "<group>"; };
+		361BDA0824F6464500C4C54E /* LoanViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanViewController.swift; sourceTree = "<group>"; };
 		3622F20224E3FFF400CFB754 /* TransferViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferViewController.swift; sourceTree = "<group>"; };
 		3622F20424E4000500CFB754 /* TransferModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferModel.swift; sourceTree = "<group>"; };
 		3622F20624E4003E00CFB754 /* TransferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferView.swift; sourceTree = "<group>"; };
@@ -1356,8 +1374,8 @@
 		361BD9F224F6454E00C4C54E /* Loan */ = {
 			isa = PBXGroup;
 			children = (
-				361BD9F724F6456B00C4C54E /* TableViewManager */,
 				361BD9F624F6456300C4C54E /* Controller */,
+				361BD9F724F6456B00C4C54E /* TableViewManager */,
 				361BD9F524F6455E00C4C54E /* ViewModel */,
 				361BD9F424F6455800C4C54E /* Model */,
 				361BD9F324F6455300C4C54E /* View */,
@@ -1368,6 +1386,11 @@
 		361BD9F324F6455300C4C54E /* View */ = {
 			isa = PBXGroup;
 			children = (
+				361BD9F824F645B000C4C54E /* LoanView.swift */,
+				361BD9FA24F645C200C4C54E /* LoanTableViewCell.swift */,
+				361BD9FC24F645DD00C4C54E /* LoanTableViewHeaderView.swift */,
+				361BD9FE24F645F900C4C54E /* LoanDescribeTableViewCell.swift */,
+				361BDA0024F6460B00C4C54E /* LoanQuestionTableViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1375,6 +1398,7 @@
 		361BD9F424F6455800C4C54E /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				361BDA0224F6461A00C4C54E /* LoanModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1382,6 +1406,7 @@
 		361BD9F524F6455E00C4C54E /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				361BDA0424F6462600C4C54E /* LoanViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -1389,6 +1414,7 @@
 		361BD9F624F6456300C4C54E /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				361BDA0824F6464500C4C54E /* LoanViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1396,6 +1422,7 @@
 		361BD9F724F6456B00C4C54E /* TableViewManager */ = {
 			isa = PBXGroup;
 			children = (
+				361BDA0624F6463700C4C54E /* LoanTableViewManager.swift */,
 			);
 			path = TableViewManager;
 			sourceTree = "<group>";
@@ -4215,6 +4242,7 @@
 				9D626481235719A400A79B3D /* WelcomeView.swift in Sources */,
 				362DC4E124EE67BA008B5A64 /* DepositOrdersViewController.swift in Sources */,
 				9DFFA8752368316900EA74F9 /* SettingViewHeader.swift in Sources */,
+				361BDA0124F6460B00C4C54E /* LoanQuestionTableViewCell.swift in Sources */,
 				9DA0265923702AFE0084905B /* BackupWarningView.swift in Sources */,
 				9D9B4A4A2362F4DC00354EF0 /* MineHeaderView.swift in Sources */,
 				361BD99224F3A0FA00C4C54E /* LoanDetailView.swift in Sources */,
@@ -4231,6 +4259,7 @@
 				9DC8778D237958EB006378C3 /* LibraManager.swift in Sources */,
 				9D9B4A502366953600354EF0 /* ImportWalletView.swift in Sources */,
 				361BD9ED24F60C7A00C4C54E /* DepositTableViewHeaderView.swift in Sources */,
+				361BD9FD24F645DD00C4C54E /* LoanTableViewHeaderView.swift in Sources */,
 				9DC901F82327A3B70097FD85 /* LibraWriteSet.swift in Sources */,
 				9DC9023F2328EA480097FD85 /* HomeView.swift in Sources */,
 				361BD9B124F3BF9300C4C54E /* LoanDetailDepositListModel.swift in Sources */,
@@ -4357,6 +4386,7 @@
 				361BD9AB24F3BF5E00C4C54E /* LoanDetailLoanListView.swift in Sources */,
 				36F826F124BD9EEB0007ACC3 /* ExchangeTransactionsView.swift in Sources */,
 				9DB515C123A32F3E0069A909 /* ViolasTransactionWriteSet.swift in Sources */,
+				361BDA0924F6464500C4C54E /* LoanViewController.swift in Sources */,
 				9DC4886F232222CF005FF254 /* LBXScanWrapper.swift in Sources */,
 				361BD95F24EFA35F00C4C54E /* DepositListModel.swift in Sources */,
 				9DB515B223A32BC50069A909 /* ViolasHDPrivateKey.swift in Sources */,
@@ -4369,6 +4399,7 @@
 				362DC4B524ED0226008B5A64 /* BankModel.swift in Sources */,
 				3623AB7623FBFC79004A01BF /* MappingTokenListAlert.swift in Sources */,
 				9D1A614C233204E2009DDA07 /* BaseViewController.swift in Sources */,
+				361BDA0524F6462600C4C54E /* LoanViewModel.swift in Sources */,
 				361BD97F24F371D000C4C54E /* LoanOrdersViewController.swift in Sources */,
 				36828CC324B707D40085A165 /* AssetsPoolTransactionDetailView.swift in Sources */,
 				361BD99024F3A0EC00C4C54E /* LoanDetailModel.swift in Sources */,
@@ -4407,6 +4438,7 @@
 				361BD97324F3698D00C4C54E /* LoanListModel.swift in Sources */,
 				9DC901E923262CB80097FD85 /* LibraTransactionArgument.swift in Sources */,
 				9D9B4A542366955B00354EF0 /* ImportWalletViewController.swift in Sources */,
+				361BDA0324F6461A00C4C54E /* LoanModel.swift in Sources */,
 				9DA0264D236FFEB10084905B /* BackupMnemonicCollectionViewManager.swift in Sources */,
 				36B466AC2476566F00CFF438 /* ScanSendRawTransactionModel.swift in Sources */,
 				9D9B49C7235FFA7800354EF0 /* MineViewController.swift in Sources */,
@@ -4414,8 +4446,10 @@
 				9D9B4A112360491C00354EF0 /* HelpCenterViewController.swift in Sources */,
 				36828CE224B74C530085A165 /* ExchangeViewController.swift in Sources */,
 				361BD95D24EFA35400C4C54E /* DepositListTableViewManager.swift in Sources */,
+				361BD9F924F645B000C4C54E /* LoanView.swift in Sources */,
 				3650F0AC2488907A0086F578 /* WalletMainViewHeaderView.swift in Sources */,
 				3617835D24440C1E003C6588 /* ViolasWordList.swift in Sources */,
+				361BDA0724F6463700C4C54E /* LoanTableViewManager.swift in Sources */,
 				9D628AC7239F9F6D00E222FB /* ViolasSocketManager.swift in Sources */,
 				36836D3B24B305D00031AC6E /* ExchangeTransactionDetailTableViewCell.swift in Sources */,
 				9D08AD4B2330D8E6004687E8 /* TransactionDetailWebViewController.swift in Sources */,
@@ -4444,6 +4478,7 @@
 				9DC902432328FC4A0097FD85 /* HomeModel.swift in Sources */,
 				363D90F024CAAC6700F6374C /* LibraContractEvent.swift in Sources */,
 				362DC4DF24EE67A8008B5A64 /* DepositOrdersTableViewManager.swift in Sources */,
+				361BD9FB24F645C200C4C54E /* LoanTableViewCell.swift in Sources */,
 				361783672444684F003C6588 /* ViolasStructTag.swift in Sources */,
 				9D9B49F52360389200354EF0 /* LanguageTableViewCell.swift in Sources */,
 				9D9B49CF235FFADB00354EF0 /* MineTableViewManager.swift in Sources */,
@@ -4489,6 +4524,7 @@
 				9D9B49F32360388C00354EF0 /* LanguageView.swift in Sources */,
 				9D08AD372330BA75004687E8 /* NetworkManager.swift in Sources */,
 				36F8270924BEAA7E0007ACC3 /* DropperCell.swift in Sources */,
+				361BD9FF24F645F900C4C54E /* LoanDescribeTableViewCell.swift in Sources */,
 				361BD99424F3A67000C4C54E /* LoanDetailHeaderView.swift in Sources */,
 				9DC4884B232111E9005FF254 /* LibraTransferViewController.swift in Sources */,
 				3682E5D124AC81DC007CA2CA /* AssetsPoolTableViewCell.swift in Sources */,
