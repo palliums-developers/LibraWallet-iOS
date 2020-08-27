@@ -301,6 +301,7 @@ wallet_bank_repayment_pay_account_content = "Account Balance";
 /************* 数字银行存款 *******************/
 wallet_bank_deposit_button_title = "Deposit";
 wallet_bank_deposit_title = "I want to deposit";
+wallet_bank_deposit_select_token_button_title = "Selcet a token";
 wallet_bank_deposit_amount_title = "Balance: ";
 wallet_bank_deposit_limit_amount_title = "Daily Limit: ";
 wallet_bank_deposit_year_rate_title = "Annual deposit interest rate";

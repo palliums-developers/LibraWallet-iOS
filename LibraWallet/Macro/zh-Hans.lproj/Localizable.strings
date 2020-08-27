@@ -301,6 +301,7 @@ wallet_bank_repayment_pay_account_content = "账户余额";
 /************* 数字银行存款 *******************/
 wallet_bank_deposit_button_title = "立即存款";
 wallet_bank_deposit_title = "我要存";
+wallet_bank_deposit_select_token_button_title = "选择币种";
 wallet_bank_deposit_amount_title = "可用余额：";
 wallet_bank_deposit_limit_amount_title = "每日限额：";
 wallet_bank_deposit_year_rate_title = "存款年利率";

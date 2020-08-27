@@ -77,14 +77,13 @@ class DepositMarketViewController: BaseViewController {
         print("DepositMarketViewController销毁了")
     }
     // 网络请求、数据模型
-    lazy var dataModel: WalletTransactionsModel = {
-        let model = WalletTransactionsModel.init()
+    lazy var dataModel: DepositMarketModel = {
+        let model = DepositMarketModel.init()
         return model
     }()
     // tableView管理类
     lazy var tableViewManager: DepositMarketTableViewManager = {
         let manager = DepositMarketTableViewManager.init()
-//        manager.delegate = self
         return manager
     }()
     // 子View
@@ -117,20 +116,7 @@ class DepositMarketViewController: BaseViewController {
     var requestType: String?
     func transactionRequest(refresh: Bool) {
         let requestState = refresh == true ? 0:1
-        switch self.wallet?.tokenType {
-        case .Libra:
-            dataModel.getLibraTransactionHistory(address: (wallet?.tokenAddress)!, module: wallet?.tokenModule ?? "", requestType: requestType ?? "", page: dataOffset, pageSize: 10, requestStatus: requestState)
-            break
-        case .Violas:
-            dataModel.getViolasTransactions(address: (wallet?.tokenAddress)!, module: wallet?.tokenModule ?? "", requestType: requestType ?? "", page: dataOffset, pageSize: 10, requestStatus: requestState)
-            break
-        case .BTC:
-            dataModel.getBTCTransactionHistory(address: (wallet?.tokenAddress)!, page: dataOffset + 1, pageSize: 10, requestStatus: requestState)
-            //            dataModel.getBTCTransactionHistory(address: "2NGZrVvZG92qGYqzTLjCAewvPZ7JE8S8VxE", page: dataOffset + 1, pageSize: 10, requestStatus: requestState)
-        //
-        default:
-            break
-        }
+        self.dataModel.getDepositMarket(requestStatus: requestState)
     }
 }
 extension DepositMarketViewController {
@@ -182,86 +168,39 @@ extension DepositMarketViewController {
                 return
             }
             let type = dataDic.value(forKey: "type") as! String
-            if type == "BTCTransactionHistoryOrigin" {
-                guard let tempData = dataDic.value(forKey: "data") as? [TrezorBTCTransactionDataModel] else {
+            if type == "GetBankDepositMarketOrigin" {
+                guard let tempData = dataDic.value(forKey: "data") as? [BankDepositMarketDataModel] else {
                     return
                 }
-//                self?.tableViewManager.btcTransactions = tempData
+                self?.tableViewManager.dataModels = tempData
                 self?.detailView.tableView.reloadData()
-            } else if type == "BTCTransactionHistoryMore" {
-                guard let tempData = dataDic.value(forKey: "data") as? [TrezorBTCTransactionDataModel] else {
+            } else if type == "GetBankDepositMarketMore" {
+                guard let tempData = dataDic.value(forKey: "data") as? [BankDepositMarketDataModel] else {
                     return
                 }
-//                if let oldData = self?.tableViewManager.btcTransactions, oldData.isEmpty == false {
-//                    let tempArray = NSMutableArray.init(array: oldData)
-//                    var insertIndexPath = [IndexPath]()
-//                    for index in 0..<tempData.count {
-//                        let indexPath = IndexPath.init(row: oldData.count + index, section: 0)
-//                        insertIndexPath.append(indexPath)
-//                    }
-//                    tempArray.addObjects(from: tempData)
-//                    self?.tableViewManager.btcTransactions = tempArray as? [TrezorBTCTransactionDataModel]
-//                    self?.detailView.tableView.beginUpdates()
-//                    self?.detailView.tableView.insertRows(at: insertIndexPath, with: UITableView.RowAnimation.bottom)
-//                    self?.detailView.tableView.endUpdates()
-//                } else {
-//                    self?.tableViewManager.btcTransactions = tempData
-//                    self?.detailView.tableView.reloadData()
-//                }
-//                self?.detailView.tableView.mj_footer?.endRefreshing()
+                if let oldData = self?.tableViewManager.dataModels, oldData.isEmpty == false {
+                    let tempArray = NSMutableArray.init(array: oldData)
+                    var insertIndexPath = [IndexPath]()
+                    for index in 0..<tempData.count {
+                        let indexPath = IndexPath.init(row: oldData.count + index, section: 0)
+                        insertIndexPath.append(indexPath)
+                    }
+                    tempArray.addObjects(from: tempData)
+                    self?.tableViewManager.dataModels = tempArray as? [BankDepositMarketDataModel]
+                    self?.detailView.tableView.beginUpdates()
+                    self?.detailView.tableView.insertRows(at: insertIndexPath, with: UITableView.RowAnimation.bottom)
+                    self?.detailView.tableView.endUpdates()
+                } else {
+                    self?.tableViewManager.dataModels = tempData
+                    self?.detailView.tableView.reloadData()
+                }
+                self?.detailView.tableView.mj_footer?.endRefreshing()
             }
             self?.detailView.tableView.mj_footer?.endRefreshing()
             self?.detailView.hideToastActivity()
             self?.detailView.tableView.mj_header?.endRefreshing()
             self?.endLoading()
         })
-    }
-}
-extension DepositMarketViewController: WalletTransactionsTableViewManagerDelegate {
-    func tableViewDidSelectRowAtIndexPath<T>(indexPath: IndexPath, model: T) {
-        let vc = TransactionDetailViewController()
-        //            vc.requestURL = address
-        vc.tokenAddress = self.wallet?.tokenAddress
-        switch self.wallet?.tokenType {
-        case .BTC:
-            print("BTC")
-            vc.btcTransaction = model as? TrezorBTCTransactionDataModel
-        case .Libra:
-            print("Libra")
-            vc.libraTransaction = model as? LibraDataModel
-            
-        case .Violas:
-            print("Violas")
-            vc.violasTransaction = model as? ViolasDataModel
-        case .none:
-            print("钱包类型异常")
-        }
-        self.navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    //    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, address: String) {
-    //        switch self.wallet?.tokenType {
-    //        case .BTC:
-    //            print("BTC")
-    //            let vc = TransactionDetailWebViewController()
-    //            vc.requestURL = "https://live.blockcypher.com/btc-testnet/tx/\(address)"
-    //            self.navigationController?.pushViewController(vc, animated: true)
-    //        case .Libra:
-    //            print("Libra")
-    //            let vc = TransactionDetailWebViewController()
-    //            vc.requestURL = address
-    //            self.navigationController?.pushViewController(vc, animated: true)
-    //        case .Violas:
-    //            print("Violas")
-    //            let vc = TransactionDetailViewController()
-    ////            vc.requestURL = address
-    //            self.navigationController?.pushViewController(vc, animated: true)
-    //        case .none:
-    //            print("钱包类型异常")
-    //        }
-    //    }
-    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, violasTransaction: ViolasDataModel) {
-        
     }
 }
 extension DepositMarketViewController: JXSegmentedListContainerViewListDelegate {
@@ -276,9 +215,9 @@ extension DepositMarketViewController: JXSegmentedListContainerViewListDelegate 
         }
         if (lastState == .Loading) {return}
         startLoading ()
-        //        self.detailView.makeToastActivity(.center)
-        //        transactionRequest(refresh: true)
-//        self.detailView.tableView.mj_header?.beginRefreshing()
+//        self.detailView.makeToastActivity(.center)
+        transactionRequest(refresh: true)
+        self.detailView.tableView.mj_header?.beginRefreshing()
         firstIn = false
     }
     /// 可选实现，列表消失的时候调用

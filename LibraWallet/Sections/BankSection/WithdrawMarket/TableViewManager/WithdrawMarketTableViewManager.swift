@@ -7,9 +7,11 @@
 //
 
 import UIKit
-
+protocol WithdrawMarketTableViewManagerDelegate: NSObjectProtocol {
+    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath)
+}
 class WithdrawMarketTableViewManager: NSObject {
-//    weak var delegate: HomeTableViewManagerDelegate?
+    weak var delegate: WithdrawMarketTableViewManagerDelegate?
     /// 数据
     var dataModels: [Token]?
     deinit {
@@ -22,10 +24,10 @@ extension WithdrawMarketTableViewManager: UITableViewDelegate {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
-        guard let model = self.dataModels else {
-            return
-        }
-//        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, model: model[indexPath.row])
+//        guard let model = self.dataModels else {
+//            return
+//        }
+        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath)
     }
 }
 extension WithdrawMarketTableViewManager: UITableViewDataSource {

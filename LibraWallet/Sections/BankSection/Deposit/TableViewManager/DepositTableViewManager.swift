@@ -7,10 +7,13 @@
 //
 
 import UIKit
-
+protocol DepositTableViewManagerDelegate: NSObjectProtocol {
+    func headerDelegate(header: DepositTableViewHeaderView)
+}
 class DepositTableViewManager: NSObject {
-    weak var delegate: AssetsPoolTransactionsTableViewManagerDelegate?
-    var dataModels: [Int]? = [1, 2, 3]
+    weak var delegate: DepositTableViewManagerDelegate?
+    var model: BankDepositMarketDataModel?
+    var dataModels: [DepositLocalDataModel]?
     deinit {
         print("DepositTableViewManager销毁了")
     }
@@ -36,10 +39,14 @@ extension DepositTableViewManager: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if section == 0 {
             let identifier = "Header"
-            if let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier) {
+            if let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier) as? DepositTableViewHeaderView {
+                header.productModel = self.model
+                self.delegate?.headerDelegate(header: header)
                 return header
             } else {
                 let header = DepositTableViewHeaderView.init(reuseIdentifier: identifier)
+                header.productModel = self.model
+                self.delegate?.headerDelegate(header: header)
                 return header
             }
         } else {
@@ -60,7 +67,7 @@ extension DepositTableViewManager: UITableViewDelegate {
 extension DepositTableViewManager: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
-            return 3//dataModels?.count ?? 0
+            return dataModels?.count ?? 0
         } else {
             return 1
         }
@@ -73,16 +80,15 @@ extension DepositTableViewManager: UITableViewDataSource {
             let identifier = "NormalCell"
             if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? DepositTableViewCell {
                 if let data = dataModels, data.isEmpty == false {
-                    //                cell.model = data[indexPath.row]
+                    cell.model = data[indexPath.row]
                     cell.hideSpcaeLineState = (data.count - 1) == indexPath.row ? true:false
                 }
-                //            cell.indexPath = indexPath
                 cell.selectionStyle = .none
                 return cell
             } else {
                 let cell = DepositTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
                 if let data = dataModels, data.isEmpty == false {
-                    //                cell.model = data[indexPath.row]
+                    cell.model = data[indexPath.row]
                     cell.hideSpcaeLineState = (data.count - 1) == indexPath.row ? true:false
                 }
                 cell.selectionStyle = .none
@@ -94,7 +100,6 @@ extension DepositTableViewManager: UITableViewDataSource {
                 if let data = dataModels, data.isEmpty == false {
                     //                cell.model = data[indexPath.row]
                 }
-                //            cell.indexPath = indexPath
                 cell.selectionStyle = .none
                 return cell
             } else {
@@ -111,7 +116,6 @@ extension DepositTableViewManager: UITableViewDataSource {
                 if let data = dataModels, data.isEmpty == false {
                     //                cell.model = data[indexPath.row]
                 }
-                //            cell.indexPath = indexPath
                 cell.selectionStyle = .none
                 return cell
             } else {

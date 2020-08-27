@@ -95,6 +95,9 @@ enum mainRequest {
     case ViolasCrossChainTransactions(String, Int, Int)
     /// 获取Libra映射交易（临时）
     case LibraCrossChainTransactions(String, Int, Int)
+    
+    // 数字银行
+    case depositMarket
 }
 extension mainRequest:TargetType {
     var baseURL: URL {
@@ -167,6 +170,15 @@ extension mainRequest:TargetType {
              .ViolasCrossChainTransactions(_, _, _),
              .LibraCrossChainTransactions(_, _, _):
             return URL(string:"http://18.136.139.151")!
+        //数字银行
+        case .depositMarket:
+            if PUBLISH_VERSION == true {
+                //对外
+                return URL(string:"https://ac.testnet.violas.io")!
+            } else {
+                //对内
+                return URL(string:"https://ab.testnet.violas.io")!
+            }
         }
     }
     var path: String {
@@ -250,6 +262,8 @@ extension mainRequest:TargetType {
             return "/"
         case .LibraCrossChainTransactions(_, _, _):
             return "/"
+        case .depositMarket:
+            return "/1.0/bank/deposit"
         }
     }
     var method: Moya.Method {
@@ -295,7 +309,8 @@ extension mainRequest:TargetType {
              .PoolTotalLiquidity,
              .BTCCrossChainTransactions(_, _, _),
              .ViolasCrossChainTransactions(_, _, _),
-             .LibraCrossChainTransactions(_, _, _):
+             .LibraCrossChainTransactions(_, _, _),
+             .depositMarket:
             return .get
         }
     }
@@ -488,6 +503,8 @@ extension mainRequest:TargetType {
                                                    "cursor":page,
                                                    "limit":offset],
                                       encoding: URLEncoding.queryString)
+        case .depositMarket:
+            return .requestPlain
         }
     }
     var headers: [String : String]? {

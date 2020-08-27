@@ -19,32 +19,11 @@ class BankViewController: UIViewController {
         // 添加导航栏按钮
         self.addNavigationBar()
         self.view.addSubview(detailView)
-//        self.view.addSubview(segmentView)
-//        self.view.addSubview(listContainerView)
         // 添加语言变换通知
         NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-//        headerView.snp.makeConstraints { (make) in
-//            if #available(iOS 11.0, *) {
-//                make.top.equalTo(self.view.safeAreaLayoutGuide)
-//            } else {
-//                make.top.equalTo(self.view)
-//            }
-//            make.left.right.equalTo(self.view)
-//            make.height.equalTo(162)
-//        }
-//        segmentView.snp.makeConstraints { (make) in
-//            make.top.equalTo(headerView.snp.bottom)
-//            make.left.equalTo(self.view)
-//            make.size.equalTo(CGSize.init(width: 180, height: 42))
-//        }
-//        listContainerView.snp.makeConstraints { (make) in
-//            make.bottom.equalTo(self.view.safeAreaLayoutGuide)
-//            make.left.right.equalTo(self.view)
-//            make.top.equalTo(segmentView.snp.bottom)
-//        }
         detailView.snp.makeConstraints { (make) in
             make.top.left.right.equalTo(self.view)
             make.bottom.equalTo(self.view.safeAreaLayoutGuide)
@@ -58,73 +37,26 @@ class BankViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
         print("BankViewController销毁了")
     }
-    /// 网络请求、数据模型
-    lazy var dataModel: WalletMainModel = {
-        let model = WalletMainModel.init()
-        return model
-    }()
+    /// DetailView
     lazy var detailView: BankView = {
         let view = BankView.init()
         view.segmentView.delegate = self
         view.controllers = [depositController, withdrawController]
         return view
     }()
-    //懒加载
-//    private lazy var segmentView : JXSegmentedView = {
-//        let view = JXSegmentedView.init()
-//        view.backgroundColor = UIColor.white
-//        view.delegate = self
-//        view.dataSource = self.segmentedDataSource
-//        //        view.indicators = self.indicator
-//        view.contentScrollView = self.listContainerView.scrollView
-//        return view
-//    }()
-//    private lazy var segmentedDataSource : JXSegmentedTitleDataSource = {
-//        let data = JXSegmentedTitleDataSource.init()
-//        //配置数据源相关配置属性
-//        data.titles = [localLanguage(keyString: "存款市场"),
-//                       localLanguage(keyString: "借款市场")]
-//        data.isTitleColorGradientEnabled = true
-//        data.titleNormalColor = UIColor.init(hex: "C2C2C2")
-//        data.titleNormalFont = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
-//        data.titleSelectedColor = UIColor.init(hex: "7038FD")
-//        data.titleSelectedFont = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.semibold)
-//
-//        //reloadData(selectedIndex:)方法一定要调用，方法内部会刷新数据源数组
-//        data.reloadData(selectedIndex: 0)
-//        return data
-//    }()
-//    private lazy var listContainerView: JXSegmentedListContainerView = {
-//        let listView = JXSegmentedListContainerView.init(dataSource: self)
-//        return listView
-//    }()
+    /// 存款市场Controller
     lazy var depositController: DepositMarketViewController = {
         let con = DepositMarketViewController()
-//        con.wallet = self.wallet
-//        con.requestType = ""
         con.initKVO()
+        con.tableViewManager.delegate = self
         return con
     }()
+    /// 贷款市场Controller
     lazy var withdrawController: WithdrawMarketViewController = {
         let con = WithdrawMarketViewController()
-//        con.wallet = self.wallet
-//        con.requestType = "0"
         con.initKVO()
         return con
     }()
-    /// 数据监听KVO
-    private var observer: NSKeyValueObservation?
-    var wallet: Token? {
-        didSet {
-            // 页面标题
-            if wallet?.tokenType == .BTC {
-                self.title = "BTC"
-            } else {
-                self.title = wallet?.tokenName
-            }
-//            self.headerView.model = wallet
-        }
-    }
     /// 全部资产价值按钮
      lazy var totalAssetsButton: UIButton = {
          let button = UIButton(type: .custom)
@@ -137,7 +69,7 @@ class BankViewController: UIViewController {
 //         button.addTarget(self, action: #selector(changeWallet), for: .touchUpInside)
          return button
      }()
-     /// 二维码扫描按钮
+     /// 交易记录按钮
      lazy var transactionsButton: UIButton = {
          let button = UIButton(type: .custom)
          button.setImage(UIImage.init(named: "wallet_detail_indicator"), for: UIControl.State.normal)
@@ -199,3 +131,19 @@ extension BankViewController {
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }
+extension BankViewController: DepositMarketTableViewManagerDelegate {
+    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, models: [BankDepositMarketDataModel]) {
+        let vc = DepositViewController.init()
+        vc.selectIndexPath = indexPath
+        vc.models = models
+        vc.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+}
+//extension BankViewController: WithdrawMarketTableViewManagerDelegate {
+//    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath) {
+//        let vc = LoanViewController.init()
+//        vc.hidesBottomBarWhenPushed = true
+//        self.navigationController?.pushViewController(vc, animated: true)
+//    }
+//}

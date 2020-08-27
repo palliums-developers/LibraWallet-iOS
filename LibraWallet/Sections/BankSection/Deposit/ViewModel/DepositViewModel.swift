@@ -11,15 +11,14 @@ import UIKit
 class DepositViewModel: NSObject {
     override init() {
         super.init()
+        tableViewManager.dataModels = self.dataModel.getLocalModel()
     }
     deinit {
         print("DepositView销毁了")
     }
     var view: DepositView? {
         didSet {
-            //            view?.headerView.delegate = self
-            //            view?.headerView.inputAmountTextField.delegate = self
-            //            view?.headerView.outputAmountTextField.delegate = self
+            view?.delegate = self
             view?.tableView.delegate = tableViewManager
             view?.tableView.dataSource = tableViewManager
         }
@@ -32,121 +31,144 @@ class DepositViewModel: NSObject {
     /// tableView管理类
     lazy var tableViewManager: DepositTableViewManager = {
         let manager = DepositTableViewManager()
+        manager.delegate = self
         return manager
     }()
     /// 数据监听KVO
     var observer: NSKeyValueObservation?
     ///
-    private var firstRequestRate: Bool = true
-    /// timer
-    private var timer: Timer?
-}
-// MARK: - 网络请求逻辑处理
-extension DepositViewModel {
-    //    func startAutoRefreshExchangeRate(inputCoinA: MarketSupportTokensDataModel, outputCoinB: MarketSupportTokensDataModel) {
-    //        self.timer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(refreshExchangeRate), userInfo: nil, repeats: true)
-    //        RunLoop.current.add(self.timer!, forMode: .common)
-    //    }
-    //    func stopAutoRefreshExchangeRate() {
-    //        self.timer?.invalidate()
-    //        self.timer = nil
-    //    }
-    //    @objc func refreshExchangeRate() {
-    //        self.dataModel.getPoolTotalLiquidity(inputCoinA: (self.view?.headerView.transferInInputTokenA)!, inputCoinB: (self.view?.headerView.transferInInputTokenB)!)
-    //    }
+    private var models: [BankDepositMarketDataModel]?
+    var selectIndexPath: IndexPath?
 }
 // MARK: - 逻辑处理
-extension DepositViewModel {
+extension DepositViewModel: DepositTableViewManagerDelegate {
+    func headerDelegate(header: DepositTableViewHeaderView) {
+        header.delegate = self
+        header.depositAmountTextField.delegate = self
+    }
+}
+extension DepositViewModel: DepositTableViewHeaderViewDelegate {
+    func selectDepositToken(header: DepositTableViewHeaderView) {
+        guard let tempData = models else {
+            return
+        }
+        let alert = DepositTokensAlert.init(data: tempData) { (model) in
+            print(model)
+            self.tableViewManager.model = model
+            self.tableViewManager.dataModels = self.dataModel.getLocalModel(model: model)
+            self.view?.tableView.reloadData()
+        }
+        if header.depositTokenSelectButton.titleLabel?.text != localLanguage(keyString: "wallet_bank_deposit_select_token_button_title") {
+            let index = tempData.firstIndex {
+                $0.product_token_show_name == header.depositTokenSelectButton.titleLabel?.text
+            }
+            alert.pickerRow = index
+        }
+        alert.show(tag: 199)
+        alert.showAnimation()
+    }
+    func selectTotalBalance(header: DepositTableViewHeaderView, model: BankDepositMarketDataModel) {
+        if (model.token_balance ?? 0) > (model.product_amount_limit_least ?? 0) {
+            let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model.product_amount_limit_least ?? 0),
+                                          scale: 6,
+                                          unit: 1000000)
+            header.depositAmountTextField.text = amount.stringValue
+        } else {
+            let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model.token_balance ?? 0),
+                                          scale: 6,
+                                          unit: 1000000)
+            header.depositAmountTextField.text = amount.stringValue
+        }
+    }
 }
 // MARK: - TextField逻辑
 extension DepositViewModel: UITextFieldDelegate {
-    //    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-    //        guard let content = textField.text else {
-    //            return true
-    //        }
-    //        let textLength = content.count + string.count - range.length
-    //        if textField.tag == 10 {
-    //            if textLength == 0 {
-    //                self.view?.headerView.inputAmountTextField.text = ""
-    //                self.view?.headerView.outputAmountTextField.text = ""
-    //            }
-    //        } else {
-    //            if textLength == 0 {
-    //                self.view?.headerView.inputAmountTextField.text = ""
-    //                self.view?.headerView.outputAmountTextField.text = ""
-    //            }
-    //        }
-    //        if content.contains(".") {
-    //            let firstContent = content.split(separator: ".").first?.description ?? "0"
-    //            if (textLength - firstContent.count) < 8 {
-    //                return handleInputAmount(textField: textField, content: (content.isEmpty == true ? "0":content) + string)
-    //            } else {
-    //                return false
-    //            }
-    //        } else {
-    //            if textLength <= ApplyTokenAmountLengthLimit {
-    //                return handleInputAmount(textField: textField, content: (content.isEmpty == true ? "0":content) + string)
-    //            } else {
-    //                return false
-    //            }
-    //        }
-    //    }
-    //    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-    //        // 转入
-    //        guard self.view?.headerView.inputTokenButton.titleLabel?.text != localLanguage(keyString: "wallet_market_exchange_input_token_button_title") else {
-    //            textField.resignFirstResponder()
-    //            self.view?.makeToast(localLanguage(keyString: "wallet_market_exchange_input_token_unselect"),
-    //                                 position: .center)
-    //            return false
-    //        }
-    //        guard self.view?.headerView.outputTokenButton.titleLabel?.text != localLanguage(keyString: "wallet_market_exchange_output_token_button_title") else {
-    //            textField.resignFirstResponder()
-    //            self.view?.makeToast(localLanguage(keyString: "wallet_market_exchange_output_token_unselect"),
-    //                                 position: .center)
-    //            return false
-    //        }
-    //        return true
-    //    }
-    //    func textFieldDidChangeSelection(_ textField: UITextField) {
-    //        if textField.tag == 10 {
-    //            if textField.text?.isEmpty == false {
-    //                self.view?.headerView.viewState = .handleBestOutputAmount
-    //                let amount = NSDecimalNumber.init(string: textField.text ?? "0").multiplying(by: NSDecimalNumber.init(value: 1000000)).int64Value
-    //                self.fliterBestOutputAmount(inputAmount: amount)
-    //            }
-    //        } else {
-    //            if textField.text?.isEmpty == false {
-    //                self.view?.headerView.viewState = .handleBestInputAmount
-    //                let amount = NSDecimalNumber.init(string: textField.text ?? "0").multiplying(by: NSDecimalNumber.init(value: 1000000)).int64Value
-    //                self.fliterBestInputAmount(outputAmount: amount)
-    //            }
-    //        }
-    //
-    //    }
-    //    func handleInputAmount(textField: UITextField, content: String) -> Bool {
-    //        let amount = NSDecimalNumber.init(string: content).multiplying(by: NSDecimalNumber.init(value: 1000000)).int64Value
-    //        if textField.tag == 10 {
-    //            if amount <= self.view?.headerView.transferInInputTokenA?.amount ?? 0 {
-    //                return true
-    //            } else {
-    //                let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: self.view?.headerView.transferInInputTokenA?.amount ?? 0),
-    //                                              scale: 6,
-    //                                              unit: 1000000)
-    //                textField.text = amount.stringValue
-    //                return false
-    //            }
-    //        } else {
-    //            if amount <= self.view?.headerView.transferInInputTokenB?.amount ?? 0 {
-    //                return true
-    //            } else {
-    //                let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: self.view?.headerView.transferInInputTokenB?.amount ?? 0),
-    //                                              scale: 6,
-    //                                              unit: 1000000)
-    //                textField.text = amount.stringValue
-    //                return false
-    //            }
-    //        }
-    //    }
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let content = textField.text else {
+            return true
+        }
+        let textLength = content.count + string.count - range.length
+        if textField.tag == 10 {
+            if textLength == 0 {
+                textField.text = ""
+            }
+        }
+        if content.contains(".") {
+            let firstContent = content.split(separator: ".").first?.description ?? "0"
+            if (textLength - firstContent.count) < 8 {
+                return handleInputAmount(textField: textField, content: (content.isEmpty == true ? "0":content) + string)
+            } else {
+                return false
+            }
+        } else {
+            if textLength <= ApplyTokenAmountLengthLimit {
+                return handleInputAmount(textField: textField, content: (content.isEmpty == true ? "0":content) + string)
+            } else {
+                return false
+            }
+        }
+    }
+    private func handleInputAmount(textField: UITextField, content: String) -> Bool {
+        let amount = NSDecimalNumber.init(string: content).multiplying(by: NSDecimalNumber.init(value: 1000000)).int64Value
+        if amount <= self.models?[(selectIndexPath?.row ?? 0)].product_amount_limit_least ?? 0 && amount <= self.models?[(selectIndexPath?.row ?? 0)].token_balance ?? 0 {
+            return true
+        } else {
+            if (self.models?[(selectIndexPath?.row ?? 0)].token_balance ?? 0) > (self.models?[(selectIndexPath?.row ?? 0)].product_amount_limit_least ?? 0) {
+                let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: self.models?[(selectIndexPath?.row ?? 0)].product_amount_limit_least ?? 0),
+                                              scale: 6,
+                                              unit: 1000000)
+                textField.text = amount.stringValue
+            } else {
+                let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: self.models?[(selectIndexPath?.row ?? 0)].token_balance ?? 0),
+                                              scale: 6,
+                                              unit: 1000000)
+                textField.text = amount.stringValue
+            }
+            return false
+        }
+    }
+}
+extension DepositViewModel: DepositViewDelegate {
+    func confirmDeposit() {
+        do {
+            let amount = try handleConfirmCondition()
+            
+        } catch {
+            self.view?.makeToast(error.localizedDescription, position: .center)
+        }
+    }
+    func handleConfirmCondition() throws -> Int64 {
+        
+        guard let header = self.view?.tableView.headerView(forSection: 0) as? DepositTableViewHeaderView else {
+            return
+        }
+        guard self.tableViewManager.model?.token_active_state == true else {
+            throw LibraWalletError.error("UnActive Token")
+        }
+        guard let balance = self.tableViewManager.model?.token_balance, balance > 0 else {
+            throw LibraWalletError.error("Account Balance Empty")
+        }
+        guard let amountString = header.depositAmountTextField.text, amountString.isEmpty == false else {
+            throw LibraWalletError.error("Amount Invalid")
+        }
+        guard isPurnDouble(string: amountString) else {
+            throw LibraWalletError.error("Amount Invalid")
+        }
+        let amount = NSDecimalNumber.init(string: amountString).multiplying(by: NSDecimalNumber.init(value: 1000000))
+        // 比余额多
+        guard amount.int64Value < (header.productModel?.token_balance ?? 0) else {
+            throw LibraWalletError.error("Amount Too big")
+        }
+        // 比最少充值金额多
+        guard amount.int64Value > (header.productModel?.product_input_token_least ?? 0) else {
+            throw LibraWalletError.error("Amount Too Least")
+        }
+        // 比每日限额少
+        guard amount.int64Value < (header.productModel?.product_amount_limit ?? 0) else {
+            throw LibraWalletError.error("Amount over limit")
+        }
+        return amount.int64Value
+    }
 }
 // MARK: - 网络请求
 extension DepositViewModel {
@@ -201,8 +223,14 @@ extension DepositViewModel {
                 return
             }
             let type = dataDic.value(forKey: "type") as! String
-            if type == "SupportViolasTokens" {
-                
+            if type == "GetBankTokens" {
+                guard let tempData = dataDic.value(forKey: "data") as? [BankDepositMarketDataModel] else {
+                    return
+                }
+                self?.models = tempData
+                self?.tableViewManager.model = tempData[(self?.selectIndexPath?.row ?? 0)]
+                self?.tableViewManager.dataModels = self?.dataModel.getLocalModel(model: tempData[(self?.selectIndexPath?.row ?? 0)])
+                self?.view?.tableView.reloadData()
             }
             self?.view?.hideToastActivity()
             self?.view?.toastView?.hide(tag: 99)

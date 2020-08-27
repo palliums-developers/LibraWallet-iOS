@@ -84,7 +84,7 @@ class WithdrawMarketViewController: BaseViewController {
     // tableView管理类
     lazy var tableViewManager: WithdrawMarketTableViewManager = {
         let manager = WithdrawMarketTableViewManager.init()
-        //        manager.delegate = self
+//        manager.delegate = self
         return manager
     }()
     // 子View
@@ -217,27 +217,7 @@ extension WithdrawMarketViewController {
         })
     }
 }
-extension WithdrawMarketViewController: WalletTransactionsTableViewManagerDelegate {
-    func tableViewDidSelectRowAtIndexPath<T>(indexPath: IndexPath, model: T) {
-        let vc = TransactionDetailViewController()
-        //            vc.requestURL = address
-        vc.tokenAddress = self.wallet?.tokenAddress
-        switch self.wallet?.tokenType {
-        case .BTC:
-            print("BTC")
-            vc.btcTransaction = model as? TrezorBTCTransactionDataModel
-        case .Libra:
-            print("Libra")
-            vc.libraTransaction = model as? LibraDataModel
-            
-        case .Violas:
-            print("Violas")
-            vc.violasTransaction = model as? ViolasDataModel
-        case .none:
-            print("钱包类型异常")
-        }
-        self.navigationController?.pushViewController(vc, animated: true)
-    }
+extension WithdrawMarketViewController: WithdrawMarketTableViewManagerDelegate {
     
     //    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, address: String) {
     //        switch self.wallet?.tokenType {
@@ -260,8 +240,10 @@ extension WithdrawMarketViewController: WalletTransactionsTableViewManagerDelega
     //            print("钱包类型异常")
     //        }
     //    }
-    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, violasTransaction: ViolasDataModel) {
-        
+    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath) {
+        let vc = LoanViewController.init()
+        vc.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }
 extension WithdrawMarketViewController: JXSegmentedListContainerViewListDelegate {

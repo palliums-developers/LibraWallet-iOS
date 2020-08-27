@@ -7,8 +7,11 @@
 //
 
 import UIKit
-
+protocol DepositViewDelegate: NSObjectProtocol {
+    func confirmDeposit()
+}
 class DepositView: UIView {
+    weak var delegate: DepositViewDelegate?
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(tableView)
@@ -70,7 +73,7 @@ class DepositView: UIView {
         return button
     }()
     @objc func buttonClick(button: UIButton) {
-        //        self.delegate?.confirm()
+        self.delegate?.confirmDeposit()
     }
     var toastView: ToastView? {
         let toast = ToastView.init()

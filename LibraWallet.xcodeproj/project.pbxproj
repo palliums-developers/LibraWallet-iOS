@@ -83,6 +83,7 @@
 		361BDA0524F6462600C4C54E /* LoanViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361BDA0424F6462600C4C54E /* LoanViewModel.swift */; };
 		361BDA0724F6463700C4C54E /* LoanTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361BDA0624F6463700C4C54E /* LoanTableViewManager.swift */; };
 		361BDA0924F6464500C4C54E /* LoanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361BDA0824F6464500C4C54E /* LoanViewController.swift */; };
+		361BDA0B24F78EDA00C4C54E /* DepositTokensAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361BDA0A24F78EDA00C4C54E /* DepositTokensAlert.swift */; };
 		3622F20324E3FFF400CFB754 /* TransferViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3622F20224E3FFF400CFB754 /* TransferViewController.swift */; };
 		3622F20524E4000500CFB754 /* TransferModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3622F20424E4000500CFB754 /* TransferModel.swift */; };
 		3622F20724E4003E00CFB754 /* TransferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3622F20624E4003E00CFB754 /* TransferView.swift */; };
@@ -491,6 +492,7 @@
 		361BDA0424F6462600C4C54E /* LoanViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanViewModel.swift; sourceTree = "<group>"; };
 		361BDA0624F6463700C4C54E /* LoanTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanTableViewManager.swift; sourceTree = "<group>"; };
 		361BDA0824F6464500C4C54E /* LoanViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanViewController.swift; sourceTree = "<group>"; };
+		361BDA0A24F78EDA00C4C54E /* DepositTokensAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositTokensAlert.swift; sourceTree = "<group>"; };
 		3622F20224E3FFF400CFB754 /* TransferViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferViewController.swift; sourceTree = "<group>"; };
 		3622F20424E4000500CFB754 /* TransferModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferModel.swift; sourceTree = "<group>"; };
 		3622F20624E4003E00CFB754 /* TransferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferView.swift; sourceTree = "<group>"; };
@@ -2765,6 +2767,7 @@
 				3623AB7523FBFC79004A01BF /* MappingTokenListAlert.swift */,
 				3622F20B24E4DE8600CFB754 /* TransferTokensAlert.swift */,
 				3622F21824E66A6400CFB754 /* MappingTokensAlert.swift */,
+				361BDA0A24F78EDA00C4C54E /* DepositTokensAlert.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -4270,6 +4273,7 @@
 				9D3954FE235D4C0F0068019F /* BTCManager.swift in Sources */,
 				36828CCC24B736240085A165 /* MarketMineView.swift in Sources */,
 				36F826FC24BD9FD90007ACC3 /* ExchangeTransactionsTableViewManager.swift in Sources */,
+				361BDA0B24F78EDA00C4C54E /* DepositTokensAlert.swift in Sources */,
 				3682E5C824AC36FB007CA2CA /* AssetsPoolViewController.swift in Sources */,
 				361BD9D424F5059100C4C54E /* RepaymentTableViewHeaderView.swift in Sources */,
 				361BD9BD24F3C05800C4C54E /* LoanDetailLoanListTableViewCell.swift in Sources */,
