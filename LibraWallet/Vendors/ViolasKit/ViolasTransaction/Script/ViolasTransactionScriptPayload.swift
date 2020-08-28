@@ -1,5 +1,5 @@
 //
-//  ViolasTransactionScript.swift
+//  ViolasTransactionScriptPayload.swift
 //  LibraWallet
 //
 //  Created by palliums on 2019/12/13.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-struct ViolasTransactionScript {
+struct ViolasTransactionScriptPayload {
     fileprivate let code: Data
     
     fileprivate let typeTags: [ViolasTypeTag]
@@ -16,9 +16,7 @@ struct ViolasTransactionScript {
     fileprivate let typeTagsString: [String]
         
     fileprivate let argruments: [ViolasTransactionArgument]
-        
-    fileprivate let programPrefixData: Data = Data.init(hex: "01")
-
+    
     init(code: Data, typeTags: [ViolasTypeTag], argruments: [ViolasTransactionArgument]) {
         
         self.code = code
@@ -43,8 +41,6 @@ struct ViolasTransactionScript {
     }
     func serialize() -> Data {
         var result = Data()
-        // 追加类型
-        result += programPrefixData
         // 追加code长度
         result += ViolasUtils.uleb128Format(length: self.code.bytes.count)
         // 追加code数据

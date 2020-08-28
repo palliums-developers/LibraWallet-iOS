@@ -1,25 +1,21 @@
 //
-//  ViolasTransactionWriteSet.swift
+//  ViolasWriteSet.swift
 //  LibraWallet
 //
-//  Created by palliums on 2019/12/13.
-//  Copyright © 2019 palliums. All rights reserved.
+//  Created by wangyingdong on 2020/8/28.
+//  Copyright © 2020 palliums. All rights reserved.
 //
 
 import UIKit
 
-struct ViolasTransactionWriteSet {
-    fileprivate let accessPaths: [ViolasTransactionAccessPath]
-    
-    fileprivate let writeHeaderData: Data = Data.init(hex: "00")
-
-    init(accessPaths: [ViolasTransactionAccessPath]) {
+struct ViolasWriteSet {
+    fileprivate let accessPaths: [ViolasAccessPath]
+        
+    init(accessPaths: [ViolasAccessPath]) {
         self.accessPaths = accessPaths
     }
     func serialize() -> Data {
         var result = Data()
-        // 追加类型
-        result += writeHeaderData
         // 追加accessPaths数量
         result += ViolasUtils.uleb128Format(length: accessPaths.count)
         // 追加accessPaths数组数据

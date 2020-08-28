@@ -38,8 +38,9 @@ struct ViolasHDPrivateKey {
         // 4.2待签数据追加
         sha3Data.append(transactionRaw.bytes, count: transactionRaw.bytes.count)
         // 4.3签名数据
-        let sign = Ed25519.sign(message: sha3Data.sha3(.sha256).bytes, secretKey: raw.bytes)
-        
+//        let sign = Ed25519.sign(message: sha3Data.sha3(.sha256).bytes, secretKey: raw.bytes)
+        let sign = Ed25519.sign(message: sha3Data.bytes, secretKey: raw.bytes)
+
         var signData = Data()
         // 4.4追加签名长度
         signData += ViolasUtils.uleb128Format(length: sign.count)
@@ -66,7 +67,8 @@ struct ViolasHDPrivateKey {
         // 4.2待签数据追加
         sha3Data.append(transactionRaw.bytes, count: transactionRaw.bytes.count)
         // 4.3签名数据
-        let sign = Ed25519.sign(message: sha3Data.sha3(.sha256).bytes, secretKey: raw.bytes)
+//        let sign = Ed25519.sign(message: sha3Data.sha3(.sha256).bytes, secretKey: raw.bytes)
+        let sign = Ed25519.sign(message: sha3Data.bytes, secretKey: raw.bytes)
         
         var signData = Data()
         // 4.4追加签名长度
