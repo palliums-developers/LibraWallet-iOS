@@ -17,8 +17,13 @@
 		36178363244465EB003C6588 /* ViolasMultiPublicKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36178362244465EB003C6588 /* ViolasMultiPublicKey.swift */; };
 		361783652444683B003C6588 /* ViolasTypeTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361783642444683B003C6588 /* ViolasTypeTag.swift */; };
 		361783672444684F003C6588 /* ViolasStructTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361783662444684F003C6588 /* ViolasStructTag.swift */; };
-		3617836B24449B53003C6588 /* ViolasTransactionModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3617836A24449B53003C6588 /* ViolasTransactionModule.swift */; };
+		3617836B24449B53003C6588 /* ViolasTransactionModulePayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3617836A24449B53003C6588 /* ViolasTransactionModulePayload.swift */; };
 		3617837024449D85003C6588 /* LibraTransactionModulePayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3617836F24449D85003C6588 /* LibraTransactionModulePayload.swift */; };
+		361BDA0D24F89ACB00C4C54E /* ViolasTransactionPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361BDA0C24F89ACB00C4C54E /* ViolasTransactionPayload.swift */; };
+		361BDA0F24F89E0D00C4C54E /* ViolasWriteSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361BDA0E24F89E0D00C4C54E /* ViolasWriteSet.swift */; };
+		361BDA1124F89E3900C4C54E /* ViolasAccessPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361BDA1024F89E3900C4C54E /* ViolasAccessPath.swift */; };
+		361BDA1324F89E7A00C4C54E /* ViolasContractEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361BDA1224F89E7A00C4C54E /* ViolasContractEvent.swift */; };
+		361BDA1524F8A47F00C4C54E /* ViolasContracts.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 361BDA1424F8A47F00C4C54E /* ViolasContracts.bundle */; };
 		3622F20324E3FFF400CFB754 /* TransferViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3622F20224E3FFF400CFB754 /* TransferViewController.swift */; };
 		3622F20524E4000500CFB754 /* TransferModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3622F20424E4000500CFB754 /* TransferModel.swift */; };
 		3622F20724E4003E00CFB754 /* TransferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3622F20624E4003E00CFB754 /* TransferView.swift */; };
@@ -247,9 +252,8 @@
 		9DB515B623A32C3A0069A909 /* ViolasHDWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515B523A32C3A0069A909 /* ViolasHDWallet.swift */; };
 		9DB515BB23A32E4C0069A909 /* ViolasRawTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515BA23A32E4C0069A909 /* ViolasRawTransaction.swift */; };
 		9DB515BD23A32E8C0069A909 /* ViolasTransactionArgument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515BC23A32E8C0069A909 /* ViolasTransactionArgument.swift */; };
-		9DB515BF23A32EF80069A909 /* ViolasTransactionAccessPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515BE23A32EF80069A909 /* ViolasTransactionAccessPath.swift */; };
-		9DB515C123A32F3E0069A909 /* ViolasTransactionWriteSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515C023A32F3E0069A909 /* ViolasTransactionWriteSet.swift */; };
-		9DB515C323A32F660069A909 /* ViolasTransactionScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515C223A32F660069A909 /* ViolasTransactionScript.swift */; };
+		9DB515C123A32F3E0069A909 /* ViolasTransactionWriteSetPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515C023A32F3E0069A909 /* ViolasTransactionWriteSetPayload.swift */; };
+		9DB515C323A32F660069A909 /* ViolasTransactionScriptPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515C223A32F660069A909 /* ViolasTransactionScriptPayload.swift */; };
 		9DBC267623408D55009650EA /* ed25519_sc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DBC267023408D54009650EA /* ed25519_sc.swift */; };
 		9DBC267723408D55009650EA /* ed25519_utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DBC267123408D54009650EA /* ed25519_utility.swift */; };
 		9DBC267823408D55009650EA /* ed25519_ge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DBC267223408D54009650EA /* ed25519_ge.swift */; };
@@ -341,8 +345,13 @@
 		36178362244465EB003C6588 /* ViolasMultiPublicKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasMultiPublicKey.swift; sourceTree = "<group>"; };
 		361783642444683B003C6588 /* ViolasTypeTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasTypeTag.swift; sourceTree = "<group>"; };
 		361783662444684F003C6588 /* ViolasStructTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasStructTag.swift; sourceTree = "<group>"; };
-		3617836A24449B53003C6588 /* ViolasTransactionModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViolasTransactionModule.swift; sourceTree = "<group>"; };
+		3617836A24449B53003C6588 /* ViolasTransactionModulePayload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViolasTransactionModulePayload.swift; sourceTree = "<group>"; };
 		3617836F24449D85003C6588 /* LibraTransactionModulePayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraTransactionModulePayload.swift; sourceTree = "<group>"; };
+		361BDA0C24F89ACB00C4C54E /* ViolasTransactionPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasTransactionPayload.swift; sourceTree = "<group>"; };
+		361BDA0E24F89E0D00C4C54E /* ViolasWriteSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasWriteSet.swift; sourceTree = "<group>"; };
+		361BDA1024F89E3900C4C54E /* ViolasAccessPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasAccessPath.swift; sourceTree = "<group>"; };
+		361BDA1224F89E7A00C4C54E /* ViolasContractEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasContractEvent.swift; sourceTree = "<group>"; };
+		361BDA1424F8A47F00C4C54E /* ViolasContracts.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ViolasContracts.bundle; sourceTree = "<group>"; };
 		3622F20224E3FFF400CFB754 /* TransferViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferViewController.swift; sourceTree = "<group>"; };
 		3622F20424E4000500CFB754 /* TransferModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferModel.swift; sourceTree = "<group>"; };
 		3622F20624E4003E00CFB754 /* TransferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferView.swift; sourceTree = "<group>"; };
@@ -583,9 +592,8 @@
 		9DB515B523A32C3A0069A909 /* ViolasHDWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasHDWallet.swift; sourceTree = "<group>"; };
 		9DB515BA23A32E4C0069A909 /* ViolasRawTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasRawTransaction.swift; sourceTree = "<group>"; };
 		9DB515BC23A32E8C0069A909 /* ViolasTransactionArgument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasTransactionArgument.swift; sourceTree = "<group>"; };
-		9DB515BE23A32EF80069A909 /* ViolasTransactionAccessPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasTransactionAccessPath.swift; sourceTree = "<group>"; };
-		9DB515C023A32F3E0069A909 /* ViolasTransactionWriteSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasTransactionWriteSet.swift; sourceTree = "<group>"; };
-		9DB515C223A32F660069A909 /* ViolasTransactionScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasTransactionScript.swift; sourceTree = "<group>"; };
+		9DB515C023A32F3E0069A909 /* ViolasTransactionWriteSetPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasTransactionWriteSetPayload.swift; sourceTree = "<group>"; };
+		9DB515C223A32F660069A909 /* ViolasTransactionScriptPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasTransactionScriptPayload.swift; sourceTree = "<group>"; };
 		9DBC266E23405B41009650EA /* LibraWallet.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LibraWallet.entitlements; sourceTree = "<group>"; };
 		9DBC267023408D54009650EA /* ed25519_sc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ed25519_sc.swift; sourceTree = "<group>"; };
 		9DBC267123408D54009650EA /* ed25519_utility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ed25519_utility.swift; sourceTree = "<group>"; };
@@ -739,7 +747,7 @@
 		3617837124449FC4003C6588 /* Script */ = {
 			isa = PBXGroup;
 			children = (
-				9DB515C223A32F660069A909 /* ViolasTransactionScript.swift */,
+				9DB515C223A32F660069A909 /* ViolasTransactionScriptPayload.swift */,
 				9DB515BC23A32E8C0069A909 /* ViolasTransactionArgument.swift */,
 				361783642444683B003C6588 /* ViolasTypeTag.swift */,
 				361783662444684F003C6588 /* ViolasStructTag.swift */,
@@ -750,8 +758,10 @@
 		3617837224449FD8003C6588 /* WriteSet */ = {
 			isa = PBXGroup;
 			children = (
-				9DB515C023A32F3E0069A909 /* ViolasTransactionWriteSet.swift */,
-				9DB515BE23A32EF80069A909 /* ViolasTransactionAccessPath.swift */,
+				9DB515C023A32F3E0069A909 /* ViolasTransactionWriteSetPayload.swift */,
+				361BDA0E24F89E0D00C4C54E /* ViolasWriteSet.swift */,
+				361BDA1024F89E3900C4C54E /* ViolasAccessPath.swift */,
+				361BDA1224F89E7A00C4C54E /* ViolasContractEvent.swift */,
 			);
 			path = WriteSet;
 			sourceTree = "<group>";
@@ -759,7 +769,7 @@
 		3617837324449FE8003C6588 /* Module */ = {
 			isa = PBXGroup;
 			children = (
-				3617836A24449B53003C6588 /* ViolasTransactionModule.swift */,
+				3617836A24449B53003C6588 /* ViolasTransactionModulePayload.swift */,
 			);
 			path = Module;
 			sourceTree = "<group>";
@@ -2626,6 +2636,7 @@
 			isa = PBXGroup;
 			children = (
 				9DB515BA23A32E4C0069A909 /* ViolasRawTransaction.swift */,
+				361BDA0C24F89ACB00C4C54E /* ViolasTransactionPayload.swift */,
 				3617837124449FC4003C6588 /* Script */,
 				3617837224449FD8003C6588 /* WriteSet */,
 				3617837324449FE8003C6588 /* Module */,
@@ -3079,6 +3090,7 @@
 				3617835A24440BDB003C6588 /* ViolasUtils.swift */,
 				9DB515A723A327640069A909 /* ViolasMnemonic.swift */,
 				3617835C24440C1E003C6588 /* ViolasWordList.swift */,
+				361BDA1424F8A47F00C4C54E /* ViolasContracts.bundle */,
 			);
 			path = ViolasKit;
 			sourceTree = "<group>";
@@ -3256,6 +3268,7 @@
 				36F8270E24BEAA7F0007ACC3 /* README.md in Resources */,
 				36828CED24BBFA300085A165 /* MarketContracts.bundle in Resources */,
 				9D7124342329EA1C009DED52 /* Localizable.strings in Resources */,
+				361BDA1524F8A47F00C4C54E /* ViolasContracts.bundle in Resources */,
 				9D712443232F7662009DED52 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3429,6 +3442,7 @@
 				3682E5C624AC36DC007CA2CA /* AssetsPoolView.swift in Sources */,
 				9D9B4A132360491C00354EF0 /* HelpCenterView.swift in Sources */,
 				9DA0265B23710FDB0084905B /* WelcomeAlert.swift in Sources */,
+				361BDA1124F89E3900C4C54E /* ViolasAccessPath.swift in Sources */,
 				9D56EA4823516C3C00A55F02 /* KeychainManager.swift in Sources */,
 				363D90EE24CAA6C500F6374C /* LibraTransactionWriteSetPayload.swift in Sources */,
 				9D9B4A5F2366D51200354EF0 /* WalletConfigTableViewManager.swift in Sources */,
@@ -3501,13 +3515,14 @@
 				9D9B49C9235FFA8E00354EF0 /* MineModel.swift in Sources */,
 				9DC4886B232222CF005FF254 /* LBXScanViewController.swift in Sources */,
 				36F826F124BD9EEB0007ACC3 /* ExchangeTransactionsView.swift in Sources */,
-				9DB515C123A32F3E0069A909 /* ViolasTransactionWriteSet.swift in Sources */,
+				9DB515C123A32F3E0069A909 /* ViolasTransactionWriteSetPayload.swift in Sources */,
 				9DC4886F232222CF005FF254 /* LBXScanWrapper.swift in Sources */,
 				9DB515B223A32BC50069A909 /* ViolasHDPrivateKey.swift in Sources */,
 				3622F20A24E4007E00CFB754 /* TransferViewModel.swift in Sources */,
 				3646E50424D7C0FD00B8C20B /* AssetsPoolViewModel.swift in Sources */,
 				361783652444683B003C6588 /* ViolasTypeTag.swift in Sources */,
 				9DB515BD23A32E8C0069A909 /* ViolasTransactionArgument.swift in Sources */,
+				361BDA0F24F89E0D00C4C54E /* ViolasWriteSet.swift in Sources */,
 				9DC48869232222CF005FF254 /* LBXScanNetAnimation.swift in Sources */,
 				3623AB7623FBFC79004A01BF /* MappingTokenListAlert.swift in Sources */,
 				9D1A614C233204E2009DDA07 /* BaseViewController.swift in Sources */,
@@ -3516,16 +3531,17 @@
 				368CD5E324D26F4E0092F12E /* MarketManager.swift in Sources */,
 				36DA3FCE23B5E5C6001D7733 /* UIButton + imageTitleLocation.swift in Sources */,
 				9D9B4A1723604A7200354EF0 /* CustomActionViewProtocol.swift in Sources */,
+				361BDA1324F89E7A00C4C54E /* ViolasContractEvent.swift in Sources */,
 				9DB515A823A327640069A909 /* ViolasMnemonic.swift in Sources */,
 				36B466A82476565000CFF438 /* ScanSendTransactionViewController.swift in Sources */,
 				9DC06A352371794100BCE1FE /* CheckBackupCollectionViewMananger.swift in Sources */,
 				36EBF018245055E9007FD4C5 /* ActiveAccountView.swift in Sources */,
 				3682E5BC24A865EB007CA2CA /* ScanLogoutView.swift in Sources */,
 				9D62646C2355A0E300A79B3D /* PasswordCrypto.swift in Sources */,
-				9DB515BF23A32EF80069A909 /* ViolasTransactionAccessPath.swift in Sources */,
 				9D9B49EF2360387B00354EF0 /* LanguageViewController.swift in Sources */,
 				36F826F524BD9F1B0007ACC3 /* AssetsPoolTransactionsViewController.swift in Sources */,
 				36F42E8B2431B56A00DBBF8F /* LibraStructTag.swift in Sources */,
+				361BDA0D24F89ACB00C4C54E /* ViolasTransactionPayload.swift in Sources */,
 				3617835B24440BDB003C6588 /* ViolasUtils.swift in Sources */,
 				9DC4884F2321F051005FF254 /* LibraWordList.swift in Sources */,
 				3682E5CC24AC3753007CA2CA /* AssetsPoolViewHeaderView.swift in Sources */,
@@ -3583,7 +3599,7 @@
 				9DC06A332371789D00BCE1FE /* CheckBackupView.swift in Sources */,
 				9D9B49B0235DA76100354EF0 /* AddAddressModel.swift in Sources */,
 				36836D3124B301250031AC6E /* ExchangeTransactionDetailView.swift in Sources */,
-				9DB515C323A32F660069A909 /* ViolasTransactionScript.swift in Sources */,
+				9DB515C323A32F660069A909 /* ViolasTransactionScriptPayload.swift in Sources */,
 				9D9B4A152360496900354EF0 /* FeedbackAlert.swift in Sources */,
 				9DC9023D2328E8290097FD85 /* CommonData.swift in Sources */,
 				36E95D8D242A084B0004B86D /* ScanLoginView.swift in Sources */,
@@ -3597,7 +3613,7 @@
 				9D9B49E8236031F700354EF0 /* SettingTableViewCell.swift in Sources */,
 				3642EB7123CC654500C7B04A /* Serialization.swift in Sources */,
 				36F8270B24BEAA7E0007ACC3 /* Dropper.swift in Sources */,
-				3617836B24449B53003C6588 /* ViolasTransactionModule.swift in Sources */,
+				3617836B24449B53003C6588 /* ViolasTransactionModulePayload.swift in Sources */,
 				9DC4886C232222CF005FF254 /* LBXScanLineAnimation.swift in Sources */,
 				9DB515B423A32C130069A909 /* ViolasHDPublicKey.swift in Sources */,
 				9D9B49FC236046CF00354EF0 /* ServiceLegalView.swift in Sources */,

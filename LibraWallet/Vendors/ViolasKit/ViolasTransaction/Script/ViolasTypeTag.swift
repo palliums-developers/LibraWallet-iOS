@@ -9,15 +9,15 @@
 import UIKit
 
 enum ViolasTypeTags {
-    case Bool
-    case U8
-    case U64
-    case U128
-    case Address
+    case Bool(Bool)
+    case U8(Int)
+    case U64(UInt64)
+    case U128(String)
+    case Address(String)
     // 加密签名
-    case Signer
-    case Vector//Vector(Box<TypeTag>)
-    case Struct
+    case Signer(String)
+    case Vector(String)//Vector(Box<TypeTag>)
+    case Struct(ViolasStructTag)
 }
 extension ViolasTypeTags {
     public var data: Data {
@@ -42,65 +42,46 @@ extension ViolasTypeTags {
     }
 }
 struct ViolasTypeTag {
-    fileprivate let value: String
-        
-    fileprivate let module: String
-        
-    fileprivate let name: String
-    
-    fileprivate let typeParams: [String]
-    
     fileprivate let typeTag: ViolasTypeTags
-        
-    init(typeTag: ViolasTypeTags, value: String, module: String, name: String, typeParams: [String]) {
+    
+    init(typeTag: ViolasTypeTags) {
         self.typeTag = typeTag
-        self.value = value
-        self.module = module
-        self.name = name
-        self.typeParams = typeParams
-    }
-    init(structData: ViolasStructTag) {
-        self.typeTag = .Struct
-        
-        self.value = structData.address
-        self.module = structData.module
-        self.name = structData.name
-        self.typeParams = structData.typeParams
     }
     func serialize() -> Data {
-        var result = Data()
+         var result = Data()
         // 追加类型
         result += self.typeTag.data
-        
         switch self.typeTag {
-        case .Bool:
-            result += ViolasUtils.getLengthData(length: UInt64(self.value)!, appendBytesCount: 1)
-        case .U8:
-            result += ViolasUtils.getLengthData(length: UInt64(self.value)!, appendBytesCount: 1)
-        case .U64:
-            result += ViolasUtils.getLengthData(length: UInt64(self.value)!, appendBytesCount: 8)
-        case .U128:
-            result += ViolasUtils.getLengthData(length: UInt64(self.value)!, appendBytesCount: 16)
-        case .Address:
-            result += Data.init(Array<UInt8>(hex: self.value))
-        case .Signer:
+        case .Bool(let value):
+            result += ViolasUtils.getLengthData(length: NSDecimalNumber.init(value: value).uint64Value, appendBytesCount: 1)
+        case .U8(let value):
+            result += ViolasUtils.getLengthData(length: NSDecimalNumber.init(value: value).uint64Value, appendBytesCount: 1)
+        case .U64(let value):
+            result += ViolasUtils.getLengthData(length: value, appendBytesCount: 8)
+        case .U128(let value):
+            result += ViolasUtils.getLengthData(length: NSDecimalNumber.init(string: value).uint64Value, appendBytesCount: 16)
+        case .Address(let value):
+            result += Data.init(Array<UInt8>(hex: value))
+        case .Signer(let value):
             #warning("待验证")
-            result += Data.init(Array<UInt8>(hex: self.value))
-        case .Vector:
-            let data = Data.init(Array<UInt8>(hex: self.value))
-            result += ViolasUtils.uleb128Format(length: data.bytes.count)
+            result += Data.init(Array<UInt8>(hex: value))
+        case .Vector(let value):
+            #warning("待验证")
+            let data = Data.init(Array<UInt8>(hex: value))
+            result += ViolasUtils.getLengthData(length: UInt64(data.bytes.count), appendBytesCount: 1)
             result += data
-        case .Struct:
-            result += Data.init(Array<UInt8>(hex: self.value))
+        case .Struct(let value):
+            result += Data.init(Array<UInt8>(hex: value.address))
             //
-            result += ViolasUtils.uleb128Format(length: self.module.data(using: String.Encoding.utf8)!.bytes.count)
-            result += self.module.data(using: String.Encoding.utf8)!
+            result += ViolasUtils.uleb128Format(length: value.module.data(using: String.Encoding.utf8)!.bytes.count)
+            result += value.module.data(using: String.Encoding.utf8)!
             //
-            result += ViolasUtils.uleb128Format(length: self.name.data(using: String.Encoding.utf8)!.bytes.count)
-            result += self.name.data(using: String.Encoding.utf8)!
+            result += ViolasUtils.uleb128Format(length: value.name.data(using: String.Encoding.utf8)!.bytes.count)
+            result += value.name.data(using: String.Encoding.utf8)!
             // 追加argument数量
-            result += ViolasUtils.uleb128Format(length: self.typeParams.count)
+            result += ViolasUtils.uleb128Format(length: value.typeParams.count)
         }
         return result
     }
+
 }

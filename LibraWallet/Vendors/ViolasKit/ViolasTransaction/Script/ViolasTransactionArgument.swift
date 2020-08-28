@@ -8,12 +8,12 @@
 
 import Foundation
 enum ViolasArgumentsCode {
-    case U8
-    case U64
-    case U128
-    case Address
-    case U8Vector
-    case Bool
+    case U8(String)
+    case U64(String)
+    case U128(String)
+    case Address(String)
+    case U8Vector(Data)
+    case Bool(Bool)
 }
 extension ViolasArgumentsCode {
     public var raw: Data {
@@ -36,33 +36,26 @@ extension ViolasArgumentsCode {
 struct ViolasTransactionArgument {
     fileprivate let code: ViolasArgumentsCode
     
-    fileprivate let value: String
-    
-    init(code: ViolasArgumentsCode, value: String) {
+    init(code: ViolasArgumentsCode) {
         self.code = code
-        self.value = value
     }
     func serialize() -> Data {
         var result = Data()
-        
         result += self.code.raw
-        
         switch self.code {
-        case .U8:
-            result += ViolasUtils.getLengthData(length: UInt64(self.value)!, appendBytesCount: 1)
-        case .U64:
-            result += ViolasUtils.getLengthData(length: UInt64(self.value) ?? 0, appendBytesCount: 8)
-        case .U128:
-            result += ViolasUtils.getLengthData(length: UInt64(self.value)!, appendBytesCount: 16)
-        case .Address:
-            let data = Data.init(Array<UInt8>(hex: self.value))
-            result += data
-        case .U8Vector:
-            let data = Data.init(Array<UInt8>(hex: self.value))
-            result += ViolasUtils.uleb128Format(length: data.bytes.count)
-            result += data
-        case .Bool:
-            result += ViolasUtils.getLengthData(length: UInt64(self.value)!, appendBytesCount: 1)
+        case .U8(let value):
+            result += LibraUtils.getLengthData(length: NSDecimalNumber.init(string: value).uint64Value, appendBytesCount: 1)
+        case .U64(let value):
+            result += LibraUtils.getLengthData(length: NSDecimalNumber.init(string: value).uint64Value, appendBytesCount: 8)
+        case .U128(let value):
+            result += LibraUtils.getLengthData(length: NSDecimalNumber.init(string: value).uint64Value, appendBytesCount: 16)
+        case .Address(let address):
+            result += Data.init(Array<UInt8>(hex: address))
+        case .U8Vector(let value):
+            result += LibraUtils.uleb128Format(length: value.bytes.count)
+            result += value
+        case .Bool(let value):
+            result += LibraUtils.getLengthData(length: NSDecimalNumber.init(value: value).uint64Value, appendBytesCount: 1)
         }
         return result
     }

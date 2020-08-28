@@ -414,7 +414,7 @@ extension mainRequest:TargetType {
                                       encoding: URLEncoding.queryString)
         case .GetViolasAccountInfo(let address):
             return .requestParameters(parameters: ["jsonrpc":"2.0",
-                                                   "method":"get_account_state",
+                                                   "method":"get_account",
                                                    "id":"123",
                                                    "params":["\(address)"]],
                                       encoding: JSONEncoding.default)
