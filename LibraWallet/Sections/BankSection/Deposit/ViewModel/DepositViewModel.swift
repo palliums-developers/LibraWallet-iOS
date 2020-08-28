@@ -42,9 +42,32 @@ class DepositViewModel: NSObject {
 }
 // MARK: - 逻辑处理
 extension DepositViewModel: DepositTableViewManagerDelegate {
+    func questionHeaderDelegate(header: DepositQuestionTableViewHeaderView) {
+        header.delegate = self
+    }
+    func describeHeaderDelegate(header: DepositDescribeTableViewHeaderView) {
+        header.delegate = self
+    }
     func headerDelegate(header: DepositTableViewHeaderView) {
         header.delegate = self
         header.depositAmountTextField.delegate = self
+    }
+}
+extension DepositViewModel: DepositQuestionTableViewHeaderViewDelegate {
+    func showQuestions(header: DepositQuestionTableViewHeaderView) {
+        self.tableViewManager.showQuestion = self.tableViewManager.showQuestion == true ? false:true
+
+        self.view?.tableView.beginUpdates()
+        self.view?.tableView.reloadSections(IndexSet.init(integer: 2), with: UITableView.RowAnimation.fade)
+        self.view?.tableView.endUpdates()
+    }
+}
+extension DepositViewModel: DepositDescribeTableViewHeaderViewDelegate {
+    func showQuestions(header: DepositDescribeTableViewHeaderView) {
+        self.tableViewManager.showIntroduce = self.tableViewManager.showIntroduce == true ? false:true
+        self.view?.tableView.beginUpdates()
+        self.view?.tableView.reloadSections(IndexSet.init(integer: 1), with: UITableView.RowAnimation.fade)
+        self.view?.tableView.endUpdates()
     }
 }
 extension DepositViewModel: DepositTableViewHeaderViewDelegate {
@@ -140,7 +163,7 @@ extension DepositViewModel: DepositViewDelegate {
     func handleConfirmCondition() throws -> Int64 {
         
         guard let header = self.view?.tableView.headerView(forSection: 0) as? DepositTableViewHeaderView else {
-            return
+            throw LibraWalletError.error("Unkwon Error")
         }
         guard self.tableViewManager.model?.token_active_state == true else {
             throw LibraWalletError.error("UnActive Token")

@@ -8,6 +8,11 @@
 
 import UIKit
 import Moya
+struct BankDepositMarketQuestionsDataModel: Codable {
+    var title: String?
+    var content: String?
+    var height: CGFloat?
+}
 struct BankDepositMarketDataModel: Codable {
     var product_name: String?
     var product_describe: String?
@@ -17,6 +22,8 @@ struct BankDepositMarketDataModel: Codable {
     var product_amount_limit: Int64?
     var product_amount_limit_least: Int64?
     var product_pledge_rate: Double?
+    var product_questions: [BankDepositMarketQuestionsDataModel]?
+    var product_introduce: [BankDepositMarketQuestionsDataModel]?
     var product_token_icon: String?
     var product_token_address: String?
     var product_token_module: String?

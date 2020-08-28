@@ -450,6 +450,8 @@ wallet_market_assets_pool_mine_navigationbar_title = "我的资金池";
 wallet_market_assets_pool_transactions_navigationbar_title = "资金池记录";
 wallet_market_assets_pool_transaction_detail_navigationbar_title = "详情";
 
+wallet_bank_deposit_navigationbar_title = "存款";
+
 /************* App错误 *******************/
 // 请求遇到错误
 wallet_request_parse_json_error = "数据解析失败";

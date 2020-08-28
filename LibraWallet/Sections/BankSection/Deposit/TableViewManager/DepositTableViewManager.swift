@@ -9,31 +9,68 @@
 import UIKit
 protocol DepositTableViewManagerDelegate: NSObjectProtocol {
     func headerDelegate(header: DepositTableViewHeaderView)
+    func questionHeaderDelegate(header: DepositQuestionTableViewHeaderView)
+    func describeHeaderDelegate(header: DepositDescribeTableViewHeaderView)
+    //    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath)
 }
 class DepositTableViewManager: NSObject {
     weak var delegate: DepositTableViewManagerDelegate?
     var model: BankDepositMarketDataModel?
     var dataModels: [DepositLocalDataModel]?
+    var showIntroduce: Bool?
+    var showQuestion: Bool?
     deinit {
         print("DepositTableViewManager销毁了")
     }
 }
 extension DepositTableViewManager: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 48
+        if indexPath.section == 0 {
+            return 48
+        } else if indexPath.section == 1 {
+            if showIntroduce == true {
+                if let height = model?.product_introduce?[indexPath.row].height, height > 0 {
+                    return 10 + height + 10
+                } else {
+                    let titleHeight = libraWalletTool.ga_heightForComment(content: model?.product_introduce?[indexPath.row].title ?? "", fontSize: 12, width: mainWidth - 56)
+                    let contentHeight = libraWalletTool.ga_heightForComment(content: model?.product_introduce?[indexPath.row].content ?? "", fontSize: 12, width: mainWidth - 56)
+                    model?.product_introduce?[indexPath.row].height = titleHeight + 10 + contentHeight
+                    return 10 + titleHeight + 10 + contentHeight + 10
+                }
+            } else {
+                return 48
+            }
+        } else {
+            if showQuestion == true {
+                if let height = model?.product_questions?[indexPath.row].height, height > 0 {
+                    return 10 + height + 10
+                } else {
+                    let titleHeight = libraWalletTool.ga_heightForComment(content: model?.product_questions?[indexPath.row].title ?? "", fontSize: 12, width: mainWidth - 56)
+                    let contentHeight = libraWalletTool.ga_heightForComment(content: model?.product_questions?[indexPath.row].content ?? "", fontSize: 12, width: mainWidth - 56)
+                    model?.product_questions?[indexPath.row].height = titleHeight + 10 + contentHeight
+                    return 10 + titleHeight + 10 + contentHeight + 10
+                }
+            } else {
+                return 48
+            }
+        }
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
-        guard let model = self.dataModels else {
+        guard indexPath.section != 0 else {
             return
         }
-        //        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, model: model[indexPath.row])
+        //        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath)
     }
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if section == 0 {
             return 162
+        } else if section == 1{
+            return 48
+        } else if section == 2 {
+            return 48
         } else {
-            return 10
+            return 0.001
         }
     }
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -49,6 +86,27 @@ extension DepositTableViewManager: UITableViewDelegate {
                 self.delegate?.headerDelegate(header: header)
                 return header
             }
+        } else if section == 1 {
+            let identifier = "DescribeHeader"
+            if let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier) as? DepositDescribeTableViewHeaderView {
+                self.delegate?.describeHeaderDelegate(header: header)
+                return header
+            } else {
+                let header = DepositDescribeTableViewHeaderView.init(reuseIdentifier: identifier)
+                self.delegate?.describeHeaderDelegate(header: header)
+                return header
+            }
+        } else if section == 2 {
+            
+            let identifier = "DepositHeader"
+            if let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier) as? DepositQuestionTableViewHeaderView {
+                self.delegate?.questionHeaderDelegate(header: header)
+                return header
+            } else {
+                let header = DepositQuestionTableViewHeaderView.init(reuseIdentifier: identifier)
+                self.delegate?.questionHeaderDelegate(header: header)
+                return header
+            }
         } else {
             let view = UIView.init()
             view.backgroundColor = UIColor.init(hex: "F7F7F9")
@@ -56,7 +114,7 @@ extension DepositTableViewManager: UITableViewDelegate {
         }
     }
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 0.001
+        return 10
     }
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let view = UIView.init()
@@ -68,8 +126,18 @@ extension DepositTableViewManager: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
             return dataModels?.count ?? 0
+        } else if section == 1 {
+            if showIntroduce == true {
+                return model?.product_introduce?.count ?? 0
+            } else {
+                return 0
+            }
         } else {
-            return 1
+            if showQuestion == true {
+                return model?.product_questions?.count ?? 0
+            } else {
+                return 0
+            }
         }
     }
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -97,15 +165,15 @@ extension DepositTableViewManager: UITableViewDataSource {
         } else if indexPath.section == 1 {
             let identifier = "DescribeCell"
             if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? DepositDescribeTableViewCell {
-                if let data = dataModels, data.isEmpty == false {
-                    //                cell.model = data[indexPath.row]
+                if let data = model?.product_introduce, data.isEmpty == false {
+                    cell.model = data[indexPath.row]
                 }
                 cell.selectionStyle = .none
                 return cell
             } else {
                 let cell = DepositDescribeTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
-                if let data = dataModels, data.isEmpty == false {
-                    //                cell.model = data[indexPath.row]
+                if let data = model?.product_introduce, data.isEmpty == false {
+                    cell.model = data[indexPath.row]
                 }
                 cell.selectionStyle = .none
                 return cell
@@ -113,20 +181,20 @@ extension DepositTableViewManager: UITableViewDataSource {
         } else {
             let identifier = "QuestionCell"
             if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? DepositQuestionTableViewCell {
-                if let data = dataModels, data.isEmpty == false {
-                    //                cell.model = data[indexPath.row]
+                if let data = model?.product_questions, data.isEmpty == false {
+                    cell.model = data[indexPath.row]
                 }
                 cell.selectionStyle = .none
                 return cell
             } else {
                 let cell = DepositQuestionTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
-                if let data = dataModels, data.isEmpty == false {
-                    //                cell.model = data[indexPath.row]
+                if let data = model?.product_questions, data.isEmpty == false {
+                    cell.model = data[indexPath.row]
                 }
                 cell.selectionStyle = .none
                 return cell
             }
         }
-        
+        //
     }
 }

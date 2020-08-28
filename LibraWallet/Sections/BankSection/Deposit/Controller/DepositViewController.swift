@@ -11,6 +11,7 @@ import UIKit
 class DepositViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = localLanguage(keyString: "wallet_bank_deposit_navigationbar_title")
         self.view.backgroundColor = UIColor.init(hex: "F7F7F9")
         // 加载子View
         self.view.addSubview(detailView)

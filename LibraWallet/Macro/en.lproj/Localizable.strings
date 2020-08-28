@@ -449,6 +449,7 @@ wallet_market_exchange_transaction_detail_navigationbar_title = "Detail";
 wallet_market_assets_pool_mine_navigationbar_title = "My Assets Pool";
 wallet_market_assets_pool_transactions_navigationbar_title = "Pool Transactions";
 wallet_market_assets_pool_transaction_detail_navigationbar_title = "Detail";
+wallet_bank_deposit_navigationbar_title = "Deposit";
 
 /************* App错误 *******************/
 // 请求遇到错误
