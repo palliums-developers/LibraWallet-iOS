@@ -1,5 +1,5 @@
 //
-//  WithdrawMarketTableViewCell.swift
+//  LoanMarketTableViewCell.swift
 //  LibraWallet
 //
 //  Created by wangyingdong on 2020/8/19.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class WithdrawMarketTableViewCell: UITableViewCell {
+class LoanMarketTableViewCell: UITableViewCell {
     //    weak var delegate: AddAssetViewTableViewCellDelegate?
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -27,7 +27,7 @@ class WithdrawMarketTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
-        print("WithdrawMarketTableViewCell销毁了")
+        print("LoanMarketTableViewCell销毁了")
     }
     //pragma MARK: 布局
     override func layoutSubviews() {
@@ -126,39 +126,12 @@ class WithdrawMarketTableViewCell: UITableViewCell {
         return label
     }()
     //MARK: - 设置数据
-    var indexPath: IndexPath?
-    var hideSpcaeLineState: Bool? {
+    var model: BankDepositMarketDataModel? {
         didSet {
-            if hideSpcaeLineState == true {
-                spaceLabel.alpha = 0
-            } else {
-                spaceLabel.alpha = 1
-            }
-        }
-    }
-    //    var model: TokenMappingListDataModel? {
-    //        didSet {
-    //            tokenNameLabel.text = model?.from_coin?.assert?.show_name
-    //            if let iconName = model?.from_coin?.assert?.icon, iconName.isEmpty == false {
-    //                let url = URL(string: iconName)
-    //                transactionTypeImageView.kf.setImage(with: url, placeholder: UIImage.init(named: "wallet_icon_default"))
-    //            }
-    //            var unit = 1000000
-    //            if model?.from_coin?.coin_type == "btc" {
-    //                unit = 100000000
-    //            }
-    //            amountLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + getDecimalNumberAmount(amount: NSDecimalNumber.init(value: model?.from_coin?.assert?.amount ?? 0),
-    //                                                                                                                  scale: 6,
-    //                                                                                                                  unit: unit)
-    //        }
-    //    }
-    var showSelectState: Bool? {
-        didSet {
-            //            if showSelectState == true {
-            //                selectIndicatorImageView.alpha = 1
-            //            } else {
-            //                selectIndicatorImageView.alpha = 0
-            //            }
+            itemNameLabel.text = model?.product_name
+            itemDescribeLabel.text = model?.product_describe
+            itemBenefitLabel.text = NSDecimalNumber.init(value: model?.product_rate ?? 0).multiplying(by: NSDecimalNumber.init(value: 100)).stringValue + "%"
+            itemBenefitTitleLabel.text = model?.product_rate_describe
         }
     }
 }

@@ -1,5 +1,5 @@
 //
-//  WithdrawMarketView.swift
+//  LoanMarketView.swift
 //  LibraWallet
 //
 //  Created by wangyingdong on 2020/8/19.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class WithdrawMarketView: UIView {
+class LoanMarketView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.addSubview(tableView)
@@ -17,7 +17,7 @@ class WithdrawMarketView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
-        print("WithdrawMarketView销毁了")
+        print("LoanMarketView销毁了")
     }
     //MARK: - 布局
     override func layoutSubviews() {

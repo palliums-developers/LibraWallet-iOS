@@ -323,6 +323,8 @@ wallet_bank_loan_pay_account_title = "质押账户";
 wallet_bank_loan_pay_account_content = "银行余额";
 wallet_bank_loan_describe_title = "产品说明";
 wallet_bank_loan_question_title = "常见问题";
+wallet_bank_loan_legal_button_conent = "我已阅读并同意《质押借款服务协议》";
+wallet_bank_loan_legal_agreement_match_contnet = "《质押借款服务协议》";
 
 /************* 弹出提示 *******************/
 // 转账弹出提示
@@ -451,6 +453,7 @@ wallet_market_assets_pool_transactions_navigationbar_title = "资金池记录";
 wallet_market_assets_pool_transaction_detail_navigationbar_title = "详情";
 
 wallet_bank_deposit_navigationbar_title = "存款";
+wallet_bank_loan_navigationbar_title = "借款";
 
 /************* App错误 *******************/
 // 请求遇到错误

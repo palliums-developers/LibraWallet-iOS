@@ -323,6 +323,8 @@ wallet_bank_loan_pay_account_title = "Pledge account";
 wallet_bank_loan_pay_account_content = "Bank Balance";
 wallet_bank_loan_describe_title = "Product Introduce";
 wallet_bank_loan_question_title = "Q&A";
+wallet_bank_loan_legal_button_conent = "I have read and agree Pledge & Loan service agreement";
+wallet_bank_loan_legal_agreement_match_contnet = "Pledge & Loan service agreement";
 
 /************* 弹出提示 *******************/
 // 转账弹出提示
@@ -450,6 +452,7 @@ wallet_market_assets_pool_mine_navigationbar_title = "My Assets Pool";
 wallet_market_assets_pool_transactions_navigationbar_title = "Pool Transactions";
 wallet_market_assets_pool_transaction_detail_navigationbar_title = "Detail";
 wallet_bank_deposit_navigationbar_title = "Deposit";
+wallet_bank_loan_navigationbar_title = "Loan";
 
 /************* App错误 *******************/
 // 请求遇到错误

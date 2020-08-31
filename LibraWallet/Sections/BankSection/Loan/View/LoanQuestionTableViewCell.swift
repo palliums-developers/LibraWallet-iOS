@@ -9,14 +9,12 @@
 import UIKit
 
 class LoanQuestionTableViewCell: UITableViewCell {
-    //    weak var delegate: AddAssetViewTableViewCellDelegate?
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.backgroundColor = UIColor.init(hex: "F7F7F9")
         contentView.addSubview(whiteBackgroundView)
         whiteBackgroundView.addSubview(itemTitleLabel)
-        whiteBackgroundView.addSubview(itemIndicatorImageView)
-        whiteBackgroundView.addSubview(itemDetailImageView)
+        whiteBackgroundView.addSubview(itemContentLabel)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -33,18 +31,14 @@ class LoanQuestionTableViewCell: UITableViewCell {
             make.top.bottom.equalTo(contentView)
         }
         itemTitleLabel.snp.makeConstraints { (make) in
-            make.centerY.equalTo(whiteBackgroundView)
+            make.top.equalTo(whiteBackgroundView).offset(15)
             make.left.equalTo(whiteBackgroundView).offset(13)
+            make.right.equalTo(whiteBackgroundView.snp.right).offset(-13)
         }
-        itemIndicatorImageView.snp.makeConstraints { (make) in
-            make.centerY.equalTo(itemTitleLabel)
-            make.left.equalTo(itemTitleLabel.snp.right).offset(3)
-            make.size.equalTo(CGSize.init(width: 14, height: 14))
-        }
-        itemDetailImageView.snp.makeConstraints { (make) in
-            make.centerY.equalTo(whiteBackgroundView)
-            make.right.equalTo(whiteBackgroundView.snp.right).offset(-12)
-            make.size.equalTo(CGSize.init(width: 12, height: 12))
+        itemContentLabel.snp.makeConstraints { (make) in
+            make.top.equalTo(itemTitleLabel.snp.bottom).offset(10)
+            make.left.equalTo(whiteBackgroundView).offset(13)
+            make.right.equalTo(whiteBackgroundView.snp.right).offset(-13)
         }
     }
     // MARK: - 懒加载对象
@@ -57,21 +51,19 @@ class LoanQuestionTableViewCell: UITableViewCell {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "5C5C5C")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.medium)
-        label.text = localLanguage(keyString: "wallet_bank_loan_question_title")
+        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
+        label.text = "---"
+        label.numberOfLines = 0
         return label
     }()
-    private lazy var itemIndicatorImageView : UIImageView = {
-        let imageView = UIImageView.init()
-        imageView.layer.cornerRadius = 7
-        imageView.layer.masksToBounds = true
-        imageView.image = UIImage.init(named: "wallet_bank_deposit_questions")
-        return imageView
-    }()
-    private lazy var itemDetailImageView : UIImageView = {
-        let imageView = UIImageView.init()
-        imageView.image = UIImage.init(named: "cell_detail")
-        return imageView
+    lazy var itemContentLabel: UILabel = {
+        let label = UILabel.init()
+        label.textAlignment = NSTextAlignment.left
+        label.textColor = UIColor.init(hex: "999999")
+        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: UIFont.Weight.regular)
+        label.text = "---"
+        label.numberOfLines = 0
+        return label
     }()
     lazy var spaceLabel: UILabel = {
         let label = UILabel.init()
@@ -79,29 +71,13 @@ class LoanQuestionTableViewCell: UITableViewCell {
         return label
     }()
     //MARK: - 设置数据
-    //    var model: TokenMappingListDataModel? {
-    //        didSet {
-    //            tokenNameLabel.text = model?.from_coin?.assert?.show_name
-    //            if let iconName = model?.from_coin?.assert?.icon, iconName.isEmpty == false {
-    //                let url = URL(string: iconName)
-    //                transactionTypeImageView.kf.setImage(with: url, placeholder: UIImage.init(named: "wallet_icon_default"))
-    //            }
-    //            var unit = 1000000
-    //            if model?.from_coin?.coin_type == "btc" {
-    //                unit = 100000000
-    //            }
-    //            amountLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + getDecimalNumberAmount(amount: NSDecimalNumber.init(value: model?.from_coin?.assert?.amount ?? 0),
-    //                                                                                                                  scale: 6,
-    //                                                                                                                  unit: unit)
-    //        }
-    //    }
-    var showSelectState: Bool? {
+    var model: BankDepositMarketQuestionsDataModel? {
         didSet {
-            //            if showSelectState == true {
-            //                selectIndicatorImageView.alpha = 1
-            //            } else {
-            //                selectIndicatorImageView.alpha = 0
-            //            }
+            guard let tempModel = model else {
+                return
+            }
+            itemTitleLabel.text = tempModel.title
+            itemContentLabel.text = tempModel.content
         }
     }
 }

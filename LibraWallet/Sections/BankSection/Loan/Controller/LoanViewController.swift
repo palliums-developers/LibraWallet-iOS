@@ -11,10 +11,16 @@ import UIKit
 class LoanViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = localLanguage(keyString: "wallet_bank_loan_navigationbar_title")
         self.view.backgroundColor = UIColor.init(hex: "F7F7F9")
         // 加载子View
         self.view.addSubview(detailView)
+        // 初始化数据监听
         self.viewModel.initKVO()
+        // 加载数据
+        self.detailView.toastView?.show(tag: 99)
+        self.viewModel.dataModel.getLoanItemDetail(itemID: self.itemID ?? "",
+                                                   address: WalletManager.shared.violasAddress!)
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -49,4 +55,12 @@ class LoanViewController: BaseViewController {
         viewModel.view = self.detailView
         return viewModel
     }()
+    ///
+    var itemID: String?
+    /// 全部数据
+    var models: [BankDepositMarketDataModel]? {
+        didSet {
+            viewModel.models = models
+        }
+    }
 }

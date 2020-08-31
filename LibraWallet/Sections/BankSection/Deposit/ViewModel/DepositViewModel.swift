@@ -37,8 +37,7 @@ class DepositViewModel: NSObject {
     /// 数据监听KVO
     var observer: NSKeyValueObservation?
     ///
-    private var models: [BankDepositMarketDataModel]?
-    var selectIndexPath: IndexPath?
+    var models: [BankDepositMarketDataModel]?
 }
 // MARK: - 逻辑处理
 extension DepositViewModel: DepositTableViewManagerDelegate {
@@ -56,7 +55,6 @@ extension DepositViewModel: DepositTableViewManagerDelegate {
 extension DepositViewModel: DepositQuestionTableViewHeaderViewDelegate {
     func showQuestions(header: DepositQuestionTableViewHeaderView) {
         self.tableViewManager.showQuestion = self.tableViewManager.showQuestion == true ? false:true
-
         self.view?.tableView.beginUpdates()
         self.view?.tableView.reloadSections(IndexSet.init(integer: 2), with: UITableView.RowAnimation.fade)
         self.view?.tableView.endUpdates()
@@ -77,9 +75,9 @@ extension DepositViewModel: DepositTableViewHeaderViewDelegate {
         }
         let alert = DepositTokensAlert.init(data: tempData) { (model) in
             print(model)
-            self.tableViewManager.model = model
-            self.tableViewManager.dataModels = self.dataModel.getLocalModel(model: model)
-            self.view?.tableView.reloadData()
+            self.view?.toastView?.show(tag: 99)
+            self.dataModel.getDepositItemDetailModel(itemID: model.product_id ?? "",
+                                                     address: WalletManager.shared.violasAddress!)
         }
         if header.depositTokenSelectButton.titleLabel?.text != localLanguage(keyString: "wallet_bank_deposit_select_token_button_title") {
             let index = tempData.firstIndex {
@@ -90,7 +88,7 @@ extension DepositViewModel: DepositTableViewHeaderViewDelegate {
         alert.show(tag: 199)
         alert.showAnimation()
     }
-    func selectTotalBalance(header: DepositTableViewHeaderView, model: BankDepositMarketDataModel) {
+    func selectTotalBalance(header: DepositTableViewHeaderView, model: DepositItemDetailMainDataModel) {
         if (model.token_balance ?? 0) > (model.product_amount_limit_least ?? 0) {
             let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model.product_amount_limit_least ?? 0),
                                           scale: 6,
@@ -133,16 +131,16 @@ extension DepositViewModel: UITextFieldDelegate {
     }
     private func handleInputAmount(textField: UITextField, content: String) -> Bool {
         let amount = NSDecimalNumber.init(string: content).multiplying(by: NSDecimalNumber.init(value: 1000000)).int64Value
-        if amount <= self.models?[(selectIndexPath?.row ?? 0)].product_amount_limit_least ?? 0 && amount <= self.models?[(selectIndexPath?.row ?? 0)].token_balance ?? 0 {
+        if amount <= self.tableViewManager.model?.product_amount_limit_least ?? 0 && amount <= self.tableViewManager.model?.token_balance ?? 0 {
             return true
         } else {
-            if (self.models?[(selectIndexPath?.row ?? 0)].token_balance ?? 0) > (self.models?[(selectIndexPath?.row ?? 0)].product_amount_limit_least ?? 0) {
-                let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: self.models?[(selectIndexPath?.row ?? 0)].product_amount_limit_least ?? 0),
+            if (self.tableViewManager.model?.token_balance ?? 0) > (self.tableViewManager.model?.product_amount_limit_least ?? 0) {
+                let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: self.tableViewManager.model?.product_amount_limit_least ?? 0),
                                               scale: 6,
                                               unit: 1000000)
                 textField.text = amount.stringValue
             } else {
-                let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: self.models?[(selectIndexPath?.row ?? 0)].token_balance ?? 0),
+                let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: self.tableViewManager.model?.token_balance ?? 0),
                                               scale: 6,
                                               unit: 1000000)
                 textField.text = amount.stringValue
@@ -155,13 +153,12 @@ extension DepositViewModel: DepositViewDelegate {
     func confirmDeposit() {
         do {
             let amount = try handleConfirmCondition()
-            
+            print(amount)
         } catch {
             self.view?.makeToast(error.localizedDescription, position: .center)
         }
     }
     func handleConfirmCondition() throws -> Int64 {
-        
         guard let header = self.view?.tableView.headerView(forSection: 0) as? DepositTableViewHeaderView else {
             throw LibraWalletError.error("Unkwon Error")
         }
@@ -199,17 +196,13 @@ extension DepositViewModel {
         self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
             guard let dataDic = change.newValue, dataDic.count != 0 else {
                 self?.view?.toastView?.hide(tag: 99)
-                self?.view?.toastView?.hide(tag: 299)
                 self?.view?.hideToastActivity()
                 return
             }
-            #warning("已修改完成，可拷贝执行")
             if let error = dataDic.value(forKey: "error") as? LibraWalletError {
                 // 隐藏请求指示
                 self?.view?.hideToastActivity()
                 self?.view?.toastView?.hide(tag: 99)
-                self?.view?.toastView?.hide(tag: 299)
-                self?.view?.toastView?.hide(tag: 399)
                 if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
                     // 网络无法访问
                     print(error.localizedDescription)
@@ -247,12 +240,13 @@ extension DepositViewModel {
             }
             let type = dataDic.value(forKey: "type") as! String
             if type == "GetBankTokens" {
-                guard let tempData = dataDic.value(forKey: "data") as? [BankDepositMarketDataModel] else {
+                guard let tempData = dataDic.value(forKey: "data") as? DepositItemDetailMainDataModel else {
                     return
                 }
-                self?.models = tempData
-                self?.tableViewManager.model = tempData[(self?.selectIndexPath?.row ?? 0)]
-                self?.tableViewManager.dataModels = self?.dataModel.getLocalModel(model: tempData[(self?.selectIndexPath?.row ?? 0)])
+                // 刷新Header
+                self?.tableViewManager.model = tempData
+                // 刷新第一个Section各种信息
+                self?.tableViewManager.dataModels = self?.dataModel.getLocalModel(model: tempData)
                 self?.view?.tableView.reloadData()
             }
             self?.view?.hideToastActivity()

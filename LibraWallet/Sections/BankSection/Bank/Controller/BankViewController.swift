@@ -52,9 +52,10 @@ class BankViewController: UIViewController {
         return con
     }()
     /// 贷款市场Controller
-    lazy var withdrawController: WithdrawMarketViewController = {
-        let con = WithdrawMarketViewController()
+    lazy var withdrawController: LoanMarketViewController = {
+        let con = LoanMarketViewController()
         con.initKVO()
+        con.tableViewManager.delegate = self
         return con
     }()
     /// 全部资产价值按钮
@@ -134,16 +135,18 @@ extension BankViewController {
 extension BankViewController: DepositMarketTableViewManagerDelegate {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, models: [BankDepositMarketDataModel]) {
         let vc = DepositViewController.init()
-        vc.selectIndexPath = indexPath
+        vc.itemID = models[indexPath.row].product_id
         vc.models = models
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }
-//extension BankViewController: WithdrawMarketTableViewManagerDelegate {
-//    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath) {
-//        let vc = LoanViewController.init()
-//        vc.hidesBottomBarWhenPushed = true
-//        self.navigationController?.pushViewController(vc, animated: true)
-//    }
-//}
+extension BankViewController: LoanMarketTableViewManagerDelegate {
+    func loanTableViewDidSelectRowAtIndexPath(indexPath: IndexPath, models: [BankDepositMarketDataModel]) {
+        let vc = LoanViewController.init()
+        vc.itemID = models[indexPath.row].product_id
+        vc.models = models
+        vc.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+}

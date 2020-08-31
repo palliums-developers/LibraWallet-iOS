@@ -35,7 +35,7 @@ class DepositView: UIView {
         footerBackgroundView.snp.makeConstraints { (make) in
             make.left.right.equalTo(self)
             make.bottom.equalTo(self)
-            make.height.equalTo(128)
+            make.height.equalTo(90)
         }
         confirmButton.snp.makeConstraints { (make) in
             make.top.equalTo(footerBackgroundView).offset(20)

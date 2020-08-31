@@ -9,7 +9,7 @@
 import UIKit
 protocol DepositTableViewHeaderViewDelegate: NSObjectProtocol {
     func selectDepositToken(header: DepositTableViewHeaderView)
-    func selectTotalBalance(header: DepositTableViewHeaderView, model: BankDepositMarketDataModel)
+    func selectTotalBalance(header: DepositTableViewHeaderView, model: DepositItemDetailMainDataModel)
 }
 class DepositTableViewHeaderView: UITableViewHeaderFooterView {
     weak var delegate: DepositTableViewHeaderViewDelegate?
@@ -217,7 +217,7 @@ class DepositTableViewHeaderView: UITableViewHeaderFooterView {
             self.delegate?.selectTotalBalance(header: self, model: model)
         }
     }
-    var productModel: BankDepositMarketDataModel? {
+    var productModel: DepositItemDetailMainDataModel? {
         didSet {
             guard let model = productModel else {
                 return

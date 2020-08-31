@@ -17,7 +17,7 @@ class DepositViewController: BaseViewController {
         self.view.addSubview(detailView)
         self.viewModel.initKVO()
         self.detailView.toastView?.show(tag: 99)
-        self.viewModel.dataModel.getBankListModel(address: WalletManager.shared.violasAddress!, bankTokens: self.models ?? [BankDepositMarketDataModel]())
+        self.viewModel.dataModel.getDepositItemDetailModel(itemID: self.itemID ?? "", address: WalletManager.shared.violasAddress!)
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -52,10 +52,10 @@ class DepositViewController: BaseViewController {
         viewModel.view = self.detailView
         return viewModel
     }()
-    var selectIndexPath: IndexPath? {
+    var itemID: String?
+    var models: [BankDepositMarketDataModel]? {
         didSet {
-            viewModel.selectIndexPath = selectIndexPath
+            viewModel.models = models
         }
     }
-    var models: [BankDepositMarketDataModel]?
 }

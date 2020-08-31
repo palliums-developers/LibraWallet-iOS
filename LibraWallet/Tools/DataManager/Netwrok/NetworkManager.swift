@@ -98,6 +98,8 @@ enum mainRequest {
     
     // 数字银行
     case depositMarket
+    case depositItemDetail(String, String)
+    case loanItemDetail(String, String)
 }
 extension mainRequest:TargetType {
     var baseURL: URL {
@@ -171,13 +173,13 @@ extension mainRequest:TargetType {
              .LibraCrossChainTransactions(_, _, _):
             return URL(string:"http://18.136.139.151")!
         //数字银行
-        case .depositMarket:
+        case .depositMarket,
+             .depositItemDetail(_, _),
+             .loanItemDetail(_):
             if PUBLISH_VERSION == true {
-                //对外
-                return URL(string:"https://ac.testnet.violas.io")!
+                return URL(string:"https://api.violas.io")!
             } else {
-                //对内
-                return URL(string:"https://ab.testnet.violas.io")!
+                return URL(string:"https://api4.violas.io")!
             }
         }
     }
@@ -264,6 +266,11 @@ extension mainRequest:TargetType {
             return "/"
         case .depositMarket:
             return "/1.0/bank/deposit"
+        case .depositItemDetail(_, _):
+            return "/1.0/violas/bank/deposit/info"
+        case .loanItemDetail(_, _):
+            return "/1.0/violas/bank/borrow/info"
+
         }
     }
     var method: Moya.Method {
@@ -310,7 +317,9 @@ extension mainRequest:TargetType {
              .BTCCrossChainTransactions(_, _, _),
              .ViolasCrossChainTransactions(_, _, _),
              .LibraCrossChainTransactions(_, _, _),
-             .depositMarket:
+             .depositMarket,
+             .depositItemDetail(_, _),
+             .loanItemDetail(_, _):
             return .get
         }
     }
@@ -505,6 +514,14 @@ extension mainRequest:TargetType {
                                       encoding: URLEncoding.queryString)
         case .depositMarket:
             return .requestPlain
+        case .depositItemDetail(let id, let address):
+            return .requestParameters(parameters: ["id":id,
+                                                   "address": address],
+                                      encoding: URLEncoding.queryString)
+        case .loanItemDetail(let id, let address):
+            return .requestParameters(parameters: ["id":id,
+                                                   "address": address],
+                                      encoding: URLEncoding.queryString)
         }
     }
     var headers: [String : String]? {

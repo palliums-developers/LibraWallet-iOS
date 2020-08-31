@@ -15,7 +15,7 @@ protocol DepositTableViewManagerDelegate: NSObjectProtocol {
 }
 class DepositTableViewManager: NSObject {
     weak var delegate: DepositTableViewManagerDelegate?
-    var model: BankDepositMarketDataModel?
+    var model: DepositItemDetailMainDataModel?
     var dataModels: [DepositLocalDataModel]?
     var showIntroduce: Bool?
     var showQuestion: Bool?
