@@ -8,8 +8,8 @@
 
 import UIKit
 protocol LoanTableViewHeaderViewDelegate: NSObjectProtocol {
-    func selectLoanToken(header: LoanTableViewHeaderView)
-    func selectTotalBalance(header: LoanTableViewHeaderView, model: DepositItemDetailMainDataModel)
+//    func selectLoanToken(header: LoanTableViewHeaderView)
+    func selectTotalBalance(header: LoanTableViewHeaderView, model: BankLoanMarketDataModel)
 }
 class LoanTableViewHeaderView: UITableViewHeaderFooterView {
     weak var delegate: LoanTableViewHeaderViewDelegate?
@@ -169,7 +169,7 @@ class LoanTableViewHeaderView: UITableViewHeaderFooterView {
     @objc func buttonClick(button: UIButton) {
         self.loanAmountTextField.resignFirstResponder()
         if button.tag == 10 {
-            self.delegate?.selectLoanToken(header: self)
+//            self.delegate?.selectLoanToken(header: self)
         } else {
             guard let model = productModel else {
                 return
@@ -177,20 +177,20 @@ class LoanTableViewHeaderView: UITableViewHeaderFooterView {
             self.delegate?.selectTotalBalance(header: self, model: model)
         }
     }
-    var productModel: DepositItemDetailMainDataModel? {
+    var productModel: BankLoanMarketDataModel? {
         didSet {
             guard let model = productModel else {
                 return
             }
-            let amountLimit = getDecimalNumber(amount: NSDecimalNumber.init(value: model.product_amount_limit ?? 0),
+            let amountLimit = getDecimalNumber(amount: NSDecimalNumber.init(value: model.quota_limit ?? 0),
                                                scale: 4,
                                                unit: 1000000)
-            let amountLimitLeast = getDecimalNumber(amount: NSDecimalNumber.init(value: model.product_amount_limit_least ?? 0),
+            let amountLimitLeast = getDecimalNumber(amount: NSDecimalNumber.init(value: model.quota_limit ?? 0).subtracting(NSDecimalNumber.init(value: model.quota_used ?? 0)),
                                                     scale: 4,
                                                     unit: 1000000)
-            loanAmountLabel.text = amountLimitLeast.stringValue + "/" + amountLimit.stringValue + " " + (model.product_token_show_name ?? "")
-            loanTokenIndicatorImageView.image = UIImage.init(named: model.product_token_icon ?? "wallet_icon_default")
-            loanTokenSelectButton.setTitle(model.product_token_show_name, for: UIControl.State.normal)
+            loanAmountLabel.text = amountLimitLeast.stringValue + "/" + amountLimit.stringValue + " " + (model.token_show_name ?? "")
+            loanTokenIndicatorImageView.image = UIImage.init(named: "wallet_icon_default")
+            loanTokenSelectButton.setTitle(model.token_show_name, for: UIControl.State.normal)
             loanTokenSelectButton.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 12, height: 12))
         }
     }

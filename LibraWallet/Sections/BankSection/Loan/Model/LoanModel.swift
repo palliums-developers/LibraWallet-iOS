@@ -8,33 +8,49 @@
 
 import UIKit
 import Moya
-//struct BankLoanMarketDataModel: Codable {
-//    var product_name: String?
-//    var product_describe: String?
-//    var product_rate: Double?
-//    var product_rate_describe: String?
-//    var product_id: String?
-//    var product_amount_limit: Int64?
-//    var product_amount_limit_least: Int64?
-//    var product_pledge_rate: Double?
-//    var product_questions: [BankDepositMarketQuestionsDataModel]?
-//    var product_introduce: [BankDepositMarketQuestionsDataModel]?
-//    var product_token_icon: String?
-//    var product_token_address: String?
-//    var product_token_module: String?
-//    var product_token_name: String?
-//    var product_token_show_name: String?
-//    var product_input_token_least: Int64?
-//    /// 余额（自行添加）
-//    var token_balance: Int64?
-//    /// 激活状态（自行添加）
-//    var token_active_state: Bool?
-//}
-//struct LoanItemDetailMainModel: Codable {
-//    var code: Int?
-//    var message: String?
-//    var data: BankLoanMarketDataModel?
-//}
+struct BankLoanMarketDataIntroduceModel: Codable {
+    var text: String?
+    var tital: String?
+    /// 高度（自行添加）
+    var height: CGFloat?
+}
+struct BankLoanMarketDataModel: Codable {
+    /// 产品ID
+    var id: String?
+    /// 产品说明
+    var intor: [BankLoanMarketDataIntroduceModel]?
+    /// 产品最少借贷额度
+    var minimum_amount: UInt64?
+    /// 产品名称
+    var name: String?
+    /// 质押率
+    var pledge_rate: Double?
+    /// 常见问题
+    var question: [BankLoanMarketDataIntroduceModel]?
+    /// 可借额度
+    var quota_limit: UInt64?
+    /// 可借额度已使用
+    var quota_used: UInt64?
+    /// 借贷率
+    var rate: Double?
+    /// 借贷币地址
+    var token_address: String?
+    /// 借贷币Module
+    var token_module: String?
+    /// 借贷币Name
+    var token_name: String?
+    /// 借贷币展示名字
+    var token_show_name: String?
+    /// 余额（自行添加）
+    var token_balance: Int64?
+    /// 激活状态（自行添加）
+    var token_active_state: Bool?
+}
+struct LoanItemDetailMainModel: Codable {
+    var code: Int?
+    var message: String?
+    var data: BankLoanMarketDataModel?
+}
 class LoanModel: NSObject {
     private var requests: [Cancellable] = []
     @objc dynamic var dataDic: NSMutableDictionary = [:]
@@ -48,16 +64,16 @@ class LoanModel: NSObject {
         requests.removeAll()
         print("DepositModel销毁了")
     }
-    func getLocalModel(model: DepositItemDetailMainDataModel? = nil) -> [DepositLocalDataModel] {
+    func getLocalModel(model: BankLoanMarketDataModel? = nil) -> [DepositLocalDataModel] {
         
         return [DepositLocalDataModel.init(title: localLanguage(keyString: "wallet_bank_loan_year_rate_title"),
                                            titleDescribe: "",
-                                           content: model != nil ? (NSDecimalNumber.init(value: model?.product_rate ?? 0).multiplying(by: NSDecimalNumber.init(value: 100)).stringValue + "%"):"---",
+                                           content: model != nil ? (NSDecimalNumber.init(value: model?.rate ?? 0).multiplying(by: NSDecimalNumber.init(value: 100)).stringValue + "%"):"---",
                                            contentColor: "13B788",
                                            conentFont: UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.bold)),
                 DepositLocalDataModel.init(title: localLanguage(keyString: "wallet_bank_loan_pledge_rate_title"),
                                            titleDescribe: localLanguage(keyString: "wallet_bank_loan_pledge_rate_descript_title"),
-                                           content: model != nil ? (NSDecimalNumber.init(value: model?.product_pledge_rate ?? 0).multiplying(by: NSDecimalNumber.init(value: 100)).stringValue + "%"):"---",
+                                           content: model != nil ? (NSDecimalNumber.init(value: model?.pledge_rate ?? 0).multiplying(by: NSDecimalNumber.init(value: 100)).stringValue + "%"):"---",
                                            contentColor: "333333",
                                            conentFont: UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.bold)),
                 DepositLocalDataModel.init(title: localLanguage(keyString: "wallet_bank_loan_pay_account_title"),
@@ -71,7 +87,7 @@ class LoanModel: NSObject {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(DepositItemDetailMainModel.self)
+                    let json = try response.map(LoanItemDetailMainModel.self)
                     if json.code == 2000 {
                         guard let model = json.data else {
                             let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: "GetLoanItemDetail")

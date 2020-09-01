@@ -88,11 +88,11 @@ extension LoanViewModel: LoanViewDelegate {
         }
         let amount = NSDecimalNumber.init(string: amountString).multiplying(by: NSDecimalNumber.init(value: 1000000))
         // 比最少充值金额多
-        guard amount.int64Value > (header.productModel?.product_input_token_least ?? 0) else {
+        guard amount.int64Value > (header.productModel?.minimum_amount ?? 0) else {
             throw LibraWalletError.error("Amount Too Least")
         }
         // 比每日限额少
-        guard amount.int64Value < (header.productModel?.product_amount_limit ?? 0) else {
+        guard amount.int64Value < (NSDecimalNumber.init(value: header.productModel?.quota_limit ?? 0).subtracting(NSDecimalNumber.init(value: header.productModel?.quota_used ?? 0))).int64Value else {
             throw LibraWalletError.error("Amount over limit")
         }
         // 未同意协议
@@ -178,8 +178,8 @@ extension LoanViewModel: LoanTableViewHeaderViewDelegate {
         alert.show(tag: 199)
         alert.showAnimation()
     }
-    func selectTotalBalance(header: LoanTableViewHeaderView, model: DepositItemDetailMainDataModel) {
-        let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model.product_amount_limit_least ?? 0),
+    func selectTotalBalance(header: LoanTableViewHeaderView, model: BankLoanMarketDataModel) {
+        let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model.quota_limit ?? 0).subtracting(NSDecimalNumber.init(value: model.quota_used ?? 0)),
                                       scale: 6,
                                       unit: 1000000)
         header.loanAmountTextField.text = amount.stringValue
@@ -215,10 +215,10 @@ extension LoanViewModel: UITextFieldDelegate {
     }
     private func handleInputAmount(textField: UITextField, content: String) -> Bool {
         let amount = NSDecimalNumber.init(string: content).multiplying(by: NSDecimalNumber.init(value: 1000000)).int64Value
-        if amount <= self.tableViewManager.model?.product_amount_limit_least ?? 0 {
+        if amount <= self.tableViewManager.model?.minimum_amount ?? 0 {
             return true
         } else {
-            let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: self.tableViewManager.model?.product_amount_limit_least ?? 0),
+            let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: self.tableViewManager.model?.quota_limit ?? 0).subtracting(NSDecimalNumber.init(value: self.tableViewManager.model?.quota_used ?? 0)),
                                           scale: 6,
                                           unit: 1000000)
             textField.text = amount.stringValue
@@ -279,7 +279,7 @@ extension LoanViewModel {
             }
             let type = dataDic.value(forKey: "type") as! String
             if type == "GetLoanItemDetail" {
-                guard let tempData = dataDic.value(forKey: "data") as? DepositItemDetailMainDataModel else {
+                guard let tempData = dataDic.value(forKey: "data") as? BankLoanMarketDataModel else {
                     return
                 }
                 self?.tableViewManager.model = tempData

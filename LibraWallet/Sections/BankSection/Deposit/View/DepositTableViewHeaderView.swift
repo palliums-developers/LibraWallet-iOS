@@ -8,7 +8,7 @@
 
 import UIKit
 protocol DepositTableViewHeaderViewDelegate: NSObjectProtocol {
-    func selectDepositToken(header: DepositTableViewHeaderView)
+//    func selectDepositToken(header: DepositTableViewHeaderView)
     func selectTotalBalance(header: DepositTableViewHeaderView, model: DepositItemDetailMainDataModel)
 }
 class DepositTableViewHeaderView: UITableViewHeaderFooterView {
@@ -209,7 +209,7 @@ class DepositTableViewHeaderView: UITableViewHeaderFooterView {
     @objc func buttonClick(button: UIButton) {
         self.depositAmountTextField.resignFirstResponder()
         if button.tag == 10 {
-            self.delegate?.selectDepositToken(header: self)
+//            self.delegate?.selectDepositToken(header: self)
         } else {
             guard let model = productModel else {
                 return
@@ -222,18 +222,18 @@ class DepositTableViewHeaderView: UITableViewHeaderFooterView {
             guard let model = productModel else {
                 return
             }
-            let amountLimit = getDecimalNumber(amount: NSDecimalNumber.init(value: model.product_amount_limit ?? 0),
+            let amountLimit = getDecimalNumber(amount: NSDecimalNumber.init(value: model.quota_limit ?? 0),
                                                scale: 4,
                                                unit: 1000000)
-            let amountLimitLeast = getDecimalNumber(amount: NSDecimalNumber.init(value: model.product_amount_limit_least ?? 0),
+            let amountLimitLeast = getDecimalNumber(amount: NSDecimalNumber.init(value: model.quota_limit ?? 0).subtracting(NSDecimalNumber.init(value: model.quota_used ?? 0)),
                                                     scale: 4,
                                                     unit: 1000000)
-            depositLimitAmountLabel.text = amountLimitLeast.stringValue + "/" + amountLimit.stringValue + " " + (model.product_token_show_name ?? "")
-            depositTokenIndicatorImageView.image = UIImage.init(named: model.product_token_icon ?? "wallet_icon_default")
+            depositLimitAmountLabel.text = amountLimitLeast.stringValue + "/" + amountLimit.stringValue + " " + (model.token_show_name ?? "")
+//            depositTokenIndicatorImageView.image = UIImage.init(named: model. ?? "wallet_icon_default")
             let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model.token_balance ?? 0),
                                           scale: 4,
                                           unit: 1000000)
-            depositTokenSelectButton.setTitle(model.product_token_show_name, for: UIControl.State.normal)
+            depositTokenSelectButton.setTitle(model.token_show_name, for: UIControl.State.normal)
             depositTokenSelectButton.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 12, height: 12))
             depositAmountLabel.text = amount.stringValue
         }
@@ -244,20 +244,3 @@ class DepositTableViewHeaderView: UITableViewHeaderFooterView {
         }
     }
 }
-// = "我要还";
-//wallet_bank_repayment_textfield_placeholder_a = "起";
-//wallet_bank_repayment_textfield_placeholder_b = "每";
-//wallet_bank_repayment_textfield_placeholder_c = "递增";
-// = "待还金额";
-// = "全部";
-//
-//wallet_bank_deposit_title = "我要存";
-//wallet_bank_deposit_amount_title = "可用余额";
-//wallet_bank_deposit_limit_amount_title = "每日限额";
-//wallet_bank_deposit_year_rate_title = "存款年利率";
-//wallet_bank_deposit_pledge_rate_title = "质押率";
-//wallet_bank_deposit_pledge_rate_descript_title = "质押率=借贷数量/存款数量";
-//wallet_bank_deposit_pay_account_title = "支付方式";
-//wallet_bank_deposit_pay_account_content = "钱包余额";
-//wallet_bank_deposit_describe_title = "产品说明";
-//wallet_bank_deposit_question_title = "常见问题";

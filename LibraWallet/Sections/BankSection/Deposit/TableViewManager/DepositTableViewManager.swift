@@ -29,12 +29,12 @@ extension DepositTableViewManager: UITableViewDelegate {
             return 48
         } else if indexPath.section == 1 {
             if showIntroduce == true {
-                if let height = model?.product_introduce?[indexPath.row].height, height > 0 {
+                if let height = model?.intor?[indexPath.row].height, height > 0 {
                     return 10 + height + 10
                 } else {
-                    let titleHeight = libraWalletTool.ga_heightForComment(content: model?.product_introduce?[indexPath.row].title ?? "", fontSize: 12, width: mainWidth - 56)
-                    let contentHeight = libraWalletTool.ga_heightForComment(content: model?.product_introduce?[indexPath.row].content ?? "", fontSize: 12, width: mainWidth - 56)
-                    model?.product_introduce?[indexPath.row].height = titleHeight + 10 + contentHeight
+                    let titleHeight = libraWalletTool.ga_heightForComment(content: model?.intor?[indexPath.row].tital ?? "", fontSize: 12, width: mainWidth - 56)
+                    let contentHeight = libraWalletTool.ga_heightForComment(content: model?.intor?[indexPath.row].text ?? "", fontSize: 12, width: mainWidth - 56)
+                    model?.intor?[indexPath.row].height = titleHeight + 10 + contentHeight
                     return 10 + titleHeight + 10 + contentHeight + 10
                 }
             } else {
@@ -42,12 +42,12 @@ extension DepositTableViewManager: UITableViewDelegate {
             }
         } else {
             if showQuestion == true {
-                if let height = model?.product_questions?[indexPath.row].height, height > 0 {
+                if let height = model?.question?[indexPath.row].height, height > 0 {
                     return 10 + height + 10
                 } else {
-                    let titleHeight = libraWalletTool.ga_heightForComment(content: model?.product_questions?[indexPath.row].title ?? "", fontSize: 12, width: mainWidth - 56)
-                    let contentHeight = libraWalletTool.ga_heightForComment(content: model?.product_questions?[indexPath.row].content ?? "", fontSize: 12, width: mainWidth - 56)
-                    model?.product_questions?[indexPath.row].height = titleHeight + 10 + contentHeight
+                    let titleHeight = libraWalletTool.ga_heightForComment(content: model?.question?[indexPath.row].tital ?? "", fontSize: 12, width: mainWidth - 56)
+                    let contentHeight = libraWalletTool.ga_heightForComment(content: model?.question?[indexPath.row].text ?? "", fontSize: 12, width: mainWidth - 56)
+                    model?.question?[indexPath.row].height = titleHeight + 10 + contentHeight
                     return 10 + titleHeight + 10 + contentHeight + 10
                 }
             } else {
@@ -128,13 +128,13 @@ extension DepositTableViewManager: UITableViewDataSource {
             return dataModels?.count ?? 0
         } else if section == 1 {
             if showIntroduce == true {
-                return model?.product_introduce?.count ?? 0
+                return model?.intor?.count ?? 0
             } else {
                 return 0
             }
         } else {
             if showQuestion == true {
-                return model?.product_questions?.count ?? 0
+                return model?.question?.count ?? 0
             } else {
                 return 0
             }
@@ -165,14 +165,14 @@ extension DepositTableViewManager: UITableViewDataSource {
         } else if indexPath.section == 1 {
             let identifier = "DescribeCell"
             if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? DepositDescribeTableViewCell {
-                if let data = model?.product_introduce, data.isEmpty == false {
+                if let data = model?.intor, data.isEmpty == false {
                     cell.model = data[indexPath.row]
                 }
                 cell.selectionStyle = .none
                 return cell
             } else {
                 let cell = DepositDescribeTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
-                if let data = model?.product_introduce, data.isEmpty == false {
+                if let data = model?.intor, data.isEmpty == false {
                     cell.model = data[indexPath.row]
                 }
                 cell.selectionStyle = .none
@@ -181,14 +181,14 @@ extension DepositTableViewManager: UITableViewDataSource {
         } else {
             let identifier = "QuestionCell"
             if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? DepositQuestionTableViewCell {
-                if let data = model?.product_questions, data.isEmpty == false {
+                if let data = model?.question, data.isEmpty == false {
                     cell.model = data[indexPath.row]
                 }
                 cell.selectionStyle = .none
                 return cell
             } else {
                 let cell = DepositQuestionTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
-                if let data = model?.product_questions, data.isEmpty == false {
+                if let data = model?.question, data.isEmpty == false {
                     cell.model = data[indexPath.row]
                 }
                 cell.selectionStyle = .none

@@ -8,25 +8,41 @@
 
 import UIKit
 import Moya
+struct DepositItemDetailMainDataIntroduceModel: Codable {
+    var text: String?
+    var tital: String?
+    /// 高度（自行添加）
+    var height: CGFloat?
+}
 struct DepositItemDetailMainDataModel: Codable {
-    var product_name: String?
-    var product_describe: String?
-    var product_rate: Double?
-    var product_rate_describe: String?
-    var product_id: String?
-    var product_amount_limit: Int64?
-    var product_amount_limit_least: Int64?
-    var product_pledge_rate: Double?
-    var product_questions: [BankDepositMarketQuestionsDataModel]?
-    var product_introduce: [BankDepositMarketQuestionsDataModel]?
-    var product_token_icon: String?
-    var product_token_address: String?
-    var product_token_module: String?
-    var product_token_name: String?
-    var product_token_show_name: String?
-    var product_input_token_least: Int64?
+    /// 产品ID
+    var id: String?
+    /// 产品说明
+    var intor: [DepositItemDetailMainDataIntroduceModel]?
+    /// 产品最少借贷额度
+    var minimum_amount: UInt64?
+    /// 产品名称
+    var name: String?
+    /// 质押率
+    var pledge_rate: Double?
+    /// 常见问题
+    var question: [DepositItemDetailMainDataIntroduceModel]?
+    /// 可借额度
+    var quota_limit: UInt64?
+    /// 可借额度已使用
+    var quota_used: UInt64?
+    /// 借贷率
+    var rate: Double?
+    /// 借贷币地址
+    var token_address: String?
+    /// 借贷币Module
+    var token_module: String?
+    /// 借贷币Name
+    var token_name: String?
+    /// 借贷币展示名字
+    var token_show_name: String?
     /// 余额（自行添加）
-    var token_balance: Int64?
+    var token_balance: UInt64?
     /// 激活状态（自行添加）
     var token_active_state: Bool?
 }
@@ -58,12 +74,12 @@ class DepositModel: NSObject {
         
         return [DepositLocalDataModel.init(title: localLanguage(keyString: "wallet_bank_deposit_year_rate_title"),
                                            titleDescribe: "",
-                                           content: model != nil ? (NSDecimalNumber.init(value: model?.product_rate ?? 0).multiplying(by: NSDecimalNumber.init(value: 100)).stringValue + "%"):"---",
+                                           content: model != nil ? (NSDecimalNumber.init(value: model?.rate ?? 0).multiplying(by: NSDecimalNumber.init(value: 100)).stringValue + "%"):"---",
                                            contentColor: "13B788",
                                            conentFont: UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.bold)),
                 DepositLocalDataModel.init(title: localLanguage(keyString: "wallet_bank_deposit_pledge_rate_title"),
                                            titleDescribe: localLanguage(keyString: "wallet_bank_deposit_pledge_rate_descript_title"),
-                                           content: model != nil ? (NSDecimalNumber.init(value: model?.product_pledge_rate ?? 0).multiplying(by: NSDecimalNumber.init(value: 100)).stringValue + "%"):"---",
+                                           content: model != nil ? (NSDecimalNumber.init(value: model?.pledge_rate ?? 0).multiplying(by: NSDecimalNumber.init(value: 100)).stringValue + "%"):"---",
                                            contentColor: "333333",
                                            conentFont: UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.bold)),
                 DepositLocalDataModel.init(title: localLanguage(keyString: "wallet_bank_deposit_pay_account_title"),
@@ -121,9 +137,9 @@ class DepositModel: NSObject {
         self.depositItemModel?.token_active_state = false
         self.depositItemModel?.token_balance = 0
         for token in self.walletTokens! {
-            if self.depositItemModel?.product_token_module == token.currency {
+            if self.depositItemModel?.token_module == token.currency {
                 self.depositItemModel?.token_active_state = true
-                self.depositItemModel?.token_balance = token.amount
+                self.depositItemModel?.token_balance = NSDecimalNumber.init(value: token.amount ?? 0).uint64Value
                 break
             }
         }

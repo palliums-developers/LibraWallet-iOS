@@ -89,8 +89,8 @@ extension DepositViewModel: DepositTableViewHeaderViewDelegate {
         alert.showAnimation()
     }
     func selectTotalBalance(header: DepositTableViewHeaderView, model: DepositItemDetailMainDataModel) {
-        if (model.token_balance ?? 0) > (model.product_amount_limit_least ?? 0) {
-            let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model.product_amount_limit_least ?? 0),
+        if (model.token_balance ?? 0) > (model.minimum_amount ?? 0) {
+            let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model.minimum_amount ?? 0),
                                           scale: 6,
                                           unit: 1000000)
             header.depositAmountTextField.text = amount.stringValue
@@ -131,11 +131,11 @@ extension DepositViewModel: UITextFieldDelegate {
     }
     private func handleInputAmount(textField: UITextField, content: String) -> Bool {
         let amount = NSDecimalNumber.init(string: content).multiplying(by: NSDecimalNumber.init(value: 1000000)).int64Value
-        if amount <= self.tableViewManager.model?.product_amount_limit_least ?? 0 && amount <= self.tableViewManager.model?.token_balance ?? 0 {
+        if amount <= self.tableViewManager.model?.minimum_amount ?? 0 && amount <= self.tableViewManager.model?.token_balance ?? 0 {
             return true
         } else {
-            if (self.tableViewManager.model?.token_balance ?? 0) > (self.tableViewManager.model?.product_amount_limit_least ?? 0) {
-                let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: self.tableViewManager.model?.product_amount_limit_least ?? 0),
+            if (self.tableViewManager.model?.token_balance ?? 0) > (self.tableViewManager.model?.minimum_amount ?? 0) {
+                let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: self.tableViewManager.model?.minimum_amount ?? 0),
                                               scale: 6,
                                               unit: 1000000)
                 textField.text = amount.stringValue
@@ -180,11 +180,11 @@ extension DepositViewModel: DepositViewDelegate {
             throw LibraWalletError.error("Amount Too big")
         }
         // 比最少充值金额多
-        guard amount.int64Value > (header.productModel?.product_input_token_least ?? 0) else {
+        guard amount.int64Value > (header.productModel?.minimum_amount ?? 0) else {
             throw LibraWalletError.error("Amount Too Least")
         }
         // 比每日限额少
-        guard amount.int64Value < (header.productModel?.product_amount_limit ?? 0) else {
+        guard amount.int64Value < (NSDecimalNumber.init(value: header.productModel?.quota_limit ?? 0).subtracting(NSDecimalNumber.init(value: header.productModel?.quota_used ?? 0))).int64Value else {
             throw LibraWalletError.error("Amount over limit")
         }
         return amount.int64Value

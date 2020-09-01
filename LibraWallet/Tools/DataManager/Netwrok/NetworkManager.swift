@@ -98,6 +98,7 @@ enum mainRequest {
     
     // 数字银行
     case depositMarket
+    case loanMarket
     case depositItemDetail(String, String)
     case loanItemDetail(String, String)
 }
@@ -174,6 +175,7 @@ extension mainRequest:TargetType {
             return URL(string:"http://18.136.139.151")!
         //数字银行
         case .depositMarket,
+             .loanMarket,
              .depositItemDetail(_, _),
              .loanItemDetail(_):
             if PUBLISH_VERSION == true {
@@ -266,6 +268,8 @@ extension mainRequest:TargetType {
             return "/"
         case .depositMarket:
             return "/1.0/bank/deposit"
+        case .loanMarket:
+            return "/1.0/violas/bank/account/info"
         case .depositItemDetail(_, _):
             return "/1.0/violas/bank/deposit/info"
         case .loanItemDetail(_, _):
@@ -318,6 +322,7 @@ extension mainRequest:TargetType {
              .ViolasCrossChainTransactions(_, _, _),
              .LibraCrossChainTransactions(_, _, _),
              .depositMarket,
+             .loanMarket,
              .depositItemDetail(_, _),
              .loanItemDetail(_, _):
             return .get
@@ -513,6 +518,8 @@ extension mainRequest:TargetType {
                                                    "limit":offset],
                                       encoding: URLEncoding.queryString)
         case .depositMarket:
+            return .requestPlain
+        case .loanMarket:
             return .requestPlain
         case .depositItemDetail(let id, let address):
             return .requestParameters(parameters: ["id":id,

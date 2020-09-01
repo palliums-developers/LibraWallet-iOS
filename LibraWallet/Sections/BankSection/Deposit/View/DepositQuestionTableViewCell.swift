@@ -72,13 +72,13 @@ class DepositQuestionTableViewCell: UITableViewCell {
         return label
     }()
     //MARK: - 设置数据
-    var model: BankDepositMarketQuestionsDataModel? {
+    var model: DepositItemDetailMainDataIntroduceModel? {
         didSet {
             guard let tempModel = model else {
                 return
             }
-            itemTitleLabel.text = tempModel.title
-            itemContentLabel.text = tempModel.content
+            itemTitleLabel.text = tempModel.tital
+            itemContentLabel.text = tempModel.text
         }
     }
 }
