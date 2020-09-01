@@ -69,25 +69,6 @@ extension DepositViewModel: DepositDescribeTableViewHeaderViewDelegate {
     }
 }
 extension DepositViewModel: DepositTableViewHeaderViewDelegate {
-    func selectDepositToken(header: DepositTableViewHeaderView) {
-        guard let tempData = models else {
-            return
-        }
-        let alert = DepositTokensAlert.init(data: tempData) { (model) in
-            print(model)
-            self.view?.toastView?.show(tag: 99)
-            self.dataModel.getDepositItemDetailModel(itemID: model.product_id ?? "",
-                                                     address: WalletManager.shared.violasAddress!)
-        }
-        if header.depositTokenSelectButton.titleLabel?.text != localLanguage(keyString: "wallet_bank_deposit_select_token_button_title") {
-            let index = tempData.firstIndex {
-                $0.product_token_show_name == header.depositTokenSelectButton.titleLabel?.text
-            }
-            alert.pickerRow = index
-        }
-        alert.show(tag: 199)
-        alert.showAnimation()
-    }
     func selectTotalBalance(header: DepositTableViewHeaderView, model: DepositItemDetailMainDataModel) {
         if (model.token_balance ?? 0) > (model.minimum_amount ?? 0) {
             let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model.minimum_amount ?? 0),

@@ -159,25 +159,6 @@ extension LoanViewModel: LoanDescribeTableViewHeaderViewDelegate {
     }
 }
 extension LoanViewModel: LoanTableViewHeaderViewDelegate {
-    func selectLoanToken(header: LoanTableViewHeaderView) {
-        guard let tempData = models else {
-            return
-        }
-        let alert = DepositTokensAlert.init(data: tempData) { (model) in
-            print(model)
-            self.view?.toastView?.show(tag: 99)
-            self.dataModel.getLoanItemDetail(itemID: model.product_id ?? "",
-                                             address: WalletManager.shared.violasAddress!)
-        }
-        if header.loanTokenSelectButton.titleLabel?.text != localLanguage(keyString: "wallet_bank_deposit_select_token_button_title") {
-            let index = tempData.firstIndex {
-                $0.product_token_show_name == header.loanTokenSelectButton.titleLabel?.text
-            }
-            alert.pickerRow = index
-        }
-        alert.show(tag: 199)
-        alert.showAnimation()
-    }
     func selectTotalBalance(header: LoanTableViewHeaderView, model: BankLoanMarketDataModel) {
         let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model.quota_limit ?? 0).subtracting(NSDecimalNumber.init(value: model.quota_used ?? 0)),
                                       scale: 6,

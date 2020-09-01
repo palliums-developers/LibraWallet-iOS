@@ -21,6 +21,7 @@ class BankViewController: UIViewController {
         self.view.addSubview(detailView)
         // 添加语言变换通知
         NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
+        self.initKVO()
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -37,6 +38,11 @@ class BankViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
         print("BankViewController销毁了")
     }
+    /// 网络请求、数据模型
+    lazy var dataModel: BankModel = {
+        let model = BankModel.init()
+        return model
+    }()
     /// DetailView
     lazy var detailView: BankView = {
         let view = BankView.init()
@@ -49,6 +55,7 @@ class BankViewController: UIViewController {
         let con = DepositMarketViewController()
         con.initKVO()
         con.tableViewManager.delegate = self
+        con.delegate = self
         return con
     }()
     /// 贷款市场Controller
@@ -56,6 +63,7 @@ class BankViewController: UIViewController {
         let con = LoanMarketViewController()
         con.initKVO()
         con.tableViewManager.delegate = self
+        con.delegate = self
         return con
     }()
     /// 全部资产价值按钮
@@ -77,6 +85,9 @@ class BankViewController: UIViewController {
          button.addTarget(self, action: #selector(checkOrder), for: .touchUpInside)
          return button
      }()
+    /// 数据监听KVO
+    var observer: NSKeyValueObservation?
+    var startRefresh: Bool = false
 }
 extension BankViewController: JXSegmentedViewDelegate {
     func segmentedView(_ segmentedView: JXSegmentedView, didSelectedItemAt index: Int) {
@@ -135,7 +146,7 @@ extension BankViewController {
 extension BankViewController: DepositMarketTableViewManagerDelegate {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, models: [BankDepositMarketDataModel]) {
         let vc = DepositViewController.init()
-        vc.itemID = models[indexPath.row].product_id
+        vc.itemID = models[indexPath.row].id
         vc.models = models
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
@@ -144,9 +155,76 @@ extension BankViewController: DepositMarketTableViewManagerDelegate {
 extension BankViewController: LoanMarketTableViewManagerDelegate {
     func loanTableViewDidSelectRowAtIndexPath(indexPath: IndexPath, models: [BankDepositMarketDataModel]) {
         let vc = LoanViewController.init()
-        vc.itemID = models[indexPath.row].product_id
+        vc.itemID = models[indexPath.row].id
         vc.models = models
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
+    }
+}
+extension BankViewController: LoanMarketViewControllerDelegate, DepositMarketViewControllerDelegate {
+    func refreshAccount() {
+        guard self.startRefresh == false else {
+            return
+        }
+        self.dataModel.getBankAccountInfo(address: WalletManager.shared.violasAddress!)
+        self.startRefresh = true
+    }
+}
+// MARK: - 网络请求
+extension BankViewController {
+    func initKVO() {
+        self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
+            guard let dataDic = change.newValue, dataDic.count != 0 else {
+                self?.view?.hideToastActivity()
+                return
+            }
+            if let error = dataDic.value(forKey: "error") as? LibraWalletError {
+                // 隐藏请求指示
+                self?.view?.hideToastActivity()
+                if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
+                    // 网络无法访问
+                    print(error.localizedDescription)
+                    self?.view?.makeToast(error.localizedDescription,
+                                          position: .center)
+                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionExpired).localizedDescription {
+                    // 版本太久
+                    print(error.localizedDescription)
+                    self?.view?.makeToast(error.localizedDescription,
+                                          position: .center)
+                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
+                    // 解析失败
+                    print(error.localizedDescription)
+                    self?.view?.makeToast(error.localizedDescription,
+                                          position: .center)
+                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
+                    print(error.localizedDescription)
+                    // 数据状态异常
+                    self?.view?.makeToast(error.localizedDescription,
+                                          position: .center)
+                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
+                    print(error.localizedDescription)
+                    // 下拉刷新请求数据为空
+                    self?.view?.makeToast(error.localizedDescription,
+                                          position: .center)
+                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .noMoreData).localizedDescription {
+                    // 上拉请求更多数据为空
+                    print(error.localizedDescription)
+                } else {
+                    self?.view?.makeToast(error.localizedDescription,
+                                          position: .center)
+                }
+                //                self?.view?.headerView.viewState = .Normal
+                return
+            }
+            let type = dataDic.value(forKey: "type") as! String
+            if type == "GetBankAccountInfo" {
+                guard let tempData = dataDic.value(forKey: "data") as? BankModelMainDataModel else {
+                    return
+                }
+                self?.detailView.headerView.model = tempData
+                self?.startRefresh = false
+            }
+            self?.view?.hideToastActivity()
+        })
     }
 }

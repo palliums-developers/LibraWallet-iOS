@@ -189,7 +189,16 @@ class LoanTableViewHeaderView: UITableViewHeaderFooterView {
                                                     scale: 4,
                                                     unit: 1000000)
             loanAmountLabel.text = amountLimitLeast.stringValue + "/" + amountLimit.stringValue + " " + (model.token_show_name ?? "")
-            loanTokenIndicatorImageView.image = UIImage.init(named: "wallet_icon_default")
+            if let iconName = model.logo, iconName.isEmpty == false {
+                if iconName.hasPrefix("http") {
+                    let url = URL(string: iconName)
+                    loanTokenIndicatorImageView.kf.setImage(with: url, placeholder: UIImage.init(named: "wallet_icon_default"))
+                } else {
+                    loanTokenIndicatorImageView.image = UIImage.init(named: iconName)
+                }
+            } else {
+                loanTokenIndicatorImageView.image = UIImage.init(named: "wallet_icon_default")
+            }
             loanTokenSelectButton.setTitle(model.token_show_name, for: UIControl.State.normal)
             loanTokenSelectButton.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 12, height: 12))
         }

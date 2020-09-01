@@ -33,8 +33,7 @@ class LoanMarketTableViewCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         whiteBackgroundView.snp.makeConstraints { (make) in
-            make.left.equalTo(contentView).offset(15)
-            make.right.equalTo(contentView.snp.right).offset(-15)
+            make.left.right.equalTo(contentView)
             make.top.bottom.equalTo(contentView)
         }
         itemContentView.snp.makeConstraints { (make) in
@@ -128,10 +127,20 @@ class LoanMarketTableViewCell: UITableViewCell {
     //MARK: - 设置数据
     var model: BankDepositMarketDataModel? {
         didSet {
-            itemNameLabel.text = model?.product_name
-            itemDescribeLabel.text = model?.product_describe
-            itemBenefitLabel.text = NSDecimalNumber.init(value: model?.product_rate ?? 0).multiplying(by: NSDecimalNumber.init(value: 100)).stringValue + "%"
-            itemBenefitTitleLabel.text = model?.product_rate_describe
+            if let iconName = model?.logo, iconName.isEmpty == false {
+                if iconName.hasPrefix("http") {
+                    let url = URL(string: iconName)
+                    itemIconImageView.kf.setImage(with: url, placeholder: UIImage.init(named: "wallet_icon_default"))
+                } else {
+                    itemIconImageView.image = UIImage.init(named: iconName)
+                }
+            } else {
+                itemIconImageView.image = UIImage.init(named: "wallet_icon_default")
+            }
+            itemNameLabel.text = model?.name
+            itemDescribeLabel.text = model?.desc
+            itemBenefitLabel.text = NSDecimalNumber.init(value: model?.rate ?? 0).multiplying(by: NSDecimalNumber.init(value: 100)).stringValue + "%"
+            itemBenefitTitleLabel.text = model?.rate_desc
         }
     }
 }

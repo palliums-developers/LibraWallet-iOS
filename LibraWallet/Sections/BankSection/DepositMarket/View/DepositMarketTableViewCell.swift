@@ -33,8 +33,7 @@ class DepositMarketTableViewCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         whiteBackgroundView.snp.makeConstraints { (make) in
-            make.left.equalTo(contentView).offset(15)
-            make.right.equalTo(contentView.snp.right).offset(-15)
+            make.left.right.equalTo(contentView)
             make.top.bottom.equalTo(contentView)
         }
         itemContentView.snp.makeConstraints { (make) in
@@ -93,7 +92,7 @@ class DepositMarketTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "333333")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: UIFont.Weight.regular)
-        label.text = "Test测试"
+        label.text = "---"
         return label
     }()
     lazy var itemDescribeLabel: UILabel = {
@@ -101,7 +100,7 @@ class DepositMarketTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "999999")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: UIFont.Weight.regular)
-        label.text = "Describe描述"
+        label.text = "---"
         return label
     }()
     lazy var itemBenefitLabel: UILabel = {
@@ -109,7 +108,7 @@ class DepositMarketTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "13B788")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 18), weight: UIFont.Weight.bold)
-        label.text = "999.999%"
+        label.text = "---"
         return label
     }()
     lazy var itemBenefitTitleLabel: UILabel = {
@@ -117,7 +116,7 @@ class DepositMarketTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "999999")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: UIFont.Weight.regular)
-        label.text = "Benefit describe年化收益率"
+        label.text = "---"
         return label
     }()
     lazy var spaceLabel: UILabel = {
@@ -128,10 +127,20 @@ class DepositMarketTableViewCell: UITableViewCell {
     //MARK: - 设置数据
     var model: BankDepositMarketDataModel? {
         didSet {
-            itemNameLabel.text = model?.product_name
-            itemDescribeLabel.text = model?.product_describe
-            itemBenefitLabel.text = NSDecimalNumber.init(value: model?.product_rate ?? 0).multiplying(by: NSDecimalNumber.init(value: 100)).stringValue + "%"
-            itemBenefitTitleLabel.text = model?.product_rate_describe
+            if let iconName = model?.logo, iconName.isEmpty == false {
+                if iconName.hasPrefix("http") {
+                    let url = URL(string: iconName)
+                    itemIconImageView.kf.setImage(with: url, placeholder: UIImage.init(named: "wallet_icon_default"))
+                } else {
+                    itemIconImageView.image = UIImage.init(named: iconName)
+                }
+            } else {
+                itemIconImageView.image = UIImage.init(named: "wallet_icon_default")
+            }
+            itemNameLabel.text = model?.name
+            itemDescribeLabel.text = model?.desc
+            itemBenefitLabel.text = NSDecimalNumber.init(value: model?.rate ?? 0).multiplying(by: NSDecimalNumber.init(value: 100)).stringValue + "%"
+            itemBenefitTitleLabel.text = model?.rate_desc
         }
     }
 }

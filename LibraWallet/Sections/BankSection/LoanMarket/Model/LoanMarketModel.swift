@@ -22,7 +22,7 @@ class LoanMarketModel: NSObject {
     }
     func getLoanMarket(requestStatus: Int) {
         let type = requestStatus == 0 ? "GetBankLoanMarketOrigin":"GetBankLoanMarketMore"
-        let request = mainProvide.request(.depositMarket) {[weak self](result) in
+        let request = mainProvide.request(.loanMarket) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {

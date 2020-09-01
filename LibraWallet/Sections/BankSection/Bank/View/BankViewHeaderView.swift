@@ -14,8 +14,8 @@ class BankViewHeaderView: UIView {
         super.init(frame: frame)
         addSubview(assetLabel)
         addSubview(withdrawAmountIndicatorImageView)
-        addSubview(withdrawAmountTitleLabel)
-        addSubview(withdrawAmountLabel)
+        addSubview(loanLimitAmountTitleLabel)
+        addSubview(loanLimitAmountLabel)
         addSubview(benefitIndicatorImageView)
         addSubview(benefitTitleLabel)
         addSubview(benefitLabel)
@@ -42,11 +42,11 @@ class BankViewHeaderView: UIView {
             make.left.equalTo(self).offset(35)
             make.size.equalTo(CGSize.init(width: 10, height: 10))
         }
-        withdrawAmountTitleLabel.snp.makeConstraints { (make) in
+        loanLimitAmountTitleLabel.snp.makeConstraints { (make) in
             make.centerY.equalTo(withdrawAmountIndicatorImageView)
             make.left.equalTo(withdrawAmountIndicatorImageView.snp.right).offset(8)
         }
-        withdrawAmountLabel.snp.makeConstraints { (make) in
+        loanLimitAmountLabel.snp.makeConstraints { (make) in
             make.centerY.equalTo(withdrawAmountIndicatorImageView)
             make.left.equalTo(withdrawAmountIndicatorImageView.snp.right).offset(140)
         }
@@ -84,7 +84,7 @@ class BankViewHeaderView: UIView {
         view.isUserInteractionEnabled = true
         return view
     }()
-    lazy var withdrawAmountTitleLabel: UILabel = {
+    lazy var loanLimitAmountTitleLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.white
@@ -92,7 +92,7 @@ class BankViewHeaderView: UIView {
         label.text = localLanguage(keyString: "wallet_bank_deposit_amount_title")
         return label
     }()
-    lazy var withdrawAmountLabel: UILabel = {
+    lazy var loanLimitAmountLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.white
@@ -119,7 +119,7 @@ class BankViewHeaderView: UIView {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.white
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: .regular)
-        label.text = "≈9999.9999"
+        label.text = "≈0.00"
         return label
     }()
     lazy var yesterdayBenefitButton: UIButton = {
@@ -134,52 +134,27 @@ class BankViewHeaderView: UIView {
         button.tag = 20
         return button
     }()
-//    var model: Token? {
-//        didSet {
-//            
-//            self.walletAddressLabel.text = model?.tokenAddress
-//            var unit = 1000000
-//            switch model?.tokenType {
-//            case .BTC:
-//                self.walletTypeLabel.text = "BTC"
-//                self.walletIndicatorImageView.image = UIImage.init(named: "btc_icon")
-//                unit = 100000000
-//            case .Libra:
-//                self.walletTypeLabel.text = model?.tokenName
-//                self.walletIndicatorImageView.image = UIImage.init(named: "libra_icon")
-//            case .Violas:
-//                self.walletTypeLabel.text = model?.tokenName
-//                self.walletIndicatorImageView.image = UIImage.init(named: "violas_icon")
-//            default:
-//                self.walletIndicatorImageView.image = UIImage.init(named: "wallet_icon_default")
-//            }
-//            self.amountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model?.tokenBalance ?? 0)),
-//                                                           scale: 4,
-//                                                           unit: unit)
-//            let rate = NSDecimalNumber.init(string: model?.tokenPrice ?? "0.0")
-//            let amount = NSDecimalNumber.init(string: amountLabel.text ?? "0.0")
-//            let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
-//                                                           scale: 4,
-//                                                           raiseOnExactness: false,
-//                                                           raiseOnOverflow: false,
-//                                                           raiseOnUnderflow: false,
-//                                                           raiseOnDivideByZero: false)
-//            let value = rate.multiplying(by: amount, withBehavior: numberConfig)
-//            amountValueLabel.text = "≈$\(value.stringValue)"
-//        }
-//    }
+    var model: BankModelMainDataModel? {
+        didSet {
+            assetLabel.text = "≈$\(model?.amount ?? 0.00)"
+            loanLimitAmountLabel.text = "≈\(model?.borrow ?? 0.00)"
+            benefitLabel.text = "≈\(model?.total ?? 0.00)"
+            yesterdayBenefitButton.setTitle((localLanguage(keyString: "wallet_bank_yesterday_earnings_button_title") + "\(model?.yesterday ?? 0.00)$"), for: UIControl.State.normal)
+            yesterdayBenefitButton.imagePosition(at: .left, space: 4, imageViewSize: CGSize.init(width: 10, height: 6))
+        }
+    }
 }
 //MARK: - 语言切换方法
 extension BankViewHeaderView {
     /// 语言切换
     @objc func setText() {
-        withdrawAmountTitleLabel.text = localLanguage(keyString: "wallet_bank_deposit_amount_title")
+        loanLimitAmountTitleLabel.text = localLanguage(keyString: "wallet_bank_deposit_amount_title")
         benefitTitleLabel.text = localLanguage(keyString: "wallet_bank_total_benefit_title")
-        yesterdayBenefitButton.setTitle(localLanguage(keyString: "wallet_bank_yesterday_earnings_button_title"), for: UIControl.State.normal)
+        yesterdayBenefitButton.setTitle((localLanguage(keyString: "wallet_bank_yesterday_earnings_button_title") + "\(model?.yesterday ?? 0.00)$"), for: UIControl.State.normal)
         yesterdayBenefitButton.snp.remakeConstraints { (make) in
             make.centerY.equalTo(benefitIndicatorImageView)
             make.right.equalTo(self.snp.right).offset(-30)
-            let width = 6 + 10 + 4 + libraWalletTool.ga_widthForComment(content: (localLanguage(keyString: "wallet_bank_yesterday_earnings_button_title") + "0.00$"), fontSize: 10, height: 16) + 4
+            let width = 6 + 10 + 4 + libraWalletTool.ga_widthForComment(content: (localLanguage(keyString: "wallet_bank_yesterday_earnings_button_title") + "\(model?.yesterday ?? 0.00)$"), fontSize: 10, height: 16) + 4
             make.size.equalTo(CGSize.init(width: width, height: 16))
         }
     }

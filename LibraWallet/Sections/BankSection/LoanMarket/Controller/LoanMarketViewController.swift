@@ -9,8 +9,11 @@
 import UIKit
 import MJRefresh
 import JXSegmentedView
-
+protocol LoanMarketViewControllerDelegate: NSObjectProtocol {
+    func refreshAccount()
+}
 class LoanMarketViewController: BaseViewController {
+    weak var delegate: LoanMarketViewControllerDelegate?
     override func viewDidLoad() {
         super.viewDidLoad()
         // 初始化本地配置
@@ -117,6 +120,9 @@ class LoanMarketViewController: BaseViewController {
     var requestType: String?
     func transactionRequest(refresh: Bool) {
         let requestState = refresh == true ? 0:1
+        if refresh == true {
+            self.delegate?.refreshAccount()
+        }
         self.dataModel.getLoanMarket(requestStatus: requestState)
     }
 }
@@ -217,7 +223,6 @@ extension LoanMarketViewController: JXSegmentedListContainerViewListDelegate {
         if (lastState == .Loading) {return}
         startLoading ()
 //                self.detailView.makeToastActivity(.center)
-        transactionRequest(refresh: true)
         self.detailView.tableView.mj_header?.beginRefreshing()
         firstIn = false
     }

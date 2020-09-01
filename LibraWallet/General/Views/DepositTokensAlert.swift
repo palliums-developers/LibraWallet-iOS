@@ -222,15 +222,15 @@ extension DepositTokensAlert: UITableViewDataSource {
 extension DepositTokensAlert: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         print(searchText)
-        let tempModel = self.dataModels?.filter({
-            $0.product_token_show_name?.lowercased().contains(searchText.lowercased()) == true
-        })
-        if searchText.isEmpty == true {
-            self.dataModels = self.originModels
-        } else {
-            self.dataModels = tempModel
-        }
-        self.tableView.reloadData()
+//        let tempModel = self.dataModels?.filter({
+//            $0.product_token_show_name?.lowercased().contains(searchText.lowercased()) == true
+//        })
+//        if searchText.isEmpty == true {
+//            self.dataModels = self.originModels
+//        } else {
+//            self.dataModels = tempModel
+//        }
+//        self.tableView.reloadData()
     }
 }
 class DepositTokensCell: UITableViewCell {
@@ -328,19 +328,19 @@ class DepositTokensCell: UITableViewCell {
     }
     var model: BankDepositMarketDataModel? {
         didSet {
-            tokenNameLabel.text = model?.product_token_show_name
-            if let iconName = model?.product_token_icon, iconName.isEmpty == false {
-                if iconName.hasPrefix("http") {
-                    let url = URL(string: iconName)
-                    transactionTypeImageView.kf.setImage(with: url, placeholder: UIImage.init(named: "wallet_icon_default"))
-                } else {
-                    transactionTypeImageView.image = UIImage.init(named: iconName)
-                }
-                
-            }
-            amountLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + getDecimalNumberAmount(amount: NSDecimalNumber.init(value: model?.token_balance ?? 0),
-                                                                                                                  scale: 6,
-                                                                                                                  unit: 1000000)
+//            tokenNameLabel.text = model?.product_token_show_name
+//            if let iconName = model?.product_token_icon, iconName.isEmpty == false {
+//                if iconName.hasPrefix("http") {
+//                    let url = URL(string: iconName)
+//                    transactionTypeImageView.kf.setImage(with: url, placeholder: UIImage.init(named: "wallet_icon_default"))
+//                } else {
+//                    transactionTypeImageView.image = UIImage.init(named: iconName)
+//                }
+//                
+//            }
+//            amountLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + getDecimalNumberAmount(amount: NSDecimalNumber.init(value: model?.token_balance ?? 0),
+//                                                                                                                  scale: 6,
+//                                                                                                                  unit: 1000000)
         }
     }
     var showSelectState: Bool? {

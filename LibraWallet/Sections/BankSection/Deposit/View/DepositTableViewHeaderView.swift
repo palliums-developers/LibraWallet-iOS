@@ -229,7 +229,16 @@ class DepositTableViewHeaderView: UITableViewHeaderFooterView {
                                                     scale: 4,
                                                     unit: 1000000)
             depositLimitAmountLabel.text = amountLimitLeast.stringValue + "/" + amountLimit.stringValue + " " + (model.token_show_name ?? "")
-//            depositTokenIndicatorImageView.image = UIImage.init(named: model. ?? "wallet_icon_default")
+            if let iconName = model.logo, iconName.isEmpty == false {
+                if iconName.hasPrefix("http") {
+                    let url = URL(string: iconName)
+                    depositTokenIndicatorImageView.kf.setImage(with: url, placeholder: UIImage.init(named: "wallet_icon_default"))
+                } else {
+                    depositTokenIndicatorImageView.image = UIImage.init(named: iconName)
+                }
+            } else {
+                depositTokenIndicatorImageView.image = UIImage.init(named: "wallet_icon_default")
+            }
             let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model.token_balance ?? 0),
                                           scale: 4,
                                           unit: 1000000)

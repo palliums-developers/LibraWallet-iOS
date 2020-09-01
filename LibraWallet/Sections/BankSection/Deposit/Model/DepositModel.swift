@@ -41,6 +41,8 @@ struct DepositItemDetailMainDataModel: Codable {
     var token_name: String?
     /// 借贷币展示名字
     var token_show_name: String?
+    /// 借贷币图片
+    var logo: String?
     /// 余额（自行添加）
     var token_balance: UInt64?
     /// 激活状态（自行添加）

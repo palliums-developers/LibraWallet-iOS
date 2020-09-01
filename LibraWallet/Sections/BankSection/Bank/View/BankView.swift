@@ -13,7 +13,7 @@ import Localize_Swift
 class BankView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.backgroundColor = UIColor.white
+        self.backgroundColor = UIColor.init(hex: "F7F7F9")
         addSubview(topBackgroundImageView)
 
         addSubview(headerView)
@@ -50,7 +50,8 @@ class BankView: UIView {
         segmentView.corner(byRoundingCorners: [UIRectCorner.topLeft, UIRectCorner.topRight], radii: 8)
         listContainerView.snp.makeConstraints { (make) in
             make.bottom.equalTo(self)
-            make.left.right.equalTo(self)
+            make.left.equalTo(self).offset(15)
+            make.right.equalTo(self.snp.right).offset(-15)
             make.top.equalTo(segmentView.snp.bottom)
         }
     }

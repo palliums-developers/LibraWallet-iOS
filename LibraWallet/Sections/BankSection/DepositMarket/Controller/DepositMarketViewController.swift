@@ -9,8 +9,11 @@
 import UIKit
 import MJRefresh
 import JXSegmentedView
-
+protocol DepositMarketViewControllerDelegate: NSObjectProtocol {
+    func refreshAccount()
+}
 class DepositMarketViewController: BaseViewController {
+    weak var delegate: DepositMarketViewControllerDelegate?
     override func viewDidLoad() {
         super.viewDidLoad()
         // 初始化本地配置
@@ -116,6 +119,9 @@ class DepositMarketViewController: BaseViewController {
     var requestType: String?
     func transactionRequest(refresh: Bool) {
         let requestState = refresh == true ? 0:1
+        if refresh == true {
+            self.delegate?.refreshAccount()
+        }
         self.dataModel.getDepositMarket(requestStatus: requestState)
     }
 }
@@ -216,7 +222,6 @@ extension DepositMarketViewController: JXSegmentedListContainerViewListDelegate 
         if (lastState == .Loading) {return}
         startLoading ()
 //        self.detailView.makeToastActivity(.center)
-        transactionRequest(refresh: true)
         self.detailView.tableView.mj_header?.beginRefreshing()
         firstIn = false
     }

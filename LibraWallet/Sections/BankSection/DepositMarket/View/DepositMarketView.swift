@@ -33,7 +33,7 @@ class DepositMarketView: UIView {
         tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
         tableView.estimatedRowHeight = 0;
         tableView.estimatedSectionHeaderHeight = 0;
-        tableView.backgroundColor = UIColor.init(hex: "F7F7F9")
+        tableView.backgroundColor = UIColor.white
         tableView.register(WalletTransactionsTableViewCell.classForCoder(), forCellReuseIdentifier: "CellNormal")
         return tableView
     }()

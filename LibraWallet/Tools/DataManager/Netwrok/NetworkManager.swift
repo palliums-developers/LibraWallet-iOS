@@ -97,6 +97,7 @@ enum mainRequest {
     case LibraCrossChainTransactions(String, Int, Int)
     
     // 数字银行
+    case bankAccountInfo(String)
     case depositMarket
     case loanMarket
     case depositItemDetail(String, String)
@@ -174,10 +175,11 @@ extension mainRequest:TargetType {
              .LibraCrossChainTransactions(_, _, _):
             return URL(string:"http://18.136.139.151")!
         //数字银行
-        case .depositMarket,
+        case .bankAccountInfo(_),
+             .depositMarket,
              .loanMarket,
              .depositItemDetail(_, _),
-             .loanItemDetail(_):
+             .loanItemDetail(_, _):
             if PUBLISH_VERSION == true {
                 return URL(string:"https://api.violas.io")!
             } else {
@@ -266,10 +268,12 @@ extension mainRequest:TargetType {
             return "/"
         case .LibraCrossChainTransactions(_, _, _):
             return "/"
-        case .depositMarket:
-            return "/1.0/bank/deposit"
-        case .loanMarket:
+        case .bankAccountInfo(_):
             return "/1.0/violas/bank/account/info"
+        case .depositMarket:
+            return "/1.0/violas/bank/product/deposit"
+        case .loanMarket:
+            return "/1.0/violas/bank/product/borrow"
         case .depositItemDetail(_, _):
             return "/1.0/violas/bank/deposit/info"
         case .loanItemDetail(_, _):
@@ -321,6 +325,7 @@ extension mainRequest:TargetType {
              .BTCCrossChainTransactions(_, _, _),
              .ViolasCrossChainTransactions(_, _, _),
              .LibraCrossChainTransactions(_, _, _),
+             .bankAccountInfo(_),
              .depositMarket,
              .loanMarket,
              .depositItemDetail(_, _),
@@ -516,6 +521,9 @@ extension mainRequest:TargetType {
                                                    "chain":"libra",
                                                    "cursor":page,
                                                    "limit":offset],
+                                      encoding: URLEncoding.queryString)
+        case .bankAccountInfo(let address):
+            return .requestParameters(parameters: ["address":address],
                                       encoding: URLEncoding.queryString)
         case .depositMarket:
             return .requestPlain
