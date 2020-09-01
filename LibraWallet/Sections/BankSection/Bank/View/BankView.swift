@@ -64,6 +64,7 @@ class BankView: UIView {
     }()
     lazy var headerView: BankViewHeaderView = {
         let view = BankViewHeaderView.init()
+        view.isUserInteractionEnabled = true
         return view
     }()
     lazy var segmentView : JXSegmentedView = {

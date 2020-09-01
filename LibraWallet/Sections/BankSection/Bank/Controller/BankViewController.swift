@@ -67,24 +67,24 @@ class BankViewController: UIViewController {
         return con
     }()
     /// 全部资产价值按钮
-     lazy var totalAssetsButton: UIButton = {
-         let button = UIButton(type: .custom)
-         button.setTitle(localLanguage(keyString: "wallet_bank_total_deposit_title"), for: UIControl.State.normal)
-         button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.regular)
-         button.setTitleColor(UIColor.white, for: UIControl.State.normal)
-         button.setImage(UIImage.init(named: "eyes_open_white"), for: UIControl.State.normal)
-         // 调整位置
-         button.imagePosition(at: .right, space: 4, imageViewSize: CGSize.init(width: 14, height: 8))
-//         button.addTarget(self, action: #selector(changeWallet), for: .touchUpInside)
-         return button
+    lazy var totalAssetsButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setTitle(localLanguage(keyString: "wallet_bank_total_deposit_title"), for: UIControl.State.normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.regular)
+        button.setTitleColor(UIColor.white, for: UIControl.State.normal)
+        button.setImage(UIImage.init(named: "eyes_open_white"), for: UIControl.State.normal)
+        // 调整位置
+        button.imagePosition(at: .right, space: 4, imageViewSize: CGSize.init(width: 14, height: 8))
+        //         button.addTarget(self, action: #selector(changeWallet), for: .touchUpInside)
+        return button
      }()
-     /// 交易记录按钮
-     lazy var transactionsButton: UIButton = {
-         let button = UIButton(type: .custom)
-         button.setImage(UIImage.init(named: "wallet_detail_indicator"), for: UIControl.State.normal)
-         button.addTarget(self, action: #selector(checkOrder), for: .touchUpInside)
-         return button
-     }()
+    /// 交易记录按钮
+    lazy var transactionsButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setImage(UIImage.init(named: "wallet_detail_indicator"), for: UIControl.State.normal)
+        button.addTarget(self, action: #selector(checkOrder(button:)), for: .touchUpInside)
+        return button
+    }()
     /// 数据监听KVO
     var observer: NSKeyValueObservation?
     var startRefresh: Bool = false
@@ -128,19 +128,16 @@ extension BankViewController {
         // 返回按钮设置成功
         self.navigationItem.rightBarButtonItems = [rightBarButtonItem, scanView]
     }
-    @objc func checkOrder() {
-//        let vc = DepositOrdersViewController.init()
-//        vc.hidesBottomBarWhenPushed = true
-//        self.navigationController?.pushViewController(vc, animated: true)
-//        let vc = LoanOrdersViewController.init()
-//        vc.hidesBottomBarWhenPushed = true
-//        self.navigationController?.pushViewController(vc, animated: true)
-//        let vc = RepaymentViewController.init()
-//        vc.hidesBottomBarWhenPushed = true
-//        self.navigationController?.pushViewController(vc, animated: true)
-        let vc = DepositViewController.init()
-        vc.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(vc, animated: true)
+    @objc func checkOrder(button: UIButton) {
+        let dropper = Dropper.init(x: 0, y: statusBarHeight - 5, width: 110, height: 90)
+        dropper.items = [localLanguage(keyString: "wallet_bank_deposit_market_title"), localLanguage(keyString: "wallet_bank_loan_market_title")]
+        dropper.cornerRadius = 8
+        dropper.theme = .black(UIColor.init(hex: "F1EEFB"))
+        dropper.cellTextFont = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
+        dropper.cellColor = UIColor.init(hex: "333333")
+        dropper.spacing = 12
+        dropper.delegate = self
+        dropper.show(Dropper.Alignment.center, position: .top, button: self.detailView.headerView.yesterdayBenefitButton)
     }
 }
 extension BankViewController: DepositMarketTableViewManagerDelegate {
@@ -168,6 +165,20 @@ extension BankViewController: LoanMarketViewControllerDelegate, DepositMarketVie
         }
         self.dataModel.getBankAccountInfo(address: WalletManager.shared.violasAddress!)
         self.startRefresh = true
+    }
+}
+extension BankViewController: DropperDelegate {
+    func DropperSelectedRow(_ path: IndexPath, contents: String) {
+        print(contents)
+        if path.row == 0 {
+            let vc = DepositOrdersViewController.init()
+            vc.hidesBottomBarWhenPushed = true
+            self.navigationController?.pushViewController(vc, animated: true)
+        } else {
+            let vc = LoanOrdersViewController.init()
+            vc.hidesBottomBarWhenPushed = true
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
     }
 }
 // MARK: - 网络请求
