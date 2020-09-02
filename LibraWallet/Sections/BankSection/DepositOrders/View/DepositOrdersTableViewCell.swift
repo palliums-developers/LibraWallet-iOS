@@ -12,7 +12,6 @@ class DepositOrdersTableViewCell: UITableViewCell {
     //    weak var delegate: AddAssetViewTableViewCellDelegate?
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        //        contentView.addSubview(iconImageView)
         contentView.backgroundColor = UIColor.init(hex: "F7F7F9")
         contentView.addSubview(whiteBackgroundView)
         whiteBackgroundView.addSubview(tokenIconImageView)
@@ -108,7 +107,7 @@ class DepositOrdersTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "333333")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: UIFont.Weight.regular)
-        label.text = "Test测试"
+        label.text = "---"
         return label
     }()
     lazy var orderStateLabel: UILabel = {
@@ -147,7 +146,7 @@ class DepositOrdersTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "333333")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
-        label.text = "99999.999"
+        label.text = "---"
         return label
     }()
     lazy var itemBenefitTitleLabel: UILabel = {
@@ -163,7 +162,7 @@ class DepositOrdersTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "333333")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
-        label.text = "99999.999"
+        label.text = "---"
         return label
     }()
     lazy var annualizedReturnTitleLabel: UILabel = {
@@ -179,7 +178,7 @@ class DepositOrdersTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "13B788")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.bold)
-        label.text = "999.999%"
+        label.text = "---"
         return label
     }()
 
@@ -199,22 +198,37 @@ class DepositOrdersTableViewCell: UITableViewCell {
             }
         }
     }
-    //    var model: TokenMappingListDataModel? {
-    //        didSet {
-    //            tokenNameLabel.text = model?.from_coin?.assert?.show_name
-    //            if let iconName = model?.from_coin?.assert?.icon, iconName.isEmpty == false {
-    //                let url = URL(string: iconName)
-    //                transactionTypeImageView.kf.setImage(with: url, placeholder: UIImage.init(named: "wallet_icon_default"))
-    //            }
-    //            var unit = 1000000
-    //            if model?.from_coin?.coin_type == "btc" {
-    //                unit = 100000000
-    //            }
-    //            amountLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + getDecimalNumberAmount(amount: NSDecimalNumber.init(value: model?.from_coin?.assert?.amount ?? 0),
-    //                                                                                                                  scale: 6,
-    //                                                                                                                  unit: unit)
-    //        }
-    //    }
+    var model: DepositOrdersMainDataModel? {
+        didSet {
+            guard let tempModel = model else {
+                return
+            }
+            if let iconName = model?.logo, iconName.isEmpty == false {
+                if iconName.hasPrefix("http") {
+                    let url = URL(string: iconName)
+                    tokenIconImageView.kf.setImage(with: url, placeholder: UIImage.init(named: "wallet_icon_default"))
+                } else {
+                    tokenIconImageView.image = UIImage.init(named: iconName)
+                }
+            } else {
+                tokenIconImageView.image = UIImage.init(named: "wallet_icon_default")
+            }
+            tokenNameLabel.text = tempModel.currency
+            orderTotalAmountLabel.text = getDecimalNumber(amount: NSDecimalNumber.init(value: tempModel.principal ?? 0),
+                                                          scale: 6,
+                                                          unit: 1000000).stringValue + (tempModel.token_show_name ?? "")
+            itemBenefitLabel.text = getDecimalNumber(amount: NSDecimalNumber.init(value: tempModel.earnings ?? 0),
+                                                     scale: 6,
+                                                     unit: 1000000).stringValue + (tempModel.token_show_name ?? "")
+            let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
+                                                           scale: 2,
+                                                           raiseOnExactness: false,
+                                                           raiseOnOverflow: false,
+                                                           raiseOnUnderflow: false,
+                                                           raiseOnDivideByZero: false)
+            annualizedReturnLabel.text = NSDecimalNumber.init(value: tempModel.rate ?? 0).multiplying(by: NSDecimalNumber.init(value: 100), withBehavior: numberConfig).stringValue + "%"
+        }
+    }
     var showSelectState: Bool? {
         didSet {
             //            if showSelectState == true {

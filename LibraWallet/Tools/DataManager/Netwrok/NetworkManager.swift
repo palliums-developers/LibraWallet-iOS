@@ -102,6 +102,8 @@ enum mainRequest {
     case loanMarket
     case depositItemDetail(String, String)
     case loanItemDetail(String, String)
+    /// 获取存款订单信息（地址、offset、limit）
+    case depositTransactions(String, Int, Int)
 }
 extension mainRequest:TargetType {
     var baseURL: URL {
@@ -179,7 +181,8 @@ extension mainRequest:TargetType {
              .depositMarket,
              .loanMarket,
              .depositItemDetail(_, _),
-             .loanItemDetail(_, _):
+             .loanItemDetail(_, _),
+             .depositTransactions(_, _, _):
             if PUBLISH_VERSION == true {
                 return URL(string:"https://api.violas.io")!
             } else {
@@ -278,7 +281,8 @@ extension mainRequest:TargetType {
             return "/1.0/violas/bank/deposit/info"
         case .loanItemDetail(_, _):
             return "/1.0/violas/bank/borrow/info"
-
+        case .depositTransactions(_, _, _):
+            return "/1.0/violas/bank/deposit/orders"
         }
     }
     var method: Moya.Method {
@@ -329,7 +333,8 @@ extension mainRequest:TargetType {
              .depositMarket,
              .loanMarket,
              .depositItemDetail(_, _),
-             .loanItemDetail(_, _):
+             .loanItemDetail(_, _),
+             .depositTransactions(_, _, _):
             return .get
         }
     }
@@ -537,6 +542,12 @@ extension mainRequest:TargetType {
             return .requestParameters(parameters: ["id":id,
                                                    "address": address],
                                       encoding: URLEncoding.queryString)
+        case .depositTransactions(let address, let page, let limit):
+            return .requestParameters(parameters: ["address": address,
+                                                   "offset": page,
+                                                   "limit": limit],
+                                      encoding: URLEncoding.queryString)
+
         }
     }
     var headers: [String : String]? {

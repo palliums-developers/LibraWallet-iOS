@@ -14,18 +14,21 @@ class DepositOrdersViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.init(hex: "F7F7F9")
+        self.view.addSubview(self.detailView)
         // 添加导航栏按钮
         self.addNavigationRightBar()
         // 初始化本地配置
         self.setNavigationWithoutShadowImage()
         // 设置标题
         self.title = localLanguage(keyString: "wallet_transactions_navigation_title")
+        self.initKVO()
         //设置空数据页面
         self.setEmptyView()
         //设置默认页面（无数据、无网络）
         self.setPlaceholderView()
         
-        self.view.addSubview(self.detailView)
+        
+        self.requestData()
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -49,34 +52,16 @@ class DepositOrdersViewController: BaseViewController {
     func requestData() {
         if (lastState == .Loading) {return}
         startLoading ()
-        //        self.detailView.makeToastActivity(.center)
+        self.detailView.makeToastActivity(.center)
         
         transactionRequest(refresh: true)
     }
     override func hasContent() -> Bool {
-        //        switch self.wallet?.tokenType {
-        //        case .Libra:
-        //            if let addresses = self.tableViewManager.libraTransactions, addresses.isEmpty == false {
-        //                return true
-        //            } else {
-        //                return false
-        //            }
-        //        case .Violas:
-        //            if let addresses = self.tableViewManager.violasTransactions, addresses.isEmpty == false {
-        //                return true
-        //            } else {
-        //                return false
-        //            }
-        //        case .BTC:
-        //            if let addresses = self.tableViewManager.btcTransactions, addresses.isEmpty == false {
-        //                return true
-        //            } else {
-        //                return false
-        //            }
-        //        default:
-        //            return false
-        //        }
-        return true
+        if let models = self.tableViewManager.dataModels, models.isEmpty == false {
+            return true
+        } else {
+            return false
+        }
     }
     deinit {
         print("DepositOrdersViewController销毁了")
@@ -89,7 +74,6 @@ class DepositOrdersViewController: BaseViewController {
     // tableView管理类
     lazy var tableViewManager: DepositOrdersTableViewManager = {
         let manager = DepositOrdersTableViewManager.init()
-        //        manager.delegate = self
         return manager
     }()
     // 子View
@@ -102,12 +86,6 @@ class DepositOrdersViewController: BaseViewController {
         return view
     }()
     var observer: NSKeyValueObservation?
-    var wallet: Token? {
-        didSet {
-            //            self.tableViewManager.transactionType = wallet?.tokenType
-        }
-    }
-    
     var dataOffset: Int = 0
     @objc func refreshData() {
         dataOffset = 0
@@ -128,21 +106,8 @@ class DepositOrdersViewController: BaseViewController {
         return button
     }()
     func transactionRequest(refresh: Bool) {
-//        let requestState = refresh == true ? 0:1
-//        switch self.wallet?.tokenType {
-//        case .Libra:
-//            dataModel.getLibraTransactionHistory(address: (wallet?.tokenAddress)!, module: wallet?.tokenModule ?? "", requestType: requestType ?? "", page: dataOffset, pageSize: 10, requestStatus: requestState)
-//            break
-//        case .Violas:
-//            dataModel.getViolasTransactions(address: (wallet?.tokenAddress)!, module: wallet?.tokenModule ?? "", requestType: requestType ?? "", page: dataOffset, pageSize: 10, requestStatus: requestState)
-//            break
-//        case .BTC:
-//            dataModel.getBTCTransactionHistory(address: (wallet?.tokenAddress)!, page: dataOffset + 1, pageSize: 10, requestStatus: requestState)
-//            //            dataModel.getBTCTransactionHistory(address: "2NGZrVvZG92qGYqzTLjCAewvPZ7JE8S8VxE", page: dataOffset + 1, pageSize: 10, requestStatus: requestState)
-//        //
-//        default:
-//            break
-//        }
+        let requestState = refresh == true ? 0:1
+        self.dataModel.getDepositTransactions(address: WalletManager.shared.violasAddress!, page: self.dataOffset, limit: 10, requestStatus: requestState)
     }
 }
 //MARK: - 导航栏添加按钮
@@ -210,33 +175,33 @@ extension DepositOrdersViewController {
                 return
             }
             let type = dataDic.value(forKey: "type") as! String
-            if type == "BTCTransactionHistoryOrigin" {
-                guard let tempData = dataDic.value(forKey: "data") as? [TrezorBTCTransactionDataModel] else {
+            if type == "GetBankDepositTransactionsOrigin" {
+                guard let tempData = dataDic.value(forKey: "data") as? [DepositOrdersMainDataModel] else {
                     return
                 }
-                //                self?.tableViewManager.btcTransactions = tempData
+                self?.tableViewManager.dataModels = tempData
                 self?.detailView.tableView.reloadData()
-            } else if type == "BTCTransactionHistoryMore" {
-                guard let tempData = dataDic.value(forKey: "data") as? [TrezorBTCTransactionDataModel] else {
+            } else if type == "GetBankDepositTransactionsMore" {
+                guard let tempData = dataDic.value(forKey: "data") as? [DepositOrdersMainDataModel] else {
                     return
                 }
-                //                if let oldData = self?.tableViewManager.btcTransactions, oldData.isEmpty == false {
-                //                    let tempArray = NSMutableArray.init(array: oldData)
-                //                    var insertIndexPath = [IndexPath]()
-                //                    for index in 0..<tempData.count {
-                //                        let indexPath = IndexPath.init(row: oldData.count + index, section: 0)
-                //                        insertIndexPath.append(indexPath)
-                //                    }
-                //                    tempArray.addObjects(from: tempData)
-                //                    self?.tableViewManager.btcTransactions = tempArray as? [TrezorBTCTransactionDataModel]
-                //                    self?.detailView.tableView.beginUpdates()
-                //                    self?.detailView.tableView.insertRows(at: insertIndexPath, with: UITableView.RowAnimation.bottom)
-                //                    self?.detailView.tableView.endUpdates()
-                //                } else {
-                //                    self?.tableViewManager.btcTransactions = tempData
-                //                    self?.detailView.tableView.reloadData()
-                //                }
-                //                self?.detailView.tableView.mj_footer?.endRefreshing()
+                if let oldData = self?.tableViewManager.dataModels, oldData.isEmpty == false {
+                    let tempArray = NSMutableArray.init(array: oldData)
+                    var insertIndexPath = [IndexPath]()
+                    for index in 0..<tempData.count {
+                        let indexPath = IndexPath.init(row: oldData.count + index, section: 0)
+                        insertIndexPath.append(indexPath)
+                    }
+                    tempArray.addObjects(from: tempData)
+                    self?.tableViewManager.dataModels = tempArray as? [DepositOrdersMainDataModel]
+                    self?.detailView.tableView.beginUpdates()
+                    self?.detailView.tableView.insertRows(at: insertIndexPath, with: UITableView.RowAnimation.bottom)
+                    self?.detailView.tableView.endUpdates()
+                } else {
+                    self?.tableViewManager.dataModels = tempData
+                    self?.detailView.tableView.reloadData()
+                }
+                self?.detailView.tableView.mj_footer?.endRefreshing()
             }
             self?.detailView.tableView.mj_footer?.endRefreshing()
             self?.detailView.hideToastActivity()

@@ -979,19 +979,19 @@
 		361BDA1624F8E7BD00C4C54E /* BankSection */ = {
 			isa = PBXGroup;
 			children = (
+				361BDA4B24F8E7BD00C4C54E /* Bank */,
 				361BDA1724F8E7BD00C4C54E /* Loan */,
+				361BDA7324F8E7BD00C4C54E /* LoanOrders */,
 				361BDA2624F8E7BD00C4C54E /* Deposit */,
+				361BDA9D24F8E7BD00C4C54E /* DepositOrders */,
+				361BDA9324F8E7BD00C4C54E /* DepositMarket */,
 				361BDA3524F8E7BD00C4C54E /* LoanList */,
 				361BDA4124F8E7BD00C4C54E /* LoanDetailClearingList */,
-				361BDA4B24F8E7BD00C4C54E /* Bank */,
 				361BDA5324F8E7BD00C4C54E /* LoanDetailLoanList */,
 				361BDA6824F8E7BD00C4C54E /* LoanDetailDepositList */,
-				361BDA7324F8E7BD00C4C54E /* LoanOrders */,
 				361BDA7E24F8E7BD00C4C54E /* Repayment */,
 				361BDA8B24F8E7BD00C4C54E /* LoanDetail */,
-				361BDA9324F8E7BD00C4C54E /* DepositMarket */,
 				361BDA5E24F8E7BD00C4C54E /* LoanMarket */,
-				361BDA9D24F8E7BD00C4C54E /* DepositOrders */,
 				361BDAA824F8E7BD00C4C54E /* DepositList */,
 			);
 			path = BankSection;
