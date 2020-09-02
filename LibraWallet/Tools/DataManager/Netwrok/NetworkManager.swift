@@ -104,6 +104,8 @@ enum mainRequest {
     case loanItemDetail(String, String)
     /// 获取存款订单信息（地址、offset、limit）
     case depositTransactions(String, Int, Int)
+    /// 获取借贷订单信息（地址、offset、limit）
+    case loanTransactions(String, Int, Int)
 }
 extension mainRequest:TargetType {
     var baseURL: URL {
@@ -182,7 +184,8 @@ extension mainRequest:TargetType {
              .loanMarket,
              .depositItemDetail(_, _),
              .loanItemDetail(_, _),
-             .depositTransactions(_, _, _):
+             .depositTransactions(_, _, _),
+             .loanTransactions(_, _, _):
             if PUBLISH_VERSION == true {
                 return URL(string:"https://api.violas.io")!
             } else {
@@ -283,6 +286,8 @@ extension mainRequest:TargetType {
             return "/1.0/violas/bank/borrow/info"
         case .depositTransactions(_, _, _):
             return "/1.0/violas/bank/deposit/orders"
+        case .loanTransactions(_, _, _):
+            return "/1.0/violas/bank/borrow/orders"
         }
     }
     var method: Moya.Method {
@@ -334,7 +339,8 @@ extension mainRequest:TargetType {
              .loanMarket,
              .depositItemDetail(_, _),
              .loanItemDetail(_, _),
-             .depositTransactions(_, _, _):
+             .depositTransactions(_, _, _),
+             .loanTransactions(_, _, _):
             return .get
         }
     }
@@ -547,7 +553,11 @@ extension mainRequest:TargetType {
                                                    "offset": page,
                                                    "limit": limit],
                                       encoding: URLEncoding.queryString)
-
+        case .loanTransactions(let address, let page, let limit):
+            return .requestParameters(parameters: ["address": address,
+                                                   "offset": page,
+                                                   "limit": limit],
+                                      encoding: URLEncoding.queryString)
         }
     }
     var headers: [String : String]? {

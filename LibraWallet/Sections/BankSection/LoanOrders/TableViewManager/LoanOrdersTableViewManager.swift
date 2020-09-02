@@ -13,9 +13,9 @@ protocol LoanOrdersTableViewManagerDelegate: NSObjectProtocol {
 class LoanOrdersTableViewManager: NSObject {
     weak var delegate: LoanOrdersTableViewManagerDelegate?
     /// 数据
-    var dataModels: [Token]?
+    var dataModels: [LoanOrdersMainDataModel]?
     deinit {
-        print("WithdrawMarketTableViewManager销毁了")
+        print("LoanOrdersTableViewManager销毁了")
     }
 }
 extension LoanOrdersTableViewManager: UITableViewDelegate {
@@ -44,22 +44,22 @@ extension LoanOrdersTableViewManager: UITableViewDelegate {
 }
 extension LoanOrdersTableViewManager: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10//dataModel?.count ?? 0
+        return dataModels?.count ?? 0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let identifier = "CellNormal"
         if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? LoanOrdersTableViewCell {
             cell.selectionStyle = .none;
-            //            if let data = dataModel, data.isEmpty == false {
-            //                cell.model = data[indexPath.row]
-            //            }
+            if let data = dataModels, data.isEmpty == false {
+                cell.model = data[indexPath.row]
+            }
             return cell
         } else {
             let cell = LoanOrdersTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
             cell.selectionStyle = .none;
-            //            if let data = dataModel, data.isEmpty == false {
-            //                cell.model = data[indexPath.row]
-            //            }
+            if let data = dataModels, data.isEmpty == false {
+                cell.model = data[indexPath.row]
+            }
             return cell
         }
     }
