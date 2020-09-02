@@ -106,6 +106,8 @@ enum mainRequest {
     case depositTransactions(String, Int, Int)
     /// 获取借贷订单信息（地址、offset、limit）
     case loanTransactions(String, Int, Int)
+    /// 借款订单详情（地址、订单ID、请求类型（0:借贷明细 1:还款明细 2: 清算明细）、offset、limit）
+    case loanTransactionDetail(String, String, Int, Int, Int)
 }
 extension mainRequest:TargetType {
     var baseURL: URL {
@@ -185,7 +187,8 @@ extension mainRequest:TargetType {
              .depositItemDetail(_, _),
              .loanItemDetail(_, _),
              .depositTransactions(_, _, _),
-             .loanTransactions(_, _, _):
+             .loanTransactions(_, _, _),
+             .loanTransactionDetail(_, _, _, _, _):
             if PUBLISH_VERSION == true {
                 return URL(string:"https://api.violas.io")!
             } else {
@@ -288,6 +291,8 @@ extension mainRequest:TargetType {
             return "/1.0/violas/bank/deposit/orders"
         case .loanTransactions(_, _, _):
             return "/1.0/violas/bank/borrow/orders"
+        case .loanTransactionDetail(_, _, _, _, _):
+            return "/1.0/violas/bank/borrow/order/detail"
         }
     }
     var method: Moya.Method {
@@ -340,7 +345,8 @@ extension mainRequest:TargetType {
              .depositItemDetail(_, _),
              .loanItemDetail(_, _),
              .depositTransactions(_, _, _),
-             .loanTransactions(_, _, _):
+             .loanTransactions(_, _, _),
+             .loanTransactionDetail(_, _, _, _, _):
             return .get
         }
     }
@@ -555,6 +561,13 @@ extension mainRequest:TargetType {
                                       encoding: URLEncoding.queryString)
         case .loanTransactions(let address, let page, let limit):
             return .requestParameters(parameters: ["address": address,
+                                                   "offset": page,
+                                                   "limit": limit],
+                                      encoding: URLEncoding.queryString)
+        case .loanTransactionDetail(let address, let orderID, let requestType, let page, let limit):
+            return .requestParameters(parameters: ["address": address,
+                                                   "id": orderID,
+                                                   "q": requestType,
                                                    "offset": page,
                                                    "limit": limit],
                                       encoding: URLEncoding.queryString)

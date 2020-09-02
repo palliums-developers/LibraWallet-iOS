@@ -1,5 +1,5 @@
 //
-//  LoanOrdersViewController.swift
+//  LoanDetailLoanListViewController.swift
 //  LibraWallet
 //
 //  Created by wangyingdong on 2020/8/24.
@@ -7,38 +7,20 @@
 //
 
 import UIKit
-import StatefulViewController
 import MJRefresh
+import JXSegmentedView
 
-class LoanOrdersViewController: BaseViewController {
+class LoanDetailLoanListViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor.init(hex: "F7F7F9")
-        self.view.addSubview(self.detailView)
-        // 添加导航栏按钮
-        self.addNavigationRightBar()
         // 初始化本地配置
         self.setNavigationWithoutShadowImage()
         // 设置标题
         self.title = localLanguage(keyString: "wallet_transactions_navigation_title")
-        self.initKVO()
         //设置空数据页面
         self.setEmptyView()
         //设置默认页面（无数据、无网络）
         self.setPlaceholderView()
-
-        self.requestData()
-    }
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        detailView.snp.makeConstraints { (make) in
-            if #available(iOS 11.0, *) {
-                make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
-            } else {
-                make.top.bottom.equalTo(self.view)
-            }
-            make.left.right.equalTo(self.view)
-        }
     }
     //MARK: - 默认页面
     func setPlaceholderView() {
@@ -51,7 +33,7 @@ class LoanOrdersViewController: BaseViewController {
     func requestData() {
         if (lastState == .Loading) {return}
         startLoading ()
-        self.detailView.makeToastActivity(.center)
+        //        self.detailView.makeToastActivity(.center)
         
         transactionRequest(refresh: true)
     }
@@ -63,30 +45,31 @@ class LoanOrdersViewController: BaseViewController {
         }
     }
     deinit {
-        print("LoanOrdersViewController销毁了")
+        print("LoanDetailLoanListViewController销毁了")
     }
-    // 网络请求、数据模型
-    lazy var dataModel: LoanOrdersModel = {
-        let model = LoanOrdersModel.init()
+    /// 网络请求、数据模型
+    lazy var dataModel: LoanDetailLoanListModel = {
+        let model = LoanDetailLoanListModel.init()
         return model
     }()
-    // tableView管理类
-    lazy var tableViewManager: LoanOrdersTableViewManager = {
-        let manager = LoanOrdersTableViewManager.init()
-        manager.delegate = self
+    /// tableView管理类
+    lazy var tableViewManager: LoanDetailLoanListTableViewManager = {
+        let manager = LoanDetailLoanListTableViewManager.init()
+        //        manager.delegate = self
         return manager
     }()
-    // 子View
-    lazy var detailView : LoanOrdersView = {
-        let view = LoanOrdersView.init()
+    /// 子View
+    lazy var detailView : LoanDetailLoanListView = {
+        let view = LoanDetailLoanListView.init()
         view.tableView.delegate = self.tableViewManager
         view.tableView.dataSource = self.tableViewManager
         view.tableView.mj_header = MJRefreshNormalHeader.init(refreshingTarget: self, refreshingAction:  #selector(refreshData))
         view.tableView.mj_footer = MJRefreshBackNormalFooter.init(refreshingTarget: self, refreshingAction:  #selector(getMoreData))
         return view
     }()
+    ///
     var observer: NSKeyValueObservation?
-    
+    /// 页数
     var dataOffset: Int = 0
     @objc func refreshData() {
         dataOffset = 0
@@ -98,43 +81,18 @@ class LoanOrdersViewController: BaseViewController {
         transactionRequest(refresh: false)
     }
     var firstIn: Bool = true
-    var requestType: String?
-    /// 二维码扫描按钮
-    lazy var depositOrderListButton: UIButton = {
-        let button = UIButton(type: .custom)
-        button.setImage(UIImage.init(named: "deposit_order_list"), for: UIControl.State.normal)
-        button.addTarget(self, action: #selector(checkOrder), for: .touchUpInside)
-        return button
-    }()
+    var itemID: String?
+    var updateAction: ((LoanOrderDetailMainDataModel)->())?
     func transactionRequest(refresh: Bool) {
         let requestState = refresh == true ? 0:1
-        self.dataModel.getLoanTransactions(address: WalletManager.shared.violasAddress!, page: self.dataOffset, limit: 10, requestStatus: requestState)
-
+        self.dataModel.getLoanOrderDetailLoanList(address: WalletManager.shared.violasAddress!,
+                                                  orderID: itemID ?? "",
+                                                  page: dataOffset,
+                                                  limit: 10,
+                                                  requestStatus: requestState)
     }
 }
-//MARK: - 导航栏添加按钮
-extension LoanOrdersViewController {
-    func addNavigationRightBar() {
-        let scanView = UIBarButtonItem(customView: depositOrderListButton)
-        // 重要方法，用来调整自定义返回view距离左边的距离
-        let rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
-        rightBarButtonItem.width = 15
-        // 返回按钮设置成功
-        self.navigationItem.rightBarButtonItems = [rightBarButtonItem, scanView]
-    }
-    @objc func checkOrder() {
-        let vc = LoanListViewController.init()
-        vc.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(vc, animated: true)
-    }
-}
-extension LoanOrdersViewController: LoanOrdersTableViewManagerDelegate {
-    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath) {
-        let vc = LoanOrderDetailViewController()
-        self.navigationController?.pushViewController(vc, animated: true)
-    }
-}
-extension LoanOrdersViewController {
+extension LoanDetailLoanListViewController {
     func initKVO() {
         self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
             guard let dataDic = change.newValue, dataDic.count != 0 else {
@@ -145,9 +103,6 @@ extension LoanOrdersViewController {
             if let error = dataDic.value(forKey: "error") as? LibraWalletError {
                 // 隐藏请求指示
                 self?.view?.hideToastActivity()
-                //                self?.view?.toastView?.hide(tag: 99)
-                //                self?.view?.toastView?.hide(tag: 299)
-                //                self?.view?.toastView?.hide(tag: 399)
                 if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
                     // 网络无法访问
                     print(error.localizedDescription)
@@ -183,30 +138,33 @@ extension LoanOrdersViewController {
                 return
             }
             let type = dataDic.value(forKey: "type") as! String
-            if type == "GetBankLoanTransactionsOrigin" {
-                guard let tempData = dataDic.value(forKey: "data") as? [LoanOrdersMainDataModel] else {
+            if type == "GetBankLoanOrderDetailLoanListOrigin" {
+                guard let tempData = dataDic.value(forKey: "data") as? LoanOrderDetailMainDataModel else {
                     return
                 }
-                self?.tableViewManager.dataModels = tempData
+                self?.tableViewManager.dataModels = tempData.list
+                if let action = self?.updateAction {
+                    action(tempData)
+                }
                 self?.detailView.tableView.reloadData()
-            } else if type == "GetBankLoanTransactionsMore" {
-                guard let tempData = dataDic.value(forKey: "data") as? [LoanOrdersMainDataModel] else {
+            } else if type == "GetBankLoanOrderDetailLoanListMore" {
+                guard let tempData = dataDic.value(forKey: "data") as? LoanOrderDetailMainDataModel else {
                     return
                 }
                 if let oldData = self?.tableViewManager.dataModels, oldData.isEmpty == false {
                     let tempArray = NSMutableArray.init(array: oldData)
                     var insertIndexPath = [IndexPath]()
-                    for index in 0..<tempData.count {
+                    for index in 0..<tempData.list!.count {
                         let indexPath = IndexPath.init(row: oldData.count + index, section: 0)
                         insertIndexPath.append(indexPath)
                     }
-                    tempArray.addObjects(from: tempData)
-                    self?.tableViewManager.dataModels = tempArray as? [LoanOrdersMainDataModel]
+                    tempArray.addObjects(from: tempData.list!)
+                    self?.tableViewManager.dataModels = tempArray as? [LoanOrderDetailMainDataListModel]
                     self?.detailView.tableView.beginUpdates()
                     self?.detailView.tableView.insertRows(at: insertIndexPath, with: UITableView.RowAnimation.bottom)
                     self?.detailView.tableView.endUpdates()
                 } else {
-                    self?.tableViewManager.dataModels = tempData
+                    self?.tableViewManager.dataModels = tempData.list
                     self?.detailView.tableView.reloadData()
                 }
                 self?.detailView.tableView.mj_footer?.endRefreshing()
@@ -216,5 +174,27 @@ extension LoanOrdersViewController {
             self?.detailView.tableView.mj_header?.endRefreshing()
             self?.endLoading()
         })
+    }
+}
+extension LoanDetailLoanListViewController: JXSegmentedListContainerViewListDelegate {
+    func listView() -> UIView {
+        return self.detailView
+    }
+    /// 可选实现，列表显示的时候调用
+    func listDidAppear() {
+        //防止重复加载数据
+        guard firstIn == true else {
+            return
+        }
+        if (lastState == .Loading) {return}
+        startLoading ()
+        //        self.detailView.makeToastActivity(.center)
+//        transactionRequest(refresh: true)
+        self.detailView.tableView.mj_header?.beginRefreshing()
+        firstIn = false
+    }
+    /// 可选实现，列表消失的时候调用
+    func listDidDisappear() {
+        
     }
 }

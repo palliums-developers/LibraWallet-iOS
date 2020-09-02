@@ -284,6 +284,10 @@ wallet_bank_loan_detail_loan_detail_status_title = "状态";
 wallet_bank_loan_detail_clearing_detail_clearing_amount_title = "被清算";
 wallet_bank_loan_detail_clearing_detail_deduction_amount_title = "已抵扣";
 wallet_bank_loan_detail_clearing_detail_status_title = "已清算";
+wallet_bank_loan_detail_deposit_status_deposited_title = "已还款";
+wallet_bank_loan_detail_deposit_status_depositing_title = "还款中";
+wallet_bank_loan_detail_loan_status_loaned_title = "已借款";
+wallet_bank_loan_detail_loan_status_loaning_title = "借款中";
 
 /************* 数字银行还款 *******************/
 wallet_bank_repayment_button_title = "立即还款";
@@ -454,6 +458,7 @@ wallet_market_assets_pool_transaction_detail_navigationbar_title = "详情";
 
 wallet_bank_deposit_navigationbar_title = "存款";
 wallet_bank_loan_navigationbar_title = "借款";
+wallet_bank_loan_detail_navigationbar_title = "借款详情";
 
 /************* App错误 *******************/
 // 请求遇到错误
