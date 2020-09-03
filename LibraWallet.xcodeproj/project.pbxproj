@@ -196,6 +196,7 @@
 		368CD5E324D26F4E0092F12E /* MarketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368CD5E224D26F4E0092F12E /* MarketManager.swift */; };
 		368F7BD524FCFC4700CCF3FB /* BankLegalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368F7BD424FCFC4700CCF3FB /* BankLegalViewController.swift */; };
 		368F7BD724FCFC5700CCF3FB /* BankLegalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368F7BD624FCFC5700CCF3FB /* BankLegalView.swift */; };
+		36AA10F925008A1E00BEF941 /* BankContracts.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 36AA10F825008A1E00BEF941 /* BankContracts.bundle */; };
 		36B43A7223BDE967008E2EEA /* LBXScanError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B43A7123BDE967008E2EEA /* LBXScanError.swift */; };
 		36B466A62476563800CFF438 /* ScanSignTransactionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B466A52476563800CFF438 /* ScanSignTransactionViewController.swift */; };
 		36B466A82476565000CFF438 /* ScanSendTransactionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B466A72476565000CFF438 /* ScanSendTransactionViewController.swift */; };
@@ -615,6 +616,7 @@
 		368CD5E224D26F4E0092F12E /* MarketManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketManager.swift; sourceTree = "<group>"; };
 		368F7BD424FCFC4700CCF3FB /* BankLegalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankLegalViewController.swift; sourceTree = "<group>"; };
 		368F7BD624FCFC5700CCF3FB /* BankLegalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankLegalView.swift; sourceTree = "<group>"; };
+		36AA10F825008A1E00BEF941 /* BankContracts.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = BankContracts.bundle; sourceTree = "<group>"; };
 		36B43A7123BDE967008E2EEA /* LBXScanError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LBXScanError.swift; sourceTree = "<group>"; };
 		36B466A52476563800CFF438 /* ScanSignTransactionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanSignTransactionViewController.swift; sourceTree = "<group>"; };
 		36B466A72476565000CFF438 /* ScanSendTransactionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanSendTransactionViewController.swift; sourceTree = "<group>"; };
@@ -2792,6 +2794,7 @@
 				9D712442232F7662009DED52 /* Assets.xcassets */,
 				36828CEA24B808760085A165 /* ColorAssets.xcassets */,
 				36828CEC24BBFA300085A165 /* MarketContracts.bundle */,
+				36AA10F825008A1E00BEF941 /* BankContracts.bundle */,
 			);
 			path = Resource;
 			sourceTree = "<group>";
@@ -4157,6 +4160,7 @@
 				36F8270E24BEAA7F0007ACC3 /* README.md in Resources */,
 				36828CED24BBFA300085A165 /* MarketContracts.bundle in Resources */,
 				9D7124342329EA1C009DED52 /* Localizable.strings in Resources */,
+				36AA10F925008A1E00BEF941 /* BankContracts.bundle in Resources */,
 				361BDA1524F8A47F00C4C54E /* ViolasContracts.bundle in Resources */,
 				9D712443232F7662009DED52 /* Assets.xcassets in Resources */,
 			);
