@@ -8,7 +8,12 @@
 
 import UIKit
 
+protocol DepositListViewDelegate: NSObjectProtocol {
+    func filterOrdersWithCurrency()
+    func filterOrdersWithStatus()
+}
 class DepositListView: UIView {
+    weak var delegate: DepositListViewDelegate?
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.init(hex: "F7F7F9")
@@ -22,7 +27,7 @@ class DepositListView: UIView {
     deinit {
         print("DepositListView销毁了")
     }
-    //MARK: - 布局
+    // MARK: - 布局
     override func layoutSubviews() {
         super.layoutSubviews()
         orderTokenSelectButton.snp.makeConstraints { (make) in
@@ -41,7 +46,7 @@ class DepositListView: UIView {
             make.bottom.equalTo(self)
         }
     }
-    //MARK: - 懒加载对象
+    // MARK: - 懒加载对象
     lazy var orderTokenSelectButton: UIButton = {
         let button = UIButton.init(type: UIButton.ButtonType.custom)
         button.setTitle(localLanguage(keyString: "wallet_deposit_list_order_token_select_title"), for: UIControl.State.normal)
@@ -49,9 +54,9 @@ class DepositListView: UIView {
         button.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
         button.setImage(UIImage.init(named: "bank_deposit_list_select"), for: UIControl.State.normal)
         button.imagePosition(at: .right, space: 5, imageViewSize: CGSize.init(width: 10, height: 10))
-        //        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
+        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
         button.backgroundColor = UIColor.white
-        button.tag = 20
+        button.tag = 10
         return button
     }()
     lazy var orderStateButton: UIButton = {
@@ -61,7 +66,7 @@ class DepositListView: UIView {
         button.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
         button.setImage(UIImage.init(named: "bank_deposit_list_select"), for: UIControl.State.normal)
         button.imagePosition(at: .right, space: 5, imageViewSize: CGSize.init(width: 10, height: 10))
-        //        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
+        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
         button.backgroundColor = UIColor.white
         button.tag = 20
         return button
@@ -78,5 +83,12 @@ class DepositListView: UIView {
     var toastView: ToastView? {
         let toast = ToastView.init()
         return toast
+    }
+    @objc func buttonClick(button: UIButton) {
+        if button.tag == 10 {
+            self.delegate?.filterOrdersWithCurrency()
+        } else {
+            self.delegate?.filterOrdersWithStatus()
+        }
     }
 }

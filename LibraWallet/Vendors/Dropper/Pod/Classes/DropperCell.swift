@@ -128,14 +128,12 @@ internal class DropperCell: UITableViewCell {
             }
         }
     }
-    /**
-     Cell Type Options
-     
-     - Icon: Cell contains a UIImage
-     - Text: Cell contains text
-     */
+
+    /// Cell Type Options
     enum Options {
+        /// Cell contains a UIImage
         case icon
+        /// Cell contains text
         case text
     }
     /// Default Cell type

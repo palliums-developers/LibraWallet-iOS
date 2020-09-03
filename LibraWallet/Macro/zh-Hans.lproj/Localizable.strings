@@ -262,9 +262,9 @@ wallet_deposit_orders_annualized_return_title = "年化收益率";
 /************* 数字银行存款明细 *******************/
 wallet_deposit_list_order_token_select_title = "全部币种";
 wallet_deposit_list_order_status_title = "全部状态";
-wallet_deposit_list_order_status_withdraw_finish_title = "已提取";
-wallet_deposit_list_order_status_withdraw_failed_title = "提取失败";
-wallet_deposit_list_order_status_withdraw_processing_title = "提取中";
+wallet_deposit_list_order_status_withdrawal_finish_title = "已提取";
+wallet_deposit_list_order_status_withdrawal_failed_title = "提取失败";
+wallet_deposit_list_order_status_withdrawal_processing_title = "提取中";
 wallet_deposit_list_order_status_deposit_finish_title = "已存款";
 wallet_deposit_list_order_status_deposit_failed_title = "存款失败";
 wallet_deposit_list_order_status_deposit_processing_title = "存款中";

@@ -108,6 +108,8 @@ enum mainRequest {
     case loanTransactions(String, Int, Int)
     /// 借款订单详情（地址、订单ID、请求类型（0:借贷明细 1:还款明细 2: 清算明细）、offset、limit）
     case loanTransactionDetail(String, String, Int, Int, Int)
+    /// 存款订单列表（地址、currency、status、offset、limit）
+    case depositList(String, String, Int, Int, Int)
 }
 extension mainRequest:TargetType {
     var baseURL: URL {
@@ -188,7 +190,8 @@ extension mainRequest:TargetType {
              .loanItemDetail(_, _),
              .depositTransactions(_, _, _),
              .loanTransactions(_, _, _),
-             .loanTransactionDetail(_, _, _, _, _):
+             .loanTransactionDetail(_, _, _, _, _),
+             .depositList(_, _, _, _, _):
             if PUBLISH_VERSION == true {
                 return URL(string:"https://api.violas.io")!
             } else {
@@ -293,6 +296,8 @@ extension mainRequest:TargetType {
             return "/1.0/violas/bank/borrow/orders"
         case .loanTransactionDetail(_, _, _, _, _):
             return "/1.0/violas/bank/borrow/order/detail"
+        case .depositList(_, _, _, _, _):
+            return "/1.0/violas/bank/deposit/order/list"
         }
     }
     var method: Moya.Method {
@@ -346,7 +351,8 @@ extension mainRequest:TargetType {
              .loanItemDetail(_, _),
              .depositTransactions(_, _, _),
              .loanTransactions(_, _, _),
-             .loanTransactionDetail(_, _, _, _, _):
+             .loanTransactionDetail(_, _, _, _, _),
+             .depositList(_, _, _, _, _):
             return .get
         }
     }
@@ -570,6 +576,22 @@ extension mainRequest:TargetType {
                                                    "q": requestType,
                                                    "offset": page,
                                                    "limit": limit],
+                                      encoding: URLEncoding.queryString)
+        case .depositList(let address, let currency, let status, let page, let limit):
+            var dic = [String: Any]()
+            if status == 999999 {
+                dic = ["address": address,
+                       "currency": currency,
+                       "offset": page,
+                       "limit": limit]
+            } else {
+                dic = ["address": address,
+                       "currency": currency,
+                       "status": status,
+                       "offset": page,
+                       "limit": limit]
+            }
+            return .requestParameters(parameters: dic,
                                       encoding: URLEncoding.queryString)
         }
     }

@@ -988,13 +988,13 @@
 				361BDA5324F8E7BD00C4C54E /* LoanOrderDetailLoanList */,
 				361BDA6824F8E7BD00C4C54E /* LoanOrderDetailDepositList */,
 				361BDA4124F8E7BD00C4C54E /* LoanOrderDetailClearingList */,
+				361BDA3524F8E7BD00C4C54E /* LoanList */,
 				361BDA2624F8E7BD00C4C54E /* Deposit */,
 				361BDA9D24F8E7BD00C4C54E /* DepositOrders */,
 				361BDA9324F8E7BD00C4C54E /* DepositMarket */,
-				361BDA3524F8E7BD00C4C54E /* LoanList */,
+				361BDAA824F8E7BD00C4C54E /* DepositList */,
 				361BDA7E24F8E7BD00C4C54E /* Repayment */,
 				361BDA5E24F8E7BD00C4C54E /* LoanMarket */,
-				361BDAA824F8E7BD00C4C54E /* DepositList */,
 			);
 			path = BankSection;
 			sourceTree = "<group>";

@@ -9,63 +9,58 @@
 import UIKit
 
 open class Dropper: UIView {
-    /**
-     Alignment of the dropdown menu compared to the button
-     
-     - Left: Dropdown is aligned to the left side the corresponding button
-     
-     - Center: Dropdown is aligned to the center of the corresponding button
-     
-     - Right: Dropdown is aligned to the right of the corresponding button
-     */
+    
+    /// Alignment of the dropdown menu compared to the button
     public enum Alignment {
+        /// Dropdown is aligned to the left side the corresponding button
         case left
+        /// Dropdown is aligned to the center of the corresponding button
         case center
+        /// Dropdown is aligned to the right of the corresponding button
         case right
     }
     
-    /**
-     Position of the dropdown, relative to the top or bottom of the button
-     
-     - Top:    Displayed on the top of the dropdown
-     - Bottom: Displayed on bottom of the dropdown
-     */
+    /// Position of the dropdown, relative to the top or bottom of the button
     public enum Position {
+        /// Displayed on the top of the dropdown
         case top
+        /// Displayed on bottom of the dropdown
         case bottom
     }
     
-    /**
-     The current status of the dropdowns state
-     
-     - Displayed: The dropdown is visible on screen
-     - Hidden: The dropdwon is hidden or offscreen.
-     
-     */
+    /// The current status of the dropdowns state
     public enum Status {
+        /// The dropdown is visible on screen
         case displayed
+        /// The dropdwon is hidden or offscreen.
         case hidden
+        /// The dropdown is visible on screen
         case shown
     }
     
-    /**
-     Default themes for dropdown menu
-     
-     - Black: Black theme for dropdown. Black background, white text
-     - White: White theme for dropdown. White background, black text
-     */
+    /// Default themes for dropdown menu
     public enum Themes {
-        case black(UIColor?), white
+        /// Black theme for dropdown. Black background, white text
+        case black(UIColor?)
+        /// White theme for dropdown. White background, black text
+        case white
     }
     
     // MARK: - Public Properties
-    open var trimCorners: Bool = false /// Automaticly applies border radius of 10 to Dropdown
-    open var defaultAnimationTime: TimeInterval = 0.1 /// The default time for animations to take
-    open var delegate: DropperDelegate? /// Delegate Property
-    open var status: Status = .hidden /// The current state of the view
-    open var spacing: CGFloat = 10 /// The distance from the button to the dropdown
-    open var maxHeight: CGFloat? /// The maximum possible height of the dropdown
-    open var cellBackgroundColor: UIColor? /// Sets the cell background color
+    /// Automaticly applies border radius of 10 to Dropdown
+    open var trimCorners: Bool = false
+    /// The default time for animations to take
+    open var defaultAnimationTime: TimeInterval = 0.1
+    /// Delegate Property
+    open var delegate: DropperDelegate?
+    /// The current state of the view
+    open var status: Status = .hidden
+    /// The distance from the button to the dropdown
+    open var spacing: CGFloat = 10
+    /// The maximum possible height of the dropdown
+    open var maxHeight: CGFloat?
+    /// Sets the cell background color
+    open var cellBackgroundColor: UIColor?
     /// Sets the cell tint color and text color
     open var cellColor: UIColor?
     open var cellTextSize: CGFloat? {
@@ -207,21 +202,11 @@ open class Dropper: UIView {
     
     // MARK: - API
     
-    /**
-     Displays the dropdown
-     
-     - parameter options: Position of the dropdown corresponding of the button
-     - parameter button: Button to which the dropdown will be aligned to
-     
-     */
-    
-    /**
-     Displays the dropdown
-     
-     - parameter options:  Vertical alignment of the dropdown corresponding of the button
-     - parameter position: Horizontal alignment of the dropdown. Defaults to bottom.
-     - parameter button:   Button to which the dropdown will be aligned to
-     */
+    /// Displays the dropdown
+    /// - Parameters:
+    ///   - options: Vertical alignment of the dropdown corresponding of the button
+    ///   - position: Horizontal alignment of the dropdown. Defaults to bottom.
+    ///   - button: Button to which the dropdown will be aligned to
     open func show(_ options: Alignment, position: Position = .bottom, button: UIButton) {
         refreshHeight()
         
@@ -257,13 +242,12 @@ open class Dropper: UIView {
         status = .displayed
     }
     
-    /**
-     Displays the dropdown with fade in type of aniamtion
-     
-     - parameter time:    Time taken for the fade animation
-     - parameter options: Position of the dropdown corresponding of the button
-     - parameter button:  Button to which the dropdown will be aligned to
-     */
+    /// Displays the dropdown with fade in type of aniamtion
+    /// - Parameters:
+    ///   - time: Time taken for the fade animation
+    ///   - options: Position of the dropdown corresponding of the button
+    ///   - position: Horizontal alignment of the dropdown. Defaults to bottom.
+    ///   - button: Button to which the dropdown will be aligned to
     open func showWithAnimation(_ time: TimeInterval, options: Alignment, position: Position = .bottom, button: UIButton) {
         if (self.isHidden) {
             refresh()
@@ -277,9 +261,7 @@ open class Dropper: UIView {
         })
     }
     
-    /**
-     Hides the dropdown from the view
-     */
+    /// Hides the dropdown from the view
     open func hide() {
         status = .hidden
         self.isHidden = true
@@ -288,11 +270,8 @@ open class Dropper: UIView {
         }
     }
     
-    /**
-     Fades out and hides the dropdown from the view
-     
-     - parameter time: Time taken to fade out the dropdown
-     */
+    /// Fades out and hides the dropdown from the view
+    /// - Parameter time: Time taken to fade out the dropdown
     open func hideWithAnimation(_ time: TimeInterval) {
         UIView.animate(withDuration: time, delay: 0.0, options: .curveEaseOut, animations: {
             self.TableMenu.alpha = 0.0
@@ -301,16 +280,12 @@ open class Dropper: UIView {
         })
     }
     
-    /**
-     Refresh the Tablemenu. For specifically calling .reloadData() on the TableView
-     */
+    /// Refresh the Tablemenu. For specifically calling .reloadData() on the TableView
     open func refresh() {
         TableMenu.reloadData()
     }
-    
-    /**
-     Refreshes the table view height
-     */
+
+    /// Refreshes the table view height
     fileprivate func refreshHeight() {
         // Updates the height of the view depending on the amount of item
         let tempHeight: CGFloat = CGFloat(items.count) * TableMenu.rowHeight // Height of TableView
@@ -320,15 +295,12 @@ open class Dropper: UIView {
             height = max_Height
         }
     }
-    
-    /**
-     Find corresponding button to which the dropdown is aligned too
-     
-     - parameter subviews: All subviews of where the button is.
-     - parameter button: Button to find
-     
-     - returns: Found button or nil
-     */
+
+    /// Find corresponding button to which the dropdown is aligned too
+    /// - Parameters:
+    ///   - subviews: All subviews of where the button is.
+    ///   - button: Button to find
+    /// - Returns: Found button or nil
     fileprivate func findButtonFromSubviews(_ subviews: [UIView], button: UIButton) -> UIView? {
         for subview in subviews {
             if (subview is UIButton && subview == button) {

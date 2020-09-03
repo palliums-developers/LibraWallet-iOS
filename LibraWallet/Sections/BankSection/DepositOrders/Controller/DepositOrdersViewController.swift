@@ -109,6 +109,7 @@ class DepositOrdersViewController: BaseViewController {
         let requestState = refresh == true ? 0:1
         self.dataModel.getDepositTransactions(address: WalletManager.shared.violasAddress!, page: self.dataOffset, limit: 10, requestStatus: requestState)
     }
+    var supprotTokens: [BankDepositMarketDataModel]?
 }
 //MARK: - 导航栏添加按钮
 extension DepositOrdersViewController {
@@ -122,7 +123,7 @@ extension DepositOrdersViewController {
     }
     @objc func checkOrder() {
         let vc = DepositListViewController.init()
-        vc.hidesBottomBarWhenPushed = true
+        vc.supprotTokens = self.supprotTokens
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }

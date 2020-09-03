@@ -15,6 +15,7 @@ class DepositListViewController: BaseViewController {
         // 加载子View
         self.view.addSubview(detailView)
         self.viewModel.initKVO()
+        self.detailView.tableView.mj_header?.beginRefreshing()
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -41,20 +42,15 @@ class DepositListViewController: BaseViewController {
     /// 子View
     lazy var detailView : DepositListView = {
         let view = DepositListView.init()
-        view.tableView.delegate = self.tableViewManager
-        view.tableView.dataSource = self.tableViewManager
         return view
     }()
     /// viewModel
     lazy var viewModel: DepositListViewModel = {
         let viewModel = DepositListViewModel.init()
         viewModel.view = self.detailView
+        viewModel.supprotTokens = self.supprotTokens
         return viewModel
     }()
-    /// tableView管理类
-    lazy var tableViewManager: DepositListTableViewManager = {
-        let manager = DepositListTableViewManager.init()
-//        manager.delegate = self
-        return manager
-    }()
+    var supprotTokens: [BankDepositMarketDataModel]?
+
 }

@@ -172,6 +172,7 @@ extension BankViewController: DropperDelegate {
         print(contents)
         if path.row == 0 {
             let vc = DepositOrdersViewController.init()
+            vc.supprotTokens = self.depositController.tableViewManager.dataModels
             vc.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController(vc, animated: true)
         } else {

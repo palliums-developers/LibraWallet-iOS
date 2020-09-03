@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MJRefresh
 
 class DepositListViewModel: NSObject {
     override init() {
@@ -17,6 +18,11 @@ class DepositListViewModel: NSObject {
     }
     var view: DepositListView? {
         didSet {
+            view?.delegate = self
+            view?.tableView.delegate = self.tableViewManager
+            view?.tableView.dataSource = self.tableViewManager
+            view?.tableView.mj_header = MJRefreshNormalHeader.init(refreshingTarget: self, refreshingAction:  #selector(refreshData))
+            view?.tableView.mj_footer = MJRefreshBackNormalFooter.init(refreshingTarget: self, refreshingAction:  #selector(getMoreData))
         }
     }
     /// 网络请求、数据模型
@@ -24,99 +30,138 @@ class DepositListViewModel: NSObject {
         let model = DepositListModel.init()
         return model
     }()
+    /// tableView管理类
+    lazy var tableViewManager: DepositListTableViewManager = {
+        let manager = DepositListTableViewManager.init()
+        //        manager.delegate = self
+        return manager
+    }()
     /// 数据监听KVO
     var observer: NSKeyValueObservation?
-    ///
-    private var firstRequestRate: Bool = true
-    /// timer
-    private var timer: Timer?
-}
-// MARK: - 网络请求逻辑处理
-extension DepositListViewModel {
-    func startAutoRefreshExchangeRate(inputCoinA: MarketSupportTokensDataModel, outputCoinB: MarketSupportTokensDataModel) {
-        self.timer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(refreshExchangeRate), userInfo: nil, repeats: true)
-        RunLoop.current.add(self.timer!, forMode: .common)
+    var dataOffset: Int = 0
+    @objc func refreshData() {
+        dataOffset = 0
+        view?.tableView.mj_footer?.resetNoMoreData()
+        transactionRequest(refresh: true)
     }
-    func stopAutoRefreshExchangeRate() {
-        self.timer?.invalidate()
-        self.timer = nil
+    @objc func getMoreData() {
+        dataOffset += 10
+        transactionRequest(refresh: false)
     }
-    @objc func refreshExchangeRate() {
-//        self.dataModel.getPoolTotalLiquidity(inputCoinA: (self.view?.headerView.transferInInputTokenA)!, inputCoinB: (self.view?.headerView.transferInInputTokenB)!)
+    func transactionRequest(refresh: Bool) {
+        let requestState = refresh == true ? 0:1
+        self.dataModel.getDepositList(address: WalletManager.shared.violasAddress!,
+                                      currency: requestOrderCurrency,
+                                      status: requestOrderStatus,
+                                      page: self.dataOffset,
+                                      limit: 10,
+                                      requestStatus: requestState)
     }
+    private var requestOrderStatus: Int = 999999
+    private var requestOrderCurrency: String = ""
+    var supprotTokens: [BankDepositMarketDataModel]?
 }
 // MARK: - 逻辑处理
-extension DepositListViewModel {
-    #warning("以后启用")
-    //    func handleConfirmCondition() throws -> (NSDecimalNumber, NSDecimalNumber, MarketSupportTokensDataModel, MarketSupportTokensDataModel) {
-    //        // ModelA不为空
-    //        guard let tempInputTokenA = self.view?.headerView.transferInInputTokenA else {
-    //            throw LibraWalletError.error(localLanguage(keyString: "wallet_market_exchange_input_token_unselect"))
-    //        }
-    //        // ModelB不为空
-    //        guard let tempInputTokenB = self.view?.headerView.transferInInputTokenB else {
-    //            throw LibraWalletError.error(localLanguage(keyString: "wallet_market_exchange_output_token_unselect"))
-    //        }
-    //        // 付出币激活状态
-    //        guard let tokenAActiveState = tempInputTokenA.activeState, tokenAActiveState == true else {
-    //            throw LibraWalletError.error(localLanguage(keyString: "wallet_market_exchange_input_token_unactived"))
-    //        }
-    //        // 金额不为空检查
-    //        guard let amountAString = self.view?.headerView.inputAmountTextField.text, amountAString.isEmpty == false else {
-    //            throw LibraWalletError.WalletTransfer(reason: .amountEmpty)
-    //
-    //        }
-    //        // 金额是否纯数字检查
-    //        guard isPurnDouble(string: amountAString) == true else {
-    //            throw LibraWalletError.WalletTransfer(reason: .amountInvalid)
-    //        }
-    //        // 转换数字
-    //        let amountIn = NSDecimalNumber.init(string: amountAString)
-    //
-    //        // 金额不为空检查
-    //        guard let amountBString = self.view?.headerView.outputAmountTextField.text, amountBString.isEmpty == false else {
-    //            throw LibraWalletError.WalletTransfer(reason: .amountEmpty)
-    //        }
-    //        // 金额是否纯数字检查
-    //        guard isPurnDouble(string: amountBString) == true else {
-    //            throw LibraWalletError.WalletTransfer(reason: .amountInvalid)
-    //        }
-    //        // 转换数字
-    //        let amountOut = NSDecimalNumber.init(string: amountBString)
-    //        guard amountIn.int64Value > 0 else {
-    //            throw LibraWalletError.WalletTransfer(reason: .amountInvalid)
-    //        }
-    //        guard amountOut.int64Value > 0 else {
-    //            throw LibraWalletError.WalletTransfer(reason: .amountInvalid)
-    //        }
-    //        // 金额超限检测
-    //        guard amountIn.multiplying(by: NSDecimalNumber.init(value: 1000000)).int64Value < (tempInputTokenA.amount ?? 0) else {
-    //            throw LibraWalletError.WalletTransfer(reason: .amountOverload)
-    //        }
-    //        // 金额超限检测
-    //        guard amountOut.multiplying(by: NSDecimalNumber.init(value: 1000000)).int64Value < (tempInputTokenB.amount ?? 0) else {
-    //            throw LibraWalletError.WalletTransfer(reason: .amountOverload)
-    //        }
-    //        return (amountIn, amountOut, tempInputTokenA, tempInputTokenB)
-    //    }
+extension DepositListViewModel: DepositListViewDelegate {
+    func filterOrdersWithCurrency() {
+        guard let tokens = self.supprotTokens else {
+            return
+        }
+        var tempContent = tokens.map {
+            $0.token_module ?? ""
+        }
+        tempContent.insert(localLanguage(keyString: "wallet_deposit_list_order_token_select_title"), at: 0)
+        let dropper = Dropper.init(x: 0, y: 0, width: 132, height: 90)
+        dropper.items = tempContent
+        dropper.theme = .black(UIColor.white)
+        dropper.cellTextFont = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
+        dropper.cellColor = UIColor.init(hex: "5C5C5C")
+        dropper.spacing = 12
+        dropper.delegate = self
+        // 定义阴影颜色
+        dropper.layer.shadowColor = UIColor.init(hex: "3D3949").cgColor
+        // 阴影的模糊半径
+        dropper.layer.shadowRadius = 3
+        // 阴影的偏移量
+        dropper.layer.shadowOffset = CGSize(width: 0, height: 0)
+        // 阴影的透明度，默认为0，不设置则不会显示阴影****
+        dropper.layer.shadowOpacity = 0.1
+        dropper.tag = 10
+        dropper.show(Dropper.Alignment.center, position: .bottom, button: self.view!.orderTokenSelectButton)
+    }
+    func filterOrdersWithStatus() {
+        let dropper = Dropper.init(x: 0, y: 0, width: 132, height: 36*5)
+        dropper.items = [localLanguage(keyString: "wallet_deposit_list_order_status_title"),
+                         localLanguage(keyString: "wallet_deposit_list_order_status_deposit_finish_title"),
+                         localLanguage(keyString: "wallet_deposit_list_order_status_withdrawal_finish_title"),
+                         localLanguage(keyString: "wallet_deposit_list_order_status_deposit_failed_title"),
+                         localLanguage(keyString: "wallet_deposit_list_order_status_withdrawal_failed_title")]
+        dropper.theme = .black(UIColor.white)
+        dropper.cellTextFont = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
+        dropper.cellColor = UIColor.init(hex: "5C5C5C")
+        dropper.spacing = 12
+        dropper.delegate = self
+        // 定义阴影颜色
+        dropper.layer.shadowColor = UIColor.init(hex: "3D3949").cgColor
+        // 阴影的模糊半径
+        dropper.layer.shadowRadius = 3
+        // 阴影的偏移量
+        dropper.layer.shadowOffset = CGSize(width: 0, height: 0)
+        // 阴影的透明度，默认为0，不设置则不会显示阴影****
+        dropper.layer.shadowOpacity = 0.1
+        dropper.tag = 20
+        dropper.show(Dropper.Alignment.center, position: .bottom, button: self.view!.orderStateButton)
+    }
+}
+extension DepositListViewModel: DropperDelegate {
+    func DropperSelectedRow(_ path: IndexPath, contents: String, tag: Int) {
+        if tag == 10 {
+            self.view?.orderTokenSelectButton.setTitle(contents, for: UIControl.State.normal)
+            self.view?.orderTokenSelectButton.imagePosition(at: .right, space: 5, imageViewSize: CGSize.init(width: 10, height: 10))
+
+        } else {
+            self.view?.orderStateButton.setTitle(contents, for: UIControl.State.normal)
+            self.view?.orderStateButton.imagePosition(at: .right, space: 5, imageViewSize: CGSize.init(width: 10, height: 10))
+
+        }
+        //999999: 默认 0（已存款），1（已提取），-1（提取失败），-2（存款失败）
+        var tempStatus = 999999
+        if self.view?.orderStateButton.titleLabel?.text == localLanguage(keyString: "wallet_deposit_list_order_status_deposit_finish_title") {
+            tempStatus = 0
+        } else if self.view?.orderStateButton.titleLabel?.text == localLanguage(keyString: "wallet_deposit_list_order_status_withdrawal_finish_title") {
+            tempStatus = 1
+        } else if self.view?.orderStateButton.titleLabel?.text == localLanguage(keyString: "wallet_deposit_list_order_status_withdrawal_failed_title") {
+            tempStatus = -1
+        } else if self.view?.orderStateButton.titleLabel?.text == localLanguage(keyString: "wallet_deposit_list_order_status_deposit_failed_title") {
+            tempStatus = -2
+        }
+        var tempCurrency = ""
+        if self.view?.orderTokenSelectButton.titleLabel?.text == localLanguage(keyString: "wallet_deposit_list_order_token_select_title") {
+            tempCurrency = ""
+        } else {
+            tempCurrency = self.view?.orderTokenSelectButton.titleLabel?.text ?? ""
+        }
+        self.requestOrderStatus = tempStatus
+        self.requestOrderCurrency = tempCurrency
+        print("request=\(tempCurrency)-\(tempStatus)")
+        self.view?.tableView.mj_header?.beginRefreshing()
+    }
 }
 // MARK: - 网络请求
 extension DepositListViewModel {
     func initKVO() {
         self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
             guard let dataDic = change.newValue, dataDic.count != 0 else {
-                self?.view?.toastView?.hide(tag: 99)
-                self?.view?.toastView?.hide(tag: 299)
                 self?.view?.hideToastActivity()
+//                self?.view?.endLoading()
                 return
             }
-            #warning("已修改完成，可拷贝执行")
             if let error = dataDic.value(forKey: "error") as? LibraWalletError {
                 // 隐藏请求指示
                 self?.view?.hideToastActivity()
-                self?.view?.toastView?.hide(tag: 99)
-                self?.view?.toastView?.hide(tag: 299)
-                self?.view?.toastView?.hide(tag: 399)
+                //                self?.view?.toastView?.hide(tag: 99)
+                //                self?.view?.toastView?.hide(tag: 299)
+                //                self?.view?.toastView?.hide(tag: 399)
                 if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
                     // 网络无法访问
                     print(error.localizedDescription)
@@ -149,82 +194,40 @@ extension DepositListViewModel {
                     self?.view?.makeToast(error.localizedDescription,
                                           position: .center)
                 }
-//                self?.view?.headerView.viewState = .Normal
                 return
             }
             let type = dataDic.value(forKey: "type") as! String
-            if type == "SupportViolasTokens" {
-//                guard let datas = dataDic.value(forKey: "data") as? [MarketSupportTokensDataModel] else {
-//                    return
-//                }
-//                var tempData = datas
-//                if self?.view?.headerView.viewState == .ExchangeSelectAToken {
-//                    if let selectBModel = self?.view?.headerView.transferInInputTokenB {
-//                        if self?.view?.headerView.transferInInputTokenB?.chainType == 0 {
-//                            tempData = tempData.filter {
-//                                $0.chainType != 0
-//                            }
-//                        } else {
-//                            tempData = tempData.filter {
-//                                $0.module != selectBModel.module
-//                            }
-//                        }
-//                    }
-//                } else {
-//                    if let selectBModel = self?.view?.headerView.transferInInputTokenA {
-//                        if self?.view?.headerView.transferInInputTokenA?.chainType == 0 {
-//                            tempData = tempData.filter {
-//                                $0.chainType != 0
-//                            }
-//                        } else {
-//                            tempData = tempData.filter {
-//                                $0.module != selectBModel.module
-//                            }
-//                        }
-//                    }
-//                }
-//                let alert = MappingTokenListAlert.init(data: tempData) { (model) in
-//                    print(model)
-//                    if self?.view?.headerView.viewState == .ExchangeSelectAToken {
-//                        self?.view?.headerView.transferInInputTokenA = model
-//                    } else {
-//                        self?.view?.headerView.transferInInputTokenB = model
-//                    }
-//                    self?.view?.headerView.viewState = .Normal
-//                }
-//                alert.show(tag: 199)
-//                alert.showAnimation()
-//            } else if type == "GetExchangeInfo" {
-//                guard let tempData = dataDic.value(forKey: "data") as? ExchangeInfoModel else {
-//                    return
-//                }
-//                self?.view?.headerView.exchangeModel = tempData
-//            } else if type == "SendViolasTransaction" {
-//                self?.view?.headerView.inputAmountTextField.text = ""
-//                self?.view?.headerView.outputAmountTextField.text = ""
-//                self?.view?.makeToast(localLanguage(keyString: "wallet_market_exchange_submit_exchange_successful"), position: .center)
-//            } else if type == "SendViolasToLibraMappingTransaction" {
-//                self?.view?.headerView.viewState = .Normal
-//                self?.view?.headerView.inputAmountTextField.text = ""
-//                self?.view?.headerView.outputAmountTextField.text = ""
-//                self?.view?.makeToast(localLanguage(keyString: "wallet_market_exchange_submit_exchange_successful"), position: .center)
-//            } else if type == "SendLibraToViolasTransaction" {
-//                self?.view?.headerView.viewState = .Normal
-//                self?.view?.headerView.inputAmountTextField.text = ""
-//                self?.view?.headerView.outputAmountTextField.text = ""
-//                self?.view?.makeToast(localLanguage(keyString: "wallet_market_exchange_submit_exchange_successful"), position: .center)
-//            } else if type == "SendBTCTransaction" {
-//                self?.view?.headerView.viewState = .Normal
-//                self?.view?.headerView.inputAmountTextField.text = ""
-//                self?.view?.headerView.outputAmountTextField.text = ""
-//                self?.view?.makeToast(localLanguage(keyString: "wallet_market_exchange_submit_exchange_successful"), position: .center)
-//            } else if type == "GetPoolTotalLiquidity" {
-//                print("获取流动性成功")
-//                self?.view?.toastView?.hide(tag: 299)
-//                return
+            if type == "GetBankDepositListOrigin" {
+                guard let tempData = dataDic.value(forKey: "data") as? [DepositListMainDataModel] else {
+                    return
+                }
+                self?.tableViewManager.dataModels = tempData
+                self?.view?.tableView.reloadData()
+            } else if type == "GetBankDepositListMore" {
+                guard let tempData = dataDic.value(forKey: "data") as? [DepositListMainDataModel] else {
+                    return
+                }
+                if let oldData = self?.tableViewManager.dataModels, oldData.isEmpty == false {
+                    let tempArray = NSMutableArray.init(array: oldData)
+                    var insertIndexPath = [IndexPath]()
+                    for index in 0..<tempData.count {
+                        let indexPath = IndexPath.init(row: oldData.count + index, section: 0)
+                        insertIndexPath.append(indexPath)
+                    }
+                    tempArray.addObjects(from: tempData)
+                    self?.tableViewManager.dataModels = tempArray as? [DepositListMainDataModel]
+                    self?.view?.tableView.beginUpdates()
+                    self?.view?.tableView.insertRows(at: insertIndexPath, with: UITableView.RowAnimation.bottom)
+                    self?.view?.tableView.endUpdates()
+                } else {
+                    self?.tableViewManager.dataModels = tempData
+                    self?.view?.tableView.reloadData()
+                }
+                self?.view?.tableView.mj_footer?.endRefreshing()
             }
+            self?.view?.tableView.mj_footer?.endRefreshing()
             self?.view?.hideToastActivity()
-            self?.view?.toastView?.hide(tag: 99)
+            self?.view?.tableView.mj_header?.endRefreshing()
         })
     }
 }

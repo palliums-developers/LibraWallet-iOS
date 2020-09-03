@@ -79,7 +79,7 @@ class DepositListTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "333333")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: UIFont.Weight.regular)
-        label.text = "Test测试"
+        label.text = "---"
         return label
     }()
     lazy var orderTimeLabel: UILabel = {
@@ -87,7 +87,7 @@ class DepositListTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "999999")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = "2020/05/04 18:22:22"
+        label.text = "---"
         return label
     }()
     lazy var orderAmountLabel: UILabel = {
@@ -95,7 +95,7 @@ class DepositListTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "333333")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 18), weight: UIFont.Weight.bold)
-        label.text = "99999.999"
+        label.text = "---"
         return label
     }()
     lazy var orderStatusLabel: UILabel = {
@@ -123,29 +123,26 @@ class DepositListTableViewCell: UITableViewCell {
             }
         }
     }
-    //    var model: TokenMappingListDataModel? {
-    //        didSet {
-    //            tokenNameLabel.text = model?.from_coin?.assert?.show_name
-    //            if let iconName = model?.from_coin?.assert?.icon, iconName.isEmpty == false {
-    //                let url = URL(string: iconName)
-    //                transactionTypeImageView.kf.setImage(with: url, placeholder: UIImage.init(named: "wallet_icon_default"))
-    //            }
-    //            var unit = 1000000
-    //            if model?.from_coin?.coin_type == "btc" {
-    //                unit = 100000000
-    //            }
-    //            amountLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + getDecimalNumberAmount(amount: NSDecimalNumber.init(value: model?.from_coin?.assert?.amount ?? 0),
-    //                                                                                                                  scale: 6,
-    //                                                                                                                  unit: unit)
-    //        }
-    //    }
-    var showSelectState: Bool? {
+    var model: DepositListMainDataModel? {
         didSet {
-            //            if showSelectState == true {
-            //                selectIndicatorImageView.alpha = 1
-            //            } else {
-            //                selectIndicatorImageView.alpha = 0
-            //            }
+            guard let tempModel = model else {
+                return
+            }
+            if let iconName = model?.logo, iconName.isEmpty == false {
+                if iconName.hasPrefix("http") {
+                    let url = URL(string: iconName)
+                    tokenIconImageView.kf.setImage(with: url, placeholder: UIImage.init(named: "wallet_icon_default"))
+                } else {
+                    tokenIconImageView.image = UIImage.init(named: iconName)
+                }
+            } else {
+                tokenIconImageView.image = UIImage.init(named: "wallet_icon_default")
+            }
+            orderTokenNameLabel.text = tempModel.currency
+            orderTimeLabel.text = timestampToDateString(timestamp: tempModel.date ?? 0, dateFormat: "yyyy/MM/dd HH:mm:ss")
+            orderAmountLabel.text = getDecimalNumber(amount: NSDecimalNumber.init(value: tempModel.value ?? 0),
+                                                     scale: 6,
+                                                     unit: 1000000).stringValue
         }
     }
 }
