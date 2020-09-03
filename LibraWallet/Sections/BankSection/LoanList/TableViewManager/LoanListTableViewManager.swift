@@ -13,7 +13,7 @@ import UIKit
 class LoanListTableViewManager: NSObject {
 //    weak var delegate: LoanListTableViewManagerDelegate?
     /// 数据
-    var dataModels: [Token]?
+    var dataModels: [LoanListMainDataModel]?
     deinit {
         print("LoanListTableViewManager销毁了")
     }
@@ -32,23 +32,23 @@ extension LoanListTableViewManager: UITableViewDelegate {
 }
 extension LoanListTableViewManager: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10//dataModel?.count ?? 0
+        return dataModels?.count ?? 0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let identifier = "CellNormal"
         if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? LoanListTableViewCell {
             cell.selectionStyle = .none;
-            //            if let data = dataModel, data.isEmpty == false {
-            //                cell.model = data[indexPath.row]
-            //            }
+            if let data = dataModels, data.isEmpty == false {
+                cell.model = data[indexPath.row]
+            }
             //            cell.hideSpcaeLineState = (data.count - 1) == indexPath.row ? true:false
             return cell
         } else {
             let cell = LoanListTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
             cell.selectionStyle = .none;
-            //            if let data = dataModel, data.isEmpty == false {
-            //                cell.model = data[indexPath.row]
-            //            }
+            if let data = dataModels, data.isEmpty == false {
+                cell.model = data[indexPath.row]
+            }
             return cell
         }
     }

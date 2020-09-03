@@ -288,6 +288,8 @@ wallet_bank_loan_detail_deposit_status_deposited_title = "Repaid";
 wallet_bank_loan_detail_deposit_status_depositing_title = "Repayment";
 wallet_bank_loan_detail_loan_status_loaned_title = "Loaned";
 wallet_bank_loan_detail_loan_status_loaning_title = "Loaning";
+wallet_bank_loan_detail_loan_status_failed_title = "Loan Failed";
+wallet_bank_loan_detail_deposit_status_failed_title = "Repaid Failed";
 
 /************* 数字银行还款 *******************/
 wallet_bank_repayment_button_title = "Repayment";

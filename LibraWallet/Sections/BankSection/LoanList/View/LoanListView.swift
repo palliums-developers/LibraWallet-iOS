@@ -8,7 +8,12 @@
 
 import UIKit
 
+protocol LoanListViewDelegate: NSObjectProtocol {
+    func filterOrdersWithCurrency()
+    func filterOrdersWithStatus()
+}
 class LoanListView: UIView {
+    weak var delegate: LoanListViewDelegate?
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.init(hex: "F7F7F9")
@@ -49,9 +54,9 @@ class LoanListView: UIView {
         button.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
         button.setImage(UIImage.init(named: "bank_deposit_list_select"), for: UIControl.State.normal)
         button.imagePosition(at: .right, space: 5, imageViewSize: CGSize.init(width: 10, height: 10))
-        //        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
+        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
         button.backgroundColor = UIColor.white
-        button.tag = 20
+        button.tag = 10
         return button
     }()
     lazy var orderStateButton: UIButton = {
@@ -61,7 +66,7 @@ class LoanListView: UIView {
         button.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
         button.setImage(UIImage.init(named: "bank_deposit_list_select"), for: UIControl.State.normal)
         button.imagePosition(at: .right, space: 5, imageViewSize: CGSize.init(width: 10, height: 10))
-        //        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
+        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
         button.backgroundColor = UIColor.white
         button.tag = 20
         return button
@@ -78,5 +83,12 @@ class LoanListView: UIView {
     var toastView: ToastView? {
         let toast = ToastView.init()
         return toast
+    }
+    @objc func buttonClick(button: UIButton) {
+        if button.tag == 10 {
+            self.delegate?.filterOrdersWithCurrency()
+        } else {
+            self.delegate?.filterOrdersWithStatus()
+        }
     }
 }

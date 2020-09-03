@@ -110,6 +110,8 @@ enum mainRequest {
     case loanTransactionDetail(String, String, Int, Int, Int)
     /// 存款订单列表（地址、currency、status、offset、limit）
     case depositList(String, String, Int, Int, Int)
+    /// 借款订单列表（地址、currency、status、offset、limit）
+    case loanList(String, String, Int, Int, Int)
 }
 extension mainRequest:TargetType {
     var baseURL: URL {
@@ -191,7 +193,8 @@ extension mainRequest:TargetType {
              .depositTransactions(_, _, _),
              .loanTransactions(_, _, _),
              .loanTransactionDetail(_, _, _, _, _),
-             .depositList(_, _, _, _, _):
+             .depositList(_, _, _, _, _),
+             .loanList(_, _, _, _, _):
             if PUBLISH_VERSION == true {
                 return URL(string:"https://api.violas.io")!
             } else {
@@ -298,6 +301,8 @@ extension mainRequest:TargetType {
             return "/1.0/violas/bank/borrow/order/detail"
         case .depositList(_, _, _, _, _):
             return "/1.0/violas/bank/deposit/order/list"
+        case .loanList(_, _, _, _, _):
+            return "/1.0/violas/bank/borrow/order/list"
         }
     }
     var method: Moya.Method {
@@ -352,7 +357,8 @@ extension mainRequest:TargetType {
              .depositTransactions(_, _, _),
              .loanTransactions(_, _, _),
              .loanTransactionDetail(_, _, _, _, _),
-             .depositList(_, _, _, _, _):
+             .depositList(_, _, _, _, _),
+             .loanList(_, _, _, _, _):
             return .get
         }
     }
@@ -578,6 +584,22 @@ extension mainRequest:TargetType {
                                                    "limit": limit],
                                       encoding: URLEncoding.queryString)
         case .depositList(let address, let currency, let status, let page, let limit):
+            var dic = [String: Any]()
+            if status == 999999 {
+                dic = ["address": address,
+                       "currency": currency,
+                       "offset": page,
+                       "limit": limit]
+            } else {
+                dic = ["address": address,
+                       "currency": currency,
+                       "status": status,
+                       "offset": page,
+                       "limit": limit]
+            }
+            return .requestParameters(parameters: dic,
+                                      encoding: URLEncoding.queryString)
+        case .loanList(let address, let currency, let status, let page, let limit):
             var dic = [String: Any]()
             if status == 999999 {
                 dic = ["address": address,

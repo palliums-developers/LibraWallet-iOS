@@ -288,6 +288,8 @@ wallet_bank_loan_detail_deposit_status_deposited_title = "已还款";
 wallet_bank_loan_detail_deposit_status_depositing_title = "还款中";
 wallet_bank_loan_detail_loan_status_loaned_title = "已借款";
 wallet_bank_loan_detail_loan_status_loaning_title = "借款中";
+wallet_bank_loan_detail_loan_status_failed_title = "借款失败";
+wallet_bank_loan_detail_deposit_status_failed_title = "还款失败";
 
 /************* 数字银行还款 *******************/
 wallet_bank_repayment_button_title = "立即还款";
