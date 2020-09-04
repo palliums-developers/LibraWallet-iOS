@@ -60,25 +60,25 @@ class BTCManagerTests: XCTestCase {
         XCTAssertEqual(result4, false)
     }
     func testCaculll() {
-        let code = Data.init(Array<UInt8>(hex: ViolasPublishScriptCode))
-        print(code.toHexString())
-        let range: Range = code.toHexString().range(of: "7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614")!
-        let location: Int = code.toHexString().distance(from: code.toHexString().startIndex, to: range.lowerBound)
-        print("location = \((location / 2) - 1)")
-        let location2 = ViolasManager().getViolasTokenContractLocation(code: ViolasPublishScriptCode, contract: "7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614")
-        print(location2)
-        
-        let data = ViolasManager.getCodeData(move: ViolasPublishScriptCode, address: "238adce0d1b40db648145473a7ba42e42d637dfbe8f7dd007c49a85f0e3a5d89")
-        print(data.toHexString())
+//        let code = Data.init(Array<UInt8>(hex: ViolasPublishScriptCode))
+//        print(code.toHexString())
+//        let range: Range = code.toHexString().range(of: "7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614")!
+//        let location: Int = code.toHexString().distance(from: code.toHexString().startIndex, to: range.lowerBound)
+//        print("location = \((location / 2) - 1)")
+//        let location2 = ViolasManager().getViolasTokenContractLocation(code: ViolasPublishScriptCode, contract: "7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614")
+//        print(location2)
+//
+//        let data = ViolasManager.getCodeData(move: ViolasPublishScriptCode, address: "238adce0d1b40db648145473a7ba42e42d637dfbe8f7dd007c49a85f0e3a5d89")
+//        print(data.toHexString())
     }
     func testExchange() {
-        let code = Data.init(Array<UInt8>(hex: ViolasStableCoinScriptWithDataCode))
-        print(code.toHexString())
-        let range: Range = code.toHexString().range(of: "7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614")!
-        let location: Int = code.toHexString().distance(from: code.toHexString().startIndex, to: range.lowerBound)
-        print("location = \((location / 2) - 1)")
-        let location2 = ViolasManager().getViolasTokenContractLocation(code: ViolasStableCoinScriptWithDataCode, contract: "7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614")
-        print(location2)
+//        let code = Data.init(Array<UInt8>(hex: ViolasStableCoinScriptWithDataCode))
+//        print(code.toHexString())
+//        let range: Range = code.toHexString().range(of: "7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614")!
+//        let location: Int = code.toHexString().distance(from: code.toHexString().startIndex, to: range.lowerBound)
+//        print("location = \((location / 2) - 1)")
+//        let location2 = ViolasManager().getViolasTokenContractLocation(code: ViolasStableCoinScriptWithDataCode, contract: "7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614")
+//        print(location2)
     }
     func testPasswordLogic() {
         XCTAssertEqual(false, handlePassword(password: "A"))
@@ -100,5 +100,51 @@ class BTCManagerTests: XCTestCase {
 //        data += Data.init(Array<UInt8>(hex: ("f086b6a2348ac502c708ac41d06fe824c91806cabcd5b2b5fa25ae1c50bed3c6")))
 //        data += UInt64(20200113201).bigEndian
 //        data += Data.init(Array<UInt8>(hex: ("cd0476e85ecc5fa71b61d84b9cf2f7fd524689a4f870c46d6a5d901b5ac1fdb2")))
+    }
+    func testBank() {
+//        let mnemonic1 = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
+        
+        let mnemonic = ["wrist", "post", "hover", "mixed", "like", "update", "salute", "access", "venture", "grant", "another", "team"]
+        
+//        let signature = try! ViolasManager.getBankFeaturesTransactionHex(sendAddress: "f41799563e5381b693d0885b56ebf19b",
+//                                                                         mnemonic: mnemonic,
+//                                                                         feeModule: "LBR",
+//                                                                         fee: 0,
+//                                                                         sequenceNumber: 9,
+//                                                                         module: "USD")
+        // 存钱
+//        let signature = try! ViolasManager.getBankDepositTransactionHex(sendAddress: "f41799563e5381b693d0885b56ebf19b",
+//                                                                        mnemonic: mnemonic,
+//                                                                        feeModule: "LBR",
+//                                                                        fee: 2,
+//                                                                        sequenceNumber: 10,
+//                                                                        module: "USD",
+//                                                                        amount: 20000000)
+        // 借钱
+//        let signature = try! ViolasManager.getBankLoanTransactionHex(sendAddress: "f41799563e5381b693d0885b56ebf19b",
+//                                                                        mnemonic: mnemonic,
+//                                                                        feeModule: "LBR",
+//                                                                        fee: 2,
+//                                                                        sequenceNumber: 11,
+//                                                                        module: "USD",
+//                                                                        amount: 5000000)
+        // 还钱
+//        let signature = try! ViolasManager.getBankRepaymentTransactionHex(sendAddress: "f41799563e5381b693d0885b56ebf19b",
+//                                                                          mnemonic: mnemonic,
+//                                                                          feeModule: "LBR",
+//                                                                          fee: 2,
+//                                                                          sequenceNumber: 13,
+//                                                                          module: "USD",
+//                                                                          amount: 1000000)
+        // 赎回
+//        let signature = try! ViolasManager.getBankRedeemTransactionHex(sendAddress: "f41799563e5381b693d0885b56ebf19b",
+//                                                                       mnemonic: mnemonic,
+//                                                                       feeModule: "LBR",
+//                                                                       fee: 2,
+//                                                                       sequenceNumber: 14,
+//                                                                       module: "USD",
+//                                                                       amount: 20000000)
+//
+//        print(signature)
     }
 }

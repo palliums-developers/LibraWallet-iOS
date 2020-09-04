@@ -163,7 +163,7 @@ extension BankViewController: LoanMarketViewControllerDelegate, DepositMarketVie
         guard self.startRefresh == false else {
             return
         }
-        self.dataModel.getBankAccountInfo(address: WalletManager.shared.violasAddress!)
+        self.dataModel.getBankAccountInfo(address: WalletManager.shared.violasAddress ?? "")
         self.startRefresh = true
     }
 }

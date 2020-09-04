@@ -332,17 +332,17 @@ class LibraSDKTests: XCTestCase {
     func testMarketTransaction() {
         //        let signature = try librama
         let mnemonic1 = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
-        let signature = try! ViolasManager.getMarketAddLiquidityTransactionHex(sendAddress: "fa279f2615270daed6061313a48360f7",
-                                                                               fee: 0,
-                                                                               mnemonic: mnemonic1,
-                                                                               amounta_desired: 5000,
-                                                                               amountb_desired: 5000,
-                                                                               amounta_min: 1,
-                                                                               amountb_min: 1,
-                                                                               sequenceNumber: 67,
-                                                                               inputModuleA: "VLSUSD",
-                                                                               inputModuleB: "VLSGBP",
-                                                                               feeModule: "LBR")
+//        let signature = try! ViolasManager.getMarketAddLiquidityTransactionHex(sendAddress: "fa279f2615270daed6061313a48360f7",
+//                                                                               fee: 0,
+//                                                                               mnemonic: mnemonic1,
+//                                                                               amounta_desired: 5000,
+//                                                                               amountb_desired: 5000,
+//                                                                               amounta_min: 1,
+//                                                                               amountb_min: 1,
+//                                                                               sequenceNumber: 67,
+//                                                                               inputModuleA: "VLSUSD",
+//                                                                               inputModuleB: "VLSGBP",
+//                                                                               feeModule: "LBR")
         //        let signature = try! ViolasManager.getMarketRemoveLiquidityTransactionHex(sendAddress: "fa279f2615270daed6061313a48360f7",
         //                                                                                  fee: 0,
         //                                                                                  mnemonic: mnemonic1,
@@ -363,21 +363,21 @@ class LibraSDKTests: XCTestCase {
         //                                                                           moduleA: "VLSUSD",
         //                                                                           moduleB: "VLSEUR",
         //                                                                           feeModule: "LBR")
-        print(signature)
+//        print(signature)
     }
     func testMarketMappingTransaction() {
         let mnemonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
-        let signature = try! ViolasManager.getViolasToLibraMappingTransactionHex(sendAddress: "fa279f2615270daed6061313a48360f7",
-                                                                                 module: "VLSUSD",
-                                                                                 amountIn: 15,
-                                                                                 amountOut: 14,
-                                                                                 fee: 0,
-                                                                                 mnemonic: mnemonic,
-                                                                                 sequenceNumber: 94,
-                                                                                 exchangeCenterAddress: "dc49a7c8979f83cde4bc229fb35fd27f",
-                                                                                 libraReceiveAddress: "fa279f2615270daed6061313a48360f7",
-                                                                                 feeModule: "LBR",
-                                                                                 type: "v2lusd")
+//        let signature = try! ViolasManager.getViolasToLibraMappingTransactionHex(sendAddress: "fa279f2615270daed6061313a48360f7",
+//                                                                                 module: "VLSUSD",
+//                                                                                 amountIn: 15,
+//                                                                                 amountOut: 14,
+//                                                                                 fee: 0,
+//                                                                                 mnemonic: mnemonic,
+//                                                                                 sequenceNumber: 94,
+//                                                                                 exchangeCenterAddress: "dc49a7c8979f83cde4bc229fb35fd27f",
+//                                                                                 libraReceiveAddress: "fa279f2615270daed6061313a48360f7",
+//                                                                                 feeModule: "LBR",
+//                                                                                 type: "v2lusd")
         //        let signature = try! LibraManager.getLibraToViolasMappingTransactionHex(sendAddress: "fa279f2615270daed6061313a48360f7",
         //                                                                         module: "LBR",
         //                                                                         amountIn: 10,
@@ -390,7 +390,7 @@ class LibraSDKTests: XCTestCase {
         //                                                                         feeModule: "LBR",
         //                                                                         type: "l2vusd")
         
-        print(signature)
+//        print(signature)
         
     }
     func testBTCScript() {
