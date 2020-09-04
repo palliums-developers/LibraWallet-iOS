@@ -419,6 +419,9 @@ wallet_market_exchange_submit_exchange_failed = "Transaction Submitted Failed";
 wallet_mapping_submit_successful = "Transaction Submitted";
 wallet_mapping_submit_failed = "Transaction Submitted Failed";
 wallet_mapping_output_token_unactived = "Output token unactived, Whether to activate and mapping right now";
+// 数字银行存款
+wallet_bank_deposit_submit_successful = "Transaction Submitted";
+wallet_bank_deposit_submit_failed = "Transaction Submitted Failed";
 
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "Safety Warning";
@@ -574,3 +577,11 @@ wallet_market_mapping_token_unpublish_error = "The stable token you are going to
 // 生物识别
 wallet_biometric_touch_id_attempts_too_much_error = "Touch ID is locked now, because of too many failed attempts.";
 wallet_biometric_face_id_attempts_too_much_error = "Face ID is locked now, because of too many failed attempts.";
+// 银行存款
+wallet_bank_deposit_token_unactivated_error = "Deposit token unactivated";
+wallet_bank_deposit_balance_empty_error = "Balance 0";
+wallet_bank_deposit_amount_invalid_error = "Input number invalid";
+wallet_bank_deposit_balance_insufficient_error = "Balance insufficient";
+wallet_bank_deposit_amount_too_little_error = "The input amount is lower than the minimum deposit amount";
+wallet_bank_deposit_quota_insufficient_error = "Quota insufficient";
+wallet_bank_deposit_data_invalid_error = "Data invalid";

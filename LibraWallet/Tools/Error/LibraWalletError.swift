@@ -276,6 +276,25 @@ public enum LibraWalletError: Error {
         case openDataBaseError
     }
     case WalletDataBase(reason: DataBaseError)
+    
+    public enum BankDepositError {
+        /// 充值币未开启
+        case tokenUnactivated
+        /// 余额为0
+        case balanceEmpty
+        /// 输入金额无效
+        case amountInvalid
+        /// 余额不足
+        case balanceInsufficient
+        /// 金额比最低充值限额低
+        case amountTooLittle
+        /// 额度不足
+        case quotaInsufficient
+        /// 数据异常
+        case dataInvalid
+    }
+    case WalletBankDeposit(reason: BankDepositError)
+
 }
 extension LibraWalletError: LocalizedError {
     public var errorDescription: String? {
@@ -311,6 +330,8 @@ extension LibraWalletError: LocalizedError {
         case .WalletMapping(let reason):
             return reason.localizedDescription
         case .WalletDataBase(reason: let reason):
+            return reason.localizedDescription
+        case .WalletBankDeposit(reason: let reason):
             return reason.localizedDescription
         }
     }
@@ -645,6 +666,32 @@ extension LibraWalletError.DataBaseError {
         case .openDataBaseError:
             #warning("待翻译")
             return localLanguage(keyString: "DataBase Invalid")
+        }
+    }
+}
+extension LibraWalletError.BankDepositError {
+    var localizedDescription: String {
+        switch self {
+        /// 充值币未开启
+        case .tokenUnactivated:
+            return localLanguage(keyString: "wallet_bank_deposit_token_unactivated_error")
+        /// 余额为0
+        case .balanceEmpty:
+            return localLanguage(keyString: "wallet_bank_deposit_balance_empty_error")
+        /// 输入金额无效
+        case .amountInvalid:
+            return localLanguage(keyString: "wallet_bank_deposit_amount_invalid_error")
+        /// 余额不足
+        case .balanceInsufficient:
+            return localLanguage(keyString: "wallet_bank_deposit_balance_insufficient_error")
+        /// 金额比最低充值限额低
+        case .amountTooLittle:
+            return localLanguage(keyString: "wallet_bank_deposit_amount_too_little_error")
+        /// 额度不足
+        case .quotaInsufficient:
+            return localLanguage(keyString: "wallet_bank_deposit_quota_insufficient_error")
+        case .dataInvalid:
+            return localLanguage(keyString: "wallet_bank_deposit_data_invalid_error")
         }
     }
 }

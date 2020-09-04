@@ -419,6 +419,9 @@ wallet_market_exchange_submit_exchange_failed = "兑换订单提交失败";
 wallet_mapping_submit_successful = "映射订单提交成功";
 wallet_mapping_submit_failed = "映射订单提交失败";
 wallet_mapping_output_token_unactived = "您想要映射的稳定币尚未激活，是否立即激活并映射";
+// 数字银行存款
+wallet_bank_deposit_submit_successful = "存款订单提交成功";
+wallet_bank_deposit_submit_failed = "存款订单提交失败";
 
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "安全提醒";
@@ -575,3 +578,11 @@ wallet_market_mapping_token_unpublish_error = "您将要映射的稳定币尚未
 // 生物识别
 wallet_biometric_touch_id_attempts_too_much_error = "由于尝试失败次数太多，指纹识别现在被锁定。";
 wallet_biometric_face_id_attempts_too_much_error = "由于尝试失败次数太多，面容识别现在被锁定。";
+// 银行存款
+wallet_bank_deposit_token_unactivated_error = "存款币尚未开启，请确认";
+wallet_bank_deposit_balance_empty_error = "余额为0";
+wallet_bank_deposit_amount_invalid_error = "输入无效";
+wallet_bank_deposit_balance_insufficient_error = "余额不足";
+wallet_bank_deposit_amount_too_little_error = "输入金额低于最低充值额度";
+wallet_bank_deposit_quota_insufficient_error = "存款额度不足";
+wallet_bank_deposit_data_invalid_error = "数据异常";

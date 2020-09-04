@@ -65,6 +65,7 @@ class DepositModel: NSObject {
     @objc dynamic var dataDic: NSMutableDictionary = [:]
     private var walletTokens: [ViolasBalanceModel]?
     private var depositItemModel: DepositItemDetailMainDataModel?
+    private var sequenceNumber: UInt64?
     deinit {
         requests.forEach { cancellable in
             cancellable.cancel()
@@ -90,6 +91,9 @@ class DepositModel: NSObject {
                                            contentColor: "333333",
                                            conentFont: UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular))]
     }
+}
+// MARK: - 获取详情、余额、拼接数据
+extension DepositModel {
     func getDepositItemDetailModel(itemID: String, address: String) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "GetBankTokenBalanceQueue")
@@ -106,6 +110,47 @@ class DepositModel: NSObject {
             self.handleBankTokenBalance()
             semaphore.signal()
         }
+    }
+    private func getDepositItemDetail(itemID: String, address: String, semaphore: DispatchSemaphore) {
+        let request = mainProvide.request(.depositItemDetail(itemID, address)) {[weak self](result) in
+            switch  result {
+            case let .success(response):
+                do {
+                    let json = try response.map(DepositItemDetailMainModel.self)
+                    if json.code == 2000 {
+                        guard let model = json.data else {
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: "GetLoanItemDetail")
+                            self?.setValue(data, forKey: "dataDic")
+                            print("GetLoanItemDetail_状态异常")
+                            return
+                        }
+                        self?.depositItemModel = model
+                        semaphore.signal()
+                    } else {
+                        print("GetLoanItemDetail_状态异常")
+                        if let message = json.message, message.isEmpty == false {
+                            let data = setKVOData(error: LibraWalletError.error(message), type: "GetLoanItemDetail")
+                            self?.setValue(data, forKey: "dataDic")
+                        } else {
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "GetLoanItemDetail")
+                            self?.setValue(data, forKey: "dataDic")
+                        }
+                    }
+                } catch {
+                    print("GetLoanItemDetail_解析异常\(error.localizedDescription)")
+                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetLoanItemDetail")
+                    self?.setValue(data, forKey: "dataDic")
+                }
+            case let .failure(error):
+                guard error.errorCode != -999 else {
+                    print("GetLoanItemDetail_网络请求已取消")
+                    return
+                }
+                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "GetLoanItemDetail")
+                self?.setValue(data, forKey: "dataDic")
+            }
+        }
+        self.requests.append(request)
     }
     private func getViolasBalance(address: String, semaphore: DispatchSemaphore) {
         let request = mainProvide.request(.GetViolasAccountInfo(address)) {[weak self](result) in
@@ -151,47 +196,146 @@ class DepositModel: NSObject {
         })
     }
 }
+// MARK: - 存款
 extension DepositModel {
-    private func getDepositItemDetail(itemID: String, address: String, semaphore: DispatchSemaphore) {
-        let request = mainProvide.request(.loanItemDetail(itemID, address)) {[weak self](result) in
+    func sendDepositTransaction(sendAddress: String, amount: UInt64, fee: UInt64, mnemonic: [String], module: String, feeModule: String, activeState: Bool) {
+        let semaphore = DispatchSemaphore.init(value: 1)
+        let queue = DispatchQueue.init(label: "SendQueue")
+        #warning("稍后处理激活银行操作")
+//        if activeState == false {
+//            queue.async {
+//                semaphore.wait()
+//                self.getViolasSequenceNumber(sendAddress: sendAddress, semaphore: semaphore)
+//            }
+//            queue.async {
+//                semaphore.wait()
+//                do {
+//                    let signature = try ViolasManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
+//                                                                                    fee: 0,
+//                                                                                    sequenceNumber: self.sequenceNumber ?? 0,
+//                                                                                    inputModule: module)
+//                    self.makeViolasTransaction(signature: signature, type: "SendPublishOutputModuleViolasTransaction", semaphore: semaphore)
+//                } catch {
+//                    print(error.localizedDescription)
+//                    DispatchQueue.main.async(execute: {
+//                        let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "SendPublishOutputModuleViolasTransaction")
+//                        self.setValue(data, forKey: "dataDic")
+//                    })
+//                }
+//            }
+//        }
+        queue.async {
+            semaphore.wait()
+            self.getViolasSequenceNumber(sendAddress: sendAddress, semaphore: semaphore)
+        }
+        queue.async {
+            semaphore.wait()
+            do {
+                let signature = try ViolasManager.getBankDepositTransactionHex(sendAddress: sendAddress,
+                                                                                mnemonic: mnemonic,
+                                                                                feeModule: feeModule,
+                                                                                fee: fee,
+                                                                                sequenceNumber: self.sequenceNumber ?? 0,
+                                                                                module: module,
+                                                                                amount: amount)
+                self.makeViolasTransaction(signature: signature, type: "SendViolasBankDepositTransaction")
+            } catch {
+                print(error.localizedDescription)
+                DispatchQueue.main.async(execute: {
+                    let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "SendViolasBankDepositTransaction")
+                    self.setValue(data, forKey: "dataDic")
+                })
+            }
+            semaphore.signal()
+        }
+    }
+    private func getViolasSequenceNumber(sendAddress: String, semaphore: DispatchSemaphore) {
+        let request = mainProvide.request(.GetViolasAccountInfo(sendAddress)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(DepositItemDetailMainModel.self)
-                    if json.code == 2000 {
-                        guard let model = json.data else {
-                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: "GetLoanItemDetail")
-                            self?.setValue(data, forKey: "dataDic")
-                            print("GetLoanItemDetail_状态异常")
-                            return
-                        }
-                        self?.depositItemModel = model
+                    let json = try response.map(BalanceViolasMainModel.self)
+                    if json.error == nil {
+                        self?.sequenceNumber = json.result?.sequence_number ?? 0
                         semaphore.signal()
                     } else {
-                        print("GetLoanItemDetail_状态异常")
-                        if let message = json.message, message.isEmpty == false {
-                            let data = setKVOData(error: LibraWalletError.error(message), type: "GetLoanItemDetail")
-                            self?.setValue(data, forKey: "dataDic")
-                        } else {
-                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "GetLoanItemDetail")
-                            self?.setValue(data, forKey: "dataDic")
-                        }
+                        print("GetViolasSequenceNumber_状态异常")
+                        DispatchQueue.main.async(execute: {
+                            if let message = json.error?.message, message.isEmpty == false {
+                                let data = setKVOData(error: LibraWalletError.error(message), type: "GetViolasSequenceNumber")
+                                self?.setValue(data, forKey: "dataDic")
+                            } else {
+                                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "SendLibraTransaction")
+                                self?.setValue(data, forKey: "dataDic")
+                            }
+                        })
                     }
                 } catch {
-                    print("GetLoanItemDetail_解析异常\(error.localizedDescription)")
-                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetLoanItemDetail")
-                    self?.setValue(data, forKey: "dataDic")
+                    print("GetViolasSequenceNumber_解析异常\(error.localizedDescription)")
+                    DispatchQueue.main.async(execute: {
+                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetViolasSequenceNumber")
+                        self?.setValue(data, forKey: "dataDic")
+                    })
                 }
             case let .failure(error):
                 guard error.errorCode != -999 else {
-                    print("GetLoanItemDetail_网络请求已取消")
+                    print("GetViolasSequenceNumber_网络请求已取消")
                     return
                 }
-                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "GetLoanItemDetail")
-                self?.setValue(data, forKey: "dataDic")
+                DispatchQueue.main.async(execute: {
+                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "GetViolasSequenceNumber")
+                    self?.setValue(data, forKey: "dataDic")
+                })
             }
         }
         self.requests.append(request)
     }
-
+    private func makeViolasTransaction(signature: String, type: String, semaphore: DispatchSemaphore? = nil) {
+        let request = mainProvide.request(.SendViolasTransaction(signature)) {[weak self](result) in
+            switch  result {
+            case let .success(response):
+                do {
+                    let json = try response.map(LibraTransferMainModel.self)
+                    if json.result == nil {
+                        DispatchQueue.main.async(execute: {
+                            if let sema = semaphore {
+                                sema.signal()
+                            } else {
+                                let data = setKVOData(type: type)
+                                self?.setValue(data, forKey: "dataDic")
+                            }
+                        })
+                    } else {
+                        print("\(type)_状态异常")
+                        DispatchQueue.main.async(execute: {
+                            if let message = json.error?.message, message.isEmpty == false {
+                                let data = setKVOData(error: LibraWalletError.error(message), type: type)
+                                self?.setValue(data, forKey: "dataDic")
+                            } else {
+                                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: type)
+                                self?.setValue(data, forKey: "dataDic")
+                            }
+                        })
+                    }
+                } catch {
+                    print("\(type)_解析异常\(error.localizedDescription)")
+                    DispatchQueue.main.async(execute: {
+                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: type)
+                        self?.setValue(data, forKey: "dataDic")
+                    })
+                }
+            case let .failure(error):
+                guard error.errorCode != -999 else {
+                    print("\(type)_网络请求已取消")
+                    return
+                }
+                DispatchQueue.main.async(execute: {
+                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: type)
+                    self?.setValue(data, forKey: "dataDic")
+                })
+                
+            }
+        }
+        self.requests.append(request)
+    }
 }

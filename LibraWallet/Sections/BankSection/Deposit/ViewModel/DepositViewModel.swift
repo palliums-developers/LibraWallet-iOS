@@ -70,8 +70,9 @@ extension DepositViewModel: DepositDescribeTableViewHeaderViewDelegate {
 }
 extension DepositViewModel: DepositTableViewHeaderViewDelegate {
     func selectTotalBalance(header: DepositTableViewHeaderView, model: DepositItemDetailMainDataModel) {
-        if (model.token_balance ?? 0) > (model.minimum_amount ?? 0) {
-            let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model.minimum_amount ?? 0),
+        let leastAmount = (NSDecimalNumber.init(value: header.productModel?.quota_limit ?? 0).subtracting(NSDecimalNumber.init(value: header.productModel?.quota_used ?? 0)))
+        if (model.token_balance ?? 0) > leastAmount.uint64Value {
+            let amount = getDecimalNumber(amount: leastAmount,
                                           scale: 6,
                                           unit: 1000000)
             header.depositAmountTextField.text = amount.stringValue
@@ -111,12 +112,13 @@ extension DepositViewModel: UITextFieldDelegate {
         }
     }
     private func handleInputAmount(textField: UITextField, content: String) -> Bool {
-        let amount = NSDecimalNumber.init(string: content).multiplying(by: NSDecimalNumber.init(value: 1000000)).int64Value
-        if amount <= self.tableViewManager.model?.minimum_amount ?? 0 && amount <= self.tableViewManager.model?.token_balance ?? 0 {
+        let amount = NSDecimalNumber.init(string: content).multiplying(by: NSDecimalNumber.init(value: 1000000)).uint64Value
+        let leastAmount = (NSDecimalNumber.init(value: self.tableViewManager.model?.quota_limit ?? 0).subtracting(NSDecimalNumber.init(value: self.tableViewManager.model?.quota_used ?? 0)))
+        if amount >= (self.tableViewManager.model?.minimum_amount ?? 0) && amount <= (self.tableViewManager.model?.token_balance ?? 0) {
             return true
         } else {
-            if (self.tableViewManager.model?.token_balance ?? 0) > (self.tableViewManager.model?.minimum_amount ?? 0) {
-                let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: self.tableViewManager.model?.minimum_amount ?? 0),
+            if (self.tableViewManager.model?.token_balance ?? 0) > leastAmount.uint64Value {
+                let amount = getDecimalNumber(amount: leastAmount,
                                               scale: 6,
                                               unit: 1000000)
                 textField.text = amount.stringValue
@@ -135,40 +137,52 @@ extension DepositViewModel: DepositViewDelegate {
         do {
             let amount = try handleConfirmCondition()
             print(amount)
+            WalletManager.unlockWallet(successful: { [weak self] mnemonic in
+                self?.view?.toastView?.show(tag: 99)
+                self?.dataModel.sendDepositTransaction(sendAddress: WalletManager.shared.violasAddress!,
+                                                      amount: amount,
+                                                      fee: 10,
+                                                      mnemonic: mnemonic,
+                                                      module: self?.tableViewManager.model?.token_module ?? "",
+                                                      feeModule: self?.tableViewManager.model?.token_module ?? "",
+                                                      activeState: true)
+            }) { [weak self] errorContent in
+                self?.view?.makeToast(errorContent, position: .center)
+            }
         } catch {
             self.view?.makeToast(error.localizedDescription, position: .center)
         }
     }
-    func handleConfirmCondition() throws -> Int64 {
+    func handleConfirmCondition() throws -> UInt64 {
         guard let header = self.view?.tableView.headerView(forSection: 0) as? DepositTableViewHeaderView else {
-            throw LibraWalletError.error("Unkwon Error")
+            throw LibraWalletError.WalletBankDeposit(reason: .dataInvalid)
         }
         guard self.tableViewManager.model?.token_active_state == true else {
-            throw LibraWalletError.error("UnActive Token")
+            throw LibraWalletError.WalletBankDeposit(reason: .tokenUnactivated)
         }
         guard let balance = self.tableViewManager.model?.token_balance, balance > 0 else {
-            throw LibraWalletError.error("Account Balance Empty")
+            throw LibraWalletError.WalletBankDeposit(reason: .balanceEmpty)
         }
         guard let amountString = header.depositAmountTextField.text, amountString.isEmpty == false else {
-            throw LibraWalletError.error("Amount Invalid")
+            throw LibraWalletError.WalletBankDeposit(reason: .amountInvalid)
         }
         guard isPurnDouble(string: amountString) else {
-            throw LibraWalletError.error("Amount Invalid")
+            throw LibraWalletError.WalletBankDeposit(reason: .amountInvalid)
         }
         let amount = NSDecimalNumber.init(string: amountString).multiplying(by: NSDecimalNumber.init(value: 1000000))
         // 比余额多
-        guard amount.int64Value < (header.productModel?.token_balance ?? 0) else {
-            throw LibraWalletError.error("Amount Too big")
+        guard amount.uint64Value < (header.productModel?.token_balance ?? 0) else {
+            throw LibraWalletError.WalletBankDeposit(reason: .balanceInsufficient)
         }
         // 比最少充值金额多
-        guard amount.int64Value > (header.productModel?.minimum_amount ?? 0) else {
-            throw LibraWalletError.error("Amount Too Least")
+        guard amount.uint64Value > (header.productModel?.minimum_amount ?? 0) else {
+            throw LibraWalletError.WalletBankDeposit(reason: .amountTooLittle)
         }
         // 比每日限额少
-        guard amount.int64Value < (NSDecimalNumber.init(value: header.productModel?.quota_limit ?? 0).subtracting(NSDecimalNumber.init(value: header.productModel?.quota_used ?? 0))).int64Value else {
-            throw LibraWalletError.error("Amount over limit")
+        guard amount.uint64Value < (NSDecimalNumber.init(value: header.productModel?.quota_limit ?? 0).subtracting(NSDecimalNumber.init(value: header.productModel?.quota_used ?? 0))).uint64Value else {
+            throw LibraWalletError.WalletBankDeposit(reason: .quotaInsufficient)
         }
-        return amount.int64Value
+        return amount.uint64Value
     }
 }
 // MARK: - 网络请求
@@ -229,9 +243,20 @@ extension DepositViewModel {
                 // 刷新第一个Section各种信息
                 self?.tableViewManager.dataModels = self?.dataModel.getLocalModel(model: tempData)
                 self?.view?.tableView.reloadData()
+                self?.view?.toastView?.hide(tag: 99)
+                self?.view?.hideToastActivity()
+            } else if type == "SendViolasBankDepositTransaction" {
+                self?.view?.toastView?.hide(tag: 99)
+                self?.view?.hideToastActivity()
+                self?.view?.makeToast(localLanguage(keyString: "wallet_bank_deposit_submit_successful"), position: .center)
+//                self?.view.makeToast(localLanguage(keyString: "wallet_bank_deposit_submit_successful"), duration: toastDuration, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
+//                    self?.needReject = false
+//                    if let confirmAction = self?.confirm {
+//                        confirmAction("success")
+//                    }
+//                    self?.dismiss(animated: true, completion: nil)
+//                })
             }
-            self?.view?.hideToastActivity()
-            self?.view?.toastView?.hide(tag: 99)
         })
     }
 }
