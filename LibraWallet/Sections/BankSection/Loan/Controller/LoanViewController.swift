@@ -19,7 +19,7 @@ class LoanViewController: BaseViewController {
         self.viewModel.initKVO()
         // 加载数据
         self.detailView.toastView?.show(tag: 99)
-        self.viewModel.dataModel.getLoanItemDetail(itemID: self.itemID ?? "",
+        self.viewModel.dataModel.getLoanItemDetailModel(itemID: self.itemID ?? "",
                                                    address: WalletManager.shared.violasAddress!)
     }
     override func viewWillLayoutSubviews() {

@@ -278,7 +278,7 @@ public enum LibraWalletError: Error {
     case WalletDataBase(reason: DataBaseError)
     
     public enum BankDepositError {
-        /// 充值币未开启
+        /// 存款未开启
         case tokenUnactivated
         /// 余额为0
         case balanceEmpty
@@ -294,7 +294,25 @@ public enum LibraWalletError: Error {
         case dataInvalid
     }
     case WalletBankDeposit(reason: BankDepositError)
-
+    
+    public enum BankLoanError {
+        /// 借款币未开启
+        case tokenUnactivated
+        /// 未输入金额
+        case amountEmpty
+        /// 输入金额无效
+        case amountInvalid
+        /// 金额比最低充值限额低
+        case amountTooLittle
+        /// 额度不足
+        case quotaInsufficient
+        /// 数据异常
+        case dataInvalid
+        /// 未同意借款协议
+        case disagreeLegal
+    }
+    case WalletBankLoan(reason: BankLoanError)
+    
 }
 extension LibraWalletError: LocalizedError {
     public var errorDescription: String? {
@@ -332,6 +350,8 @@ extension LibraWalletError: LocalizedError {
         case .WalletDataBase(reason: let reason):
             return reason.localizedDescription
         case .WalletBankDeposit(reason: let reason):
+            return reason.localizedDescription
+        case .WalletBankLoan(reason: let reason):
             return reason.localizedDescription
         }
     }
@@ -692,6 +712,33 @@ extension LibraWalletError.BankDepositError {
             return localLanguage(keyString: "wallet_bank_deposit_quota_insufficient_error")
         case .dataInvalid:
             return localLanguage(keyString: "wallet_bank_deposit_data_invalid_error")
+        }
+    }
+}
+extension LibraWalletError.BankLoanError {
+    var localizedDescription: String {
+        switch self {
+        /// 充值币未开启
+        case .tokenUnactivated:
+            return localLanguage(keyString: "wallet_bank_loan_token_unactivated_error")
+        /// 余额为0
+        case .amountEmpty:
+            return localLanguage(keyString: "wallet_bank_loan_amount_empty_error")
+        /// 输入金额无效
+        case .amountInvalid:
+            return localLanguage(keyString: "wallet_bank_loan_amount_invalid_error")
+        /// 金额比最低充值限额低
+        case .amountTooLittle:
+            return localLanguage(keyString: "wallet_bank_loan_amount_too_little_error")
+        /// 额度不足
+        case .quotaInsufficient:
+            return localLanguage(keyString: "wallet_bank_loan_quota_insufficient_error")
+        /// 数据异常
+        case .dataInvalid:
+            return localLanguage(keyString: "wallet_bank_loan_data_invalid_error")
+        /// 余额不足
+        case .disagreeLegal:
+            return localLanguage(keyString: "wallet_bank_loan_disagree_legal_error")
         }
     }
 }

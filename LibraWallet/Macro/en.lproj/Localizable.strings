@@ -329,8 +329,8 @@ wallet_bank_loan_pay_account_title = "Pledge account";
 wallet_bank_loan_pay_account_content = "Bank Balance";
 wallet_bank_loan_describe_title = "Product Introduce";
 wallet_bank_loan_question_title = "Q&A";
-wallet_bank_loan_legal_button_conent = "I have read and agree Pledge & Loan service agreement";
-wallet_bank_loan_legal_agreement_match_contnet = "Pledge & Loan service agreement";
+wallet_bank_loan_legal_button_conent = "I have read and agree Pledge & Loan Service Agreement";
+wallet_bank_loan_legal_agreement_match_contnet = "Pledge & Loan Service Agreement";
 
 /************* 弹出提示 *******************/
 // 转账弹出提示
@@ -422,6 +422,13 @@ wallet_mapping_output_token_unactived = "Output token unactived, Whether to acti
 // 数字银行存款
 wallet_bank_deposit_submit_successful = "Transaction Submitted";
 wallet_bank_deposit_submit_failed = "Transaction Submitted Failed";
+// 数字银行贷款
+wallet_bank_loan_token_unactivated_alert_title = "Tips";
+wallet_bank_loan_token_unactivated_alert_content = "The loan currency you selected has not been activated yet, whether to activate and loan immediately";
+wallet_bank_loan_token_unactivated_alert_cancel_button_title = "Cancel";
+wallet_bank_loan_token_unactivated_alert_confirm_button_title = "Confirm";
+wallet_bank_loan_submit_successful = "Transaction Submitted";
+wallet_bank_loan_submit_failed = "Transaction Submitted Failed";
 
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "Safety Warning";
@@ -585,3 +592,11 @@ wallet_bank_deposit_balance_insufficient_error = "Balance insufficient";
 wallet_bank_deposit_amount_too_little_error = "The input amount is lower than the minimum deposit amount";
 wallet_bank_deposit_quota_insufficient_error = "Quota insufficient";
 wallet_bank_deposit_data_invalid_error = "Data invalid";
+// 银行借款
+wallet_bank_loan_token_unactivated_error = "Loan token unactivated";
+wallet_bank_loan_amount_empty_error = "Input empty";
+wallet_bank_loan_amount_invalid_error = "Input invalid";
+wallet_bank_loan_amount_too_little_error = "The input amount is lower than the minimum loan amount";
+wallet_bank_loan_quota_insufficient_error = "Quota insufficient";
+wallet_bank_loan_data_invalid_error = "Data invalid";
+wallet_bank_loan_disagree_legal_error = "Please agree Pledge & Loan Service Agreement";

@@ -56,16 +56,16 @@ extension LoanViewModel: LoanViewDelegate {
         do {
             let (amount, activeState) = try handleConfirmCondition()
             if activeState == false {
-                self.unActiveAlert(amount: amount)
+                self.unactivatedAlert(amount: amount)
             } else {
                 WalletManager.unlockWallet(successful: { [weak self] (mnemonic) in
                     self?.view?.toastView?.show(tag: 99)
                     self?.dataModel.sendLoanTransaction(sendAddress: WalletManager.shared.violasAddress!,
                                                         amount: UInt64(amount),
-                                                        fee: 0,
+                                                        fee: 10,
                                                         mnemonic: mnemonic,
-                                                        module: "",
-                                                        feeModule: "",
+                                                        module: self?.tableViewManager.model?.token_module ?? "",
+                                                        feeModule: self?.tableViewManager.model?.token_module ?? "",
                                                         activeState: true)
                 }) { (errorContent) in
                     self.view?.makeToast(errorContent, position: .center)
@@ -76,48 +76,51 @@ extension LoanViewModel: LoanViewDelegate {
             self.view?.makeToast(error.localizedDescription, position: .center)
         }
     }
-    func handleConfirmCondition() throws -> (Int64, Bool) {
+    func handleConfirmCondition() throws -> (UInt64, Bool) {
+        // 获取TableViewHeader
         guard let header = self.view?.tableView.headerView(forSection: 0) as? LoanTableViewHeaderView else {
-            throw LibraWalletError.error("Unkwon Error")
+            throw LibraWalletError.WalletBankLoan(reason: .dataInvalid)
         }
+        // 获取输入借贷金额
         guard let amountString = header.loanAmountTextField.text, amountString.isEmpty == false else {
-            throw LibraWalletError.error("Amount Invalid")
+            throw LibraWalletError.WalletBankLoan(reason: .amountEmpty)
         }
+        // 检查金额是否为纯数字
         guard isPurnDouble(string: amountString) else {
-            throw LibraWalletError.error("Amount Invalid")
+            throw LibraWalletError.WalletBankLoan(reason: .amountInvalid)
         }
         let amount = NSDecimalNumber.init(string: amountString).multiplying(by: NSDecimalNumber.init(value: 1000000))
-        // 比最少充值金额多
-        guard amount.int64Value > (header.productModel?.minimum_amount ?? 0) else {
-            throw LibraWalletError.error("Amount Too Least")
+        // 检查是否低于最低借贷金额
+        guard amount.uint64Value > (header.productModel?.minimum_amount ?? 0) else {
+            throw LibraWalletError.WalletBankLoan(reason: .tokenUnactivated)
         }
-        // 比每日限额少
-        guard amount.int64Value < (NSDecimalNumber.init(value: header.productModel?.quota_limit ?? 0).subtracting(NSDecimalNumber.init(value: header.productModel?.quota_used ?? 0))).int64Value else {
-            throw LibraWalletError.error("Amount over limit")
+        // 检查是否超过每日限额
+        guard amount.uint64Value < (NSDecimalNumber.init(value: header.productModel?.quota_limit ?? 0).subtracting(NSDecimalNumber.init(value: header.productModel?.quota_used ?? 0))).uint64Value else {
+            throw LibraWalletError.WalletBankLoan(reason: .quotaInsufficient)
         }
-        // 未同意协议
+        // 检查是否同意协议
         guard self.view?.legalButton.imageView?.image != UIImage.init(named: "unselect") else {
-            throw LibraWalletError.WalletAddWallet(reason: .notAgreeLegalError)
+            throw LibraWalletError.WalletBankLoan(reason: .disagreeLegal)
         }
-        return (amount.int64Value, header.productModel?.token_active_state ?? false)
+        return (amount.uint64Value, header.productModel?.token_active_state ?? false)
     }
-    func unActiveAlert(amount: Int64) {
-        let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_alert_delete_address_title"), message: localLanguage(keyString: "wallet_market_exchange_output_token_unactived"), preferredStyle: .alert)
-        alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_alert_delete_address_confirm_button_title"), style: .default){ [weak self] clickHandler in
+    func unactivatedAlert(amount: UInt64) {
+        let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_bank_loan_token_unactivated_alert_title"), message: localLanguage(keyString: "wallet_bank_loan_token_unactivated_alert_content"), preferredStyle: .alert)
+        alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_bank_loan_token_unactivated_alert_confirm_button_title"), style: .default){ [weak self] clickHandler in
             WalletManager.unlockWallet(successful: { [weak self] (mnemonic) in
                 self?.view?.toastView?.show(tag: 99)
                 self?.dataModel.sendLoanTransaction(sendAddress: WalletManager.shared.violasAddress!,
-                                                    amount: UInt64(amount),
-                                                    fee: 0,
+                                                    amount: amount,
+                                                    fee: 10,
                                                     mnemonic: mnemonic,
-                                                    module: "",
-                                                    feeModule: "",
+                                                    module: self?.tableViewManager.model?.token_module ?? "",
+                                                    feeModule: self?.tableViewManager.model?.token_module ?? "",
                                                     activeState: true)
             }) { (errorContent) in
                 self?.view?.makeToast(errorContent, position: .center)
             }
         })
-        alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_alert_delete_address_cancel_button_title"), style: .cancel){ clickHandler in
+        alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_bank_loan_token_unactivated_alert_cancel_button_title"), style: .cancel){ clickHandler in
             NSLog("点击了取消")
         })
         var rootViewController = UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.rootViewController
@@ -144,6 +147,9 @@ extension LoanViewModel: LoanTableViewManagerDelegate {
 }
 extension LoanViewModel: LoanQuestionTableViewHeaderViewDelegate {
     func showQuestions(header: LoanQuestionTableViewHeaderView) {
+        if let header = self.view?.tableView.headerView(forSection: 0) as? LoanTableViewHeaderView {
+            header.loanAmountTextField.resignFirstResponder()
+        }
         self.tableViewManager.showQuestion = self.tableViewManager.showQuestion == true ? false:true
         self.view?.tableView.beginUpdates()
         self.view?.tableView.reloadSections(IndexSet.init(integer: 2), with: UITableView.RowAnimation.fade)
@@ -152,6 +158,9 @@ extension LoanViewModel: LoanQuestionTableViewHeaderViewDelegate {
 }
 extension LoanViewModel: LoanDescribeTableViewHeaderViewDelegate {
     func showQuestions(header: LoanDescribeTableViewHeaderView) {
+        if let header = self.view?.tableView.headerView(forSection: 0) as? LoanTableViewHeaderView {
+            header.loanAmountTextField.resignFirstResponder()
+        }
         self.tableViewManager.showIntroduce = self.tableViewManager.showIntroduce == true ? false:true
         self.view?.tableView.beginUpdates()
         self.view?.tableView.reloadSections(IndexSet.init(integer: 1), with: UITableView.RowAnimation.fade)
@@ -195,11 +204,12 @@ extension LoanViewModel: UITextFieldDelegate {
         }
     }
     private func handleInputAmount(textField: UITextField, content: String) -> Bool {
-        let amount = NSDecimalNumber.init(string: content).multiplying(by: NSDecimalNumber.init(value: 1000000)).int64Value
-        if amount <= self.tableViewManager.model?.minimum_amount ?? 0 {
+        let amount = NSDecimalNumber.init(string: content).multiplying(by: NSDecimalNumber.init(value: 1000000)).uint64Value
+        let leastAmount = (NSDecimalNumber.init(value: self.tableViewManager.model?.quota_limit ?? 0).subtracting(NSDecimalNumber.init(value: self.tableViewManager.model?.quota_used ?? 0)))
+        if amount <= leastAmount.uint64Value {
             return true
         } else {
-            let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: self.tableViewManager.model?.quota_limit ?? 0).subtracting(NSDecimalNumber.init(value: self.tableViewManager.model?.quota_used ?? 0)),
+            let amount = getDecimalNumber(amount: leastAmount,
                                           scale: 6,
                                           unit: 1000000)
             textField.text = amount.stringValue
@@ -266,9 +276,13 @@ extension LoanViewModel {
                 self?.tableViewManager.model = tempData
                 self?.tableViewManager.dataModels = self?.dataModel.getLocalModel(model: tempData)
                 self?.view?.tableView.reloadData()
+                self?.view?.toastView?.hide(tag: 99)
+                self?.view?.hideToastActivity()
+            } else if type == "SendViolasBankLoanTransaction" {
+                self?.view?.toastView?.hide(tag: 99)
+                self?.view?.hideToastActivity()
+                self?.view?.makeToast(localLanguage(keyString: "wallet_bank_loan_submit_successful"), position: .center)
             }
-            self?.view?.hideToastActivity()
-            self?.view?.toastView?.hide(tag: 99)
         })
     }
 }

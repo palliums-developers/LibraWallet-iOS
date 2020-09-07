@@ -422,6 +422,13 @@ wallet_mapping_output_token_unactived = "您想要映射的稳定币尚未激活
 // 数字银行存款
 wallet_bank_deposit_submit_successful = "存款订单提交成功";
 wallet_bank_deposit_submit_failed = "存款订单提交失败";
+// 数字银行贷款
+wallet_bank_loan_token_unactivated_alert_title = "提示";
+wallet_bank_loan_token_unactivated_alert_content = "您选择的贷款币种，尚未激活，是否立即激活并贷款";
+wallet_bank_loan_token_unactivated_alert_cancel_button_title = "取消";
+wallet_bank_loan_token_unactivated_alert_confirm_button_title = "确定";
+wallet_bank_loan_submit_successful = "借款订单提交成功";
+wallet_bank_loan_submit_failed = "借款订单提交失败";
 
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "安全提醒";
@@ -586,3 +593,11 @@ wallet_bank_deposit_balance_insufficient_error = "余额不足";
 wallet_bank_deposit_amount_too_little_error = "输入金额低于最低充值额度";
 wallet_bank_deposit_quota_insufficient_error = "存款额度不足";
 wallet_bank_deposit_data_invalid_error = "数据异常";
+// 银行借款
+wallet_bank_loan_token_unactivated_error = "借款币尚未开启，请确认";
+wallet_bank_loan_amount_empty_error = "未输入";
+wallet_bank_loan_amount_invalid_error = "输入无效";
+wallet_bank_loan_amount_too_little_error = "输入金额低于最低借贷金额";
+wallet_bank_loan_quota_insufficient_error = "借款额度不足";
+wallet_bank_loan_data_invalid_error = "数据异常";
+wallet_bank_loan_disagree_legal_error = "请阅读并同意《质押借款服务协议》";
