@@ -154,31 +154,36 @@ extension DepositViewModel: DepositViewDelegate {
         }
     }
     func handleConfirmCondition() throws -> UInt64 {
+        // 获取当前headerView
         guard let header = self.view?.tableView.headerView(forSection: 0) as? DepositTableViewHeaderView else {
             throw LibraWalletError.WalletBankDeposit(reason: .dataInvalid)
         }
+        // 检查当前充值币是否激活
         guard self.tableViewManager.model?.token_active_state == true else {
             throw LibraWalletError.WalletBankDeposit(reason: .tokenUnactivated)
         }
+        // 检查当前余额
         guard let balance = self.tableViewManager.model?.token_balance, balance > 0 else {
             throw LibraWalletError.WalletBankDeposit(reason: .balanceEmpty)
         }
+        // 获取输入金额
         guard let amountString = header.depositAmountTextField.text, amountString.isEmpty == false else {
             throw LibraWalletError.WalletBankDeposit(reason: .amountInvalid)
         }
+        // 检查是否纯数字
         guard isPurnDouble(string: amountString) else {
             throw LibraWalletError.WalletBankDeposit(reason: .amountInvalid)
         }
         let amount = NSDecimalNumber.init(string: amountString).multiplying(by: NSDecimalNumber.init(value: 1000000))
-        // 比余额多
+        // 检查是否比余额多
         guard amount.uint64Value < (header.productModel?.token_balance ?? 0) else {
             throw LibraWalletError.WalletBankDeposit(reason: .balanceInsufficient)
         }
-        // 比最少充值金额多
+        // 检查是否比最少充值金额多
         guard amount.uint64Value > (header.productModel?.minimum_amount ?? 0) else {
             throw LibraWalletError.WalletBankDeposit(reason: .amountTooLittle)
         }
-        // 比每日限额少
+        // 检查是否比每日限额少
         guard amount.uint64Value < (NSDecimalNumber.init(value: header.productModel?.quota_limit ?? 0).subtracting(NSDecimalNumber.init(value: header.productModel?.quota_used ?? 0))).uint64Value else {
             throw LibraWalletError.WalletBankDeposit(reason: .quotaInsufficient)
         }
