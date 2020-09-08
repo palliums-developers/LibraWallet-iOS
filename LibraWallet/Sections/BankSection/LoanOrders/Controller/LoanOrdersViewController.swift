@@ -130,8 +130,9 @@ extension LoanOrdersViewController {
     }
 }
 extension LoanOrdersViewController: LoanOrdersTableViewManagerDelegate {
-    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath) {
+    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: LoanOrdersMainDataModel) {
         let vc = LoanOrderDetailViewController()
+        vc.itemID = model.id
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }

@@ -290,6 +290,7 @@ wallet_bank_loan_detail_loan_status_loaned_title = "已借款";
 wallet_bank_loan_detail_loan_status_loaning_title = "借款中";
 wallet_bank_loan_detail_loan_status_failed_title = "借款失败";
 wallet_bank_loan_detail_deposit_status_failed_title = "还款失败";
+wallet_bank_loan_detail_repayment_button_title = "立即还款";
 
 /************* 数字银行还款 *******************/
 wallet_bank_repayment_button_title = "立即还款";
@@ -429,6 +430,9 @@ wallet_bank_loan_token_unactivated_alert_cancel_button_title = "取消";
 wallet_bank_loan_token_unactivated_alert_confirm_button_title = "确定";
 wallet_bank_loan_submit_successful = "借款订单提交成功";
 wallet_bank_loan_submit_failed = "借款订单提交失败";
+// 数字银行还款
+wallet_bank_repayment_submit_successful = "还款订单提交成功";
+wallet_bank_repayment_submit_failed = "还款订单提交失败";
 
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "安全提醒";
@@ -601,3 +605,11 @@ wallet_bank_loan_amount_too_little_error = "输入金额低于最低借贷金额
 wallet_bank_loan_quota_insufficient_error = "借款额度不足";
 wallet_bank_loan_data_invalid_error = "数据异常";
 wallet_bank_loan_disagree_legal_error = "请阅读并同意《质押借款服务协议》";
+// 银行还贷
+wallet_bank_repayment_token_unactivated_error = "还款币尚未开启，请确认";
+wallet_bank_repayment_amount_empty_error = "未输入";
+wallet_bank_repayment_amount_invalid_error = "输入无效";
+wallet_bank_repayment_amount_too_little_error = "输入金额低于最低还贷金额";
+wallet_bank_repayment_amount_too_large_error = "输入金额高于贷款金额";
+wallet_bank_repayment_balance_insufficient_error = "余额不足";
+wallet_bank_repayment_data_invalid_error = "数据异常";

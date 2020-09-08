@@ -9,7 +9,11 @@
 import UIKit
 import JXSegmentedView
 
+protocol LoanOrderDetailViewDelegate: NSObjectProtocol {
+    func confirmRepayment()
+}
 class LoanOrderDetailView: UIView {
+    weak var delegate: LoanOrderDetailViewDelegate?
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.white
@@ -119,7 +123,7 @@ class LoanOrderDetailView: UIView {
     }()
     lazy var confirmButton: UIButton = {
         let button = UIButton.init(type: UIButton.ButtonType.custom)
-        button.setTitle(localLanguage(keyString: "wallet_bank_deposit_button_title"), for: UIControl.State.normal)
+        button.setTitle(localLanguage(keyString: "wallet_bank_loan_detail_repayment_button_title"), for: UIControl.State.normal)
         button.setTitleColor(UIColor.white, for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 15), weight: UIFont.Weight.regular)
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
@@ -129,9 +133,13 @@ class LoanOrderDetailView: UIView {
         button.layer.masksToBounds = true
         return button
     }()
+    var toastView: ToastView? {
+        let toast = ToastView.init()
+        return toast
+    }
     var controllers: [UIViewController]?
     @objc func buttonClick(button: UIButton) {
-//        self.delegate?.confirmDeposit()
+        self.delegate?.confirmRepayment()
     }
 }
 extension LoanOrderDetailView: JXSegmentedListContainerViewDataSource {

@@ -313,6 +313,24 @@ public enum LibraWalletError: Error {
     }
     case WalletBankLoan(reason: BankLoanError)
     
+    public enum BankRepaymentError {
+        /// 借款币未开启
+        case tokenUnactivated
+        /// 未输入金额
+        case amountEmpty
+        /// 输入金额无效
+        case amountInvalid
+        /// 金额比最低还贷额低
+        case amountTooLittle
+        /// 金额太多
+        case amountTooLarge
+        /// 余额不足
+        case balanceInsufficient
+        /// 数据异常
+        case dataInvalid
+    }
+    case WalletBankRepayment(reason: BankRepaymentError)
+    
 }
 extension LibraWalletError: LocalizedError {
     public var errorDescription: String? {
@@ -352,6 +370,8 @@ extension LibraWalletError: LocalizedError {
         case .WalletBankDeposit(reason: let reason):
             return reason.localizedDescription
         case .WalletBankLoan(reason: let reason):
+            return reason.localizedDescription
+        case .WalletBankRepayment(reason: let reason):
             return reason.localizedDescription
         }
     }
@@ -739,6 +759,32 @@ extension LibraWalletError.BankLoanError {
         /// 余额不足
         case .disagreeLegal:
             return localLanguage(keyString: "wallet_bank_loan_disagree_legal_error")
+        }
+    }
+}
+extension LibraWalletError.BankRepaymentError {
+    var localizedDescription: String {
+        switch self {
+        /// 还贷币未开启
+        case .tokenUnactivated:
+            return localLanguage(keyString: "wallet_bank_repayment_token_unactivated_error")
+        /// 余额为0
+        case .amountEmpty:
+            return localLanguage(keyString: "wallet_bank_repayment_amount_empty_error")
+        /// 输入金额无效
+        case .amountInvalid:
+            return localLanguage(keyString: "wallet_bank_repayment_amount_invalid_error")
+        /// 金额比最低还贷额低
+        case .amountTooLittle:
+            return localLanguage(keyString: "wallet_bank_repayment_amount_too_little_error")
+        case .amountTooLarge:
+            return localLanguage(keyString: "wallet_bank_repayment_amount_too_large_error")
+        /// 余额不足
+        case .balanceInsufficient:
+            return localLanguage(keyString: "wallet_bank_repayment_balance_insufficient_error")
+        /// 数据异常
+        case .dataInvalid:
+            return localLanguage(keyString: "wallet_bank_repayment_data_invalid_error")
         }
     }
 }

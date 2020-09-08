@@ -7,8 +7,11 @@
 //
 
 import UIKit
-
+protocol RepaymentViewDelegate: NSObjectProtocol {
+    func confirmRepayment()
+}
 class RepaymentView: UIView {
+    weak var delegate: RepaymentViewDelegate?
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(tableView)
@@ -32,7 +35,7 @@ class RepaymentView: UIView {
         footerBackgroundView.snp.makeConstraints { (make) in
             make.left.right.equalTo(self)
             make.bottom.equalTo(self)
-            make.height.equalTo(128)
+            make.height.equalTo(90)
         }
         confirmButton.snp.makeConstraints { (make) in
             make.top.equalTo(footerBackgroundView).offset(20)
@@ -71,7 +74,7 @@ class RepaymentView: UIView {
         return button
     }()
     @objc func buttonClick(button: UIButton) {
-//        self.delegate?.confirm()
+        self.delegate?.confirmRepayment()
     }
     var toastView: ToastView? {
         let toast = ToastView.init()

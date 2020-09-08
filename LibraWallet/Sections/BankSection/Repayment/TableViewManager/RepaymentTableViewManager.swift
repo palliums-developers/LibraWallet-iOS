@@ -7,10 +7,13 @@
 //
 
 import UIKit
-
+protocol RepaymentTableViewManagerDelegate: NSObjectProtocol {
+    func headerDelegate(header: RepaymentTableViewHeaderView)
+}
 class RepaymentTableViewManager: NSObject {
-    weak var delegate: AssetsPoolTransactionsTableViewManagerDelegate?
-    var dataModels: [Int]? = [1, 2, 3]
+    weak var delegate: RepaymentTableViewManagerDelegate?
+    var dataModels: [DepositLocalDataModel]?
+    var model: RepaymentMainDataModel?
     deinit {
         print("RepaymentTableViewManager销毁了")
     }
@@ -31,32 +34,35 @@ extension RepaymentTableViewManager: UITableViewDelegate {
     }
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let identifier = "Header"
-        if let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier) {
+        if let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier) as? RepaymentTableViewHeaderView {
+            header.model = self.model
+            self.delegate?.headerDelegate(header: header)
             return header
         } else {
             let header = RepaymentTableViewHeaderView.init(reuseIdentifier: identifier)
+            header.model = self.model
+            self.delegate?.headerDelegate(header: header)
             return header
         }
     }
 }
 extension RepaymentTableViewManager: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3//dataModels?.count ?? 0
+        return dataModels?.count ?? 0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let identifier = "NormalCell"
         if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? RepaymentTableViewCell {
             if let data = dataModels, data.isEmpty == false {
-//                cell.model = data[indexPath.row]
+                cell.model = data[indexPath.row]
                 cell.hideSpcaeLineState = (data.count - 1) == indexPath.row ? true:false
             }
-//            cell.indexPath = indexPath
             cell.selectionStyle = .none
             return cell
         } else {
             let cell = RepaymentTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
             if let data = dataModels, data.isEmpty == false {
-//                cell.model = data[indexPath.row]
+                cell.model = data[indexPath.row]
                 cell.hideSpcaeLineState = (data.count - 1) == indexPath.row ? true:false
             }
             cell.selectionStyle = .none

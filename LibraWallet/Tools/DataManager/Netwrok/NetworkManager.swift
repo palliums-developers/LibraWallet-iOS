@@ -112,6 +112,8 @@ enum mainRequest {
     case depositList(String, String, Int, Int, Int)
     /// 借款订单列表（地址、currency、status、offset、limit）
     case loanList(String, String, Int, Int, Int)
+    /// 获取借款还款详情（地址、借款订单ID）
+    case loanRepaymentDetail(String, String)
 }
 extension mainRequest:TargetType {
     var baseURL: URL {
@@ -194,7 +196,8 @@ extension mainRequest:TargetType {
              .loanTransactions(_, _, _),
              .loanTransactionDetail(_, _, _, _, _),
              .depositList(_, _, _, _, _),
-             .loanList(_, _, _, _, _):
+             .loanList(_, _, _, _, _),
+             .loanRepaymentDetail(_, _):
             if PUBLISH_VERSION == true {
                 return URL(string:"https://api.violas.io")!
             } else {
@@ -303,6 +306,8 @@ extension mainRequest:TargetType {
             return "/1.0/violas/bank/deposit/order/list"
         case .loanList(_, _, _, _, _):
             return "/1.0/violas/bank/borrow/order/list"
+        case .loanRepaymentDetail(_, _):
+            return "/1.0/violas/bank/borrow/repayment"
         }
     }
     var method: Moya.Method {
@@ -358,7 +363,8 @@ extension mainRequest:TargetType {
              .loanTransactions(_, _, _),
              .loanTransactionDetail(_, _, _, _, _),
              .depositList(_, _, _, _, _),
-             .loanList(_, _, _, _, _):
+             .loanList(_, _, _, _, _),
+             .loanRepaymentDetail(_, _):
             return .get
         }
     }
@@ -614,6 +620,10 @@ extension mainRequest:TargetType {
                        "limit": limit]
             }
             return .requestParameters(parameters: dic,
+                                      encoding: URLEncoding.queryString)
+        case .loanRepaymentDetail(let address, let orderID):
+            return .requestParameters(parameters: ["address": address,
+                                                   "id": orderID],
                                       encoding: URLEncoding.queryString)
         }
     }

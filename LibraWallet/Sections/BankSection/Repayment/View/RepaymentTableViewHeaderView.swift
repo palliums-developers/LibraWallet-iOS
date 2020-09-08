@@ -7,8 +7,11 @@
 //
 
 import UIKit
-
+protocol RepaymentTableViewHeaderViewDelegate: NSObjectProtocol {
+    func selectTotalBalance(header: RepaymentTableViewHeaderView, model: RepaymentMainDataModel)
+}
 class RepaymentTableViewHeaderView: UITableViewHeaderFooterView {
+    weak var delegate: RepaymentTableViewHeaderViewDelegate?
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
         contentView.backgroundColor = UIColor.init(hex: "F7F7F9")
@@ -99,19 +102,17 @@ class RepaymentTableViewHeaderView: UITableViewHeaderFooterView {
         let imageView = UIImageView.init()
         imageView.layer.cornerRadius = 7
         imageView.layer.masksToBounds = true
-        imageView.backgroundColor = UIColor.red
+        imageView.image = UIImage.init(named: "wallet_icon_default")
         return imageView
     }()
     lazy var repaymentTokenSelectButton: UIButton = {
         let button = UIButton.init(type: UIButton.ButtonType.custom)
-        button.setTitle("Test", for: UIControl.State.normal)
+        button.setTitle("---", for: UIControl.State.normal)
         button.setTitleColor(UIColor.init(hex: "333333"), for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
 //        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
-//
         button.setImage(UIImage.init(named: "cell_detail"), for: UIControl.State.normal)
         button.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 12, height: 12))
-
         return button
     }()
     lazy var repaymentAmountTextField: WYDTextField = {
@@ -123,7 +124,6 @@ class RepaymentTableViewHeaderView: UITableViewHeaderFooterView {
                                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C2C2C2"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20)])
         textField.keyboardType = .decimalPad
         textField.tintColor = DefaultGreenColor
-//        textField.delegate = self
         textField.tag = 20
         return textField
     }()
@@ -152,7 +152,7 @@ class RepaymentTableViewHeaderView: UITableViewHeaderFooterView {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "5C5C5C")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: UIFont.Weight.medium)
-        label.text = "999999"
+        label.text = "---"
         return label
     }()
     lazy var totalLoanAmountSelectButton: UIButton = {
@@ -160,13 +160,37 @@ class RepaymentTableViewHeaderView: UITableViewHeaderFooterView {
         button.setTitle(localLanguage(keyString: "wallet_bank_repayment_repayment_amount_total_button_title"), for: UIControl.State.normal)
         button.setTitleColor(UIColor.init(hex: "7038FD"), for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: UIFont.Weight.regular)
-        //        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
+        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
         return button
     }()
+    @objc func buttonClick(button: UIButton) {
+        self.repaymentAmountTextField.resignFirstResponder()
+        guard let tempModel = model else {
+            return
+        }
+        self.delegate?.selectTotalBalance(header: self, model: tempModel)
+    }
+    var model: RepaymentMainDataModel? {
+        didSet {
+            guard let tempModel = model else {
+                return
+            }
+            let amountLeast = getDecimalNumber(amount: NSDecimalNumber.init(value: tempModel.balance ?? 0),
+                                               scale: 4,
+                                               unit: 1000000)
+            loanTokenAmountLabel.text = amountLeast.stringValue + " " + (tempModel.token_show_name ?? "")
+            if let iconName = tempModel.logo, iconName.isEmpty == false {
+                if iconName.hasPrefix("http") {
+                    let url = URL(string: iconName)
+                    loanTokenIndicatorImageView.kf.setImage(with: url, placeholder: UIImage.init(named: "wallet_icon_default"))
+                } else {
+                    loanTokenIndicatorImageView.image = UIImage.init(named: iconName)
+                }
+            } else {
+                loanTokenIndicatorImageView.image = UIImage.init(named: "wallet_icon_default")
+            }
+            repaymentTokenSelectButton.setTitle(tempModel.token_show_name, for: UIControl.State.normal)
+            repaymentTokenSelectButton.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 12, height: 12))
+        }
+    }
 }
-// = "我要还";
-//wallet_bank_repayment_textfield_placeholder_a = "起";
-//wallet_bank_repayment_textfield_placeholder_b = "每";
-//wallet_bank_repayment_textfield_placeholder_c = "递增";
-// = "待还金额";
-// = "全部";

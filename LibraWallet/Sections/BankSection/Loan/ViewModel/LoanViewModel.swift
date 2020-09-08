@@ -92,7 +92,7 @@ extension LoanViewModel: LoanViewDelegate {
         let amount = NSDecimalNumber.init(string: amountString).multiplying(by: NSDecimalNumber.init(value: 1000000))
         // 检查是否低于最低借贷金额
         guard amount.uint64Value > (header.productModel?.minimum_amount ?? 0) else {
-            throw LibraWalletError.WalletBankLoan(reason: .tokenUnactivated)
+            throw LibraWalletError.WalletBankLoan(reason: .amountTooLittle)
         }
         // 检查是否超过每日限额
         guard amount.uint64Value < (NSDecimalNumber.init(value: header.productModel?.quota_limit ?? 0).subtracting(NSDecimalNumber.init(value: header.productModel?.quota_used ?? 0))).uint64Value else {

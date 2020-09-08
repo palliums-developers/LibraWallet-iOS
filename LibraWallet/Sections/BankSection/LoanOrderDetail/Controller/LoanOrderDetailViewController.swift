@@ -32,12 +32,13 @@ class LoanOrderDetailViewController: BaseViewController {
         print("LoanDetailViewController销毁了")
     }
     /// 网络请求、数据模型
-    lazy var dataModel: WalletMainModel = {
-        let model = WalletMainModel.init()
+    lazy var dataModel: LoanOrderDetailModel = {
+        let model = LoanOrderDetailModel.init()
         return model
     }()
     lazy var detailView: LoanOrderDetailView = {
         let view = LoanOrderDetailView.init()
+        view.delegate = self
         view.segmentView.delegate = self
         view.controllers = [loanListController, depositListController, clearingListController]
         return view
@@ -73,8 +74,12 @@ class LoanOrderDetailViewController: BaseViewController {
     private var observer: NSKeyValueObservation?
     var itemID: String?
 }
-extension LoanOrderDetailViewController {
-    
+extension LoanOrderDetailViewController: LoanOrderDetailViewDelegate {
+    func confirmRepayment() {
+        let vc = RepaymentViewController()
+        vc.itemID = self.itemID
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
 }
 extension LoanOrderDetailViewController: JXSegmentedViewDelegate {
     func segmentedView(_ segmentedView: JXSegmentedView, didSelectedItemAt index: Int) {

@@ -21,7 +21,7 @@ class LoanOrderDetailHeaderView: UIView {
     deinit {
         print("LoanOrderDetailHeaderView销毁了")
     }
-    //MARK: - 布局
+    // MARK: - 布局
     override func layoutSubviews() {
         super.layoutSubviews()
         assetTitleLabel.snp.makeConstraints { (make) in

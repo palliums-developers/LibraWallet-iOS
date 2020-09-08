@@ -1429,8 +1429,8 @@
 		361BDA7E24F8E7BD00C4C54E /* Repayment */ = {
 			isa = PBXGroup;
 			children = (
-				361BDA7F24F8E7BD00C4C54E /* ViewModel */,
 				361BDA8124F8E7BD00C4C54E /* Controller */,
+				361BDA7F24F8E7BD00C4C54E /* ViewModel */,
 				361BDA8324F8E7BD00C4C54E /* Model */,
 				361BDA8524F8E7BD00C4C54E /* View */,
 				361BDA8924F8E7BD00C4C54E /* TableViewManager */,
@@ -1465,9 +1465,9 @@
 		361BDA8524F8E7BD00C4C54E /* View */ = {
 			isa = PBXGroup;
 			children = (
+				361BDA8824F8E7BD00C4C54E /* RepaymentView.swift */,
 				361BDA8624F8E7BD00C4C54E /* RepaymentTableViewHeaderView.swift */,
 				361BDA8724F8E7BD00C4C54E /* RepaymentTableViewCell.swift */,
-				361BDA8824F8E7BD00C4C54E /* RepaymentView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";

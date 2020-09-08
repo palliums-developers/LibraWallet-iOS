@@ -58,7 +58,7 @@ class RepaymentTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "5C5C5C")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
-        label.text = "Test-测试-テスト"
+        label.text = "---"
         return label
     }()
     lazy var itemContentLabel: UILabel = {
@@ -66,7 +66,7 @@ class RepaymentTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "333333")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
-        label.text = "99999999.9999"
+        label.text = "---"
         return label
     }()
     lazy var spaceLabel: UILabel = {
@@ -85,29 +85,15 @@ class RepaymentTableViewCell: UITableViewCell {
             }
         }
     }
-    //    var model: TokenMappingListDataModel? {
-    //        didSet {
-    //            tokenNameLabel.text = model?.from_coin?.assert?.show_name
-    //            if let iconName = model?.from_coin?.assert?.icon, iconName.isEmpty == false {
-    //                let url = URL(string: iconName)
-    //                transactionTypeImageView.kf.setImage(with: url, placeholder: UIImage.init(named: "wallet_icon_default"))
-    //            }
-    //            var unit = 1000000
-    //            if model?.from_coin?.coin_type == "btc" {
-    //                unit = 100000000
-    //            }
-    //            amountLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + getDecimalNumberAmount(amount: NSDecimalNumber.init(value: model?.from_coin?.assert?.amount ?? 0),
-    //                                                                                                                  scale: 6,
-    //                                                                                                                  unit: unit)
-    //        }
-    //    }
-    var showSelectState: Bool? {
+    var model: DepositLocalDataModel? {
         didSet {
-            //            if showSelectState == true {
-            //                selectIndicatorImageView.alpha = 1
-            //            } else {
-            //                selectIndicatorImageView.alpha = 0
-            //            }
+            guard let tempModel = model else {
+                return
+            }
+            itemTitleLabel.text = tempModel.title
+            itemContentLabel.text = tempModel.content
+            itemContentLabel.textColor = UIColor.init(hex: tempModel.contentColor)
+            itemContentLabel.font = tempModel.conentFont
         }
     }
 }

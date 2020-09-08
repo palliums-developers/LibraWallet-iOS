@@ -8,7 +8,7 @@
 
 import UIKit
 protocol LoanOrdersTableViewManagerDelegate: NSObjectProtocol {
-    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath)
+    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: LoanOrdersMainDataModel)
 }
 class LoanOrdersTableViewManager: NSObject {
     weak var delegate: LoanOrdersTableViewManagerDelegate?
@@ -24,10 +24,10 @@ extension LoanOrdersTableViewManager: UITableViewDelegate {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
-//        guard let model = self.dataModels else {
-//            return
-//        }
-        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath)
+        guard let tempModels = self.dataModels else {
+            return
+        }
+        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, model: tempModels[indexPath.row])
     }
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 40

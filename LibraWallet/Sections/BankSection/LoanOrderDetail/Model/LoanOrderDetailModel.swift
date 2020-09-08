@@ -46,4 +46,7 @@ struct LoanOrderDetailMainModel: Codable {
 }
 
 class LoanOrderDetailModel: NSObject {
+    deinit {
+        print("LoanOrderDetailModel销毁了")
+    }
 }

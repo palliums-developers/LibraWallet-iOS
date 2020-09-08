@@ -15,6 +15,9 @@ class RepaymentViewController: BaseViewController {
         // 加载子View
         self.view.addSubview(detailView)
         self.viewModel.initKVO()
+        self.detailView.toastView?.show(tag: 99)
+        self.viewModel.dataModel.getLoanItemDetailModel(itemID: self.itemID ?? "",
+                                                        address: WalletManager.shared.violasAddress!)
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -49,4 +52,18 @@ class RepaymentViewController: BaseViewController {
         viewModel.view = self.detailView
         return viewModel
     }()
+    var itemID: String?
+    /*
+     //        WalletManager.unlockWallet(successful: { [weak self] (mnemonic) in
+     //            self?.detailView.toastView?.show(tag: 99)
+     //            self?.dataModel.sendRepaymentTransaction(sendAddress: WalletManager.shared.violasAddress!,
+     //                                                     amount: self?.detailView.headerView.model?.balance ?? 0,
+     //                                                     fee: 10,
+     //                                                     mnemonic: mnemonic,
+     //                                                     module: self?.detailView.headerView.model?.token_module ?? "",
+     //                                                     feeModule: self?.detailView.headerView.model?.token_module ?? "")
+     //        }) { (errorContent) in
+     //            self.view?.makeToast(errorContent, position: .center)
+     //        }
+     */
 }
