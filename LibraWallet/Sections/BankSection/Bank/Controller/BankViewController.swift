@@ -75,7 +75,7 @@ class BankViewController: UIViewController {
         button.setImage(UIImage.init(named: "eyes_open_white"), for: UIControl.State.normal)
         // 调整位置
         button.imagePosition(at: .right, space: 4, imageViewSize: CGSize.init(width: 14, height: 8))
-        //         button.addTarget(self, action: #selector(changeWallet), for: .touchUpInside)
+        button.addTarget(self, action: #selector(changeToHideMode(button:)), for: .touchUpInside)
         return button
      }()
     /// 交易记录按钮
@@ -138,6 +138,16 @@ extension BankViewController {
         dropper.spacing = 12
         dropper.delegate = self
         dropper.show(Dropper.Alignment.center, position: .top, button: self.detailView.headerView.yesterdayBenefitButton)
+    }
+    @objc func changeToHideMode(button: UIButton) {
+        if self.detailView.headerView.assetLabel.text == "≈$******" {
+            self.totalAssetsButton.setImage(UIImage.init(named: "eyes_open_white"), for: UIControl.State.normal)
+            self.detailView.headerView.hideMode = false
+        } else {
+            self.totalAssetsButton.setImage(UIImage.init(named: "bank_eye_close"), for: UIControl.State.normal)
+            self.detailView.headerView.hideMode = true
+        }
+        self.totalAssetsButton.imagePosition(at: .right, space: 4, imageViewSize: CGSize.init(width: 14, height: 8))
     }
 }
 extension BankViewController: DepositMarketTableViewManagerDelegate {

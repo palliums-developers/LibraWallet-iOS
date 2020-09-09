@@ -985,6 +985,7 @@
 		361BDA1624F8E7BD00C4C54E /* BankSection */ = {
 			isa = PBXGroup;
 			children = (
+				368F7BD024FCFC0B00CCF3FB /* BankLegal */,
 				361BDA4B24F8E7BD00C4C54E /* Bank */,
 				361BDA1724F8E7BD00C4C54E /* Loan */,
 				361BDA7324F8E7BD00C4C54E /* LoanOrders */,
@@ -3850,7 +3851,6 @@
 		9DC902362328E7820097FD85 /* Sections */ = {
 			isa = PBXGroup;
 			children = (
-				368F7BD024FCFC0B00CCF3FB /* BankLegal */,
 				361BDA1624F8E7BD00C4C54E /* BankSection */,
 				9D1A6147233204B1009DDA07 /* Base */,
 				9DC87792237A529D006378C3 /* FirstInSection */,

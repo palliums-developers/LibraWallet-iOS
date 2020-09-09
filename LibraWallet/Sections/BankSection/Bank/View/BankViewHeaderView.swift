@@ -97,7 +97,7 @@ class BankViewHeaderView: UIView {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.white
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: .regular)
-        label.text = "≈9999.9999"
+        label.text = "≈0.00"
         return label
     }()
     private lazy var benefitIndicatorImageView: UIImageView = {
@@ -141,6 +141,30 @@ class BankViewHeaderView: UIView {
             benefitLabel.text = "≈\(model?.total ?? 0.00)"
             yesterdayBenefitButton.setTitle((localLanguage(keyString: "wallet_bank_yesterday_earnings_button_title") + "\(model?.yesterday ?? 0.00)$"), for: UIControl.State.normal)
             yesterdayBenefitButton.imagePosition(at: .left, space: 4, imageViewSize: CGSize.init(width: 10, height: 6))
+        }
+    }
+    var hideMode: Bool? {
+        didSet {
+            guard let state = hideMode else {
+                return
+            }
+            if state == true {
+                assetLabel.text = "≈$******"
+                loanLimitAmountLabel.text = "≈******"
+                benefitLabel.text = "≈******"
+                yesterdayBenefitButton.setTitle((localLanguage(keyString: "wallet_bank_yesterday_earnings_button_title") + "***$"), for: UIControl.State.normal)
+                yesterdayBenefitButton.imagePosition(at: .left, space: 4, imageViewSize: CGSize.init(width: 10, height: 6))
+            } else {
+                guard let tempModel = model else {
+                    return
+                }
+                assetLabel.text = "≈$\(tempModel.amount ?? 0.00)"
+                loanLimitAmountLabel.text = "≈\(tempModel.borrow ?? 0.00)"
+                benefitLabel.text = "≈\(tempModel.total ?? 0.00)"
+                yesterdayBenefitButton.setTitle((localLanguage(keyString: "wallet_bank_yesterday_earnings_button_title") + "\(tempModel.yesterday ?? 0.00)$"), for: UIControl.State.normal)
+                yesterdayBenefitButton.imagePosition(at: .left, space: 4, imageViewSize: CGSize.init(width: 10, height: 6))
+
+            }
         }
     }
 }
