@@ -66,17 +66,18 @@ class DepositOrdersViewController: BaseViewController {
     deinit {
         print("DepositOrdersViewController销毁了")
     }
-    // 网络请求、数据模型
+    /// 网络请求、数据模型
     lazy var dataModel: DepositOrdersModel = {
         let model = DepositOrdersModel.init()
         return model
     }()
-    // tableView管理类
+    /// tableView管理类
     lazy var tableViewManager: DepositOrdersTableViewManager = {
         let manager = DepositOrdersTableViewManager.init()
+        manager.delegate = self
         return manager
     }()
-    // 子View
+    /// 子View
     lazy var detailView : DepositOrdersView = {
         let view = DepositOrdersView.init()
         view.tableView.delegate = self.tableViewManager
@@ -96,8 +97,6 @@ class DepositOrdersViewController: BaseViewController {
         dataOffset += 10
         transactionRequest(refresh: false)
     }
-    var firstIn: Bool = true
-    var requestType: String?
     /// 二维码扫描按钮
     lazy var depositOrderListButton: UIButton = {
         let button = UIButton(type: .custom)
@@ -110,8 +109,9 @@ class DepositOrdersViewController: BaseViewController {
         self.dataModel.getDepositTransactions(address: WalletManager.shared.violasAddress!, page: self.dataOffset, limit: 10, requestStatus: requestState)
     }
     var supprotTokens: [BankDepositMarketDataModel]?
+    var withdrawClosure: ((DepositOrderWithdrawMainDataModel) -> Void)?
 }
-//MARK: - 导航栏添加按钮
+// MARK: - 导航栏添加按钮
 extension DepositOrdersViewController {
     func addNavigationRightBar() {
         let scanView = UIBarButtonItem(customView: depositOrderListButton)
@@ -127,6 +127,46 @@ extension DepositOrdersViewController {
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }
+// MARK: - TableViewManager代理
+extension DepositOrdersViewController: DepositOrdersTableViewManagerDelegate {
+    func cellDelegate(cell: DepositOrdersTableViewCell) {
+        cell.delegate = self
+    }
+}
+extension DepositOrdersViewController: DepositOrdersTableViewCellDelegate {
+    func withdraw(indexPath: IndexPath, model: DepositOrdersMainDataModel) {
+//        let alert = RedeemAlert.init()
+//        alert.model = ""
+//        alert.show(tag: 199)
+        print(indexPath.row)
+        self.detailView.toastView?.show(tag: 99)
+        self.dataModel.getDepositItemWithdrawDetail(address: WalletManager.shared.violasAddress!,
+                                                    itemID: model.id ?? "")
+        self.withdrawClosure = { model in
+            let alert = RedeemAlert.init()
+            alert.model = model
+            alert.withdrawClosure = { [weak self] amount in
+                WalletManager.unlockWallet(successful: { [weak self] (mnemonic) in
+                    self?.detailView.toastView?.show(tag: 99)
+                    self?.dataModel.sendWithdrawTransaction(sendAddress: WalletManager.shared.violasAddress!,
+                                                        amount: amount,
+                                                        fee: 10,
+                                                        mnemonic: mnemonic,
+                                                        module: model.token_module ?? "",
+                                                        feeModule: model.token_module ?? "")
+                }) { [weak self] (errorContent) in
+                    guard errorContent != "Cancel" else {
+                        self?.detailView.toastView?.hide(tag: 99)
+                        return
+                    }
+                    self?.detailView.makeToast(errorContent, position: .center)
+                }
+            }
+            alert.show(tag: 199)
+        }
+    }
+}
+//MARK: - 网络请求处理中心
 extension DepositOrdersViewController {
     func initKVO() {
         self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
@@ -137,10 +177,8 @@ extension DepositOrdersViewController {
             }
             if let error = dataDic.value(forKey: "error") as? LibraWalletError {
                 // 隐藏请求指示
-                self?.view?.hideToastActivity()
-                //                self?.view?.toastView?.hide(tag: 99)
-                //                self?.view?.toastView?.hide(tag: 299)
-                //                self?.view?.toastView?.hide(tag: 399)
+                self?.detailView.hideToastActivity()
+                self?.detailView.toastView?.hide(tag: 99)
                 if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
                     // 网络无法访问
                     print(error.localizedDescription)
@@ -182,6 +220,8 @@ extension DepositOrdersViewController {
                 }
                 self?.tableViewManager.dataModels = tempData
                 self?.detailView.tableView.reloadData()
+                self?.detailView.tableView.mj_header?.endRefreshing()
+                self?.detailView.hideToastActivity()
             } else if type == "GetBankDepositTransactionsMore" {
                 guard let tempData = dataDic.value(forKey: "data") as? [DepositOrdersMainDataModel] else {
                     return
@@ -203,58 +243,19 @@ extension DepositOrdersViewController {
                     self?.detailView.tableView.reloadData()
                 }
                 self?.detailView.tableView.mj_footer?.endRefreshing()
+                self?.detailView.hideToastActivity()
+            } else if type == "GetDepositItemWithdrawDetail" {
+                self?.detailView.toastView?.hide(tag: 99)
+                guard let tempData = dataDic.value(forKey: "data") as? DepositOrderWithdrawMainDataModel else {
+                    return
+                }
+                if let action = self?.withdrawClosure {
+                    action(tempData)
+                }
+            } else if type == "SendViolasBankWithdrawTransaction" {
+                self?.detailView.toastView?.hide(tag: 99)
             }
-            self?.detailView.tableView.mj_footer?.endRefreshing()
-            self?.detailView.hideToastActivity()
-            self?.detailView.tableView.mj_header?.endRefreshing()
             self?.endLoading()
         })
     }
 }
-//extension DepositOrdersViewController: WalletTransactionsTableViewManagerDelegate {
-//    func tableViewDidSelectRowAtIndexPath<T>(indexPath: IndexPath, model: T) {
-//        let vc = TransactionDetailViewController()
-//        //            vc.requestURL = address
-//        vc.tokenAddress = self.wallet?.tokenAddress
-//        switch self.wallet?.tokenType {
-//        case .BTC:
-//            print("BTC")
-//            vc.btcTransaction = model as? TrezorBTCTransactionDataModel
-//        case .Libra:
-//            print("Libra")
-//            vc.libraTransaction = model as? LibraDataModel
-//
-//        case .Violas:
-//            print("Violas")
-//            vc.violasTransaction = model as? ViolasDataModel
-//        case .none:
-//            print("钱包类型异常")
-//        }
-//        self.navigationController?.pushViewController(vc, animated: true)
-//    }
-//
-//    //    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, address: String) {
-//    //        switch self.wallet?.tokenType {
-//    //        case .BTC:
-//    //            print("BTC")
-//    //            let vc = TransactionDetailWebViewController()
-//    //            vc.requestURL = "https://live.blockcypher.com/btc-testnet/tx/\(address)"
-//    //            self.navigationController?.pushViewController(vc, animated: true)
-//    //        case .Libra:
-//    //            print("Libra")
-//    //            let vc = TransactionDetailWebViewController()
-//    //            vc.requestURL = address
-//    //            self.navigationController?.pushViewController(vc, animated: true)
-//    //        case .Violas:
-//    //            print("Violas")
-//    //            let vc = TransactionDetailViewController()
-//    ////            vc.requestURL = address
-//    //            self.navigationController?.pushViewController(vc, animated: true)
-//    //        case .none:
-//    //            print("钱包类型异常")
-//    //        }
-//    //    }
-//    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, violasTransaction: ViolasDataModel) {
-//
-//    }
-//}

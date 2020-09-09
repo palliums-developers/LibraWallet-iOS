@@ -67,8 +67,12 @@ extension LoanViewModel: LoanViewDelegate {
                                                         module: self?.tableViewManager.model?.token_module ?? "",
                                                         feeModule: self?.tableViewManager.model?.token_module ?? "",
                                                         activeState: true)
-                }) { (errorContent) in
-                    self.view?.makeToast(errorContent, position: .center)
+                }) { [weak self] (errorContent) in
+                    guard errorContent != "Cancel" else {
+                        self?.view?.toastView?.hide(tag: 99)
+                        return
+                    }
+                    self?.view?.makeToast(errorContent, position: .center)
                 }
             }
             print(amount)
@@ -116,7 +120,11 @@ extension LoanViewModel: LoanViewDelegate {
                                                     module: self?.tableViewManager.model?.token_module ?? "",
                                                     feeModule: self?.tableViewManager.model?.token_module ?? "",
                                                     activeState: true)
-            }) { (errorContent) in
+            }) { [weak self] (errorContent) in
+                guard errorContent != "Cancel" else {
+                    self?.view?.toastView?.hide(tag: 99)
+                    return
+                }
                 self?.view?.makeToast(errorContent, position: .center)
             }
         })

@@ -7,9 +7,11 @@
 //
 
 import UIKit
-
+protocol DepositOrdersTableViewCellDelegate: NSObjectProtocol {
+    func withdraw(indexPath: IndexPath, model: DepositOrdersMainDataModel)
+}
 class DepositOrdersTableViewCell: UITableViewCell {
-    //    weak var delegate: AddAssetViewTableViewCellDelegate?
+    weak var delegate: DepositOrdersTableViewCellDelegate?
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.backgroundColor = UIColor.init(hex: "F7F7F9")
@@ -29,7 +31,7 @@ class DepositOrdersTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
-        print("DepositMarketTableViewCell销毁了")
+        print("DepositOrdersTableViewCell销毁了")
     }
     //pragma MARK: 布局
     override func layoutSubviews() {
@@ -126,7 +128,7 @@ class DepositOrdersTableViewCell: UITableViewCell {
         button.setTitle(localLanguage(keyString: "wallet_deposit_orders_order_withdraw_button_title"), for: UIControl.State.normal)
         button.setTitleColor(UIColor.init(hex: "7038FD"), for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 10, weight: UIFont.Weight.regular)
-        //        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
+        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
         button.layer.borderColor = UIColor.init(hex: "7038FD").cgColor
         button.layer.borderWidth = 0.5
         button.layer.cornerRadius = 9
@@ -187,17 +189,14 @@ class DepositOrdersTableViewCell: UITableViewCell {
         label.backgroundColor = DefaultSpaceColor
         return label
     }()
-    //MARK: - 设置数据
-    var indexPath: IndexPath?
-    var hideSpcaeLineState: Bool? {
-        didSet {
-            if hideSpcaeLineState == true {
-                spaceLabel.alpha = 0
-            } else {
-                spaceLabel.alpha = 1
-            }
+    @objc func buttonClick(button: UIButton) {
+        guard let tempModel = self.model, let indexPath = self.indexPath else {
+            return
         }
+        self.delegate?.withdraw(indexPath: indexPath, model: tempModel)
     }
+    // MARK: - 设置数据
+    var indexPath: IndexPath?
     var model: DepositOrdersMainDataModel? {
         didSet {
             guard let tempModel = model else {
@@ -227,15 +226,6 @@ class DepositOrdersTableViewCell: UITableViewCell {
                                                            raiseOnUnderflow: false,
                                                            raiseOnDivideByZero: false)
             annualizedReturnLabel.text = NSDecimalNumber.init(value: tempModel.rate ?? 0).multiplying(by: NSDecimalNumber.init(value: 100), withBehavior: numberConfig).stringValue + "%"
-        }
-    }
-    var showSelectState: Bool? {
-        didSet {
-            //            if showSelectState == true {
-            //                selectIndicatorImageView.alpha = 1
-            //            } else {
-            //                selectIndicatorImageView.alpha = 0
-            //            }
         }
     }
 }

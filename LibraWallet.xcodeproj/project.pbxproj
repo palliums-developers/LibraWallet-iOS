@@ -159,6 +159,8 @@
 		3650F0C1248F2A850086F578 /* TransactionDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3650F0C0248F2A850086F578 /* TransactionDetailTableViewCell.swift */; };
 		3650F0C3248F7ED30086F578 /* HomeWithoutWalletView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3650F0C2248F7ED30086F578 /* HomeWithoutWalletView.swift */; };
 		365A89C023B9A7CE00C55A10 /* WYDTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 365A89BF23B9A7CE00C55A10 /* WYDTextField.swift */; };
+		36677A742507598E009152B3 /* RedeemAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36677A732507598E009152B3 /* RedeemAlert.swift */; };
+		36677A7725077BBB009152B3 /* DepositOrdersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36677A7625077BBB009152B3 /* DepositOrdersViewModel.swift */; };
 		3667A79B2475011F0000F119 /* WalletConnectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3667A79A2475011F0000F119 /* WalletConnectManager.swift */; };
 		36828CBF24B707B90085A165 /* AssetsPoolTransactionDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36828CBE24B707B90085A165 /* AssetsPoolTransactionDetailViewController.swift */; };
 		36828CC124B707C80085A165 /* AssetsPoolTransactionDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36828CC024B707C80085A165 /* AssetsPoolTransactionDetailModel.swift */; };
@@ -579,6 +581,8 @@
 		3650F0C0248F2A850086F578 /* TransactionDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionDetailTableViewCell.swift; sourceTree = "<group>"; };
 		3650F0C2248F7ED30086F578 /* HomeWithoutWalletView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeWithoutWalletView.swift; sourceTree = "<group>"; };
 		365A89BF23B9A7CE00C55A10 /* WYDTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WYDTextField.swift; sourceTree = "<group>"; };
+		36677A732507598E009152B3 /* RedeemAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedeemAlert.swift; sourceTree = "<group>"; };
+		36677A7625077BBB009152B3 /* DepositOrdersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositOrdersViewModel.swift; sourceTree = "<group>"; };
 		3667A79A2475011F0000F119 /* WalletConnectManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectManager.swift; sourceTree = "<group>"; };
 		36828CBE24B707B90085A165 /* AssetsPoolTransactionDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsPoolTransactionDetailViewController.swift; sourceTree = "<group>"; };
 		36828CC024B707C80085A165 /* AssetsPoolTransactionDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsPoolTransactionDetailModel.swift; sourceTree = "<group>"; };
@@ -1562,6 +1566,7 @@
 		361BDA9D24F8E7BD00C4C54E /* DepositOrders */ = {
 			isa = PBXGroup;
 			children = (
+				36677A7525077BA3009152B3 /* ViewModel */,
 				361BDA9E24F8E7BD00C4C54E /* Controller */,
 				361BDAA024F8E7BD00C4C54E /* Model */,
 				361BDAA224F8E7BD00C4C54E /* View */,
@@ -1993,6 +1998,14 @@
 				365A89BF23B9A7CE00C55A10 /* WYDTextField.swift */,
 			);
 			path = WYDTextField;
+			sourceTree = "<group>";
+		};
+		36677A7525077BA3009152B3 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				36677A7625077BBB009152B3 /* DepositOrdersViewModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		3667A799247500DE0000F119 /* WalletConnect */ = {
@@ -2822,6 +2835,7 @@
 				3622F20B24E4DE8600CFB754 /* TransferTokensAlert.swift */,
 				3622F21824E66A6400CFB754 /* MappingTokensAlert.swift */,
 				361BDB0824F8E7C700C4C54E /* DepositTokensAlert.swift */,
+				36677A732507598E009152B3 /* RedeemAlert.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -4398,6 +4412,7 @@
 				9D5B4E70236BCBDB00F4D99C /* AddAssetModel.swift in Sources */,
 				9D5B4E5E236976D500F4D99C /* HomeTableViewCell.swift in Sources */,
 				361BDAE424F8E7BE00C4C54E /* LoanDetailDepositListTableViewCell.swift in Sources */,
+				36677A7725077BBB009152B3 /* DepositOrdersViewModel.swift in Sources */,
 				3622F21924E66A6400CFB754 /* MappingTokensAlert.swift in Sources */,
 				3617837024449D85003C6588 /* LibraTransactionModulePayload.swift in Sources */,
 				36828CD324B736860085A165 /* MarketMineTableViewManager.swift in Sources */,
@@ -4419,6 +4434,7 @@
 				9DC4887E2322320B005FF254 /* ScanView.swift in Sources */,
 				361BDAB524F8E7BD00C4C54E /* LoanViewController.swift in Sources */,
 				361BDAF124F8E7BE00C4C54E /* RepaymentView.swift in Sources */,
+				36677A742507598E009152B3 /* RedeemAlert.swift in Sources */,
 				3622F20C24E4DE8600CFB754 /* TransferTokensAlert.swift in Sources */,
 				361BDAC624F8E7BD00C4C54E /* LoanListViewModel.swift in Sources */,
 				361BDAC424F8E7BD00C4C54E /* DepositDescribeTableViewCell.swift in Sources */,

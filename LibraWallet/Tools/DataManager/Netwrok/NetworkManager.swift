@@ -114,6 +114,8 @@ enum mainRequest {
     case loanList(String, String, Int, Int, Int)
     /// 获取借款还款详情（地址、借款订单ID）
     case loanRepaymentDetail(String, String)
+    /// 获取存款提款详情（地址、存款ID）
+    case depositWithdrawDetail(String, String)
 }
 extension mainRequest:TargetType {
     var baseURL: URL {
@@ -197,7 +199,8 @@ extension mainRequest:TargetType {
              .loanTransactionDetail(_, _, _, _, _),
              .depositList(_, _, _, _, _),
              .loanList(_, _, _, _, _),
-             .loanRepaymentDetail(_, _):
+             .loanRepaymentDetail(_, _),
+             .depositWithdrawDetail(_, _):
             if PUBLISH_VERSION == true {
                 return URL(string:"https://api.violas.io")!
             } else {
@@ -308,6 +311,8 @@ extension mainRequest:TargetType {
             return "/1.0/violas/bank/borrow/order/list"
         case .loanRepaymentDetail(_, _):
             return "/1.0/violas/bank/borrow/repayment"
+        case .depositWithdrawDetail(_, _):
+            return "/1.0/violas/bank/deposit/withdrawal"
         }
     }
     var method: Moya.Method {
@@ -364,7 +369,8 @@ extension mainRequest:TargetType {
              .loanTransactionDetail(_, _, _, _, _),
              .depositList(_, _, _, _, _),
              .loanList(_, _, _, _, _),
-             .loanRepaymentDetail(_, _):
+             .loanRepaymentDetail(_, _),
+             .depositWithdrawDetail(_, _):
             return .get
         }
     }
@@ -622,6 +628,10 @@ extension mainRequest:TargetType {
             return .requestParameters(parameters: dic,
                                       encoding: URLEncoding.queryString)
         case .loanRepaymentDetail(let address, let orderID):
+            return .requestParameters(parameters: ["address": address,
+                                                   "id": orderID],
+                                      encoding: URLEncoding.queryString)
+        case .depositWithdrawDetail(let address, let orderID):
             return .requestParameters(parameters: ["address": address,
                                                    "id": orderID],
                                       encoding: URLEncoding.queryString)

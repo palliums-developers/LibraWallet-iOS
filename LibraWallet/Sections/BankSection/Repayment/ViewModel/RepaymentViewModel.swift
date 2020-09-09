@@ -75,7 +75,7 @@ extension RepaymentViewModel: RepaymentViewDelegate {
         }
         let amount = NSDecimalNumber.init(string: amountString).multiplying(by: NSDecimalNumber.init(value: 1000000))
         // 检查是否等于0
-        guard amount.uint64Value != 0 else {
+        guard amount.uint64Value == 0 else {
             throw LibraWalletError.WalletBankRepayment(reason: .amountTooLittle)
         }
         // 检查是否高于贷款金额

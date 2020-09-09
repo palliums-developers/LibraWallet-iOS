@@ -7,9 +7,11 @@
 //
 
 import UIKit
-
+protocol DepositOrdersTableViewManagerDelegate: NSObjectProtocol {
+    func cellDelegate(cell: DepositOrdersTableViewCell)
+}
 class DepositOrdersTableViewManager: NSObject {
-    //    weak var delegate: HomeTableViewManagerDelegate?
+    weak var delegate: DepositOrdersTableViewManagerDelegate?
     /// 数据
     var dataModels: [DepositOrdersMainDataModel]?
     deinit {
@@ -51,6 +53,8 @@ extension DepositOrdersTableViewManager: UITableViewDataSource {
             if let data = dataModels, data.isEmpty == false {
                 cell.model = data[indexPath.row]
             }
+            cell.indexPath = indexPath
+            self.delegate?.cellDelegate(cell: cell)
             return cell
         } else {
             let cell = DepositOrdersTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
@@ -58,6 +62,8 @@ extension DepositOrdersTableViewManager: UITableViewDataSource {
             if let data = dataModels, data.isEmpty == false {
                 cell.model = data[indexPath.row]
             }
+            cell.indexPath = indexPath
+            self.delegate?.cellDelegate(cell: cell)
             return cell
         }
     }

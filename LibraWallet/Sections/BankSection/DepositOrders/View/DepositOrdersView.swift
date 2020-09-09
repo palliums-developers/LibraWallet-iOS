@@ -38,4 +38,8 @@ class DepositOrdersView: UIView {
         tableView.register(DepositOrdersTableViewHeaderView.classForCoder(), forHeaderFooterViewReuseIdentifier: "Header")
         return tableView
     }()
+    var toastView: ToastView? {
+        let toast = ToastView.init()
+        return toast
+    }
 }

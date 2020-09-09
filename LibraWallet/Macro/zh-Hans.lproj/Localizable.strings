@@ -433,6 +433,13 @@ wallet_bank_loan_submit_failed = "借款订单提交失败";
 // 数字银行还款
 wallet_bank_repayment_submit_successful = "还款订单提交成功";
 wallet_bank_repayment_submit_failed = "还款订单提交失败";
+// 数字银行赎回
+wallet_bank_redeem_alert_title = "提取";
+wallet_bank_redeem_alert_textfield_placeholder = "请输入提取数量";
+wallet_bank_redeem_alert_amount_title = "可提数量：";
+wallet_bank_redeem_alert_amount_select_total_title = "全部";
+wallet_bank_redeem_alert_warring_content = "如果您当前有借贷操作，则需将部分存款作为质押金。提取质押金需还对应数量的借款金额。";
+wallet_bank_redeem_alert_confirm_button_title = "提取";
 
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "安全提醒";
@@ -613,3 +620,9 @@ wallet_bank_repayment_amount_too_little_error = "输入金额低于最低还贷�
 wallet_bank_repayment_amount_too_large_error = "输入金额高于贷款金额";
 wallet_bank_repayment_balance_insufficient_error = "余额不足";
 wallet_bank_repayment_data_invalid_error = "数据异常";
+// 银行取款
+wallet_bank_withdraw_token_unactivated_error = "提款币尚未开启，请确认";
+wallet_bank_withdraw_amount_empty_error = "未输入";
+wallet_bank_withdraw_amount_invalid_error = "输入无效";
+wallet_bank_withdraw_amount_too_large_error = "输入金额高于贷款金额";
+wallet_bank_withdraw_data_invalid_error = "数据异常";

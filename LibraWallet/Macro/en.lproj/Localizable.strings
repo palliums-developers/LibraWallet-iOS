@@ -254,7 +254,7 @@ wallet_bank_loan_market_title = "Loan Market";
 /************* 数字银行存款订单 *******************/
 wallet_deposit_orders_title = "Current Deposit";
 wallet_deposit_orders_order_state_title = "Increasing";
-wallet_deposit_orders_order_withdraw_button_title = "Withdrawal";
+wallet_deposit_orders_order_withdraw_button_title = "Enchashment";
 wallet_deposit_orders_total_amount_title = "Principal";
 wallet_deposit_orders_income_title = "Earnings";
 wallet_deposit_orders_annualized_return_title = "Annualized Return";
@@ -433,6 +433,13 @@ wallet_bank_loan_submit_failed = "Transaction Submitted Failed";
 // 数字银行还款
 wallet_bank_repayment_submit_successful = "Transaction Submitted";
 wallet_bank_repayment_submit_failed = "Transaction Submitted Failed";
+// 数字银行赎回
+wallet_bank_redeem_alert_title = "Enchashment";
+wallet_bank_redeem_alert_textfield_placeholder = "Please input the withdrawal quantity";
+wallet_bank_redeem_alert_amount_title = "Available Quantity: ";
+wallet_bank_redeem_alert_amount_select_total_title = "Total";
+wallet_bank_redeem_alert_warring_content = "If you currently have a loan operation, you need to use part of the deposit as a pledge deposit. Withdrawal of the pledge deposit needs to repay the corresponding amount of loan amount.";
+wallet_bank_redeem_alert_confirm_button_title = "Confirm";
 
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "Safety Warning";
@@ -612,3 +619,9 @@ wallet_bank_repayment_amount_too_little_error = "The input amount is lower than 
 wallet_bank_repayment_amount_too_large_error = "The input amount is higher than the minimum loan amount";
 wallet_bank_repayment_balance_insufficient_error = "Balance insufficient";
 wallet_bank_repayment_data_invalid_error = "Data invalid";
+// 银行取款
+wallet_bank_withdraw_token_unactivated_error = "Withdraw token unactivated";
+wallet_bank_withdraw_amount_empty_error = "Input empty";
+wallet_bank_withdraw_amount_invalid_error = "Input invalid";
+wallet_bank_withdraw_amount_too_large_error = "The input amount is higher than the minimum withdraw amount";
+wallet_bank_withdraw_data_invalid_error = "Data invalid";
