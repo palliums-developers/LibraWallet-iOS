@@ -161,6 +161,7 @@
 		365A89C023B9A7CE00C55A10 /* WYDTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 365A89BF23B9A7CE00C55A10 /* WYDTextField.swift */; };
 		36677A742507598E009152B3 /* RedeemAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36677A732507598E009152B3 /* RedeemAlert.swift */; };
 		36677A7725077BBB009152B3 /* DepositOrdersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36677A7625077BBB009152B3 /* DepositOrdersViewModel.swift */; };
+		36677A79250A1908009152B3 /* DropperCellConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36677A78250A1908009152B3 /* DropperCellConfig.swift */; };
 		3667A79B2475011F0000F119 /* WalletConnectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3667A79A2475011F0000F119 /* WalletConnectManager.swift */; };
 		36828CBF24B707B90085A165 /* AssetsPoolTransactionDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36828CBE24B707B90085A165 /* AssetsPoolTransactionDetailViewController.swift */; };
 		36828CC124B707C80085A165 /* AssetsPoolTransactionDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36828CC024B707C80085A165 /* AssetsPoolTransactionDetailModel.swift */; };
@@ -583,6 +584,7 @@
 		365A89BF23B9A7CE00C55A10 /* WYDTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WYDTextField.swift; sourceTree = "<group>"; };
 		36677A732507598E009152B3 /* RedeemAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedeemAlert.swift; sourceTree = "<group>"; };
 		36677A7625077BBB009152B3 /* DepositOrdersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositOrdersViewModel.swift; sourceTree = "<group>"; };
+		36677A78250A1908009152B3 /* DropperCellConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropperCellConfig.swift; sourceTree = "<group>"; };
 		3667A79A2475011F0000F119 /* WalletConnectManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectManager.swift; sourceTree = "<group>"; };
 		36828CBE24B707B90085A165 /* AssetsPoolTransactionDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsPoolTransactionDetailViewController.swift; sourceTree = "<group>"; };
 		36828CC024B707C80085A165 /* AssetsPoolTransactionDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsPoolTransactionDetailModel.swift; sourceTree = "<group>"; };
@@ -987,7 +989,6 @@
 			children = (
 				368F7BD024FCFC0B00CCF3FB /* BankLegal */,
 				361BDA4B24F8E7BD00C4C54E /* Bank */,
-				361BDA9324F8E7BD00C4C54E /* DepositMarket */,
 				361BDA5E24F8E7BD00C4C54E /* LoanMarket */,
 				361BDA1724F8E7BD00C4C54E /* Loan */,
 				361BDA7324F8E7BD00C4C54E /* LoanOrders */,
@@ -996,6 +997,7 @@
 				361BDA6824F8E7BD00C4C54E /* LoanOrderDetailDepositList */,
 				361BDA4124F8E7BD00C4C54E /* LoanOrderDetailClearingList */,
 				361BDA3524F8E7BD00C4C54E /* LoanList */,
+				361BDA9324F8E7BD00C4C54E /* DepositMarket */,
 				361BDA2624F8E7BD00C4C54E /* Deposit */,
 				361BDA9D24F8E7BD00C4C54E /* DepositOrders */,
 				361BDAA824F8E7BD00C4C54E /* DepositList */,
@@ -2596,6 +2598,7 @@
 		36F8270224BEAA7E0007ACC3 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				36677A78250A1908009152B3 /* DropperCellConfig.swift */,
 				36F8270324BEAA7E0007ACC3 /* DropperCell.swift */,
 				36F8270424BEAA7E0007ACC3 /* DropperDelegate.swift */,
 				36F8270524BEAA7E0007ACC3 /* Dropper.swift */,
@@ -4445,6 +4448,7 @@
 				9D5B4E78236BCE1700F4D99C /* AddAssetViewTableViewCell.swift in Sources */,
 				9DC901F2232788C30097FD85 /* LibraAccessPath.swift in Sources */,
 				9DBC267823408D55009650EA /* ed25519_ge.swift in Sources */,
+				36677A79250A1908009152B3 /* DropperCellConfig.swift in Sources */,
 				9DFFA88323683C5700EA74F9 /* WalletTransactionsTableViewManager.swift in Sources */,
 				3646E50D24DBF5B300B8C20B /* ScanSwapViewController.swift in Sources */,
 				36828CC624B708900085A165 /* AssetsPoolTransactionDetailTableViewMananger.swift in Sources */,

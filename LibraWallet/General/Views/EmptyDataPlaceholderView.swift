@@ -12,7 +12,7 @@ class EmptyDataPlaceholderView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = defaultBackgroundColor
-        addSubview(topBackgroundImageView)
+//        addSubview(topBackgroundImageView)
         addSubview(walletWhiteBackgroundView)
 
         walletWhiteBackgroundView.addSubview(indicatorImageView)
@@ -24,10 +24,10 @@ class EmptyDataPlaceholderView: UIView {
     }
     override func layoutSubviews() {
         super.layoutSubviews()
-        topBackgroundImageView.snp.makeConstraints { (make) in
-            make.top.left.right.equalTo(0)
-            make.height.equalTo(202)
-        }
+//        topBackgroundImageView.snp.makeConstraints { (make) in
+//            make.top.left.right.equalTo(0)
+//            make.height.equalTo(202)
+//        }
         walletWhiteBackgroundView.snp.makeConstraints { (make) in
             make.top.equalTo(self).offset(navigationBarHeight)
             make.left.right.bottom.equalTo(self)
@@ -63,12 +63,12 @@ class EmptyDataPlaceholderView: UIView {
 //        label.font = UIFont.systemFont(ofSize: 11, weight: UIFont.Weight.regular)
 //        return label
 //    }()
-    private lazy var topBackgroundImageView : UIImageView = {
-        let imageView = UIImageView.init()
-        imageView.image = UIImage.init(named: "navigation_background")
-        imageView.isUserInteractionEnabled = true
-        return imageView
-    }()
+//    private lazy var topBackgroundImageView : UIImageView = {
+//        let imageView = UIImageView.init()
+//        imageView.image = UIImage.init(named: "navigation_background")
+//        imageView.isUserInteractionEnabled = true
+//        return imageView
+//    }()
     private lazy var walletWhiteBackgroundView: UIView = {
         let view = UIView.init()
         view.backgroundColor = UIColor.white

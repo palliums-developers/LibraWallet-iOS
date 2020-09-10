@@ -20,7 +20,7 @@ class LoanOrdersViewController: BaseViewController {
         // 初始化本地配置
         self.setNavigationWithoutShadowImage()
         // 设置标题
-        self.title = localLanguage(keyString: "wallet_transactions_navigation_title")
+        self.title = localLanguage(keyString: "wallet_bank_loan_orders_navigationbar_title")
         self.initKVO()
         //设置空数据页面
         self.setEmptyView()
@@ -43,8 +43,8 @@ class LoanOrdersViewController: BaseViewController {
     //MARK: - 默认页面
     func setPlaceholderView() {
         if let empty = emptyView as? EmptyDataPlaceholderView {
-            empty.emptyImageName = "transaction_list_empty_default"
-            empty.tipString = localLanguage(keyString: "wallet_transactions_empty_default_title")
+            empty.emptyImageName = "data_empty"
+            empty.tipString = localLanguage(keyString: "wallet_bank_loan_orders_empty_title")
         }
     }
     //MARK: - 网络请求
@@ -146,42 +146,55 @@ extension LoanOrdersViewController {
             }
             if let error = dataDic.value(forKey: "error") as? LibraWalletError {
                 // 隐藏请求指示
-                self?.view?.hideToastActivity()
-                //                self?.view?.toastView?.hide(tag: 99)
-                //                self?.view?.toastView?.hide(tag: 299)
-                //                self?.view?.toastView?.hide(tag: 399)
+                self?.detailView.hideToastActivity()
+                if self?.detailView.tableView.mj_header?.isRefreshing == true {
+                    self?.detailView.tableView.mj_header?.endRefreshing()
+                }
                 if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
                     // 网络无法访问
                     print(error.localizedDescription)
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
+                    if self?.detailView.tableView.mj_footer?.isRefreshing == true {
+                        self?.detailView.tableView.mj_footer?.endRefreshing()
+                    }
+                    self?.detailView.makeToast(error.localizedDescription, position: .center)
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionExpired).localizedDescription {
                     // 版本太久
                     print(error.localizedDescription)
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
+                    if self?.detailView.tableView.mj_footer?.isRefreshing == true {
+                        self?.detailView.tableView.mj_footer?.endRefreshing()
+                    }
+                    self?.detailView.makeToast(error.localizedDescription, position: .center)
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
                     // 解析失败
                     print(error.localizedDescription)
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
+                    if self?.detailView.tableView.mj_footer?.isRefreshing == true {
+                        self?.detailView.tableView.mj_footer?.endRefreshing()
+                    }
+                    self?.detailView.makeToast(error.localizedDescription, position: .center)
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
                     print(error.localizedDescription)
                     // 数据状态异常
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
+                    if self?.detailView.tableView.mj_footer?.isRefreshing == true {
+                        self?.detailView.tableView.mj_footer?.endRefreshing()
+                    }
+                    self?.detailView.makeToast(error.localizedDescription, position: .center)
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
                     print(error.localizedDescription)
                     // 下拉刷新请求数据为空
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
+                    self?.detailView.makeToast(error.localizedDescription, position: .center)
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .noMoreData).localizedDescription {
                     // 上拉请求更多数据为空
                     print(error.localizedDescription)
+                    if self?.detailView.tableView.mj_footer?.isRefreshing == true {
+                        self?.detailView.tableView.mj_footer?.endRefreshingWithNoMoreData()
+                    }
                 } else {
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
+                    if self?.detailView.tableView.mj_footer?.isRefreshing == true {
+                        self?.detailView.tableView.mj_footer?.endRefreshing()
+                    }
+                    self?.detailView.makeToast(error.localizedDescription, position: .center)
                 }
+                self?.endLoading()
                 return
             }
             let type = dataDic.value(forKey: "type") as! String
@@ -191,6 +204,7 @@ extension LoanOrdersViewController {
                 }
                 self?.tableViewManager.dataModels = tempData
                 self?.detailView.tableView.reloadData()
+                self?.detailView.tableView.mj_header?.endRefreshing()
             } else if type == "GetBankLoanTransactionsMore" {
                 guard let tempData = dataDic.value(forKey: "data") as? [LoanOrdersMainDataModel] else {
                     return
@@ -213,9 +227,7 @@ extension LoanOrdersViewController {
                 }
                 self?.detailView.tableView.mj_footer?.endRefreshing()
             }
-            self?.detailView.tableView.mj_footer?.endRefreshing()
             self?.detailView.hideToastActivity()
-            self?.detailView.tableView.mj_header?.endRefreshing()
             self?.endLoading()
         })
     }

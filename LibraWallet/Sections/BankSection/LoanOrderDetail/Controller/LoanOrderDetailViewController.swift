@@ -12,7 +12,7 @@ import JXSegmentedView
 class LoanOrderDetailViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = localLanguage(keyString: "wallet_bank_loan_detail_navigationbar_title")
+        self.title = localLanguage(keyString: "wallet_bank_loan_orders_list_navigationbar_title")
         // 设置背景色
         self.view.backgroundColor = UIColor.white
         self.view.addSubview(detailView)

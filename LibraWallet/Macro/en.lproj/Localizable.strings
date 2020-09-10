@@ -250,6 +250,9 @@ wallet_bank_total_benefit_title = "Accumulated Earnings($)";
 wallet_bank_yesterday_earnings_button_title = "Yesterday's earnings";
 wallet_bank_deposit_market_title = "Deposit Market";
 wallet_bank_loan_market_title = "Loan Market";
+wallet_bank_deposit_orders_alert_title = "Deposit Orders";
+wallet_bank_loan_orders_alert_title = "Loan Orders";
+
 
 /************* 数字银行存款订单 *******************/
 wallet_deposit_orders_title = "Current Deposit";
@@ -258,6 +261,7 @@ wallet_deposit_orders_order_withdraw_button_title = "Enchashment";
 wallet_deposit_orders_total_amount_title = "Principal";
 wallet_deposit_orders_income_title = "Earnings";
 wallet_deposit_orders_annualized_return_title = "Annualized Return";
+wallet_deposit_orders_empty_title = "Data Empty";
 
 /************* 数字银行存款明细 *******************/
 wallet_deposit_list_order_token_select_title = "All Token";
@@ -272,6 +276,7 @@ wallet_deposit_list_order_status_deposit_processing_title = "Deposit Processing"
 /************* 数字银行借款订单 *******************/
 wallet_bank_loan_orders_title = "Current Loan";
 wallet_bank_loan_order_amount_title = "Remaining Payment Amount";
+wallet_bank_loan_orders_empty_title = "Data Empty";
 
 /************* 数字银行借款详情 *******************/
 wallet_bank_loan_detail_remaining_payment_amount_title = "Remaining Payment Amount";
@@ -481,6 +486,10 @@ wallet_market_assets_pool_transaction_detail_navigationbar_title = "Detail";
 wallet_bank_deposit_navigationbar_title = "Deposit";
 wallet_bank_loan_navigationbar_title = "Loan";
 wallet_bank_loan_detail_navigationbar_title = "Loan Detail";
+wallet_bank_loan_orders_navigationbar_title = "Loan Orders";
+wallet_bank_deposit_orders_navigationbar_title = "Deposit Orders";
+wallet_bank_loan_orders_list_navigationbar_title = "Loan Orders List";
+wallet_bank_deposit_orders_list_navigationbar_title = "Deposit Orders List";
 
 /************* App错误 *******************/
 // 请求遇到错误

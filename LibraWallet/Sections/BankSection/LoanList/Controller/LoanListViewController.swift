@@ -11,6 +11,7 @@ import UIKit
 class LoanListViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = localLanguage(keyString: "wallet_bank_loan_orders_list_navigationbar_title")
         self.view.backgroundColor = UIColor.white
         // 加载子View
         self.view.addSubview(detailView)

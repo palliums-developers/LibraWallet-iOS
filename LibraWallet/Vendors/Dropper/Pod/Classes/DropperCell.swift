@@ -30,7 +30,7 @@ internal class DropperCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
-        print("PopMenuTableViewCell销毁了")
+        print("DropperCell销毁了")
     }
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -144,16 +144,17 @@ internal class DropperCell: UITableViewCell {
     var indexPath: IndexPath?
     /// Border Color of custom Border
     var borderColor: UIColor?
-    //    //MARK: - 设置数据
-//    var cellConfig: CellConfig? {
-//        didSet {
-//            guard let config = cellConfig else {
-//                return
-//            }
-//            textItem.font = config.textFont ?? UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
-//            textItem.textColor = config.textColor ?? UIColor.black
-//            seperator.alpha = config.showSeperator == true ? 1:0
-//            contentView.backgroundColor = config.backgroundColor ?? UIColor.clear
-//        }
-//    }
+    // MARK: - 设置数据
+    var cellConfig: DropperCellConfig? {
+        didSet {
+            guard let config = cellConfig else {
+                return
+            }
+            textItem.font = config.textFont ?? UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
+            textItem.textColor = config.textColor ?? UIColor.black
+            seperator.alpha = config.showSeperator == true ? 1:0
+            seperator.backgroundColor = config.seperatorColor ?? UIColor.black
+            contentView.backgroundColor = config.backgroundColor ?? UIColor.clear
+        }
+    }
 }

@@ -331,19 +331,14 @@ open class Dropper: UIView {
         let view = UIView.init(frame: CGRect.init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
         return view
     }()
-//    var cellConfig: CellConfig?
-//    struct CellConfig {
-//        var textFont: UIFont?
-//        var textColor: UIColor?
-//        var showSeperator: Bool?
-//        var backgroundColor: UIColor?
-//    }
+    var cellConfig: DropperCellConfig?
+
 }
 
 extension Dropper: UITableViewDelegate, DropperExtentsions {
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        delegate?.DropperSelectedRow(indexPath, contents: items[(indexPath as NSIndexPath).row])
-        delegate?.DropperSelectedRow(indexPath, contents: items[(indexPath as NSIndexPath).row], tag: self.tag)
+        delegate?.DropperSelectedRow(indexPath, contents: items[indexPath.row])
+        delegate?.DropperSelectedRow(indexPath, contents: items[indexPath.row], tag: self.tag)
         self.hideWithAnimation(defaultAnimationTime)
     }
 }
@@ -386,6 +381,7 @@ extension Dropper: UITableViewDataSource {
             } else {
                 cell.selectMode = false
             }
+            cell.cellConfig = self.cellConfig
             return cell
         } else {
             let cell = DropperCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: "cell", cellType: toImage(items[indexPath.row]) == nil ? .text:.icon)
@@ -416,7 +412,7 @@ extension Dropper: UITableViewDataSource {
                 //                cell.cellType = .text
                 cell.textItem.text = item
             }
-            
+            cell.cellConfig = self.cellConfig
             return cell
         }
     }

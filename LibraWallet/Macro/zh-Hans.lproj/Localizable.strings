@@ -250,6 +250,8 @@ wallet_bank_total_benefit_title = "累计收益（$）";
 wallet_bank_yesterday_earnings_button_title = "昨日收益";
 wallet_bank_deposit_market_title = "存款市场";
 wallet_bank_loan_market_title = "借款市场";
+wallet_bank_deposit_orders_alert_title = "存款订单";
+wallet_bank_loan_orders_alert_title = "借款订单";
 
 /************* 数字银行存款订单 *******************/
 wallet_deposit_orders_title = "当前存款";
@@ -258,6 +260,7 @@ wallet_deposit_orders_order_withdraw_button_title = "提取";
 wallet_deposit_orders_total_amount_title = "本金";
 wallet_deposit_orders_income_title = "收益";
 wallet_deposit_orders_annualized_return_title = "年化收益率";
+wallet_deposit_orders_empty_title = "暂无数据";
 
 /************* 数字银行存款明细 *******************/
 wallet_deposit_list_order_token_select_title = "全部币种";
@@ -272,6 +275,7 @@ wallet_deposit_list_order_status_deposit_processing_title = "存款中";
 /************* 数字银行借款订单 *******************/
 wallet_bank_loan_orders_title = "当前借款";
 wallet_bank_loan_order_amount_title = "待还金额";
+wallet_bank_loan_orders_empty_title = "暂无数据";
 
 /************* 数字银行借款详情 *******************/
 wallet_bank_loan_detail_remaining_payment_amount_title = "待还金额";
@@ -482,6 +486,10 @@ wallet_market_assets_pool_transaction_detail_navigationbar_title = "详情";
 wallet_bank_deposit_navigationbar_title = "存款";
 wallet_bank_loan_navigationbar_title = "借款";
 wallet_bank_loan_detail_navigationbar_title = "借款详情";
+wallet_bank_loan_orders_navigationbar_title = "借款订单";
+wallet_bank_deposit_orders_navigationbar_title = "存款订单";
+wallet_bank_loan_orders_list_navigationbar_title = "借款明细";
+wallet_bank_deposit_orders_list_navigationbar_title = "存款明细";
 
 /************* App错误 *******************/
 // 请求遇到错误
