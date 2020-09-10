@@ -16,80 +16,57 @@ class DepositMarketViewController: BaseViewController {
     weak var delegate: DepositMarketViewControllerDelegate?
     override func viewDidLoad() {
         super.viewDidLoad()
-        // 初始化本地配置
-        self.setNavigationWithoutShadowImage()
-        // 设置标题
-        self.title = localLanguage(keyString: "wallet_transactions_navigation_title")
+//        self.view.addSubview(self.detailView)
         //设置空数据页面
         self.setEmptyView()
         //设置默认页面（无数据、无网络）
         self.setPlaceholderView()
     }
-    //    override func viewWillLayoutSubviews() {
-    //        super.viewWillLayoutSubviews()
-    //        detailView.snp.makeConstraints { (make) in
-    //            if #available(iOS 11.0, *) {
-    //                make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
-    //            } else {
-    //                make.top.bottom.equalTo(self.view)
-    //            }
-    //            make.left.right.equalTo(self.view)
-    //        }
-    //    }
-    //MARK: - 默认页面
+//    override func viewWillLayoutSubviews() {
+//        super.viewWillLayoutSubviews()
+//        detailView.snp.makeConstraints { (make) in
+//            if #available(iOS 11.0, *) {
+//                make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
+//            } else {
+//                make.top.bottom.equalTo(self.view)
+//            }
+//            make.left.right.equalTo(self.view)
+//        }
+//    }
+    deinit {
+        print("DepositMarketViewController销毁了")
+    }
+    // 默认页面
     func setPlaceholderView() {
         if let empty = emptyView as? EmptyDataPlaceholderView {
             empty.emptyImageName = "transaction_list_empty_default"
             empty.tipString = localLanguage(keyString: "wallet_transactions_empty_default_title")
         }
     }
-    //MARK: - 网络请求
+    // 网络请求
     func requestData() {
         if (lastState == .Loading) {return}
         startLoading ()
-        //        self.detailView.makeToastActivity(.center)
-        
         transactionRequest(refresh: true)
     }
     override func hasContent() -> Bool {
-//        switch self.wallet?.tokenType {
-//        case .Libra:
-//            if let addresses = self.tableViewManager.libraTransactions, addresses.isEmpty == false {
-//                return true
-//            } else {
-//                return false
-//            }
-//        case .Violas:
-//            if let addresses = self.tableViewManager.violasTransactions, addresses.isEmpty == false {
-//                return true
-//            } else {
-//                return false
-//            }
-//        case .BTC:
-//            if let addresses = self.tableViewManager.btcTransactions, addresses.isEmpty == false {
-//                return true
-//            } else {
-//                return false
-//            }
-//        default:
-//            return false
-//        }
-        return true
+        if let models = self.tableViewManager.dataModels, models.isEmpty == false {
+            return true
+        } else {
+            return false
+        }
     }
-    deinit {
-        print("DepositMarketViewController销毁了")
-    }
-    // 网络请求、数据模型
+    /// 网络请求、数据模型
     lazy var dataModel: DepositMarketModel = {
         let model = DepositMarketModel.init()
         return model
     }()
-    // tableView管理类
+    /// tableView管理类
     lazy var tableViewManager: DepositMarketTableViewManager = {
         let manager = DepositMarketTableViewManager.init()
         return manager
     }()
-    // 子View
+    /// 子View
     lazy var detailView : DepositMarketView = {
         let view = DepositMarketView.init()
         view.tableView.delegate = self.tableViewManager
@@ -98,14 +75,16 @@ class DepositMarketViewController: BaseViewController {
         view.tableView.mj_footer = MJRefreshBackNormalFooter.init(refreshingTarget: self, refreshingAction:  #selector(getMoreData))
         return view
     }()
+    /// 数据监听KVO
     var observer: NSKeyValueObservation?
-    var wallet: Token? {
-        didSet {
-//            self.tableViewManager.transactionType = wallet?.tokenType
-        }
-    }
-    
+    /// 页数
     var dataOffset: Int = 0
+    /// 防止多次点击
+    var firstIn: Bool = true
+}
+
+// MARK: - 网络请求
+extension DepositMarketViewController {
     @objc func refreshData() {
         dataOffset = 0
         detailView.tableView.mj_footer?.resetNoMoreData()
@@ -115,8 +94,6 @@ class DepositMarketViewController: BaseViewController {
         dataOffset += 10
         transactionRequest(refresh: false)
     }
-    var firstIn: Bool = true
-    var requestType: String?
     func transactionRequest(refresh: Bool) {
         let requestState = refresh == true ? 0:1
         if refresh == true {
@@ -125,6 +102,8 @@ class DepositMarketViewController: BaseViewController {
         self.dataModel.getDepositMarket(requestStatus: requestState)
     }
 }
+
+// MARK: - 网络请求数据处理
 extension DepositMarketViewController {
     func initKVO() {
         self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
@@ -134,79 +113,91 @@ extension DepositMarketViewController {
                 return
             }
             if let error = dataDic.value(forKey: "error") as? LibraWalletError {
+                if self?.detailView.tableView.mj_header?.isRefreshing == true {
+                    self?.detailView.tableView.mj_header?.endRefreshing()
+                }
                 // 隐藏请求指示
-                self?.view?.hideToastActivity()
-//                self?.view?.toastView?.hide(tag: 99)
-//                self?.view?.toastView?.hide(tag: 299)
-//                self?.view?.toastView?.hide(tag: 399)
                 if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
                     // 网络无法访问
                     print(error.localizedDescription)
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
+                    if self?.detailView.tableView.mj_footer?.isRefreshing == true {
+                        self?.detailView.tableView.mj_footer?.endRefreshing()
+                    }
+                    self?.detailView.makeToast(error.localizedDescription, position: .center)
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionExpired).localizedDescription {
                     // 版本太久
                     print(error.localizedDescription)
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
+                    if self?.detailView.tableView.mj_footer?.isRefreshing == true {
+                        self?.detailView.tableView.mj_footer?.endRefreshing()
+                    }
+                    self?.detailView.makeToast(error.localizedDescription, position: .center)
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
                     // 解析失败
                     print(error.localizedDescription)
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
+                    if self?.detailView.tableView.mj_footer?.isRefreshing == true {
+                        self?.detailView.tableView.mj_footer?.endRefreshing()
+                    }
+                    self?.detailView.makeToast(error.localizedDescription, position: .center)
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
-                    print(error.localizedDescription)
                     // 数据状态异常
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
                     print(error.localizedDescription)
+                    if self?.detailView.tableView.mj_footer?.isRefreshing == true {
+                        self?.detailView.tableView.mj_footer?.endRefreshing()
+                    }
+                    self?.detailView.makeToast(error.localizedDescription, position: .center)
+                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
                     // 下拉刷新请求数据为空
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
+                    print(error.localizedDescription)
+//                    self?.endLoading()
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .noMoreData).localizedDescription {
                     // 上拉请求更多数据为空
                     print(error.localizedDescription)
-                } else {
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
-                }
-                return
-            }
-            let type = dataDic.value(forKey: "type") as! String
-            if type == "GetBankDepositMarketOrigin" {
-                guard let tempData = dataDic.value(forKey: "data") as? [BankDepositMarketDataModel] else {
-                    return
-                }
-                self?.tableViewManager.dataModels = tempData
-                self?.detailView.tableView.reloadData()
-            } else if type == "GetBankDepositMarketMore" {
-                guard let tempData = dataDic.value(forKey: "data") as? [BankDepositMarketDataModel] else {
-                    return
-                }
-                if let oldData = self?.tableViewManager.dataModels, oldData.isEmpty == false {
-                    let tempArray = NSMutableArray.init(array: oldData)
-                    var insertIndexPath = [IndexPath]()
-                    for index in 0..<tempData.count {
-                        let indexPath = IndexPath.init(row: oldData.count + index, section: 0)
-                        insertIndexPath.append(indexPath)
+                    if self?.detailView.tableView.mj_footer?.isRefreshing == true {
+                        self?.detailView.tableView.mj_footer?.endRefreshingWithNoMoreData()
                     }
-                    tempArray.addObjects(from: tempData)
-                    self?.tableViewManager.dataModels = tempArray as? [BankDepositMarketDataModel]
-                    self?.detailView.tableView.beginUpdates()
-                    self?.detailView.tableView.insertRows(at: insertIndexPath, with: UITableView.RowAnimation.bottom)
-                    self?.detailView.tableView.endUpdates()
                 } else {
+                    // 其他错误
+                    print(error.localizedDescription)
+                    if self?.detailView.tableView.mj_footer?.isRefreshing == true {
+                        self?.detailView.tableView.mj_footer?.endRefreshing()
+                    }
+                    self?.detailView.makeToast(error.localizedDescription, position: .center)
+                }
+            }
+            if let type = dataDic.value(forKey: "type") as? String {
+                if type == "GetBankDepositMarketOrigin" {
+                    guard let tempData = dataDic.value(forKey: "data") as? [BankDepositMarketDataModel] else {
+                        return
+                    }
                     self?.tableViewManager.dataModels = tempData
                     self?.detailView.tableView.reloadData()
+                    self?.detailView.tableView.mj_header?.endRefreshing()
+                } else if type == "GetBankDepositMarketMore" {
+                    guard let tempData = dataDic.value(forKey: "data") as? [BankDepositMarketDataModel] else {
+                        return
+                    }
+                    if let oldData = self?.tableViewManager.dataModels, oldData.isEmpty == false {
+                        var insertIndexPath = [IndexPath]()
+                        for index in 0..<tempData.count {
+                            let indexPath = IndexPath.init(row: oldData.count + index, section: 0)
+                            insertIndexPath.append(indexPath)
+                        }
+                        self?.tableViewManager.dataModels = (oldData + tempData)
+                        self?.detailView.tableView.beginUpdates()
+                        self?.detailView.tableView.insertRows(at: insertIndexPath, with: UITableView.RowAnimation.bottom)
+                        self?.detailView.tableView.endUpdates()
+                    } else {
+                        self?.tableViewManager.dataModels = tempData
+                        self?.detailView.tableView.reloadData()
+                    }
+                    self?.detailView.tableView.mj_footer?.endRefreshing()
                 }
-                self?.detailView.tableView.mj_footer?.endRefreshing()
+                self?.endLoading()
             }
-            self?.detailView.tableView.mj_footer?.endRefreshing()
-            self?.detailView.hideToastActivity()
-            self?.detailView.tableView.mj_header?.endRefreshing()
-            self?.endLoading()
         })
+    }
+    func handleError(error: LibraWalletError) {
+
     }
 }
 extension DepositMarketViewController: JXSegmentedListContainerViewListDelegate {
@@ -221,7 +212,6 @@ extension DepositMarketViewController: JXSegmentedListContainerViewListDelegate 
         }
         if (lastState == .Loading) {return}
         startLoading ()
-//        self.detailView.makeToastActivity(.center)
         self.detailView.tableView.mj_header?.beginRefreshing()
         firstIn = false
     }

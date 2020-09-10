@@ -987,6 +987,8 @@
 			children = (
 				368F7BD024FCFC0B00CCF3FB /* BankLegal */,
 				361BDA4B24F8E7BD00C4C54E /* Bank */,
+				361BDA9324F8E7BD00C4C54E /* DepositMarket */,
+				361BDA5E24F8E7BD00C4C54E /* LoanMarket */,
 				361BDA1724F8E7BD00C4C54E /* Loan */,
 				361BDA7324F8E7BD00C4C54E /* LoanOrders */,
 				361BDA8B24F8E7BD00C4C54E /* LoanOrderDetail */,
@@ -996,10 +998,8 @@
 				361BDA3524F8E7BD00C4C54E /* LoanList */,
 				361BDA2624F8E7BD00C4C54E /* Deposit */,
 				361BDA9D24F8E7BD00C4C54E /* DepositOrders */,
-				361BDA9324F8E7BD00C4C54E /* DepositMarket */,
 				361BDAA824F8E7BD00C4C54E /* DepositList */,
 				361BDA7E24F8E7BD00C4C54E /* Repayment */,
-				361BDA5E24F8E7BD00C4C54E /* LoanMarket */,
 			);
 			path = BankSection;
 			sourceTree = "<group>";

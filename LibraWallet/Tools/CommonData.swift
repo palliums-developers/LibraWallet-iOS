@@ -41,7 +41,7 @@ func localLanguage(keyString: String) -> String {
 ///   - type: 请求类型
 ///   - data: 数据
 /// - Returns: 字典结果
-func setKVOData(error: LibraWalletError? = nil, type: String?, data: Any? = nil) -> NSMutableDictionary {
+func setKVOData(error: LibraWalletError? = nil, type: String, data: Any? = nil) -> NSMutableDictionary {
     let dic = NSMutableDictionary()
     dic.setValue(error, forKey: "error")
     dic.setValue(type, forKey: "type")
@@ -49,11 +49,11 @@ func setKVOData(error: LibraWalletError? = nil, type: String?, data: Any? = nil)
     return dic
 }
 struct RequestHandleModel {
-    var type: String?
+    var type: String
     var error: LibraWalletError?
     var data: Any?
 }
-func setKVOModel(error: LibraWalletError? = nil, type: String?, data: Any? = nil) -> RequestHandleModel {
+func setKVOModel(error: LibraWalletError? = nil, type: String, data: Any? = nil) -> RequestHandleModel {
     let model = RequestHandleModel.init(type: type,
                                         error: error,
                                         data: data)

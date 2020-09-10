@@ -46,7 +46,8 @@ class EmptyDataPlaceholderView: UIView {
 //        }
     }
     internal lazy var indicatorImageView: UIImageView = {
-        return UIImageView()
+        let image = UIImageView()
+        return image
     }()
     internal lazy var tipLabel: UILabel = {
         let label = UILabel()

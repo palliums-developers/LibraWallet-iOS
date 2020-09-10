@@ -197,5 +197,4 @@ extension DepositMarketModel {
         }
         self.requests.append(request)
     }
-
 }

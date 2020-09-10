@@ -11,7 +11,7 @@ import UIKit
 class DepositMarketView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.addSubview(tableView)
+        addSubview(tableView)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

@@ -9,13 +9,12 @@
 import UIKit
 
 class DepositMarketTableViewCell: UITableViewCell {
-    //    weak var delegate: AddAssetViewTableViewCellDelegate?
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        //        contentView.addSubview(iconImageView)
         contentView.backgroundColor = UIColor.init(hex: "F7F7F9")
         contentView.addSubview(whiteBackgroundView)
-        whiteBackgroundView.addSubview(itemContentView)
+        contentView.addSubview(itemContentView)
         itemContentView.addSubview(itemIconImageView)
         itemContentView.addSubview(itemNameLabel)
         itemContentView.addSubview(itemDescribeLabel)
@@ -29,7 +28,7 @@ class DepositMarketTableViewCell: UITableViewCell {
     deinit {
         print("DepositMarketTableViewCell销毁了")
     }
-    //pragma MARK: 布局
+    // MARK: - 布局
     override func layoutSubviews() {
         super.layoutSubviews()
         whiteBackgroundView.snp.makeConstraints { (make) in
@@ -87,7 +86,7 @@ class DepositMarketTableViewCell: UITableViewCell {
         view.layer.masksToBounds = true
         return view
     }()
-    lazy var itemNameLabel: UILabel = {
+    private lazy var itemNameLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "333333")
@@ -95,7 +94,7 @@ class DepositMarketTableViewCell: UITableViewCell {
         label.text = "---"
         return label
     }()
-    lazy var itemDescribeLabel: UILabel = {
+    private lazy var itemDescribeLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "999999")
@@ -103,7 +102,7 @@ class DepositMarketTableViewCell: UITableViewCell {
         label.text = "---"
         return label
     }()
-    lazy var itemBenefitLabel: UILabel = {
+    private lazy var itemBenefitLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "13B788")
@@ -111,7 +110,7 @@ class DepositMarketTableViewCell: UITableViewCell {
         label.text = "---"
         return label
     }()
-    lazy var itemBenefitTitleLabel: UILabel = {
+    private lazy var itemBenefitTitleLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "999999")
@@ -119,15 +118,13 @@ class DepositMarketTableViewCell: UITableViewCell {
         label.text = "---"
         return label
     }()
-    lazy var spaceLabel: UILabel = {
-        let label = UILabel.init()
-        label.backgroundColor = DefaultSpaceColor
-        return label
-    }()
-    //MARK: - 设置数据
+    // MARK: - 设置数据
     var model: BankDepositMarketDataModel? {
         didSet {
-            if let iconName = model?.logo, iconName.isEmpty == false {
+            guard let tempModel = model else {
+                return
+            }
+            if let iconName = tempModel.logo, iconName.isEmpty == false {
                 if iconName.hasPrefix("http") {
                     let url = URL(string: iconName)
                     itemIconImageView.kf.setImage(with: url, placeholder: UIImage.init(named: "wallet_icon_default"))
@@ -137,10 +134,10 @@ class DepositMarketTableViewCell: UITableViewCell {
             } else {
                 itemIconImageView.image = UIImage.init(named: "wallet_icon_default")
             }
-            itemNameLabel.text = model?.name
-            itemDescribeLabel.text = model?.desc
-            itemBenefitLabel.text = NSDecimalNumber.init(value: model?.rate ?? 0).multiplying(by: NSDecimalNumber.init(value: 100)).stringValue + "%"
-            itemBenefitTitleLabel.text = model?.rate_desc
+            itemNameLabel.text = tempModel.name
+            itemDescribeLabel.text = tempModel.desc
+            itemBenefitLabel.text = NSDecimalNumber.init(value: tempModel.rate ?? 0).multiplying(by: NSDecimalNumber.init(value: 100)).stringValue + "%"
+            itemBenefitTitleLabel.text = tempModel.rate_desc
         }
     }
 }
