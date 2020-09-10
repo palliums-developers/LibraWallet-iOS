@@ -9,10 +9,9 @@
 import UIKit
 
 class LoanMarketTableViewCell: UITableViewCell {
-    //    weak var delegate: AddAssetViewTableViewCellDelegate?
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        //        contentView.addSubview(iconImageView)
         contentView.backgroundColor = UIColor.init(hex: "F7F7F9")
         contentView.addSubview(whiteBackgroundView)
         whiteBackgroundView.addSubview(itemContentView)
@@ -92,7 +91,7 @@ class LoanMarketTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "333333")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: UIFont.Weight.regular)
-        label.text = "Test-テスト"
+        label.text = "---"
         return label
     }()
     lazy var itemDescribeLabel: UILabel = {
@@ -100,7 +99,7 @@ class LoanMarketTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "999999")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: UIFont.Weight.regular)
-        label.text = "Describe-説明する"
+        label.text = "---"
         return label
     }()
     lazy var itemBenefitLabel: UILabel = {
@@ -108,7 +107,7 @@ class LoanMarketTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "13B788")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 18), weight: UIFont.Weight.bold)
-        label.text = "999.999%"
+        label.text = "---"
         return label
     }()
     lazy var itemBenefitTitleLabel: UILabel = {
@@ -116,7 +115,7 @@ class LoanMarketTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "999999")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: UIFont.Weight.regular)
-        label.text = "Benefit describe-年間収益率"
+        label.text = "---"
         return label
     }()
     lazy var spaceLabel: UILabel = {
@@ -124,7 +123,7 @@ class LoanMarketTableViewCell: UITableViewCell {
         label.backgroundColor = DefaultSpaceColor
         return label
     }()
-    //MARK: - 设置数据
+    // MARK: - 设置数据
     var model: BankDepositMarketDataModel? {
         didSet {
             if let iconName = model?.logo, iconName.isEmpty == false {

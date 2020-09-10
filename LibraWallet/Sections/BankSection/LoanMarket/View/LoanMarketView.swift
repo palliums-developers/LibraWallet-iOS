@@ -19,7 +19,7 @@ class LoanMarketView: UIView {
     deinit {
         print("LoanMarketView销毁了")
     }
-    //MARK: - 布局
+    // MARK: - 布局
     override func layoutSubviews() {
         super.layoutSubviews()
         self.tableView.snp.makeConstraints { (make) in
@@ -27,7 +27,7 @@ class LoanMarketView: UIView {
             make.left.right.bottom.equalTo(self)
         }
     }
-    //MARK: - 懒加载对象
+    // MARK: - 懒加载对象
     lazy var tableView: UITableView = {
         let tableView = UITableView.init(frame: CGRect.zero, style: UITableView.Style.plain)
         tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
@@ -37,5 +37,4 @@ class LoanMarketView: UIView {
         tableView.register(WalletTransactionsTableViewCell.classForCoder(), forCellReuseIdentifier: "CellNormal")
         return tableView
     }()
-
 }

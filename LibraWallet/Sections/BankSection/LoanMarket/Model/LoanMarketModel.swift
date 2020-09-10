@@ -12,7 +12,6 @@ import Moya
 class LoanMarketModel: NSObject {
     private var requests: [Cancellable] = []
     @objc dynamic var dataDic: NSMutableDictionary = [:]
-    private var sequenceNumber: UInt64?
     deinit {
         requests.forEach { cancellable in
             cancellable.cancel()

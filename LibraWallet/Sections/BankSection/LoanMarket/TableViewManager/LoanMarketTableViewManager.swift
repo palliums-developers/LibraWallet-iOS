@@ -11,6 +11,7 @@ protocol LoanMarketTableViewManagerDelegate: NSObjectProtocol {
     func loanTableViewDidSelectRowAtIndexPath(indexPath: IndexPath, models: [BankDepositMarketDataModel])
 }
 class LoanMarketTableViewManager: NSObject {
+    /// Delegate
     weak var delegate: LoanMarketTableViewManagerDelegate?
     /// 数据
     var dataModels: [BankDepositMarketDataModel]?
