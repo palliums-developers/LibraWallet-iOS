@@ -1615,8 +1615,8 @@
 		361BDAA824F8E7BD00C4C54E /* DepositList */ = {
 			isa = PBXGroup;
 			children = (
-				361BDAA924F8E7BD00C4C54E /* ViewModel */,
 				361BDAAB24F8E7BD00C4C54E /* Controller */,
+				361BDAA924F8E7BD00C4C54E /* ViewModel */,
 				361BDAAD24F8E7BD00C4C54E /* Model */,
 				361BDAAF24F8E7BD00C4C54E /* View */,
 				361BDAB224F8E7BD00C4C54E /* TableViewManager */,

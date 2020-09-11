@@ -8,23 +8,28 @@
 
 import UIKit
 import MJRefresh
+import StatefulViewController
 
 class DepositListViewModel: NSObject {
     override init() {
         super.init()
     }
+    convenience init(handleView: DepositListView) {
+        self.init()
+        self.view = handleView
+        handleView.delegate = self
+        handleView.tableView.delegate = self.tableViewManager
+        handleView.tableView.dataSource = self.tableViewManager
+        handleView.tableView.mj_header = MJRefreshNormalHeader.init(refreshingTarget: self, refreshingAction:  #selector(refreshData))
+        handleView.tableView.mj_footer = MJRefreshBackNormalFooter.init(refreshingTarget: self, refreshingAction:  #selector(getMoreData))
+        self.setEmptyView()
+        self.setPlaceholderView()
+    }
     deinit {
         print("DepositListViewModel销毁了")
     }
-    var view: DepositListView? {
-        didSet {
-            view?.delegate = self
-            view?.tableView.delegate = self.tableViewManager
-            view?.tableView.dataSource = self.tableViewManager
-            view?.tableView.mj_header = MJRefreshNormalHeader.init(refreshingTarget: self, refreshingAction:  #selector(refreshData))
-            view?.tableView.mj_footer = MJRefreshBackNormalFooter.init(refreshingTarget: self, refreshingAction:  #selector(getMoreData))
-        }
-    }
+    /// 管理view
+    var view: DepositListView?
     /// 网络请求、数据模型
     lazy var dataModel: DepositListModel = {
         let model = DepositListModel.init()
@@ -33,12 +38,54 @@ class DepositListViewModel: NSObject {
     /// tableView管理类
     lazy var tableViewManager: DepositListTableViewManager = {
         let manager = DepositListTableViewManager.init()
-        //        manager.delegate = self
         return manager
     }()
     /// 数据监听KVO
     var observer: NSKeyValueObservation?
-    var dataOffset: Int = 0
+    /// 页数
+    private var dataOffset: Int = 0
+    /// 请求状态
+    private var requestOrderStatus: Int = 999999
+    /// 请求币种
+    private var requestOrderCurrency: String = ""
+    var supprotTokens: [BankDepositMarketDataModel]?
+}
+extension DepositListViewModel: StatefulViewController {
+    var backingView: UIView {
+        get {
+            return self.view!
+        }
+    }
+    
+    func setEmptyView() {
+        //空数据
+        emptyView = EmptyDataPlaceholderView.init()        
+    }
+    // 默认页面
+    func setPlaceholderView() {
+        if let empty = emptyView as? EmptyDataPlaceholderView {
+            empty.emptyImageName = "data_empty"
+            empty.tipString = localLanguage(keyString: "wallet_deposit_orders_empty_title")
+        }
+    }
+    // 网络请求
+    func requestData() {
+        if (lastState == .Loading) {return}
+        startLoading ()
+        self.view?.makeToastActivity(.center)
+        
+        self.transactionRequest(refresh: true)
+    }
+    func hasContent() -> Bool {
+        if let models = self.tableViewManager.dataModels, models.isEmpty == false {
+            return true
+        } else {
+            return false
+        }
+    }
+}
+// MARK: - 网络请求
+extension DepositListViewModel {
     @objc func refreshData() {
         dataOffset = 0
         view?.tableView.mj_footer?.resetNoMoreData()
@@ -57,9 +104,6 @@ class DepositListViewModel: NSObject {
                                       limit: 10,
                                       requestStatus: requestState)
     }
-    private var requestOrderStatus: Int = 999999
-    private var requestOrderCurrency: String = ""
-    var supprotTokens: [BankDepositMarketDataModel]?
 }
 // MARK: - 逻辑处理
 extension DepositListViewModel: DepositListViewDelegate {
@@ -118,11 +162,11 @@ extension DepositListViewModel: DropperDelegate {
         if tag == 10 {
             self.view?.orderTokenSelectButton.setTitle(contents, for: UIControl.State.normal)
             self.view?.orderTokenSelectButton.imagePosition(at: .right, space: 5, imageViewSize: CGSize.init(width: 10, height: 10))
-
+            
         } else {
             self.view?.orderStateButton.setTitle(contents, for: UIControl.State.normal)
             self.view?.orderStateButton.imagePosition(at: .right, space: 5, imageViewSize: CGSize.init(width: 10, height: 10))
-
+            
         }
         //999999: 默认 0（已存款），1（已提取），-1（提取失败），-2（存款失败）
         var tempStatus = 999999
@@ -153,47 +197,59 @@ extension DepositListViewModel {
         self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
             guard let dataDic = change.newValue, dataDic.count != 0 else {
                 self?.view?.hideToastActivity()
-//                self?.view?.endLoading()
+                //                self?.view?.endLoading()
                 return
             }
             if let error = dataDic.value(forKey: "error") as? LibraWalletError {
                 // 隐藏请求指示
                 self?.view?.hideToastActivity()
-                //                self?.view?.toastView?.hide(tag: 99)
-                //                self?.view?.toastView?.hide(tag: 299)
-                //                self?.view?.toastView?.hide(tag: 399)
+                if self?.view?.tableView.mj_header?.isRefreshing == true {
+                    self?.view?.tableView.mj_header?.endRefreshing()
+                }
                 if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
                     // 网络无法访问
                     print(error.localizedDescription)
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
+                    if self?.view?.tableView.mj_footer?.isRefreshing == true {
+                        self?.view?.tableView.mj_footer?.endRefreshing()
+                    }
+                    self?.view?.makeToast(error.localizedDescription, position: .center)
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionExpired).localizedDescription {
                     // 版本太久
                     print(error.localizedDescription)
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
+                    if self?.view?.tableView.mj_footer?.isRefreshing == true {
+                        self?.view?.tableView.mj_footer?.endRefreshing()
+                    }
+                    self?.view?.makeToast(error.localizedDescription, position: .center)
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
                     // 解析失败
                     print(error.localizedDescription)
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
+                    if self?.view?.tableView.mj_footer?.isRefreshing == true {
+                        self?.view?.tableView.mj_footer?.endRefreshing()
+                    }
+                    self?.view?.makeToast(error.localizedDescription, position: .center)
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
                     print(error.localizedDescription)
                     // 数据状态异常
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
+                    if self?.view?.tableView.mj_footer?.isRefreshing == true {
+                        self?.view?.tableView.mj_footer?.endRefreshing()
+                    }
+                    self?.view?.makeToast(error.localizedDescription, position: .center)
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
                     print(error.localizedDescription)
                     // 下拉刷新请求数据为空
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .noMoreData).localizedDescription {
                     // 上拉请求更多数据为空
                     print(error.localizedDescription)
+                    if self?.view?.tableView.mj_footer?.isRefreshing == true {
+                        self?.view?.tableView.mj_footer?.endRefreshingWithNoMoreData()
+                    }
                 } else {
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
+                    if self?.view?.tableView.mj_footer?.isRefreshing == true {
+                        self?.view?.tableView.mj_footer?.endRefreshing()
+                    }
+                    self?.view?.makeToast(error.localizedDescription, position: .center)
                 }
+                self?.endLoading()
                 return
             }
             let type = dataDic.value(forKey: "type") as! String
@@ -203,19 +259,18 @@ extension DepositListViewModel {
                 }
                 self?.tableViewManager.dataModels = tempData
                 self?.view?.tableView.reloadData()
+                self?.view?.tableView.mj_header?.endRefreshing()
             } else if type == "GetBankDepositListMore" {
                 guard let tempData = dataDic.value(forKey: "data") as? [DepositListMainDataModel] else {
                     return
                 }
                 if let oldData = self?.tableViewManager.dataModels, oldData.isEmpty == false {
-                    let tempArray = NSMutableArray.init(array: oldData)
                     var insertIndexPath = [IndexPath]()
                     for index in 0..<tempData.count {
                         let indexPath = IndexPath.init(row: oldData.count + index, section: 0)
                         insertIndexPath.append(indexPath)
                     }
-                    tempArray.addObjects(from: tempData)
-                    self?.tableViewManager.dataModels = tempArray as? [DepositListMainDataModel]
+                    self?.tableViewManager.dataModels = (oldData + tempData)
                     self?.view?.tableView.beginUpdates()
                     self?.view?.tableView.insertRows(at: insertIndexPath, with: UITableView.RowAnimation.bottom)
                     self?.view?.tableView.endUpdates()
@@ -225,9 +280,8 @@ extension DepositListViewModel {
                 }
                 self?.view?.tableView.mj_footer?.endRefreshing()
             }
-            self?.view?.tableView.mj_footer?.endRefreshing()
             self?.view?.hideToastActivity()
-            self?.view?.tableView.mj_header?.endRefreshing()
+            self?.endLoading()
         })
     }
 }

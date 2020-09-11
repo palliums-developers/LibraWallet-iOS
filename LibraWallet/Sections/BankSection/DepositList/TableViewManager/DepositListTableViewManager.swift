@@ -22,9 +22,9 @@ extension DepositListTableViewManager: UITableViewDelegate {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
-        guard let model = self.dataModels else {
-            return
-        }
+//        guard let model = self.dataModels else {
+//            return
+//        }
         //        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, model: model[indexPath.row])
     }
 }

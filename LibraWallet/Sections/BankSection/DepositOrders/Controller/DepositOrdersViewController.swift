@@ -11,14 +11,13 @@ import MJRefresh
 import StatefulViewController
 
 class DepositOrdersViewController: BaseViewController {
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.init(hex: "F7F7F9")
         self.view.addSubview(self.detailView)
         // 添加导航栏按钮
         self.addNavigationRightBar()
-        // 初始化本地配置
-        self.setNavigationWithoutShadowImage()
         // 设置标题
         self.title = localLanguage(keyString: "wallet_bank_deposit_orders_navigationbar_title")
         self.initKVO()
@@ -40,14 +39,14 @@ class DepositOrdersViewController: BaseViewController {
             make.left.right.equalTo(self.view)
         }
     }
-    //MARK: - 默认页面
+    // 默认页面
     func setPlaceholderView() {
         if let empty = emptyView as? EmptyDataPlaceholderView {
             empty.emptyImageName = "data_empty"
             empty.tipString = localLanguage(keyString: "wallet_deposit_orders_empty_title")
         }
     }
-    //MARK: - 网络请求
+    // 网络请求
     func requestData() {
         if (lastState == .Loading) {return}
         startLoading ()
@@ -85,31 +84,23 @@ class DepositOrdersViewController: BaseViewController {
         view.tableView.mj_footer = MJRefreshBackNormalFooter.init(refreshingTarget: self, refreshingAction:  #selector(getMoreData))
         return view
     }()
+    /// 数据监听KVO
     var observer: NSKeyValueObservation?
+    /// 页数
     var dataOffset: Int = 0
-    @objc func refreshData() {
-        dataOffset = 0
-        detailView.tableView.mj_footer?.resetNoMoreData()
-        transactionRequest(refresh: true)
-    }
-    @objc func getMoreData() {
-        dataOffset += 10
-        transactionRequest(refresh: false)
-    }
-    /// 二维码扫描按钮
+
+    /// 订单列表
     lazy var depositOrderListButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setImage(UIImage.init(named: "deposit_order_list"), for: UIControl.State.normal)
         button.addTarget(self, action: #selector(checkOrder), for: .touchUpInside)
         return button
     }()
-    func transactionRequest(refresh: Bool) {
-        let requestState = refresh == true ? 0:1
-        self.dataModel.getDepositTransactions(address: WalletManager.shared.violasAddress!, page: self.dataOffset, limit: 10, requestStatus: requestState)
-    }
+
     var supprotTokens: [BankDepositMarketDataModel]?
     var withdrawClosure: ((DepositOrderWithdrawMainDataModel) -> Void)?
 }
+
 // MARK: - 导航栏添加按钮
 extension DepositOrdersViewController {
     func addNavigationRightBar() {
@@ -126,17 +117,33 @@ extension DepositOrdersViewController {
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }
+
+// MARK: - 网络请求
+extension DepositOrdersViewController {
+    @objc func refreshData() {
+        dataOffset = 0
+        detailView.tableView.mj_footer?.resetNoMoreData()
+        transactionRequest(refresh: true)
+    }
+    @objc func getMoreData() {
+        dataOffset += 10
+        transactionRequest(refresh: false)
+    }
+    func transactionRequest(refresh: Bool) {
+        let requestState = refresh == true ? 0:1
+        self.dataModel.getDepositTransactions(address: WalletManager.shared.violasAddress!, page: self.dataOffset, limit: 10, requestStatus: requestState)
+    }
+}
+
 // MARK: - TableViewManager代理
 extension DepositOrdersViewController: DepositOrdersTableViewManagerDelegate {
     func cellDelegate(cell: DepositOrdersTableViewCell) {
         cell.delegate = self
     }
 }
+
 extension DepositOrdersViewController: DepositOrdersTableViewCellDelegate {
     func withdraw(indexPath: IndexPath, model: DepositOrdersMainDataModel) {
-//        let alert = RedeemAlert.init()
-//        alert.model = ""
-//        alert.show(tag: 199)
         print(indexPath.row)
         self.detailView.toastView?.show(tag: 99)
         self.dataModel.getDepositItemWithdrawDetail(address: WalletManager.shared.violasAddress!,
@@ -165,7 +172,8 @@ extension DepositOrdersViewController: DepositOrdersTableViewCellDelegate {
         }
     }
 }
-//MARK: - 网络请求处理中心
+
+// MARK: - 网络请求处理中心
 extension DepositOrdersViewController {
     func initKVO() {
         self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
@@ -242,14 +250,12 @@ extension DepositOrdersViewController {
                     return
                 }
                 if let oldData = self?.tableViewManager.dataModels, oldData.isEmpty == false {
-                    let tempArray = NSMutableArray.init(array: oldData)
                     var insertIndexPath = [IndexPath]()
                     for index in 0..<tempData.count {
                         let indexPath = IndexPath.init(row: oldData.count + index, section: 0)
                         insertIndexPath.append(indexPath)
                     }
-                    tempArray.addObjects(from: tempData)
-                    self?.tableViewManager.dataModels = tempArray as? [DepositOrdersMainDataModel]
+                    self?.tableViewManager.dataModels = (oldData + tempData)
                     self?.detailView.tableView.beginUpdates()
                     self?.detailView.tableView.insertRows(at: insertIndexPath, with: UITableView.RowAnimation.bottom)
                     self?.detailView.tableView.endUpdates()

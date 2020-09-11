@@ -7,16 +7,19 @@
 //
 
 import UIKit
+import MJRefresh
 
 class DepositListViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        // 设置标题
         self.title = localLanguage(keyString: "wallet_bank_deposit_orders_list_navigationbar_title")
-        self.view.backgroundColor = UIColor.white
         // 加载子View
         self.view.addSubview(detailView)
         self.viewModel.initKVO()
-        self.detailView.tableView.mj_header?.beginRefreshing()
+        
+        self.detailView.makeToastActivity(.center)
+        self.viewModel.requestData()
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -29,29 +32,24 @@ class DepositListViewController: BaseViewController {
             make.left.right.equalTo(self.view)
         }
     }
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.navigationController?.navigationBar.barStyle = .default
-    }
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        self.navigationController?.navigationBar.barStyle = .default
-    }
     deinit {
         print("DepositListViewController销毁了")
     }
     /// 子View
     lazy var detailView : DepositListView = {
         let view = DepositListView.init()
+//        view.delegate = self.viewModel
+//        view.tableView.delegate = self.viewModel.tableViewManager
+//        view.tableView.dataSource = self.viewModel.tableViewManager
+//        view.tableView.mj_header = MJRefreshNormalHeader.init(refreshingTarget: self.viewModel, refreshingAction:  #selector(self.viewModel.refreshData))
+//        view.tableView.mj_footer = MJRefreshBackNormalFooter.init(refreshingTarget: self.viewModel, refreshingAction:  #selector(self.viewModel.getMoreData))
         return view
     }()
     /// viewModel
     lazy var viewModel: DepositListViewModel = {
-        let viewModel = DepositListViewModel.init()
-        viewModel.view = self.detailView
+        let viewModel = DepositListViewModel.init(handleView: self.detailView)
         viewModel.supprotTokens = self.supprotTokens
         return viewModel
     }()
     var supprotTokens: [BankDepositMarketDataModel]?
-
 }
