@@ -8,6 +8,7 @@
 
 import UIKit
 import MJRefresh
+import StatefulViewController
 
 class LoanListViewModel: NSObject {
     override init() {
@@ -23,6 +24,8 @@ class LoanListViewModel: NSObject {
             view?.tableView.dataSource = self.tableViewManager
             view?.tableView.mj_header = MJRefreshNormalHeader.init(refreshingTarget: self, refreshingAction:  #selector(refreshData))
             view?.tableView.mj_footer = MJRefreshBackNormalFooter.init(refreshingTarget: self, refreshingAction:  #selector(getMoreData))
+            self.setEmptyView()
+            self.setPlaceholderView()
         }
     }
     /// 网络请求、数据模型
@@ -60,6 +63,40 @@ class LoanListViewModel: NSObject {
     private var requestOrderStatus: Int = 999999
     private var requestOrderCurrency: String = ""
     var supprotTokens: [BankDepositMarketDataModel]?
+}
+extension LoanListViewModel: StatefulViewController {
+    var backingView: UIView {
+        get {
+            return self.view!
+        }
+    }
+    
+    func setEmptyView() {
+        //空数据
+        emptyView = EmptyDataPlaceholderView.init()
+    }
+    // 默认页面
+    func setPlaceholderView() {
+        if let empty = emptyView as? EmptyDataPlaceholderView {
+            empty.emptyImageName = "data_empty"
+            empty.tipString = localLanguage(keyString: "wallet_deposit_orders_empty_title")
+        }
+    }
+    // 网络请求
+    func requestData() {
+        if (lastState == .Loading) {return}
+        startLoading ()
+        self.view?.makeToastActivity(.center)
+        
+        self.transactionRequest(refresh: true)
+    }
+    func hasContent() -> Bool {
+        if let models = self.tableViewManager.dataModels, models.isEmpty == false {
+            return true
+        } else {
+            return false
+        }
+    }
 }
 // MARK: - 网络请求逻辑处理
 extension LoanListViewModel: LoanListViewDelegate {
@@ -199,6 +236,7 @@ extension LoanListViewModel {
                     self?.view?.makeToast(error.localizedDescription,
                                           position: .center)
                 }
+                self?.endLoading()
                 return
             }
             let type = dataDic.value(forKey: "type") as! String
@@ -208,6 +246,7 @@ extension LoanListViewModel {
                 }
                 self?.tableViewManager.dataModels = tempData
                 self?.view?.tableView.reloadData()
+                self?.view?.tableView.mj_header?.endRefreshing()
             } else if type == "GetBankLoanListMore" {
                 guard let tempData = dataDic.value(forKey: "data") as? [LoanListMainDataModel] else {
                     return
@@ -230,9 +269,8 @@ extension LoanListViewModel {
                 }
                 self?.view?.tableView.mj_footer?.endRefreshing()
             }
-            self?.view?.tableView.mj_footer?.endRefreshing()
             self?.view?.hideToastActivity()
-            self?.view?.tableView.mj_header?.endRefreshing()
+            self?.endLoading()
         })
     }
 }
