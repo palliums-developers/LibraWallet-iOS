@@ -141,6 +141,9 @@ wallet_wallet_connect_publish_title = "网页ViolasPay注册币种";
 wallet_wallet_connect_swap_title = "网页ViolasPay兑换币种";
 wallet_wallet_connect_add_liquidity_title = "网页ViolasPay添加流动性";
 wallet_wallet_connect_remove_liquidity_title = "网页ViolasPay移除流动性";
+wallet_wallet_connect_bank_deposit_title = "网页ViolasPay存款";
+wallet_wallet_connect_bank_withdraw_title = "网页ViolasPay取款";
+wallet_wallet_connect_bank_loan_title = "网页ViolasPay借款";
 wallet_wallet_connect_transfer_receive_address_title = "转账地址";
 wallet_wallet_connect_transfer_amount_title = "金额";
 wallet_wallet_connect_publish_module_title = "注册币种";
@@ -336,6 +339,9 @@ wallet_bank_loan_describe_title = "产品说明";
 wallet_bank_loan_question_title = "常见问题";
 wallet_bank_loan_legal_button_conent = "我已阅读并同意《质押借款服务协议》";
 wallet_bank_loan_legal_agreement_match_contnet = "《质押借款服务协议》";
+
+/************* 数字银行赎回 *******************/
+wallet_bank_redeem_amount_title = "提取数量";
 
 /************* 弹出提示 *******************/
 // 转账弹出提示

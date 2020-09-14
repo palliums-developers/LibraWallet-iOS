@@ -162,7 +162,19 @@
 		36677A742507598E009152B3 /* RedeemAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36677A732507598E009152B3 /* RedeemAlert.swift */; };
 		36677A7725077BBB009152B3 /* DepositOrdersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36677A7625077BBB009152B3 /* DepositOrdersViewModel.swift */; };
 		36677A79250A1908009152B3 /* DropperCellConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36677A78250A1908009152B3 /* DropperCellConfig.swift */; };
+		36677A83250F0D2C009152B3 /* ScanBankDepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36677A82250F0D2C009152B3 /* ScanBankDepositViewController.swift */; };
+		36677A85250F0D3D009152B3 /* ScanBankDepositModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36677A84250F0D3D009152B3 /* ScanBankDepositModel.swift */; };
+		36677A87250F0DD9009152B3 /* ScanBankDepositView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36677A86250F0DD9009152B3 /* ScanBankDepositView.swift */; };
+		36677A8C250F651A009152B3 /* ScanBankWithdrawViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36677A8B250F651A009152B3 /* ScanBankWithdrawViewController.swift */; };
+		36677A8E250F652A009152B3 /* ScanBankWithdrawModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36677A8D250F652A009152B3 /* ScanBankWithdrawModel.swift */; };
+		36677A90250F6539009152B3 /* ScanBankWithdrawView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36677A8F250F6539009152B3 /* ScanBankWithdrawView.swift */; };
+		36677A95250F6C54009152B3 /* ScanBankLoanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36677A94250F6C54009152B3 /* ScanBankLoanViewController.swift */; };
+		36677A97250F6C64009152B3 /* ScanBankLoanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36677A96250F6C64009152B3 /* ScanBankLoanView.swift */; };
+		36677A99250F6C73009152B3 /* ScanBankLoanModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36677A98250F6C73009152B3 /* ScanBankLoanModel.swift */; };
 		3667A79B2475011F0000F119 /* WalletConnectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3667A79A2475011F0000F119 /* WalletConnectManager.swift */; };
+		3679149F250F742F008C7237 /* ScanBankRepaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3679149E250F742F008C7237 /* ScanBankRepaymentViewController.swift */; };
+		367914A1250F7446008C7237 /* ScanBankRepaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367914A0250F7446008C7237 /* ScanBankRepaymentView.swift */; };
+		367914A3250F7455008C7237 /* ScanBankRepaymentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367914A2250F7455008C7237 /* ScanBankRepaymentModel.swift */; };
 		36828CBF24B707B90085A165 /* AssetsPoolTransactionDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36828CBE24B707B90085A165 /* AssetsPoolTransactionDetailViewController.swift */; };
 		36828CC124B707C80085A165 /* AssetsPoolTransactionDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36828CC024B707C80085A165 /* AssetsPoolTransactionDetailModel.swift */; };
 		36828CC324B707D40085A165 /* AssetsPoolTransactionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36828CC224B707D40085A165 /* AssetsPoolTransactionDetailView.swift */; };
@@ -585,7 +597,19 @@
 		36677A732507598E009152B3 /* RedeemAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedeemAlert.swift; sourceTree = "<group>"; };
 		36677A7625077BBB009152B3 /* DepositOrdersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositOrdersViewModel.swift; sourceTree = "<group>"; };
 		36677A78250A1908009152B3 /* DropperCellConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropperCellConfig.swift; sourceTree = "<group>"; };
+		36677A82250F0D2C009152B3 /* ScanBankDepositViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBankDepositViewController.swift; sourceTree = "<group>"; };
+		36677A84250F0D3D009152B3 /* ScanBankDepositModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBankDepositModel.swift; sourceTree = "<group>"; };
+		36677A86250F0DD9009152B3 /* ScanBankDepositView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBankDepositView.swift; sourceTree = "<group>"; };
+		36677A8B250F651A009152B3 /* ScanBankWithdrawViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBankWithdrawViewController.swift; sourceTree = "<group>"; };
+		36677A8D250F652A009152B3 /* ScanBankWithdrawModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBankWithdrawModel.swift; sourceTree = "<group>"; };
+		36677A8F250F6539009152B3 /* ScanBankWithdrawView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBankWithdrawView.swift; sourceTree = "<group>"; };
+		36677A94250F6C54009152B3 /* ScanBankLoanViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBankLoanViewController.swift; sourceTree = "<group>"; };
+		36677A96250F6C64009152B3 /* ScanBankLoanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBankLoanView.swift; sourceTree = "<group>"; };
+		36677A98250F6C73009152B3 /* ScanBankLoanModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBankLoanModel.swift; sourceTree = "<group>"; };
 		3667A79A2475011F0000F119 /* WalletConnectManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectManager.swift; sourceTree = "<group>"; };
+		3679149E250F742F008C7237 /* ScanBankRepaymentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBankRepaymentViewController.swift; sourceTree = "<group>"; };
+		367914A0250F7446008C7237 /* ScanBankRepaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBankRepaymentView.swift; sourceTree = "<group>"; };
+		367914A2250F7455008C7237 /* ScanBankRepaymentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBankRepaymentModel.swift; sourceTree = "<group>"; };
 		36828CBE24B707B90085A165 /* AssetsPoolTransactionDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsPoolTransactionDetailViewController.swift; sourceTree = "<group>"; };
 		36828CC024B707C80085A165 /* AssetsPoolTransactionDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsPoolTransactionDetailModel.swift; sourceTree = "<group>"; };
 		36828CC224B707D40085A165 /* AssetsPoolTransactionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsPoolTransactionDetailView.swift; sourceTree = "<group>"; };
@@ -1883,6 +1907,11 @@
 		364BB571242CD2A300B9BE17 /* ScanModule */ = {
 			isa = PBXGroup;
 			children = (
+				36677A7E250F0C2E009152B3 /* ScanBankRepayment */,
+				36677A7D250F0C1F009152B3 /* ScanBankLoan */,
+				36677A7C250F0C08009152B3 /* ScanBankWithdraw */,
+				36677A7B250F0BEA009152B3 /* ScanBankDeposit */,
+				9DC48878232231DA005FF254 /* Scan */,
 				3646E50824DBF56E00B8C20B /* ScanSwap */,
 				3682E5D224AC9D42007CA2CA /* ScanPublish */,
 				3682E5B624A865A3007CA2CA /* ScanLogout */,
@@ -1890,7 +1919,6 @@
 				36B4669B2476556A00CFF438 /* ScanSignTransaction */,
 				36B4669A2476553C00CFF438 /* ScanSendTransaction */,
 				36B46699247654B900CFF438 /* ScanSendRawTransaction */,
-				9DC48878232231DA005FF254 /* Scan */,
 				9DF9BB502383E5AF00FA800D /* ScanResultInvalid */,
 			);
 			path = ScanModule;
@@ -2011,12 +2039,148 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
+		36677A7B250F0BEA009152B3 /* ScanBankDeposit */ = {
+			isa = PBXGroup;
+			children = (
+				36677A81250F0C75009152B3 /* Controller */,
+				36677A80250F0C6F009152B3 /* Model */,
+				36677A7F250F0C62009152B3 /* View */,
+			);
+			path = ScanBankDeposit;
+			sourceTree = "<group>";
+		};
+		36677A7C250F0C08009152B3 /* ScanBankWithdraw */ = {
+			isa = PBXGroup;
+			children = (
+				36677A8A250F6504009152B3 /* Controller */,
+				36677A89250F64FF009152B3 /* Model */,
+				36677A88250F64FA009152B3 /* View */,
+			);
+			path = ScanBankWithdraw;
+			sourceTree = "<group>";
+		};
+		36677A7D250F0C1F009152B3 /* ScanBankLoan */ = {
+			isa = PBXGroup;
+			children = (
+				36677A93250F6C40009152B3 /* Controller */,
+				36677A92250F6C3B009152B3 /* Model */,
+				36677A91250F6C35009152B3 /* View */,
+			);
+			path = ScanBankLoan;
+			sourceTree = "<group>";
+		};
+		36677A7E250F0C2E009152B3 /* ScanBankRepayment */ = {
+			isa = PBXGroup;
+			children = (
+				3679149D250F7419008C7237 /* Controller */,
+				3679149C250F7414008C7237 /* Model */,
+				3679149B250F7410008C7237 /* View */,
+			);
+			path = ScanBankRepayment;
+			sourceTree = "<group>";
+		};
+		36677A7F250F0C62009152B3 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				36677A86250F0DD9009152B3 /* ScanBankDepositView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		36677A80250F0C6F009152B3 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				36677A84250F0D3D009152B3 /* ScanBankDepositModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		36677A81250F0C75009152B3 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				36677A82250F0D2C009152B3 /* ScanBankDepositViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		36677A88250F64FA009152B3 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				36677A8F250F6539009152B3 /* ScanBankWithdrawView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		36677A89250F64FF009152B3 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				36677A8D250F652A009152B3 /* ScanBankWithdrawModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		36677A8A250F6504009152B3 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				36677A8B250F651A009152B3 /* ScanBankWithdrawViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		36677A91250F6C35009152B3 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				36677A96250F6C64009152B3 /* ScanBankLoanView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		36677A92250F6C3B009152B3 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				36677A98250F6C73009152B3 /* ScanBankLoanModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		36677A93250F6C40009152B3 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				36677A94250F6C54009152B3 /* ScanBankLoanViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
 		3667A799247500DE0000F119 /* WalletConnect */ = {
 			isa = PBXGroup;
 			children = (
 				3667A79A2475011F0000F119 /* WalletConnectManager.swift */,
 			);
 			path = WalletConnect;
+			sourceTree = "<group>";
+		};
+		3679149B250F7410008C7237 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				367914A0250F7446008C7237 /* ScanBankRepaymentView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		3679149C250F7414008C7237 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				367914A2250F7455008C7237 /* ScanBankRepaymentModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		3679149D250F7419008C7237 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				3679149E250F742F008C7237 /* ScanBankRepaymentViewController.swift */,
+			);
+			path = Controller;
 			sourceTree = "<group>";
 		};
 		36828CBA24B707820085A165 /* AssetsPoolTransactionDetail */ = {
@@ -3508,6 +3672,7 @@
 				9DBC266E23405B41009650EA /* LibraWallet.entitlements */,
 				9DA8E2A12317ABC400E28D07 /* AppDelegate.swift */,
 				9DC902362328E7820097FD85 /* Sections */,
+				364BB571242CD2A300B9BE17 /* ScanModule */,
 				9DC4885B23220E30005FF254 /* Vendors */,
 				9DC9023B2328E7E60097FD85 /* Tools */,
 				9D626476235718D700A79B3D /* Resource */,
@@ -3676,7 +3841,6 @@
 				9D68D2FA237D25CA005B7593 /* ViolasTransfer */,
 				9D68D2EC237CF019005B7593 /* BTCTransfer */,
 				9D5B4E66236BCB4000F4D99C /* AddAsset */,
-				364BB571242CD2A300B9BE17 /* ScanModule */,
 				3622F20E24E539B100CFB754 /* Receive */,
 				3622F1FE24E3FBB300CFB754 /* Transfer */,
 				364BB570242CD27700B9BE17 /* MappingModule */,
@@ -4325,6 +4489,7 @@
 				9DA0265923702AFE0084905B /* BackupWarningView.swift in Sources */,
 				9D9B4A4A2362F4DC00354EF0 /* MineHeaderView.swift in Sources */,
 				361BDAD424F8E7BD00C4C54E /* BankView.swift in Sources */,
+				36677A87250F0DD9009152B3 /* ScanBankDepositView.swift in Sources */,
 				36EBF016245055D8007FD4C5 /* ActiveAccountViewController.swift in Sources */,
 				9DFFA87F23683C3400EA74F9 /* WalletTransactionsModel.swift in Sources */,
 				361BDB0624F8E7BE00C4C54E /* DepositListView.swift in Sources */,
@@ -4428,6 +4593,7 @@
 				36F826F324BD9F060007ACC3 /* ExchangeTransactionsModel.swift in Sources */,
 				3650F0A624888FAE0086F578 /* WalletMainViewController.swift in Sources */,
 				361BDAE824F8E7BE00C4C54E /* LoanOrdersView.swift in Sources */,
+				36677A8C250F651A009152B3 /* ScanBankWithdrawViewController.swift in Sources */,
 				361BDAD224F8E7BD00C4C54E /* BankModel.swift in Sources */,
 				3646E51124DBF5D400B8C20B /* ScanSwapView.swift in Sources */,
 				9DB515AE23A32B7C0069A909 /* ViolasNetwork.swift in Sources */,
@@ -4513,6 +4679,7 @@
 				36F42E8B2431B56A00DBBF8F /* LibraStructTag.swift in Sources */,
 				361BDA0D24F89ACB00C4C54E /* ViolasTransactionPayload.swift in Sources */,
 				3617835B24440BDB003C6588 /* ViolasUtils.swift in Sources */,
+				367914A1250F7446008C7237 /* ScanBankRepaymentView.swift in Sources */,
 				9DC4884F2321F051005FF254 /* LibraWordList.swift in Sources */,
 				3682E5CC24AC3753007CA2CA /* AssetsPoolViewHeaderView.swift in Sources */,
 				9DFFA87D23683C1D00EA74F9 /* WalletTransactionsView.swift in Sources */,
@@ -4523,6 +4690,7 @@
 				9D9B4A5A2366D1C400354EF0 /* WalletConfigView.swift in Sources */,
 				9D68D2F5237D24DD005B7593 /* BTCTransferView.swift in Sources */,
 				9D9B49AC235DA76100354EF0 /* AddressManagerModel.swift in Sources */,
+				36677A97250F6C64009152B3 /* ScanBankLoanView.swift in Sources */,
 				9DC901E923262CB80097FD85 /* LibraTransactionArgument.swift in Sources */,
 				9D9B4A542366955B00354EF0 /* ImportWalletViewController.swift in Sources */,
 				9DA0264D236FFEB10084905B /* BackupMnemonicCollectionViewManager.swift in Sources */,
@@ -4559,6 +4727,7 @@
 				363D90F024CAAC6700F6374C /* LibraContractEvent.swift in Sources */,
 				361783672444684F003C6588 /* ViolasStructTag.swift in Sources */,
 				9D9B49F52360389200354EF0 /* LanguageTableViewCell.swift in Sources */,
+				36677A8E250F652A009152B3 /* ScanBankWithdrawModel.swift in Sources */,
 				9D9B49CF235FFADB00354EF0 /* MineTableViewManager.swift in Sources */,
 				361F2F3924FCA28C003EFA2E /* LoanQuestionTableViewHeaderView.swift in Sources */,
 				9DA02652237011F00084905B /* BackupMnemonicFlowLayout.swift in Sources */,
@@ -4587,6 +4756,7 @@
 				9D9B4A152360496900354EF0 /* FeedbackAlert.swift in Sources */,
 				9DC9023D2328E8290097FD85 /* CommonData.swift in Sources */,
 				36E95D8D242A084B0004B86D /* ScanLoginView.swift in Sources */,
+				3679149F250F742F008C7237 /* ScanBankRepaymentViewController.swift in Sources */,
 				9D9B49AE235DA76100354EF0 /* AddressManagerTableViewCell.swift in Sources */,
 				365A89C023B9A7CE00C55A10 /* WYDTextField.swift in Sources */,
 				9DA02648236FFD040084905B /* BackupMnemonicController.swift in Sources */,
@@ -4619,6 +4789,7 @@
 				9D5B4E7A236BD22600F4D99C /* AddAssetTableViewHeader.swift in Sources */,
 				9D68D2F9237D24FF005B7593 /* BTCTransferViewController.swift in Sources */,
 				36828CE424B74C6E0085A165 /* ExchangeViewHeaderView.swift in Sources */,
+				36677A85250F0D3D009152B3 /* ScanBankDepositModel.swift in Sources */,
 				361BDABA24F8E7BD00C4C54E /* LoanTableViewCell.swift in Sources */,
 				3650F0BA248A46280086F578 /* TransactionDetailModel.swift in Sources */,
 				9D712441232F621B009DED52 /* LibraWalletTool.swift in Sources */,
@@ -4634,16 +4805,20 @@
 				361BDAF624F8E7BE00C4C54E /* LoanOrderDetailView.swift in Sources */,
 				9D5D13C523692D3800A2C6AF /* HomeHeaderView.swift in Sources */,
 				361BDB0224F8E7BE00C4C54E /* DepositListViewModel.swift in Sources */,
+				36677A83250F0D2C009152B3 /* ScanBankDepositViewController.swift in Sources */,
 				36B43A7223BDE967008E2EEA /* LBXScanError.swift in Sources */,
 				3617835F244465B7003C6588 /* ViolasMultiHDWallet.swift in Sources */,
 				361BDAED24F8E7BE00C4C54E /* RepaymentViewController.swift in Sources */,
 				3650F0BF248A46F20086F578 /* TransactionDetailTableViewManager.swift in Sources */,
 				361BDB0124F8E7BE00C4C54E /* DepositOrdersTableViewManager.swift in Sources */,
+				36677A99250F6C73009152B3 /* ScanBankLoanModel.swift in Sources */,
 				9DC4884923211180005FF254 /* WalletManager.swift in Sources */,
+				36677A90250F6539009152B3 /* ScanBankWithdrawView.swift in Sources */,
 				36B466B6247656E400CFF438 /* ScanSendTransactionModel.swift in Sources */,
 				9D9B49AB235DA76100354EF0 /* AddressManagerTableViewManager.swift in Sources */,
 				9D5B4E6E236BCBC200F4D99C /* AddAssetView.swift in Sources */,
 				3650F0B12488986A0086F578 /* WalletMainTableViewManager.swift in Sources */,
+				367914A3250F7455008C7237 /* ScanBankRepaymentModel.swift in Sources */,
 				361BDABE24F8E7BD00C4C54E /* DepositViewController.swift in Sources */,
 				9D5B4E602369788500F4D99C /* HomeTableViewManager.swift in Sources */,
 				36B466B0247656A000CFF438 /* ScanSendTransactionView.swift in Sources */,
@@ -4659,6 +4834,7 @@
 				36828CE024B74C380085A165 /* ExchangeModel.swift in Sources */,
 				36836D2F24B3010F0031AC6E /* ExchangeTransactionDetailViewController.swift in Sources */,
 				3682E5D724AC9DA3007CA2CA /* ScanPublishViewController.swift in Sources */,
+				36677A95250F6C54009152B3 /* ScanBankLoanViewController.swift in Sources */,
 				36F42E89242E347300DBBF8F /* LibraTypeTag.swift in Sources */,
 				9D9B49DD23602EB900354EF0 /* SettingTableViewManager.swift in Sources */,
 				9D9B4A462362967200354EF0 /* AddWalletViewController.swift in Sources */,

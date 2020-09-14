@@ -129,21 +129,23 @@ extension BankViewController {
         self.navigationItem.rightBarButtonItems = [rightBarButtonItem, scanView]
     }
     @objc func checkOrder(button: UIButton) {
-        let dropper = Dropper.init(x: 0, y: statusBarHeight - 5, width: 110, height: 90)
-        dropper.items = [localLanguage(keyString: "wallet_bank_deposit_orders_alert_title"), localLanguage(keyString: "wallet_bank_loan_orders_alert_title")]
-        dropper.cornerRadius = 8
-        dropper.theme = .black(UIColor.init(hex: "F1EEFB"))
-//        dropper.cellTextFont = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
-//        dropper.cellColor = UIColor.init(hex: "333333")
-        dropper.spacing = 12
-        dropper.delegate = self
-        let config = DropperCellConfig.init(textFont: UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular),
-                                            textColor: UIColor.init(hex: "333333"),
-                                            showSeperator: false,
-                                            seperatorColor: nil,
-                                            backgroundColor: nil)
-        dropper.cellConfig = config
-        dropper.show(Dropper.Alignment.center, position: .top, button: self.detailView.headerView.yesterdayBenefitButton)
+//        let dropper = Dropper.init(x: 0, y: statusBarHeight - 5, width: 110, height: 90)
+//        dropper.items = [localLanguage(keyString: "wallet_bank_deposit_orders_alert_title"), localLanguage(keyString: "wallet_bank_loan_orders_alert_title")]
+//        dropper.cornerRadius = 8
+//        dropper.theme = .black(UIColor.init(hex: "F1EEFB"))
+////        dropper.cellTextFont = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
+////        dropper.cellColor = UIColor.init(hex: "333333")
+//        dropper.spacing = 12
+//        dropper.delegate = self
+//        let config = DropperCellConfig.init(textFont: UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular),
+//                                            textColor: UIColor.init(hex: "333333"),
+//                                            showSeperator: false,
+//                                            seperatorColor: nil,
+//                                            backgroundColor: nil)
+//        dropper.cellConfig = config
+//        dropper.show(Dropper.Alignment.center, position: .top, button: self.detailView.headerView.yesterdayBenefitButton)
+        let vc = ScanBankLoanViewController()
+        self.present(vc, animated: true, completion: nil)
     }
     @objc func changeToHideMode(button: UIButton) {
         if self.detailView.headerView.assetLabel.text == "≈$******" {

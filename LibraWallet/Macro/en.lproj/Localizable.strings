@@ -141,6 +141,9 @@ wallet_wallet_connect_publish_title = "Web ViolasPay Publish Token";
 wallet_wallet_connect_swap_title = "Web ViolasPay Swap";
 wallet_wallet_connect_add_liquidity_title = "Web ViolasPay Add Liquidity";
 wallet_wallet_connect_remove_liquidity_title = "Web ViolasPay Remove Liquidity";
+wallet_wallet_connect_bank_deposit_title = "Web ViolasPay Deposit";
+wallet_wallet_connect_bank_withdraw_title = "Web ViolasPay Withdraw";
+wallet_wallet_connect_bank_loan_title = "Web ViolasPay Loan";
 wallet_wallet_connect_transfer_receive_address_title = "Receive Address";
 wallet_wallet_connect_transfer_amount_title = "Amount";
 wallet_wallet_connect_publish_module_title = "Token";
@@ -316,7 +319,7 @@ wallet_bank_deposit_title = "I want to deposit";
 wallet_bank_deposit_select_token_button_title = "Selcet a token";
 wallet_bank_deposit_amount_title = "Balance: ";
 wallet_bank_deposit_limit_amount_title = "Daily Limit: ";
-wallet_bank_deposit_year_rate_title = "Annual deposit interest rate";
+wallet_bank_deposit_year_rate_title = "Annual interest rate";
 wallet_bank_deposit_pledge_rate_title = "Pledge Rate";
 wallet_bank_deposit_pledge_rate_descript_title = "Pledge rate = Number of loans/Number of deposit";
 wallet_bank_deposit_pay_account_title = "Deposit way";
@@ -337,6 +340,9 @@ wallet_bank_loan_describe_title = "Product Introduce";
 wallet_bank_loan_question_title = "Q&A";
 wallet_bank_loan_legal_button_conent = "I have read and agree Pledge & Loan Service Agreement";
 wallet_bank_loan_legal_agreement_match_contnet = "Pledge & Loan Service Agreement";
+
+/************* 数字银行赎回 *******************/
+wallet_bank_redeem_amount_title = "Amount";
 
 /************* 弹出提示 *******************/
 // 转账弹出提示
