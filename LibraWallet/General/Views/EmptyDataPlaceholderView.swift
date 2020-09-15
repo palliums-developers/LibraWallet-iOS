@@ -7,16 +7,14 @@
 //
 
 import UIKit
+import StatefulViewController
 
 class EmptyDataPlaceholderView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.backgroundColor = defaultBackgroundColor
-//        addSubview(topBackgroundImageView)
-        addSubview(walletWhiteBackgroundView)
-
-        walletWhiteBackgroundView.addSubview(indicatorImageView)
-        walletWhiteBackgroundView.addSubview(tipLabel)
+        self.backgroundColor = UIColor.white
+        self.addSubview(indicatorImageView)
+        self.addSubview(tipLabel)
 //        self.addSubview(descLabel)
     }
     required init?(coder aDecoder: NSCoder) {
@@ -24,20 +22,12 @@ class EmptyDataPlaceholderView: UIView {
     }
     override func layoutSubviews() {
         super.layoutSubviews()
-//        topBackgroundImageView.snp.makeConstraints { (make) in
-//            make.top.left.right.equalTo(0)
-//            make.height.equalTo(202)
-//        }
-        walletWhiteBackgroundView.snp.makeConstraints { (make) in
-            make.top.equalTo(self).offset(navigationBarHeight)
-            make.left.right.bottom.equalTo(self)
-        }
         indicatorImageView.snp.makeConstraints { (make) in
-            make.centerX.equalTo(walletWhiteBackgroundView)
-            make.bottom.equalTo(walletWhiteBackgroundView.snp.centerY).offset(-55)
+            make.centerX.equalTo(self)
+            make.bottom.equalTo(self.snp.centerY).offset(-55)
         }
         tipLabel.snp.makeConstraints { (make) in
-            make.centerX.equalTo(walletWhiteBackgroundView)
+            make.centerX.equalTo(self)
             make.top.equalTo(indicatorImageView.snp.bottom).offset(73)
         }
 //        descLabel.snp.makeConstraints { (make) in
@@ -69,11 +59,11 @@ class EmptyDataPlaceholderView: UIView {
 //        imageView.isUserInteractionEnabled = true
 //        return imageView
 //    }()
-    private lazy var walletWhiteBackgroundView: UIView = {
-        let view = UIView.init()
-        view.backgroundColor = UIColor.white
-        return view
-    }()
+//    private lazy var walletWhiteBackgroundView: UIView = {
+//        let view = UIView.init()
+//        view.backgroundColor = UIColor.white
+//        return view
+//    }()
     var emptyImageName:String? {
         didSet{
             indicatorImageView.image = UIImage.init(named: emptyImageName ?? "")
@@ -84,9 +74,14 @@ class EmptyDataPlaceholderView: UIView {
             tipLabel.text = tipString
         }
     }
-//    var descString:String? {
-//        didSet{
-//            descLabel.text = descString
-//        }
-//    }
+    var edge: UIEdgeInsets?
+}
+extension EmptyDataPlaceholderView: StatefulPlaceholderView {
+    func placeholderViewInsets() -> UIEdgeInsets {
+        if let tempEdge = self.edge {
+            return tempEdge
+        } else {
+            return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        }
+    }
 }

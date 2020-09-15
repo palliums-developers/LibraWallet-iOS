@@ -40,7 +40,7 @@ class DepositListView: UIView {
             make.left.equalTo(orderTokenSelectButton.snp.right)
             make.height.equalTo(24)
         }
-        self.tableView.snp.makeConstraints { (make) in
+        tableView.snp.makeConstraints { (make) in
             make.top.equalTo(orderTokenSelectButton.snp.bottom).offset(5)
             make.left.right.equalTo(self)
             make.bottom.equalTo(self)

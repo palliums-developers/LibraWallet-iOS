@@ -56,16 +56,16 @@ extension DepositListViewModel: StatefulViewController {
             return self.view!
         }
     }
-    
     func setEmptyView() {
         //空数据
-        emptyView = EmptyDataPlaceholderView.init()        
+        emptyView = EmptyDataPlaceholderView.init()
     }
     // 默认页面
     func setPlaceholderView() {
         if let empty = emptyView as? EmptyDataPlaceholderView {
             empty.emptyImageName = "data_empty"
             empty.tipString = localLanguage(keyString: "wallet_deposit_orders_empty_title")
+            empty.edge = UIEdgeInsets.init(top: 29, left: 0, bottom: 0, right: 0)
         }
     }
     // 网络请求
