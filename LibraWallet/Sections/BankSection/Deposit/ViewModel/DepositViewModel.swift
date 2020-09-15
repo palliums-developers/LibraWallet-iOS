@@ -180,7 +180,7 @@ extension DepositViewModel: DepositViewDelegate {
             throw LibraWalletError.WalletBankDeposit(reason: .balanceInsufficient)
         }
         // 检查是否比最少充值金额多
-        guard amount.uint64Value > (header.productModel?.minimum_amount ?? 0) else {
+        guard amount.uint64Value >= (header.productModel?.minimum_amount ?? 0) else {
             throw LibraWalletError.WalletBankDeposit(reason: .amountTooLittle)
         }
         // 检查是否比每日限额少
