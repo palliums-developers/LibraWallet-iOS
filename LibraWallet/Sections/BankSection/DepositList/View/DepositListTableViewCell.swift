@@ -103,7 +103,7 @@ class DepositListTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "999999")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "wallet_deposit_list_order_status_withdrawal_finish_title")
+        label.text = "---"
         return label
     }()
     lazy var spaceLabel: UILabel = {
@@ -143,12 +143,16 @@ class DepositListTableViewCell: UITableViewCell {
             orderAmountLabel.text = getDecimalNumber(amount: NSDecimalNumber.init(value: tempModel.value ?? 0),
                                                      scale: 6,
                                                      unit: 1000000).stringValue
+            //0（已存款），1（已提取），-1（提取失败），-2（存款失败）
+            if tempModel.status == 0 {
+                orderStatusLabel.text = localLanguage(keyString: "wallet_deposit_list_order_status_deposit_finish_title")
+            } else if tempModel.status == 1 {
+                orderStatusLabel.text = localLanguage(keyString: "wallet_deposit_list_order_status_withdrawal_finish_title")
+            } else if tempModel.status == -1 {
+                orderStatusLabel.text = localLanguage(keyString: "wallet_deposit_list_order_status_withdrawal_failed_title")
+            } else if tempModel.status == -2 {
+                orderStatusLabel.text = localLanguage(keyString: "wallet_deposit_list_order_status_deposit_failed_title")
+            }
         }
     }
 }
-//wallet_deposit_list_order_status_withdrawal_finish_title = "Withdraw Done";
-//wallet_deposit_list_order_status_withdrawal_failed_title = "Withdraw Failed";
-//wallet_deposit_list_order_status_withdrawal_processing_title = "Withdraw Processing";
-//wallet_deposit_list_order_status_deposit_finish_title = "Deposit Done";
-//wallet_deposit_list_order_status_deposit_failed_title = "Deposit Failed";
-//wallet_deposit_list_order_status_deposit_processing_title = "Deposit Processing";

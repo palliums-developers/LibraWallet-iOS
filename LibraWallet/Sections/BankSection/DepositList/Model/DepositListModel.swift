@@ -17,7 +17,7 @@ struct DepositListMainDataModel: Codable {
     var id: String?
     /// 订单币种图片
     var logo: String?
-    /// 订单状态
+    /// 订单状态（0（已存款），1（已提取），-1（提取失败），-2（存款失败））
     var status: Int?
     /// 订单价值
     var value: Double?
