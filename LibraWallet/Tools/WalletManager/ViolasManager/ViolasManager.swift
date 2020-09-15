@@ -402,30 +402,6 @@ extension ViolasManager {
 }
 // MARK: - 数字银行
 extension ViolasManager {
-    public static func getBankFeaturesTransactionHex(sendAddress: String, mnemonic: [String], feeModule: String, fee: UInt64, sequenceNumber: UInt64, module: String) throws -> String {
-        do {
-            let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
-            // metadata
-            let argument0 = ViolasTransactionArgument.init(code: .U8Vector(Data()))
-            let script = ViolasTransactionScriptPayload.init(code: Data.init(hex: ViolasManager.getBankMoveCode(name: "publish")),
-                                                             typeTags: [],
-                                                             argruments: [argument0])
-            let transactionPayload = ViolasTransactionPayload.init(payload: .script(script))
-            let rawTransaction = ViolasRawTransaction.init(senderAddres: sendAddress,
-                                                           sequenceNumber: sequenceNumber,
-                                                           maxGasAmount: 1000000,
-                                                           gasUnitPrice: fee,
-                                                           expirationTime: NSDecimalNumber.init(value: Date().timeIntervalSince1970 + 600).uint64Value,
-                                                           payload: transactionPayload,
-                                                           module: feeModule,
-                                                           chainID: 4)
-            // 签名交易
-            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
-            return signature.toHexString()
-        } catch {
-            throw error
-        }
-    }
     /// 存款
     /// - Parameters:
     ///   - sendAddress: 发送地址

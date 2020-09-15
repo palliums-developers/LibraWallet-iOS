@@ -145,7 +145,7 @@ extension DepositViewModel: DepositViewDelegate {
                                                       mnemonic: mnemonic,
                                                       module: self?.tableViewManager.model?.token_module ?? "",
                                                       feeModule: self?.tableViewManager.model?.token_module ?? "",
-                                                      activeState: true)
+                                                      productID: self?.tableViewManager.model?.id ?? "")
             }) { [weak self] errorContent in
                 self?.view?.makeToast(errorContent, position: .center)
             }

@@ -116,6 +116,8 @@ enum mainRequest {
     case loanRepaymentDetail(String, String)
     /// 获取存款提款详情（地址、存款ID）
     case depositWithdrawDetail(String, String)
+    ///存款交易上链
+    case depositTransactiondSubmit(String, String, UInt64, String)
 }
 extension mainRequest:TargetType {
     var baseURL: URL {
@@ -200,7 +202,8 @@ extension mainRequest:TargetType {
              .depositList(_, _, _, _, _),
              .loanList(_, _, _, _, _),
              .loanRepaymentDetail(_, _),
-             .depositWithdrawDetail(_, _):
+             .depositWithdrawDetail(_, _),
+             .depositTransactiondSubmit(_, _, _, _):
             if PUBLISH_VERSION == true {
                 return URL(string:"https://api.violas.io")!
             } else {
@@ -313,6 +316,8 @@ extension mainRequest:TargetType {
             return "/1.0/violas/bank/borrow/repayment"
         case .depositWithdrawDetail(_, _):
             return "/1.0/violas/bank/deposit/withdrawal"
+        case .depositTransactiondSubmit(_, _, _, _):
+            return "/1.0/violas/bank/deposit"
         }
     }
     var method: Moya.Method {
@@ -321,7 +326,8 @@ extension mainRequest:TargetType {
              .SendViolasTransaction(_),
              .SendBTCTransaction(_),
              .GetLibraAccountBalance(_),
-             .GetViolasAccountInfo(_):
+             .GetViolasAccountInfo(_),
+             .depositTransactiondSubmit(_, _, _, _):
             return .post
         case .GetBTCBalance(_),
              .GetBTCTransactionHistory(_, _, _),
@@ -596,16 +602,25 @@ extension mainRequest:TargetType {
                                                    "limit": limit],
                                       encoding: URLEncoding.queryString)
         case .depositList(let address, let currency, let status, let page, let limit):
-            var dic = [String: Any]()
-            if status == 999999 {
+            var dic = [String : Any]()
+            if status != 999999 && currency.isEmpty == false {
+                dic = ["address": address,
+                       "currency": currency,
+                       "status": status,
+                       "offset": page,
+                       "limit": limit]
+            } else if status == 999999 && currency.isEmpty == false {
                 dic = ["address": address,
                        "currency": currency,
                        "offset": page,
                        "limit": limit]
-            } else {
+            } else if status != 999999 && currency.isEmpty == true {
                 dic = ["address": address,
-                       "currency": currency,
                        "status": status,
+                       "offset": page,
+                       "limit": limit]
+            } else if status == 999999 && currency.isEmpty == true {
+                dic = ["address": address,
                        "offset": page,
                        "limit": limit]
             }
@@ -635,6 +650,12 @@ extension mainRequest:TargetType {
             return .requestParameters(parameters: ["address": address,
                                                    "id": orderID],
                                       encoding: URLEncoding.queryString)
+        case .depositTransactiondSubmit(let address, let productID, let amount, let signature):
+            return .requestParameters(parameters: ["address": address,
+                                                   "product_id": productID,
+                                                   "value": amount,
+                                                   "sigtxn": signature],
+                                      encoding: JSONEncoding.default)
         }
     }
     var headers: [String : String]? {
