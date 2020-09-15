@@ -144,6 +144,7 @@ wallet_wallet_connect_remove_liquidity_title = "网页ViolasPay移除流动性";
 wallet_wallet_connect_bank_deposit_title = "网页ViolasPay存款";
 wallet_wallet_connect_bank_withdraw_title = "网页ViolasPay取款";
 wallet_wallet_connect_bank_loan_title = "网页ViolasPay借款";
+wallet_wallet_connect_bank_repayment_title = "网页ViolasPay还款";
 wallet_wallet_connect_transfer_receive_address_title = "转账地址";
 wallet_wallet_connect_transfer_amount_title = "金额";
 wallet_wallet_connect_publish_module_title = "注册币种";
@@ -311,6 +312,9 @@ wallet_bank_repayment_loan_rate_title = "借贷率";
 wallet_bank_repayment_miner_fees_title = "矿工费用";
 wallet_bank_repayment_pay_account_title = "还款账户";
 wallet_bank_repayment_pay_account_content = "账户余额";
+// 还款WalletConnect
+wallet_bank_repayment_loan_interest_title = "贷款利息";
+wallet_bank_repayment_repayment_total_amount_title = "还款总额";
 
 /************* 数字银行存款 *******************/
 wallet_bank_deposit_button_title = "立即存款";
