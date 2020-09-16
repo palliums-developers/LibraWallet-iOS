@@ -51,7 +51,8 @@ extension RepaymentViewModel: RepaymentViewDelegate {
                                                          fee: 10,
                                                          mnemonic: mnemonic,
                                                          module: self?.tableViewManager.model?.token_module ?? "",
-                                                         feeModule: self?.tableViewManager.model?.token_module ?? "")
+                                                         feeModule: self?.tableViewManager.model?.token_module ?? "",
+                                                         productID: self?.tableViewManager.model?.id ?? "")
             }) { (errorContent) in
                 self.view?.makeToast(errorContent, position: .center)
             }

@@ -148,9 +148,9 @@ extension DepositOrdersViewController: DepositOrdersTableViewCellDelegate {
         self.detailView.toastView?.show(tag: 99)
         self.dataModel.getDepositItemWithdrawDetail(address: WalletManager.shared.violasAddress!,
                                                     itemID: model.id ?? "")
-        self.withdrawClosure = { model in
+        self.withdrawClosure = { withdrawModel in
             let alert = RedeemAlert.init()
-            alert.model = model
+            alert.model = withdrawModel
             alert.withdrawClosure = { [weak self] amount in
                 WalletManager.unlockWallet(successful: { [weak self] (mnemonic) in
                     self?.detailView.toastView?.show(tag: 99)
@@ -158,8 +158,9 @@ extension DepositOrdersViewController: DepositOrdersTableViewCellDelegate {
                                                         amount: amount,
                                                         fee: 10,
                                                         mnemonic: mnemonic,
-                                                        module: model.token_module ?? "",
-                                                        feeModule: model.token_module ?? "")
+                                                        module: withdrawModel.token_module ?? "",
+                                                        feeModule: withdrawModel.token_module ?? "",
+                                                        productID: model.id ?? "")
                 }) { [weak self] (errorContent) in
                     guard errorContent != "Cancel" else {
                         self?.detailView.toastView?.hide(tag: 99)

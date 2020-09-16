@@ -116,8 +116,14 @@ enum mainRequest {
     case loanRepaymentDetail(String, String)
     /// 获取存款提款详情（地址、存款ID）
     case depositWithdrawDetail(String, String)
-    ///存款交易上链
+    /// 存款交易上链
     case depositTransactiondSubmit(String, String, UInt64, String)
+    /// 取款交易上链
+    case withdrawTransactiondSubmit(String, String, UInt64, String)
+    /// 贷款交易上链
+    case loanTransactiondSubmit(String, String, UInt64, String)
+    /// 还款交易上链
+    case repaymentTransactiondSubmit(String, String, UInt64, String)
 }
 extension mainRequest:TargetType {
     var baseURL: URL {
@@ -203,7 +209,10 @@ extension mainRequest:TargetType {
              .loanList(_, _, _, _, _),
              .loanRepaymentDetail(_, _),
              .depositWithdrawDetail(_, _),
-             .depositTransactiondSubmit(_, _, _, _):
+             .depositTransactiondSubmit(_, _, _, _),
+             .withdrawTransactiondSubmit(_, _, _, _),
+             .loanTransactiondSubmit(_, _, _, _),
+             .repaymentTransactiondSubmit(_, _, _, _):
             if PUBLISH_VERSION == true {
                 return URL(string:"https://api.violas.io")!
             } else {
@@ -318,6 +327,12 @@ extension mainRequest:TargetType {
             return "/1.0/violas/bank/deposit/withdrawal"
         case .depositTransactiondSubmit(_, _, _, _):
             return "/1.0/violas/bank/deposit"
+        case .withdrawTransactiondSubmit(_, _, _, _):
+            return "/1.0/violas/bank/deposit/withdrawal"
+        case .loanTransactiondSubmit(_, _, _, _):
+            return "/1.0/violas/bank/borrow"
+        case .repaymentTransactiondSubmit(_, _, _, _):
+            return "/1.0/violas/bank/borrow/repayment"
         }
     }
     var method: Moya.Method {
@@ -327,7 +342,10 @@ extension mainRequest:TargetType {
              .SendBTCTransaction(_),
              .GetLibraAccountBalance(_),
              .GetViolasAccountInfo(_),
-             .depositTransactiondSubmit(_, _, _, _):
+             .depositTransactiondSubmit(_, _, _, _),
+             .withdrawTransactiondSubmit(_, _, _, _),
+             .loanTransactiondSubmit(_, _, _, _),
+             .repaymentTransactiondSubmit(_, _, _, _):
             return .post
         case .GetBTCBalance(_),
              .GetBTCTransactionHistory(_, _, _),
@@ -651,6 +669,24 @@ extension mainRequest:TargetType {
                                                    "id": orderID],
                                       encoding: URLEncoding.queryString)
         case .depositTransactiondSubmit(let address, let productID, let amount, let signature):
+            return .requestParameters(parameters: ["address": address,
+                                                   "product_id": productID,
+                                                   "value": amount,
+                                                   "sigtxn": signature],
+                                      encoding: JSONEncoding.default)
+        case .withdrawTransactiondSubmit(let address, let productID, let amount, let signature):
+            return .requestParameters(parameters: ["address": address,
+                                                   "product_id": productID,
+                                                   "value": amount,
+                                                   "sigtxn": signature],
+                                      encoding: JSONEncoding.default)
+        case .loanTransactiondSubmit(let address, let productID, let amount, let signature):
+            return .requestParameters(parameters: ["address": address,
+                                                   "product_id": productID,
+                                                   "value": amount,
+                                                   "sigtxn": signature],
+                                      encoding: JSONEncoding.default)
+        case .repaymentTransactiondSubmit(let address, let productID, let amount, let signature):
             return .requestParameters(parameters: ["address": address,
                                                    "product_id": productID,
                                                    "value": amount,

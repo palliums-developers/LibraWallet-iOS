@@ -66,7 +66,8 @@ extension LoanViewModel: LoanViewDelegate {
                                                         mnemonic: mnemonic,
                                                         module: self?.tableViewManager.model?.token_module ?? "",
                                                         feeModule: self?.tableViewManager.model?.token_module ?? "",
-                                                        activeState: true)
+                                                        activeState: true,
+                                                        productID: self?.tableViewManager.model?.id ?? "")
                 }) { [weak self] (errorContent) in
                     guard errorContent != "Cancel" else {
                         self?.view?.toastView?.hide(tag: 99)
@@ -119,7 +120,8 @@ extension LoanViewModel: LoanViewDelegate {
                                                     mnemonic: mnemonic,
                                                     module: self?.tableViewManager.model?.token_module ?? "",
                                                     feeModule: self?.tableViewManager.model?.token_module ?? "",
-                                                    activeState: true)
+                                                    activeState: true,
+                                                    productID: self?.tableViewManager.model?.id ?? "")
             }) { [weak self] (errorContent) in
                 guard errorContent != "Cancel" else {
                     self?.view?.toastView?.hide(tag: 99)

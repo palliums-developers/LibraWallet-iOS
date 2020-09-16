@@ -261,7 +261,7 @@ wallet_bank_loan_orders_alert_title = "Loan Orders";
 /************* 数字银行存款订单 *******************/
 wallet_deposit_orders_title = "Current Deposit";
 wallet_deposit_orders_order_state_title = "Increasing";
-wallet_deposit_orders_order_withdraw_button_title = "Enchashment";
+wallet_deposit_orders_order_withdraw_button_title = "Withdrawal";
 wallet_deposit_orders_total_amount_title = "Principal";
 wallet_deposit_orders_income_title = "Earnings";
 wallet_deposit_orders_annualized_return_title = "Annualized Return";
@@ -449,7 +449,7 @@ wallet_bank_loan_submit_failed = "Transaction Submitted Failed";
 wallet_bank_repayment_submit_successful = "Transaction Submitted";
 wallet_bank_repayment_submit_failed = "Transaction Submitted Failed";
 // 数字银行赎回
-wallet_bank_redeem_alert_title = "Enchashment";
+wallet_bank_redeem_alert_title = "Withdrawal";
 wallet_bank_redeem_alert_textfield_placeholder = "Please input the withdrawal quantity";
 wallet_bank_redeem_alert_amount_title = "Available Quantity: ";
 wallet_bank_redeem_alert_amount_select_total_title = "Total";
