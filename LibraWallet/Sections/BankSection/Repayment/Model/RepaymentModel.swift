@@ -10,7 +10,7 @@ import UIKit
 import Moya
 struct RepaymentMainDataModel: Codable {
     /// 产品ID
-    var id: String?
+    var product_id: String?
     /// 待还余额
     var balance: UInt64?
     /// 借贷率
@@ -307,7 +307,7 @@ extension RepaymentModel {
 //        self.requests.append(request)
 //    }
     private func makeViolasTransaction(address: String, productID: String, amount: UInt64, signature: String, type: String, semaphore: DispatchSemaphore? = nil) {
-        let request = mainProvide.request(.loanTransactiondSubmit(address, productID, amount, signature)) {[weak self](result) in
+        let request = mainProvide.request(.repaymentTransactiondSubmit(address, productID, amount, signature)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
