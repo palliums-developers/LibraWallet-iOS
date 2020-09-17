@@ -76,8 +76,12 @@ class DepositView: UIView {
     @objc func buttonClick(button: UIButton) {
         self.delegate?.confirmDeposit()
     }
-    var toastView: ToastView? {
+//    var toastView: ToastView? {
+//        let toast = ToastView.init()
+//        return toast
+//    }
+    lazy var toastView: ToastView? = {
         let toast = ToastView.init()
         return toast
-    }
+    }()
 }
