@@ -9,8 +9,25 @@
 import UIKit
 import MJRefresh
 import StatefulViewController
-
+enum ViewRequestAnimation {
+    case showToast
+    case hideToast
+    case startHeaderRefresh
+    case endHeaderRefresh
+    case startFooterRefresh
+    case endFooterRefresh
+    case endFooterWithoutData
+    case startToast(tag: Int)
+    case endToast(tag: Int)
+    case reloadTableView
+    case insertRowsInTableView(indexPaths: [IndexPath])
+    case reloadCell(indexPath: IndexPath)
+}
+protocol DepositListViewModelDelegate: NSObjectProtocol {
+    func requestAnimation(type: ViewRequestAnimation)
+}
 class DepositListViewModel: NSObject {
+    weak var delegate: DepositListViewModelDelegate?
     override init() {
         super.init()
     }
@@ -107,7 +124,7 @@ extension DepositListViewModel {
 }
 // MARK: - 逻辑处理
 extension DepositListViewModel: DepositListViewDelegate {
-    func filterOrdersWithCurrency() {
+    func filterOrdersWithCurrency(button: UIButton) {
         guard let tokens = self.supprotTokens else {
             return
         }
@@ -115,31 +132,19 @@ extension DepositListViewModel: DepositListViewDelegate {
             $0.token_module ?? ""
         }
         tempContent.insert(localLanguage(keyString: "wallet_deposit_list_order_token_select_title"), at: 0)
-        let dropper = Dropper.init(x: 0, y: 0, width: 132, height: 90)
-        dropper.items = tempContent
-        dropper.theme = .black(UIColor.white)
-        dropper.cellTextFont = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
-        dropper.cellColor = UIColor.init(hex: "5C5C5C")
-        dropper.spacing = 12
-        dropper.delegate = self
-        // 定义阴影颜色
-        dropper.layer.shadowColor = UIColor.init(hex: "3D3949").cgColor
-        // 阴影的模糊半径
-        dropper.layer.shadowRadius = 3
-        // 阴影的偏移量
-        dropper.layer.shadowOffset = CGSize(width: 0, height: 0)
-        // 阴影的透明度，默认为0，不设置则不会显示阴影****
-        dropper.layer.shadowOpacity = 0.1
-        dropper.tag = 10
-        dropper.show(Dropper.Alignment.center, position: .bottom, button: self.view!.orderTokenSelectButton)
+        self.showDropDown(button: button, datas: tempContent)
     }
-    func filterOrdersWithStatus() {
+    func filterOrdersWithStatus(button: UIButton) {
+        let datas = [localLanguage(keyString: "wallet_deposit_list_order_status_title"),
+                     localLanguage(keyString: "wallet_deposit_list_order_status_deposit_finish_title"),
+                     localLanguage(keyString: "wallet_deposit_list_order_status_withdrawal_finish_title"),
+                     localLanguage(keyString: "wallet_deposit_list_order_status_deposit_failed_title"),
+                     localLanguage(keyString: "wallet_deposit_list_order_status_withdrawal_failed_title")]
+        self.showDropDown(button: button, datas: datas)
+    }
+    func showDropDown(button: UIButton, datas: [String]) {
         let dropper = Dropper.init(x: 0, y: 0, width: 132, height: 36*5)
-        dropper.items = [localLanguage(keyString: "wallet_deposit_list_order_status_title"),
-                         localLanguage(keyString: "wallet_deposit_list_order_status_deposit_finish_title"),
-                         localLanguage(keyString: "wallet_deposit_list_order_status_withdrawal_finish_title"),
-                         localLanguage(keyString: "wallet_deposit_list_order_status_deposit_failed_title"),
-                         localLanguage(keyString: "wallet_deposit_list_order_status_withdrawal_failed_title")]
+        dropper.items = datas
         dropper.theme = .black(UIColor.white)
         dropper.cellTextFont = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
         dropper.cellColor = UIColor.init(hex: "5C5C5C")
@@ -154,7 +159,7 @@ extension DepositListViewModel: DepositListViewDelegate {
         // 阴影的透明度，默认为0，不设置则不会显示阴影****
         dropper.layer.shadowOpacity = 0.1
         dropper.tag = 20
-        dropper.show(Dropper.Alignment.center, position: .bottom, button: self.view!.orderStateButton)
+        dropper.show(Dropper.Alignment.center, position: .bottom, button: button)
     }
 }
 extension DepositListViewModel: DropperDelegate {
@@ -237,6 +242,8 @@ extension DepositListViewModel {
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
                     print(error.localizedDescription)
                     // 下拉刷新请求数据为空
+                    self?.tableViewManager.dataModels?.removeAll()
+                    self?.view?.tableView.reloadData()
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .noMoreData).localizedDescription {
                     // 上拉请求更多数据为空
                     print(error.localizedDescription)

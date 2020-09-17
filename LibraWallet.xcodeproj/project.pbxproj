@@ -1675,8 +1675,8 @@
 		361BDAAF24F8E7BD00C4C54E /* View */ = {
 			isa = PBXGroup;
 			children = (
-				361BDAB024F8E7BD00C4C54E /* DepositListTableViewCell.swift */,
 				361BDAB124F8E7BD00C4C54E /* DepositListView.swift */,
+				361BDAB024F8E7BD00C4C54E /* DepositListTableViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";

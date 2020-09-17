@@ -9,11 +9,8 @@
 import UIKit
 
 class DepositListTableViewCell: UITableViewCell {
-    //    weak var delegate: AddAssetViewTableViewCellDelegate?
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        //        contentView.addSubview(iconImageView)
-//        contentView.addSubview(whiteBackgroundView)
         contentView.addSubview(tokenIconImageView)
         contentView.addSubview(orderTokenNameLabel)
         contentView.addSubview(orderTimeLabel)
@@ -59,12 +56,6 @@ class DepositListTableViewCell: UITableViewCell {
         }
     }
     // MARK: - 懒加载对象
-//    private lazy var whiteBackgroundView: UIView = {
-//        let view = UIView.init()
-//        view.layer.backgroundColor = UIColor.white.cgColor
-//        view.layer.cornerRadius = 10
-//        return view
-//    }()
     private lazy var tokenIconImageView: UIImageView = {
         let view = UIImageView.init()
         view.image = UIImage.init(named: "wallet_icon_default")
@@ -74,7 +65,7 @@ class DepositListTableViewCell: UITableViewCell {
         view.layer.masksToBounds = true
         return view
     }()
-    lazy var orderTokenNameLabel: UILabel = {
+    private lazy var orderTokenNameLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "333333")
@@ -82,7 +73,7 @@ class DepositListTableViewCell: UITableViewCell {
         label.text = "---"
         return label
     }()
-    lazy var orderTimeLabel: UILabel = {
+    private lazy var orderTimeLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "999999")
@@ -90,7 +81,7 @@ class DepositListTableViewCell: UITableViewCell {
         label.text = "---"
         return label
     }()
-    lazy var orderAmountLabel: UILabel = {
+    private lazy var orderAmountLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "333333")
@@ -98,7 +89,7 @@ class DepositListTableViewCell: UITableViewCell {
         label.text = "---"
         return label
     }()
-    lazy var orderStatusLabel: UILabel = {
+    private lazy var orderStatusLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "999999")
@@ -106,14 +97,13 @@ class DepositListTableViewCell: UITableViewCell {
         label.text = "---"
         return label
     }()
-    lazy var spaceLabel: UILabel = {
+    private lazy var spaceLabel: UILabel = {
         let label = UILabel.init()
         label.backgroundColor = DefaultSpaceColor
         
         return label
     }()
     //MARK: - 设置数据
-    var indexPath: IndexPath?
     var hideSpcaeLineState: Bool? {
         didSet {
             if hideSpcaeLineState == true {
@@ -131,7 +121,8 @@ class DepositListTableViewCell: UITableViewCell {
             if let iconName = model?.logo, iconName.isEmpty == false {
                 if iconName.hasPrefix("http") {
                     let url = URL(string: iconName)
-                    tokenIconImageView.kf.setImage(with: url, placeholder: UIImage.init(named: "wallet_icon_default"))
+                    tokenIconImageView.kf.setImage(with: url,
+                                                   placeholder: UIImage.init(named: "wallet_icon_default"))
                 } else {
                     tokenIconImageView.image = UIImage.init(named: iconName)
                 }
@@ -139,7 +130,8 @@ class DepositListTableViewCell: UITableViewCell {
                 tokenIconImageView.image = UIImage.init(named: "wallet_icon_default")
             }
             orderTokenNameLabel.text = tempModel.currency
-            orderTimeLabel.text = timestampToDateString(timestamp: tempModel.date ?? 0, dateFormat: "yyyy/MM/dd HH:mm:ss")
+            orderTimeLabel.text = timestampToDateString(timestamp: tempModel.date ?? 0,
+                                                        dateFormat: "yyyy/MM/dd HH:mm:ss")
             orderAmountLabel.text = getDecimalNumber(amount: NSDecimalNumber.init(value: tempModel.value ?? 0),
                                                      scale: 6,
                                                      unit: 1000000).stringValue

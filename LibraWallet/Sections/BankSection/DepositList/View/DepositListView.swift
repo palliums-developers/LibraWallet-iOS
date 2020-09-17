@@ -9,13 +9,14 @@
 import UIKit
 
 protocol DepositListViewDelegate: NSObjectProtocol {
-    func filterOrdersWithCurrency()
-    func filterOrdersWithStatus()
+    func filterOrdersWithCurrency(button: UIButton)
+    func filterOrdersWithStatus(button: UIButton)
 }
 class DepositListView: UIView {
     weak var delegate: DepositListViewDelegate?
     override init(frame: CGRect) {
         super.init(frame: frame)
+        // 背景色（space间隔）
         self.backgroundColor = UIColor.init(hex: "F7F7F9")
         addSubview(orderTokenSelectButton)
         addSubview(orderStateButton)
@@ -86,9 +87,9 @@ class DepositListView: UIView {
     }
     @objc func buttonClick(button: UIButton) {
         if button.tag == 10 {
-            self.delegate?.filterOrdersWithCurrency()
+            self.delegate?.filterOrdersWithCurrency(button: button)
         } else {
-            self.delegate?.filterOrdersWithStatus()
+            self.delegate?.filterOrdersWithStatus(button: button)
         }
     }
 }

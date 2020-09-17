@@ -9,7 +9,6 @@
 import UIKit
 
 class DepositListTableViewManager: NSObject {
-    //    weak var delegate: HomeTableViewManagerDelegate?
     /// 数据
     var dataModels: [DepositListMainDataModel]?
     deinit {
@@ -22,10 +21,6 @@ extension DepositListTableViewManager: UITableViewDelegate {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
-//        guard let model = self.dataModels else {
-//            return
-//        }
-        //        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, model: model[indexPath.row])
     }
 }
 extension DepositListTableViewManager: UITableViewDataSource {

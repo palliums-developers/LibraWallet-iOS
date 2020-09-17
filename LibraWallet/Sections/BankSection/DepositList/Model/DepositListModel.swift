@@ -45,12 +45,12 @@ class DepositListModel: NSObject {
                  do {
                      let json = try response.map(DepositListMainModel.self)
                      if json.code == 2000 {
-//                         guard let models = json.data, models.isEmpty == false else {
-//                             let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: type)
-//                             self?.setValue(data, forKey: "dataDic")
-//                             print("\(type)_状态异常")
-//                             return
-//                         }
+                         guard let models = json.data, models.isEmpty == false else {
+                             let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: type)
+                             self?.setValue(data, forKey: "dataDic")
+                             print("\(type)_状态异常")
+                             return
+                         }
                          let data = setKVOData(type: type, data: json.data)
                          self?.setValue(data, forKey: "dataDic")
                      } else {
