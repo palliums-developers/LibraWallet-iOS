@@ -19,7 +19,6 @@ class DepositDescribeTableViewHeaderView: UITableViewHeaderFooterView {
         showButton.addSubview(itemTitleLabel)
         showButton.addSubview(itemIndicatorImageView)
         showButton.addSubview(itemDetailImageView)
-        showButton.addSubview(itemContentView)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -49,12 +48,6 @@ class DepositDescribeTableViewHeaderView: UITableViewHeaderFooterView {
             make.right.equalTo(showButton.snp.right).offset(-12)
             make.size.equalTo(CGSize.init(width: 12, height: 12))
         }
-        itemContentView.snp.makeConstraints { (make) in
-            make.top.equalTo(showButton).offset(48)
-            make.left.equalTo(showButton).offset(13)
-            make.right.equalTo(showButton.snp.right).offset(-13)
-            make.bottom.equalTo(showButton.snp.bottom).offset(-16)
-        }
     }
     // MARK: - 懒加载对象
     lazy var itemTitleLabel: UILabel = {
@@ -76,11 +69,6 @@ class DepositDescribeTableViewHeaderView: UITableViewHeaderFooterView {
         let imageView = UIImageView.init()
         imageView.image = UIImage.init(named: "bottom_arrow")
         return imageView
-    }()
-    private lazy var itemContentView: UITextView = {
-        let textView = UITextView.init()
-        textView.isScrollEnabled = false
-        return textView
     }()
     private lazy var showButton: UIButton = {
         let button = UIButton.init(type: UIButton.ButtonType.custom)

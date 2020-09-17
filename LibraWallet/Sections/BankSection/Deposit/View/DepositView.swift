@@ -14,6 +14,7 @@ class DepositView: UIView {
     weak var delegate: DepositViewDelegate?
     override init(frame: CGRect) {
         super.init(frame: frame)
+        self.backgroundColor = UIColor.white
         addSubview(tableView)
         addSubview(footerBackgroundView)
         footerBackgroundView.addSubview(confirmButton)
@@ -78,17 +79,5 @@ class DepositView: UIView {
     var toastView: ToastView? {
         let toast = ToastView.init()
         return toast
-    }
-    func deleteRowInTableView(indexPaths: [IndexPath]) {
-        
-    }
-    func insertRowInTableView(indexPaths: [IndexPath]) {
-        
-    }
-    func reloadRowInTableView(indexPaths: [IndexPath]) {
-        
-    }
-    func dealErrorToast(error: LibraWalletError) {
-        
     }
 }

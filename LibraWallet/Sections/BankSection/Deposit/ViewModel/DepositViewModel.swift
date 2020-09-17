@@ -7,8 +7,12 @@
 //
 
 import UIKit
-
+import Toast_Swift
+protocol DepositViewModelDelegate: NSObjectProtocol {
+    func successDeposit()
+}
 class DepositViewModel: NSObject {
+    weak var delegate: DepositViewModelDelegate?
     override init() {
         super.init()
         tableViewManager.dataModels = self.dataModel.getLocalModel()
@@ -253,14 +257,9 @@ extension DepositViewModel {
             } else if type == "SendViolasBankDepositTransaction" {
                 self?.view?.toastView?.hide(tag: 99)
                 self?.view?.hideToastActivity()
-                self?.view?.makeToast(localLanguage(keyString: "wallet_bank_deposit_submit_successful"), position: .center)
-//                self?.view.makeToast(localLanguage(keyString: "wallet_bank_deposit_submit_successful"), duration: toastDuration, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
-//                    self?.needReject = false
-//                    if let confirmAction = self?.confirm {
-//                        confirmAction("success")
-//                    }
-//                    self?.dismiss(animated: true, completion: nil)
-//                })
+                self?.view?.makeToast(localLanguage(keyString: "wallet_bank_deposit_submit_successful"), duration: toastDuration, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
+                    self?.delegate?.successDeposit()
+                })
             }
         })
     }

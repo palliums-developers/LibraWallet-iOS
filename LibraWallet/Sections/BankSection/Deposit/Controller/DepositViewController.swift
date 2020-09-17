@@ -22,12 +22,7 @@ class DepositViewController: BaseViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         detailView.snp.makeConstraints { (make) in
-            if #available(iOS 11.0, *) {
-                make.top.equalTo(self.view.safeAreaLayoutGuide)
-            } else {
-                make.top.equalTo(self.view)
-            }
-            make.left.right.bottom.equalTo(self.view)
+            make.top.left.right.bottom.equalTo(self.view.safeAreaLayoutGuide)
         }
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -50,6 +45,7 @@ class DepositViewController: BaseViewController {
     lazy var viewModel: DepositViewModel = {
         let viewModel = DepositViewModel.init()
         viewModel.view = self.detailView
+        viewModel.delegate = self
         return viewModel
     }()
     var itemID: String?
@@ -57,5 +53,10 @@ class DepositViewController: BaseViewController {
         didSet {
             viewModel.models = models
         }
+    }
+}
+extension DepositViewController: DepositViewModelDelegate {
+    func successDeposit() {
+        self.navigationController?.popViewController(animated: true)
     }
 }
