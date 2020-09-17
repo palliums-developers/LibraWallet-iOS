@@ -230,7 +230,7 @@ extension LoanViewModel: UITextFieldDelegate {
 // MARK: - 网络请求
 extension LoanViewModel {
     func initKVO() {
-        self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
+        self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self] (model, change) in
             guard let dataDic = change.newValue, dataDic.count != 0 else {
                 self?.view?.toastView?.hide(tag: 99)
                 self?.view?.toastView?.hide(tag: 299)
@@ -287,7 +287,7 @@ extension LoanViewModel {
                 self?.tableViewManager.dataModels = self?.dataModel.getLocalModel(model: tempData)
                 self?.view?.tableView.reloadData()
                 self?.view?.toastView?.hide(tag: 99)
-                self?.view?.hideToastActivity()
+//                self?.view?.hideToastActivity()
             } else if type == "SendViolasBankLoanTransaction" {
                 self?.view?.toastView?.hide(tag: 99)
                 self?.view?.hideToastActivity()

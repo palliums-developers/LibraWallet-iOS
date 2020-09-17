@@ -89,25 +89,25 @@ class LoanView: UIView {
         return button
     }()
     lazy var legalButton: UIButton = {
-         let button = UIButton.init(type: UIButton.ButtonType.custom)
-         button.setImage(UIImage.init(named: "unselect"), for: UIControl.State.normal)
-         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
-         button.tag = 10
-         return button
-     }()
-     private lazy var legalContentTextView: AttributedTextView = {
-         let textView = AttributedTextView.init()
-         textView.textAlignment = NSTextAlignment.left
-         textView.backgroundColor = UIColor.clear
-         textView.isEditable = false
-         textView.attributer = localLanguage(keyString: "wallet_bank_loan_legal_button_conent")
-             .color(UIColor.init(hex: "999999"))
-             .font(UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular))
-             .match(localLanguage(keyString: "wallet_bank_loan_legal_agreement_match_contnet")).underline.makeInteract({ _ in
-                self.delegate?.checkLegal()
-             })
-         return textView
-     }()
+        let button = UIButton.init(type: UIButton.ButtonType.custom)
+        button.setImage(UIImage.init(named: "unselect"), for: UIControl.State.normal)
+        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
+        button.tag = 10
+        return button
+    }()
+    private lazy var legalContentTextView: AttributedTextView = {
+        let textView = AttributedTextView.init()
+        textView.textAlignment = NSTextAlignment.left
+        textView.backgroundColor = UIColor.clear
+        textView.isEditable = false
+        textView.attributer = localLanguage(keyString: "wallet_bank_loan_legal_button_conent")
+            .color(UIColor.init(hex: "999999"))
+            .font(UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular))
+            .match(localLanguage(keyString: "wallet_bank_loan_legal_agreement_match_contnet")).underline.makeInteract({ [weak self] _ in
+                self?.delegate?.checkLegal()
+            })
+        return textView
+    }()
     @objc func buttonClick(button: UIButton) {
         if button.tag == 100 {
             self.delegate?.loanConfirm()
@@ -119,20 +119,8 @@ class LoanView: UIView {
             }
         }
     }
-    var toastView: ToastView? {
+    lazy var toastView: ToastView? = {
         let toast = ToastView.init()
         return toast
-    }
-    func deleteRowInTableView(indexPaths: [IndexPath]) {
-        
-    }
-    func insertRowInTableView(indexPaths: [IndexPath]) {
-        
-    }
-    func reloadRowInTableView(indexPaths: [IndexPath]) {
-        
-    }
-    func dealErrorToast(error: LibraWalletError) {
-        
-    }
+    }()
 }
