@@ -11,6 +11,7 @@ import UIKit
 class RepaymentViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = localLanguage(keyString: "wallet_bank_repayment_navigationbar_title")
         self.view.backgroundColor = UIColor.init(hex: "F7F7F9")
         // 加载子View
         self.view.addSubview(detailView)
@@ -23,11 +24,11 @@ class RepaymentViewController: BaseViewController {
         super.viewWillLayoutSubviews()
         detailView.snp.makeConstraints { (make) in
             if #available(iOS 11.0, *) {
-                make.top.equalTo(self.view.safeAreaLayoutGuide)
+                make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
             } else {
                 make.top.equalTo(self.view)
             }
-            make.left.right.bottom.equalTo(self.view)
+            make.left.right.equalTo(self.view)
         }
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -53,17 +54,4 @@ class RepaymentViewController: BaseViewController {
         return viewModel
     }()
     var itemID: String?
-    /*
-     //        WalletManager.unlockWallet(successful: { [weak self] (mnemonic) in
-     //            self?.detailView.toastView?.show(tag: 99)
-     //            self?.dataModel.sendRepaymentTransaction(sendAddress: WalletManager.shared.violasAddress!,
-     //                                                     amount: self?.detailView.headerView.model?.balance ?? 0,
-     //                                                     fee: 10,
-     //                                                     mnemonic: mnemonic,
-     //                                                     module: self?.detailView.headerView.model?.token_module ?? "",
-     //                                                     feeModule: self?.detailView.headerView.model?.token_module ?? "")
-     //        }) { (errorContent) in
-     //            self.view?.makeToast(errorContent, position: .center)
-     //        }
-     */
 }

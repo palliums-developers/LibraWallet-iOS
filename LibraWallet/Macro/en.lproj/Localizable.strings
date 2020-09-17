@@ -500,6 +500,7 @@ wallet_bank_loan_orders_navigationbar_title = "Loan Orders";
 wallet_bank_deposit_orders_navigationbar_title = "Deposit Orders";
 wallet_bank_loan_orders_list_navigationbar_title = "Loan Orders List";
 wallet_bank_deposit_orders_list_navigationbar_title = "Deposit Orders List";
+wallet_bank_repayment_navigationbar_title = "Repayment";
 
 /************* App错误 *******************/
 // 请求遇到错误

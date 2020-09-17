@@ -500,6 +500,7 @@ wallet_bank_loan_orders_navigationbar_title = "借款订单";
 wallet_bank_deposit_orders_navigationbar_title = "存款订单";
 wallet_bank_loan_orders_list_navigationbar_title = "借款明细";
 wallet_bank_deposit_orders_list_navigationbar_title = "存款明细";
+wallet_bank_repayment_navigationbar_title = "还款";
 
 /************* App错误 *******************/
 // 请求遇到错误
