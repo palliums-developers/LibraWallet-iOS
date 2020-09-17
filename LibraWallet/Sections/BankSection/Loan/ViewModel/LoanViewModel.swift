@@ -7,11 +7,13 @@
 //
 
 import UIKit
+import Toast_Swift
 
 protocol LoanViewModelDelegate: NSObjectProtocol {
     func successDeposit()
 }
 class LoanViewModel: NSObject {
+    weak var delegate: LoanViewModelDelegate?
     override init() {
         super.init()
         tableViewManager.dataModels = self.dataModel.getLocalModel()
@@ -294,7 +296,9 @@ extension LoanViewModel {
             } else if type == "SendViolasBankLoanTransaction" {
                 self?.view?.toastView?.hide(tag: 99)
                 self?.view?.hideToastActivity()
-                self?.view?.makeToast(localLanguage(keyString: "wallet_bank_loan_submit_successful"), position: .center)
+                self?.view?.makeToast(localLanguage(keyString: "wallet_bank_loan_submit_successful"), duration: toastDuration, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
+                    self?.delegate?.successDeposit()
+                })
             }
         })
     }

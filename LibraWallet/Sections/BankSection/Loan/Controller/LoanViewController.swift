@@ -9,6 +9,7 @@
 import UIKit
 
 class LoanViewController: BaseViewController {
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = localLanguage(keyString: "wallet_bank_loan_navigationbar_title")
@@ -20,7 +21,7 @@ class LoanViewController: BaseViewController {
         // 加载数据
         self.detailView.toastView?.show(tag: 99)
         self.viewModel.dataModel.getLoanItemDetailModel(itemID: self.itemID ?? "",
-                                                   address: WalletManager.shared.violasAddress!)
+                                                        address: WalletManager.shared.violasAddress!)
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -53,6 +54,7 @@ class LoanViewController: BaseViewController {
     lazy var viewModel: LoanViewModel = {
         let viewModel = LoanViewModel.init()
         viewModel.view = self.detailView
+        viewModel.delegate = self
         return viewModel
     }()
     ///
@@ -60,7 +62,12 @@ class LoanViewController: BaseViewController {
     /// 全部数据
     var models: [BankDepositMarketDataModel]? {
         didSet {
-            viewModel.models = models
+//            viewModel.models = models
         }
     }
+}
+extension LoanViewController: LoanViewModelDelegate {
+    func successDeposit() {
+        self.navigationController?.popViewController(animated: true)
+    }    
 }
