@@ -8,6 +8,9 @@
 
 import UIKit
 
+protocol LoanViewModelDelegate: NSObjectProtocol {
+    func successDeposit()
+}
 class LoanViewModel: NSObject {
     override init() {
         super.init()
@@ -96,7 +99,7 @@ extension LoanViewModel: LoanViewDelegate {
         }
         let amount = NSDecimalNumber.init(string: amountString).multiplying(by: NSDecimalNumber.init(value: 1000000))
         // 检查是否低于最低借贷金额
-        guard amount.uint64Value > (header.productModel?.minimum_amount ?? 0) else {
+        guard amount.uint64Value >= (header.productModel?.minimum_amount ?? 0) else {
             throw LibraWalletError.WalletBankLoan(reason: .amountTooLittle)
         }
         // 检查是否超过每日限额
