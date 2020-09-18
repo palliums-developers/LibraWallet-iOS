@@ -85,8 +85,17 @@ class LoanDetailDepositListTableViewCell: UITableViewCell {
             itemAmountLabel.text = getDecimalNumber(amount: NSDecimalNumber.init(value: tempModel.amount ?? 0),
                                                     scale: 6,
                                                     unit: 1000000).stringValue
-            if tempModel.status == 1 {
+            //订单状态，0（已借款），1（已还款），-1（借款失败），-2（还款失败）2（已清算）
+            if tempModel.status == 0 {
+                itemStatusLabel.text = localLanguage(keyString: "wallet_bank_loan_detail_loan_status_loaned_title")
+            } else if tempModel.status == 1 {
                 itemStatusLabel.text = localLanguage(keyString: "wallet_bank_loan_detail_deposit_status_deposited_title")
+            } else if tempModel.status == 2 {
+                itemStatusLabel.text = localLanguage(keyString: "wallet_bank_loan_detail_clearing_detail_status_title")
+            } else if tempModel.status == -1 {
+                itemStatusLabel.text = localLanguage(keyString: "wallet_bank_loan_detail_loan_status_failed_title")
+            } else if tempModel.status == -2 {
+                itemStatusLabel.text = localLanguage(keyString: "wallet_bank_loan_detail_deposit_status_failed_title")
             }
         }
     }
