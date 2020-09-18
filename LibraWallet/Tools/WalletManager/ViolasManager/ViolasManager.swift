@@ -94,7 +94,7 @@ extension ViolasManager {
     /// 获取合约
     /// - Parameter name: 合约名字
     /// - Returns: 合约Hex
-    private static func getLocalMoveCode(name: String) -> String {
+    static func getLocalMoveCode(name: String) -> String {
         // 1.获取Bundle路径
         let marketContractBundlePath = Bundle.main.path(forResource:"MarketContracts", ofType:"bundle") ?? ""
         guard marketContractBundlePath.isEmpty == false else {
@@ -120,7 +120,7 @@ extension ViolasManager {
     /// 获取合约
     /// - Parameter name: 合约名字
     /// - Returns: 合约Hex
-    private static func getBankMoveCode(name: String) -> String {
+    static func getBankMoveCode(name: String) -> String {
         // 1.获取Bundle路径
         let marketContractBundlePath = Bundle.main.path(forResource:"BankContracts", ofType:"bundle") ?? ""
         guard marketContractBundlePath.isEmpty == false else {

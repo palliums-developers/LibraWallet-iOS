@@ -42,7 +42,11 @@ extension ScanBankLoanModel {
                                                                             sequenceNumber: self.sequenceNumber ?? 0,
                                                                             module: module1,
                                                                             amount: amount)
-                self.makeViolasTransaction(signature: signature, type: "SendViolasBankLoanTransaction")
+//                self.makeViolasTransaction(signature: signature, type: "SendViolasBankLoanTransaction")
+                DispatchQueue.main.async(execute: {
+                    let data = setKVOData(type: "SendViolasBankLoanTransaction", data: signature)
+                    self.setValue(data, forKey: "dataDic")
+                })
             } catch {
                 print(error.localizedDescription)
                 DispatchQueue.main.async(execute: {

@@ -1,5 +1,5 @@
 //
-//  ScanBankLoanViewController.swift
+//  ScanBankRepaymentViewController.swift
 //  LibraWallet
 //
 //  Created by wangyingdong on 2020/9/14.
@@ -9,7 +9,7 @@
 import UIKit
 import Toast_Swift
 
-class ScanBankLoanViewController: UIViewController {
+class ScanBankRepaymentViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.addSubview(detailView)
@@ -35,19 +35,19 @@ class ScanBankLoanViewController: UIViewController {
         }
     }
     deinit {
-        print("ScanBankLoanViewController销毁了")
+        print("ScanBankRepaymentViewController销毁了")
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.barStyle = .default
     }
-    private lazy var detailView : ScanBankLoanView = {
-        let view = ScanBankLoanView.init()
+    private lazy var detailView : ScanBankRepaymentView = {
+        let view = ScanBankRepaymentView.init()
         view.delegate = self
         return view
     }()
-    lazy var dataModel: ScanBankLoanModel = {
-        let model = ScanBankLoanModel.init()
+    lazy var dataModel: ScanBankRepaymentModel = {
+        let model = ScanBankRepaymentModel.init()
         return model
     }()
     /// 数据监听KVO
@@ -61,7 +61,7 @@ class ScanBankLoanViewController: UIViewController {
     var confirm: ((String) -> Void)?
     var needReject: Bool? = true
 }
-extension ScanBankLoanViewController {
+extension ScanBankRepaymentViewController {
     func initKVO() {
         self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
             guard let dataDic = change.newValue, dataDic.count != 0 else {
@@ -92,12 +92,15 @@ extension ScanBankLoanViewController {
                 self?.detailView.makeToast(error.localizedDescription, position: .center)
                 return
             }
-            if type == "SendViolasBankLoanTransaction" {
+            if type == "SendViolasBankRepaymentTransaction" {
                 self?.detailView.toastView?.hide(tag: 99)
+                guard let tempData = dataDic.value(forKey: "data") as? String else {
+                    return
+                }
                 self?.view.makeToast(localLanguage(keyString: "wallet_bank_deposit_submit_successful"), duration: toastDuration, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
                     self?.needReject = false
                     if let confirmAction = self?.confirm {
-                        confirmAction("success")
+                        confirmAction(tempData)
                     }
                     self?.dismiss(animated: true, completion: nil)
                 })
@@ -106,7 +109,7 @@ extension ScanBankLoanViewController {
     }
 }
 
-extension ScanBankLoanViewController: ScanSendTransactionViewDelegate {
+extension ScanBankRepaymentViewController: ScanSendTransactionViewDelegate {
     func cancelLogin() {
         self.dismiss(animated: true, completion: {
             if let rejectC = self.reject {

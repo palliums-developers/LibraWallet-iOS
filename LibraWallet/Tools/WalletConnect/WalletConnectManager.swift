@@ -153,11 +153,12 @@ class WalletConnectManager: NSObject {
         ser.register(handler: SendTransactionHandler())
         ser.register(handler: GetAccountHandler())
         ser.register(handler: SignTransactionHandler())
+        ser.register(handler: SignRawTransactionHandler())
         ser.register(handler: SendLibraTransactionHandler())
         ser.register(handler: SendBTCTransactionHandler())
         return ser
     }()
-
+    
     var didConnectClosure: (() -> Void)?
     var connect: ((Bool) -> Void)?
     var allowConnect: (() -> Void)?
@@ -261,7 +262,7 @@ class SendTransactionHandler: RequestHandler {
             let model = try request.parameter(of: WCRawTransaction.self, at: 0)
             DispatchQueue.main.async {
                 if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-                    if model.payload?.code == "a11ceb0b010006010002030206040802050a0707111a082b100000000100010101000201060c000109000c4c696272614163636f756e740c6164645f63757272656e63790000000000000000000000000000000101010001030b00380002" {
+                    if model.payload?.code == ViolasUtils.getMoveCode(name: "add_currency_to_account") {
                         let vc = ScanPublishViewController()
                         vc.model = model
                         vc.reject = {
@@ -276,7 +277,7 @@ class SendTransactionHandler: RequestHandler {
                             print(signature)
                         }
                         appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
-                    } else if model.payload?.code == "a11ceb0b010006010002030207040902050b0d071817082f10000000010001020101000205060c030303030002090009010845786368616e67650d6164645f6c6971756964697479000000000000000000000000000000010201010001070b000a010a020a030a04380002" {
+                    } else if model.payload?.code == ViolasManager.getCodeData(move: ViolasManager.getLocalMoveCode(name: "add_liquidity"), address: "00000000000000000000000000000001").toHexString() {
                         // 添加流动性
                         let vc = ScanSwapViewController()
                         vc.model = model
@@ -292,7 +293,7 @@ class SendTransactionHandler: RequestHandler {
                             print(signature)
                         }
                         appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
-                    } else if model.payload?.code == "a11ceb0b010006010002030207040902050b0c07171a083110000000010001020101000204060c0303030002090009010845786368616e67651072656d6f76655f6c6971756964697479000000000000000000000000000000010201010001060b000a010a020a03380002" {
+                    } else if model.payload?.code == ViolasManager.getCodeData(move: ViolasManager.getLocalMoveCode(name: "remove_liquidity"), address: "00000000000000000000000000000001").toHexString() {
                         // 移除流动性
                         let vc = ScanSwapViewController()
                         vc.model = model
@@ -308,7 +309,7 @@ class SendTransactionHandler: RequestHandler {
                             print(signature)
                         }
                         appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
-                    } else if model.payload?.code == "a11ceb0b010006010002030207040902050b10071b0e082910000000010001020101000206060c0503030a020a020002090009010845786368616e67650473776170000000000000000000000000000000010201010001080b000a010a020a030b040b05380002" {
+                    } else if model.payload?.code == ViolasManager.getCodeData(move: ViolasManager.getLocalMoveCode(name: "swap"), address: "00000000000000000000000000000001").toHexString() {
                         // 交换
                         let vc = ScanSwapViewController()
                         vc.model = model
@@ -413,7 +414,7 @@ class SendLibraTransactionHandler: RequestHandler {
 }
 class SignTransactionHandler: RequestHandler {
     func canHandle(request: Request) -> Bool {
-        return request.method == "violas_signTransaction"
+        return request.method == "violas_signRawTransaction"
     }
     func handle(request: Request) {
         do {
@@ -434,6 +435,87 @@ class SignTransactionHandler: RequestHandler {
                         print(signature)
                     }
                     appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
+                }
+            }
+        } catch {
+            WalletConnectManager.shared.walletConnectServer.send(.invalid(request))
+            return
+        }
+    }
+}
+class SignRawTransactionHandler: RequestHandler {
+    func canHandle(request: Request) -> Bool {
+        return request.method == "violas_signTransaction"
+    }
+    func handle(request: Request) {
+        do {
+            let model = try request.parameter(of: WCRawTransaction.self, at: 0)
+            DispatchQueue.main.async {
+                if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+                    if model.payload?.code == ViolasManager.getBankMoveCode(name: "lock") {
+                        // 存款
+                        let vc = ScanBankDepositViewController()
+                        vc.model = model
+                        vc.reject = {
+                            WalletConnectManager.shared.walletConnectServer.send(.reject(request))
+                        }
+                        vc.confirm = { (signature) in
+                            do {
+                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))//
+                            } catch {
+                                print(error.localizedDescription)
+                            }
+                            print(signature)
+                        }
+                        appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
+                    } else if model.payload?.code == ViolasManager.getBankMoveCode(name: "borrow") {
+                        // 借款
+                        let vc = ScanBankLoanViewController()
+                        vc.model = model
+                        vc.reject = {
+                            WalletConnectManager.shared.walletConnectServer.send(.reject(request))
+                        }
+                        vc.confirm = { (signature) in
+                            do {
+                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))//
+                            } catch {
+                                print(error.localizedDescription)
+                            }
+                            print(signature)
+                        }
+                        appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
+                    } else if model.payload?.code == ViolasManager.getBankMoveCode(name: "repay_borrow") {
+                        // 还款
+                        let vc = ScanBankRepaymentViewController()
+                        vc.model = model
+                        vc.reject = {
+                            WalletConnectManager.shared.walletConnectServer.send(.reject(request))
+                        }
+                        vc.confirm = { (signature) in
+                            do {
+                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))//
+                            } catch {
+                                print(error.localizedDescription)
+                            }
+                            print(signature)
+                        }
+                        appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
+                    } else if model.payload?.code == ViolasManager.getBankMoveCode(name: "redeem") {
+                        // 取款
+                        let vc = ScanBankWithdrawViewController()
+                        vc.model = model
+                        vc.reject = {
+                            WalletConnectManager.shared.walletConnectServer.send(.reject(request))
+                        }
+                        vc.confirm = { (signature) in
+                            do {
+                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))//
+                            } catch {
+                                print(error.localizedDescription)
+                            }
+                        }
+                        appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
+                    }
                 }
             }
         } catch {

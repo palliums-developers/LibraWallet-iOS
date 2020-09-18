@@ -1,5 +1,5 @@
 //
-//  ScanBankWithdrawModel.swift
+//  ScanBankRepaymentModel.swift
 //  LibraWallet
 //
 //  Created by wangyingdong on 2020/9/14.
@@ -9,7 +9,7 @@
 import UIKit
 import Moya
 
-class ScanBankWithdrawModel: NSObject {
+class ScanBankRepaymentModel: NSObject {
     private var requests: [Cancellable] = []
     @objc dynamic var dataDic: NSMutableDictionary = [:]
     private var sequenceNumber: UInt64?
@@ -18,10 +18,10 @@ class ScanBankWithdrawModel: NSObject {
             cancellable.cancel()
         }
         requests.removeAll()
-        print("ScanBankWithdrawModel销毁了")
+        print("ScanBankRepaymentModel销毁了")
     }
 }
-extension ScanBankWithdrawModel {
+extension ScanBankRepaymentModel {
     func sendWithdrawTransaction(model: WCRawTransaction, mnemonic: [String]) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
@@ -35,18 +35,22 @@ extension ScanBankWithdrawModel {
                 let (_, module1) = ViolasManager.readTypeTags(data: Data.init(hex: model.payload?.tyArgs?[0] ?? "") ?? Data(), typeTagCount: 1)
                 let amount = NSDecimalNumber.init(string: model.payload?.args?[0].value).uint64Value
                 
-                let signature = try ViolasManager.getBankRedeemTransactionHex(sendAddress: model.from ?? "",
-                                                                              mnemonic: mnemonic,
-                                                                              feeModule: model.gasCurrencyCode ?? "LBR",
-                                                                              fee: model.gasUnitPrice ?? 0,
-                                                                              sequenceNumber: self.sequenceNumber ?? 0,
-                                                                              module: module1,
-                                                                              amount: amount)
-                self.makeViolasTransaction(signature: signature, type: "SendViolasBankWithdrawTransaction")
+                let signature = try ViolasManager.getBankRepaymentTransactionHex(sendAddress: model.from ?? "",
+                                                                                 mnemonic: mnemonic,
+                                                                                 feeModule: model.gasCurrencyCode ?? "LBR",
+                                                                                 fee: model.gasUnitPrice ?? 0,
+                                                                                 sequenceNumber: self.sequenceNumber ?? 0,
+                                                                                 module: module1,
+                                                                                 amount: amount)
+//                self.makeViolasTransaction(signature: signature, type: "SendViolasBankRepaymentTransaction")
+                DispatchQueue.main.async(execute: {
+                    let data = setKVOData(type: "SendViolasBankRepaymentTransaction", data: signature)
+                    self.setValue(data, forKey: "dataDic")
+                })
             } catch {
                 print(error.localizedDescription)
                 DispatchQueue.main.async(execute: {
-                    let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "SendViolasBankWithdrawTransaction")
+                    let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "SendViolasBankRepaymentTransaction")
                     self.setValue(data, forKey: "dataDic")
                 })
             }

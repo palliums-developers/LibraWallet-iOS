@@ -3672,7 +3672,6 @@
 				9DBC266E23405B41009650EA /* LibraWallet.entitlements */,
 				9DA8E2A12317ABC400E28D07 /* AppDelegate.swift */,
 				9DC902362328E7820097FD85 /* Sections */,
-				364BB571242CD2A300B9BE17 /* ScanModule */,
 				9DC4885B23220E30005FF254 /* Vendors */,
 				9DC9023B2328E7E60097FD85 /* Tools */,
 				9D626476235718D700A79B3D /* Resource */,
@@ -3844,6 +3843,7 @@
 				3622F20E24E539B100CFB754 /* Receive */,
 				3622F1FE24E3FBB300CFB754 /* Transfer */,
 				364BB570242CD27700B9BE17 /* MappingModule */,
+				364BB571242CD2A300B9BE17 /* ScanModule */,
 			);
 			path = HomeSection;
 			sourceTree = "<group>";
