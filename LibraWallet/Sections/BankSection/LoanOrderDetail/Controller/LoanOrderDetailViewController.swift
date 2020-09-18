@@ -78,6 +78,15 @@ extension LoanOrderDetailViewController: LoanOrderDetailViewDelegate {
     func confirmRepayment() {
         let vc = RepaymentViewController()
         vc.itemID = self.itemID
+        vc.updateAction = { action in
+            if self.detailView.segmentView.selectedIndex == 0 {
+                self.loanListController.detailView.tableView.mj_header?.beginRefreshing()
+            } else if self.detailView.segmentView.selectedIndex == 0 {
+                self.depositListController.detailView.tableView.mj_header?.beginRefreshing()
+            } else {
+                self.clearingListController.detailView.tableView.mj_header?.beginRefreshing()
+            }
+        }
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }

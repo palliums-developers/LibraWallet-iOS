@@ -7,8 +7,14 @@
 //
 
 import UIKit
+import Toast_Swift
 
+protocol RepaymentViewModelDelegate: NSObjectProtocol {
+    func successRepayment()
+}
 class RepaymentViewModel: NSObject {
+    
+    weak var delegate: RepaymentViewModelDelegate?
     override init() {
         super.init()
         tableViewManager.dataModels = self.dataModel.getLocalModel()
@@ -156,13 +162,10 @@ extension RepaymentViewModel {
                 self?.view?.hideToastActivity()
                 return
             }
-            #warning("已修改完成，可拷贝执行")
             if let error = dataDic.value(forKey: "error") as? LibraWalletError {
                 // 隐藏请求指示
                 self?.view?.hideToastActivity()
                 self?.view?.toastView?.hide(tag: 99)
-                self?.view?.toastView?.hide(tag: 299)
-                self?.view?.toastView?.hide(tag: 399)
                 if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
                     // 网络无法访问
                     print(error.localizedDescription)
@@ -211,7 +214,9 @@ extension RepaymentViewModel {
             } else if type == "SendViolasBankRepaymentTransaction" {
                 self?.view?.hideToastActivity()
                 self?.view?.toastView?.hide(tag: 99)
-                self?.view?.makeToast(localLanguage(keyString: "wallet_bank_repayment_submit_successful"), position: .center)
+                self?.view?.makeToast(localLanguage(keyString: "wallet_bank_repayment_submit_successful"), duration: toastDuration, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
+                    self?.delegate?.successRepayment()
+                })
             }
         })
     }

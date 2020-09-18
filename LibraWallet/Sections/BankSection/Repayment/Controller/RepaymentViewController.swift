@@ -51,7 +51,17 @@ class RepaymentViewController: BaseViewController {
     lazy var viewModel: RepaymentViewModel = {
         let viewModel = RepaymentViewModel.init()
         viewModel.view = self.detailView
+        viewModel.delegate = self
         return viewModel
     }()
     var itemID: String?
+    var updateAction: ((ControllerAction)->())?
+}
+extension RepaymentViewController: RepaymentViewModelDelegate {
+    func successRepayment() {
+        if let action = self.updateAction {
+            action(.update)
+        }
+        self.navigationController?.popViewController(animated: true)
+    }
 }
