@@ -42,7 +42,8 @@ class LoanOrdersModel: NSObject {
                     let json = try response.map(LoanOrdersMainModel.self)
                     if json.code == 2000 {
                         guard let models = json.data, models.isEmpty == false else {
-                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: type)
+                            let error = requestStatus == 0 ? LibraWalletError.RequestError.dataEmpty:LibraWalletError.RequestError.noMoreData
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: error), type: type)
                             self?.setValue(data, forKey: "dataDic")
                             print("\(type)_状态异常")
                             return

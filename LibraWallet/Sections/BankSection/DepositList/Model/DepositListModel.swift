@@ -38,45 +38,46 @@ class DepositListModel: NSObject {
         print("DepositListModel销毁了")
     }
     func getDepositList(address: String, currency: String, status: Int, page: Int, limit: Int, requestStatus: Int) {
-         let type = requestStatus == 0 ? "GetBankDepositListOrigin":"GetBankDepositListMore"
-         let request = mainProvide.request(.depositList(address, currency, status, page, limit)) {[weak self](result) in
-             switch  result {
-             case let .success(response):
-                 do {
-                     let json = try response.map(DepositListMainModel.self)
-                     if json.code == 2000 {
-                         guard let models = json.data, models.isEmpty == false else {
-                             let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: type)
-                             self?.setValue(data, forKey: "dataDic")
-                             print("\(type)_状态异常")
-                             return
-                         }
-                         let data = setKVOData(type: type, data: json.data)
-                         self?.setValue(data, forKey: "dataDic")
-                     } else {
-                         print("\(type)_状态异常")
-                         if let message = json.message, message.isEmpty == false {
-                             let data = setKVOData(error: LibraWalletError.error(message), type: type)
-                             self?.setValue(data, forKey: "dataDic")
-                         } else {
-                             let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: type)
-                             self?.setValue(data, forKey: "dataDic")
-                         }
-                     }
-                 } catch {
-                     print("\(type)_解析异常\(error.localizedDescription)")
-                     let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: type)
-                     self?.setValue(data, forKey: "dataDic")
-                 }
-             case let .failure(error):
-                 guard error.errorCode != -999 else {
-                     print("\(type)_网络请求已取消")
-                     return
-                 }
-                 let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: type)
-                 self?.setValue(data, forKey: "dataDic")
-             }
-         }
-         self.requests.append(request)
-     }
+        let type = requestStatus == 0 ? "GetBankDepositListOrigin":"GetBankDepositListMore"
+        let request = mainProvide.request(.depositList(address, currency, status, page, limit)) {[weak self](result) in
+            switch  result {
+            case let .success(response):
+                do {
+                    let json = try response.map(DepositListMainModel.self)
+                    if json.code == 2000 {
+                        guard let models = json.data, models.isEmpty == false else {
+                            let error = requestStatus == 0 ? LibraWalletError.RequestError.dataEmpty:LibraWalletError.RequestError.noMoreData
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: error), type: type)
+                            self?.setValue(data, forKey: "dataDic")
+                            print("\(type)_状态异常")
+                            return
+                        }
+                        let data = setKVOData(type: type, data: json.data)
+                        self?.setValue(data, forKey: "dataDic")
+                    } else {
+                        print("\(type)_状态异常")
+                        if let message = json.message, message.isEmpty == false {
+                            let data = setKVOData(error: LibraWalletError.error(message), type: type)
+                            self?.setValue(data, forKey: "dataDic")
+                        } else {
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: type)
+                            self?.setValue(data, forKey: "dataDic")
+                        }
+                    }
+                } catch {
+                    print("\(type)_解析异常\(error.localizedDescription)")
+                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: type)
+                    self?.setValue(data, forKey: "dataDic")
+                }
+            case let .failure(error):
+                guard error.errorCode != -999 else {
+                    print("\(type)_网络请求已取消")
+                    return
+                }
+                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: type)
+                self?.setValue(data, forKey: "dataDic")
+            }
+        }
+        self.requests.append(request)
+    }
 }
