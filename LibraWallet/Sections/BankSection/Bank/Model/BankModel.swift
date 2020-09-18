@@ -11,8 +11,10 @@ import Moya
 struct BankModelMainDataModel: Codable {
     /// 存款总额
     var amount: Double?
-    /// 可借额度
+    /// 可借总额度
     var borrow: Double?
+    /// 当前限额
+    var borrow_limit: Double?
     /// 累计收益
     var total: Double?
     /// 昨日收益

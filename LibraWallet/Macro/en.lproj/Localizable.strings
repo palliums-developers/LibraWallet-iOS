@@ -249,7 +249,7 @@ wallet_market_transaction_content_order_fee_title = "Fees: ";
 
 /************* 数字银行首页 *******************/
 wallet_bank_total_deposit_title = "Total Deposit($)";
-wallet_bank_deposit_amount_title = "Loanable Funds($)";
+wallet_bank_loan_amount_limit_title = "Loanable Funds($)";
 wallet_bank_total_benefit_title = "Accumulated Earnings($)";
 wallet_bank_yesterday_earnings_button_title = "Yesterday's earnings";
 wallet_bank_deposit_market_title = "Deposit Market";

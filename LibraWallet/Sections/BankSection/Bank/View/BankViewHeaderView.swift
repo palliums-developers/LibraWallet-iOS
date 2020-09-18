@@ -89,7 +89,7 @@ class BankViewHeaderView: UIView {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.white
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: .regular)
-        label.text = localLanguage(keyString: "wallet_bank_deposit_amount_title")
+        label.text = localLanguage(keyString: "wallet_bank_loan_amount_limit_title")
         return label
     }()
     lazy var loanLimitAmountLabel: UILabel = {
@@ -137,7 +137,7 @@ class BankViewHeaderView: UIView {
     var model: BankModelMainDataModel? {
         didSet {
             assetLabel.text = "≈$\(model?.amount ?? 0.00)"
-            loanLimitAmountLabel.text = "≈\(model?.borrow ?? 0.00)"
+            loanLimitAmountLabel.text = "≈\(model?.borrow_limit ?? 0.00)/\(model?.borrow ?? 0.00)"
             benefitLabel.text = "≈\(model?.total ?? 0.00)"
             yesterdayBenefitButton.setTitle((localLanguage(keyString: "wallet_bank_yesterday_earnings_button_title") + "\(model?.yesterday ?? 0.00)$"), for: UIControl.State.normal)
             yesterdayBenefitButton.imagePosition(at: .left, space: 4, imageViewSize: CGSize.init(width: 10, height: 6))
@@ -159,7 +159,7 @@ class BankViewHeaderView: UIView {
                     return
                 }
                 assetLabel.text = "≈$\(tempModel.amount ?? 0.00)"
-                loanLimitAmountLabel.text = "≈\(tempModel.borrow ?? 0.00)"
+                loanLimitAmountLabel.text = "≈\(tempModel.borrow_limit ?? 0.00)/\(tempModel.borrow ?? 0.00)"
                 benefitLabel.text = "≈\(tempModel.total ?? 0.00)"
                 yesterdayBenefitButton.setTitle((localLanguage(keyString: "wallet_bank_yesterday_earnings_button_title") + "\(tempModel.yesterday ?? 0.00)$"), for: UIControl.State.normal)
                 yesterdayBenefitButton.imagePosition(at: .left, space: 4, imageViewSize: CGSize.init(width: 10, height: 6))
@@ -172,7 +172,7 @@ class BankViewHeaderView: UIView {
 extension BankViewHeaderView {
     /// 语言切换
     @objc func setText() {
-        loanLimitAmountTitleLabel.text = localLanguage(keyString: "wallet_bank_deposit_amount_title")
+        loanLimitAmountTitleLabel.text = localLanguage(keyString: "wallet_bank_loan_amount_limit_title")
         benefitTitleLabel.text = localLanguage(keyString: "wallet_bank_total_benefit_title")
         yesterdayBenefitButton.setTitle((localLanguage(keyString: "wallet_bank_yesterday_earnings_button_title") + "\(model?.yesterday ?? 0.00)$"), for: UIControl.State.normal)
         yesterdayBenefitButton.snp.remakeConstraints { (make) in
