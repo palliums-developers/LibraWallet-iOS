@@ -132,7 +132,7 @@ extension DepositListViewModel: DepositListViewDelegate {
             $0.token_module ?? ""
         }
         tempContent.insert(localLanguage(keyString: "wallet_deposit_list_order_token_select_title"), at: 0)
-        self.showDropDown(button: button, datas: tempContent)
+        self.showDropDown(button: button, datas: tempContent, tag: 10)
     }
     func filterOrdersWithStatus(button: UIButton) {
         let datas = [localLanguage(keyString: "wallet_deposit_list_order_status_title"),
@@ -140,9 +140,9 @@ extension DepositListViewModel: DepositListViewDelegate {
                      localLanguage(keyString: "wallet_deposit_list_order_status_withdrawal_finish_title"),
                      localLanguage(keyString: "wallet_deposit_list_order_status_deposit_failed_title"),
                      localLanguage(keyString: "wallet_deposit_list_order_status_withdrawal_failed_title")]
-        self.showDropDown(button: button, datas: datas)
+        self.showDropDown(button: button, datas: datas, tag: 20)
     }
-    func showDropDown(button: UIButton, datas: [String]) {
+    func showDropDown(button: UIButton, datas: [String], tag: Int) {
         let dropper = Dropper.init(x: 0, y: 0, width: 132, height: 36*5)
         dropper.items = datas
         dropper.theme = .black(UIColor.white)
@@ -158,7 +158,7 @@ extension DepositListViewModel: DepositListViewDelegate {
         dropper.layer.shadowOffset = CGSize(width: 0, height: 0)
         // 阴影的透明度，默认为0，不设置则不会显示阴影****
         dropper.layer.shadowOpacity = 0.1
-        dropper.tag = 20
+        dropper.tag = tag
         dropper.show(Dropper.Alignment.center, position: .bottom, button: button)
     }
 }
