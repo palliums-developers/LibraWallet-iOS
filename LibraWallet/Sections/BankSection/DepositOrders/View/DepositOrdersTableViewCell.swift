@@ -183,12 +183,6 @@ class DepositOrdersTableViewCell: UITableViewCell {
         label.text = "---"
         return label
     }()
-
-    lazy var spaceLabel: UILabel = {
-        let label = UILabel.init()
-        label.backgroundColor = DefaultSpaceColor
-        return label
-    }()
     @objc func buttonClick(button: UIButton) {
         guard let tempModel = self.model, let indexPath = self.indexPath else {
             return

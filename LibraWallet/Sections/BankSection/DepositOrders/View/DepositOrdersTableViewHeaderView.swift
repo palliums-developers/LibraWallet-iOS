@@ -21,7 +21,7 @@ class DepositOrdersTableViewHeaderView: UITableViewHeaderFooterView {
     deinit {
         print("DepositOrdersTableViewHeaderView销毁了")
     }
-    //MARK: - 布局
+    // MARK: - 布局
     override func layoutSubviews() {
         super.layoutSubviews()
         iconImageView.snp.makeConstraints { (make) in
@@ -34,13 +34,13 @@ class DepositOrdersTableViewHeaderView: UITableViewHeaderFooterView {
             make.left.equalTo(iconImageView.snp.right).offset(5)
         }
     }
-    //MARK: - 懒加载对象
+    // MARK: - 懒加载对象
     private lazy var iconImageView : UIImageView = {
         let imageView = UIImageView.init()
         imageView.image = UIImage.init(named: "deposit_orders_indicator")
         return imageView
     }()
-    lazy var nameLabel: UILabel = {
+    private lazy var nameLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "333333")

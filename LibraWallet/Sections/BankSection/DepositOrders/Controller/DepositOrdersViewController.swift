@@ -8,7 +8,7 @@
 
 import UIKit
 import MJRefresh
-import StatefulViewController
+import Toast_Swift
 
 class DepositOrdersViewController: BaseViewController {
     
@@ -21,9 +21,9 @@ class DepositOrdersViewController: BaseViewController {
         // 设置标题
         self.title = localLanguage(keyString: "wallet_bank_deposit_orders_navigationbar_title")
         self.initKVO()
-        //设置空数据页面
+        // 设置空数据页面
         self.setEmptyView()
-        //设置默认页面（无数据、无网络）
+        // 设置默认页面（无数据、无网络）
         self.setPlaceholderView()
         
         self.requestData()
@@ -31,13 +31,11 @@ class DepositOrdersViewController: BaseViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         detailView.snp.makeConstraints { (make) in
-            if #available(iOS 11.0, *) {
-                make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
-            } else {
-                make.top.bottom.equalTo(self.view)
-            }
-            make.left.right.equalTo(self.view)
+            make.top.left.right.bottom.equalTo(self.view.safeAreaLayoutGuide)
         }
+    }
+    deinit {
+        print("DepositOrdersViewController销毁了")
     }
     // 默认页面
     func setPlaceholderView() {
@@ -60,9 +58,6 @@ class DepositOrdersViewController: BaseViewController {
         } else {
             return false
         }
-    }
-    deinit {
-        print("DepositOrdersViewController销毁了")
     }
     /// 网络请求、数据模型
     lazy var dataModel: DepositOrdersModel = {
@@ -88,7 +83,6 @@ class DepositOrdersViewController: BaseViewController {
     var observer: NSKeyValueObservation?
     /// 页数
     var dataOffset: Int = 0
-
     /// 订单列表
     lazy var depositOrderListButton: UIButton = {
         let button = UIButton(type: .custom)
@@ -96,9 +90,13 @@ class DepositOrdersViewController: BaseViewController {
         button.addTarget(self, action: #selector(checkOrder), for: .touchUpInside)
         return button
     }()
-
     var supprotTokens: [BankDepositMarketDataModel]?
     var withdrawClosure: ((DepositOrderWithdrawMainDataModel) -> Void)?
+    /// 取款Alert
+    lazy var withdrawAlert: RedeemAlert = {
+        let alert = RedeemAlert.init()
+        return alert
+    }()
 }
 
 // MARK: - 导航栏添加按钮
@@ -148,10 +146,9 @@ extension DepositOrdersViewController: DepositOrdersTableViewCellDelegate {
         self.detailView.toastView?.show(tag: 99)
         self.dataModel.getDepositItemWithdrawDetail(address: WalletManager.shared.violasAddress!,
                                                     itemID: model.id ?? "")
-        self.withdrawClosure = { withdrawModel in
-            let alert = RedeemAlert.init()
-            alert.model = withdrawModel
-            alert.withdrawClosure = { [weak self] amount in
+        self.withdrawClosure = { [weak self] withdrawModel in
+            self?.withdrawAlert.model = withdrawModel
+            self?.withdrawAlert.withdrawClosure = { [weak self] amount in
                 WalletManager.unlockWallet(successful: { [weak self] (mnemonic) in
                     self?.detailView.toastView?.show(tag: 99)
                     self?.dataModel.sendWithdrawTransaction(sendAddress: WalletManager.shared.violasAddress!,
@@ -169,7 +166,7 @@ extension DepositOrdersViewController: DepositOrdersTableViewCellDelegate {
                     self?.detailView.makeToast(errorContent, position: .center)
                 }
             }
-            alert.show(tag: 199)
+            self?.withdrawAlert.show(tag: 199)
         }
     }
 }
@@ -183,61 +180,11 @@ extension DepositOrdersViewController {
                 self?.endLoading()
                 return
             }
+            let type = dataDic.value(forKey: "type") as! String
             if let error = dataDic.value(forKey: "error") as? LibraWalletError {
-                // 隐藏请求指示
-                self?.detailView.hideToastActivity()
-                self?.detailView.toastView?.hide(tag: 99)
-                if self?.detailView.tableView.mj_header?.isRefreshing == true {
-                    self?.detailView.tableView.mj_header?.endRefreshing()
-                }
-                if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
-                    // 网络无法访问
-                    print(error.localizedDescription)
-                    if self?.detailView.tableView.mj_footer?.isRefreshing == true {
-                        self?.detailView.tableView.mj_footer?.endRefreshing()
-                    }
-                    self?.detailView.makeToast(error.localizedDescription, position: .center)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionExpired).localizedDescription {
-                    // 版本太久
-                    print(error.localizedDescription)
-                    if self?.detailView.tableView.mj_footer?.isRefreshing == true {
-                        self?.detailView.tableView.mj_footer?.endRefreshing()
-                    }
-                    self?.detailView.makeToast(error.localizedDescription, position: .center)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
-                    // 解析失败
-                    print(error.localizedDescription)
-                    if self?.detailView.tableView.mj_footer?.isRefreshing == true {
-                        self?.detailView.tableView.mj_footer?.endRefreshing()
-                    }
-                    self?.detailView.makeToast(error.localizedDescription, position: .center)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
-                    print(error.localizedDescription)
-                    // 数据状态异常
-                    if self?.detailView.tableView.mj_footer?.isRefreshing == true {
-                        self?.detailView.tableView.mj_footer?.endRefreshing()
-                    }
-                    self?.detailView.makeToast(error.localizedDescription, position: .center)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
-                    print(error.localizedDescription)
-                    // 下拉刷新请求数据为空
-                    self?.detailView.makeToast(error.localizedDescription, position: .center)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .noMoreData).localizedDescription {
-                    // 上拉请求更多数据为空
-                    print(error.localizedDescription)
-                    if self?.detailView.tableView.mj_footer?.isRefreshing == true {
-                        self?.detailView.tableView.mj_footer?.endRefreshingWithNoMoreData()
-                    }
-                } else {
-                    if self?.detailView.tableView.mj_footer?.isRefreshing == true {
-                        self?.detailView.tableView.mj_footer?.endRefreshing()
-                    }
-                    self?.detailView.makeToast(error.localizedDescription, position: .center)
-                }
-                self?.endLoading()
+                self?.handleError(requestType: type, error: error)
                 return
             }
-            let type = dataDic.value(forKey: "type") as! String
             if type == "GetBankDepositTransactionsOrigin" {
                 guard let tempData = dataDic.value(forKey: "data") as? [DepositOrdersMainDataModel] else {
                     return
@@ -258,7 +205,7 @@ extension DepositOrdersViewController {
                     }
                     self?.tableViewManager.dataModels = (oldData + tempData)
                     self?.detailView.tableView.beginUpdates()
-                    self?.detailView.tableView.insertRows(at: insertIndexPath, with: UITableView.RowAnimation.bottom)
+                    self?.detailView.tableView.insertRows(at: insertIndexPath, with: UITableView.RowAnimation.fade)
                     self?.detailView.tableView.endUpdates()
                 } else {
                     self?.tableViewManager.dataModels = tempData
@@ -276,8 +223,69 @@ extension DepositOrdersViewController {
                 }
             } else if type == "SendViolasBankWithdrawTransaction" {
                 self?.detailView.toastView?.hide(tag: 99)
+                self?.withdrawAlert.makeToast(localLanguage(keyString: "wallet_bank_loan_submit_successful"), duration: toastDuration, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
+                    self?.withdrawAlert.hide(tag: 199)
+                    self?.detailView.tableView.mj_header?.beginRefreshing()
+                })
             }
             self?.endLoading()
         })
+    }
+    func handleError(requestType: String, error: LibraWalletError) {
+        // 隐藏请求指示
+        self.detailView.hideToastActivity()
+        // 隐藏首次进入指示
+        self.detailView.toastView?.hide(tag: 99)
+        // 隐藏下拉刷新状态
+        if self.detailView.tableView.mj_header?.isRefreshing == true {
+            self.detailView.tableView.mj_header?.endRefreshing()
+        }
+        if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
+            // 网络无法访问
+            print(error.localizedDescription)
+            if self.detailView.tableView.mj_footer?.isRefreshing == true {
+                self.detailView.tableView.mj_footer?.endRefreshing()
+            }
+            self.detailView.makeToast(error.localizedDescription, position: .center)
+        } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionExpired).localizedDescription {
+            // 版本太久
+            print(error.localizedDescription)
+            if self.detailView.tableView.mj_footer?.isRefreshing == true {
+                self.detailView.tableView.mj_footer?.endRefreshing()
+            }
+            self.detailView.makeToast(error.localizedDescription, position: .center)
+        } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
+            // 解析失败
+            print(error.localizedDescription)
+            if self.detailView.tableView.mj_footer?.isRefreshing == true {
+                self.detailView.tableView.mj_footer?.endRefreshing()
+            }
+            self.detailView.makeToast(error.localizedDescription, position: .center)
+        } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
+            print(error.localizedDescription)
+            // 数据状态异常
+            if self.detailView.tableView.mj_footer?.isRefreshing == true {
+                self.detailView.tableView.mj_footer?.endRefreshing()
+            }
+            self.detailView.makeToast(error.localizedDescription, position: .center)
+        } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
+            print(error.localizedDescription)
+            // 下拉刷新请求数据为空
+            self.tableViewManager.dataModels?.removeAll()
+            self.detailView.tableView.reloadData()
+            self.detailView.makeToast(error.localizedDescription, position: .center)
+        } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .noMoreData).localizedDescription {
+            // 上拉请求更多数据为空
+            print(error.localizedDescription)
+            if self.detailView.tableView.mj_footer?.isRefreshing == true {
+                self.detailView.tableView.mj_footer?.endRefreshingWithNoMoreData()
+            }
+        } else {
+            if self.detailView.tableView.mj_footer?.isRefreshing == true {
+                self.detailView.tableView.mj_footer?.endRefreshing()
+            }
+            self.detailView.makeToast(error.localizedDescription, position: .center)
+        }
+        self.endLoading()
     }
 }

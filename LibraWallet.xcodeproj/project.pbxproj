@@ -1621,8 +1621,8 @@
 		361BDAA224F8E7BD00C4C54E /* View */ = {
 			isa = PBXGroup;
 			children = (
-				361BDAA324F8E7BD00C4C54E /* DepositOrdersTableViewCell.swift */,
 				361BDAA424F8E7BD00C4C54E /* DepositOrdersView.swift */,
+				361BDAA324F8E7BD00C4C54E /* DepositOrdersTableViewCell.swift */,
 				361BDAA524F8E7BD00C4C54E /* DepositOrdersTableViewHeaderView.swift */,
 			);
 			path = View;

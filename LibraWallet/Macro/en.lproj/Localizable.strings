@@ -450,7 +450,7 @@ wallet_bank_repayment_submit_successful = "Transaction Submitted";
 wallet_bank_repayment_submit_failed = "Transaction Submitted Failed";
 // 数字银行赎回
 wallet_bank_redeem_alert_title = "Withdrawal";
-wallet_bank_redeem_alert_textfield_placeholder = "Please input the withdrawal quantity";
+wallet_bank_redeem_alert_textfield_placeholder = "Withdrawal quantity";
 wallet_bank_redeem_alert_amount_title = "Available Quantity: ";
 wallet_bank_redeem_alert_amount_select_total_title = "Total";
 wallet_bank_redeem_alert_warring_content = "If you currently have a loan operation, you need to use part of the deposit as a pledge deposit. Withdrawal of the pledge deposit needs to repay the corresponding amount of loan amount.";

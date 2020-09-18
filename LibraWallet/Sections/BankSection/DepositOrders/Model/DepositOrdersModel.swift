@@ -165,12 +165,12 @@ extension DepositOrdersModel {
             semaphore.wait()
             do {
                 let signature = try ViolasManager.getBankRedeemTransactionHex(sendAddress: sendAddress,
-                                                                            mnemonic: mnemonic,
-                                                                            feeModule: feeModule,
-                                                                            fee: fee,
-                                                                            sequenceNumber: self.sequenceNumber ?? 0,
-                                                                            module: module,
-                                                                            amount: amount)
+                                                                              mnemonic: mnemonic,
+                                                                              feeModule: feeModule,
+                                                                              fee: fee,
+                                                                              sequenceNumber: self.sequenceNumber ?? 0,
+                                                                              module: module,
+                                                                              amount: amount)
                 self.makeViolasTransaction(address: sendAddress, productID: productID, amount: amount, signature: signature, type: "SendViolasBankWithdrawTransaction")
             } catch {
                 print(error.localizedDescription)
