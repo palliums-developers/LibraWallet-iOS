@@ -100,44 +100,11 @@ extension LoanDetailLoanListViewController {
                 self?.endLoading()
                 return
             }
+            let type = dataDic.value(forKey: "type") as! String
             if let error = dataDic.value(forKey: "error") as? LibraWalletError {
-                // 隐藏请求指示
-                self?.view?.hideToastActivity()
-                if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
-                    // 网络无法访问
-                    print(error.localizedDescription)
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionExpired).localizedDescription {
-                    // 版本太久
-                    print(error.localizedDescription)
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
-                    // 解析失败
-                    print(error.localizedDescription)
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
-                    print(error.localizedDescription)
-                    // 数据状态异常
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
-                    print(error.localizedDescription)
-                    // 下拉刷新请求数据为空
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .noMoreData).localizedDescription {
-                    // 上拉请求更多数据为空
-                    print(error.localizedDescription)
-                } else {
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
-                }
+                self?.handleError(requestType: type, error: error)
                 return
             }
-            let type = dataDic.value(forKey: "type") as! String
             if type == "GetBankLoanOrderDetailLoanListOrigin" {
                 guard let tempData = dataDic.value(forKey: "data") as? LoanOrderDetailMainDataModel else {
                     return
@@ -174,6 +141,61 @@ extension LoanDetailLoanListViewController {
             self?.detailView.tableView.mj_header?.endRefreshing()
             self?.endLoading()
         })
+    }
+    func handleError(requestType: String, error: LibraWalletError) {
+        // 隐藏请求指示
+        self.detailView.hideToastActivity()
+        // 隐藏下拉刷新状态
+        if self.detailView.tableView.mj_header?.isRefreshing == true {
+            self.detailView.tableView.mj_header?.endRefreshing()
+        }
+        if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
+            // 网络无法访问
+            print(error.localizedDescription)
+            if self.detailView.tableView.mj_footer?.isRefreshing == true {
+                self.detailView.tableView.mj_footer?.endRefreshing()
+            }
+            self.detailView.makeToast(error.localizedDescription, position: .center)
+        } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionExpired).localizedDescription {
+            // 版本太久
+            print(error.localizedDescription)
+            if self.detailView.tableView.mj_footer?.isRefreshing == true {
+                self.detailView.tableView.mj_footer?.endRefreshing()
+            }
+            self.detailView.makeToast(error.localizedDescription, position: .center)
+        } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
+            // 解析失败
+            print(error.localizedDescription)
+            if self.detailView.tableView.mj_footer?.isRefreshing == true {
+                self.detailView.tableView.mj_footer?.endRefreshing()
+            }
+            self.detailView.makeToast(error.localizedDescription, position: .center)
+        } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
+            print(error.localizedDescription)
+            // 数据状态异常
+            if self.detailView.tableView.mj_footer?.isRefreshing == true {
+                self.detailView.tableView.mj_footer?.endRefreshing()
+            }
+            self.detailView.makeToast(error.localizedDescription, position: .center)
+        } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
+            print(error.localizedDescription)
+            // 下拉刷新请求数据为空
+            self.tableViewManager.dataModels?.removeAll()
+            self.detailView.tableView.reloadData()
+            self.detailView.makeToast(error.localizedDescription, position: .center)
+        } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .noMoreData).localizedDescription {
+            // 上拉请求更多数据为空
+            print(error.localizedDescription)
+            if self.detailView.tableView.mj_footer?.isRefreshing == true {
+                self.detailView.tableView.mj_footer?.endRefreshingWithNoMoreData()
+            }
+        } else {
+            if self.detailView.tableView.mj_footer?.isRefreshing == true {
+                self.detailView.tableView.mj_footer?.endRefreshing()
+            }
+            self.detailView.makeToast(error.localizedDescription, position: .center)
+        }
+        self.endLoading()
     }
 }
 extension LoanDetailLoanListViewController: JXSegmentedListContainerViewListDelegate {
