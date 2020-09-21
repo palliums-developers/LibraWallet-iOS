@@ -155,7 +155,7 @@ class RedeemAlert: UIView {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "5C5C5C")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: UIFont.Weight.regular)
+        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
         label.text = localLanguage(keyString: "wallet_bank_redeem_alert_amount_title")
         return label
     }()
@@ -163,7 +163,7 @@ class RedeemAlert: UIView {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "5C5C5C")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: UIFont.Weight.medium)
+        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.medium)
         label.text = "---"
         return label
     }()
@@ -171,7 +171,7 @@ class RedeemAlert: UIView {
         let button = UIButton.init(type: UIButton.ButtonType.custom)
         button.setTitle(localLanguage(keyString: "wallet_bank_redeem_alert_amount_select_total_title"), for: UIControl.State.normal)
         button.setTitleColor(UIColor.init(hex: "7038FD"), for: UIControl.State.normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: UIFont.Weight.regular)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
         button.tag = 20
         return button
