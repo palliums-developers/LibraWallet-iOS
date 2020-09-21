@@ -10,7 +10,7 @@ import UIKit
 import Moya
 struct BankLoanMarketDataIntroduceModel: Codable {
     var text: String?
-    var tital: String?
+    var title: String?
     /// 高度（自行添加）
     var height: CGFloat?
 }

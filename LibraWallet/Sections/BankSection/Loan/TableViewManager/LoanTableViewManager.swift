@@ -31,7 +31,7 @@ extension LoanTableViewManager: UITableViewDelegate {
                 if let height = model?.intor?[indexPath.row].height, height > 0 {
                     return 10 + height + 10
                 } else {
-                    let titleHeight = libraWalletTool.ga_heightForComment(content: model?.intor?[indexPath.row].tital ?? "", fontSize: 12, width: mainWidth - 56)
+                    let titleHeight = libraWalletTool.ga_heightForComment(content: model?.intor?[indexPath.row].title ?? "", fontSize: 12, width: mainWidth - 56)
                     let contentHeight = libraWalletTool.ga_heightForComment(content: model?.intor?[indexPath.row].text ?? "", fontSize: 12, width: mainWidth - 56)
                     model?.intor?[indexPath.row].height = titleHeight + 10 + contentHeight
                     return 10 + titleHeight + 10 + contentHeight + 10
@@ -44,7 +44,7 @@ extension LoanTableViewManager: UITableViewDelegate {
                 if let height = model?.question?[indexPath.row].height, height > 0 {
                     return 10 + height + 10
                 } else {
-                    let titleHeight = libraWalletTool.ga_heightForComment(content: model?.question?[indexPath.row].tital ?? "", fontSize: 12, width: mainWidth - 56)
+                    let titleHeight = libraWalletTool.ga_heightForComment(content: model?.question?[indexPath.row].title ?? "", fontSize: 12, width: mainWidth - 56)
                     let contentHeight = libraWalletTool.ga_heightForComment(content: model?.question?[indexPath.row].text ?? "", fontSize: 12, width: mainWidth - 56)
                     model?.question?[indexPath.row].height = titleHeight + 10 + contentHeight
                     return 10 + titleHeight + 10 + contentHeight + 10

@@ -76,7 +76,7 @@ class LoanQuestionTableViewCell: UITableViewCell {
             guard let tempModel = model else {
                 return
             }
-            itemTitleLabel.text = tempModel.tital
+            itemTitleLabel.text = tempModel.title
             itemContentLabel.text = tempModel.text
         }
     }
