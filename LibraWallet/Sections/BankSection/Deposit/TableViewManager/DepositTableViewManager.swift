@@ -26,7 +26,15 @@ class DepositTableViewManager: NSObject {
 extension DepositTableViewManager: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section == 0 {
-            return 48
+            if let tempModels = dataModels, tempModels.isEmpty == false {
+                if tempModels[indexPath.row].titleDescribe.isEmpty == false {
+                    return 70
+                } else {
+                    return 48
+                }
+            } else {
+                return 48
+            }            
         } else if indexPath.section == 1 {
             if showIntroduce == true {
                 if let height = model?.intor?[indexPath.row].height, height > 0 {

@@ -326,11 +326,11 @@ wallet_bank_deposit_amount_title = "Balance: ";
 wallet_bank_deposit_limit_amount_title = "Daily Limit: ";
 wallet_bank_deposit_year_rate_title = "Annual interest rate";
 wallet_bank_deposit_pledge_rate_title = "Pledge Rate";
-wallet_bank_deposit_pledge_rate_descript_title = "Pledge rate = Number of loans/Number of deposit";
+wallet_bank_deposit_pledge_rate_descript_title = "Pledge rate = Loan/Deposit";
 wallet_bank_deposit_pay_account_title = "Deposit way";
 wallet_bank_deposit_pay_account_content = "Account Balance";
-wallet_bank_deposit_describe_title = "Product Introduce";
-wallet_bank_deposit_question_title = "Q&A";
+wallet_bank_deposit_describe_title = "Introduce";
+wallet_bank_deposit_question_title = "FAQs";
 
 /************* 数字银行借贷 *******************/
 wallet_bank_loan_button_title = "Loan";
@@ -342,7 +342,7 @@ wallet_bank_loan_pledge_rate_descript_title = "Pledge rate = Number of loans/Num
 wallet_bank_loan_pay_account_title = "Pledge account";
 wallet_bank_loan_pay_account_content = "Bank Balance";
 wallet_bank_loan_describe_title = "Product Introduce";
-wallet_bank_loan_question_title = "Q&A";
+wallet_bank_loan_question_title = "FAQs";
 wallet_bank_loan_legal_button_conent = "I have read and agree Pledge & Loan Service Agreement";
 wallet_bank_loan_legal_agreement_match_contnet = "Pledge & Loan Service Agreement";
 

@@ -8,7 +8,6 @@
 
 import UIKit
 protocol DepositTableViewHeaderViewDelegate: NSObjectProtocol {
-//    func selectDepositToken(header: DepositTableViewHeaderView)
     func selectTotalBalance(header: DepositTableViewHeaderView, model: DepositItemDetailMainDataModel)
 }
 class DepositTableViewHeaderView: UITableViewHeaderFooterView {
@@ -108,7 +107,7 @@ class DepositTableViewHeaderView: UITableViewHeaderFooterView {
         view.isUserInteractionEnabled = true
         return view
     }()
-    lazy var depositTitleLabel: UILabel = {
+    private lazy var depositTitleLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "5C5C5C")
@@ -123,7 +122,7 @@ class DepositTableViewHeaderView: UITableViewHeaderFooterView {
         imageView.image = UIImage.init(named: "wallet_icon_default")
         return imageView
     }()
-    lazy var depositTokenSelectButton: UIButton = {
+    private lazy var depositTokenSelectButton: UIButton = {
         let button = UIButton.init(type: UIButton.ButtonType.custom)
         button.setTitle("---", for: UIControl.State.normal)
         button.setTitleColor(UIColor.init(hex: "333333"), for: UIControl.State.normal)
@@ -146,7 +145,7 @@ class DepositTableViewHeaderView: UITableViewHeaderFooterView {
         textField.tag = 10
         return textField
     }()
-    lazy var depositTextfieldSpaceLabel: UILabel = {
+    private lazy var depositTextfieldSpaceLabel: UILabel = {
         let label = UILabel.init()
         label.backgroundColor = DefaultSpaceColor
         return label
@@ -158,7 +157,7 @@ class DepositTableViewHeaderView: UITableViewHeaderFooterView {
         imageView.image = UIImage.init(named: "wallet_bank_deposit_balance")
         return imageView
     }()
-    lazy var depositAmountTitleLabel: UILabel = {
+    private lazy var depositAmountTitleLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "5C5C5C")
@@ -166,7 +165,7 @@ class DepositTableViewHeaderView: UITableViewHeaderFooterView {
         label.text = localLanguage(keyString: "wallet_bank_deposit_amount_title")
         return label
     }()
-    lazy var depositAmountLabel: UILabel = {
+    private lazy var depositAmountLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "5C5C5C")

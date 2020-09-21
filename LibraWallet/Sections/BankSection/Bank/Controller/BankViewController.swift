@@ -37,7 +37,7 @@ class BankViewController: UIViewController {
     }
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        self.navigationController?.navigationBar.barStyle = .black
+        self.navigationController?.navigationBar.barStyle = .default
     }
     deinit {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
@@ -107,7 +107,7 @@ extension BankViewController: JXSegmentedViewDelegate {
         self.detailView.listContainerView.scrolling(from: leftIndex, to: rightIndex, percent: percent, selectedIndex: segmentedView.selectedIndex)
     }
 }
-//MARK: - 语言切换方法
+// MARK: - 语言切换方法
 extension BankViewController {
     /// 语言切换
     @objc func setText() {
@@ -115,7 +115,7 @@ extension BankViewController {
         totalAssetsButton.imagePosition(at: .right, space: 4, imageViewSize: CGSize.init(width: 14, height: 8))
     }
 }
-//MARK: - 导航栏添加按钮
+// MARK: - 导航栏添加按钮
 extension BankViewController {
     func addNavigationBar() {
         // 自定义导航栏的UIBarButtonItem类型的按钮
@@ -138,8 +138,6 @@ extension BankViewController {
         dropper.items = [localLanguage(keyString: "wallet_bank_deposit_orders_alert_title"), localLanguage(keyString: "wallet_bank_loan_orders_alert_title")]
         dropper.cornerRadius = 8
         dropper.theme = .black(UIColor.init(hex: "F1EEFB"))
-//        dropper.cellTextFont = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
-//        dropper.cellColor = UIColor.init(hex: "333333")
         dropper.spacing = 12
         dropper.delegate = self
         let config = DropperCellConfig.init(textFont: UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular),
@@ -149,8 +147,6 @@ extension BankViewController {
                                             backgroundColor: nil)
         dropper.cellConfig = config
         dropper.show(Dropper.Alignment.center, position: .top, button: self.detailView.headerView.yesterdayBenefitButton)
-//        let vc = ScanBankRepaymentViewController()
-//        self.present(vc, animated: true, completion: nil)
     }
     @objc func changeToHideMode(button: UIButton) {
         if self.detailView.headerView.assetLabel.text == "≈$******" {
@@ -220,36 +216,29 @@ extension BankViewController {
                 if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
                     // 网络无法访问
                     print(error.localizedDescription)
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
+                    self?.view?.makeToast(error.localizedDescription, position: .center)
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionExpired).localizedDescription {
                     // 版本太久
                     print(error.localizedDescription)
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
+                    self?.view?.makeToast(error.localizedDescription, position: .center)
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
                     // 解析失败
                     print(error.localizedDescription)
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
+                    self?.view?.makeToast(error.localizedDescription, position: .center)
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
                     print(error.localizedDescription)
                     // 数据状态异常
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
+                    self?.view?.makeToast(error.localizedDescription, position: .center)
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
                     print(error.localizedDescription)
                     // 下拉刷新请求数据为空
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
+                    self?.view?.makeToast(error.localizedDescription, position: .center)
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .noMoreData).localizedDescription {
                     // 上拉请求更多数据为空
                     print(error.localizedDescription)
                 } else {
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
+                    self?.view?.makeToast(error.localizedDescription, position: .center)
                 }
-                //                self?.view?.headerView.viewState = .Normal
                 return
             }
             let type = dataDic.value(forKey: "type") as! String

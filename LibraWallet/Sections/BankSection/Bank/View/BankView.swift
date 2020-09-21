@@ -15,7 +15,6 @@ class BankView: UIView {
         super.init(frame: frame)
         self.backgroundColor = UIColor.init(hex: "F7F7F9")
         addSubview(topBackgroundImageView)
-
         addSubview(headerView)
         addSubview(segmentView)
         addSubview(listContainerView)
@@ -27,9 +26,9 @@ class BankView: UIView {
     }
     deinit {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
-        print("WalletDetailView销毁了")
+        print("BankView销毁了")
     }
-    //MARK: - 布局
+    // MARK: - 布局
     override func layoutSubviews() {
         super.layoutSubviews()
         topBackgroundImageView.snp.makeConstraints { (make) in
@@ -55,7 +54,7 @@ class BankView: UIView {
             make.top.equalTo(segmentView.snp.bottom)
         }
     }
-    //MARK: - 懒加载对象
+    // MARK: - 懒加载对象
     private lazy var topBackgroundImageView : UIImageView = {
         let imageView = UIImageView.init()
         imageView.image = UIImage.init(named: "home_top_background")
@@ -89,7 +88,6 @@ class BankView: UIView {
         data.titleNormalFont = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
         data.titleSelectedColor = UIColor.init(hex: "333333")
         data.titleSelectedFont = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.medium)
-        
         //reloadData(selectedIndex:)方法一定要调用，方法内部会刷新数据源数组
         data.reloadData(selectedIndex: 0)
         return data
@@ -104,9 +102,9 @@ extension BankView: JXSegmentedListContainerViewDataSource {
         return controllers?[index] as! JXSegmentedListContainerViewListDelegate
     }
 }
-//MARK: - 语言切换方法
+// MARK: - 语言切换方法
 extension BankView {
-    /// 语言切换
+    // 语言切换
     @objc func setText() {
         self.segmentedDataSource.titles = [localLanguage(keyString: "wallet_bank_deposit_market_title"),
                                            localLanguage(keyString: "wallet_bank_loan_market_title")]

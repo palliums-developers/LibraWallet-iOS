@@ -25,7 +25,7 @@ class DepositView: UIView {
     deinit {
         print("DepositView销毁了")
     }
-    //MARK: - 布局
+    // MARK: - 布局
     override func layoutSubviews() {
         super.layoutSubviews()
         tableView.snp.makeConstraints { (make) in
@@ -45,7 +45,7 @@ class DepositView: UIView {
             make.height.equalTo(40)
         }
     }
-    //MARK: - 懒加载对象
+    // MARK: - 懒加载对象
     lazy var tableView: UITableView = {
         let tableView = UITableView.init(frame: CGRect.zero, style: UITableView.Style.grouped)
         tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
@@ -76,10 +76,6 @@ class DepositView: UIView {
     @objc func buttonClick(button: UIButton) {
         self.delegate?.confirmDeposit()
     }
-//    var toastView: ToastView? {
-//        let toast = ToastView.init()
-//        return toast
-//    }
     lazy var toastView: ToastView? = {
         let toast = ToastView.init()
         return toast
