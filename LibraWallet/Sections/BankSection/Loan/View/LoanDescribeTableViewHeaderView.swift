@@ -67,7 +67,7 @@ class LoanDescribeTableViewHeaderView: UITableViewHeaderFooterView {
     }()
     private lazy var itemDetailImageView : UIImageView = {
         let imageView = UIImageView.init()
-        imageView.image = UIImage.init(named: "bottom_arrow")
+        imageView.image = UIImage.init(named: "cell_detail")
         return imageView
     }()
     private lazy var showButton: UIButton = {
@@ -79,5 +79,16 @@ class LoanDescribeTableViewHeaderView: UITableViewHeaderFooterView {
     }()
     @objc func buttonClick(button: UIButton) {
         self.delegate?.showQuestions(header: self)
+    }
+    var showIntroduce: Bool? {
+        didSet {
+            if showIntroduce == true {
+                self.itemDetailImageView.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi / 2))
+            } else {
+                UIView.animate(withDuration: 5) {
+                    self.itemDetailImageView.transform = CGAffineTransform.identity
+                }
+            }
+        }
     }
 }

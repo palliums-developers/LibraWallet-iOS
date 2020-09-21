@@ -80,4 +80,13 @@ class LoanQuestionTableViewHeaderView: UITableViewHeaderFooterView {
     @objc func buttonClick(button: UIButton) {
         self.delegate?.showQuestions(header: self)
     }
+    var showQuestions: Bool? {
+        didSet {
+            if showQuestions == true {
+                self.itemDetailImageView.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi / 2))
+            } else {
+                self.itemDetailImageView.transform = CGAffineTransform.identity
+            }
+        }
+    }
 }
