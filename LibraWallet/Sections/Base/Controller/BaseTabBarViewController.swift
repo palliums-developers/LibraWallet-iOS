@@ -35,7 +35,7 @@ class BaseTabBarViewController: UITabBarController {
         
         addChildViewController(childViewController: home, imageName: "tabbar_wallet_normal", selectedImageName: "tabbar_wallet_highlight", title: localLanguage(keyString: "wallet_tabbar_wallet_title"))
         addChildViewController(childViewController: market, imageName: "tabbar_market_normal", selectedImageName: "tabbar_market_highlight", title: localLanguage(keyString: "wallet_tabbar_market_title"))
-        addChildViewController(childViewController: bank, imageName: "tabbar_market_normal", selectedImageName: "tabbar_market_highlight", title: localLanguage(keyString: "wallet_tabbar_market_title"))
+        addChildViewController(childViewController: bank, imageName: "tabbar_bank_normal", selectedImageName: "tabbar_bank_highlight", title: localLanguage(keyString: "wallet_tabbar_bank_title"))
         addChildViewController(childViewController: mine, imageName: "tabbar_mine_normal", selectedImageName: "tabbar_mine_highlight", title: localLanguage(keyString: "wallet_tabbar_mine_title"))
     }
     private func addChildViewController(childViewController:UIViewController, imageName:String, selectedImageName:String, title:String){

@@ -5,12 +5,12 @@
       "scale" : "1x"
     },
     {
-      "filename" : "tabbar_wallet_highlight@2x.png",
+      "filename" : "tabbar_bank_highlight@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "tabbar_wallet_highlight@3x.png",
+      "filename" : "tabbar_bank_highlight@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

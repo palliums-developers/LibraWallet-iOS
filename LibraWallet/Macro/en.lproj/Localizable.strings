@@ -8,6 +8,7 @@
 /************* 底部导航栏 *******************/
 wallet_tabbar_wallet_title = "Wallet";
 wallet_tabbar_market_title = "Market";
+wallet_tabbar_bank_title = "Bank";
 wallet_tabbar_mine_title = "My Profile";
 
 /************* 首页 *******************/
