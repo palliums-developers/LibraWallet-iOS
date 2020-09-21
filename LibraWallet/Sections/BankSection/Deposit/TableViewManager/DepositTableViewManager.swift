@@ -98,21 +98,24 @@ extension DepositTableViewManager: UITableViewDelegate {
             let identifier = "DescribeHeader"
             if let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier) as? DepositDescribeTableViewHeaderView {
                 self.delegate?.describeHeaderDelegate(header: header)
+                header.showIntroduce = showIntroduce
                 return header
             } else {
                 let header = DepositDescribeTableViewHeaderView.init(reuseIdentifier: identifier)
                 self.delegate?.describeHeaderDelegate(header: header)
+                header.showIntroduce = showIntroduce
                 return header
             }
         } else if section == 2 {
-            
             let identifier = "DepositHeader"
             if let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier) as? DepositQuestionTableViewHeaderView {
                 self.delegate?.questionHeaderDelegate(header: header)
+                header.showQuestions = showQuestion
                 return header
             } else {
                 let header = DepositQuestionTableViewHeaderView.init(reuseIdentifier: identifier)
                 self.delegate?.questionHeaderDelegate(header: header)
+                header.showQuestions = showQuestion
                 return header
             }
         } else {
