@@ -15,6 +15,7 @@ class LoanTableViewCell: UITableViewCell {
         contentView.backgroundColor = UIColor.init(hex: "F7F7F9")
         contentView.addSubview(whiteBackgroundView)
         whiteBackgroundView.addSubview(itemTitleLabel)
+        whiteBackgroundView.addSubview(itemTitleDescribeLabel)
         whiteBackgroundView.addSubview(itemContentLabel)
         whiteBackgroundView.addSubview(spaceLabel)
     }
@@ -33,11 +34,15 @@ class LoanTableViewCell: UITableViewCell {
             make.top.bottom.equalTo(contentView)
         }
         itemTitleLabel.snp.makeConstraints { (make) in
-            make.centerY.equalTo(whiteBackgroundView)
+            make.centerY.equalTo(whiteBackgroundView).priority(250)
+            make.left.equalTo(whiteBackgroundView).offset(13).priority(250)
+        }
+        itemTitleDescribeLabel.snp.makeConstraints { (make) in
+            make.centerY.equalTo(whiteBackgroundView).offset(10)
             make.left.equalTo(whiteBackgroundView).offset(13)
         }
         itemContentLabel.snp.makeConstraints { (make) in
-            make.centerY.equalTo(whiteBackgroundView)
+            make.centerY.equalTo(itemTitleLabel)
             make.right.equalTo(whiteBackgroundView.snp.right).offset(-12)
         }
         spaceLabel.snp.makeConstraints { (make) in
@@ -58,7 +63,16 @@ class LoanTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "5C5C5C")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
-        label.text = "Test-测试-テスト"
+        label.text = "---"
+        return label
+    }()
+    lazy var itemTitleDescribeLabel: UILabel = {
+        let label = UILabel.init()
+        label.textAlignment = NSTextAlignment.left
+        label.textColor = UIColor.init(hex: "BABABA")
+        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: UIFont.Weight.regular)
+        label.text = ""
+        label.alpha = 0
         return label
     }()
     lazy var itemContentLabel: UILabel = {
@@ -66,7 +80,7 @@ class LoanTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "333333")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
-        label.text = "99999999.9999"
+        label.text = "---"
         return label
     }()
     lazy var spaceLabel: UILabel = {
@@ -94,6 +108,20 @@ class LoanTableViewCell: UITableViewCell {
             itemContentLabel.text = tempModel.content
             itemContentLabel.textColor = UIColor.init(hex: tempModel.contentColor)
             itemContentLabel.font = tempModel.conentFont
+            if tempModel.titleDescribe.isEmpty == false {
+                itemTitleDescribeLabel.text = tempModel.titleDescribe
+                itemTitleDescribeLabel.alpha = 1
+                itemTitleLabel.snp.remakeConstraints { (make) in
+                    make.centerY.equalTo(whiteBackgroundView).offset(-10)
+                    make.left.equalTo(whiteBackgroundView).offset(13)
+                }
+            } else {
+                itemTitleDescribeLabel.alpha = 0
+                itemTitleLabel.snp.remakeConstraints { (make) in
+                    make.centerY.equalTo(whiteBackgroundView)
+                    make.left.equalTo(whiteBackgroundView).offset(13)
+                }
+            }
         }
     }
 }

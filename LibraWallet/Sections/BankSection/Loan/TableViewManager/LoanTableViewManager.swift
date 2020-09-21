@@ -25,7 +25,15 @@ class LoanTableViewManager: NSObject {
 extension LoanTableViewManager: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section == 0 {
-            return 48
+            if let tempModels = dataModels, tempModels.isEmpty == false {
+                if tempModels[indexPath.row].titleDescribe.isEmpty == false {
+                    return 70
+                } else {
+                    return 48
+                }
+            } else {
+                return 48
+            }
         } else if indexPath.section == 1 {
             if showIntroduce == true {
                 if let height = model?.intor?[indexPath.row].height, height > 0 {
@@ -89,20 +97,24 @@ extension LoanTableViewManager: UITableViewDelegate {
             let identifier = "DescribeHeader"
             if let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier) as? LoanDescribeTableViewHeaderView {
                 self.delegate?.describeHeaderDelegate(header: header)
+                header.showIntroduce = showIntroduce
                 return header
             } else {
                 let header = LoanDescribeTableViewHeaderView.init(reuseIdentifier: identifier)
                 self.delegate?.describeHeaderDelegate(header: header)
+                header.showIntroduce = showIntroduce
                 return header
             }
         } else if section == 2 {
             let identifier = "DepositHeader"
             if let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier) as? LoanQuestionTableViewHeaderView {
                 self.delegate?.questionHeaderDelegate(header: header)
+                header.showQuestions = showQuestion
                 return header
             } else {
                 let header = LoanQuestionTableViewHeaderView.init(reuseIdentifier: identifier)
                 self.delegate?.questionHeaderDelegate(header: header)
+                header.showQuestions = showQuestion
                 return header
             }
         } else {
