@@ -14,6 +14,7 @@ import JXSegmentedView
 class BankViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         // 设置背景色
         self.view.backgroundColor = UIColor.white
         // 添加导航栏按钮
@@ -32,7 +33,11 @@ class BankViewController: UIViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.navigationBar.barStyle = .default
+        self.navigationController?.navigationBar.barStyle = .black
+    }
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        self.navigationController?.navigationBar.barStyle = .black
     }
     deinit {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
