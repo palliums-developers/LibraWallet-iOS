@@ -23,12 +23,8 @@ class RepaymentViewController: BaseViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         detailView.snp.makeConstraints { (make) in
-            if #available(iOS 11.0, *) {
-                make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
-            } else {
-                make.top.equalTo(self.view)
-            }
-            make.left.right.equalTo(self.view)
+            make.top.left.right.equalTo(self.view.safeAreaLayoutGuide)
+            make.bottom.equalTo(self.view)
         }
     }
     override func viewWillAppear(_ animated: Bool) {

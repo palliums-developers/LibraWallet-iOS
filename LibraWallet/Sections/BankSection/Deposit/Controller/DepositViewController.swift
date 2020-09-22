@@ -22,7 +22,8 @@ class DepositViewController: BaseViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         detailView.snp.makeConstraints { (make) in
-            make.top.left.right.bottom.equalTo(self.view.safeAreaLayoutGuide)
+            make.top.left.right.equalTo(self.view.safeAreaLayoutGuide)
+            make.bottom.equalTo(self.view)
         }
     }
     override func viewWillAppear(_ animated: Bool) {

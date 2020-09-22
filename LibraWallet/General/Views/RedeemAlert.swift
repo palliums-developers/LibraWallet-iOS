@@ -27,6 +27,9 @@ class RedeemAlert: UIView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    deinit {
+        print("RedeemAlert销毁了")
+    }
     override func layoutSubviews() {
         super.layoutSubviews()
         whiteBackgroundView.snp.makeConstraints { (make) in

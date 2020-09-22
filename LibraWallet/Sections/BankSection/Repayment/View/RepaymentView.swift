@@ -14,6 +14,7 @@ class RepaymentView: UIView {
     weak var delegate: RepaymentViewDelegate?
     override init(frame: CGRect) {
         super.init(frame: frame)
+        self.backgroundColor = UIColor.white
         addSubview(tableView)
         addSubview(footerBackgroundView)
         footerBackgroundView.addSubview(confirmButton)
@@ -34,8 +35,8 @@ class RepaymentView: UIView {
         }
         footerBackgroundView.snp.makeConstraints { (make) in
             make.left.right.equalTo(self)
-            make.bottom.equalTo(self)
-            make.height.equalTo(90)
+            make.bottom.equalTo(self.safeAreaLayoutGuide)
+            make.height.equalTo(87)
         }
         confirmButton.snp.makeConstraints { (make) in
             make.top.equalTo(footerBackgroundView).offset(20)
@@ -57,9 +58,17 @@ class RepaymentView: UIView {
         return tableView
     }()
     lazy var footerBackgroundView: UIView = {
-        let footer = UIView.init()
-        footer.backgroundColor = UIColor.white
-        return footer
+        let view = UIView.init()
+        view.backgroundColor = UIColor.white
+        // 定义阴影颜色
+        view.layer.shadowColor = UIColor.init(hex: "333333").cgColor
+        // 阴影的模糊半径
+        view.layer.shadowRadius = 3
+        // 阴影的偏移量
+        view.layer.shadowOffset = CGSize(width: 0, height: -5)
+        // 阴影的透明度，默认为0，不设置则不会显示阴影****
+        view.layer.shadowOpacity = 0.04
+        return view
     }()
     lazy var confirmButton: UIButton = {
         let button = UIButton.init(type: UIButton.ButtonType.custom)
