@@ -57,7 +57,6 @@ class LoanOrderDetailView: UIView {
         footerBackgroundView.snp.makeConstraints { (make) in
             make.left.right.equalTo(self)
             make.bottom.equalTo(self)
-//            make.bottom.equalTo(self.safeAreaLayoutGuide)
             make.height.equalTo(72)
         }
         confirmButton.snp.makeConstraints { (make) in
@@ -66,8 +65,6 @@ class LoanOrderDetailView: UIView {
             make.right.equalTo(footerBackgroundView.snp.right).offset(-69)
             make.height.equalTo(40)
         }
-        #warning("圆角待处理")
-//        listContainerView.corner(byRoundingCorners: [UIRectCorner.topLeft, UIRectCorner.topRight], radii: 24)
     }
     // MARK: - 懒加载对象
     private lazy var topBackgroundImageView : UIImageView = {
@@ -91,6 +88,7 @@ class LoanOrderDetailView: UIView {
     }()
     lazy var listContainerView: JXSegmentedListContainerView = {
         let listView = JXSegmentedListContainerView.init(dataSource: self)
+        listView.backgroundColor = UIColor.init(hex: "F7F7F9")
         return listView
     }()
     private lazy var segmentedDataSource : JXSegmentedTitleDataSource = {
