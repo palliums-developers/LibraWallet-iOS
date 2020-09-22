@@ -9,8 +9,8 @@
 import UIKit
 
 protocol LoanListViewDelegate: NSObjectProtocol {
-    func filterOrdersWithCurrency()
-    func filterOrdersWithStatus()
+    func filterOrdersWithCurrency(button: UIButton)
+    func filterOrdersWithStatus(button: UIButton)
 }
 class LoanListView: UIView {
     weak var delegate: LoanListViewDelegate?
@@ -86,9 +86,9 @@ class LoanListView: UIView {
     }
     @objc func buttonClick(button: UIButton) {
         if button.tag == 10 {
-            self.delegate?.filterOrdersWithCurrency()
+            self.delegate?.filterOrdersWithCurrency(button: button)
         } else {
-            self.delegate?.filterOrdersWithStatus()
+            self.delegate?.filterOrdersWithStatus(button: button)
         }
     }
 }

@@ -101,7 +101,7 @@ extension LoanListViewModel: StatefulViewController {
 }
 // MARK: - 网络请求逻辑处理
 extension LoanListViewModel: LoanListViewDelegate {
-    func filterOrdersWithCurrency() {
+    func filterOrdersWithCurrency(button: UIButton) {
         guard let tokens = self.supprotTokens else {
             return
         }
@@ -109,34 +109,61 @@ extension LoanListViewModel: LoanListViewDelegate {
             $0.token_module ?? ""
         }
         tempContent.insert(localLanguage(keyString: "wallet_deposit_list_order_token_select_title"), at: 0)
-        let dropper = Dropper.init(x: 0, y: 0, width: 132, height: 90)
-        dropper.items = tempContent
-        dropper.theme = .black(UIColor.white)
-        dropper.cellTextFont = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
-        dropper.cellColor = UIColor.init(hex: "5C5C5C")
-        dropper.spacing = 12
-        dropper.delegate = self
-        // 定义阴影颜色
-        dropper.layer.shadowColor = UIColor.init(hex: "3D3949").cgColor
-        // 阴影的模糊半径
-        dropper.layer.shadowRadius = 3
-        // 阴影的偏移量
-        dropper.layer.shadowOffset = CGSize(width: 0, height: 0)
-        // 阴影的透明度，默认为0，不设置则不会显示阴影****
-        dropper.layer.shadowOpacity = 0.1
-        dropper.tag = 10
-        dropper.show(Dropper.Alignment.center, position: .bottom, button: self.view!.orderTokenSelectButton)
+//        let dropper = Dropper.init(x: 0, y: 0, width: 132, height: 90)
+//        dropper.items = tempContent
+//        dropper.theme = .black(UIColor.white)
+//        dropper.cellTextFont = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
+//        dropper.cellColor = UIColor.init(hex: "5C5C5C")
+//        dropper.spacing = 12
+//        dropper.delegate = self
+//        // 定义阴影颜色
+//        dropper.layer.shadowColor = UIColor.init(hex: "3D3949").cgColor
+//        // 阴影的模糊半径
+//        dropper.layer.shadowRadius = 3
+//        // 阴影的偏移量
+//        dropper.layer.shadowOffset = CGSize(width: 0, height: 0)
+//        // 阴影的透明度，默认为0，不设置则不会显示阴影****
+//        dropper.layer.shadowOpacity = 0.1
+//        dropper.tag = 10
+//        dropper.show(Dropper.Alignment.center, position: .bottom, button: self.view!.orderTokenSelectButton)
+        self.showDropDown(button: button, datas: tempContent, tag: 10)
     }
     
-    func filterOrdersWithStatus() {
+    func filterOrdersWithStatus(button: UIButton) {
         //0（已借款），1（已还款），2（已清算），-1（借款失败），-2（还款失败）
+//        let dropper = Dropper.init(x: 0, y: 0, width: 132, height: 36*5)
+//        dropper.items = [localLanguage(keyString: "wallet_deposit_list_order_status_title"),
+//                         localLanguage(keyString: "wallet_bank_loan_detail_loan_status_loaned_title"),
+//                         localLanguage(keyString: "wallet_bank_loan_detail_deposit_status_deposited_title"),
+//                         localLanguage(keyString: "wallet_bank_loan_detail_clearing_detail_status_title"),
+//                         localLanguage(keyString: "wallet_bank_loan_detail_loan_status_failed_title"),
+//                         localLanguage(keyString: "wallet_bank_loan_detail_deposit_status_failed_title")]
+//        dropper.theme = .black(UIColor.white)
+//        dropper.cellTextFont = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
+//        dropper.cellColor = UIColor.init(hex: "5C5C5C")
+//        dropper.spacing = 12
+//        dropper.delegate = self
+//        // 定义阴影颜色
+//        dropper.layer.shadowColor = UIColor.init(hex: "3D3949").cgColor
+//        // 阴影的模糊半径
+//        dropper.layer.shadowRadius = 3
+//        // 阴影的偏移量
+//        dropper.layer.shadowOffset = CGSize(width: 0, height: 0)
+//        // 阴影的透明度，默认为0，不设置则不会显示阴影****
+//        dropper.layer.shadowOpacity = 0.1
+//        dropper.tag = 20
+//        dropper.show(Dropper.Alignment.center, position: .bottom, button: self.view!.orderStateButton)
+        let datas = [localLanguage(keyString: "wallet_deposit_list_order_status_title"),
+                     localLanguage(keyString: "wallet_bank_loan_detail_loan_status_loaned_title"),
+                     localLanguage(keyString: "wallet_bank_loan_detail_deposit_status_deposited_title"),
+                     localLanguage(keyString: "wallet_bank_loan_detail_clearing_detail_status_title"),
+                     localLanguage(keyString: "wallet_bank_loan_detail_loan_status_failed_title"),
+                     localLanguage(keyString: "wallet_bank_loan_detail_deposit_status_failed_title")]
+        self.showDropDown(button: button, datas: datas, tag: 20)
+    }
+    func showDropDown(button: UIButton, datas: [String], tag: Int) {
         let dropper = Dropper.init(x: 0, y: 0, width: 132, height: 36*5)
-        dropper.items = [localLanguage(keyString: "wallet_deposit_list_order_status_title"),
-                         localLanguage(keyString: "wallet_bank_loan_detail_loan_status_loaned_title"),
-                         localLanguage(keyString: "wallet_bank_loan_detail_deposit_status_deposited_title"),
-                         localLanguage(keyString: "wallet_bank_loan_detail_clearing_detail_status_title"),
-                         localLanguage(keyString: "wallet_bank_loan_detail_loan_status_failed_title"),
-                         localLanguage(keyString: "wallet_bank_loan_detail_deposit_status_failed_title")]
+        dropper.items = datas
         dropper.theme = .black(UIColor.white)
         dropper.cellTextFont = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
         dropper.cellColor = UIColor.init(hex: "5C5C5C")
@@ -150,8 +177,8 @@ extension LoanListViewModel: LoanListViewDelegate {
         dropper.layer.shadowOffset = CGSize(width: 0, height: 0)
         // 阴影的透明度，默认为0，不设置则不会显示阴影****
         dropper.layer.shadowOpacity = 0.1
-        dropper.tag = 20
-        dropper.show(Dropper.Alignment.center, position: .bottom, button: self.view!.orderStateButton)
+        dropper.tag = tag
+        dropper.show(Dropper.Alignment.center, position: .bottom, button: button)
     }
 }
 extension LoanListViewModel: DropperDelegate {
