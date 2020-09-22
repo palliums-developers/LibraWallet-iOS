@@ -34,7 +34,7 @@ class LoanMarketView: UIView {
         tableView.estimatedRowHeight = 0;
         tableView.estimatedSectionHeaderHeight = 0;
         tableView.backgroundColor = UIColor.white
-        tableView.register(WalletTransactionsTableViewCell.classForCoder(), forCellReuseIdentifier: "CellNormal")
+        tableView.register(LoanMarketTableViewCell.classForCoder(), forCellReuseIdentifier: "CellNormal")
         return tableView
     }()
 }

@@ -47,8 +47,8 @@ class LoanOrderDetailViewController: BaseViewController {
         let con = LoanDetailLoanListViewController()
         con.itemID = self.itemID ?? ""
         con.initKVO()
-        con.updateAction = { (model) in
-            self.detailView.headerView.model = model
+        con.updateAction = { [weak self] (model) in
+            self?.detailView.headerView.model = model
         }
         return con
     }()
@@ -56,8 +56,8 @@ class LoanOrderDetailViewController: BaseViewController {
         let con = LoanDetailDepositListViewController()
         con.itemID = self.itemID ?? ""
         con.initKVO()
-        con.updateAction = { (model) in
-            self.detailView.headerView.model = model
+        con.updateAction = { [weak self] (model) in
+            self?.detailView.headerView.model = model
         }
         return con
     }()
@@ -65,8 +65,8 @@ class LoanOrderDetailViewController: BaseViewController {
         let con = LoanDetailClearingListViewController()
         con.itemID = self.itemID ?? ""
         con.initKVO()
-        con.updateAction = { (model) in
-            self.detailView.headerView.model = model
+        con.updateAction = { [weak self] (model) in
+            self?.detailView.headerView.model = model
         }
         return con
     }()

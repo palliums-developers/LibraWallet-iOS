@@ -23,7 +23,7 @@ class WalletTransactionsTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
-        print("WalletDetailTableViewCell销毁了")
+        print("WalletTransactionsTableViewCell销毁了")
     }
     //MARK: - 布局
     override func layoutSubviews() {

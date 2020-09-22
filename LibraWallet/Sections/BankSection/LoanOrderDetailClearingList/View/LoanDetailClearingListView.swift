@@ -11,7 +11,7 @@ import UIKit
 class LoanDetailClearingListView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.addSubview(tableView)
+        addSubview(tableView)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -22,7 +22,7 @@ class LoanDetailClearingListView: UIView {
     //MARK: - 布局
     override func layoutSubviews() {
         super.layoutSubviews()
-        self.tableView.snp.makeConstraints { (make) in
+        tableView.snp.makeConstraints { (make) in
             make.top.equalTo(self)
             make.left.right.bottom.equalTo(self)
         }
@@ -34,7 +34,7 @@ class LoanDetailClearingListView: UIView {
         tableView.estimatedRowHeight = 0;
         tableView.estimatedSectionHeaderHeight = 0;
         tableView.backgroundColor = UIColor.white
-        tableView.register(WalletTransactionsTableViewCell.classForCoder(), forCellReuseIdentifier: "CellNormal")
+        tableView.register(LoanDetailClearingListTableViewCell.classForCoder(), forCellReuseIdentifier: "CellNormal")
         return tableView
     }()
 }

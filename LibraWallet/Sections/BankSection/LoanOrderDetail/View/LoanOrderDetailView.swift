@@ -68,7 +68,7 @@ class LoanOrderDetailView: UIView {
         #warning("圆角待处理")
 //        listContainerView.corner(byRoundingCorners: [UIRectCorner.topLeft, UIRectCorner.topRight], radii: 24)
     }
-    //MARK: - 懒加载对象
+    // MARK: - 懒加载对象
     private lazy var topBackgroundImageView : UIImageView = {
         let imageView = UIImageView.init()
         imageView.backgroundColor = UIColor.init(hex: "F7F7F9")
@@ -133,10 +133,10 @@ class LoanOrderDetailView: UIView {
         button.layer.masksToBounds = true
         return button
     }()
-    var toastView: ToastView? {
+    lazy var toastView: ToastView? = {
         let toast = ToastView.init()
         return toast
-    }
+    }()
     var controllers: [UIViewController]?
     @objc func buttonClick(button: UIButton) {
         self.delegate?.confirmRepayment()
