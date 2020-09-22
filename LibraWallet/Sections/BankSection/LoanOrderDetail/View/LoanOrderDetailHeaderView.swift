@@ -69,7 +69,7 @@ class LoanOrderDetailHeaderView: UIView {
             assetLabel.text = getDecimalNumber(amount: NSDecimalNumber.init(value: tempModel.balance ?? 0),
                                                scale: 6,
                                                unit: 1000000).stringValue
-            assetUnitLabel.text = tempModel.token_show_name
+            assetUnitLabel.text = tempModel.name
         }
     }
 }
