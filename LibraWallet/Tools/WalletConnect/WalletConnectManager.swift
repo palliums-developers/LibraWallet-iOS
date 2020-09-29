@@ -535,6 +535,7 @@ class GetAccountHandler: RequestHandler {
                 var coinType: String?
                 var name: String?
                 var address: String?
+                var chainId: Int?
             }
             let localWallets = try DataBaseManager.DBManager.getTokens()
             var tempWallets = [tempData]()
@@ -542,7 +543,8 @@ class GetAccountHandler: RequestHandler {
                 tempWallets.append(tempData.init(walletType: 0,
                                                  coinType: wallets.tokenType.description.lowercased(),
                                                  name: wallets.tokenName,
-                                                 address: wallets.tokenAddress))
+                                                 address: wallets.tokenAddress,
+                                                 chainId: 2))
             }
             WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: tempWallets, id: request.id!))//
         } catch {
