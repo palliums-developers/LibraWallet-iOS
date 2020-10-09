@@ -149,23 +149,23 @@ struct LibraResponseModel: Codable {
 }
 struct ViolasDataModel: Codable {
     /// 数量
-    var amount: Int?
-    /// 交易币合约
-    var module: String?
-    /// 币种名字
-    var currency: String?
-    /// 手续费币名
-    var gas_currency: String?
+    var amount: Int64?
+    /// 确认时间
+    var confirmed_time: Int64?
     /// 过期时间
     var expiration_time: Int?
     /// 手续费
-    var gas: Int?
+    var gas: Int64?
+    /// 手续费币种
+    var gas_currency: String?
     /// 接收方
     var receiver: String?
     /// 发送方
     var sender: String?
     /// 交易序列号
-    var sequence_number: Int?
+    var sequence_number: UInt64?
+    /// 币种名字
+    var currency: String?
     /// 交易执行状态
     var status: String?
     /// 类型超多，不一一展示
