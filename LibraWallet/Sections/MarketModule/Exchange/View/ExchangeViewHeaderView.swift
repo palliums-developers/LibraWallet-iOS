@@ -73,7 +73,7 @@ class ExchangeViewHeaderView: UIView {
             make.bottom.equalTo(inputTokenBackgroundView.snp.top).offset(-6)
         }
         inputTokenBackgroundView.snp.makeConstraints { (make) in
-            make.top.equalTo(self).offset(30)
+            make.top.equalTo(self).offset(40)
             make.left.equalTo(self).offset(30)
             make.right.equalTo(self.snp.right).offset(-30)
             make.height.equalTo(80)
@@ -193,6 +193,7 @@ class ExchangeViewHeaderView: UIView {
         let textField = WYDTextField.init()
         textField.textAlignment = NSTextAlignment.left
         textField.textColor = UIColor.init(hex: "333333")
+        textField.tintColor = DefaultGreenColor
         textField.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         textField.attributedPlaceholder = NSAttributedString(string: "0.00",
                                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C2C2C2"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20)])
@@ -255,6 +256,7 @@ class ExchangeViewHeaderView: UIView {
         let textField = WYDTextField.init()
         textField.textAlignment = NSTextAlignment.left
         textField.textColor = UIColor.init(hex: "333333")
+        textField.tintColor = DefaultGreenColor
         textField.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         textField.attributedPlaceholder = NSAttributedString(string: "0.00",
                                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C2C2C2"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20)])
