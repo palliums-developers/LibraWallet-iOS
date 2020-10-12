@@ -38,8 +38,8 @@ class DepositMarketTableViewCell: UITableViewCell {
         itemContentView.snp.makeConstraints { (make) in
             make.left.equalTo(whiteBackgroundView).offset(15)
             make.right.equalTo(whiteBackgroundView.snp.right).offset(-15)
-            make.top.equalTo(whiteBackgroundView).offset(5)
-            make.bottom.equalTo(whiteBackgroundView.snp.bottom).offset(-5)
+            make.top.equalTo(whiteBackgroundView)
+            make.bottom.equalTo(whiteBackgroundView.snp.bottom).offset(-10)
         }
         itemIconImageView.snp.makeConstraints { (make) in
             make.left.equalTo(itemContentView).offset(12)

@@ -38,7 +38,7 @@ class BankView: UIView {
         headerView.snp.makeConstraints { (make) in
             make.top.equalTo(self).offset(navigationBarHeight)
             make.left.right.equalTo(self)
-            make.height.equalTo(225 - navigationBarHeight - 50)
+            make.height.equalTo(174 - navigationBarHeight)
         }
         segmentView.snp.makeConstraints { (make) in
             make.top.equalTo(headerView.snp.bottom)

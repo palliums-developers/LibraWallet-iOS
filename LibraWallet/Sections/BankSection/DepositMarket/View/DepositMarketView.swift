@@ -29,7 +29,7 @@ class DepositMarketView: UIView {
     }
     //MARK: - 懒加载对象
     lazy var tableView: UITableView = {
-        let tableView = UITableView.init(frame: CGRect.zero, style: UITableView.Style.plain)
+        let tableView = UITableView.init(frame: CGRect.zero, style: UITableView.Style.grouped)
         tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
         tableView.estimatedRowHeight = 0;
         tableView.estimatedSectionHeaderHeight = 0;
