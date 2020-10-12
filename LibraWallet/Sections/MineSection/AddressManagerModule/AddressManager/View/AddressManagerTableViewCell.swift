@@ -11,7 +11,7 @@ import UIKit
 class AddressManagerTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        contentView.backgroundColor = UIColor.white
+        contentView.backgroundColor = UIColor.init(hex: "F7F7F9")
         contentView.addSubview(addressBackgroundView)
         contentView.addSubview(nameLabel)
         addressBackgroundView.addSubview(addressLabel)
@@ -40,7 +40,7 @@ class AddressManagerTableViewCell: UITableViewCell {
         }
         addressLabel.snp.makeConstraints { (make) in
             make.centerY.equalTo(addressBackgroundView)
-            make.left.equalTo(addressBackgroundView).offset(5)
+            make.left.equalTo(addressBackgroundView).offset(13)
             make.right.equalTo(addressBackgroundView.snp.right).offset(-5)
 
         }
@@ -60,7 +60,8 @@ class AddressManagerTableViewCell: UITableViewCell {
     //MARK: - 懒加载对象
     private lazy var addressBackgroundView: UIView = {
         let view = UIView.init()
-        view.backgroundColor = UIColor.init(hex: "F7F7F9")
+        view.layer.backgroundColor = UIColor.white.cgColor
+        view.layer.cornerRadius = 16
         return view
     }()
     lazy var nameLabel: UILabel = {

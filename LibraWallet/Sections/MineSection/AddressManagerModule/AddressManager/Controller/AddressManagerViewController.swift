@@ -10,6 +10,7 @@ import UIKit
 class AddressManagerViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.backgroundColor = UIColor.init(hex: "F7F7F9")
         // 初始化本地配置
 //        self.setBaseControlllerConfig()
         // 设置标题
