@@ -50,11 +50,12 @@ class HomeHeaderView: UIView {
         super.layoutSubviews()
         assetLabel.snp.makeConstraints { (make) in
             make.left.equalTo(self).offset(25)
-            if statusBarHeight < 44 {
-                make.top.equalTo(self).offset(2 + (44 - statusBarHeight))
-            } else {
-                make.top.equalTo(self).offset(2)
-            }
+//            if statusBarHeight < 44 {
+//                make.top.equalTo(self).offset(2 + (44 - statusBarHeight))
+//            } else {
+//                make.top.equalTo(self).offset(2)
+//            }
+            make.top.equalTo(self).offset(2)
         }
         walletConnectStateButton.snp.makeConstraints { (make) in
 //            make.bottom.equalTo(coinBackgroundView.snp.top).offset(-9)
@@ -115,7 +116,7 @@ class HomeHeaderView: UIView {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "FFFFFF")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 28), weight: .bold)
+        label.font = UIFont.init(name: "Helvetica", size: 28)
         label.text = "$ 0.00"
         return label
     }()
