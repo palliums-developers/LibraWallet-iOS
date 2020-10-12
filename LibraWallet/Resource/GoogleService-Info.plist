@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1041521306945-b9ojeg3n6dc3eg51ho6rmv2a60cf7cg8.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1041521306945-b9ojeg3n6dc3eg51ho6rmv2a60cf7cg8</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDbqvgcbd7Cxf2yG0iS2Y20aU7fVOqeBss</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1041521306945</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.palliums.violas</string>
+	<key>PROJECT_ID</key>
+	<string>test-ec4df</string>
+	<key>STORAGE_BUCKET</key>
+	<string>test-ec4df.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1041521306945:ios:41f4b523bb72cfd5f8c5c0</string>
+	<key>DATABASE_URL</key>
+	<string>https://test-ec4df.firebaseio.com</string>
+</dict>
+</plist>

@@ -226,6 +226,7 @@
 		36E95D8B242A084B0004B86D /* ScanLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E95D86242A084B0004B86D /* ScanLoginViewController.swift */; };
 		36E95D8C242A084B0004B86D /* ScanLoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E95D88242A084B0004B86D /* ScanLoginModel.swift */; };
 		36E95D8D242A084B0004B86D /* ScanLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E95D8A242A084B0004B86D /* ScanLoginView.swift */; };
+		36E9AB482531A1D40083E965 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 36E9AB472531A1D40083E965 /* GoogleService-Info.plist */; };
 		36EBF016245055D8007FD4C5 /* ActiveAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36EBF015245055D8007FD4C5 /* ActiveAccountViewController.swift */; };
 		36EBF018245055E9007FD4C5 /* ActiveAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36EBF017245055E9007FD4C5 /* ActiveAccountView.swift */; };
 		36F42E89242E347300DBBF8F /* LibraTypeTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F42E88242E347300DBBF8F /* LibraTypeTag.swift */; };
@@ -662,6 +663,7 @@
 		36E95D86242A084B0004B86D /* ScanLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanLoginViewController.swift; sourceTree = "<group>"; };
 		36E95D88242A084B0004B86D /* ScanLoginModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanLoginModel.swift; sourceTree = "<group>"; };
 		36E95D8A242A084B0004B86D /* ScanLoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanLoginView.swift; sourceTree = "<group>"; };
+		36E9AB472531A1D40083E965 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		36EBF015245055D8007FD4C5 /* ActiveAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveAccountViewController.swift; sourceTree = "<group>"; };
 		36EBF017245055E9007FD4C5 /* ActiveAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveAccountView.swift; sourceTree = "<group>"; };
 		36F42E88242E347300DBBF8F /* LibraTypeTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraTypeTag.swift; sourceTree = "<group>"; };
@@ -2971,6 +2973,7 @@
 		9D626476235718D700A79B3D /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				36E9AB472531A1D40083E965 /* GoogleService-Info.plist */,
 				9DA8E2AA2317ABC600E28D07 /* LaunchScreen.storyboard */,
 				9D712442232F7662009DED52 /* Assets.xcassets */,
 				36828CEA24B808760085A165 /* ColorAssets.xcassets */,
@@ -4342,6 +4345,7 @@
 				36828CED24BBFA300085A165 /* MarketContracts.bundle in Resources */,
 				9D7124342329EA1C009DED52 /* Localizable.strings in Resources */,
 				36AA10F925008A1E00BEF941 /* BankContracts.bundle in Resources */,
+				36E9AB482531A1D40083E965 /* GoogleService-Info.plist in Resources */,
 				361BDA1524F8A47F00C4C54E /* ViolasContracts.bundle in Resources */,
 				9D712443232F7662009DED52 /* Assets.xcassets in Resources */,
 			);
