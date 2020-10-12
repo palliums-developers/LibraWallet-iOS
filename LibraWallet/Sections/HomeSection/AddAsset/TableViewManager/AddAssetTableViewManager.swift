@@ -21,7 +21,7 @@ class AddAssetTableViewManager: NSObject {
 }
 extension AddAssetTableViewManager: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 70
+        return 60
     }
 //    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 //        tableView.deselectRow(at: indexPath, animated: false)
@@ -30,16 +30,35 @@ extension AddAssetTableViewManager: UITableViewDelegate {
 //        }
 //        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, model: model[indexPath.row])
 //    }
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let view = UIView.init()
+        view.backgroundColor = UIColor.white
+        return view
+    }
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let view = UIView.init()
+        view.backgroundColor = UIColor.white
+        return view
+    }
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 0.001
+    }
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 10
+    }
 }
 extension AddAssetTableViewManager: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    func numberOfSections(in tableView: UITableView) -> Int {
         return dataModel?.count ?? 0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let identifier = "CellNormal"
         if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? AddAssetViewTableViewCell {
             if let data = dataModel, data.isEmpty == false {
-                cell.token = data[indexPath.row]
+                cell.token = data[indexPath.section]
             }
             cell.selectionStyle = .none
             cell.delegate = self
@@ -48,7 +67,7 @@ extension AddAssetTableViewManager: UITableViewDataSource {
         } else {
             let cell = AddAssetViewTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
             if let data = dataModel, data.isEmpty == false {
-                cell.token = data[indexPath.row]
+                cell.token = data[indexPath.section]
             }
             cell.selectionStyle = .none
             cell.delegate = self

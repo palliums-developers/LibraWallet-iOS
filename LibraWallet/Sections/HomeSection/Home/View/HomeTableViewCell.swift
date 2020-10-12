@@ -13,7 +13,8 @@ class HomeTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 //        contentView.backgroundColor = UIColor.white
         contentView.addSubview(whiteBackgroundView)
-        whiteBackgroundView.addSubview(coinIconImageView)
+        whiteBackgroundView.addSubview(iconBackground)
+        iconBackground.addSubview(coinIconImageView)
         whiteBackgroundView.addSubview(coinNameLabel)
         whiteBackgroundView.addSubview(coinAmountLabel)
         whiteBackgroundView.addSubview(coinValueLabel)
@@ -33,10 +34,14 @@ class HomeTableViewCell: UITableViewCell {
             make.left.equalTo(contentView).offset(15)
             make.right.equalTo(contentView).offset(-15)
         }
-        coinIconImageView.snp.makeConstraints { (make) in
+        iconBackground.snp.makeConstraints { (make) in
             make.centerY.equalTo(whiteBackgroundView)
-            make.size.equalTo(CGSize.init(width: 42, height: 42))
+            make.size.equalTo(CGSize.init(width: 40, height: 40))
             make.left.equalTo(whiteBackgroundView).offset(14)
+        }
+        coinIconImageView.snp.makeConstraints { (make) in
+            make.centerY.centerX.equalTo(iconBackground)
+            make.size.equalTo(CGSize.init(width: 26, height: 26))
         }
         coinNameLabel.snp.makeConstraints { (make) in
             make.centerY.equalTo(whiteBackgroundView)
@@ -75,9 +80,17 @@ class HomeTableViewCell: UITableViewCell {
         view.layer.cornerRadius = 14
         return view
     }()
+    private lazy var iconBackground : UIView = {
+        let view = UIView.init()
+        view.layer.cornerRadius = 20
+        view.layer.borderColor = UIColor.init(hex: "333333").cgColor
+        view.layer.borderWidth = 0.25
+        view.layer.masksToBounds = true
+       return view
+   }()
     private lazy var coinIconImageView : UIImageView = {
         let imageView = UIImageView.init()
-        imageView.layer.cornerRadius = 15
+        imageView.layer.cornerRadius = 13
         imageView.layer.masksToBounds = true
         return imageView
     }()

@@ -264,7 +264,6 @@
 		9D5B4E72236BCBEE00F4D99C /* AddAssetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B4E71236BCBEE00F4D99C /* AddAssetViewController.swift */; };
 		9D5B4E76236BCC1700F4D99C /* AddAssetTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B4E75236BCC1700F4D99C /* AddAssetTableViewManager.swift */; };
 		9D5B4E78236BCE1700F4D99C /* AddAssetViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B4E77236BCE1700F4D99C /* AddAssetViewTableViewCell.swift */; };
-		9D5B4E7A236BD22600F4D99C /* AddAssetTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B4E79236BD22600F4D99C /* AddAssetTableViewHeader.swift */; };
 		9D5C7C6723AA243A0090385C /* LibraCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5C7C6623AA24390090385C /* LibraCommon.swift */; };
 		9D5D13C523692D3800A2C6AF /* HomeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5D13C423692D3800A2C6AF /* HomeHeaderView.swift */; };
 		9D62646C2355A0E300A79B3D /* PasswordCrypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D62646B2355A0E300A79B3D /* PasswordCrypto.swift */; };
@@ -705,7 +704,6 @@
 		9D5B4E71236BCBEE00F4D99C /* AddAssetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAssetViewController.swift; sourceTree = "<group>"; };
 		9D5B4E75236BCC1700F4D99C /* AddAssetTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAssetTableViewManager.swift; sourceTree = "<group>"; };
 		9D5B4E77236BCE1700F4D99C /* AddAssetViewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAssetViewTableViewCell.swift; sourceTree = "<group>"; };
-		9D5B4E79236BD22600F4D99C /* AddAssetTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAssetTableViewHeader.swift; sourceTree = "<group>"; };
 		9D5C7C6623AA24390090385C /* LibraCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraCommon.swift; sourceTree = "<group>"; };
 		9D5D13C423692D3800A2C6AF /* HomeHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeHeaderView.swift; sourceTree = "<group>"; };
 		9D62646B2355A0E300A79B3D /* PasswordCrypto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordCrypto.swift; sourceTree = "<group>"; };
@@ -2879,7 +2877,6 @@
 			isa = PBXGroup;
 			children = (
 				9D5B4E6D236BCBC200F4D99C /* AddAssetView.swift */,
-				9D5B4E79236BD22600F4D99C /* AddAssetTableViewHeader.swift */,
 				9D5B4E77236BCE1700F4D99C /* AddAssetViewTableViewCell.swift */,
 			);
 			path = View;
@@ -4790,7 +4787,6 @@
 				361BDAF724F8E7BE00C4C54E /* DepositMarketViewController.swift in Sources */,
 				3622F20724E4003E00CFB754 /* TransferView.swift in Sources */,
 				9D628A8D239A4A2B00E222FB /* PrivateLegalView.swift in Sources */,
-				9D5B4E7A236BD22600F4D99C /* AddAssetTableViewHeader.swift in Sources */,
 				9D68D2F9237D24FF005B7593 /* BTCTransferViewController.swift in Sources */,
 				36828CE424B74C6E0085A165 /* ExchangeViewHeaderView.swift in Sources */,
 				36677A85250F0D3D009152B3 /* ScanBankDepositModel.swift in Sources */,
