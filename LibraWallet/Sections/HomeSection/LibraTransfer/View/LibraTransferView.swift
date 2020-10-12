@@ -149,7 +149,8 @@ class LibraTransferView: UIView {
         textField.keyboardType = .decimalPad
         textField.tintColor = DefaultGreenColor
         textField.layer.borderColor = UIColor.init(hex: "D8D7DA").cgColor
-        textField.layer.borderWidth = 1
+        textField.layer.borderWidth = 0.5
+        textField.layer.cornerRadius = 16
         let holderView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: 7, height: 48))
         textField.leftView = holderView
         textField.leftViewMode = .always
@@ -180,11 +181,14 @@ class LibraTransferView: UIView {
         textField.keyboardType = .default
         textField.tintColor = DefaultGreenColor
         textField.layer.borderColor = UIColor.init(hex: "D8D7DA").cgColor
-        textField.layer.borderWidth = 1
+        textField.layer.borderWidth = 0.5
+        textField.layer.cornerRadius = 16
         let holderView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: 7, height: 48))
         textField.leftView = holderView
         textField.leftViewMode = .always
-        textField.rightView = addressScanButton
+        let rightView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: 31.5, height: 48))
+        rightView.addSubview(addressScanButton)
+        textField.rightView = rightView
         textField.rightViewMode = .always
         return textField
     }()
@@ -192,7 +196,7 @@ class LibraTransferView: UIView {
         let button = UIButton.init(frame: CGRect.init(x: 0, y: 0, width: 28, height: 48))
         button.setImage(UIImage.init(named: "scan"), for: UIControl.State.normal)
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
-        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -4, bottom: 0, right: 4)
+//        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -4, bottom: 0, right: 4)
         button.tag = 10
         return button
     }()

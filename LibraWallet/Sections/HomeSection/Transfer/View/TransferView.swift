@@ -141,7 +141,8 @@ class TransferView: UIView {
         textField.keyboardType = .decimalPad
         textField.tintColor = DefaultGreenColor
         textField.layer.borderColor = UIColor.init(hex: "D8D7DA").cgColor
-        textField.layer.borderWidth = 1
+        textField.layer.borderWidth = 0.5
+        textField.layer.cornerRadius = 16
         let holderView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: 7, height: 48))
         textField.leftView = holderView
         textField.leftViewMode = .always
@@ -197,11 +198,12 @@ class TransferView: UIView {
         textField.keyboardType = .default
         textField.tintColor = DefaultGreenColor
         textField.layer.borderColor = UIColor.init(hex: "D8D7DA").cgColor
-        textField.layer.borderWidth = 1
+        textField.layer.borderWidth = 0.5
+        textField.layer.cornerRadius = 16
         let holderView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: 7, height: 48))
         textField.leftView = holderView
         textField.leftViewMode = .always
-        let rightView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: 33, height: 48))
+        let rightView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: 31.5, height: 48))
         rightView.addSubview(addressScanButton)
         textField.rightView = rightView
         textField.rightViewMode = .always
