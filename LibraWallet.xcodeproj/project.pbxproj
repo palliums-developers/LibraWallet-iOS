@@ -657,7 +657,6 @@
 		36B466B1247656BE00CFF438 /* ScanSignTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanSignTransactionView.swift; sourceTree = "<group>"; };
 		36B466B3247656D100CFF438 /* ScanSignTransactionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanSignTransactionModel.swift; sourceTree = "<group>"; };
 		36B466B5247656E400CFF438 /* ScanSendTransactionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanSendTransactionModel.swift; sourceTree = "<group>"; };
-		36B5E5D92459C2C5009DA08D /* LibraWallet_Publish.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = LibraWallet_Publish.plist; path = "/Users/wangyingdong/Desktop/公司电脑桌面/柏链/LibraWallet/LibraWallet_Publish.plist"; sourceTree = "<absolute>"; };
 		36DA3FCD23B5E5C6001D7733 /* UIButton + imageTitleLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton + imageTitleLocation.swift"; sourceTree = "<group>"; };
 		36E95D86242A084B0004B86D /* ScanLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanLoginViewController.swift; sourceTree = "<group>"; };
 		36E95D88242A084B0004B86D /* ScanLoginModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanLoginModel.swift; sourceTree = "<group>"; };
@@ -3678,7 +3677,6 @@
 				9D626477235718FF00A79B3D /* General */,
 				9D7124252329E870009DED52 /* Macro */,
 				9DA8E2AD2317ABC600E28D07 /* Info.plist */,
-				36B5E5D92459C2C5009DA08D /* LibraWallet_Publish.plist */,
 			);
 			path = LibraWallet;
 			sourceTree = "<group>";
@@ -5038,7 +5036,7 @@
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = ND49YBN8B3;
 				INFOPLIST_FILE = LibraWallet/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -5065,7 +5063,7 @@
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = ND49YBN8B3;
 				INFOPLIST_FILE = LibraWallet/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
