@@ -50,12 +50,12 @@ class AddAddressView: UIView {
         remarksTextField.snp.makeConstraints { (make) in
             make.bottom.equalTo(remarksSpaceLabel.snp.top)
             make.left.right.equalTo(self.remarksSpaceLabel)
-            make.height.equalTo(50)
+            make.height.equalTo(60)
         }
         remarksSpaceLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(self).offset(50)
-            make.left.equalTo(self).offset(67)
-            make.right.equalTo(self.snp.right).offset(-23)
+            make.top.equalTo(self).offset(60)
+            make.left.equalTo(self).offset(58)
+            make.right.equalTo(self.snp.right).offset(-15)
             make.height.equalTo(0.5)
         }
         addressTitleLabel.snp.makeConstraints { (make) in
@@ -67,17 +67,17 @@ class AddAddressView: UIView {
             make.bottom.equalTo(addressSpaceLabel.snp.top)
             make.left.equalTo(addressSpaceLabel)
             make.right.equalTo(scanAddressButton.snp.left)
-            make.height.equalTo(50)
+            make.height.equalTo(60)
         }
         scanAddressButton.snp.makeConstraints { (make) in
             make.centerY.equalTo(addressTextField)
             make.right.equalTo(self.addressSpaceLabel)
-            make.size.equalTo(CGSize.init(width: 40, height: 40))
+            make.size.equalTo(CGSize.init(width: 20, height: 60))
         }
         addressSpaceLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(remarksSpaceLabel.snp.bottom).offset(50)
-            make.left.equalTo(self).offset(67)
-            make.right.equalTo(self.snp.right).offset(-23)
+            make.top.equalTo(remarksSpaceLabel.snp.bottom).offset(60)
+            make.left.equalTo(self).offset(58)
+            make.right.equalTo(self.snp.right).offset(-15)
             make.height.equalTo(0.5)
         }
         typeTitleLabel.snp.makeConstraints { (make) in
@@ -86,32 +86,32 @@ class AddAddressView: UIView {
             make.right.equalTo(violasAddressButton.snp.left)
         }
         violasAddressButton.snp.makeConstraints { (make) in
-            make.top.equalTo(addressSpaceLabel.snp.bottom).offset(11)
-            make.left.equalTo(self).offset(66)
+            make.top.equalTo(addressSpaceLabel.snp.bottom).offset(21)
+            make.left.equalTo(self).offset(58)
             make.width.equalTo(libraAddressButton)
-            make.height.equalTo(24)
+            make.height.equalTo(28)
         }
         libraAddressButton.snp.makeConstraints { (make) in
-            make.top.equalTo(addressSpaceLabel.snp.bottom).offset(11)
-            make.left.equalTo(violasAddressButton.snp.right).offset(11)
+            make.top.equalTo(addressSpaceLabel.snp.bottom).offset(21)
+            make.left.equalTo(violasAddressButton.snp.right).offset(22)
             //            make.size.equalTo(CGSize.init(width: 100, height: 50))
             make.width.equalTo(bitcoinAddressButton)
-            make.height.equalTo(24)
+            make.height.equalTo(28)
         }
         bitcoinAddressButton.snp.makeConstraints { (make) in
-            make.top.equalTo(addressSpaceLabel.snp.bottom).offset(11)
-            make.left.equalTo(libraAddressButton.snp.right).offset(11)
+            make.top.equalTo(addressSpaceLabel.snp.bottom).offset(21)
+            make.left.equalTo(libraAddressButton.snp.right).offset(22)
             //            make.size.equalTo(CGSize.init(width: 100, height: 50))
-            let width = (mainWidth - 67 - 23 - 11 - 11) / 3
+            let width = (mainWidth - 58 - 15 - 22 - 22) / 3
             make.width.equalTo(width)
-            make.height.equalTo(24)
+            make.height.equalTo(28)
         }
         confirmButton.snp.makeConstraints { (make) in
             make.centerX.equalTo(self)
-            make.top.equalTo(addressSpaceLabel.snp.bottom).offset(107)
-            make.left.equalTo(self).offset(49)
-            make.right.equalTo(self.snp.right).offset(-49)
-            make.height.equalTo(37)
+            make.top.equalTo(addressSpaceLabel.snp.bottom).offset(137)
+            make.left.equalTo(self).offset(69)
+            make.right.equalTo(self.snp.right).offset(-69)
+            make.height.equalTo(40)
         }
     }
     //MARK: - 懒加载对象
@@ -120,7 +120,7 @@ class AddAddressView: UIView {
         let label = UILabel.init()
         label.textAlignment = .center
         label.textColor = UIColor.init(hex: "2E2E2E")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: .regular)
+        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: .regular)
         label.text = localLanguage(keyString: "wallet_address_add_remarks_title")
         return label
     }()
@@ -129,7 +129,7 @@ class AddAddressView: UIView {
         textField.textAlignment = NSTextAlignment.left
         textField.textColor = UIColor.init(hex: "3C3848")
         textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_address_add_remarks_textfield_placeholder"),
-                                                             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "3C3848").alpha(0.3),NSAttributedString.Key.font: UIFont.systemFont(ofSize: adaptFont(fontSize: 16))])
+                                                             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "BABABA").alpha(0.3),NSAttributedString.Key.font: UIFont.systemFont(ofSize: adaptFont(fontSize: 14))])
         textField.tintColor = DefaultGreenColor
         textField.delegate = self
         return textField
@@ -142,8 +142,8 @@ class AddAddressView: UIView {
     lazy var addressTitleLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = .center
-        label.textColor = UIColor.init(hex: "515151")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: .regular)
+        label.textColor = UIColor.init(hex: "333333")
+        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: .regular)
         label.text = localLanguage(keyString: "wallet_address_add_address_title")
         return label
     }()
@@ -152,7 +152,7 @@ class AddAddressView: UIView {
         textField.textAlignment = NSTextAlignment.left
         textField.textColor = UIColor.init(hex: "3C3848")
         textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_address_add_address_textfield_placeholder"),
-                                                             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "3C3848").alpha(0.3),NSAttributedString.Key.font: UIFont.systemFont(ofSize: adaptFont(fontSize: 16))])
+                                                             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "BABABA").alpha(0.3),NSAttributedString.Key.font: UIFont.systemFont(ofSize: adaptFont(fontSize: 14))])
         textField.tintColor = DefaultGreenColor
         return textField
     }()
@@ -173,8 +173,8 @@ class AddAddressView: UIView {
     lazy var typeTitleLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = .center
-        label.textColor = UIColor.init(hex: "515151")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: .regular)
+        label.textColor = UIColor.init(hex: "333333")
+        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: .regular)
         label.text = localLanguage(keyString: "wallet_address_add_type_title")
         return label
     }()
@@ -220,8 +220,8 @@ class AddAddressView: UIView {
         button.setTitleColor(UIColor.white, for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
-        let width = UIScreen.main.bounds.width - 49 - 49
-        button.layer.insertSublayer(colorGradualChange(size: CGSize.init(width: width, height: 44)), at: 0)
+        let width = UIScreen.main.bounds.width - 69 - 69
+        button.layer.insertSublayer(colorGradualChange(size: CGSize.init(width: width, height: 40)), at: 0)
         button.layer.cornerRadius = 5
         button.layer.masksToBounds = true
         button.tag = 10
