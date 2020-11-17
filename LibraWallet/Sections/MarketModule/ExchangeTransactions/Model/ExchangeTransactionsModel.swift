@@ -254,7 +254,7 @@ class ExchangeTransactionsModel: NSObject {
     }
     func getExchangeTransactions(address: String, page: Int, pageSize: Int, requestStatus: Int, group: DispatchGroup) {
         let type = requestStatus == 0 ? "ExchangeTransactionsOrigin":"ExchangeTransactionsMore"
-        let request = mainProvide.request(.ExchangeTransactions(address, page, pageSize)) {[weak self](result) in
+        let request = marketModuleProvide.request(.exchangeTransactions(address, page, pageSize)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {

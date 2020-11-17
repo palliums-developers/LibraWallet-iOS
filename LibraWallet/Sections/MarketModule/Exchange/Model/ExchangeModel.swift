@@ -120,7 +120,7 @@ class ExchangeModel: NSObject {
     var totalLiquidity: [PoolLiquidityDataModel]?
     func getExchangeTransactions(address: String, page: Int, pageSize: Int, requestStatus: Int) {
         let type = requestStatus == 0 ? "ExchangeTransactionsOrigin":"ExchangeTransactionsMore"
-        let request = mainProvide.request(.ExchangeTransactions(address, page, pageSize)) {[weak self](result) in
+        let request = marketModuleProvide.request(.exchangeTransactions(address, page, pageSize)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -166,7 +166,7 @@ class ExchangeModel: NSObject {
         self.requests.append(request)
     }
     func getExchangeInfo(amount: Int64, inputModule: String, outputModule: String) {
-        let request = mainProvide.request(.ExchangeTransferInfo(inputModule, outputModule, amount)) {[weak self](result) in
+        let request = marketModuleProvide.request(.exchangeTransferInfo(inputModule, outputModule, amount)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -239,7 +239,7 @@ extension ExchangeModel {
         }
     }
     private func getMarketSupportTokens(group: DispatchGroup) {
-        let request = mainProvide.request(.MarketSupportTokens) {[weak self](result) in
+        let request = marketModuleProvide.request(.marketSupportTokens) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -415,7 +415,7 @@ extension ExchangeModel {
 //MARK: - 获取跨链映射支持币
 extension ExchangeModel {
     private func getMappingTokenList(semaphore: DispatchSemaphore, outputModuleName: String, inputModule: String) {
-        let request = mainProvide.request(.MarketSupportMappingTokens) {[weak self](result) in
+        let request = marketModuleProvide.request(.marketSupportMappingTokens) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -463,7 +463,7 @@ extension ExchangeModel {
 //MARK: - 获取资金池流动性
 extension ExchangeModel {
     func getPoolTotalLiquidity(inputCoinA: MarketSupportTokensDataModel, inputCoinB: MarketSupportTokensDataModel) {
-        let request = mainProvide.request(.PoolTotalLiquidity) {[weak self](result) in
+        let request = marketModuleProvide.request(.poolTotalLiquidity) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {

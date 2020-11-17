@@ -72,7 +72,7 @@ class AssetsPoolModel: NSObject {
     var tokenModel: AssetsPoolsInfoDataModel?
     func getAssetsPoolTransactions(address: String, page: Int, pageSize: Int, requestStatus: Int) {
         let type = requestStatus == 0 ? "AssetsPoolTransactionsOrigin":"AssetsPoolTransactionsMore"
-        let request = mainProvide.request(.AssetsPoolTransactions(address, page, pageSize)) {[weak self](result) in
+        let request = marketModuleProvide.request(.assetsPoolTransactions(address, page, pageSize)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -278,7 +278,7 @@ extension AssetsPoolModel {
 
 extension AssetsPoolModel {
     func getMarketMineTokens(address: String) {
-        let request = mainProvide.request(.MarketMineTokens(address)) {[weak self](result) in
+        let request = marketModuleProvide.request(.marketMineTokens(address)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -322,7 +322,7 @@ extension AssetsPoolModel {
 }
 extension AssetsPoolModel {
     func getMarketAssetsPoolTransferOutRate(address: String, coinA: String, coinB: String, amount: Int64) {
-        let request = mainProvide.request(.AssetsPoolTransferOutInfo(address, coinA, coinB, amount)) {[weak self](result) in
+        let request = marketModuleProvide.request(.assetsPoolTransferOutInfo(address, coinA, coinB, amount)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -364,7 +364,7 @@ extension AssetsPoolModel {
         self.requests.append(request)
     }
     func getMarketAssetsPoolTransferInRate(coinA: String, coinB: String, amount: Int64) {
-        let request = mainProvide.request(.AssetsPoolTransferInInfo(coinA, coinB, amount)) {[weak self](result) in
+        let request = marketModuleProvide.request(.assetsPoolTransferInInfo(coinA, coinB, amount)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -428,7 +428,7 @@ extension AssetsPoolModel {
     }
     
     private func getMarketSupportTokens(semaphore: DispatchSemaphore) {
-        let request = mainProvide.request(.MarketSupportTokens) {[weak self](result) in
+        let request = marketModuleProvide.request(.marketSupportTokens) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -522,7 +522,7 @@ extension AssetsPoolModel {
 }
 extension AssetsPoolModel {
     func getPoolLiquidity(coinA: String, coinB: String) {
-        let request = mainProvide.request(.PoolLiquidity(coinA, coinB)) {[weak self](result) in
+        let request = marketModuleProvide.request(.poolLiquidity(coinA, coinB)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {

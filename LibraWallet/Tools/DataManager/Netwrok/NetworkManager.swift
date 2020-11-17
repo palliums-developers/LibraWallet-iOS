@@ -66,29 +66,6 @@ enum mainRequest {
     /// 激活Libra（临时）
     case ActiveLibraAccount(String)
     
-    
-    //交易所
-    /// 获取兑换交易记录
-    case ExchangeTransactions(String, Int, Int)
-    /// 获取资金池交易记录
-    case AssetsPoolTransactions(String, Int, Int)
-    /// 获取交易支持稳定币
-    case MarketSupportTokens
-    /// 获取我的通证
-    case MarketMineTokens(String)
-    /// 获取资金池转出试算
-    case AssetsPoolTransferOutInfo(String, String, String, Int64)
-    /// 获取资金池转入试算
-    case AssetsPoolTransferInInfo(String, String, Int64)
-    /// 获取兑换试算
-    case ExchangeTransferInfo(String, String, Int64)
-    /// 获取交易所支持映射币
-    case MarketSupportMappingTokens
-    /// 获取资金池流动性
-    case PoolLiquidity(String, String)
-    /// 获取资金池全部流动性
-    case PoolTotalLiquidity
-    
     /// 获取BTC映射交易（临时）
     case BTCCrossChainTransactions(String, Int, Int)
     /// 获取Violas映射交易（临时）
@@ -130,22 +107,6 @@ extension mainRequest:TargetType {
              .GetMappingInfo,
              .GetMappingTokenList(_),
              .GetMappingTransactions(_, _, _):
-            if PUBLISH_VERSION == true {
-                return URL(string:"https://api.violas.io")!
-            } else {
-                return URL(string:"https://api4.violas.io")!
-            }
-        // 交易所
-        case .ExchangeTransactions(_, _, _),
-             .AssetsPoolTransactions(_, _, _),
-             .MarketSupportTokens,
-             .MarketMineTokens(_),
-             .AssetsPoolTransferOutInfo(_, _, _, _),
-             .AssetsPoolTransferInInfo(_, _, _),
-             .ExchangeTransferInfo(_, _, _),
-             .MarketSupportMappingTokens,
-             .PoolLiquidity(_, _),
-             .PoolTotalLiquidity:
             if PUBLISH_VERSION == true {
                 return URL(string:"https://api.violas.io")!
             } else {
@@ -224,26 +185,6 @@ extension mainRequest:TargetType {
             return "/1.0/libra/mint"
         case .ActiveViolasAccount(_):
             return "/1.0/violas/mint"
-        case .ExchangeTransactions(_, _, _):
-            return "/1.0/market/exchange/transaction"
-        case .AssetsPoolTransactions(_, _, _):
-            return "/1.0/market/pool/transaction"
-        case .MarketSupportTokens:
-            return "/1.0/market/exchange/currency"
-        case .MarketMineTokens(_):
-            return "/1.0/market/pool/info"
-        case .AssetsPoolTransferOutInfo(_, _, _, _):
-            return "/1.0/market/pool/withdrawal/trial"
-        case .AssetsPoolTransferInInfo(_, _, _):
-            return "/1.0/market/pool/deposit/trial"
-        case .ExchangeTransferInfo(_, _, _):
-            return "/1.0/market/exchange/trial"
-        case .MarketSupportMappingTokens:
-            return "/1.0/market/exchange/crosschain/address/info"
-        case .PoolLiquidity(_, _):
-            return "/1.0/market/pool/reserve/info"
-        case .PoolTotalLiquidity:
-            return "/1.0/market/pool/reserve/infos"
         case .BTCCrossChainTransactions(_, _, _):
             return "/"
         case .ViolasCrossChainTransactions(_, _, _):
@@ -283,16 +224,6 @@ extension mainRequest:TargetType {
              .GetLibraPrice(_),
              .ActiveViolasAccount(_),
              .ActiveLibraAccount(_),
-             .ExchangeTransactions(_, _, _),
-             .AssetsPoolTransactions(_, _, _),
-             .MarketSupportTokens,
-             .MarketMineTokens(_),
-             .AssetsPoolTransferOutInfo(_, _, _, _),
-             .AssetsPoolTransferInInfo(_, _, _),
-             .ExchangeTransferInfo(_, _, _),
-             .MarketSupportMappingTokens,
-             .PoolLiquidity(_, _),
-             .PoolTotalLiquidity,
              .BTCCrossChainTransactions(_, _, _),
              .ViolasCrossChainTransactions(_, _, _),
              .LibraCrossChainTransactions(_, _, _):
@@ -427,46 +358,6 @@ extension mainRequest:TargetType {
                                                    "auth_key_perfix": authPrefix,
                                                    "currency":"LBR"],
                                       encoding: URLEncoding.queryString)
-        case .ExchangeTransactions(let address, let offset, let limit):
-            return .requestParameters(parameters: ["address": address,
-                                                   "limit": limit,
-                                                   "offset":offset],
-                                      encoding: URLEncoding.queryString)
-        case .AssetsPoolTransactions(let address, let offset, let limit):
-            return .requestParameters(parameters: ["address": address,
-                                                   "limit": limit,
-                                                   "offset":offset],
-                                      encoding: URLEncoding.queryString)
-            
-        case .MarketSupportTokens:
-            return .requestPlain
-        case .MarketMineTokens(let address):
-            return .requestParameters(parameters: ["address": address],
-                                      encoding: URLEncoding.queryString)
-        case .AssetsPoolTransferOutInfo(let address, let coinA, let coinB, let amount):
-            return .requestParameters(parameters: ["address": address,
-                                                   "coin_a":coinA,
-                                                   "coin_b":coinB,
-                                                   "amount":amount],
-                                      encoding: URLEncoding.queryString)
-        case .AssetsPoolTransferInInfo(let coinA, let coinB, let amount):
-            return .requestParameters(parameters: ["coin_a":coinA,
-                                                   "coin_b":coinB,
-                                                   "amount":amount],
-                                      encoding: URLEncoding.queryString)
-        case .ExchangeTransferInfo(let coinA, let coinB, let amount):
-            return .requestParameters(parameters: ["currencyIn":coinA,
-                                                   "currencyOut":coinB,
-                                                   "amount":amount],
-                                      encoding: URLEncoding.queryString)
-        case .MarketSupportMappingTokens:
-            return .requestPlain
-        case .PoolLiquidity(let coinA, let coinB):
-            return .requestParameters(parameters: ["coin_a":coinA,
-                                                   "coin_b":coinB],
-                                      encoding: URLEncoding.queryString)
-        case .PoolTotalLiquidity:
-            return .requestPlain
         case .BTCCrossChainTransactions(let address, let page, let offset):
             return .requestParameters(parameters: ["opt":"record",
                                                    "sender":address,

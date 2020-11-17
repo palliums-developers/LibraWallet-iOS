@@ -14,7 +14,7 @@ class AssetsPoolTransactionsModel: NSObject {
     private var sequenceNumber: Int?
     func getAssetsPoolTransactions(address: String, page: Int, pageSize: Int, requestStatus: Int) {
         let type = requestStatus == 0 ? "AssetsPoolTransactionsOrigin":"AssetsPoolTransactionsMore"
-        let request = mainProvide.request(.AssetsPoolTransactions(address, page, pageSize)) {[weak self](result) in
+        let request = marketModuleProvide.request(.assetsPoolTransactions(address, page, pageSize)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {

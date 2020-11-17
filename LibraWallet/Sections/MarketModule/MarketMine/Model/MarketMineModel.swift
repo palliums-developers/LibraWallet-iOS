@@ -42,7 +42,7 @@ class MarketMineModel: NSObject {
     private var requests: [Cancellable] = []
     @objc dynamic var dataDic: NSMutableDictionary = [:]
     func getMarketMineTokens(address: String) {
-        let request = mainProvide.request(.MarketMineTokens(address)) {[weak self](result) in
+        let request = marketModuleProvide.request(.marketMineTokens(address)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
