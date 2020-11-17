@@ -30,6 +30,7 @@ target 'LibraWallet' do
   pod 'JXSegmentedView'
   pod 'WalletConnectSwift'
   pod 'Firebase/Messaging'
+  pod "DropDownMenuKit"
   # Pods for LibraWallet
 
   target 'LibraWalletTests' do

@@ -190,12 +190,16 @@ class LibraSDKTests: XCTestCase {
         XCTAssertEqual(wallet.publicKey.toLegacy(), "cd35f1a78093554f5dc9c61301f204e4")
     }
     func testLibraKitSSO() {
-        let mnemonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
+//        let mnemonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
+        //b90148b7d177538c2f91c9a13d695506 f41799563e5381b693d0885b56ebf19b
+        let mnemonic = ["wrist", "post", "hover", "mixed", "like", "update", "salute", "access", "venture", "grant", "another", "team"]
+        //2e797751e6ae643d129a854f8c739b72 783a439b523f2545d3a71622c9e74b38
         do {
             let seed = try ViolasMnemonic.seed(mnemonic: mnemonic)
             let wallet = try ViolasHDWallet.init(seed: seed, depth: 0)
             let walletAddress = wallet.publicKey.toLegacy()
             let active = wallet.publicKey.toActive()
+            print(walletAddress, active)
             //注册Module
             // 拼接交易
             //            let request = ViolasTransaction.init(sendAddress: wallet.publicKey.toLegacy(),
@@ -258,6 +262,27 @@ class LibraSDKTests: XCTestCase {
             // 签名交易
             //            let signature = try wallet.privateKey.signTransaction(transaction: request.request, wallet: wallet)
             //            print(signature.toHexString())
+            let argument0 = ViolasTransactionArgument.init(code: .Address("783a439b523f2545d3a71622c9e74b38"))
+            
+            let argument1 = ViolasTransactionArgument.init(code: .U8Vector(Data.init(hex: "2e797751e6ae643d129a854f8c739b72")))
+            let argument2 = ViolasTransactionArgument.init(code: .Bool(true))
+            
+            let argument3 = ViolasTransactionArgument.init(code: .U64("1000000"))
+
+            let script = ViolasTransactionScriptPayload.init(code: Data.init(hex: ViolasUtils.getMoveCode(name: "create_child_vasp_account")),
+                                                             typeTags: [ViolasTypeTag.init(typeTag: ViolasTypeTags.Struct(ViolasStructTag.init(type: ViolasStructTagType.Normal("Coin1"))))],
+                                                             argruments: [argument0, argument1, argument2, argument3])
+            let transactionPayload = ViolasTransactionPayload.init(payload: .script(script))
+            let rawTransaction = ViolasRawTransaction.init(senderAddres: wallet.publicKey.toLegacy(),
+                                                           sequenceNumber: 6,
+                                                           maxGasAmount: 1000000,
+                                                           gasUnitPrice: 10,
+                                                           expirationTime: NSDecimalNumber.init(value: Date().timeIntervalSince1970 + 600).uint64Value,
+                                                           payload: transactionPayload,
+                                                           module: "Coin1",
+                                                           chainID: 4)
+            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            print(signature.toHexString())
         } catch {
             print(error.localizedDescription)
         }
@@ -398,5 +423,181 @@ class LibraSDKTests: XCTestCase {
     func testA() {
         let a: Array<UInt8> = [165, 87, 66, 216, 60, 179, 202, 135, 205,248,242,49,242,45,215,85,52,162,88,139,23,75,32,230,220,65,41,46,146,206,121,229]
         print(Data.init(a).toHexString())
+    }
+    func testViolasAddCurrency() {
+//        let mnemonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
+        //2e797751e6ae643d129a854f8c739b72 783a439b523f2545d3a71622c9e74b38
+        let mnemonic = ["wrist", "post", "hover", "mixed", "like", "update", "salute", "access", "venture", "grant", "another", "team"]
+        //b90148b7d177538c2f91c9a13d695506 f41799563e5381b693d0885b56ebf19b
+
+        do {
+            let seed = try ViolasMnemonic.seed(mnemonic: mnemonic)
+            let wallet = try ViolasHDWallet.init(seed: seed, depth: 0)
+            let walletAddress = wallet.publicKey.toLegacy()
+            let active = wallet.publicKey.toActive()
+            print(walletAddress, active)
+            let script = ViolasTransactionScriptPayload.init(code: Data.init(hex: ViolasUtils.getMoveCode(name: "add_currency_to_account")),
+                                                             typeTags: [ViolasTypeTag.init(typeTag: ViolasTypeTags.Struct(ViolasStructTag.init(type: ViolasStructTagType.Normal("Coin1"))))],
+                                                             argruments: [])
+            let transactionPayload = ViolasTransactionPayload.init(payload: .script(script))
+            
+            let rawTransaction = ViolasRawTransaction.init(senderAddres: wallet.publicKey.toLegacy(),
+                                                           sequenceNumber: 0,
+                                                           maxGasAmount: 1000000,
+                                                           gasUnitPrice: 0,
+                                                           expirationTime: NSDecimalNumber.init(value: Date().timeIntervalSince1970 + 600).uint64Value,
+                                                           payload: transactionPayload,
+                                                           module: "Coin1",
+                                                           chainID: 2)
+            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            print(signature.toHexString())
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    func testViolasCreateChildAccount() {
+//        let mnemonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
+        //2e797751e6ae643d129a854f8c739b72 783a439b523f2545d3a71622c9e74b38
+//        let mnemonic = ["wrist", "post", "hover", "mixed", "like", "update", "salute", "access", "venture", "grant", "another", "team"]
+        //b90148b7d177538c2f91c9a13d695506 f41799563e5381b693d0885b56ebf19b
+//        let mnemonic = ["net", "dice", "divide", "amount", "stamp", "flock", "brave", "nuclear", "fox", "aim", "father", "apology"]
+        //1d0f84eb9752f7d5bf224fe504a35f6e 2da8e2146b015a5986138312baafbc61
+        let mnemonic = ["trouble", "menu", "nephew", "group", "alert", "recipe", "hotel", "fatigue", "wet", "shadow", "say", "fold", "huge", "olive", "solution", "enjoy", "garden", "appear", "vague", "joy", "great", "keep", "cactus", "melt"]
+
+        do {
+            let seed = try ViolasMnemonic.seed(mnemonic: mnemonic)
+            let wallet = try ViolasHDWallet.init(seed: seed, depth: 0)
+            let walletAddress = wallet.publicKey.toLegacy()
+            let active = wallet.publicKey.toActive()
+            print(walletAddress, active)
+            let argument0 = ViolasTransactionArgument.init(code: .Address("783a439b523f2545d3a71622c9e74b38"))
+            
+            let argument1 = ViolasTransactionArgument.init(code: .U8Vector(Data.init(hex: "2e797751e6ae643d129a854f8c739b72")))
+            let argument2 = ViolasTransactionArgument.init(code: .Bool(true))
+            
+            let argument3 = ViolasTransactionArgument.init(code: .U64("1000000"))
+            
+            let script = ViolasTransactionScriptPayload.init(code: Data.init(hex: ViolasUtils.getMoveCode(name: "create_child_vasp_account")),
+                                                             typeTags: [ViolasTypeTag.init(typeTag: ViolasTypeTags.Struct(ViolasStructTag.init(type: ViolasStructTagType.Normal("Coin1"))))],
+                                                             argruments: [argument0, argument1, argument2, argument3])
+            let transactionPayload = ViolasTransactionPayload.init(payload: .script(script))
+            let rawTransaction = ViolasRawTransaction.init(senderAddres: wallet.publicKey.toLegacy(),
+                                                           sequenceNumber: 22,
+                                                           maxGasAmount: 1000000,
+                                                           gasUnitPrice: 10,
+                                                           expirationTime: NSDecimalNumber.init(value: Date().timeIntervalSince1970 + 600).uint64Value,
+                                                           payload: transactionPayload,
+                                                           module: "Coin1",
+                                                           chainID: 2)
+            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            print(signature.toHexString())
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    func testViolasLargeTransfer() {
+        let mnemonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
+        //2e797751e6ae643d129a854f8c739b72 783a439b523f2545d3a71622c9e74b38
+//        let mnemonic = ["wrist", "post", "hover", "mixed", "like", "update", "salute", "access", "venture", "grant", "another", "team"]
+        //b90148b7d177538c2f91c9a13d695506 f41799563e5381b693d0885b56ebf19b
+//        let mnemonic = ["trouble", "menu", "nephew", "group", "alert", "recipe", "hotel", "fatigue", "wet", "shadow", "say", "fold", "huge", "olive", "solution", "enjoy", "garden", "appear", "vague", "joy", "great", "keep", "cactus", "melt"]
+
+        do {
+            let seed = try LibraMnemonic.seed(mnemonic: mnemonic)
+            let wallet = try LibraHDWallet.init(seed: seed, depth: 0)
+            let walletAddress = wallet.publicKey.toLegacy()
+            let active = wallet.publicKey.toActive()
+            print(walletAddress, active)
+            // 拼接交易
+            let argument0 = LibraTransactionArgument.init(code: .Address("2da8e2146b015a5986138312baafbc61"))
+            let argument1 = LibraTransactionArgument.init(code: .U64("\(9000_000_000)"))
+//            // metadata
+//            let argument2 = LibraTransactionArgument.init(code: .U8Vector("10".data(using: .utf8)!))
+//            // metadata_signature
+//            let argument3 = LibraTransactionArgument.init(code: .U8Vector(Data.init(hex: "40776041804bfb69ea8f03cdd8b065e51d47aab44e0169826d80ee232fd0fb96f1b9a7431f2e7d4e40270a235548f494568305614012d56302621cdf419bd305")))
+            // metadata
+            let argument2 = LibraTransactionArgument.init(code: .U8Vector(Data()))
+            // metadata_signature
+            let argument3 = LibraTransactionArgument.init(code: .U8Vector(Data()))
+            let script = LibraTransactionScriptPayload.init(code: Data.init(hex: LibraUtils.getMoveCode(name: "peer_to_peer_with_metadata")),
+                                                            typeTags: [LibraTypeTag.init(typeTag: .Struct(LibraStructTag.init(type: .Normal("Coin1"))))],
+                                                            argruments: [argument0, argument1, argument2, argument3])
+            let transactionPayload = LibraTransactionPayload.init(payload: .script(script))
+            let rawTransaction = LibraRawTransaction.init(senderAddres: walletAddress,
+                                                          sequenceNumber: 2,
+                                                          maxGasAmount: 1000000,
+                                                          gasUnitPrice: 10,
+                                                          expirationTime: UInt64(Date().timeIntervalSince1970 + 600),
+                                                          payload: transactionPayload,
+                                                          module: "Coin1",
+                                                          chainID: 2)
+            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            print(signature.toHexString())
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    func testViolasLargeTransferSign() {
+//        let mnemonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
+        //2e797751e6ae643d129a854f8c739b72 783a439b523f2545d3a71622c9e74b38
+        let mnemonic = ["wrist", "post", "hover", "mixed", "like", "update", "salute", "access", "venture", "grant", "another", "team"]
+        //b90148b7d177538c2f91c9a13d695506 f41799563e5381b693d0885b56ebf19b
+        do {
+            let seed = try ViolasMnemonic.seed(mnemonic: mnemonic)
+            let wallet = try ViolasHDWallet.init(seed: seed, depth: 0)
+            var result = Data()
+            result += "10".data(using: .utf8)!
+            
+            result += Data.init(Array<UInt8>(hex: "2e9829f376318154bff603ebc8e0b743"))
+            
+            result += ViolasUtils.getLengthData(length: NSDecimalNumber.init(string: "10000000000").uint64Value, appendBytesCount: 8)
+            
+            result += Array("@@$$LIBRA_ATTEST$$@@".utf8)
+
+            print(result.toHexString())
+            // 4.3签名数据
+            let sign = Ed25519.sign(message: result.bytes, secretKey: wallet.privateKey.raw.bytes)
+            let testResult = Ed25519.verify(signature: sign, message: result.bytes, publicKey: wallet.publicKey.raw.bytes)
+            print(testResult)
+            print(sign.toHexString())
+        } catch {
+            print(error.localizedDescription)
+        }
+        //3130 2e9829f376318154bff603ebc8e0b743 00e40b5402000000 404024244c494252415f41545445535424244040
+        //0a783a439b523f2545d3a71622c9e74b3800e40b540200000014404024244c494252415f4154544553542424404000206865d4cb3f7f71986f60ff3ecc7653c7408844f7ef30c9f9711c89a46df6cf60404a873e9cc638e55e69d09094476b965dda1fc6cb5c382aa183855dff4a3e95d8d571da1d53067456b99c658761f8ca2b4230ef994610836c7cabff32e0438204
+    }
+    func testViolasLargeTransferSetDualA() {
+//        let mnemonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
+        //2e797751e6ae643d129a854f8c739b72 783a439b523f2545d3a71622c9e74b38
+        let mnemonic = ["wrist", "post", "hover", "mixed", "like", "update", "salute", "access", "venture", "grant", "another", "team"]
+        //b90148b7d177538c2f91c9a13d695506 f41799563e5381b693d0885b56ebf19b
+//        let mnemonic = ["trouble", "menu", "nephew", "group", "alert", "recipe", "hotel", "fatigue", "wet", "shadow", "say", "fold", "huge", "olive", "solution", "enjoy", "garden", "appear", "vague", "joy", "great", "keep", "cactus", "melt"]
+
+        do {
+            let seed = try ViolasMnemonic.seed(mnemonic: mnemonic)
+            let wallet = try ViolasHDWallet.init(seed: seed, depth: 0)
+            let walletAddress = wallet.publicKey.toLegacy()
+            let active = wallet.publicKey.toActive()
+            print(walletAddress, active)
+            let argument0 = ViolasTransactionArgument.init(code: .U8Vector("www.google.com".data(using: .utf8)!))
+            let argument1 = ViolasTransactionArgument.init(code: .U8Vector(wallet.publicKey.raw))
+            let script = ViolasTransactionScriptPayload.init(code: Data.init(hex: ViolasUtils.getMoveCode(name: "rotate_dual_attestation_info")),
+                                                             typeTags: [ViolasTypeTag](),
+                                                             argruments: [argument0, argument1])
+            let transactionPayload = ViolasTransactionPayload.init(payload: .script(script))
+            
+            let rawTransaction = ViolasRawTransaction.init(senderAddres: wallet.publicKey.toLegacy(),
+                                                           sequenceNumber: 1,
+                                                           maxGasAmount: 1000000,
+                                                           gasUnitPrice: 0,
+                                                           expirationTime: NSDecimalNumber.init(value: Date().timeIntervalSince1970 + 600).uint64Value,
+                                                           payload: transactionPayload,
+                                                           module: "Coin1",
+                                                           chainID: 2)
+            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            print(signature.toHexString())
+        } catch {
+            print(error.localizedDescription)
+        }
     }
 }
