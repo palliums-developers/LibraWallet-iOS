@@ -192,7 +192,7 @@ class WalletTransactionsModel: NSObject {
     ///   - pageSize: 数量
     func getBTCTransactionHistory(address: String, page: Int, pageSize: Int, requestStatus: Int) {
         let type = requestStatus == 0 ? "BTCTransactionHistoryOrigin":"BTCTransactionHistoryMore"
-        let request = mainProvide.request(.TrezorBTCTransactions(address, page, pageSize)) {[weak self](result) in
+        let request = BTCModuleProvide.request(.TrezorBTCTransactions(address, page, pageSize)) {[weak self](result) in
                 switch  result {
                 case let .success(response):
                     do {

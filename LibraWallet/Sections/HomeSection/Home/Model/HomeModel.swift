@@ -186,7 +186,7 @@ class HomeModel: NSObject {
         }
     }
     func getBTCBalance(tokenID: Int64, address: String, tokens: [Token]) {
-        let request = mainProvide.request(.TrezorBTCBalance(address)) {[weak self](result) in
+        let request = BTCModuleProvide.request(.TrezorBTCBalance(address)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {

@@ -123,7 +123,7 @@ extension TokenMappingModel {
     }
     private func getUnspentUTXO(address: String, semaphore: DispatchSemaphore) {
         semaphore.wait()
-        let request = mainProvide.request(.TrezorBTCUnspentUTXO(address)) {[weak self](result) in
+        let request = BTCModuleProvide.request(.TrezorBTCUnspentUTXO(address)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -209,7 +209,7 @@ extension TokenMappingModel {
         return Transaction(version: 2, inputs: unsignedInputs, outputs: outputs, lockTime: 0)
     }
     private func sendBTCTransaction(signature: String) {
-        let request = mainProvide.request(.TrezorBTCPushTransaction(signature)) {[weak self](result) in
+        let request = BTCModuleProvide.request(.TrezorBTCPushTransaction(signature)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -596,7 +596,7 @@ extension TokenMappingModel {
         self.requests.append(request)
     }
     private func getBTCBalance(address: String, group: DispatchGroup) {
-        let request = mainProvide.request(.TrezorBTCBalance(address)) {[weak self](result) in
+        let request = BTCModuleProvide.request(.TrezorBTCBalance(address)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {

@@ -12,19 +12,6 @@ import Localize_Swift
 let mainProvide = MoyaProvider<mainRequest>()
 //let mainProvide = MoyaProvider<mainRequest>(stubClosure: MoyaProvider.immediatelyStub)
 enum mainRequest {
-    /// 获取BTC余额记录
-    case GetBTCBalance(String)
-    /// 获取BTC交易记录
-    case GetBTCTransactionHistory(String, Int, Int)
-    /// 获取UTXO
-    case GetBTCUnspentUTXO(String)
-    /// 发送BTC交易
-    case SendBTCTransaction(String)
-    
-    case TrezorBTCBalance(String)
-    case TrezorBTCUnspentUTXO(String)
-    case TrezorBTCTransactions(String, Int, Int)
-    case TrezorBTCPushTransaction(String)
     
     /// 获取Libra账户余额
     case GetLibraAccountBalance(String)
@@ -62,18 +49,6 @@ enum mainRequest {
 extension mainRequest:TargetType {
     var baseURL: URL {
         switch self {
-        case .GetBTCBalance(_),
-             .GetBTCTransactionHistory(_, _, _),
-             .GetBTCUnspentUTXO(_),
-             .SendBTCTransaction(_):
-            return URL(string:"https://tchain.api.btc.com/v3")!
-        //https://tbtc1.trezor.io/api/
-        case .TrezorBTCBalance(_),
-             .TrezorBTCUnspentUTXO(_),
-             .TrezorBTCTransactions(_, _, _),
-             .TrezorBTCPushTransaction:
-            return URL(string:"https://tbtc1.trezor.io/api")!
-            
         case .GetLibraTransactions(_, _, _, _, _),
              .GetLibraTokenList,
              .GetBTCPrice,
@@ -111,23 +86,6 @@ extension mainRequest:TargetType {
     }
     var path: String {
         switch self {
-        case .GetBTCBalance(let address):
-            return "/address/\(address)"
-        case .GetBTCTransactionHistory(let address, _, _):
-            return "/address/\(address)/tx"
-        case .GetBTCUnspentUTXO(let address):
-            return "/address/\(address)/unspent"
-        case .SendBTCTransaction(_):
-            return "/tools/tx-publish"
-            
-        case .TrezorBTCBalance(let address):
-            return "/v2/address/\(address)"
-        case .TrezorBTCUnspentUTXO(let address):
-            return "/v2/utxo/\(address)"
-        case .TrezorBTCTransactions(let address, _, _):
-            return "/v2/address/\(address)"
-        case .TrezorBTCPushTransaction(let signature):
-            return "/v2/sendtx/\(signature)"
         case .GetLibraAccountBalance(_):
             return ""
         case .GetLibraTransactions(_, _, _, _, _):
@@ -164,20 +122,10 @@ extension mainRequest:TargetType {
         switch self {
         case .SendLibraTransaction(_),
              .SendViolasTransaction(_),
-             .SendBTCTransaction(_),
              .GetLibraAccountBalance(_),
              .GetViolasAccountInfo(_):
             return .post
-        case .GetBTCBalance(_),
-             .GetBTCTransactionHistory(_, _, _),
-             .GetBTCUnspentUTXO(_),
-             
-             .TrezorBTCBalance(_),
-             .TrezorBTCUnspentUTXO(_),
-             .TrezorBTCTransactions(_, _, _),
-             .TrezorBTCPushTransaction(_),
-             
-             .GetLibraTransactions(_, _, _, _, _),
+        case .GetLibraTransactions(_, _, _, _, _),
              .GetViolasAccountBalance(_, _),
              .GetViolasAccountSequenceNumber(_),
              .GetViolasTransactions(_, _, _, _, _),
@@ -204,30 +152,6 @@ extension mainRequest:TargetType {
     }
     var task: Task {
         switch self {
-        case .GetBTCBalance(_):
-            return .requestPlain
-        case .GetBTCTransactionHistory(_, let page, let pageSize):
-            return .requestParameters(parameters: ["page": page,
-                                                   "pagesize":pageSize],
-                                      encoding: URLEncoding.queryString)
-        case .GetBTCUnspentUTXO(_):
-            return .requestPlain
-        case .SendBTCTransaction(let signature):
-            return .requestParameters(parameters: ["rawhex": signature],
-                                      encoding: JSONEncoding.default)
-            
-        case .TrezorBTCBalance(_):
-            return .requestPlain
-        case .TrezorBTCUnspentUTXO(_):
-            return .requestPlain
-        case .TrezorBTCTransactions(_, let page, let pageSize):
-            return .requestParameters(parameters: ["page": page,
-                                                   "pageSize": pageSize,
-                                                   "details":"txs"],
-                                      encoding: URLEncoding.queryString)
-        case .TrezorBTCPushTransaction(_):
-            return .requestPlain
-            
         case .GetLibraAccountBalance(let address):
             return .requestParameters(parameters: ["jsonrpc":"2.0",
                                                    "method":"get_account",

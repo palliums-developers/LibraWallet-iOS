@@ -131,7 +131,7 @@ class BTCTransferModel: NSObject {
     }
     private func getUnspentUTXO(address: String, semaphore: DispatchSemaphore) {
         semaphore.wait()
-        let request = mainProvide.request(.TrezorBTCUnspentUTXO(address)) {[weak self](result) in
+        let request = BTCModuleProvide.request(.TrezorBTCUnspentUTXO(address)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -234,7 +234,7 @@ class BTCTransferModel: NSObject {
         self.sendBTCTransaction(signature: result!.serialized().toHexString())
     }
     private func sendBTCTransaction(signature: String) {
-        let request = mainProvide.request(.TrezorBTCPushTransaction(signature)) {[weak self](result) in
+        let request = BTCModuleProvide.request(.TrezorBTCPushTransaction(signature)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {

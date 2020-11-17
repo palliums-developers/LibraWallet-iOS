@@ -12,6 +12,7 @@
 		361051422563ABD7008407F5 /* BankModuleNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361051412563ABD7008407F5 /* BankModuleNetworkManager.swift */; };
 		361051472563BDC7008407F5 /* MarketModuleNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361051462563BDC7008407F5 /* MarketModuleNetworkManager.swift */; };
 		361051542563C61E008407F5 /* MappingModuleNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361051532563C61E008407F5 /* MappingModuleNetworkManager.swift */; };
+		361051822563CAA0008407F5 /* BTCModuleNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361051812563CAA0008407F5 /* BTCModuleNetworkManager.swift */; };
 		36178322243F1455003C6588 /* LibraMultiHDWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36178321243F1455003C6588 /* LibraMultiHDWallet.swift */; };
 		3617835B24440BDB003C6588 /* ViolasUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3617835A24440BDB003C6588 /* ViolasUtils.swift */; };
 		3617835D24440C1E003C6588 /* ViolasWordList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3617835C24440C1E003C6588 /* ViolasWordList.swift */; };
@@ -450,6 +451,7 @@
 		361051412563ABD7008407F5 /* BankModuleNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankModuleNetworkManager.swift; sourceTree = "<group>"; };
 		361051462563BDC7008407F5 /* MarketModuleNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketModuleNetworkManager.swift; sourceTree = "<group>"; };
 		361051532563C61E008407F5 /* MappingModuleNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MappingModuleNetworkManager.swift; sourceTree = "<group>"; };
+		361051812563CAA0008407F5 /* BTCModuleNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTCModuleNetworkManager.swift; sourceTree = "<group>"; };
 		36178321243F1455003C6588 /* LibraMultiHDWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraMultiHDWallet.swift; sourceTree = "<group>"; };
 		3617835A24440BDB003C6588 /* ViolasUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasUtils.swift; sourceTree = "<group>"; };
 		3617835C24440C1E003C6588 /* ViolasWordList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasWordList.swift; sourceTree = "<group>"; };
@@ -2955,6 +2957,7 @@
 				361051412563ABD7008407F5 /* BankModuleNetworkManager.swift */,
 				361051462563BDC7008407F5 /* MarketModuleNetworkManager.swift */,
 				361051532563C61E008407F5 /* MappingModuleNetworkManager.swift */,
+				361051812563CAA0008407F5 /* BTCModuleNetworkManager.swift */,
 			);
 			path = Netwrok;
 			sourceTree = "<group>";
@@ -4730,6 +4733,7 @@
 				361BDAF224F8E7BE00C4C54E /* RepaymentTableViewManager.swift in Sources */,
 				3623AB8023FC0CB3004A01BF /* MappingTransactionsView.swift in Sources */,
 				361BDABC24F8E7BD00C4C54E /* LoanTableViewManager.swift in Sources */,
+				361051822563CAA0008407F5 /* BTCModuleNetworkManager.swift in Sources */,
 				361BDAE324F8E7BE00C4C54E /* LoanDetailDepositListView.swift in Sources */,
 				9D68D301237D260E005B7593 /* ViolasTransferModel.swift in Sources */,
 				36828CBF24B707B90085A165 /* AssetsPoolTransactionDetailViewController.swift in Sources */,
