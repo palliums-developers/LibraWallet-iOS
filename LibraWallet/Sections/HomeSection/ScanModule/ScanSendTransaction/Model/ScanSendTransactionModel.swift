@@ -169,7 +169,7 @@ extension ScanSendTransactionModel {
         }
     }
     private func getLibraSequenceNumber(sendAddress: String, semaphore: DispatchSemaphore) {
-        let request = mainProvide.request(.GetLibraAccountBalance(sendAddress)) {[weak self](result) in
+        let request = libraModuleProvide.request(.accountInfo(sendAddress)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -197,7 +197,7 @@ extension ScanSendTransactionModel {
         self.requests.append(request)
     }
     private func makeLibraTransaction(signature: String) {
-        let request = mainProvide.request(.SendLibraTransaction(signature)) {[weak self](result) in
+        let request = libraModuleProvide.request(.sendTransaction(signature)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {

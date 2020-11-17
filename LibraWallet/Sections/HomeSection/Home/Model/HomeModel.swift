@@ -212,7 +212,7 @@ class HomeModel: NSObject {
         self.requests.append(request)
     }
     func getLibraBalance(tokenID: Int64, address: String, authKey: String, tokens: [Token]) {
-        let request = mainProvide.request(.GetLibraAccountBalance(address)) {[weak self](result) in
+        let request = libraModuleProvide.request(.accountInfo(address)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -370,7 +370,7 @@ class HomeModel: NSObject {
         self.requests.append(request)
     }
     func getLibraPrice(address: String, group: DispatchGroup) {
-        let request = mainProvide.request(.GetLibraPrice(address)) {[weak self](result) in
+        let request = libraModuleProvide.request(.price(address)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -456,7 +456,7 @@ class HomeModel: NSObject {
 }
 extension HomeModel {
     func activeLibraAccount(tokenID: Int64, address: String, authKey: String, tokens: [Token]) {
-        let request = mainProvide.request(.ActiveLibraAccount(authKey)) {[weak self](result) in
+        let request = libraModuleProvide.request(.ActiveLibraAccount(authKey)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {

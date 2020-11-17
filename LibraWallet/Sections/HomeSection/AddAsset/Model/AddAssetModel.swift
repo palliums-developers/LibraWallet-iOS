@@ -196,7 +196,7 @@ class AddAssetModel: NSObject {
     }
     private func getLibraTokens(group: DispatchGroup) {
         group.enter()
-        let request = mainProvide.request(.GetLibraTokenList) {[weak self](result) in
+        let request = libraModuleProvide.request(.currencyList) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -238,7 +238,7 @@ class AddAssetModel: NSObject {
     }
     private func getLibraAccountInfo(address: String, group: DispatchGroup) {
         group.enter()
-        let request = mainProvide.request(.GetLibraAccountBalance(address)) {[weak self](result) in
+        let request = libraModuleProvide.request(.accountInfo(address)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -392,7 +392,7 @@ class AddAssetModel: NSObject {
         self.requests.append(request)
     }
     private func getLibraSequenceNumber(sendAddress: String, mnemonic: [String], type: WalletType, module: String) {
-        let request = mainProvide.request(.GetLibraAccountBalance(sendAddress)) {[weak self](result) in
+        let request = libraModuleProvide.request(.accountInfo(sendAddress)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -474,7 +474,7 @@ class AddAssetModel: NSObject {
         self.requests.append(request)
     }
     private func makeLibraTransaction(signature: String) {
-        let request = mainProvide.request(.SendLibraTransaction(signature)) {[weak self](result) in
+        let request = libraModuleProvide.request(.sendTransaction(signature)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {

@@ -336,7 +336,7 @@ extension ExchangeModel {
         self.requests.append(request)
     }
     func getLibraBalance(address: String, group: DispatchGroup) {
-        let request = mainProvide.request(.GetLibraAccountBalance(address)) {[weak self](result) in
+        let request = libraModuleProvide.request(.accountInfo(address)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -985,7 +985,7 @@ extension ExchangeModel {
         }
     }
     private func getLibraSequenceNumber(sendAddress: String, semaphore: DispatchSemaphore) {
-        let request = mainProvide.request(.GetLibraAccountBalance(sendAddress)) {[weak self](result) in
+        let request = libraModuleProvide.request(.accountInfo(sendAddress)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -1013,7 +1013,7 @@ extension ExchangeModel {
         self.requests.append(request)
     }
     private func makeLibraTransaction(signature: String, type: String, semaphore: DispatchSemaphore? = nil) {
-        let request = mainProvide.request(.SendLibraTransaction(signature)) {[weak self](result) in
+        let request = libraModuleProvide.request(.sendTransaction(signature)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {

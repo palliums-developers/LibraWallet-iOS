@@ -288,7 +288,7 @@ class WalletTransactionsModel: NSObject {
     ///   - pageSize: 数量
     func getLibraTransactionHistory(address: String, module: String, requestType: String, page: Int, pageSize: Int, requestStatus: Int) {
         let type = requestStatus == 0 ? "LibraTransactionHistoryOrigin":"LibraTransactionHistoryMore"
-        let request = mainProvide.request(.GetLibraTransactions(address, module, requestType, page, pageSize)) {[weak self](result) in
+        let request = libraModuleProvide.request(.accountTransactions(address, module, requestType, page, pageSize)) {[weak self](result) in
                 switch  result {
                 case let .success(response):
                     do {
