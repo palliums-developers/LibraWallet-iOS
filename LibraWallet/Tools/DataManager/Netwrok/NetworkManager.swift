@@ -21,28 +21,9 @@ enum mainRequest {
     case SendLibraTransaction(String)
     /// 获取Libra稳定币列表
     case GetLibraTokenList
-    
-    /// 获取Violas账户余额（钱包地址,代币地址（逗号分隔））
-    case GetViolasAccountBalance(String, String)
-    /// 获取Violas账户Sequence Number
-    case GetViolasAccountSequenceNumber(String)
-    /// 获取Violas账户交易记录（地址、币名、请求类型（空：全部；0：转出；1：转入）、偏移量、数量）
-    case GetViolasTransactions(String, String, String, Int, Int)
-    /// 发送Violas交易
-    case SendViolasTransaction(String)
-    /// 获取代币
-    case GetViolasTokenList
-    
-    /// 获取Violas账户信息
-    case GetViolasAccountInfo(String)
     /// 获取BTC价格
     case GetBTCPrice
-    /// 获取Violas链资产价格（地址）
-    case GetViolasPrice(String)
-    /// 获取Libra链资产价格（地址）
     case GetLibraPrice(String)
-    /// 激活Violas（临时）
-    case ActiveViolasAccount(String)
     /// 激活Libra（临时）
     case ActiveLibraAccount(String)
 }
@@ -52,32 +33,12 @@ extension mainRequest:TargetType {
         case .GetLibraTransactions(_, _, _, _, _),
              .GetLibraTokenList,
              .GetBTCPrice,
-             .GetViolasPrice(_),
              .GetLibraPrice(_),
-             .ActiveLibraAccount(_),
-             .ActiveViolasAccount(_):
+             .ActiveLibraAccount(_):
             if PUBLISH_VERSION == true {
                 return URL(string:"https://api.violas.io")!
             } else {
                 return URL(string:"https://api4.violas.io")!
-            }
-        case .GetViolasAccountBalance(_, _),
-             .GetViolasAccountSequenceNumber(_),
-             .GetViolasTransactions(_, _, _, _, _),
-             .GetViolasTokenList:
-            if PUBLISH_VERSION == true {
-                return URL(string:"https://api.violas.io")!
-            } else {
-                return URL(string:"https://api4.violas.io")!
-            }
-        case .GetViolasAccountInfo(_),
-             .SendViolasTransaction(_):
-            if PUBLISH_VERSION == true {
-                //对外
-                return URL(string:"https://ac.testnet.violas.io")!
-            } else {
-                //对内
-                return URL(string:"https://ab.testnet.violas.io")!
             }
         case .GetLibraAccountBalance(_),
              .SendLibraTransaction(_):
@@ -94,47 +55,23 @@ extension mainRequest:TargetType {
             return ""
         case .GetLibraTokenList:
             return "/1.0/libra/currency"
-        case .GetViolasAccountBalance(_, _):
-            return "/1.0/violas/balance"
-        case .GetViolasAccountSequenceNumber(_):
-            return "/1.0/violas/seqnum"
-        case .GetViolasTransactions(_, _, _, _, _):
-            return "/1.0/violas/transaction"
-        case .SendViolasTransaction(_):
-            return ""
-        case .GetViolasTokenList:
-            return "/1.0/violas/currency"
-        case .GetViolasAccountInfo(_):
-            return ""
         case .GetBTCPrice:
             return "/1.0/violas/value/btc"
-        case .GetViolasPrice(_):
-            return "/1.0/violas/value/violas"
         case .GetLibraPrice(_):
             return "/1.0/violas/value/libra"
         case .ActiveLibraAccount(_):
             return "/1.0/libra/mint"
-        case .ActiveViolasAccount(_):
-            return "/1.0/violas/mint"
         }
     }
     var method: Moya.Method {
         switch self {
         case .SendLibraTransaction(_),
-             .SendViolasTransaction(_),
-             .GetLibraAccountBalance(_),
-             .GetViolasAccountInfo(_):
+             .GetLibraAccountBalance(_):
             return .post
         case .GetLibraTransactions(_, _, _, _, _),
-             .GetViolasAccountBalance(_, _),
-             .GetViolasAccountSequenceNumber(_),
-             .GetViolasTransactions(_, _, _, _, _),
-             .GetViolasTokenList,
              .GetLibraTokenList,
              .GetBTCPrice,
-             .GetViolasPrice(_),
              .GetLibraPrice(_),
-             .ActiveViolasAccount(_),
              .ActiveLibraAccount(_):
             return .get
         }
@@ -173,59 +110,12 @@ extension mainRequest:TargetType {
                                       encoding: JSONEncoding.default)
         case .GetLibraTokenList:
             return .requestPlain
-        case .GetViolasAccountBalance(let address, let modules):
-            return .requestParameters(parameters: ["addr": address,
-                                                   "modu": modules],
-                                      encoding: URLEncoding.queryString)
-        case .GetViolasAccountSequenceNumber(let address):
-            return .requestParameters(parameters: ["addr": address],
-                                      encoding: URLEncoding.queryString)
-        case .GetViolasTransactions(let address, let currency, let type, let offset, let limit):
-            //            if type.isEmpty == true {
-            //                return .requestParameters(parameters: ["addr": address,
-            //                                                       "currency": currency,
-            //                                                       "limit": limit,
-            //                                                       "offset":offset],
-            //                                          encoding: URLEncoding.queryString)
-            //            } else {
-            return .requestParameters(parameters: ["addr": address,
-                                                   "currency": currency,
-                                                   "flows": type,
-                                                   "limit": limit,
-                                                   "offset":offset],
-                                      encoding: URLEncoding.queryString)
-        //            }
-        case .SendViolasTransaction(let signature):
-            return .requestParameters(parameters: ["jsonrpc":"2.0",
-                                                   "method":"submit",
-                                                   "id":"123",
-                                                   "params":["\(signature)"]],
-                                      encoding: JSONEncoding.default)
-        case .GetViolasTokenList:
-            return .requestPlain
-        case .GetViolasAccountInfo(let address):
-            return .requestParameters(parameters: ["jsonrpc":"2.0",
-                                                   "method":"get_account",
-                                                   "id":"123",
-                                                   "params":["\(address)"]],
-                                      encoding: JSONEncoding.default)
         case .GetBTCPrice:
             return .requestPlain
-        case .GetViolasPrice(let address):
-            return .requestParameters(parameters: ["address":address],
-                                      encoding: URLEncoding.queryString)
         case .GetLibraPrice(let address):
             return .requestParameters(parameters: ["address":address],
                                       encoding: URLEncoding.queryString)
         case .ActiveLibraAccount(let authKey):
-            let index = authKey.index(authKey.startIndex, offsetBy: 32)
-            let address = authKey.suffix(from: index)
-            let authPrefix = authKey.prefix(upTo: index)
-            return .requestParameters(parameters: ["address": address,
-                                                   "auth_key_perfix": authPrefix,
-                                                   "currency":"LBR"],
-                                      encoding: URLEncoding.queryString)
-        case .ActiveViolasAccount(let authKey):
             let index = authKey.index(authKey.startIndex, offsetBy: 32)
             let address = authKey.suffix(from: index)
             let authPrefix = authKey.prefix(upTo: index)

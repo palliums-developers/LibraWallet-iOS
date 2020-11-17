@@ -51,7 +51,7 @@ class ScanSwapModel: NSObject {
         }
     }
     private func getViolasSequenceNumber(sendAddress: String, semaphore: DispatchSemaphore) {
-        let request = mainProvide.request(.GetViolasAccountInfo(sendAddress)) {[weak self](result) in
+        let request = violasModuleProvide.request(.accountInfo(sendAddress)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -92,7 +92,7 @@ class ScanSwapModel: NSObject {
         self.requests.append(request)
     }
     private func makeViolasTransaction(signature: String) {
-        let request = mainProvide.request(.SendViolasTransaction(signature)) {[weak self](result) in
+        let request = violasModuleProvide.request(.sendTransaction(signature)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {

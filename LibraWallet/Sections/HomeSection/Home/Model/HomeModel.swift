@@ -249,7 +249,7 @@ class HomeModel: NSObject {
         self.requests.append(request)
     }
     func getViolasBalance(tokenID: Int64, address: String, authKey: String, tokens: [Token]) {
-        let request = mainProvide.request(.GetViolasAccountInfo(address)) {[weak self](result) in
+        let request = violasModuleProvide.request(.accountInfo(address)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -328,7 +328,7 @@ class HomeModel: NSObject {
         self.requests.append(request)
     }
     func getViolasPrice(address: String, group: DispatchGroup) {
-        let request = mainProvide.request(.GetViolasPrice(address)) {[weak self](result) in
+        let request = violasModuleProvide.request(.price(address)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -490,7 +490,7 @@ extension HomeModel {
         self.requests.append(request)
     }
     func activeViolasAccount(tokenID: Int64, address: String, authKey: String, tokens: [Token]) {
-        let request = mainProvide.request(.ActiveViolasAccount(authKey)) {[weak self](result) in
+        let request = violasModuleProvide.request(.activeAccount(authKey)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {

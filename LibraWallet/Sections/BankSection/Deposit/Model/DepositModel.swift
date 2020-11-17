@@ -153,7 +153,7 @@ extension DepositModel {
         self.requests.append(request)
     }
     private func getViolasBalance(address: String, semaphore: DispatchSemaphore) {
-        let request = mainProvide.request(.GetViolasAccountInfo(address)) {[weak self](result) in
+        let request = violasModuleProvide.request(.accountInfo(address)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -227,7 +227,7 @@ extension DepositModel {
         }
     }
     private func getViolasSequenceNumber(sendAddress: String, semaphore: DispatchSemaphore) {
-        let request = mainProvide.request(.GetViolasAccountInfo(sendAddress)) {[weak self](result) in
+        let request = violasModuleProvide.request(.accountInfo(sendAddress)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {

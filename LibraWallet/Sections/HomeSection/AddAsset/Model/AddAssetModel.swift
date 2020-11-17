@@ -118,7 +118,7 @@ class AddAssetModel: NSObject {
     }
     private func getViolasTokens(group: DispatchGroup) {
         group.enter()
-        let request = mainProvide.request(.GetViolasTokenList) {[weak self](result) in
+        let request = violasModuleProvide.request(.currencyList) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -161,7 +161,7 @@ class AddAssetModel: NSObject {
     }
     func getViolasAccountInfo(address: String, group: DispatchGroup) {
         group.enter()
-        let request = mainProvide.request(.GetViolasAccountInfo(address)) {[weak self](result) in
+        let request = violasModuleProvide.request(.accountInfo(address)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -364,7 +364,7 @@ class AddAssetModel: NSObject {
         }
     }
     private func getViolasSequenceNumber(sendAddress: String, mnemonic: [String], type: WalletType, module: String) {
-        let request = mainProvide.request(.GetViolasAccountInfo(sendAddress)) {[weak self](result) in
+        let request = violasModuleProvide.request(.accountInfo(sendAddress)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -439,7 +439,7 @@ class AddAssetModel: NSObject {
         }
     }
     private func makeViolasTransaction(signature: String) {
-        let request = mainProvide.request(.SendViolasTransaction(signature)) {[weak self](result) in
+        let request = violasModuleProvide.request(.sendTransaction(signature)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {

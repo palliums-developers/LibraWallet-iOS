@@ -13,7 +13,7 @@ class ScanSendRawTransactionModel: NSObject {
     @objc dynamic var dataDic: NSMutableDictionary = [:]
     private var encryptData: String?
     func sendTransaction(tx: String) {
-        let request = mainProvide.request(.SendViolasTransaction(tx)) {[weak self](result) in
+        let request = violasModuleProvide.request(.sendTransaction(tx)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {

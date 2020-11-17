@@ -233,7 +233,7 @@ class WalletTransactionsModel: NSObject {
     ///   - pageSize: 数量
     func getViolasTransactions(address: String, module: String, requestType: String, page: Int, pageSize: Int, requestStatus: Int) {
         let type = requestStatus == 0 ? "ViolasTransactionsOrigin":"ViolasTransactionsMore"
-        let request = mainProvide.request(.GetViolasTransactions(address, module, requestType, page, pageSize)) {[weak self](result) in
+        let request = violasModuleProvide.request(.accountTransactions(address, module, requestType, page, pageSize)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
