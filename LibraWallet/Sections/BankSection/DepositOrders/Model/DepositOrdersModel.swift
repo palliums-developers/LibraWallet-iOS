@@ -67,7 +67,7 @@ class DepositOrdersModel: NSObject {
     }
     func getDepositTransactions(address: String, page: Int, limit: Int, requestStatus: Int) {
         let type = requestStatus == 0 ? "GetBankDepositTransactionsOrigin":"GetBankDepositTransactionsMore"
-        let request = mainProvide.request(.depositTransactions(address, page, limit)) {[weak self](result) in
+        let request = bankModuleProvide.request(.depositTransactions(address, page, limit)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -112,7 +112,7 @@ class DepositOrdersModel: NSObject {
 // MARK: -获取提款详情
 extension DepositOrdersModel {
     func getDepositItemWithdrawDetail(address: String, itemID: String) {
-        let request = mainProvide.request(.depositWithdrawDetail(address, itemID)) {[weak self](result) in
+        let request = bankModuleProvide.request(.depositWithdrawDetail(address, itemID)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -273,7 +273,7 @@ extension DepositOrdersModel {
 //        self.requests.append(request)
 //    }
     private func makeViolasTransaction(address: String, productID: String, amount: UInt64, signature: String, type: String, semaphore: DispatchSemaphore? = nil) {
-        let request = mainProvide.request(.withdrawTransactiondSubmit(address, productID, amount, signature)) {[weak self](result) in
+        let request = bankModuleProvide.request(.withdrawTransactiondSubmit(address, productID, amount, signature)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {

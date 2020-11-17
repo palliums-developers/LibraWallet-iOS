@@ -21,7 +21,7 @@ class LoanDetailDepositListModel: NSObject {
     }
     func getLoanOrderDetailDepositList(address: String, orderID: String, page: Int, limit: Int, requestStatus: Int) {
          let type = requestStatus == 0 ? "GetBankLoanOrderDetailDepositListOrigin":"GetBankLoanOrderDetailDepositListMore"
-         let request = mainProvide.request(.loanTransactionDetail(address, orderID, 1, page, limit)) {[weak self](result) in
+         let request = bankModuleProvide.request(.loanTransactionDetail(address, orderID, 1, page, limit)) {[weak self](result) in
              switch  result {
              case let .success(response):
                  do {

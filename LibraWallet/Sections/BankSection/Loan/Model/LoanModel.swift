@@ -106,7 +106,7 @@ extension LoanModel {
         }
     }
     private func getLoanItemDetail(itemID: String, address: String, semaphore: DispatchSemaphore) {
-        let request = mainProvide.request(.loanItemDetail(itemID, address)) {[weak self](result) in
+        let request = bankModuleProvide.request(.loanItemDetail(itemID, address)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -347,7 +347,7 @@ extension LoanModel {
         self.requests.append(request)
     }
     private func makeViolasTransaction(address: String, productID: String, amount: UInt64, signature: String, type: String, semaphore: DispatchSemaphore? = nil) {
-        let request = mainProvide.request(.loanTransactiondSubmit(address, productID, amount, signature)) {[weak self](result) in
+        let request = bankModuleProvide.request(.loanTransactiondSubmit(address, productID, amount, signature)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {

@@ -112,7 +112,7 @@ extension DepositModel {
         }
     }
     private func getDepositItemDetail(itemID: String, address: String, semaphore: DispatchSemaphore) {
-        let request = mainProvide.request(.depositItemDetail(itemID, address)) {[weak self](result) in
+        let request = bankModuleProvide.request(.depositItemDetail(itemID, address)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -316,7 +316,7 @@ extension DepositModel {
 //        self.requests.append(request)
 //    }
     private func makeViolasTransaction(address: String, productID: String, amount: UInt64, signature: String, type: String, semaphore: DispatchSemaphore? = nil) {
-        let request = mainProvide.request(.depositTransactiondSubmit(address, productID, amount, signature)) {[weak self](result) in
+        let request = bankModuleProvide.request(.depositTransactiondSubmit(address, productID, amount, signature)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {

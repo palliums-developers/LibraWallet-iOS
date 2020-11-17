@@ -39,7 +39,7 @@ class DepositListModel: NSObject {
     }
     func getDepositList(address: String, currency: String, status: Int, page: Int, limit: Int, requestStatus: Int) {
         let type = requestStatus == 0 ? "GetBankDepositListOrigin":"GetBankDepositListMore"
-        let request = mainProvide.request(.depositList(address, currency, status, page, limit)) {[weak self](result) in
+        let request = bankModuleProvide.request(.depositList(address, currency, status, page, limit)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {

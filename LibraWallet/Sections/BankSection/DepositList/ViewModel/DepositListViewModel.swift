@@ -9,6 +9,8 @@
 import UIKit
 import MJRefresh
 import StatefulViewController
+import DropDownMenuKit
+
 enum ViewRequestAnimation {
     case showToast
     case hideToast
@@ -66,6 +68,17 @@ class DepositListViewModel: NSObject {
     /// 请求币种
     private var requestOrderCurrency: String = ""
     var supprotTokens: [BankDepositMarketDataModel]?
+    lazy var dropMenu: DropDownMenu = {
+        let menu = DropDownMenu(frame: self.view!.bounds)
+        menu.delegate = self
+        menu.container = view
+        return menu
+    }()
+}
+extension DepositListViewModel: DropDownMenuDelegate {
+    func didTapInDropDownMenuBackground(_ menu: DropDownMenu) {
+        dropMenu.hide()
+    }
 }
 extension DepositListViewModel: StatefulViewController {
     var backingView: UIView {

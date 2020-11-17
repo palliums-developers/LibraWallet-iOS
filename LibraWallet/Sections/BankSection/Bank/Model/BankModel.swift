@@ -36,7 +36,7 @@ class BankModel: NSObject {
         print("BankModel销毁了")
     }
     func getBankAccountInfo(address: String) {
-        let request = mainProvide.request(.bankAccountInfo(address)) {[weak self](result) in
+        let request = bankModuleProvide.request(.bankAccountInfo(address)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {

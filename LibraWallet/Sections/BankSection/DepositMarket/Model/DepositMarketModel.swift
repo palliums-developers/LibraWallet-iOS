@@ -34,7 +34,7 @@ class DepositMarketModel: NSObject {
     }
     func getDepositMarket(requestStatus: Int) {
         let type = requestStatus == 0 ? "GetBankDepositMarketOrigin":"GetBankDepositMarketMore"
-        let request = mainProvide.request(.depositMarket) {[weak self](result) in
+        let request = bankModuleProvide.request(.depositMarket) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {

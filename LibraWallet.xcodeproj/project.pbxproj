@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		01694EF4D3F368EB6A685132 /* Pods_LibraWalletUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7658E656E8E8976B3E75152 /* Pods_LibraWalletUITests.framework */; };
 		1A8251333880EBAB4D609292 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		361051422563ABD7008407F5 /* BankModuleNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361051412563ABD7008407F5 /* BankModuleNetworkManager.swift */; };
 		36178322243F1455003C6588 /* LibraMultiHDWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36178321243F1455003C6588 /* LibraMultiHDWallet.swift */; };
 		3617835B24440BDB003C6588 /* ViolasUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3617835A24440BDB003C6588 /* ViolasUtils.swift */; };
 		3617835D24440C1E003C6588 /* ViolasWordList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3617835C24440C1E003C6588 /* ViolasWordList.swift */; };
@@ -444,6 +445,7 @@
 
 /* Begin PBXFileReference section */
 		3319F603C808C70BDFCCC240 /* Pods_LibraWallet_Publish.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LibraWallet_Publish.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		361051412563ABD7008407F5 /* BankModuleNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankModuleNetworkManager.swift; sourceTree = "<group>"; };
 		36178321243F1455003C6588 /* LibraMultiHDWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraMultiHDWallet.swift; sourceTree = "<group>"; };
 		3617835A24440BDB003C6588 /* ViolasUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasUtils.swift; sourceTree = "<group>"; };
 		3617835C24440C1E003C6588 /* ViolasWordList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasWordList.swift; sourceTree = "<group>"; };
@@ -2946,6 +2948,7 @@
 			isa = PBXGroup;
 			children = (
 				9D08AD362330BA75004687E8 /* NetworkManager.swift */,
+				361051412563ABD7008407F5 /* BankModuleNetworkManager.swift */,
 			);
 			path = Netwrok;
 			sourceTree = "<group>";
@@ -4765,6 +4768,7 @@
 				9D5B4E72236BCBEE00F4D99C /* AddAssetViewController.swift in Sources */,
 				361BDAFC24F8E7BE00C4C54E /* DepositOrdersViewController.swift in Sources */,
 				9DC06A6E2373FEB900BCE1FE /* ViolasManager.swift in Sources */,
+				361051422563ABD7008407F5 /* BankModuleNetworkManager.swift in Sources */,
 				3646E50724D90A7800B8C20B /* ExchangeViewModel.swift in Sources */,
 				9D9B49E8236031F700354EF0 /* SettingTableViewCell.swift in Sources */,
 				3642EB7123CC654500C7B04A /* Serialization.swift in Sources */,
