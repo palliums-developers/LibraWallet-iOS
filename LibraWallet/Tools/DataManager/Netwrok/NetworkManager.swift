@@ -46,13 +46,6 @@ enum mainRequest {
     /// 获取代币
     case GetViolasTokenList
     
-    /// 查询映射信息
-    case GetMappingInfo
-    /// 获取当前已开启映射币（钱包地址）
-    case GetMappingTokenList(String)
-    /// 获取映射交易记录（地址、偏移量、数量）
-    case GetMappingTransactions(String, Int, Int)
-    
     /// 获取Violas账户信息
     case GetViolasAccountInfo(String)
     /// 获取BTC价格
@@ -65,13 +58,6 @@ enum mainRequest {
     case ActiveViolasAccount(String)
     /// 激活Libra（临时）
     case ActiveLibraAccount(String)
-    
-    /// 获取BTC映射交易（临时）
-    case BTCCrossChainTransactions(String, Int, Int)
-    /// 获取Violas映射交易（临时）
-    case ViolasCrossChainTransactions(String, Int, Int)
-    /// 获取Libra映射交易（临时）
-    case LibraCrossChainTransactions(String, Int, Int)
 }
 extension mainRequest:TargetType {
     var baseURL: URL {
@@ -103,10 +89,7 @@ extension mainRequest:TargetType {
         case .GetViolasAccountBalance(_, _),
              .GetViolasAccountSequenceNumber(_),
              .GetViolasTransactions(_, _, _, _, _),
-             .GetViolasTokenList,
-             .GetMappingInfo,
-             .GetMappingTokenList(_),
-             .GetMappingTransactions(_, _, _):
+             .GetViolasTokenList:
             if PUBLISH_VERSION == true {
                 return URL(string:"https://api.violas.io")!
             } else {
@@ -124,10 +107,6 @@ extension mainRequest:TargetType {
         case .GetLibraAccountBalance(_),
              .SendLibraTransaction(_):
             return URL(string:"https://client.testnet.libra.org")!
-        case .BTCCrossChainTransactions(_, _, _),
-             .ViolasCrossChainTransactions(_, _, _),
-             .LibraCrossChainTransactions(_, _, _):
-            return URL(string:"http://18.136.139.151")!
         }
     }
     var path: String {
@@ -167,12 +146,6 @@ extension mainRequest:TargetType {
             return ""
         case .GetViolasTokenList:
             return "/1.0/violas/currency"
-        case .GetMappingInfo:
-            return "/1.0/mapping/address/info"
-        case .GetMappingTokenList(_):
-            return "/1.0/crosschain/modules"
-        case .GetMappingTransactions(_, _, _):
-            return "/1.0/mapping/transaction"
         case .GetViolasAccountInfo(_):
             return ""
         case .GetBTCPrice:
@@ -185,12 +158,6 @@ extension mainRequest:TargetType {
             return "/1.0/libra/mint"
         case .ActiveViolasAccount(_):
             return "/1.0/violas/mint"
-        case .BTCCrossChainTransactions(_, _, _):
-            return "/"
-        case .ViolasCrossChainTransactions(_, _, _):
-            return "/"
-        case .LibraCrossChainTransactions(_, _, _):
-            return "/"
         }
     }
     var method: Moya.Method {
@@ -214,19 +181,13 @@ extension mainRequest:TargetType {
              .GetViolasAccountBalance(_, _),
              .GetViolasAccountSequenceNumber(_),
              .GetViolasTransactions(_, _, _, _, _),
-             .GetMappingInfo,
-             .GetMappingTokenList(_),
-             .GetMappingTransactions(_, _, _),
              .GetViolasTokenList,
              .GetLibraTokenList,
              .GetBTCPrice,
              .GetViolasPrice(_),
              .GetLibraPrice(_),
              .ActiveViolasAccount(_),
-             .ActiveLibraAccount(_),
-             .BTCCrossChainTransactions(_, _, _),
-             .ViolasCrossChainTransactions(_, _, _),
-             .LibraCrossChainTransactions(_, _, _):
+             .ActiveLibraAccount(_):
             return .get
         }
     }
@@ -318,16 +279,6 @@ extension mainRequest:TargetType {
                                       encoding: JSONEncoding.default)
         case .GetViolasTokenList:
             return .requestPlain
-        case .GetMappingInfo:
-            return .requestPlain
-        case .GetMappingTokenList(let walletAddress):
-            return .requestParameters(parameters: ["address": walletAddress],
-                                      encoding: URLEncoding.queryString)
-        case .GetMappingTransactions(let walletAddress, let offset, let limit):
-            return .requestParameters(parameters: ["address": walletAddress,
-                                                   "limit": limit,
-                                                   "offset":offset],
-                                      encoding: URLEncoding.queryString)
         case .GetViolasAccountInfo(let address):
             return .requestParameters(parameters: ["jsonrpc":"2.0",
                                                    "method":"get_account",
@@ -357,27 +308,6 @@ extension mainRequest:TargetType {
             return .requestParameters(parameters: ["address": address,
                                                    "auth_key_perfix": authPrefix,
                                                    "currency":"LBR"],
-                                      encoding: URLEncoding.queryString)
-        case .BTCCrossChainTransactions(let address, let page, let offset):
-            return .requestParameters(parameters: ["opt":"record",
-                                                   "sender":address,
-                                                   "chain":"btc",
-                                                   "cursor":page,
-                                                   "limit":offset],
-                                      encoding: URLEncoding.queryString)
-        case .ViolasCrossChainTransactions(let address, let page, let offset):
-            return .requestParameters(parameters: ["opt":"record",
-                                                   "sender":address,
-                                                   "chain":"violas",
-                                                   "cursor":page,
-                                                   "limit":offset],
-                                      encoding: URLEncoding.queryString)
-        case .LibraCrossChainTransactions(let address, let page, let offset):
-            return .requestParameters(parameters: ["opt":"record",
-                                                   "sender":address,
-                                                   "chain":"libra",
-                                                   "cursor":page,
-                                                   "limit":offset],
                                       encoding: URLEncoding.queryString)
         }
     }

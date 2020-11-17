@@ -556,7 +556,7 @@ extension TokenMappingModel {
         }
     }
     private func getSupportMappingList(group: DispatchGroup) {
-        let request = mainProvide.request(.GetMappingInfo) {[weak self](result) in
+        let request = mappingModuleProvide.request(.mappingInfo) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {

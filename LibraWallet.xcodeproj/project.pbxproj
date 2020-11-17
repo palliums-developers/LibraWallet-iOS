@@ -11,6 +11,7 @@
 		1A8251333880EBAB4D609292 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		361051422563ABD7008407F5 /* BankModuleNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361051412563ABD7008407F5 /* BankModuleNetworkManager.swift */; };
 		361051472563BDC7008407F5 /* MarketModuleNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361051462563BDC7008407F5 /* MarketModuleNetworkManager.swift */; };
+		361051542563C61E008407F5 /* MappingModuleNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361051532563C61E008407F5 /* MappingModuleNetworkManager.swift */; };
 		36178322243F1455003C6588 /* LibraMultiHDWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36178321243F1455003C6588 /* LibraMultiHDWallet.swift */; };
 		3617835B24440BDB003C6588 /* ViolasUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3617835A24440BDB003C6588 /* ViolasUtils.swift */; };
 		3617835D24440C1E003C6588 /* ViolasWordList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3617835C24440C1E003C6588 /* ViolasWordList.swift */; };
@@ -448,6 +449,7 @@
 		3319F603C808C70BDFCCC240 /* Pods_LibraWallet_Publish.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LibraWallet_Publish.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		361051412563ABD7008407F5 /* BankModuleNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankModuleNetworkManager.swift; sourceTree = "<group>"; };
 		361051462563BDC7008407F5 /* MarketModuleNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketModuleNetworkManager.swift; sourceTree = "<group>"; };
+		361051532563C61E008407F5 /* MappingModuleNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MappingModuleNetworkManager.swift; sourceTree = "<group>"; };
 		36178321243F1455003C6588 /* LibraMultiHDWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraMultiHDWallet.swift; sourceTree = "<group>"; };
 		3617835A24440BDB003C6588 /* ViolasUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasUtils.swift; sourceTree = "<group>"; };
 		3617835C24440C1E003C6588 /* ViolasWordList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasWordList.swift; sourceTree = "<group>"; };
@@ -2952,6 +2954,7 @@
 				9D08AD362330BA75004687E8 /* NetworkManager.swift */,
 				361051412563ABD7008407F5 /* BankModuleNetworkManager.swift */,
 				361051462563BDC7008407F5 /* MarketModuleNetworkManager.swift */,
+				361051532563C61E008407F5 /* MappingModuleNetworkManager.swift */,
 			);
 			path = Netwrok;
 			sourceTree = "<group>";
@@ -4592,6 +4595,7 @@
 				36828CD324B736860085A165 /* MarketMineTableViewManager.swift in Sources */,
 				3682E5D924AC9DC0007CA2CA /* ScanPublishView.swift in Sources */,
 				36F826EF24BD9ED50007ACC3 /* ExchangeTransactionsViewController.swift in Sources */,
+				361051542563C61E008407F5 /* MappingModuleNetworkManager.swift in Sources */,
 				9DC4880D2320EDF8005FF254 /* LibraUtils.swift in Sources */,
 				9DC4886D232222CF005FF254 /* LBXScanViewStyle.swift in Sources */,
 				9DC8778F23796884006378C3 /* ToastView.swift in Sources */,

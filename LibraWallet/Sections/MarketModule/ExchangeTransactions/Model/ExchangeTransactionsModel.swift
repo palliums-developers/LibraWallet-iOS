@@ -109,7 +109,7 @@ class ExchangeTransactionsModel: NSObject {
     }
     func getBTCExchangeTransactions(address: String, page: Int, pageSize: Int, requestStatus: Int, group: DispatchGroup) {
         let type = requestStatus == 0 ? "BTCExchangeTransactionsOrigin":"BTCExchangeTransactionsMore"
-        let request = mainProvide.request(.BTCCrossChainTransactions(address, page, pageSize)) {[weak self](result) in
+        let request = mappingModuleProvide.request(.BTCCrossChainTransactions(address, page, pageSize)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -156,7 +156,7 @@ class ExchangeTransactionsModel: NSObject {
     }
     func getViolasExchangeTransactions(address: String, page: Int, pageSize: Int, requestStatus: Int, group: DispatchGroup) {
         let type = requestStatus == 0 ? "ViolasExchangeTransactionsOrigin":"ViolasExchangeTransactionsMore"
-        let request = mainProvide.request(.ViolasCrossChainTransactions(address, page, pageSize)) {[weak self](result) in
+        let request = mappingModuleProvide.request(.ViolasCrossChainTransactions(address, page, pageSize)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -205,7 +205,7 @@ class ExchangeTransactionsModel: NSObject {
     }
     func getLibraExchangeTransactions(address: String, page: Int, pageSize: Int, requestStatus: Int, group: DispatchGroup) {
         let type = requestStatus == 0 ? "LibraExchangeTransactionsOrigin":"LibraExchangeTransactionsMore"
-        let request = mainProvide.request(.LibraCrossChainTransactions(address, page, pageSize)) {[weak self](result) in
+        let request = mappingModuleProvide.request(.LibraCrossChainTransactions(address, page, pageSize)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {

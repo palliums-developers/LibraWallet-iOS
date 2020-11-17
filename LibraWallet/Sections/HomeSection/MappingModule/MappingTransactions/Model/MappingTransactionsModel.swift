@@ -31,7 +31,7 @@ class MappingTransactionsModel: NSObject {
     @objc dynamic var dataDic: NSMutableDictionary = [:]
     func getMappingTransactions(walletAddress: String, page: Int, pageSize: Int, requestStatus: Int) {
         let type = requestStatus == 0 ? "MappingTransactionsOrigin":"MappingTransactionsMore"
-        let request = mainProvide.request(.GetMappingTransactions(walletAddress, page, pageSize)) {[weak self](result) in
+        let request = mappingModuleProvide.request(.mappingTransactions(walletAddress, page, pageSize)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
