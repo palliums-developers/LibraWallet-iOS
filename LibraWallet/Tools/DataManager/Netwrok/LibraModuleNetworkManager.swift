@@ -15,7 +15,7 @@ let libraModuleProvide = MoyaProvider<LibraModuleRequest>()
 enum LibraModuleRequest {
     /// 获取Libra账户信息（可获取钱包开启币、Sequence Number、账户余额）（钱包地址）（链上操作）
     case accountInfo(String)
-    /// 发送Libra交易
+    /// 发送Libra交易（链上操作）
     case sendTransaction(String)
     /// 获取Libra账户交易记录（地址、币名、请求类型（空：全部；0：转出；1：转入）、offset、limit）
     case accountTransactions(String, String, String, Int, Int)
@@ -24,23 +24,23 @@ enum LibraModuleRequest {
     /// 获取Libra链资产价格（钱包地址）
     case price(String)
     /// 激活Libra（钱包地址）（临时）
-    case ActiveLibraAccount(String)
+    case activeAccount(String)
 }
 extension LibraModuleRequest: TargetType {
     var baseURL: URL {
         switch self {
+        case .accountInfo(_),
+             .sendTransaction(_):
+            return URL(string:"https://client.testnet.libra.org")!
         case .accountTransactions(_, _, _, _, _),
              .currencyList,
              .price(_),
-             .ActiveLibraAccount(_):
+             .activeAccount(_):
             if PUBLISH_VERSION == true {
                 return URL(string:"https://api.violas.io")!
             } else {
                 return URL(string:"https://api4.violas.io")!
             }
-        case .accountInfo(_),
-             .sendTransaction(_):
-            return URL(string:"https://client.testnet.libra.org")!
         }
     }
     var path: String {
@@ -55,7 +55,7 @@ extension LibraModuleRequest: TargetType {
             return "/1.0/libra/currency"
         case .price(_):
             return "/1.0/violas/value/libra"
-        case .ActiveLibraAccount(_):
+        case .activeAccount(_):
             return "/1.0/libra/mint"
         }
     }
@@ -67,7 +67,7 @@ extension LibraModuleRequest: TargetType {
         case .accountTransactions(_, _, _, _, _),
              .currencyList,
              .price(_),
-             .ActiveLibraAccount(_):
+             .activeAccount(_):
             return .get
         }
     }
@@ -106,7 +106,7 @@ extension LibraModuleRequest: TargetType {
         case .price(let address):
             return .requestParameters(parameters: ["address":address],
                                       encoding: URLEncoding.queryString)
-        case .ActiveLibraAccount(let authKey):
+        case .activeAccount(let authKey):
             let index = authKey.index(authKey.startIndex, offsetBy: 32)
             let address = authKey.suffix(from: index)
             let authPrefix = authKey.prefix(upTo: index)

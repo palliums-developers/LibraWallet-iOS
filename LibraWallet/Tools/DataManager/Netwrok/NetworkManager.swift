@@ -9,33 +9,21 @@
 import UIKit
 import Moya
 import Localize_Swift
-let mainProvide = MoyaProvider<mainRequest>()
+let mainProvide = MoyaProvider<MainRequest>()
 //let mainProvide = MoyaProvider<mainRequest>(stubClosure: MoyaProvider.immediatelyStub)
-enum mainRequest {
-    /// 获取BTC价格
-    case GetBTCPrice
+enum MainRequest {
 }
-extension mainRequest:TargetType {
+extension MainRequest:TargetType {
     var baseURL: URL {
         switch self {
-        case .GetBTCPrice:
-            if PUBLISH_VERSION == true {
-                return URL(string:"https://api.violas.io")!
-            } else {
-                return URL(string:"https://api4.violas.io")!
-            }
         }
     }
     var path: String {
         switch self {
-        case .GetBTCPrice:
-            return "/1.0/violas/value/btc"
         }
     }
     var method: Moya.Method {
         switch self {
-        case .GetBTCPrice:
-            return .get
         }
     }
     public var validate: Bool {
@@ -49,8 +37,6 @@ extension mainRequest:TargetType {
     }
     var task: Task {
         switch self {
-        case .GetBTCPrice:
-            return .requestPlain
         }
     }
     var headers: [String : String]? {

@@ -286,7 +286,7 @@ class HomeModel: NSObject {
         self.requests.append(request)
     }
     func getBTCPrice(address: String, group: DispatchGroup) {
-        let request = mainProvide.request(.GetBTCPrice) {[weak self](result) in
+        let request = BTCModuleProvide.request(.price) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -456,7 +456,7 @@ class HomeModel: NSObject {
 }
 extension HomeModel {
     func activeLibraAccount(tokenID: Int64, address: String, authKey: String, tokens: [Token]) {
-        let request = libraModuleProvide.request(.ActiveLibraAccount(authKey)) {[weak self](result) in
+        let request = libraModuleProvide.request(.activeAccount(authKey)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {

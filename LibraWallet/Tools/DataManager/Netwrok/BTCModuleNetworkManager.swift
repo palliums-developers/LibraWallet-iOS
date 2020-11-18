@@ -30,6 +30,9 @@ enum BTCModuleRequest {
     case TrezorBTCTransactions(String, Int, Int)
     /// Trezor发送BTC交易（交易签名）
     case TrezorBTCPushTransaction(String)
+    
+    /// 获取BTC价格
+    case price
 }
 extension BTCModuleRequest: TargetType {
     var baseURL: URL {
@@ -39,12 +42,19 @@ extension BTCModuleRequest: TargetType {
              .TChainBTCUnspentUTXO(_),
              .TChainBTCPushTransaction(_):
             return URL(string:"https://tchain.api.btc.com")!
-        //https://tbtc1.trezor.io/api/
+        
         case .TrezorBTCBalance(_),
              .TrezorBTCUnspentUTXO(_),
              .TrezorBTCTransactions(_, _, _),
              .TrezorBTCPushTransaction:
             return URL(string:"https://tbtc1.trezor.io/api")!
+            
+        case .price:
+            if PUBLISH_VERSION == true {
+                return URL(string:"https://api.violas.io")!
+            } else {
+                return URL(string:"https://api4.violas.io")!
+            }
         }
     }
     var path: String {
@@ -66,6 +76,9 @@ extension BTCModuleRequest: TargetType {
             return "/v2/address/\(address)"
         case .TrezorBTCPushTransaction(let signature):
             return "/v2/sendtx/\(signature)"
+            
+        case .price:
+            return "/1.0/violas/value/btc"
         }
     }
     var method: Moya.Method {
@@ -79,7 +92,9 @@ extension BTCModuleRequest: TargetType {
              .TrezorBTCBalance(_),
              .TrezorBTCUnspentUTXO(_),
              .TrezorBTCTransactions(_, _, _),
-             .TrezorBTCPushTransaction(_):
+             .TrezorBTCPushTransaction(_),
+             
+             .price:
             return .get
         }
     }
@@ -116,6 +131,9 @@ extension BTCModuleRequest: TargetType {
                                                    "details":"txs"],
                                       encoding: URLEncoding.queryString)
         case .TrezorBTCPushTransaction(_):
+            return .requestPlain
+            
+        case .price:
             return .requestPlain
         }
     }
