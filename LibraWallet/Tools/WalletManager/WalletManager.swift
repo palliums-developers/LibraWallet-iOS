@@ -390,7 +390,6 @@ extension WalletManager {
 // MARK: 删除钱包
 extension WalletManager {
     static func deleteWallet(password: String, createOrImport: Bool, step: Int) {
-        
         do {
             // 移除钱包包含所有币
             if DataBaseManager.DBManager.isExistTable(name: "Tokens") == true && step >= 1 {
@@ -536,8 +535,8 @@ extension WalletManager {
                                    tokenActiveState: true,
                                    tokenIcon: "btc_icon",
                                    tokenContract: "",
-                                   tokenModule: "",
-                                   tokenModuleName: "",
+                                   tokenModule: "BTC",
+                                   tokenModuleName: "BTC",
                                    tokenEnable: true,
                                    tokenPrice: "0.0")
             try DataBaseManager.DBManager.insertToken(token: token)
@@ -545,6 +544,50 @@ extension WalletManager {
             return wallet.address.description
         } catch {
             throw error
+        }
+    }
+}
+// MARK: 更新钱包余额
+extension WalletManager {
+    static func updateLibraTokensBalance(tokens: [Token], tokenBalances: [LibraBalanceModel]) {
+        // 刷新本地缓存数据
+        for model in tokenBalances {
+            for token in tokens {
+                if model.currency == token.tokenModule {
+                    do {
+                        try DataBaseManager.DBManager.updateTokenBalance(tokenID: token.tokenID, balance: model.amount ?? 0)
+                        print("刷新Libra Token数据状态: \(true),walletID = \(token.tokenID)")
+                    } catch {
+                        print("刷新Libra Token数据状态: \(false),walletID = \(token.tokenID)")
+                    }
+                    break
+                }
+            }
+        }
+    }
+    static func updateViolasTokensBalance(tokens: [Token], tokenBalances: [ViolasBalanceModel]) {
+        // 刷新本地缓存数据
+        for model in tokenBalances {
+            for token in tokens {
+                if model.currency == token.tokenModule {
+                    do {
+                        try DataBaseManager.DBManager.updateTokenBalance(tokenID: token.tokenID, balance: model.amount ?? 0)
+                        print("刷新Violas Token数据状态: \(true),walletID = \(token.tokenID)")
+                    } catch {
+                        print("刷新Violas Token数据状态: \(false),walletID = \(token.tokenID)")
+                    }
+                    break
+                }
+            }
+        }
+    }
+    static func updateBitcoinBalance(tokenID: Int64, balance: Int64) {
+        // 刷新本地缓存数据
+        do {
+            try DataBaseManager.DBManager.updateTokenBalance(tokenID: tokenID, balance: balance)
+            print("刷新BTC类型本地tokenID数据状态: \(true),walletID = \(tokenID)")
+        } catch {
+            print("刷新BTC类型本地tokenID数据状态: \(false),walletID = \(tokenID)")
         }
     }
 }

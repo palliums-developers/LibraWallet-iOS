@@ -398,7 +398,6 @@ extension HomeViewController {
                     //                    self?.detailView.model = tempData
                     self?.tableViewManager.dataModel = tempData
                     self?.detailView.tableView.reloadData()
-                    self?.detailView.headerView.assetsModel = "0.00"
                 }
             } else if type == "UpdateBTCBalance" {
                 if let tempData = dataDic.value(forKey: "data") as? TrezorBTCBalanceMainModel {
@@ -510,7 +509,7 @@ extension HomeViewController {
                     var tempTokens = [Token]()
                     var tempIndexPath = [IndexPath]()
                     for i in 0..<dataModels.count {
-                        guard dataModels[i].tokenType == .Violas else {
+                        guard dataModels[i].tokenType == .BTC else {
                             tempTokens.append(dataModels[i])
                             continue
                         }
