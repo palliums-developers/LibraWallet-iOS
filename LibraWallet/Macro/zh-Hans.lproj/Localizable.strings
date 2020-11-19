@@ -368,8 +368,10 @@ wallet_alert_feedback_content_empty = "请输入反馈内容";
 wallet_alert_feedback_contact_empty = "请输入联系方式";
 // 导入钱包
 wallet_import_wallet_success_title = "导入钱包成功";
+wallet_import_wallet_failed_title = "导入钱包失败";
 // 创建钱包
 wallet_create_wallet_success_title = "创建钱包成功";
+wallet_create_wallet_failed_title = "创建钱包失败";
 // 删除钱包
 wallet_delete_wallet_success_title = "删除钱包成功";
 wallet_alert_delete_wallet_title = "警告";

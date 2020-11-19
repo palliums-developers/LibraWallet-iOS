@@ -21,12 +21,7 @@ class ImportWalletViewController: BaseViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         detailView.snp.makeConstraints { (make) in
-            if #available(iOS 11.0, *) {
-                make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
-            } else {
-                make.top.bottom.equalTo(self.view)
-            }
-            make.left.right.equalTo(self.view)
+            make.top.bottom.left.right.equalTo(self.view.safeAreaLayoutGuide)
         }
     }
     deinit {
@@ -68,28 +63,6 @@ extension ImportWalletViewController: ImportWalletViewDelegate {
         let navi = UINavigationController.init(rootViewController: vc)
         self.present(navi, animated: true, completion: nil)
     }
-    
-//    func jumpToWalletManagerController() {
-//        if let vc = UIApplication.shared.keyWindow?.rootViewController, vc.children.isEmpty == false {
-//            if let mineControllers = vc.children.last?.children, mineControllers.isEmpty == false {
-//                for con in mineControllers {
-//                    if con.isKind(of: WalletManagerViewController.classForCoder()) {
-//                        (con as! WalletManagerViewController).needRefresh = true
-//                        self.navigationController?.popToViewController(con, animated: true)
-//                        return
-//                    }
-//                }
-//                self.navigationController?.popToRootViewController(animated: true)
-//            } else {
-//                self.navigationController?.popToRootViewController(animated: true)
-//            }
-//        } else {
-//            // 根控制器为空,重置App
-//            let tabbar = BaseTabBarViewController.init()
-//            UIApplication.shared.keyWindow?.rootViewController = tabbar
-//            UIApplication.shared.keyWindow?.makeKeyAndVisible()
-//        }
-//    }
 }
 //MARK: - 网络请求数据处理中心
 extension ImportWalletViewController {
@@ -120,17 +93,22 @@ extension ImportWalletViewController {
                 }
                 self?.detailView.hideToastActivity()
                 self?.detailView.toastView.hide(tag: 99)
+                self?.detailView.makeToast(localLanguage(keyString: "wallet_import_wallet_failed_title"))
                 return
             }
             if type == "ImportWallet" {
                 // 加载本地默认钱包
-                    self?.view.makeToast(localLanguage(keyString: "wallet_import_wallet_success_title"), duration: 0.5, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
-                        try? DataBaseManager.DBManager.getDefaultWallet()
+                self?.detailView.makeToast(localLanguage(keyString: "wallet_import_wallet_success_title"), duration: 0.5, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
+                    do {
+                        try DataBaseManager.DBManager.getDefaultWallet()
                         if let success = self?.successImportClosure {
                             success()
                         }
-                        self?.dismiss(animated: true, completion: nil)
-                    })
+                    } catch {
+                        self?.detailView.makeToast(localLanguage(keyString: "wallet_import_wallet_failed_title"))
+                    }
+                    self?.dismiss(animated: true, completion: nil)
+                })
             }
             self?.detailView.toastView.hide(tag: 99)
         })

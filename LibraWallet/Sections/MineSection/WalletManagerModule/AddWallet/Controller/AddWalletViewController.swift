@@ -98,6 +98,7 @@ extension AddWalletViewController {
                 }
                 self?.detailView.hideToastActivity()
                 self?.detailView.toastView.hide(tag: 99)
+                self?.detailView.makeToast(localLanguage(keyString: "wallet_create_wallet_failed_title"))
                 return
             }
             self?.detailView.toastView.hide(tag: 99)
@@ -105,18 +106,21 @@ extension AddWalletViewController {
                 // 加载本地默认钱包
                 if let tempData = dataDic.value(forKey: "data") as? [String] {
                     self?.view.makeToast(localLanguage(keyString: "wallet_create_wallet_success_title"), duration: 0.5, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
-                        try? DataBaseManager.DBManager.getDefaultWallet()
-                        if let success = self?.successCreateClosure {
-                            success()
+                        do {
+                            try DataBaseManager.DBManager.getDefaultWallet()
+                            if let success = self?.successCreateClosure {
+                                success()
+                            }
+                            DispatchQueue.main.async(execute: {
+                                let vc = BackupWarningViewController()
+                                vc.FirstInApp = true
+                                vc.tempWallet = tempData
+                                self?.navigationController?.pushViewController(vc, animated: true)
+                            })
+                        } catch {
+                            self?.detailView.makeToast(localLanguage(keyString: "wallet_create_wallet_failed_title"))
                         }
-                        DispatchQueue.main.async(execute: {
-                            let vc = BackupWarningViewController()
-                            vc.FirstInApp = true
-                            vc.tempWallet = tempData
-                            self?.navigationController?.pushViewController(vc, animated: true)
-                        })
                     })
-//                    print(tempData)
                 }
             }
         })

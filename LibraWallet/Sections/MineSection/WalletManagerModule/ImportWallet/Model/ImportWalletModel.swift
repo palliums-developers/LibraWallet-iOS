@@ -9,7 +9,7 @@
 import UIKit
 class ImportWalletModel: NSObject {
     @objc dynamic var dataDic: NSMutableDictionary = [:]
-    func importWallet(password: String, mnemonic: [String]){
+    func importWallet(password: String, mnemonic: [String]) {
         let quene = DispatchQueue.init(label: "createWalletQuene")
         quene.async {
             do {

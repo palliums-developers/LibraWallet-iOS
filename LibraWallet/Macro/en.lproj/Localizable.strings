@@ -369,8 +369,10 @@ wallet_alert_feedback_content_empty = "Input Feedback Info";
 wallet_alert_feedback_contact_empty = "Input Contact Info";
 // 导入钱包
 wallet_import_wallet_success_title = "Import Wallet Successful";
+wallet_import_wallet_failed_title = "Import Wallet Failed";
 // 创建钱包
 wallet_create_wallet_success_title = "Create Wallet Successful";
+wallet_create_wallet_failed_title = "Create Wallet Failed";
 // 删除钱包
 wallet_delete_wallet_success_title = "Delete Wallet Successful";
 wallet_alert_delete_wallet_title = "Warning";
