@@ -419,8 +419,12 @@ class HomeModel: NSObject {
         for model in tokenBalances {
             for token in tempTokens {
                 if model.currency == token.tokenModule {
-                    let result = DataBaseManager.DBManager.updateTokenBalance(tokenID: token.tokenID, balance: model.amount ?? 0)
-                    print("刷新\(type.description)类型本地tokenID数据状态: \(result),walletID = \(token.tokenID)")
+                    do {
+                        try DataBaseManager.DBManager.updateTokenBalance(tokenID: token.tokenID, balance: model.amount ?? 0)
+                        print("刷新\(type.description)类型本地tokenID数据状态: \(true),walletID = \(token.tokenID)")
+                    } catch {
+                        print("刷新\(type.description)类型本地tokenID数据状态: \(false),walletID = \(token.tokenID)")
+                    }
                     continue
                 }
             }
@@ -434,8 +438,12 @@ class HomeModel: NSObject {
         for model in tokenBalances {
             for token in tempTokens {
                 if model.currency == token.tokenModule {
-                    let result = DataBaseManager.DBManager.updateTokenBalance(tokenID: token.tokenID, balance: model.amount ?? 0)
-                    print("刷新\(type.description)类型本地tokenID数据状态: \(result),walletID = \(token.tokenID)")
+                    do {
+                        try DataBaseManager.DBManager.updateTokenBalance(tokenID: token.tokenID, balance: model.amount ?? 0)
+                        print("刷新\(type.description)类型本地tokenID数据状态: \(true),walletID = \(token.tokenID)")
+                    } catch {
+                        print("刷新\(type.description)类型本地tokenID数据状态: \(false),walletID = \(token.tokenID)")
+                    }
                     continue
                 }
             }
@@ -443,8 +451,12 @@ class HomeModel: NSObject {
     }
     func updateLocalBTCBalance(tokenID: Int64, balance: Int64) {
         // 刷新本地缓存数据
-        let result = DataBaseManager.DBManager.updateTokenBalance(tokenID: tokenID, balance: balance)
-        print("刷新BTC类型本地tokenID数据状态: \(result),walletID = \(tokenID)")
+        do {
+            try DataBaseManager.DBManager.updateTokenBalance(tokenID: tokenID, balance: balance)
+            print("刷新BTC类型本地tokenID数据状态: \(true),walletID = \(tokenID)")
+        } catch {
+            print("刷新BTC类型本地tokenID数据状态: \(false),walletID = \(tokenID)")
+        }
     }
     deinit {
         requests.forEach { cancellable in
@@ -525,7 +537,11 @@ extension HomeModel {
     }
     func updateLocalTokenActiveState(tokens: [Token], type: WalletType) {
         for token in tokens {
-            _ = DataBaseManager.DBManager.updateTokenActiveState(tokenID: token.tokenID, state: true)
+            do {
+                try DataBaseManager.DBManager.updateTokenActiveState(tokenID: token.tokenID, state: true)
+            } catch {
+                print(error)
+            }
         }
     }
 }

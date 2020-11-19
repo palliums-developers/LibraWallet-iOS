@@ -68,12 +68,12 @@ extension WalletConfigViewController: WalletConfigTableViewManagerDelegate {
                 if WalletManager.shared.walletBackupState == true {
                     let vc = BackupMnemonicController()
                     vc.JustShow = true
-                    vc.tempWallet = CreateWalletModel.init(password: "", mnemonic: mnemonic, wallet: nil)
+                    vc.tempWallet = mnemonic
                     self?.navigationController?.pushViewController(vc, animated: true)
                 } else {
                     let vc = BackupWarningViewController()
                     vc.FirstInApp = false
-                    vc.tempWallet = CreateWalletModel.init(password: "", mnemonic: mnemonic, wallet: nil)
+                    vc.tempWallet = mnemonic
                     self?.navigationController?.pushViewController(vc, animated: true)
                 }
             }) { [weak self]  (error) in
@@ -91,12 +91,12 @@ extension WalletConfigViewController: WalletConfigTableViewManagerDelegate {
             let alert = libraWalletTool.passowordCheckAlert(rootAddress: "", passwordContent: { (password) in
                 KeychainManager.addBiometric(password: password, success: { (result, error) in
                     if result == "Success" {
-                        let result = DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: WalletManager.shared.walletID!, state: button.isOn)
-                        guard result == true else {
+                        do {
+                            try DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: WalletManager.shared.walletID!, state: button.isOn)
+                            WalletManager.shared.changeWalletBiometricLock(state: button.isOn)
+                        } catch {
                             button.setOn(!button.isOn, animated: true)
-                            return
                         }
-                        WalletManager.shared.changeWalletBiometricLock(state: button.isOn)
                     } else {
                         self.detailView.makeToast(error, position: .center)
                         button.setOn(!button.isOn, animated: true)
@@ -120,11 +120,7 @@ extension WalletConfigViewController: WalletConfigTableViewManagerDelegate {
                 case .success( _):
                     do {
                         try KeychainManager.removeBiometric()
-                        let result = DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: WalletManager.shared.walletID!, state: button.isOn)
-                        guard result == true else {
-                            button.setOn(!button.isOn, animated: true)
-                            return
-                        }
+                        try DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: WalletManager.shared.walletID!, state: button.isOn)
                         WalletManager.shared.changeWalletBiometricLock(state: button.isOn)
                     } catch {
                         self.detailView.makeToast(error.localizedDescription, position: .center)
@@ -198,11 +194,8 @@ extension WalletConfigViewController: WalletConfigViewDelegate {
                 //                if let action = self?.actionClosure {
                 //                    action(.delete)
                 //                }
-                                DataBaseManager.DBManager.deleteHDWallet()
-                                DataBaseManager.DBManager.deleteAllTokens()
-                                WalletManager.shared.deleteWallet()
-                                setIdentityWalletState(show: false)
-                                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "PalliumsWalletDelete"), object: nil)
+                    #warning("密码待处理")
+                    WalletManager.deleteWallet(password: "", createOrImport: false, step: 999)
                                 self?.navigationController?.popViewController(animated: true)
                             })
             }) { [weak self] (error) in

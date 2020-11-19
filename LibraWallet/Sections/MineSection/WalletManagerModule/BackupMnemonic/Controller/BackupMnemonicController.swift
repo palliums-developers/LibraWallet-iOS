@@ -43,9 +43,9 @@ class BackupMnemonicController: BaseViewController {
             self.viewModel.detailView.JustShow = JustShow
         }
     }
-    var tempWallet: CreateWalletModel? {
+    var tempWallet: [String]? {
         didSet {
-            self.viewModel.dataArray = tempWallet?.mnemonic
+            self.viewModel.dataArray = tempWallet
         }
     }
 }

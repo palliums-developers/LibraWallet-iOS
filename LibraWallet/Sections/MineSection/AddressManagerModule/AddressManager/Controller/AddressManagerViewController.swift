@@ -190,19 +190,19 @@ extension AddressManagerViewController: AddressManagerTableViewManagerDelegate {
         
     }
     func deleteAddress(indexPath: IndexPath, model: AddressModel) {
-        let deleteStatus = DataBaseManager.DBManager.deleteTransferAddressFromTable(model: model)
-        guard deleteStatus == true else {
+        do {
+            try DataBaseManager.DBManager.deleteTransferAddressFromTable(model: model)
+            self.tableViewManager.dataModel = self.tableViewManager.dataModel?.filter({
+                $0.addressID != model.addressID
+            })
+            self.detailView.tableView.beginUpdates()
+            self.detailView.tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.left)
+            self.detailView.tableView.endUpdates()
+            if (lastState == .Loading) {return}
+            startLoading ()
+            endLoading()
+        } catch {
             self.view.makeToast(localLanguage(keyString: "wallet_transection_address_delete_error"), position: .center)
-            return
         }
-        self.tableViewManager.dataModel = self.tableViewManager.dataModel?.filter({
-            $0.addressID != model.addressID
-        })
-        self.detailView.tableView.beginUpdates()
-        self.detailView.tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.left)
-        self.detailView.tableView.endUpdates()
-        if (lastState == .Loading) {return}
-        startLoading ()
-        endLoading()
     }
 }

@@ -274,6 +274,8 @@ public enum LibraWalletError: Error {
     public enum DataBaseError {
         /// 数据打开失败
         case openDataBaseError
+        /// 默认钱包不存在
+        case defaultWalletNotExist
     }
     case WalletDataBase(reason: DataBaseError)
     
@@ -722,6 +724,8 @@ extension LibraWalletError.DataBaseError {
         case .openDataBaseError:
             #warning("待翻译")
             return localLanguage(keyString: "DataBase Invalid")
+        case .defaultWalletNotExist:
+            return localLanguage(keyString: "DataBase not exist default wallet")
         }
     }
 }

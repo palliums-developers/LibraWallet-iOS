@@ -97,37 +97,45 @@ extension AddAssetViewController: AddAssetTableViewManagerDelegate {
             let wallet = tokens?.filter({
                 $0.tokenType == model.type
             })
-            if DataBaseManager.DBManager.isExistViolasToken(tokenAddress: wallet?.first?.tokenAddress ?? "", tokenModule: model.module ?? "", tokenType: model.type!) {
-                //已存在改状态
-                print("已存在改状态,\(wallet?.first?.tokenAddress ?? "")")
-                let changeState = DataBaseManager.DBManager.updateViolasTokenState(tokenAddress: wallet?.first?.tokenAddress ?? "", tokenModule: model.module ?? "", tokenType: model.type!, state: state)
-                if changeState == false {
-                    let cell = self.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
-                    cell.switchButton.setOn(!state, animated: true)
+            do {
+                let state = try DataBaseManager.DBManager.isExistViolasToken(tokenAddress: wallet?.first?.tokenAddress ?? "", tokenModule: model.module ?? "", tokenType: model.type!)
+                if state == true {
+                    //已存在改状态
+                    print("已存在改状态,\(wallet?.first?.tokenAddress ?? "")")
+                    do {
+                        try DataBaseManager.DBManager.updateViolasTokenState(tokenAddress: wallet?.first?.tokenAddress ?? "", tokenModule: model.module ?? "", tokenType: model.type!, state: state)
+                    } catch {
+                        let cell = self.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
+                        cell.switchButton.setOn(!state, animated: true)
+                    }
+                } else {
+                    //不存在插入
+                    print("不存在插入")
+                    let token = Token.init(tokenID: 999,
+                                           tokenName: model.show_name ?? "",
+                                           tokenBalance: 0,
+                                           tokenAddress: wallet?.first?.tokenAddress ?? "",
+                                           tokenType: model.type!,
+                                           tokenIndex: 0,
+                                           tokenAuthenticationKey: wallet?.first?.tokenAuthenticationKey ?? "",
+                                           tokenActiveState: true,
+                                           tokenIcon: model.icon ?? "",
+                                           tokenContract: model.address ?? "00000000000000000000000000000001",
+                                           tokenModule: model.module ?? "",
+                                           tokenModuleName: "T",
+                                           tokenEnable: true,
+                                           tokenPrice: "0.0")
+                    do {
+                        try DataBaseManager.DBManager.insertToken(token: token)
+                    } catch {
+                        let cell = self.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
+                        cell.switchButton.setOn(!state, animated: true)
+                    }
                 }
-            } else {
-                //不存在插入
-                print("不存在插入")
-                let token = Token.init(tokenID: 999,
-                                       tokenName: model.show_name ?? "",
-                                       tokenBalance: 0,
-                                       tokenAddress: wallet?.first?.tokenAddress ?? "",
-                                       tokenType: model.type!,
-                                       tokenIndex: 0,
-                                       tokenAuthenticationKey: wallet?.first?.tokenAuthenticationKey ?? "",
-                                       tokenActiveState: true,
-                                       tokenIcon: model.icon ?? "",
-                                       tokenContract: model.address ?? "00000000000000000000000000000001",
-                                       tokenModule: model.module ?? "",
-                                       tokenModuleName: "T",
-                                       tokenEnable: true,
-                                       tokenPrice: "0.0")
-                let changeState = DataBaseManager.DBManager.insertToken(token: token)
-                if changeState == false {
-                    let cell = self.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
-                    cell.switchButton.setOn(!state, animated: true)
-                }
-            }
+            } catch {
+                // 异常不做操作
+                print(error)
+            }            
         } else {
             // 未注册
             print("未注册")
@@ -171,7 +179,11 @@ extension AddAssetViewController: AddAssetTableViewManagerDelegate {
                                            tokenModuleName: model.module ?? "",
                                            tokenEnable: true,
                                            tokenPrice: "0.0")
-                    _ = DataBaseManager.DBManager.insertToken(token: token)
+                    do {
+                        try DataBaseManager.DBManager.insertToken(token: token)
+                    } catch {
+                        print(error)
+                    }
                     if let action = self?.needUpdateClosure {
                         action(true)
                     }

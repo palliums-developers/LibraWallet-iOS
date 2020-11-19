@@ -220,6 +220,7 @@ extension Token {
         self.semaphore.signal()
     }
 }
+// MARK: 助记词存储钥匙串相关操作
 extension WalletManager {
     static func saveMnemonicToKeychain(mnemonic: [String], password: String) throws {
         guard mnemonic.isEmpty == false else {
@@ -236,9 +237,6 @@ extension WalletManager {
         }
     }
     static func getMnemonicFromKeychain(password: String) throws -> [String] {
-//        guard walletRootAddress.isEmpty == false else {
-//            throw LibraWalletError.WalletKeychain(reason: .searchStringEmptyError)
-//        }
         do {
             // 取出加密后助记词字符串
             let menmonicString = try KeychainManager.getMnemonicStringFromKeychain()
@@ -257,10 +255,15 @@ extension WalletManager {
             throw error
         }
     }
-    func createLibraWallet() throws -> Bool {
-        return false
+    static func deleteMnemonicFromKeychain() throws {
+        do {
+            try KeychainManager.deleteMnemonicStringFromKeychain()
+        } catch {
+            throw error
+        }
     }
 }
+// MARK: 解锁钱包
 extension WalletManager {
     static func unlockWallet(controller: UIViewController? = nil, successful: @escaping (([String])->Void), failed: @escaping((String)->Void)) {
         if WalletManager.shared.walletBiometricLock == true {
@@ -313,11 +316,7 @@ extension WalletManager {
                 case .success( _):
                     do {
                         try KeychainManager.removeBiometric()
-                        let result = DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: WalletManager.shared.walletID!, state: state)
-                        guard result == true else {
-                            failed("Failed Insert DataBase")
-                            return
-                        }
+                        try DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: WalletManager.shared.walletID!, state: state)
                         WalletManager.shared.changeWalletBiometricLock(state: state)
                     } catch {
                         failed(error.localizedDescription)
@@ -371,12 +370,12 @@ extension WalletManager {
             let alert = libraWalletTool.passowordCheckAlert(rootAddress: "", passwordContent: { (password) in
                 KeychainManager.addBiometric(password: password, success: { (result, error) in
                     if result == "Success" {
-                        let result = DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: WalletManager.shared.walletID!, state: state)
-                        guard result == true else {
+                        do {
+                            try DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: WalletManager.shared.walletID!, state: state)
+                            WalletManager.shared.changeWalletBiometricLock(state: state)
+                        } catch {
                             failed("Failed Insert DataBase")
-                            return
                         }
-                        WalletManager.shared.changeWalletBiometricLock(state: state)
                     } else {
                         failed(error)
                     }
@@ -385,6 +384,167 @@ extension WalletManager {
                 failed(error)
             })
             controller.present(alert, animated: true, completion: nil)
+        }
+    }
+}
+// MARK: 删除钱包
+extension WalletManager {
+    static func deleteWallet(password: String, createOrImport: Bool, step: Int) {
+        
+        do {
+            // 移除钱包包含所有币
+            if DataBaseManager.DBManager.isExistTable(name: "Tokens") == true && step >= 1 {
+                try DataBaseManager.DBManager.deleteAllTokens()
+            }
+            // 移除本地钱包
+            if DataBaseManager.DBManager.isExistTable(name: "Wallet") == true && step >= 2 {
+                try DataBaseManager.DBManager.deleteHDWallet()
+            }
+            if step >= 3 {
+                // 初始化钱包状态
+                setIdentityWalletState(show: false)
+            }
+            if step >= 4 {
+                // 移除钥匙串
+                try WalletManager.deleteMnemonicFromKeychain()
+            }
+            // 清空钱包单例
+            WalletManager.shared.deleteWallet()
+            if createOrImport == false {
+                // 发送钱包已删除广播
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "PalliumsWalletDelete"), object: nil)
+            }
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+}
+// MARK: 创建Palliums钱包
+extension WalletManager {
+    static func createWallet(password: String, mnemonic: [String]) throws {
+        var step = 0
+        do {
+            // 创建Violas币
+            let violasTokenAddress = try WalletManager.initViolasToken(mnemonic: mnemonic)
+            print("创建Violas Token Successful")
+            // 创建Libra币
+            let libraTokenAddress = try WalletManager.initLibraToken(mnemonic: mnemonic)
+            print("创建Libra Token Successful")
+            // 创建BTC币
+            let bitcoinTokenAddress = try WalletManager.initBitcoinToken(mnemonic: mnemonic)
+            print("创建Bitcoin Token Successful")
+            step += 1
+            // 创建钱包
+            try WalletManager.createWallet(mnemonic: mnemonic,
+                                           btcAddress: bitcoinTokenAddress,
+                                           violasAddress: violasTokenAddress,
+                                           libraAddress: libraTokenAddress)
+            print("创建钱包 Successful")
+            step += 1
+            // 设置已创建钱包状态
+            setIdentityWalletState(show: true)
+            print("设置已创建钱包状态 Successful")
+            step += 1
+            // 加密助记词到Keychain
+            try WalletManager.saveMnemonicToKeychain(mnemonic: mnemonic,
+                                                     password: password)
+            print("保存助记词到钥匙串 Successful")
+            step += 1
+        } catch {
+            print(error)
+            WalletManager.deleteWallet(password: password, createOrImport: true, step: step)
+            throw error
+        }
+    }
+    private static func createWallet(mnemonic: [String], btcAddress: String, violasAddress: String, libraAddress: String) throws {
+        do {
+            let wallet = WalletManager.init(walletID: 999,
+                                            walletName: "PalliumsWallet",
+                                            walletCreateTime: NSDate().timeIntervalSince1970,
+                                            walletBiometricLock: false,
+                                            walletCreateType: 0,
+                                            walletBackupState: true,
+                                            walletSubscription: false,
+                                            walletMnemonicHash: mnemonic.joined(separator: " ").md5(),
+                                            walletUseState: true,
+                                            btcAddress: btcAddress,
+                                            violasAddress: violasAddress,
+                                            libraAddress: libraAddress)
+            try DataBaseManager.DBManager.insertWallet(model: wallet)
+        } catch {
+            throw error
+        }
+    }
+    private static func initViolasToken(mnemonic: [String]) throws -> String {
+        do {
+            let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
+            let token = Token.init(tokenID: 999,
+                                   tokenName: "LBR",
+                                   tokenBalance: 0,
+                                   tokenAddress: wallet.publicKey.toLegacy(),
+                                   tokenType: .Violas,
+                                   tokenIndex: 0,
+                                   tokenAuthenticationKey: wallet.publicKey.toActive(),
+                                   tokenActiveState: false,
+                                   tokenIcon: "violas_icon",
+                                   tokenContract: "00000000000000000000000000000001",
+                                   tokenModule: "LBR",
+                                   tokenModuleName: "LBR",
+                                   tokenEnable: true,
+                                   tokenPrice: "0.0")
+            try DataBaseManager.DBManager.insertToken(token: token)
+            print("Violas钱包创建结果：\(true)")
+            return wallet.publicKey.toLegacy()
+        } catch {
+            throw error
+        }
+    }
+    private static func initLibraToken(mnemonic: [String]) throws -> String {
+        do {
+            let wallet = try LibraManager.getWallet(mnemonic: mnemonic)
+            let token = Token.init(tokenID: 999,
+                                   tokenName: "LBR",
+                                   tokenBalance: 0,
+                                   tokenAddress: wallet.publicKey.toLegacy(),
+                                   tokenType: .Libra,
+                                   tokenIndex: 0,
+                                   tokenAuthenticationKey: wallet.publicKey.toActive(),
+                                   tokenActiveState: false,
+                                   tokenIcon: "libra_icon",
+                                   tokenContract: "00000000000000000000000000000001",
+                                   tokenModule: "LBR",
+                                   tokenModuleName: "LBR",
+                                   tokenEnable: true,
+                                   tokenPrice: "0.0")
+            try DataBaseManager.DBManager.insertToken(token: token)
+            print("Libra钱包创建结果：\(true)")
+            return wallet.publicKey.toLegacy()
+        } catch {
+            throw error
+        }
+    }
+    private static func initBitcoinToken(mnemonic: [String]) throws -> String {
+        do {
+            let wallet = try BTCManager().getWallet(mnemonic: mnemonic)
+            let token = Token.init(tokenID: 999,
+                                   tokenName: "BTC",
+                                   tokenBalance: 0,
+                                   tokenAddress: wallet.address.description,
+                                   tokenType: .BTC,
+                                   tokenIndex: 0,
+                                   tokenAuthenticationKey: "",
+                                   tokenActiveState: true,
+                                   tokenIcon: "btc_icon",
+                                   tokenContract: "",
+                                   tokenModule: "",
+                                   tokenModuleName: "",
+                                   tokenEnable: true,
+                                   tokenPrice: "0.0")
+            try DataBaseManager.DBManager.insertToken(token: token)
+            print("BTC钱包创建结果：\(true)")
+            return wallet.address.description
+        } catch {
+            throw error
         }
     }
 }

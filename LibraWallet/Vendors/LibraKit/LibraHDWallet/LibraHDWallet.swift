@@ -44,10 +44,10 @@ public final class LibraHDWallet {
         let tempInfo = Data() + Array("LIBRA WALLET: derived key$".utf8) + depthData.bytes
         do {
             let privateKey = try HKDF.init(password: seed,
-                                     salt:Array("LIBRA WALLET: main key salt$".utf8),
-                                     info: tempInfo.bytes,
-                                     keyLength: 32,
-                                     variant: .sha3_256).calculate()
+                                           salt:Array("LIBRA WALLET: main key salt$".utf8),
+                                           info: tempInfo.bytes,
+                                           keyLength: 32,
+                                           variant: .sha3_256).calculate()
             self.init(seed: seed, privateKey: privateKey, depth: depth)
         } catch {
             throw error

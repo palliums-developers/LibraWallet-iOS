@@ -103,9 +103,9 @@ extension AddWalletViewController {
             self?.detailView.toastView.hide(tag: 99)
             if type == "CreateWallet" {
                 // 加载本地默认钱包
-                if let tempData = dataDic.value(forKey: "data") as? CreateWalletModel {
+                if let tempData = dataDic.value(forKey: "data") as? [String] {
                     self?.view.makeToast(localLanguage(keyString: "wallet_create_wallet_success_title"), duration: 0.5, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
-                        DataBaseManager.DBManager.getLocalWallets()
+                        try? DataBaseManager.DBManager.getDefaultWallet()
                         if let success = self?.successCreateClosure {
                             success()
                         }

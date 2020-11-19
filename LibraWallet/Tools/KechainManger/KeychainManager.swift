@@ -13,13 +13,13 @@ struct KeychainManager {
     /// - Parameter mnemonic: 助记词
     /// - Throws: 错误描述
     static func saveMnemonicStringToKeychain(mnemonic: String) throws {
-        let bundId: String = Bundle.main.bundleIdentifier ?? "LibraWallet"
-        //"\(bundId)-\(walletAddress)"
+        let bundId: String = Bundle.main.bundleIdentifier ?? "PalliumsWallet"
         let keychain = Keychain(service: bundId)
         do {
-            try keychain.set(mnemonic, key: "mnemonic_PalliumsWallet")
+            try keychain.set(mnemonic, key: "mnemonic_palliums_wallet")
+            print("Save Mnemonic Successful")
         } catch {
-            print("error: \(error)")
+            print("saveMnemonicStringToKeychain error: \(error)")
             throw error
         }
     }
@@ -28,31 +28,33 @@ struct KeychainManager {
     /// - Returns: 助记词
     static func getMnemonicStringFromKeychain() throws -> String {
         //
-        let bundId: String = Bundle.main.bundleIdentifier ?? "LibraWallet"
+        let bundId: String = Bundle.main.bundleIdentifier ?? "PalliumsWallet"
         let keychain = Keychain(service: bundId)
         do {
-            let mnemonicString = try keychain.get("mnemonic_PalliumsWallet")
+            let mnemonicString = try keychain.get("mnemonic_palliums_wallet")
             guard let mnemonic = mnemonicString else {
                 throw LibraWalletError.WalletKeychain(reason: .getMnemonicFailedError)
             }
             guard mnemonic.isEmpty == false else {
                 throw LibraWalletError.WalletKeychain(reason: .getMnemonicEmptyError)
             }
+            print("Get Mnemonic Successful")
             return mnemonic
         } catch {
-            print("error: \(error)")
+            print("getMnemonicStringFromKeychain error: \(error)")
             throw error
         }
     }
-    /// 删除助记词(删除钱时包掉用)
+    /// 删除助记词
     /// - Throws: 错误描述
     static func deleteMnemonicStringFromKeychain() throws {
-        let bundId: String = Bundle.main.bundleIdentifier ?? "LibraWallet"
+        let bundId: String = Bundle.main.bundleIdentifier ?? "PalliumsWallet"
         let keychain = Keychain(service: bundId)
         do {
-            try keychain.remove("mnemonic_PalliumsWallet")
+            try keychain.remove("mnemonic_palliums_wallet")
+            print("Remove Mnemonic Successful")
         } catch {
-            print("error: \(error)")
+            print("deleteMnemonicStringFromKeychain error: \(error)")
             throw error
         }
     }
@@ -61,7 +63,7 @@ struct KeychainManager {
     ///   - password: 密码
     ///   - success: 成功回调（一个成功参数，第二个错误描述）
     static func addBiometric(password: String, success: @escaping (String, String)->Void) {
-        let bundId: String = Bundle.main.bundleIdentifier ?? "LibraWallet"
+        let bundId: String = Bundle.main.bundleIdentifier ?? "PalliumsWallet"
         let keychain = Keychain(service: bundId)
         DispatchQueue.global().async {
             do {
@@ -69,13 +71,13 @@ struct KeychainManager {
                 try keychain
                     .accessibility(.whenPasscodeSetThisDeviceOnly, authenticationPolicy: .userPresence)
                     .authenticationPrompt("Authenticate to update your access token")
-                    .set(password, key: "pay_password_PalliumsWallet")
+                    .set(password, key: "pay_password_palliums_wallet")
                 DispatchQueue.main.async(execute: {
                     success("Success", "")
                 })
             } catch {
                 // Error handling if needed...
-                print(error)
+                print("addBiometric error: \(error)")
                 DispatchQueue.main.async(execute: {
                     success("", error.localizedDescription)
                 })
@@ -85,13 +87,13 @@ struct KeychainManager {
     /// 通过生物识别获取密码
     /// - Parameter success: 成功回调（一个成功参数，第二个错误描述）
     static func getPasswordWithBiometric(success: @escaping (String, String)->Void) {
-        let bundId: String = Bundle.main.bundleIdentifier ?? "LibraWallet"
+        let bundId: String = Bundle.main.bundleIdentifier ?? "PalliumsWallet"
         let keychain = Keychain(service: bundId)
         DispatchQueue.global().async {
             do {
                 let passwordString = try keychain
                     .authenticationPrompt("Authenticate to login to server")
-                    .get("pay_password_PalliumsWallet")
+                    .get("pay_password_palliums_wallet")
                 guard let password = passwordString else {
                     success("", LibraWalletError.WalletKeychain(reason: .getPaymentPasswordFailedError).localizedDescription)
                     return
@@ -106,6 +108,7 @@ struct KeychainManager {
                 })
             } catch {
                 // Error handling if needed...
+                print("getPasswordWithBiometric error: \(error)")
                 DispatchQueue.main.async(execute: {
                     success("", error.localizedDescription)
                     
@@ -116,14 +119,15 @@ struct KeychainManager {
     /// 移除生物识别
     /// - Throws: 错误描述
     static func removeBiometric() throws {
-        let bundId: String = Bundle.main.bundleIdentifier ?? "LibraWallet"
+        let bundId: String = Bundle.main.bundleIdentifier ?? "PalliumsWallet"
         let keychain = Keychain(service: bundId)
         do {
             // Should be the secret invalidated when passcode is removed? If not then use `.WhenUnlocked`
-            try keychain.remove("pay_password_PalliumsWallet")
-            print("Remove_Biometric_Successful")
+            try keychain.remove("pay_password_palliums_wallet")
+            print("Remove Biometric Successful")
         } catch {
             // Error handling if needed...
+            print("removeBiometric error: \(error)")
             throw error
         }
     }

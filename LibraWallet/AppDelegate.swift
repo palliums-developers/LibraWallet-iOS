@@ -21,11 +21,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let tabbar = BaseTabBarViewController.init()
         window?.rootViewController = tabbar
         window?.makeKeyAndVisible()
-        DataBaseManager.DBManager.creatLocalDataBase()
-        DataBaseManager.DBManager.createWalletTable()
-        DataBaseManager.DBManager.createTransferAddressListTable()
-        DataBaseManager.DBManager.createViolasTokenTable()
-        _ = DataBaseManager.DBManager.getLocalWallets()
+//        DataBaseManager.DBManager.creatLocalDataBase()
+//        DataBaseManager.DBManager.createWalletTable()
+//        DataBaseManager.DBManager.createTransferAddressListTable()
+//        DataBaseManager.DBManager.createViolasTokenTable()
+//        _ = DataBaseManager.DBManager.getLocalWallets()
+        DataBaseManager.DBManager.initDataBase()
         IQKeyboardManager.shared.enable = true
         if let sessionData = getWalletConnectSession(), sessionData.isEmpty == false {
             WalletConnectManager.shared.reconnectToServer(sessionData: sessionData)

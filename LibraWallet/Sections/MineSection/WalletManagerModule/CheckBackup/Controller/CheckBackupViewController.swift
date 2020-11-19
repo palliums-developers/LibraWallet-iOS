@@ -37,9 +37,9 @@ class CheckBackupViewController: BaseViewController {
         return viewModel
     }()
     var FirstInApp: Bool?
-    var tempWallet: CreateWalletModel? {
+    var tempWallet: [String]? {
         didSet {
-            self.viewModel.dataArray = tempWallet?.mnemonic
+            self.viewModel.dataArray = tempWallet
         }
     }
 }
@@ -56,22 +56,18 @@ extension CheckBackupViewController: CheckBackupViewDelegate {
 //                } else {
 //                    print("无法更新备份状态")
 //                }
-                let result = DataBaseManager.DBManager.updateWalletBackupState(wallet: WalletManager.shared)
-                print("钱包更新备份状态-\(result)")
-                if result == true {
-                    WalletManager.shared.changeWalletBackupState(state: true)
-                    self.view.makeToast(localLanguage(keyString: "wallet_check_mnemonic_success_title"), duration: 0.5, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
-                        self.dismiss(animated: true, completion: nil)
-                    })
-                }
+                try DataBaseManager.DBManager.updateWalletBackupState(wallet: WalletManager.shared)
+                print("钱包更新备份状态-\(true)")
+                WalletManager.shared.changeWalletBackupState(state: true)
+                self.view.makeToast(localLanguage(keyString: "wallet_check_mnemonic_success_title"), duration: 0.5, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
+                    self.dismiss(animated: true, completion: nil)
+                })
             } else {
                 self.view.hideToastActivity()
-                let result = DataBaseManager.DBManager.updateWalletBackupState(wallet: WalletManager.shared)
-                print("钱包更新备份状态-\(result)")
-                if result == true {
-                    WalletManager.shared.changeWalletBackupState(state: true)
-                    self.jumpToWalletManagerController()
-                }
+                try DataBaseManager.DBManager.updateWalletBackupState(wallet: WalletManager.shared)
+                print("钱包更新备份状态-\(true)")
+                WalletManager.shared.changeWalletBackupState(state: true)
+                self.jumpToWalletManagerController()
             }
         } catch {
             self.view.makeToast(error.localizedDescription,

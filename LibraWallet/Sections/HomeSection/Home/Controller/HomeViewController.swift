@@ -521,7 +521,7 @@ extension HomeViewController {
                                 let newPrice = NSDecimalNumber.init(value: token.rate ?? 0.0).stringValue
                                 if newPrice != dataModels[i].tokenPrice {
                                     tempLocalToken.changeTokenPrice(price: newPrice)
-                                    _ = DataBaseManager.DBManager.updateTokenPrice(tokenID: dataModels[i].tokenID, price: newPrice)
+                                    try? DataBaseManager.DBManager.updateTokenPrice(tokenID: dataModels[i].tokenID, price: newPrice)
                                     tempIndexPath.append(IndexPath.init(item: i, section: 0))
                                 }
                                 tempTokens.append(tempLocalToken)
@@ -559,7 +559,7 @@ extension HomeViewController {
                                 let newPrice = NSDecimalNumber.init(value: token.rate ?? 0.0).stringValue
                                 if newPrice != dataModels[i].tokenPrice {
                                     tempLocalToken.changeTokenPrice(price: newPrice)
-                                    _ = DataBaseManager.DBManager.updateTokenPrice(tokenID: dataModels[i].tokenID, price: newPrice)
+                                    try? DataBaseManager.DBManager.updateTokenPrice(tokenID: dataModels[i].tokenID, price: newPrice)
                                     tempIndexPath.append(IndexPath.init(item: i, section: 0))
                                 }
                                 tempTokens.append(tempLocalToken)
@@ -596,7 +596,7 @@ extension HomeViewController {
                                 var tempLocalToken = dataModels[i]
                                 let newPrice = NSDecimalNumber.init(value: token.rate ?? 0.0).stringValue
                                 if newPrice != dataModels[i].tokenPrice {
-                                    _ = DataBaseManager.DBManager.updateTokenPrice(tokenID: dataModels[i].tokenID, price: newPrice)
+                                    try? DataBaseManager.DBManager.updateTokenPrice(tokenID: dataModels[i].tokenID, price: newPrice)
                                     tempLocalToken.changeTokenPrice(price: newPrice)
                                     tempIndexPath.append(IndexPath.init(item: i, section: 0))
                                 }

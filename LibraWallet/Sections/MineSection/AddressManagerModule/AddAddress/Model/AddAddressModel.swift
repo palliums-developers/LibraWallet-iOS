@@ -22,15 +22,14 @@ class AddAddressModel: NSObject {
                                       address: address,
                                       addressName: remarks,
                                       addressType: type)
-        let result = DataBaseManager.DBManager.insertTransferAddress(model: model)
-        print(result)
-        guard result == true else {
+        do {
+            try DataBaseManager.DBManager.insertTransferAddress(model: model)
+            let data = setKVOData(type: "AddAddress", data: model)
+            self.setValue(data, forKey: "dataDic")
+        } catch {
             let data = setKVOData(error: LibraWalletError.WalletAddAddress(reason: .addressInsertError), type: "AddAddress")
             self.setValue(data, forKey: "dataDic")
-            return
         }
-        let data = setKVOData(type: "AddAddress", data: model)
-        self.setValue(data, forKey: "dataDic")
     }
     deinit {
         print("AddAddressModel销毁了")
