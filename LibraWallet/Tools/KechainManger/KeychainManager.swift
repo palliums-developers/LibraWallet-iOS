@@ -109,6 +109,9 @@ struct KeychainManager {
             } catch {
                 // Error handling if needed...
                 print("getPasswordWithBiometric error: \(error)")
+                guard error.localizedDescription != "User canceled the operation." else {
+                    return
+                }
                 DispatchQueue.main.async(execute: {
                     completion(.failure(error))
                 })

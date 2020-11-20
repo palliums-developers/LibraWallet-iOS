@@ -105,17 +105,10 @@ extension WalletConfigViewController: WalletConfigTableViewManagerDelegate {
 }
 extension WalletConfigViewController: WalletConfigViewDelegate {
     func deleteButtonClick() {
-        let alert = UIAlertController.init(title: localLanguage(keyString: "wallet_alert_delete_wallet_title"), message: localLanguage(keyString: "wallet_alert_delete_wallet_content"), preferredStyle: UIAlertController.Style.alert)
-        let confirmAction = UIAlertAction.init(title: localLanguage(keyString: "wallet_alert_delete_wallet_confirm_button_title"), style: UIAlertAction.Style.destructive) { (UIAlertAction) in
-            //            let state = DataBaseManager.DBManager.deleteWalletFromTable(model: self.walletModel!)
-            
-            //            guard state == true else {
-            //                return
-            //            }
-            //            _ = DataBaseManager.DBManager.updateDefaultViolasWallet()
+        let alert = libraWalletTool.deleteWalletAlert {
             WalletManager.unlockWallet { [weak self] (result) in
                 switch result {
-                case let .success(_):
+                case .success(_):
                     self?.view.makeToast(localLanguage(keyString: "wallet_delete_wallet_success_title"), duration: 1, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { [weak self](bool) in
                     //                if let action = self?.actionClosure {
                     //                    action(.delete)
@@ -131,26 +124,7 @@ extension WalletConfigViewController: WalletConfigViewDelegate {
                     self?.detailView.makeToast(error.localizedDescription, position: .center)
                 }
             }
-//            WalletManager.unlockWallet(controller: self, successful: { [weak self] (mnemonic) in
-//                self?.view.makeToast(localLanguage(keyString: "wallet_delete_wallet_success_title"), duration: 1, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { [weak self](bool) in
-//                //                if let action = self?.actionClosure {
-//                //                    action(.delete)
-//                //                }
-//                    #warning("密码待处理")
-//                    WalletManager.deleteWallet(password: "", createOrImport: false, step: 999)
-//                                self?.navigationController?.popViewController(animated: true)
-//                            })
-//            }) { [weak self] (error) in
-//                self?.view.makeToast(error,
-//                                     position: .center)
-//            }
-            
         }
-        let cancelAction = UIAlertAction.init(title: localLanguage(keyString: "wallet_alert_delete_wallet_cancel_button_title"), style: UIAlertAction.Style.cancel) { (UIAlertAction) in
-            
-        }
-        alert.addAction(cancelAction)
-        alert.addAction(confirmAction)
         self.present(alert, animated: true, completion: nil)
     }
 }

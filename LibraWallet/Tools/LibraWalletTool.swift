@@ -303,6 +303,11 @@ extension libraWalletTool {
 }
 // MARK: 密码验证
 extension libraWalletTool {
+    /// 验证密码获取助记词
+    /// - Parameters:
+    ///   - message: 提示内容
+    ///   - completion: 返回结果
+    /// - Returns: UIAlertController
     static func passowordAlert(message: String? = localLanguage(keyString: "wallet_type_in_password_content"), completion: @escaping (Result<[String], Error>)-> Void) -> UIAlertController {
         let alertController = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: message, preferredStyle: .alert)
         alertController.addTextField {
@@ -335,6 +340,11 @@ extension libraWalletTool {
         })
         return alertController
     }
+    /// 验证密码
+    /// - Parameters:
+    ///   - message: 提示内容
+    ///   - completion: 返回结果
+    /// - Returns: UIAlertController
     static func passowordCheckAlert(message: String? = localLanguage(keyString: "wallet_type_in_password_content"),  completion: @escaping (Result<String, Error>)-> Void) -> UIAlertController {
         let alertController = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: message, preferredStyle: .alert)
         alertController.addTextField {
@@ -366,5 +376,17 @@ extension libraWalletTool {
             completion(.failure(LibraWalletError.WalletCheckPassword(reason: .cancel)))
         })
         return alertController
+    }
+    static func deleteWalletAlert(confirm: @escaping ()-> Void) -> UIAlertController {
+        let alert = UIAlertController.init(title: localLanguage(keyString: "wallet_alert_delete_wallet_title"), message: localLanguage(keyString: "wallet_alert_delete_wallet_content"), preferredStyle: UIAlertController.Style.alert)
+        let confirmAction = UIAlertAction.init(title: localLanguage(keyString: "wallet_alert_delete_wallet_confirm_button_title"), style: UIAlertAction.Style.destructive) { (UIAlertAction) in
+            confirm()
+        }
+        let cancelAction = UIAlertAction.init(title: localLanguage(keyString: "wallet_alert_delete_wallet_cancel_button_title"), style: UIAlertAction.Style.cancel) { (UIAlertAction) in
+            print("Delete Wallet Cancel")
+        }
+        alert.addAction(cancelAction)
+        alert.addAction(confirmAction)
+        return alert
     }
 }
