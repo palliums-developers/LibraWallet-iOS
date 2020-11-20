@@ -245,41 +245,43 @@ extension TransferViewModel: TransferViewDelegate {
         self.view?.amountTextField.resignFirstResponder()
         self.view?.addressTextField.resignFirstResponder()
         self.view?.transferFeeSlider.resignFirstResponder()
-        
-        WalletManager.unlockWallet(successful: { [weak self] (mnemonic) in
-            self?.view?.toastView?.show(tag: 99)
-            
-            switch token.tokenType {
-            case .Violas:
-                print("Send Violas Transaction")
-                self?.dataModel.sendViolasTransaction(sendAddress: token.tokenAddress,
-                                                      receiveAddress: address,
-                                                      amount: amount.uint64Value,
-                                                      fee: fee.uint64Value,
-                                                      mnemonic: mnemonic,
-                                                      module: token.tokenModule)
-            case .Libra:
-                print("Send Libra Transaction")
-                self?.dataModel.sendLibraTransaction(sendAddress: token.tokenAddress,
-                                                     receiveAddress: address,
-                                                     amount: amount.uint64Value,
-                                                     fee: fee.uint64Value,
-                                                     mnemonic: mnemonic,
-                                                     module: token.tokenModule)
-            case .BTC:
-                print("Send BTC Transaction")
-                let wallet = try! BTCManager().getWallet(mnemonic: mnemonic)
-                self?.dataModel.makeTransaction(wallet: wallet,
-                                                amount: amount.uint64Value,
-                                                fee: fee.uint64Value,
-                                                toAddress: address)
+        WalletManager.unlockWallet { [weak self] (result) in
+            switch result {
+            case let .success(mnemonic):
+                self?.view?.toastView?.show(tag: 99)
+                
+                switch token.tokenType {
+                case .Violas:
+                    print("Send Violas Transaction")
+                    self?.dataModel.sendViolasTransaction(sendAddress: token.tokenAddress,
+                                                          receiveAddress: address,
+                                                          amount: amount.uint64Value,
+                                                          fee: fee.uint64Value,
+                                                          mnemonic: mnemonic,
+                                                          module: token.tokenModule)
+                case .Libra:
+                    print("Send Libra Transaction")
+                    self?.dataModel.sendLibraTransaction(sendAddress: token.tokenAddress,
+                                                         receiveAddress: address,
+                                                         amount: amount.uint64Value,
+                                                         fee: fee.uint64Value,
+                                                         mnemonic: mnemonic,
+                                                         module: token.tokenModule)
+                case .BTC:
+                    print("Send BTC Transaction")
+                    let wallet = try! BTCManager().getWallet(mnemonic: mnemonic)
+                    self?.dataModel.makeTransaction(wallet: wallet,
+                                                    amount: amount.uint64Value,
+                                                    fee: fee.uint64Value,
+                                                    toAddress: address)
+                }
+            case let .failure(error):
+                guard error.localizedDescription != "Cancel" else {
+                    self?.view?.toastView?.hide(tag: 99)
+                    return
+                }
+                self?.view?.makeToast(error.localizedDescription, position: .center)
             }
-        }) { [weak self] (error) in
-            guard error != "Cancel" else {
-                self?.view?.toastView?.hide(tag: 99)
-                return
-            }
-            self?.view?.makeToast(error, position: .center)
         }
     }
     func chooseCoin() {

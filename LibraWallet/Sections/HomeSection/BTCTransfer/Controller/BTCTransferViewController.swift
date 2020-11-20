@@ -168,20 +168,22 @@ extension BTCTransferViewController: BTCTransferViewDelegate {
 
 //    }
     func confirmTransfer(amount: Double, address: String, fee: Double) {
-        WalletManager.unlockWallet(controller: self, successful: { [weak self] (mnemonic) in
-            self?.detailView.toastView?.show(tag: 99)
-            let walletttt = try! BTCManager().getWallet(mnemonic: mnemonic)
-            self?.dataModel.makeTransaction(wallet: walletttt,
-                                            amount: amount,
-                                            fee: fee,
-                                            toAddress: address)
-        }) { [weak self] (error) in
-            guard error != "Cancel" else {
-                self?.detailView.toastView?.hide(tag: 99)
-                return
+        WalletManager.unlockWallet { [weak self] (result) in
+            switch result {
+            case let .success(mnemonic):
+                self?.detailView.toastView?.show(tag: 99)
+                let walletttt = try! BTCManager().getWallet(mnemonic: mnemonic)
+                self?.dataModel.makeTransaction(wallet: walletttt,
+                                                amount: amount,
+                                                fee: fee,
+                                                toAddress: address)
+            case let .failure(error):
+                guard error.localizedDescription != "Cancel" else {
+                    self?.detailView.toastView?.hide(tag: 99)
+                    return
+                }
+                self?.detailView.makeToast(error.localizedDescription, position: .center)
             }
-            self?.detailView.makeToast(error,
-                                       position: .center)
         }
     }
 }

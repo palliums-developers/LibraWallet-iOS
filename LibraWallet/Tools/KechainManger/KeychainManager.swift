@@ -62,7 +62,7 @@ struct KeychainManager {
     /// - Parameters:
     ///   - password: 密码
     ///   - success: 成功回调（一个成功参数，第二个错误描述）
-    static func addBiometric(password: String, success: @escaping (String, String)->Void) {
+    static func addBiometric(password: String, completion: @escaping (Result<String, Error>)->Void) {
         let bundId: String = Bundle.main.bundleIdentifier ?? "PalliumsWallet"
         let keychain = Keychain(service: bundId)
         DispatchQueue.global().async {
@@ -73,20 +73,20 @@ struct KeychainManager {
                     .authenticationPrompt("Authenticate to update your access token")
                     .set(password, key: "pay_password_palliums_wallet")
                 DispatchQueue.main.async(execute: {
-                    success("Success", "")
+                    completion(.success("Success"))
                 })
             } catch {
                 // Error handling if needed...
                 print("addBiometric error: \(error)")
                 DispatchQueue.main.async(execute: {
-                    success("", error.localizedDescription)
+                    completion(.failure(error))
                 })
             }
         }
     }
     /// 通过生物识别获取密码
     /// - Parameter success: 成功回调（一个成功参数，第二个错误描述）
-    static func getPasswordWithBiometric(success: @escaping (String, String)->Void) {
+    static func getPasswordWithBiometric(completion: @escaping (Result<String, Error>)->Void) {
         let bundId: String = Bundle.main.bundleIdentifier ?? "PalliumsWallet"
         let keychain = Keychain(service: bundId)
         DispatchQueue.global().async {
@@ -95,23 +95,22 @@ struct KeychainManager {
                     .authenticationPrompt("Authenticate to login to server")
                     .get("pay_password_palliums_wallet")
                 guard let password = passwordString else {
-                    success("", LibraWalletError.WalletKeychain(reason: .getPaymentPasswordFailedError).localizedDescription)
+                    completion(.failure(LibraWalletError.WalletKeychain(reason: .getPaymentPasswordFailedError)))
                     return
                 }
                 guard password.isEmpty == false else {
-                    success("", LibraWalletError.WalletKeychain(reason: .getPaymentPasswordEmptyError).localizedDescription)
+                    completion(.failure(LibraWalletError.WalletKeychain(reason: .getPaymentPasswordEmptyError)))
                     return
                 }
                 print("password: \(password)")
                 DispatchQueue.main.async(execute: {
-                    success(password, "")
+                    completion(.success(password))
                 })
             } catch {
                 // Error handling if needed...
                 print("getPasswordWithBiometric error: \(error)")
                 DispatchQueue.main.async(execute: {
-                    success("", error.localizedDescription)
-                    
+                    completion(.failure(error))
                 })
             }
         }

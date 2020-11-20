@@ -616,8 +616,15 @@ wallet_market_exchange_amount_empty_error = "兑换稳定币数量为空";
 // 映射
 wallet_market_mapping_token_unpublish_error = "您将要映射的稳定币尚未开启，开启需要消耗一定数量Gas费，是否立即开启并映射？";
 // 生物识别
-wallet_biometric_touch_id_attempts_too_much_error = "由于尝试失败次数太多，指纹识别现在被锁定。";
-wallet_biometric_face_id_attempts_too_much_error = "由于尝试失败次数太多，面容识别现在被锁定。";
+wallet_biometric_face_id_not_enrolled_error = "未设置面容识别。 请转到设备 设置 -> 面容ID与密码 并注册您的面容。";
+wallet_biometric_touch_id_not_enrolled_error = "未设置指纹识别。 请转到设备 设置 -> 指纹ID与密码 并注册您的指纹。";
+wallet_biometric_face_id_locked_error = "由于失败尝试过多，面容ID已被锁定。 输入密码以解锁面容ID。";
+wallet_biometric_touch_id_locked_error = "由于失败尝试过多，指纹ID已被锁定。 输入密码以解锁指纹ID。";
+wallet_biometric_not_available_error = "生物识别身份验证不适用于此设备。";
+wallet_biometric_face_id_failed_error = "面容ID无法识别您的脸部。 请用您注册的面容再试一次。";
+wallet_biometric_touch_id_failed_error = "指纹ID无法识别您的指纹。 请用您注册的指纹再试一次。";
+wallet_biometric_face_id_without_password_error = "请设置设备密码以使用面容ID进行身份验证。";
+wallet_biometric_touch_id_without_password_error = "请设置设备密码以使用指纹ID进行身份验证。";
 // 银行存款
 wallet_bank_deposit_token_unactivated_error = "存款币尚未开启，请确认";
 wallet_bank_deposit_balance_empty_error = "余额为0";

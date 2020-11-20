@@ -141,17 +141,23 @@ extension DepositViewModel: DepositViewDelegate {
         do {
             let amount = try handleConfirmCondition()
             print(amount)
-            WalletManager.unlockWallet(successful: { [weak self] mnemonic in
-                self?.view?.toastView?.show(tag: 99)
-                self?.dataModel.sendDepositTransaction(sendAddress: WalletManager.shared.violasAddress!,
-                                                      amount: amount,
-                                                      fee: 10,
-                                                      mnemonic: mnemonic,
-                                                      module: self?.tableViewManager.model?.token_module ?? "",
-                                                      feeModule: self?.tableViewManager.model?.token_module ?? "",
-                                                      productID: self?.tableViewManager.model?.id ?? "")
-            }) { [weak self] errorContent in
-                self?.view?.makeToast(errorContent, position: .center)
+            WalletManager.unlockWallet { [weak self] (result) in
+                switch result {
+                case let .success(mnemonic):
+                    self?.view?.toastView?.show(tag: 99)
+                    self?.dataModel.sendDepositTransaction(sendAddress: WalletManager.shared.violasAddress!,
+                                                          amount: amount,
+                                                          fee: 10,
+                                                          mnemonic: mnemonic,
+                                                          module: self?.tableViewManager.model?.token_module ?? "",
+                                                          feeModule: self?.tableViewManager.model?.token_module ?? "",
+                                                          productID: self?.tableViewManager.model?.id ?? "")
+                case let .failure(error):
+                    guard error.localizedDescription != "Cancel" else {
+                        return
+                    }
+                    self?.view?.makeToast(error.localizedDescription, position: .center)
+                }
             }
         } catch {
             self.view?.makeToast(error.localizedDescription, position: .center)

@@ -68,16 +68,18 @@ extension ScanSignTransactionViewController: ScanSignTransactionViewDelegate {
     func confirmLogin(password: String) {
         NSLog("Password:\(password)")
         if let raw = self.model {
-            WalletManager.unlockWallet(controller: self, successful: { [weak self] (mnemonic) in
-                self?.detailView.toastView?.show(tag: 99)
-                self?.dataModel.signMessage(message: raw.message ?? "", mnemonic: mnemonic)
-            }) { [weak self] (error) in
-                guard error != "Cancel" else {
-                    self?.detailView.toastView?.hide(tag: 99)
-                    return
+            WalletManager.unlockWallet { [weak self] (result) in
+                switch result {
+                case let .success(mnemonic):
+                    self?.detailView.toastView?.show(tag: 99)
+                    self?.dataModel.signMessage(message: raw.message ?? "", mnemonic: mnemonic)
+                case let .failure(error):
+                    guard error.localizedDescription != "Cancel" else {
+                        self?.detailView.toastView?.hide(tag: 99)
+                        return
+                    }
+                    self?.detailView.makeToast(error.localizedDescription, position: .center)
                 }
-                self?.detailView.makeToast(error,
-                                           position: .center)
             }
         } else {
             #warning("报错待处理")

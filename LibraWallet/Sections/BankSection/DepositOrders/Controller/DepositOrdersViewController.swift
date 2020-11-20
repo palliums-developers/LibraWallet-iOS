@@ -149,21 +149,24 @@ extension DepositOrdersViewController: DepositOrdersTableViewCellDelegate {
         self.withdrawClosure = { [weak self] withdrawModel in
             self?.withdrawAlert.model = withdrawModel
             self?.withdrawAlert.withdrawClosure = { [weak self] amount in
-                WalletManager.unlockWallet(successful: { [weak self] (mnemonic) in
-                    self?.detailView.toastView?.show(tag: 99)
-                    self?.dataModel.sendWithdrawTransaction(sendAddress: WalletManager.shared.violasAddress!,
-                                                        amount: amount,
-                                                        fee: 10,
-                                                        mnemonic: mnemonic,
-                                                        module: withdrawModel.token_module ?? "",
-                                                        feeModule: withdrawModel.token_module ?? "",
-                                                        productID: model.id ?? "")
-                }) { [weak self] (errorContent) in
-                    guard errorContent != "Cancel" else {
-                        self?.detailView.toastView?.hide(tag: 99)
-                        return
+                WalletManager.unlockWallet { [weak self] (result) in
+                    switch result {
+                    case let .success(mnemonic):
+                        self?.detailView.toastView?.show(tag: 99)
+                        self?.dataModel.sendWithdrawTransaction(sendAddress: WalletManager.shared.violasAddress!,
+                                                            amount: amount,
+                                                            fee: 10,
+                                                            mnemonic: mnemonic,
+                                                            module: withdrawModel.token_module ?? "",
+                                                            feeModule: withdrawModel.token_module ?? "",
+                                                            productID: model.id ?? "")
+                    case let .failure(error):
+                        guard error.localizedDescription != "Cancel" else {
+                            self?.detailView.toastView?.hide(tag: 99)
+                            return
+                        }
+                        self?.detailView.makeToast(error.localizedDescription, position: .center)
                     }
-                    self?.detailView.makeToast(errorContent, position: .center)
                 }
             }
             self?.withdrawAlert.show(tag: 199)

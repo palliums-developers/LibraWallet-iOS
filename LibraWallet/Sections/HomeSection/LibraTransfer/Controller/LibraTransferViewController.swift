@@ -110,21 +110,23 @@ extension LibraTransferViewController: LibraTransferViewDelegate {
         self.navigationController?.pushViewController(vc, animated: true)
     }
     func confirmTransfer(amount: UInt64, address: String, fee: UInt64) {
-        WalletManager.unlockWallet(controller: self, successful: { [weak self] (mnemonic) in
-            self?.detailView.toastView?.show(tag: 99)
-            self?.dataModel.sendLibraTransaction(sendAddress: self?.wallet?.tokenAddress ?? "",
-                                                 receiveAddress: address,
-                                                 amount: amount,
-                                                 fee: fee,
-                                                 mnemonic: mnemonic,
-                                                 module: self?.wallet?.tokenModule ?? "")
-        }) { [weak self] (error) in
-            guard error != "Cancel" else {
-                self?.detailView.toastView?.hide(tag: 99)
-                return
+        WalletManager.unlockWallet { [weak self] (result) in
+            switch result {
+            case let .success(mnemonic):
+                self?.detailView.toastView?.show(tag: 99)
+                self?.dataModel.sendLibraTransaction(sendAddress: self?.wallet?.tokenAddress ?? "",
+                                                     receiveAddress: address,
+                                                     amount: amount,
+                                                     fee: fee,
+                                                     mnemonic: mnemonic,
+                                                     module: self?.wallet?.tokenModule ?? "")
+            case let .failure(error):
+                guard error.localizedDescription != "Cancel" else {
+                    self?.detailView.toastView?.hide(tag: 99)
+                    return
+                }
+                self?.detailView.makeToast(error.localizedDescription, position: .center)
             }
-            self?.detailView.makeToast(error,
-                                       position: .center)
         }
     }
 }

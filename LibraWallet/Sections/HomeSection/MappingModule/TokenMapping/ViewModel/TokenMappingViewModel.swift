@@ -36,19 +36,22 @@ class TokenMappingViewModel: NSObject {
 }
 extension TokenMappingViewModel {
     func handleUnlockWallet(inputAmount: NSDecimalNumber, outputAmount: NSDecimalNumber, model: TokenMappingListDataModel, outputModuleActiveState: Bool) {
-        WalletManager.unlockWallet(successful: { [weak self](mnemonic) in
-            self?.view?.toastView?.show(tag: 99)
-            self?.handleRequest(inputAmount: inputAmount,
-                                outputAmount: outputAmount,
-                                model: model,
-                                mnemonic: mnemonic,
-                                outputModuleActiveState: outputModuleActiveState)
-        }) { [weak self](error) in
-            guard error != "Cancel" else {
-                self?.view?.toastView?.hide(tag: 99)
-                return
+        WalletManager.unlockWallet { [weak self] (result) in
+            switch result {
+            case let .success(mnemonic):
+                self?.view?.toastView?.show(tag: 99)
+                self?.handleRequest(inputAmount: inputAmount,
+                                    outputAmount: outputAmount,
+                                    model: model,
+                                    mnemonic: mnemonic,
+                                    outputModuleActiveState: outputModuleActiveState)
+            case let .failure(error):
+                guard error.localizedDescription != "Cancel" else {
+                    self?.view?.toastView?.hide(tag: 99)
+                    return
+                }
+                self?.view?.makeToast(error.localizedDescription, position: .center)
             }
-            self?.view?.makeToast(error, position: .center)
         }
     }
     func handleRequest(inputAmount: NSDecimalNumber, outputAmount: NSDecimalNumber, model: TokenMappingListDataModel, mnemonic: [String], outputModuleActiveState: Bool) {

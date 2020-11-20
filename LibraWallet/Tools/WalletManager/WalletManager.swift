@@ -222,7 +222,7 @@ extension Token {
 }
 // MARK: 助记词存储钥匙串相关操作
 extension WalletManager {
-    static func saveMnemonicToKeychain(mnemonic: [String], password: String) throws {
+    private static func saveMnemonicToKeychain(mnemonic: [String], password: String) throws {
         guard mnemonic.isEmpty == false else {
             throw LibraWalletError.WalletCrypto(reason: .mnemonicEmptyError)
         }
@@ -265,46 +265,46 @@ extension WalletManager {
 }
 // MARK: 解锁钱包
 extension WalletManager {
-    static func unlockWallet(controller: UIViewController? = nil, successful: @escaping (([String])->Void), failed: @escaping((String)->Void)) {
+    /// 解锁钱包
+    /// - Parameter completion: 返回结果
+    static func unlockWallet(completion: @escaping (Result<[String], Error>) -> Void) {
         if WalletManager.shared.walletBiometricLock == true {
-            KeychainManager.getPasswordWithBiometric() { (result, error) in
-                if result.isEmpty == false {
+            KeychainManager.getPasswordWithBiometric { (result) in
+                switch result {
+                case let .success(password):
                     do {
-                        let mnemonic = try WalletManager.getMnemonicFromKeychain(password: result)
-                        successful(mnemonic)
+                        let mnemonic = try WalletManager.getMnemonicFromKeychain(password: password)
+                        completion(.success(mnemonic))
                     } catch {
-                        failed(error.localizedDescription)
+                        completion(.failure(error))
                     }
-                } else {
-                    failed(error)
+                case let .failure(error):
+                    completion(.failure(error))
                 }
             }
         } else {
-            let alert = libraWalletTool.passowordAlert(rootAddress: "", mnemonic: { (mnemonic) in
-                successful(mnemonic)
-            }) { (errorContent) in
-                failed(errorContent)
-            }
-            if let con = controller {
-                con.present(alert, animated: true, completion: nil)
-            } else {
-                var rootViewController = UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.rootViewController
-                if let navigationController = rootViewController as? UINavigationController {
-                    rootViewController = navigationController.viewControllers.first
+            let alert = libraWalletTool.passowordAlert { (result) in
+                switch result {
+                case let .success(mnemonic):
+                    completion(.success(mnemonic))
+                case let .failure(error):
+                    completion(.failure(error))
                 }
-                if let tabBarController = rootViewController as? UITabBarController {
-                    rootViewController = tabBarController.selectedViewController
-                }
-                rootViewController?.present(alert, animated: true, completion: nil)
-//                let alertWindow = UIWindow(frame: UIScreen.main.bounds)
-//                alertWindow.rootViewController = UIViewController()
-//                alertWindow.windowLevel = UIWindow.Level.alert + 1;
-//                alertWindow.makeKeyAndVisible()
-//                alertWindow.rootViewController?.present(alert, animated: true, completion: nil)
             }
+            var rootViewController = UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.rootViewController
+            if let tabBarController = rootViewController as? UITabBarController {
+                rootViewController = tabBarController.selectedViewController
+            }
+            if let navigationController = rootViewController as? UINavigationController {
+                rootViewController = navigationController.viewControllers.first
+            }
+            rootViewController?.present(alert, animated: true, completion: nil)
         }
     }
-    static func ChangeBiometricState(controller: UIViewController, state: Bool, successful: @escaping (([String])->Void), failed: @escaping((String)->Void)) {
+}
+// MARK: 钱包添加生物验证
+extension WalletManager {
+    static func changeBiometricState(state: Bool, completion: @escaping (Result<String, Error>) -> Void) {
         if state == false {
             // 关闭
             var str = localLanguage(keyString: "wallet_biometric_alert_face_id_describe")
@@ -315,75 +315,92 @@ extension WalletManager {
                 switch result {
                 case .success( _):
                     do {
+                        // 移除钥匙串
                         try KeychainManager.removeBiometric()
+                        // 移除数据库生物识别状态
                         try DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: WalletManager.shared.walletID!, state: state)
+                        // 移除钱包单里状态
                         WalletManager.shared.changeWalletBiometricLock(state: state)
+                        completion(.success(""))
                     } catch {
-                        failed(error.localizedDescription)
+                        completion(.failure(error))
                     }
-//                    KeychainManager().removeBiometric(password: "", success: { (result, error) in
-//                        if result == "Success" {
-//                            let result = DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: WalletManager.shared.walletID!, state: state)
-//                            guard result == true else {
-//                                failed("Failed Insert DataBase")
-//                                return
-//                            }
-//                            WalletManager.shared.changeWalletBiometricLock(state: state)
-//                        } else {
-//                            failed(error)
-//                        }
-//                    })
                 case .failure(let error):
                     switch error {
-                    // device does not support biometric (face id or touch id) authentication
                     case .biometryNotAvailable:
                         print("biometryNotAvailable")
-                    // No biometry enrolled in this device, ask user to register fingerprint or face
+                        completion(.failure(LibraWalletError.error(localLanguage(keyString: "wallet_biometric_not_available_error"))))
                     case .biometryNotEnrolled:
                         print("biometryNotEnrolled")
+                        if BioMetricAuthenticator.shared.touchIDAvailable() {
+                            completion(.failure(LibraWalletError.error(localLanguage(keyString: "wallet_biometric_touch_id_not_enrolled_error"))))
+                        } else {
+                            completion(.failure(LibraWalletError.error(localLanguage(keyString: "wallet_biometric_face_id_not_enrolled_error"))))
+                        }
                     case .fallback:
-                        //                    self.txtUsername.becomeFirstResponder() // enter username password manually
                         print("fallback")
-                        // Biometry is locked out now, because there were too many failed attempts.
-                    // Need to enter device passcode to unlock.
+                        break
                     case .biometryLockedout:
                         print("biometryLockedout")
                         if BioMetricAuthenticator.shared.touchIDAvailable() {
-                            failed(localLanguage(keyString: "wallet_biometric_touch_id_attempts_too_much_error"))
+                            completion(.failure(LibraWalletError.error(localLanguage(keyString: "wallet_biometric_touch_id_locked_error"))))
                         } else {
-                            failed(localLanguage(keyString: "wallet_biometric_face_id_attempts_too_much_error"))
+                            completion(.failure(LibraWalletError.error(localLanguage(keyString: "wallet_biometric_face_id_locked_error"))))
                         }
-                    // do nothing on canceled by system or user
+                    case .passcodeNotSet:
+                        print("biometryLockedout")
+                        if BioMetricAuthenticator.shared.touchIDAvailable() {
+                            completion(.failure(LibraWalletError.error(localLanguage(keyString: "wallet_biometric_touch_id_without_password_error"))))
+                        } else {
+                            completion(.failure(LibraWalletError.error(localLanguage(keyString: "wallet_biometric_face_id_without_password_error"))))
+                        }
+                    case .failed:
+                        print("biometryLockedout")
+                        if BioMetricAuthenticator.shared.touchIDAvailable() {
+                            completion(.failure(LibraWalletError.error(localLanguage(keyString: "wallet_biometric_touch_id_failed_error"))))
+                        } else {
+                            completion(.failure(LibraWalletError.error(localLanguage(keyString: "wallet_biometric_face_id_failed_error"))))
+                        }
                     case .canceledBySystem, .canceledByUser:
-                        print("cancel")
+                        completion(.failure(LibraWalletError.error("Cancel")))
                         break
-                        
-                    // show error for any other reason
                     default:
                         print(error.localizedDescription)
+                        completion(.failure(error))
                     }
-                    failed(error.localizedDescription)
                 }
             }
         } else {
             // 打开
-            let alert = libraWalletTool.passowordCheckAlert(rootAddress: "", passwordContent: { (password) in
-                KeychainManager.addBiometric(password: password, success: { (result, error) in
-                    if result == "Success" {
-                        do {
-                            try DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: WalletManager.shared.walletID!, state: state)
-                            WalletManager.shared.changeWalletBiometricLock(state: state)
-                        } catch {
-                            failed("Failed Insert DataBase")
+            let alert = libraWalletTool.passowordCheckAlert { (result) in
+                switch result {
+                case let .success(password):
+                    KeychainManager.addBiometric(password: password) { (result) in
+                        switch result {
+                        case .success(_):
+                            do {
+                                try DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: WalletManager.shared.walletID!, state: state)
+                                WalletManager.shared.changeWalletBiometricLock(state: state)
+                                completion(.success(""))
+                            } catch {
+                                completion(.failure(error))
+                            }
+                        case let .failure(error):
+                            completion(.failure(error))
                         }
-                    } else {
-                        failed(error)
                     }
-                })
-            }, errorContent: { (error) in
-                failed(error)
-            })
-            controller.present(alert, animated: true, completion: nil)
+                case let .failure(error):
+                    completion(.failure(error))
+                }
+            }
+            var rootViewController = UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.rootViewController
+            if let tabBarController = rootViewController as? UITabBarController {
+                rootViewController = tabBarController.selectedViewController
+            }
+            if let navigationController = rootViewController as? UINavigationController {
+                rootViewController = navigationController.viewControllers.first
+            }
+            rootViewController?.present(alert, animated: true, completion: nil)
         }
     }
 }

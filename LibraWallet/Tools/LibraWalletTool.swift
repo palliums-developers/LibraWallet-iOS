@@ -284,6 +284,7 @@ struct libraWalletTool {
         }
     }
 }
+// MARK: 计算文字宽高
 extension libraWalletTool {
     static func ga_heightForComment(content: String, fontSize: CGFloat, width: CGFloat) -> CGFloat {
         let rect = NSString(string: content).boundingRect(with: CGSize(width: width, height: CGFloat(MAXFLOAT)),
@@ -300,75 +301,70 @@ extension libraWalletTool {
         return ceil(rect.width)
     }
 }
+// MARK: 密码验证
 extension libraWalletTool {
-    static func passowordAlert(rootAddress: String, message: String? = localLanguage(keyString: "wallet_type_in_password_content"), mnemonic: @escaping (([String])->Void), errorContent: @escaping ((String)->Void)) -> UIAlertController {
-        let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: message, preferredStyle: .alert)
-        alertContr.addTextField {
+    static func passowordAlert(message: String? = localLanguage(keyString: "wallet_type_in_password_content"), completion: @escaping (Result<[String], Error>)-> Void) -> UIAlertController {
+        let alertController = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: message, preferredStyle: .alert)
+        alertController.addTextField {
             (textField: UITextField!) -> Void in
             textField.placeholder = localLanguage(keyString: "wallet_type_in_password_textfield_placeholder")
             textField.tintColor = DefaultGreenColor
             textField.isSecureTextEntry = true
         }
-        alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_confirm_button_title"), style: .default) { clickHandler in
-            let passwordTextField = alertContr.textFields!.first! as UITextField
-            guard let password = passwordTextField.text else {
-                errorContent(LibraWalletError.WalletCheckPassword(reason: .passwordInvalidError).localizedDescription)
+        alertController.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_confirm_button_title"), style: .default) { clickHandler in
+            guard let password = alertController.textFields?.first?.text else {
+                completion(.failure(LibraWalletError.WalletCheckPassword(reason: .passwordInvalidError)))
                 return
             }
             guard password.isEmpty == false else {
-                errorContent(LibraWalletError.WalletCheckPassword(reason: .passwordEmptyError).localizedDescription)
+                completion(.failure(LibraWalletError.WalletCheckPassword(reason: .passwordEmptyError)))
                 return
             }
             NSLog("Password:\(password)")
             do {
-                let tempMenmonic = try WalletManager.getMnemonicFromKeychain(password: password)
-                mnemonic(tempMenmonic)
+                let mnemonic = try WalletManager.getMnemonicFromKeychain(password: password)
+                completion(.success(mnemonic))
             } catch {
-                errorContent(error.localizedDescription)
+                completion(.failure(error))
             }
         })
-        alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_cancel_button_title"), style: .cancel){
+        alertController.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_cancel_button_title"), style: .cancel){
             clickHandler in
             NSLog("点击了取消")
-            errorContent("Cancel")
+            completion(.failure(LibraWalletError.WalletCheckPassword(reason: .cancel)))
         })
-        return alertContr
+        return alertController
     }
-    static func passowordCheckAlert(rootAddress: String, message: String? = localLanguage(keyString: "wallet_type_in_password_content"), passwordContent: @escaping ((String)->Void), errorContent: @escaping ((String)->Void)) -> UIAlertController {
-        let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: message, preferredStyle: .alert)
-        alertContr.addTextField {
+    static func passowordCheckAlert(message: String? = localLanguage(keyString: "wallet_type_in_password_content"),  completion: @escaping (Result<String, Error>)-> Void) -> UIAlertController {
+        let alertController = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: message, preferredStyle: .alert)
+        alertController.addTextField {
             (textField: UITextField!) -> Void in
             textField.placeholder = localLanguage(keyString: "wallet_type_in_password_textfield_placeholder")
             textField.tintColor = DefaultGreenColor
             textField.isSecureTextEntry = true
         }
-        alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_confirm_button_title"), style: .default) { clickHandler in
-            let passwordTextField = alertContr.textFields!.first! as UITextField
-            guard let password = passwordTextField.text else {
-                errorContent(LibraWalletError.WalletCheckPassword(reason: .passwordInvalidError).localizedDescription)
+        alertController.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_confirm_button_title"), style: .default) { clickHandler in
+            guard let password = alertController.textFields?.first?.text else {
+                completion(.failure(LibraWalletError.WalletCheckPassword(reason: .passwordInvalidError)))
                 return
             }
             guard password.isEmpty == false else {
-                errorContent(LibraWalletError.WalletCheckPassword(reason: .passwordEmptyError).localizedDescription)
+                completion(.failure(LibraWalletError.WalletCheckPassword(reason: .passwordEmptyError)))
                 return
             }
             NSLog("Password:\(password)")
             do {
-                let result = try WalletManager.getMnemonicFromKeychain(password: password)
-                guard result.isEmpty == false else {
-                    errorContent(LibraWalletError.WalletCheckPassword(reason: .passwordCheckFailed).localizedDescription)
-                    return
-                }
-                passwordContent(password)
+                _ = try WalletManager.getMnemonicFromKeychain(password: password)
+                completion(.success(password))
             } catch {
-                errorContent(error.localizedDescription)
+                completion(.failure(error))
             }
         })
-        alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_cancel_button_title"), style: .cancel){
+        alertController.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_cancel_button_title"), style: .cancel){
             clickHandler in
             NSLog("点击了取消")
-            errorContent("Cancel")
+            completion(.failure(LibraWalletError.WalletCheckPassword(reason: .cancel)))
         })
-        return alertContr
+        return alertController
     }
 }

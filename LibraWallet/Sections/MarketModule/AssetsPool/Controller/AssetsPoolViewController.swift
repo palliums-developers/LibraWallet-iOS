@@ -58,48 +58,51 @@ extension AssetsPoolViewController: AssetsPoolViewHeaderViewDelegate {
     }
     
     func addLiquidityConfirm(amountIn: UInt64, amountOut: UInt64, inputModelName: String, outputModelName: String) {
-        WalletManager.unlockWallet(controller: self, successful: { [weak self](mnemonic) in
-            self?.detailView.toastView?.show(tag: 99)
-            self?.dataModel.sendAddLiquidityViolasTransaction(sendAddress: WalletManager.shared.violasAddress ?? "",
-                                                              amounta_desired: amountIn,
-                                                              amountb_desired: amountOut,
-                                                              amounta_min: UInt64(Double(amountIn) * 0.995),
-                                                              amountb_min: UInt64(Double(amountOut) * 0.995),
-                                                              fee: 0,
-                                                              mnemonic: mnemonic,
-                                                              moduleA: inputModelName,
-                                                              moduleB: outputModelName,
-                                                              feeModule: inputModelName)
-        }) { [weak self](error) in
-            guard error != "Cancel" else {
-                self?.detailView.toastView?.hide(tag: 99)
-                return
+        WalletManager.unlockWallet { [weak self] (result) in
+            switch result {
+            case let .success(mnemonic):
+                self?.detailView.toastView?.show(tag: 99)
+                self?.dataModel.sendAddLiquidityViolasTransaction(sendAddress: WalletManager.shared.violasAddress ?? "",
+                                                                  amounta_desired: amountIn,
+                                                                  amountb_desired: amountOut,
+                                                                  amounta_min: UInt64(Double(amountIn) * 0.995),
+                                                                  amountb_min: UInt64(Double(amountOut) * 0.995),
+                                                                  fee: 0,
+                                                                  mnemonic: mnemonic,
+                                                                  moduleA: inputModelName,
+                                                                  moduleB: outputModelName,
+                                                                  feeModule: inputModelName)
+            case let .failure(error):
+                guard error.localizedDescription != "Cancel" else {
+                    self?.detailView.toastView?.hide(tag: 99)
+                    return
+                }
+                self?.detailView.makeToast(error.localizedDescription, position: .center)
             }
-            self?.detailView.makeToast(error,
-                                       position: .center)
         }
     }
     func removeLiquidityConfirm(token: Double, amountIn: Double, amountOut: Double, inputModelName: String, outputModelName: String) {
         print("Exchange")
-        
-        WalletManager.unlockWallet(controller: self, successful: { [weak self](mnemonic) in
-            self?.detailView.toastView?.show(tag: 99)
-            self?.dataModel.sendRemoveLiquidityViolasTransaction(sendAddress: WalletManager.shared.violasAddress ?? "",
-                                                                 liquidity: token,
-                                                                 amounta_min: amountIn,
-                                                                 amountb_min: amountOut,
-                                                                 fee: 0,
-                                                                 mnemonic: mnemonic,
-                                                                 moduleA: inputModelName,
-                                                                 moduleB: outputModelName,
-                                                                 feeModule: inputModelName)
-        }) { [weak self](error) in
-            guard error != "Cancel" else {
-                self?.detailView.toastView?.hide(tag: 99)
-                return
+        WalletManager.unlockWallet { [weak self] (result) in
+            switch result {
+            case let .success(mnemonic):
+                self?.detailView.toastView?.show(tag: 99)
+                self?.dataModel.sendRemoveLiquidityViolasTransaction(sendAddress: WalletManager.shared.violasAddress ?? "",
+                                                                     liquidity: token,
+                                                                     amounta_min: amountIn,
+                                                                     amountb_min: amountOut,
+                                                                     fee: 0,
+                                                                     mnemonic: mnemonic,
+                                                                     moduleA: inputModelName,
+                                                                     moduleB: outputModelName,
+                                                                     feeModule: inputModelName)
+            case let .failure(error):
+                guard error.localizedDescription != "Cancel" else {
+                    self?.detailView.toastView?.hide(tag: 99)
+                    return
+                }
+                self?.detailView.makeToast(error.localizedDescription, position: .center)
             }
-            self?.detailView.makeToast(error,
-                                       position: .center)
         }
     }
     

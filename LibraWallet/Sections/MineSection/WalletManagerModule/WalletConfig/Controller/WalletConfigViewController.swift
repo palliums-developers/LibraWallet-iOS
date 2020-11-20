@@ -64,117 +64,42 @@ class WalletConfigViewController: BaseViewController {
 extension WalletConfigViewController: WalletConfigTableViewManagerDelegate {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath) {
         if indexPath.row == 0 {
-            WalletManager.unlockWallet(controller: self, successful: { [weak self] (mnemonic) in
-                if WalletManager.shared.walletBackupState == true {
-                    let vc = BackupMnemonicController()
-                    vc.JustShow = true
-                    vc.tempWallet = mnemonic
-                    self?.navigationController?.pushViewController(vc, animated: true)
-                } else {
-                    let vc = BackupWarningViewController()
-                    vc.FirstInApp = false
-                    vc.tempWallet = mnemonic
-                    self?.navigationController?.pushViewController(vc, animated: true)
+            WalletManager.unlockWallet { [weak self] (result) in
+                switch result {
+                case let .success(mnemonic):
+                    if WalletManager.shared.walletBackupState == true {
+                        let vc = BackupMnemonicController()
+                        vc.JustShow = true
+                        vc.tempWallet = mnemonic
+                        self?.navigationController?.pushViewController(vc, animated: true)
+                    } else {
+                        let vc = BackupWarningViewController()
+                        vc.FirstInApp = false
+                        vc.tempWallet = mnemonic
+                        self?.navigationController?.pushViewController(vc, animated: true)
+                    }
+                case let .failure(error):
+                    guard error.localizedDescription != "Cancel" else {
+                        self?.detailView.hideToastActivity()
+                        return
+                    }
+                    self?.detailView.makeToast(error.localizedDescription, position: .center)
                 }
-            }) { [weak self]  (error) in
-                guard error != "Cancel" else {
-                    self?.detailView.hideToastActivity()
-                     return
-                 }
-                self?.detailView.makeToast(error, position: .center)
             }
         }
     }
     func switchButtonValueChange(button: UISwitch) {
-        if button.isOn == true {
-            // 打开
-            let alert = libraWalletTool.passowordCheckAlert(rootAddress: "", passwordContent: { (password) in
-                KeychainManager.addBiometric(password: password, success: { (result, error) in
-                    if result == "Success" {
-                        do {
-                            try DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: WalletManager.shared.walletID!, state: button.isOn)
-                            WalletManager.shared.changeWalletBiometricLock(state: button.isOn)
-                        } catch {
-                            button.setOn(!button.isOn, animated: true)
-                        }
-                    } else {
-                        self.detailView.makeToast(error, position: .center)
-                        button.setOn(!button.isOn, animated: true)
-                    }
-                })
-            }, errorContent: { (error) in
-                if error != "Cancel" {
-                    self.detailView.makeToast(error, position: .center)
-                }
+        WalletManager.changeBiometricState(state: button.isOn) { [weak self] (result) in
+            switch result {
+            case .success(_):
+                print("生物识别状态：\(button.isOn)成功")
+            case let .failure(error):
                 button.setOn(!button.isOn, animated: true)
-            })
-            self.present(alert, animated: true, completion: nil)
-        } else {
-            // 关闭
-            var str = localLanguage(keyString: "wallet_biometric_alert_face_id_describe")
-            if BioMetricAuthenticator.shared.touchIDAvailable() {
-                str = localLanguage(keyString: "wallet_biometric_alert_fingerprint_describe")
-            }
-            BioMetricAuthenticator.authenticateWithBioMetrics(reason: str) { (result) in
-                switch result {
-                case .success( _):
-                    do {
-                        try KeychainManager.removeBiometric()
-                        try DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: WalletManager.shared.walletID!, state: button.isOn)
-                        WalletManager.shared.changeWalletBiometricLock(state: button.isOn)
-                    } catch {
-                        self.detailView.makeToast(error.localizedDescription, position: .center)
-                        button.setOn(!button.isOn, animated: true)
-                    }
-//                    KeychainManager().removeBiometric(password: "", success: { (result, error) in
-//                        if result == "Success" {
-//                            let result = DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: WalletManager.shared.walletID!, state: button.isOn)
-//                            guard result == true else {
-//                                button.setOn(!button.isOn, animated: true)
-//                                return
-//                            }
-//                            WalletManager.shared.changeWalletBiometricLock(state: button.isOn)
-//                        } else {
-//                            self.detailView.makeToast(error, position: .center)
-//                            button.setOn(!button.isOn, animated: true)
-//                        }
-//                    })
-                    print("success")
-                case .failure(let error):
-                    button.setOn(!button.isOn, animated: true)
-                    switch error {
-                    // device does not support biometric (face id or touch id) authentication
-                    case .biometryNotAvailable:
-                        print("biometryNotAvailable")
-                    // No biometry enrolled in this device, ask user to register fingerprint or face
-                    case .biometryNotEnrolled:
-                        print("biometryNotEnrolled")
-                    case .fallback:
-                        //                    self.txtUsername.becomeFirstResponder() // enter username password manually
-                        print("fallback")
-                        // Biometry is locked out now, because there were too many failed attempts.
-                    // Need to enter device passcode to unlock.
-                    case .biometryLockedout:
-                        print("biometryLockedout")
-                        if BioMetricAuthenticator.shared.touchIDAvailable() {
-                            self.detailView.makeToast(localLanguage(keyString: "wallet_biometric_touch_id_attempts_too_much_error"),
-                                                      position: .center)
-                        } else {
-                            self.detailView.makeToast(localLanguage(keyString: "wallet_biometric_face_id_attempts_too_much_error"),
-                                                      position: .center)
-                        }
-                    // do nothing on canceled by system or user
-                    case .canceledBySystem, .canceledByUser:
-                        print("cancel")
-                        break
-                        
-                    // show error for any other reason
-                    default:
-                        print(error.localizedDescription)
-                    }
+                guard error.localizedDescription != "Cancel" else {
+                    return
                 }
+                self?.detailView.makeToast(error.localizedDescription, position: .center)
             }
-            
         }
     }
 }
@@ -182,26 +107,43 @@ extension WalletConfigViewController: WalletConfigViewDelegate {
     func deleteButtonClick() {
         let alert = UIAlertController.init(title: localLanguage(keyString: "wallet_alert_delete_wallet_title"), message: localLanguage(keyString: "wallet_alert_delete_wallet_content"), preferredStyle: UIAlertController.Style.alert)
         let confirmAction = UIAlertAction.init(title: localLanguage(keyString: "wallet_alert_delete_wallet_confirm_button_title"), style: UIAlertAction.Style.destructive) { (UIAlertAction) in
-            #warning("缺少删除keychain")
             //            let state = DataBaseManager.DBManager.deleteWalletFromTable(model: self.walletModel!)
             
             //            guard state == true else {
             //                return
             //            }
             //            _ = DataBaseManager.DBManager.updateDefaultViolasWallet()
-            WalletManager.unlockWallet(controller: self, successful: { [weak self] (mnemonic) in
-                self?.view.makeToast(localLanguage(keyString: "wallet_delete_wallet_success_title"), duration: 1, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { [weak self](bool) in
-                //                if let action = self?.actionClosure {
-                //                    action(.delete)
-                //                }
-                    #warning("密码待处理")
-                    WalletManager.deleteWallet(password: "", createOrImport: false, step: 999)
-                                self?.navigationController?.popViewController(animated: true)
-                            })
-            }) { [weak self] (error) in
-                self?.view.makeToast(error,
-                                     position: .center)
+            WalletManager.unlockWallet { [weak self] (result) in
+                switch result {
+                case let .success(_):
+                    self?.view.makeToast(localLanguage(keyString: "wallet_delete_wallet_success_title"), duration: 1, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { [weak self](bool) in
+                    //                if let action = self?.actionClosure {
+                    //                    action(.delete)
+                    //                }
+                        WalletManager.deleteWallet(password: "", createOrImport: false, step: 999)
+                                    self?.navigationController?.popViewController(animated: true)
+                                })
+                case let .failure(error):
+                    guard error.localizedDescription != "Cancel" else {
+                        self?.detailView.hideToastActivity()
+                        return
+                    }
+                    self?.detailView.makeToast(error.localizedDescription, position: .center)
+                }
             }
+//            WalletManager.unlockWallet(controller: self, successful: { [weak self] (mnemonic) in
+//                self?.view.makeToast(localLanguage(keyString: "wallet_delete_wallet_success_title"), duration: 1, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { [weak self](bool) in
+//                //                if let action = self?.actionClosure {
+//                //                    action(.delete)
+//                //                }
+//                    #warning("密码待处理")
+//                    WalletManager.deleteWallet(password: "", createOrImport: false, step: 999)
+//                                self?.navigationController?.popViewController(animated: true)
+//                            })
+//            }) { [weak self] (error) in
+//                self?.view.makeToast(error,
+//                                     position: .center)
+//            }
             
         }
         let cancelAction = UIAlertAction.init(title: localLanguage(keyString: "wallet_alert_delete_wallet_cancel_button_title"), style: UIAlertAction.Style.cancel) { (UIAlertAction) in

@@ -63,22 +63,25 @@ extension LoanViewModel: LoanViewDelegate {
             if activeState == false {
                 self.unactivatedAlert(amount: amount)
             } else {
-                WalletManager.unlockWallet(successful: { [weak self] (mnemonic) in
-                    self?.view?.toastView?.show(tag: 99)
-                    self?.dataModel.sendLoanTransaction(sendAddress: WalletManager.shared.violasAddress!,
-                                                        amount: UInt64(amount),
-                                                        fee: 10,
-                                                        mnemonic: mnemonic,
-                                                        module: self?.tableViewManager.model?.token_module ?? "",
-                                                        feeModule: self?.tableViewManager.model?.token_module ?? "",
-                                                        activeState: true,
-                                                        productID: self?.tableViewManager.model?.id ?? "")
-                }) { [weak self] (errorContent) in
-                    guard errorContent != "Cancel" else {
-                        self?.view?.toastView?.hide(tag: 99)
-                        return
+                WalletManager.unlockWallet { [weak self] (result) in
+                    switch result {
+                    case let .success(mnemonic):
+                        self?.view?.toastView?.show(tag: 99)
+                        self?.dataModel.sendLoanTransaction(sendAddress: WalletManager.shared.violasAddress!,
+                                                            amount: UInt64(amount),
+                                                            fee: 10,
+                                                            mnemonic: mnemonic,
+                                                            module: self?.tableViewManager.model?.token_module ?? "",
+                                                            feeModule: self?.tableViewManager.model?.token_module ?? "",
+                                                            activeState: true,
+                                                            productID: self?.tableViewManager.model?.id ?? "")
+                    case let .failure(error):
+                        guard error.localizedDescription != "Cancel" else {
+                            self?.view?.toastView?.hide(tag: 99)
+                            return
+                        }
+                        self?.view?.makeToast(error.localizedDescription, position: .center)
                     }
-                    self?.view?.makeToast(errorContent, position: .center)
                 }
             }
             print(amount)
@@ -117,22 +120,25 @@ extension LoanViewModel: LoanViewDelegate {
     func unactivatedAlert(amount: UInt64) {
         let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_bank_loan_token_unactivated_alert_title"), message: localLanguage(keyString: "wallet_bank_loan_token_unactivated_alert_content"), preferredStyle: .alert)
         alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_bank_loan_token_unactivated_alert_confirm_button_title"), style: .default){ [weak self] clickHandler in
-            WalletManager.unlockWallet(successful: { [weak self] (mnemonic) in
-                self?.view?.toastView?.show(tag: 99)
-                self?.dataModel.sendLoanTransaction(sendAddress: WalletManager.shared.violasAddress!,
-                                                    amount: amount,
-                                                    fee: 10,
-                                                    mnemonic: mnemonic,
-                                                    module: self?.tableViewManager.model?.token_module ?? "",
-                                                    feeModule: self?.tableViewManager.model?.token_module ?? "",
-                                                    activeState: true,
-                                                    productID: self?.tableViewManager.model?.id ?? "")
-            }) { [weak self] (errorContent) in
-                guard errorContent != "Cancel" else {
-                    self?.view?.toastView?.hide(tag: 99)
-                    return
+            WalletManager.unlockWallet { [weak self] (result) in
+                switch result {
+                case let .success(mnemonic):
+                    self?.view?.toastView?.show(tag: 99)
+                    self?.dataModel.sendLoanTransaction(sendAddress: WalletManager.shared.violasAddress!,
+                                                        amount: amount,
+                                                        fee: 10,
+                                                        mnemonic: mnemonic,
+                                                        module: self?.tableViewManager.model?.token_module ?? "",
+                                                        feeModule: self?.tableViewManager.model?.token_module ?? "",
+                                                        activeState: true,
+                                                        productID: self?.tableViewManager.model?.id ?? "")
+                case let .failure(error):
+                    guard error.localizedDescription != "Cancel" else {
+                        self?.view?.toastView?.hide(tag: 99)
+                        return
+                    }
+                    self?.view?.makeToast(error.localizedDescription, position: .center)
                 }
-                self?.view?.makeToast(errorContent, position: .center)
             }
         })
         alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_bank_loan_token_unactivated_alert_cancel_button_title"), style: .cancel){ clickHandler in

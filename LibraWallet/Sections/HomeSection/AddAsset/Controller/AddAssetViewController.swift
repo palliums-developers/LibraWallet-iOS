@@ -140,50 +140,52 @@ extension AddAssetViewController: AddAssetTableViewManagerDelegate {
         }
     }
     func showPasswordAlert(model: AssetsModel, indexPath: IndexPath, wallet: Token) {
-        WalletManager.unlockWallet(controller: self, successful: { [weak self] (mnemonic) in
-            self?.detailView.toastView?.show(tag: 99)
-            self?.dataModel.publishViolasToken(sendAddress: wallet.tokenAddress, mnemonic: mnemonic, type: wallet.tokenType, module: model.module ?? "")
-            self?.actionClosure = { result in
-                if result == true {
-                    print("开启成功插入")
-                    let token = Token.init(tokenID: 999,
-                                           tokenName: model.show_name ?? "",
-                                           tokenBalance: 0,
-                                           tokenAddress: wallet.tokenAddress,
-                                           tokenType: model.type!,
-                                           tokenIndex: 0,
-                                           tokenAuthenticationKey: wallet.tokenAuthenticationKey,
-                                           tokenActiveState: true,
-                                           tokenIcon: model.icon ?? "",
-                                           tokenContract: model.address ?? "00000000000000000000000000000001",
-                                           tokenModule: model.module ?? "",
-                                           tokenModuleName: model.module ?? "",
-                                           tokenEnable: true,
-                                           tokenPrice: "0.0")
-                    do {
-                        try WalletManager.addCurrencyToWallet(token: token)
-                    } catch {
+        WalletManager.unlockWallet { [weak self] (result) in
+            switch result {
+            case let .success(mnemonic):
+                self?.detailView.toastView?.show(tag: 99)
+                self?.dataModel.publishViolasToken(sendAddress: wallet.tokenAddress, mnemonic: mnemonic, type: wallet.tokenType, module: model.module ?? "")
+                self?.actionClosure = { result in
+                    if result == true {
+                        print("开启成功插入")
+                        let token = Token.init(tokenID: 999,
+                                               tokenName: model.show_name ?? "",
+                                               tokenBalance: 0,
+                                               tokenAddress: wallet.tokenAddress,
+                                               tokenType: model.type!,
+                                               tokenIndex: 0,
+                                               tokenAuthenticationKey: wallet.tokenAuthenticationKey,
+                                               tokenActiveState: true,
+                                               tokenIcon: model.icon ?? "",
+                                               tokenContract: model.address ?? "00000000000000000000000000000001",
+                                               tokenModule: model.module ?? "",
+                                               tokenModuleName: model.module ?? "",
+                                               tokenEnable: true,
+                                               tokenPrice: "0.0")
+                        do {
+                            try WalletManager.addCurrencyToWallet(token: token)
+                        } catch {
+                            let cell = self?.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
+                            cell.switchButton.setOn(result, animated: true)
+                        }
+                        if let action = self?.needUpdateClosure {
+                            action(true)
+                        }
+                    } else {
                         let cell = self?.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
                         cell.switchButton.setOn(result, animated: true)
+                        print("开启失败")
                     }
-                    if let action = self?.needUpdateClosure {
-                        action(true)
-                    }
-                } else {
-                    let cell = self?.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
-                    cell.switchButton.setOn(result, animated: true)
-                    print("开启失败")
                 }
+            case let .failure(error):
+                let cell = self?.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
+                cell.switchButton.setOn(false, animated: true)
+                guard error.localizedDescription != "Cancel" else {
+                    self?.detailView.toastView?.hide(tag: 99)
+                    return
+                }
+                self?.detailView.makeToast(error.localizedDescription, position: .center)
             }
-        }) { [weak self] (error) in
-            let cell = self?.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
-            cell.switchButton.setOn(false, animated: true)
-            guard error != "Cancel" else {
-                self?.detailView.toastView?.hide(tag: 99)
-                return
-            }
-            self?.detailView.makeToast(error,
-                                       position: .center)
         }
     }
 }

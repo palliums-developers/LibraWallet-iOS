@@ -50,17 +50,23 @@ extension RepaymentViewModel: RepaymentViewDelegate {
     func confirmRepayment() {
         do {
             let (amount, _) = try handleConfirmCondition()
-            WalletManager.unlockWallet(successful: { [weak self] (mnemonic) in
-                self?.view?.toastView?.show(tag: 99)
-                self?.dataModel.sendRepaymentTransaction(sendAddress: WalletManager.shared.violasAddress!,
-                                                         amount: UInt64(amount),
-                                                         fee: 10,
-                                                         mnemonic: mnemonic,
-                                                         module: self?.tableViewManager.model?.token_module ?? "",
-                                                         feeModule: self?.tableViewManager.model?.token_module ?? "",
-                                                         productID: self?.tableViewManager.model?.product_id ?? "")
-            }) { (errorContent) in
-                self.view?.makeToast(errorContent, position: .center)
+            WalletManager.unlockWallet { [weak self] (result) in
+                switch result {
+                case let .success(mnemonic):
+                    self?.view?.toastView?.show(tag: 99)
+                    self?.dataModel.sendRepaymentTransaction(sendAddress: WalletManager.shared.violasAddress!,
+                                                             amount: UInt64(amount),
+                                                             fee: 10,
+                                                             mnemonic: mnemonic,
+                                                             module: self?.tableViewManager.model?.token_module ?? "",
+                                                             feeModule: self?.tableViewManager.model?.token_module ?? "",
+                                                             productID: self?.tableViewManager.model?.product_id ?? "")
+                case let .failure(error):
+                    guard error.localizedDescription != "Cancel" else {
+                        return
+                    }
+                    self?.view?.makeToast(error.localizedDescription, position: .center)
+                }
             }
             print(amount)
         } catch {

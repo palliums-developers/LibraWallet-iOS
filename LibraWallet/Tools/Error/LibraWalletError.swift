@@ -177,6 +177,8 @@ public enum LibraWalletError: Error {
         case passwordEmptyError
         /// 密码不正确
         case passwordCheckFailed
+        /// 取消密码验证
+        case cancel
     }
     case WalletCheckPassword(reason: CheckPasswordError)
     
@@ -346,7 +348,6 @@ public enum LibraWalletError: Error {
         case dataInvalid
     }
     case WalletBankWithdraw(reason: BankWithdrawError)
-    
 }
 extension LibraWalletError: LocalizedError {
     public var errorDescription: String? {
@@ -605,6 +606,8 @@ extension LibraWalletError.CheckPasswordError {
             return localLanguage(keyString: "wallet_check_password_empty_error")
         case .passwordCheckFailed:
             return localLanguage(keyString: "wallet_check_password_failed_error")
+        case .cancel:
+            return "Cancel"
         }
     }
 }

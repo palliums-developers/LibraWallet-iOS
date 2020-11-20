@@ -47,19 +47,22 @@ extension ExchangeViewModel {
 // MARK: - 逻辑处理
 extension ExchangeViewModel {
     func handleUnlockWallet(inputAmount: NSDecimalNumber, outputAmount: NSDecimalNumber, inputModule: MarketSupportTokensDataModel, outputModule: MarketSupportTokensDataModel, outputModuleActiveState: Bool) {
-        WalletManager.unlockWallet(successful: { [weak self](mnemonic) in
-            self?.handleRequest(inputAmount: inputAmount,
-                                outputAmount: outputAmount,
-                                inputModule: inputModule,
-                                outputModule: outputModule,
-                                mnemonic: mnemonic,
-                                outputModuleActiveState: outputModuleActiveState)
-        }) { [weak self](error) in
-            guard error != "Cancel" else {
-                self?.view?.toastView?.hide(tag: 99)
-                return
+        WalletManager.unlockWallet { [weak self] (result) in
+            switch result {
+            case let .success(mnemonic):
+                self?.handleRequest(inputAmount: inputAmount,
+                                    outputAmount: outputAmount,
+                                    inputModule: inputModule,
+                                    outputModule: outputModule,
+                                    mnemonic: mnemonic,
+                                    outputModuleActiveState: outputModuleActiveState)
+            case let .failure(error):
+                guard error.localizedDescription != "Cancel" else {
+                    self?.view?.toastView?.hide(tag: 99)
+                    return
+                }
+                self?.view?.makeToast(error.localizedDescription, position: .center)
             }
-            self?.view?.makeToast(error, position: .center)
         }
     }
     func handleRequest(inputAmount: NSDecimalNumber, outputAmount: NSDecimalNumber, inputModule: MarketSupportTokensDataModel, outputModule: MarketSupportTokensDataModel, mnemonic: [String], outputModuleActiveState: Bool) {
