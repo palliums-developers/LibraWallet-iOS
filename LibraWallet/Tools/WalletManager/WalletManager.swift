@@ -556,9 +556,9 @@ extension WalletManager {
                 if model.currency == token.tokenModule {
                     do {
                         try DataBaseManager.DBManager.updateTokenBalance(tokenID: token.tokenID, balance: model.amount ?? 0)
-                        print("刷新Libra Token数据状态: \(true),walletID = \(token.tokenID)")
+                        print("刷新Libra Token数据状态: \(true)")
                     } catch {
-                        print("刷新Libra Token数据状态: \(false),walletID = \(token.tokenID)")
+                        print("刷新Libra Token数据状态: \(false)")
                     }
                     break
                 }
@@ -572,9 +572,9 @@ extension WalletManager {
                 if model.currency == token.tokenModule {
                     do {
                         try DataBaseManager.DBManager.updateTokenBalance(tokenID: token.tokenID, balance: model.amount ?? 0)
-                        print("刷新Violas Token数据状态: \(true),walletID = \(token.tokenID)")
+                        print("刷新Violas Token数据状态: \(true)")
                     } catch {
-                        print("刷新Violas Token数据状态: \(false),walletID = \(token.tokenID)")
+                        print("刷新Violas Token数据状态: \(false)")
                     }
                     break
                 }
@@ -585,9 +585,36 @@ extension WalletManager {
         // 刷新本地缓存数据
         do {
             try DataBaseManager.DBManager.updateTokenBalance(tokenID: tokenID, balance: balance)
-            print("刷新BTC类型本地tokenID数据状态: \(true),walletID = \(tokenID)")
+            print("刷新Bitcoin Token数据状态: \(true)")
         } catch {
-            print("刷新BTC类型本地tokenID数据状态: \(false),walletID = \(tokenID)")
+            print("刷新Bitcoin Token数据状态: \(false)")
+        }
+    }
+}
+// MARK: 钱包添加资产
+extension WalletManager {
+    static func addCurrencyToWallet(token: Token) throws {
+        do {
+            let isExist = try DataBaseManager.DBManager.isExistViolasToken(tokenAddress: token.tokenAddress, tokenModule: token.tokenModule, tokenType: token.tokenType)
+            if isExist == true {
+                // 已存在改状态
+                print("Token 数据库中已存在,改状态: \(token.tokenEnable)")
+                do {
+                    try DataBaseManager.DBManager.updateViolasTokenState(tokenAddress: token.tokenAddress, tokenModule: token.tokenModule, tokenType: token.tokenType, state: token.tokenEnable)
+                } catch {
+                    throw error
+                }
+            } else {
+                // 不存在插入
+                print("Token数据库中不存在,插入")
+                do {
+                    try DataBaseManager.DBManager.insertToken(token: token)
+                } catch {
+                    throw error
+                }
+            }
+        } catch {
+            throw error
         }
     }
 }
