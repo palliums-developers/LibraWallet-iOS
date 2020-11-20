@@ -48,25 +48,14 @@ extension CheckBackupViewController: CheckBackupViewDelegate {
         do {
             try self.viewModel.checkIsAllValid()
             if FirstInApp == true {
-//                if let wallets = self.tempWallet?.wallet, wallets.isEmpty == false {
-//                    for wallet in wallets {
-//                        let result = DataBaseManager.DBManager.updateWalletBackupState(wallet: WalletManager.shared)
-//                        print("\(wallet.tokenAddress)钱包更新备份状态-\(result)")
-//                    }
-//                } else {
-//                    print("无法更新备份状态")
-//                }
-                try DataBaseManager.DBManager.updateWalletBackupState(wallet: WalletManager.shared)
-                print("钱包更新备份状态-\(true)")
-                WalletManager.shared.changeWalletBackupState(state: true)
+
+                try WalletManager.updateWalletBackupState()
                 self.view.makeToast(localLanguage(keyString: "wallet_check_mnemonic_success_title"), duration: 0.5, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
                     self.dismiss(animated: true, completion: nil)
                 })
             } else {
                 self.view.hideToastActivity()
-                try DataBaseManager.DBManager.updateWalletBackupState(wallet: WalletManager.shared)
-                print("钱包更新备份状态-\(true)")
-                WalletManager.shared.changeWalletBackupState(state: true)
+                try WalletManager.updateWalletBackupState()
                 self.jumpToWalletManagerController()
             }
         } catch {

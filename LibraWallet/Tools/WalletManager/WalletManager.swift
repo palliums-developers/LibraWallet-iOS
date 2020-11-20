@@ -635,3 +635,15 @@ extension WalletManager {
         }
     }
 }
+// MARK: 更新钱包备份状态
+extension WalletManager {
+    static func updateWalletBackupState() throws {
+        do {
+            try DataBaseManager.DBManager.updateWalletBackupState(wallet: WalletManager.shared)
+            print("钱包更新备份状态-\(true)")
+            WalletManager.shared.changeWalletBackupState(state: true)
+        } catch {
+            throw error
+        }
+    }
+}
