@@ -120,23 +120,16 @@ extension AddAssetViewController: AddAssetTableViewManagerDelegate {
         } else {
             // 未注册
             print("未注册")
-            let alertView = UIAlertController.init(title: localLanguage(keyString: "wallet_add_asset_alert_title"),
-                                                   message: localLanguage(keyString: "wallet_add_asset_alert_content"),
-                                                   preferredStyle: .alert)
-            let cancelAction = UIAlertAction.init(title:localLanguage(keyString: "wallet_add_asset_alert_cancel_button_title"), style: .default) { okAction in
-                let cell = self.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
-                cell.switchButton.setOn(!state, animated: true)
-            }
-            let confirmAction = UIAlertAction.init(title:localLanguage(keyString: "wallet_add_asset_alert_confirm_button_title"), style: .default) { okAction in
+            let alert = libraWalletTool.currencyUnactivatedAlert {
                 let wallet = self.tokens?.filter({
                     $0.tokenType == model.type
                 })
                 self.showPasswordAlert(model: model, indexPath: indexPath, wallet: wallet!.first!)
-                
+            } cancel: {
+                let cell = self.detailView.tableView.cellForRow(at: indexPath) as! AddAssetViewTableViewCell
+                cell.switchButton.setOn(!state, animated: true)
             }
-            alertView.addAction(cancelAction)
-            alertView.addAction(confirmAction)
-            self.present(alertView, animated: true, completion: nil)
+            self.present(alert, animated: true, completion: nil)
         }
     }
     func showPasswordAlert(model: AssetsModel, indexPath: IndexPath, wallet: Token) {
