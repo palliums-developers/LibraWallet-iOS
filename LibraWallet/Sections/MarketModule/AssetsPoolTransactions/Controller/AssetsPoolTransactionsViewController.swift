@@ -16,8 +16,14 @@ class AssetsPoolTransactionsViewController: BaseViewController {
         self.view.addSubview(detailView)
         // 初始化KVO
         self.initKVO()
-        // 请求数据
-        self.detailView.tableView.mj_header?.beginRefreshing()
+//        // 请求数据
+//        self.detailView.tableView.mj_header?.beginRefreshing()
+        //设置空数据页面
+        self.setEmptyView()
+        //设置默认页面（无数据、无网络）
+        self.setPlaceholderView()
+
+        self.requestData()
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -28,6 +34,26 @@ class AssetsPoolTransactionsViewController: BaseViewController {
                 make.top.bottom.equalTo(self.view)
             }
             make.left.right.equalTo(self.view)
+        }
+    }
+    func setPlaceholderView() {
+        if let empty = emptyView as? EmptyDataPlaceholderView {
+            empty.emptyImageName = "data_empty"
+            empty.tipString = localLanguage(keyString: "wallet_bank_loan_orders_empty_title")
+        }
+    }
+    func requestData() {
+        if (lastState == .Loading) {return}
+        startLoading ()
+        self.detailView.makeToastActivity(.center)
+        
+        refreshData()
+    }
+    override func hasContent() -> Bool {
+        if let models = self.tableViewManager.dataModels, models.isEmpty == false {
+            return true
+        } else {
+            return false
         }
     }
     /// 网络请求、数据模型
@@ -84,49 +110,56 @@ extension AssetsPoolTransactionsViewController {
                 return
             }
             if let error = dataDic.value(forKey: "error") as? LibraWalletError {
-                // 隐藏请求指示
                 self?.detailView.hideToastActivity()
-                if self?.detailView.tableView.mj_footer?.isRefreshing == true {
-                    self?.detailView.tableView.mj_footer?.endRefreshingWithNoMoreData()
-                }
                 if self?.detailView.tableView.mj_header?.isRefreshing == true {
                     self?.detailView.tableView.mj_header?.endRefreshing()
                 }
                 if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
                     // 网络无法访问
                     print(error.localizedDescription)
-                    self?.detailView.makeToast(error.localizedDescription,
-                                               position: .center)
+                    if self?.detailView.tableView.mj_footer?.isRefreshing == true {
+                        self?.detailView.tableView.mj_footer?.endRefreshing()
+                    }
+                    self?.detailView.makeToast(error.localizedDescription, position: .center)
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionExpired).localizedDescription {
                     // 版本太久
                     print(error.localizedDescription)
-                    self?.detailView.makeToast(error.localizedDescription,
-                                               position: .center)
+                    if self?.detailView.tableView.mj_footer?.isRefreshing == true {
+                        self?.detailView.tableView.mj_footer?.endRefreshing()
+                    }
+                    self?.detailView.makeToast(error.localizedDescription, position: .center)
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
                     // 解析失败
                     print(error.localizedDescription)
-                    self?.detailView.makeToast(error.localizedDescription,
-                                               position: .center)
+                    if self?.detailView.tableView.mj_footer?.isRefreshing == true {
+                        self?.detailView.tableView.mj_footer?.endRefreshing()
+                    }
+                    self?.detailView.makeToast(error.localizedDescription, position: .center)
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
                     print(error.localizedDescription)
                     // 数据状态异常
-                    self?.detailView.makeToast(error.localizedDescription,
-                                               position: .center)
+                    if self?.detailView.tableView.mj_footer?.isRefreshing == true {
+                        self?.detailView.tableView.mj_footer?.endRefreshing()
+                    }
+                    self?.detailView.makeToast(error.localizedDescription, position: .center)
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
                     print(error.localizedDescription)
                     // 下拉刷新请求数据为空
-                    self?.tableViewManager.dataModels?.removeAll()
-                    self?.detailView.tableView.reloadData()
-                    self?.detailView.makeToast(error.localizedDescription,
-                                               position: .center)
+                    self?.detailView.makeToast(error.localizedDescription, position: .center)
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .noMoreData).localizedDescription {
                     // 上拉请求更多数据为空
                     print(error.localizedDescription)
-                    self?.detailView.tableView.mj_footer?.endRefreshingWithNoMoreData()
+                    if self?.detailView.tableView.mj_footer?.isRefreshing == true {
+                        self?.detailView.tableView.mj_footer?.endRefreshingWithNoMoreData()
+                    }
                 } else {
-                    self?.detailView.makeToast(error.localizedDescription,
-                                               position: .center)
+                    if self?.detailView.tableView.mj_footer?.isRefreshing == true {
+                        self?.detailView.tableView.mj_footer?.endRefreshing()
+                    }
+                    self?.detailView.makeToast(error.localizedDescription, position: .center)
                 }
+                self?.endLoading()
+
                 return
             }
             let type = dataDic.value(forKey: "type") as! String
@@ -160,6 +193,7 @@ extension AssetsPoolTransactionsViewController {
             }
             self?.detailView.hideToastActivity()
             self?.detailView.tableView.mj_header?.endRefreshing()
+            self?.endLoading()
         })
     }
 }

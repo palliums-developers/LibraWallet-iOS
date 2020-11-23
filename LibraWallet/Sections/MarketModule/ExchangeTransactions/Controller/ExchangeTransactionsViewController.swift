@@ -16,8 +16,14 @@ class ExchangeTransactionsViewController: BaseViewController {
         self.view.addSubview(detailView)
         // 初始化KVO
         self.initKVO()
-        // 请求数据
-        self.detailView.tableView.mj_header?.beginRefreshing()
+//        // 请求数据
+//        self.detailView.tableView.mj_header?.beginRefreshing()
+        //设置空数据页面
+        self.setEmptyView()
+        //设置默认页面（无数据、无网络）
+        self.setPlaceholderView()
+
+        self.requestData()
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -40,6 +46,26 @@ class ExchangeTransactionsViewController: BaseViewController {
     }
     deinit {
         print("ExchangeTransactionsViewController销毁了")
+    }
+    func setPlaceholderView() {
+        if let empty = emptyView as? EmptyDataPlaceholderView {
+            empty.emptyImageName = "data_empty"
+            empty.tipString = localLanguage(keyString: "wallet_bank_loan_orders_empty_title")
+        }
+    }
+    func requestData() {
+        if (lastState == .Loading) {return}
+        startLoading ()
+        self.detailView.makeToastActivity(.center)
+        
+        refreshData()
+    }
+    override func hasContent() -> Bool {
+        if let models = self.tableViewManager.dataModels, models.isEmpty == false {
+            return true
+        } else {
+            return false
+        }
     }
     /// 网络请求、数据模型
     lazy var dataModel: ExchangeTransactionsModel = {
@@ -147,6 +173,7 @@ extension ExchangeTransactionsViewController {
                     self?.detailView.makeToast(error.localizedDescription,
                                                position: .center)
                 }
+                self?.endLoading()
                 return
             }
             let type = dataDic.value(forKey: "type") as! String
@@ -189,6 +216,7 @@ extension ExchangeTransactionsViewController {
             }
             self?.detailView.hideToastActivity()
             self?.detailView.tableView.mj_header?.endRefreshing()
+            self?.endLoading()
         })
     }
 }
