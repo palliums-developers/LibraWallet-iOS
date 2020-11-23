@@ -683,3 +683,14 @@ extension WalletManager {
         }
     }
 }
+// MARK: 更新币种激活状态
+extension WalletManager {
+    static func updateTokenActiveState(tokenID: Int64) throws {
+        do {
+            try DataBaseManager.DBManager.updateTokenActiveState(tokenID: tokenID, state: true)
+        } catch {
+            print(error)
+            throw error
+        }
+    }
+}

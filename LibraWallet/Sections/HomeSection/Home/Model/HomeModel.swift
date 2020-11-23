@@ -557,7 +557,7 @@ extension HomeModel {
     func updateLocalTokenActiveState(tokens: [Token], type: WalletType) {
         for token in tokens {
             do {
-                try DataBaseManager.DBManager.updateTokenActiveState(tokenID: token.tokenID, state: true)
+                try WalletManager.updateTokenActiveState(tokenID: token.tokenID)
             } catch {
                 print(error)
             }

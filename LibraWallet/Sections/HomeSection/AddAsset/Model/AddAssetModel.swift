@@ -337,23 +337,6 @@ class AddAssetModel: NSObject {
             self.resultTokens.append(tempModel)
         }
     }
-//    func dealModelWithSelect(walletID: Int64, models: [ViolasTokenModel]) -> [ViolasTokenModel] {
-//        let localSelectModel = try! DataBaseManager.DBManager.getViolasTokens(walletID: walletID)
-//        var tempDataArray = [ViolasTokenModel]()
-//        for model in models {
-//            var tempModel = model
-//            for item in localSelectModel {
-//                if tempModel.id == item.id {
-//                    tempModel.enable = item.enable
-//                    break
-//                } else {
-//                    tempModel.enable = false
-//                }
-//            }
-//            tempDataArray.append(tempModel)
-//        }
-//        return tempDataArray
-//    }
     // MARK: 开启ViolasToken
     func publishViolasToken(sendAddress: String, mnemonic: [String], type: WalletType, module: String) {
         if type == .Libra {
