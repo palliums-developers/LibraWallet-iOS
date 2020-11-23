@@ -223,221 +223,6 @@ extension Token {
         self.semaphore.signal()
     }
 }
-// MARK: 助记词存储钥匙串相关操作
-extension WalletManager {
-    private static func saveMnemonicToKeychain(mnemonic: [String], password: String) throws {
-        guard mnemonic.isEmpty == false else {
-            throw LibraWalletError.WalletCrypto(reason: .mnemonicEmptyError)
-        }
-        do {
-            let mnemonicString = mnemonic.joined(separator: " ")
-            // 加密密码
-            let encryptMnemonicString = try PasswordCrypto.encryptPassword(content: mnemonicString, password: password)
-            // 保存加密字符串到KeyChain
-            try KeychainManager.saveMnemonicStringToKeychain(mnemonic: encryptMnemonicString)
-        } catch {
-            throw error
-        }
-    }
-    static func getMnemonicFromKeychain(password: String) throws -> [String] {
-        do {
-            // 取出加密后助记词字符串
-            let menmonicString = try KeychainManager.getMnemonicStringFromKeychain()
-            
-            // 解密密文
-            let decryptMnemonicString = try PasswordCrypto.decryptPassword(cryptoString: menmonicString, password: password)
-            
-            let mnemonicArray = decryptMnemonicString.split(separator: " ").compactMap { (item) -> String in
-                return "\(item)"
-            }
-            guard mnemonicArray.isEmpty == false else {
-                throw LibraWalletError.WalletCrypto(reason: .decryptStringSplitError)
-            }
-            return mnemonicArray
-        } catch {
-            throw error
-        }
-    }
-    static func deleteMnemonicFromKeychain() throws {
-        do {
-            try KeychainManager.deleteMnemonicStringFromKeychain()
-        } catch {
-            throw error
-        }
-    }
-}
-// MARK: 解锁钱包
-extension WalletManager {
-    /// 解锁钱包
-    /// - Parameter completion: 返回结果
-    static func unlockWallet(completion: @escaping (Result<[String], Error>) -> Void) {
-        if WalletManager.shared.walletBiometricLock == true {
-            KeychainManager.getPasswordWithBiometric { (result) in
-                switch result {
-                case let .success(password):
-                    do {
-                        let mnemonic = try WalletManager.getMnemonicFromKeychain(password: password)
-                        completion(.success(mnemonic))
-                    } catch {
-                        completion(.failure(error))
-                    }
-                case let .failure(error):
-                    completion(.failure(error))
-                }
-            }
-        } else {
-            let alert = libraWalletTool.passowordAlert { (result) in
-                switch result {
-                case let .success(mnemonic):
-                    completion(.success(mnemonic))
-                case let .failure(error):
-                    completion(.failure(error))
-                }
-            }
-            var rootViewController = UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.rootViewController
-            if let tabBarController = rootViewController as? UITabBarController {
-                rootViewController = tabBarController.selectedViewController
-            }
-            if let navigationController = rootViewController as? UINavigationController {
-                rootViewController = navigationController.viewControllers.first
-            }
-            rootViewController?.present(alert, animated: true, completion: nil)
-        }
-    }
-}
-// MARK: 钱包添加生物验证
-extension WalletManager {
-    static func changeBiometricState(state: Bool, completion: @escaping (Result<String, Error>) -> Void) {
-        if state == false {
-            // 关闭
-            var str = localLanguage(keyString: "wallet_biometric_alert_face_id_describe")
-            if BioMetricAuthenticator.shared.touchIDAvailable() {
-                str = localLanguage(keyString: "wallet_biometric_alert_fingerprint_describe")
-            }
-            BioMetricAuthenticator.authenticateWithBioMetrics(reason: str) { (result) in
-                switch result {
-                case .success( _):
-                    do {
-                        // 移除钥匙串
-                        try KeychainManager.removeBiometric()
-                        // 移除数据库生物识别状态
-                        try DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: WalletManager.shared.walletID!, state: state)
-                        // 移除钱包单里状态
-                        WalletManager.shared.changeWalletBiometricLock(state: state)
-                        completion(.success(""))
-                    } catch {
-                        completion(.failure(error))
-                    }
-                case .failure(let error):
-                    switch error {
-                    case .biometryNotAvailable:
-                        print("biometryNotAvailable")
-                        completion(.failure(LibraWalletError.error(localLanguage(keyString: "wallet_biometric_not_available_error"))))
-                    case .biometryNotEnrolled:
-                        print("biometryNotEnrolled")
-                        if BioMetricAuthenticator.shared.touchIDAvailable() {
-                            completion(.failure(LibraWalletError.error(localLanguage(keyString: "wallet_biometric_touch_id_not_enrolled_error"))))
-                        } else {
-                            completion(.failure(LibraWalletError.error(localLanguage(keyString: "wallet_biometric_face_id_not_enrolled_error"))))
-                        }
-                    case .fallback:
-                        print("fallback")
-                        break
-                    case .biometryLockedout:
-                        print("biometryLockedout")
-                        if BioMetricAuthenticator.shared.touchIDAvailable() {
-                            completion(.failure(LibraWalletError.error(localLanguage(keyString: "wallet_biometric_touch_id_locked_error"))))
-                        } else {
-                            completion(.failure(LibraWalletError.error(localLanguage(keyString: "wallet_biometric_face_id_locked_error"))))
-                        }
-                    case .passcodeNotSet:
-                        print("biometryLockedout")
-                        if BioMetricAuthenticator.shared.touchIDAvailable() {
-                            completion(.failure(LibraWalletError.error(localLanguage(keyString: "wallet_biometric_touch_id_without_password_error"))))
-                        } else {
-                            completion(.failure(LibraWalletError.error(localLanguage(keyString: "wallet_biometric_face_id_without_password_error"))))
-                        }
-                    case .failed:
-                        print("biometryLockedout")
-                        if BioMetricAuthenticator.shared.touchIDAvailable() {
-                            completion(.failure(LibraWalletError.error(localLanguage(keyString: "wallet_biometric_touch_id_failed_error"))))
-                        } else {
-                            completion(.failure(LibraWalletError.error(localLanguage(keyString: "wallet_biometric_face_id_failed_error"))))
-                        }
-                    case .canceledBySystem, .canceledByUser:
-                        completion(.failure(LibraWalletError.error("Cancel")))
-                        break
-                    default:
-                        print(error.localizedDescription)
-                        completion(.failure(error))
-                    }
-                }
-            }
-        } else {
-            // 打开
-            let alert = libraWalletTool.passowordCheckAlert { (result) in
-                switch result {
-                case let .success(password):
-                    KeychainManager.addBiometric(password: password) { (result) in
-                        switch result {
-                        case .success(_):
-                            do {
-                                try DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: WalletManager.shared.walletID!, state: state)
-                                WalletManager.shared.changeWalletBiometricLock(state: state)
-                                completion(.success(""))
-                            } catch {
-                                completion(.failure(error))
-                            }
-                        case let .failure(error):
-                            completion(.failure(error))
-                        }
-                    }
-                case let .failure(error):
-                    completion(.failure(error))
-                }
-            }
-            var rootViewController = UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.rootViewController
-            if let tabBarController = rootViewController as? UITabBarController {
-                rootViewController = tabBarController.selectedViewController
-            }
-            if let navigationController = rootViewController as? UINavigationController {
-                rootViewController = navigationController.viewControllers.first
-            }
-            rootViewController?.present(alert, animated: true, completion: nil)
-        }
-    }
-}
-// MARK: 删除钱包
-extension WalletManager {
-    static func deleteWallet(password: String, createOrImport: Bool, step: Int) {
-        do {
-            // 移除钱包包含所有币
-            if DataBaseManager.DBManager.isExistTable(name: "Tokens") == true && step >= 1 {
-                try DataBaseManager.DBManager.deleteAllTokens()
-            }
-            // 移除本地钱包
-            if DataBaseManager.DBManager.isExistTable(name: "Wallet") == true && step >= 2 {
-                try DataBaseManager.DBManager.deleteHDWallet()
-            }
-            if step >= 3 {
-                // 初始化钱包状态
-                setIdentityWalletState(show: false)
-            }
-            if step >= 4 {
-                // 移除钥匙串
-                try WalletManager.deleteMnemonicFromKeychain()
-            }
-            // 清空钱包单例
-            WalletManager.shared.deleteWallet()
-            if createOrImport == false {
-                // 发送钱包已删除广播
-                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "PalliumsWalletDelete"), object: nil)
-            }
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
-}
 // MARK: 创建Palliums钱包
 extension WalletManager {
     static func createWallet(password: String, mnemonic: [String]) throws {
@@ -567,6 +352,271 @@ extension WalletManager {
         }
     }
 }
+// MARK: 助记词存储钥匙串相关操作
+extension WalletManager {
+    private static func saveMnemonicToKeychain(mnemonic: [String], password: String) throws {
+        guard mnemonic.isEmpty == false else {
+            throw LibraWalletError.WalletCrypto(reason: .mnemonicEmptyError)
+        }
+        do {
+            let mnemonicString = mnemonic.joined(separator: " ")
+            // 加密密码
+            let encryptMnemonicString = try PasswordCrypto.encryptPassword(content: mnemonicString, password: password)
+            // 保存加密字符串到KeyChain
+            try KeychainManager.saveMnemonicStringToKeychain(mnemonic: encryptMnemonicString)
+        } catch {
+            throw error
+        }
+    }
+    static func getMnemonicFromKeychain(password: String) throws -> [String] {
+        do {
+            // 取出加密后助记词字符串
+            let menmonicString = try KeychainManager.getMnemonicStringFromKeychain()
+            
+            // 解密密文
+            let decryptMnemonicString = try PasswordCrypto.decryptPassword(cryptoString: menmonicString, password: password)
+            
+            let mnemonicArray = decryptMnemonicString.split(separator: " ").compactMap { (item) -> String in
+                return "\(item)"
+            }
+            guard mnemonicArray.isEmpty == false else {
+                throw LibraWalletError.WalletCrypto(reason: .decryptStringSplitError)
+            }
+            return mnemonicArray
+        } catch {
+            throw error
+        }
+    }
+    static func deleteMnemonicFromKeychain() throws {
+        do {
+            try KeychainManager.deleteMnemonicStringFromKeychain()
+        } catch {
+            throw error
+        }
+    }
+}
+// MARK: 解锁钱包
+extension WalletManager {
+    /// 解锁钱包
+    /// - Parameter completion: 返回结果
+    static func unlockWallet(completion: @escaping (Result<[String], Error>) -> Void) {
+        if WalletManager.shared.walletBiometricLock == true {
+            KeychainManager.getPasswordWithBiometric { (result) in
+                switch result {
+                case let .success(password):
+                    do {
+                        let mnemonic = try WalletManager.getMnemonicFromKeychain(password: password)
+                        completion(.success(mnemonic))
+                    } catch {
+                        completion(.failure(error))
+                    }
+                case let .failure(error):
+                    completion(.failure(error))
+                }
+            }
+        } else {
+            let alert = libraWalletTool.passowordAlert { (result) in
+                switch result {
+                case let .success(mnemonic):
+                    completion(.success(mnemonic))
+                case let .failure(error):
+                    completion(.failure(error))
+                }
+            }
+            var rootViewController = UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.rootViewController
+            if let tabBarController = rootViewController as? UITabBarController {
+                rootViewController = tabBarController.selectedViewController
+            }
+            if let navigationController = rootViewController as? UINavigationController {
+                rootViewController = navigationController.viewControllers.first
+            }
+            rootViewController?.present(alert, animated: true, completion: nil)
+        }
+    }
+}
+// MARK: 添加钱包资产
+extension WalletManager {
+    static func addCurrencyToWallet(token: Token) throws {
+        do {
+            let isExist = try DataBaseManager.DBManager.isExistViolasToken(tokenAddress: token.tokenAddress, tokenModule: token.tokenModule, tokenType: token.tokenType)
+            if isExist == true {
+                // 已存在改状态
+                print("Token 数据库中已存在,改状态: \(token.tokenEnable)")
+                do {
+                    try DataBaseManager.DBManager.updateViolasTokenState(tokenAddress: token.tokenAddress, tokenModule: token.tokenModule, tokenType: token.tokenType, state: token.tokenEnable)
+                } catch {
+                    throw error
+                }
+            } else {
+                // 不存在插入
+                print("Token数据库中不存在,插入")
+                do {
+                    try DataBaseManager.DBManager.insertToken(token: token)
+                } catch {
+                    throw error
+                }
+            }
+        } catch {
+            throw error
+        }
+    }
+}
+// MARK: 删除钱包
+extension WalletManager {
+    static func deleteWallet(password: String, createOrImport: Bool, step: Int) {
+        do {
+            // 移除钱包包含所有币
+            if DataBaseManager.DBManager.isExistTable(name: "Tokens") == true && step >= 1 {
+                try DataBaseManager.DBManager.deleteAllTokens()
+            }
+            // 移除本地钱包
+            if DataBaseManager.DBManager.isExistTable(name: "Wallet") == true && step >= 2 {
+                try DataBaseManager.DBManager.deleteHDWallet()
+            }
+            if step >= 3 {
+                // 初始化钱包状态
+                setIdentityWalletState(show: false)
+            }
+            if step >= 4 {
+                // 移除钥匙串
+                try WalletManager.deleteMnemonicFromKeychain()
+            }
+            // 清空钱包单例
+            WalletManager.shared.deleteWallet()
+            if createOrImport == false {
+                // 发送钱包已删除广播
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "PalliumsWalletDelete"), object: nil)
+            }
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+}
+// MARK: 更新钱包生物验证状态
+extension WalletManager {
+    static func changeBiometricState(state: Bool, completion: @escaping (Result<String, Error>) -> Void) {
+        if state == false {
+            // 关闭
+            var str = localLanguage(keyString: "wallet_biometric_alert_face_id_describe")
+            if BioMetricAuthenticator.shared.touchIDAvailable() {
+                str = localLanguage(keyString: "wallet_biometric_alert_fingerprint_describe")
+            }
+            BioMetricAuthenticator.authenticateWithBioMetrics(reason: str) { (result) in
+                switch result {
+                case .success( _):
+                    do {
+                        // 移除钥匙串
+                        try KeychainManager.removeBiometric()
+                        // 移除数据库生物识别状态
+                        try DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: WalletManager.shared.walletID!, state: state)
+                        // 移除钱包单里状态
+                        WalletManager.shared.changeWalletBiometricLock(state: state)
+                        completion(.success(""))
+                    } catch {
+                        completion(.failure(error))
+                    }
+                case .failure(let error):
+                    switch error {
+                    case .biometryNotAvailable:
+                        print("biometryNotAvailable")
+                        completion(.failure(LibraWalletError.error(localLanguage(keyString: "wallet_biometric_not_available_error"))))
+                    case .biometryNotEnrolled:
+                        print("biometryNotEnrolled")
+                        if BioMetricAuthenticator.shared.touchIDAvailable() {
+                            completion(.failure(LibraWalletError.error(localLanguage(keyString: "wallet_biometric_touch_id_not_enrolled_error"))))
+                        } else {
+                            completion(.failure(LibraWalletError.error(localLanguage(keyString: "wallet_biometric_face_id_not_enrolled_error"))))
+                        }
+                    case .fallback:
+                        print("fallback")
+                        break
+                    case .biometryLockedout:
+                        print("biometryLockedout")
+                        if BioMetricAuthenticator.shared.touchIDAvailable() {
+                            completion(.failure(LibraWalletError.error(localLanguage(keyString: "wallet_biometric_touch_id_locked_error"))))
+                        } else {
+                            completion(.failure(LibraWalletError.error(localLanguage(keyString: "wallet_biometric_face_id_locked_error"))))
+                        }
+                    case .passcodeNotSet:
+                        print("biometryLockedout")
+                        if BioMetricAuthenticator.shared.touchIDAvailable() {
+                            completion(.failure(LibraWalletError.error(localLanguage(keyString: "wallet_biometric_touch_id_without_password_error"))))
+                        } else {
+                            completion(.failure(LibraWalletError.error(localLanguage(keyString: "wallet_biometric_face_id_without_password_error"))))
+                        }
+                    case .failed:
+                        print("biometryLockedout")
+                        if BioMetricAuthenticator.shared.touchIDAvailable() {
+                            completion(.failure(LibraWalletError.error(localLanguage(keyString: "wallet_biometric_touch_id_failed_error"))))
+                        } else {
+                            completion(.failure(LibraWalletError.error(localLanguage(keyString: "wallet_biometric_face_id_failed_error"))))
+                        }
+                    case .canceledBySystem, .canceledByUser:
+                        completion(.failure(LibraWalletError.error("Cancel")))
+                        break
+                    default:
+                        print(error.localizedDescription)
+                        completion(.failure(error))
+                    }
+                }
+            }
+        } else {
+            // 打开
+            let alert = libraWalletTool.passowordCheckAlert { (result) in
+                switch result {
+                case let .success(password):
+                    KeychainManager.addBiometric(password: password) { (result) in
+                        switch result {
+                        case .success(_):
+                            do {
+                                try DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: WalletManager.shared.walletID!, state: state)
+                                WalletManager.shared.changeWalletBiometricLock(state: state)
+                                completion(.success(""))
+                            } catch {
+                                completion(.failure(error))
+                            }
+                        case let .failure(error):
+                            completion(.failure(error))
+                        }
+                    }
+                case let .failure(error):
+                    completion(.failure(error))
+                }
+            }
+            var rootViewController = UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.rootViewController
+            if let tabBarController = rootViewController as? UITabBarController {
+                rootViewController = tabBarController.selectedViewController
+            }
+            if let navigationController = rootViewController as? UINavigationController {
+                rootViewController = navigationController.viewControllers.first
+            }
+            rootViewController?.present(alert, animated: true, completion: nil)
+        }
+    }
+}
+// MARK: 更新钱包备份状态
+extension WalletManager {
+    static func updateWalletBackupState() throws {
+        do {
+            try DataBaseManager.DBManager.updateWalletBackupState(wallet: WalletManager.shared)
+            print("钱包更新备份状态-\(true)")
+            WalletManager.shared.changeWalletBackupState(state: true)
+        } catch {
+            throw error
+        }
+    }
+}
+// MARK: 更新币种激活状态
+extension WalletManager {
+    static func updateTokenActiveState(tokenID: Int64) throws {
+        do {
+            try DataBaseManager.DBManager.updateTokenActiveState(tokenID: tokenID, state: true)
+        } catch {
+            print(error)
+            throw error
+        }
+    }
+}
 // MARK: 更新钱包余额
 extension WalletManager {
     static func updateLibraTokensBalance(tokens: [Token], tokenBalances: [LibraBalanceModel]) {
@@ -623,40 +673,11 @@ extension WalletManager {
         }
     }
 }
-// MARK: 钱包添加资产
+// MARK: 加载默认钱包
 extension WalletManager {
-    static func addCurrencyToWallet(token: Token) throws {
+    static func getDefaultWallet() throws {
         do {
-            let isExist = try DataBaseManager.DBManager.isExistViolasToken(tokenAddress: token.tokenAddress, tokenModule: token.tokenModule, tokenType: token.tokenType)
-            if isExist == true {
-                // 已存在改状态
-                print("Token 数据库中已存在,改状态: \(token.tokenEnable)")
-                do {
-                    try DataBaseManager.DBManager.updateViolasTokenState(tokenAddress: token.tokenAddress, tokenModule: token.tokenModule, tokenType: token.tokenType, state: token.tokenEnable)
-                } catch {
-                    throw error
-                }
-            } else {
-                // 不存在插入
-                print("Token数据库中不存在,插入")
-                do {
-                    try DataBaseManager.DBManager.insertToken(token: token)
-                } catch {
-                    throw error
-                }
-            }
-        } catch {
-            throw error
-        }
-    }
-}
-// MARK: 更新钱包备份状态
-extension WalletManager {
-    static func updateWalletBackupState() throws {
-        do {
-            try DataBaseManager.DBManager.updateWalletBackupState(wallet: WalletManager.shared)
-            print("钱包更新备份状态-\(true)")
-            WalletManager.shared.changeWalletBackupState(state: true)
+            try DataBaseManager.DBManager.getDefaultWallet()
         } catch {
             throw error
         }
@@ -673,33 +694,16 @@ extension WalletManager {
         }
     }
 }
-// MARK: 加载默认钱包
+// MARK: 添加钱包联系人
 extension WalletManager {
-    static func getDefaultWallet() throws {
+    static func addContact(model: AddressModel) throws {
         do {
-            try DataBaseManager.DBManager.getDefaultWallet()
-        } catch {
-            throw error
-        }
-    }
-}
-// MARK: 更新币种激活状态
-extension WalletManager {
-    static func updateTokenActiveState(tokenID: Int64) throws {
-        do {
-            try DataBaseManager.DBManager.updateTokenActiveState(tokenID: tokenID, state: true)
-        } catch {
-            print(error)
-            throw error
-        }
-    }
-}
-// MARK: 加载钱包通讯录
-extension WalletManager {
-    static func getContacts(type: String) throws -> [AddressModel] {
-        do {
-            let dataArray = try DataBaseManager.DBManager.getTransferAddress(type: type)
-            return dataArray
+            let isExist = try DataBaseManager.DBManager.isExistAddress(model: model)
+            if isExist == true {
+                throw LibraWalletError.WalletAddAddress(reason: .addressExistError)
+            }
+            try DataBaseManager.DBManager.insertTransferAddress(model: model)
+            print("添加地址成功")
         } catch {
             throw error
         }
@@ -716,16 +720,12 @@ extension WalletManager {
         }
     }
 }
-// MARK: 添加钱包联系人
+// MARK: 加载钱包通讯录
 extension WalletManager {
-    static func addContact(model: AddressModel) throws {
+    static func getContacts(type: String) throws -> [AddressModel] {
         do {
-            let isExist = try DataBaseManager.DBManager.isExistAddress(model: model)
-            if isExist == true {
-                throw LibraWalletError.WalletAddAddress(reason: .addressExistError)
-            }
-            try DataBaseManager.DBManager.insertTransferAddress(model: model)
-            print("添加地址成功")
+            let dataArray = try DataBaseManager.DBManager.getTransferAddress(type: type)
+            return dataArray
         } catch {
             throw error
         }
