@@ -2042,6 +2042,26 @@
 			path = WYDTextField;
 			sourceTree = "<group>";
 		};
+		36658C65256BB56600964005 /* ExchangeSection */ = {
+			isa = PBXGroup;
+			children = (
+				36828CD924B74BFA0085A165 /* Exchange */,
+				36F826E624BD9E880007ACC3 /* ExchangeTransactions */,
+				36836D2A24B2FEF50031AC6E /* ExchangeTransactionDetail */,
+			);
+			path = ExchangeSection;
+			sourceTree = "<group>";
+		};
+		36658C66256BB57500964005 /* SwapSection */ = {
+			isa = PBXGroup;
+			children = (
+				3682E5C124AC30D4007CA2CA /* AssetsPool */,
+				36F826E724BD9E970007ACC3 /* AssetsPoolTransactions */,
+				36828CBA24B707820085A165 /* AssetsPoolTransactionDetail */,
+			);
+			path = SwapSection;
+			sourceTree = "<group>";
+		};
 		36677A7525077BA3009152B3 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
@@ -3792,12 +3812,8 @@
 			isa = PBXGroup;
 			children = (
 				9DC06A392372A92C00BCE1FE /* Market */,
-				36828CD924B74BFA0085A165 /* Exchange */,
-				3682E5C124AC30D4007CA2CA /* AssetsPool */,
-				36F826E724BD9E970007ACC3 /* AssetsPoolTransactions */,
-				36828CBA24B707820085A165 /* AssetsPoolTransactionDetail */,
-				36F826E624BD9E880007ACC3 /* ExchangeTransactions */,
-				36836D2A24B2FEF50031AC6E /* ExchangeTransactionDetail */,
+				36658C66256BB57500964005 /* SwapSection */,
+				36658C65256BB56600964005 /* ExchangeSection */,
 				36828CC724B735F00085A165 /* MarketMine */,
 			);
 			path = MarketModule;
