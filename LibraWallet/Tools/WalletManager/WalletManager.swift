@@ -103,7 +103,7 @@ extension WalletManager {
     }
     mutating func changeDefaultWallet(wallet: WalletManager) {
         self.semaphore.wait()
-
+        
         self.walletID = wallet.walletID
         self.walletName = wallet.walletName
         self.walletCreateTime = wallet.walletCreateTime
@@ -113,7 +113,7 @@ extension WalletManager {
         self.walletSubscription = wallet.walletSubscription
         self.walletMnemonicHash = wallet.walletMnemonicHash
         self.walletUseState = wallet.walletUseState
-
+        
         self.semaphore.signal()
     }
     mutating func changeWalletBackupState(state: Bool) {
@@ -174,18 +174,20 @@ struct Token {
 extension Token {
     /// 创建Token单例
     /// - Parameters:
-    ///   - tokenID: 钱包ID
-    ///   - tokenBalance: 钱包余额
-    ///   - tokenAddress: 钱包地址
-    ///   - tokenType: 钱包类型(0=Libra、1=Violas、2=BTC)
-    ///   - tokenIndex: 钱包当前使用层数
-    ///   - tokenAuthenticationKey: 授权Key
-    ///   - tokenActiveState: 钱包激活状态
-    ///   - tokenIcon: 钱包标志
-    ///   - tokenContract: 钱包合约地址
-    ///   - tokenModule: 钱包合约名称
-    ///   - tokenModuleName: 钱包合约名称
-    mutating func initToken(tokenID: Int64, tokenName: String, tokenBalance: Int64, tokenAddress: String, tokenType: WalletType, tokenIndex: Int64, tokenAuthenticationKey: String, tokenActiveState: Bool, tokenIcon: String, tokenContract: String, tokenModule: String, tokenModuleName: String, tokenPrice: String) {
+    ///   - tokenID: 币ID
+    ///   - tokenBalance: 币余额
+    ///   - tokenAddress: 币钱包地址
+    ///   - tokenType: 币类型(0=Libra、1=Violas、2=BTC)
+    ///   - tokenIndex: 币当前使用钱包层数
+    ///   - tokenAuthenticationKey: 币钱包授权Key
+    ///   - tokenActiveState: 币激活状态
+    ///   - tokenIcon: 币标志
+    ///   - tokenContract: 币合约地址
+    ///   - tokenModule: 币合约名称
+    ///   - tokenModuleName: 币合约名称
+    ///   - tokenEnable: 币开启状态
+    ///   - tokenPrice: 币价
+    mutating func initToken(tokenID: Int64, tokenName: String, tokenBalance: Int64, tokenAddress: String, tokenType: WalletType, tokenIndex: Int64, tokenAuthenticationKey: String, tokenActiveState: Bool, tokenIcon: String, tokenContract: String, tokenModule: String, tokenModuleName: String, tokenEnable: Bool, tokenPrice: String) {
         self.semaphore.wait()
         
         self.tokenID = tokenID
@@ -200,6 +202,7 @@ extension Token {
         self.tokenContract = tokenContract
         self.tokenModule = tokenModule
         self.tokenModuleName = tokenModuleName
+        self.tokenEnable = tokenEnable
         self.tokenPrice = tokenPrice
         
         self.semaphore.signal()
@@ -240,7 +243,7 @@ extension WalletManager {
         do {
             // 取出加密后助记词字符串
             let menmonicString = try KeychainManager.getMnemonicStringFromKeychain()
-
+            
             // 解密密文
             let decryptMnemonicString = try PasswordCrypto.decryptPassword(cryptoString: menmonicString, password: password)
             
@@ -605,6 +608,18 @@ extension WalletManager {
             print("刷新Bitcoin Token数据状态: \(true)")
         } catch {
             print("刷新Bitcoin Token数据状态: \(false)")
+        }
+    }
+}
+// MARK: 更新钱包币种价格
+extension WalletManager {
+    static func updateTokenPrice(token: Token, price: String) {
+        // 刷新本地缓存数据
+        do {
+            try DataBaseManager.DBManager.updateTokenPrice(tokenID: token.tokenID, price: price)
+            print("刷新\(token.tokenName) Token Price数据状态: \(true)")
+        } catch {
+            print("刷新\(token.tokenName) Token Price数据状态: \(false)")
         }
     }
 }

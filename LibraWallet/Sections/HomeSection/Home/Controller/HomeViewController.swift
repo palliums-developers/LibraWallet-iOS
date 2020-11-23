@@ -520,7 +520,7 @@ extension HomeViewController {
                                 let newPrice = NSDecimalNumber.init(value: token.rate ?? 0.0).stringValue
                                 if newPrice != dataModels[i].tokenPrice {
                                     tempLocalToken.changeTokenPrice(price: newPrice)
-                                    try? DataBaseManager.DBManager.updateTokenPrice(tokenID: dataModels[i].tokenID, price: newPrice)
+                                    WalletManager.updateTokenPrice(token: dataModels[i], price: newPrice)
                                     tempIndexPath.append(IndexPath.init(item: i, section: 0))
                                 }
                                 tempTokens.append(tempLocalToken)
@@ -558,7 +558,7 @@ extension HomeViewController {
                                 let newPrice = NSDecimalNumber.init(value: token.rate ?? 0.0).stringValue
                                 if newPrice != dataModels[i].tokenPrice {
                                     tempLocalToken.changeTokenPrice(price: newPrice)
-                                    try? DataBaseManager.DBManager.updateTokenPrice(tokenID: dataModels[i].tokenID, price: newPrice)
+                                    WalletManager.updateTokenPrice(token: dataModels[i], price: newPrice)
                                     tempIndexPath.append(IndexPath.init(item: i, section: 0))
                                 }
                                 tempTokens.append(tempLocalToken)
@@ -595,8 +595,8 @@ extension HomeViewController {
                                 var tempLocalToken = dataModels[i]
                                 let newPrice = NSDecimalNumber.init(value: token.rate ?? 0.0).stringValue
                                 if newPrice != dataModels[i].tokenPrice {
-                                    try? DataBaseManager.DBManager.updateTokenPrice(tokenID: dataModels[i].tokenID, price: newPrice)
                                     tempLocalToken.changeTokenPrice(price: newPrice)
+                                    WalletManager.updateTokenPrice(token: dataModels[i], price: newPrice)
                                     tempIndexPath.append(IndexPath.init(item: i, section: 0))
                                 }
                                 tempTokens.append(tempLocalToken)
