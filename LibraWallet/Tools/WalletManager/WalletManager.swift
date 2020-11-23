@@ -662,3 +662,24 @@ extension WalletManager {
         }
     }
 }
+// MARK: 加载钱包所有已开启币种
+extension WalletManager {
+    static func getLocalEnableTokens() throws -> [Token] {
+        do {
+            let tokens = try DataBaseManager.DBManager.getTokens()
+            return tokens
+        } catch {
+            throw error
+        }
+    }
+}
+// MARK: 加载默认钱包
+extension WalletManager {
+    static func getDefaultWallet() throws {
+        do {
+            try DataBaseManager.DBManager.getDefaultWallet()
+        } catch {
+            throw error
+        }
+    }
+}

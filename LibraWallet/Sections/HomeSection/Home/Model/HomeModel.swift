@@ -114,7 +114,7 @@ class HomeModel: NSObject {
     private var activeCount: Int = 0
     func getLocalTokens() {
         do {
-            let tokens = try DataBaseManager.DBManager.getTokens()
+            let tokens = try WalletManager.getLocalEnableTokens()
             let data = setKVOData(type: "LoadCurrentEnableTokens", data: tokens)
             self.setValue(data, forKey: "dataDic")
             // 更新本地数据

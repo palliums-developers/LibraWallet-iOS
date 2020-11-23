@@ -100,7 +100,7 @@ extension ImportWalletViewController {
                 // 加载本地默认钱包
                 self?.detailView.makeToast(localLanguage(keyString: "wallet_import_wallet_success_title"), duration: 0.5, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
                     do {
-                        try DataBaseManager.DBManager.getDefaultWallet()
+                        try WalletManager.getDefaultWallet()
                         if let success = self?.successImportClosure {
                             success()
                         }

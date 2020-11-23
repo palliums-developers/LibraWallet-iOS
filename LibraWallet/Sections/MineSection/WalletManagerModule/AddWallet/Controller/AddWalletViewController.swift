@@ -107,7 +107,7 @@ extension AddWalletViewController {
                 if let tempData = dataDic.value(forKey: "data") as? [String] {
                     self?.view.makeToast(localLanguage(keyString: "wallet_create_wallet_success_title"), duration: 0.5, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
                         do {
-                            try DataBaseManager.DBManager.getDefaultWallet()
+                            try WalletManager.getDefaultWallet()
                             if let success = self?.successCreateClosure {
                                 success()
                             }
