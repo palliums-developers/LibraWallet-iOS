@@ -23,7 +23,7 @@ class AddAddressModel: NSObject {
                                       addressName: remarks,
                                       addressType: type)
         do {
-            try DataBaseManager.DBManager.insertTransferAddress(model: model)
+            try WalletManager.addContact(model: model)
             let data = setKVOData(type: "AddAddress", data: model)
             self.setValue(data, forKey: "dataDic")
         } catch {

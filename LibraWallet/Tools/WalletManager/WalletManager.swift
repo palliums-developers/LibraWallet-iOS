@@ -694,3 +694,40 @@ extension WalletManager {
         }
     }
 }
+// MARK: 加载钱包通讯录
+extension WalletManager {
+    static func getContacts(type: String) throws -> [AddressModel] {
+        do {
+            let dataArray = try DataBaseManager.DBManager.getTransferAddress(type: type)
+            return dataArray
+        } catch {
+            throw error
+        }
+    }
+}
+// MARK: 删除钱包联系人
+extension WalletManager {
+    static func deleteContact(model: AddressModel) throws {
+        do {
+            try DataBaseManager.DBManager.deleteTransferAddressFromTable(model: model)
+            print("删除地址成功")
+        } catch {
+            throw error
+        }
+    }
+}
+// MARK: 添加钱包联系人
+extension WalletManager {
+    static func addContact(model: AddressModel) throws {
+        do {
+            let isExist = try DataBaseManager.DBManager.isExistAddress(model: model)
+            if isExist == true {
+                throw LibraWalletError.WalletAddAddress(reason: .addressExistError)
+            }
+            try DataBaseManager.DBManager.insertTransferAddress(model: model)
+            print("添加地址成功")
+        } catch {
+            throw error
+        }
+    }
+}

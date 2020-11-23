@@ -191,7 +191,7 @@ extension AddressManagerViewController: AddressManagerTableViewManagerDelegate {
     }
     func deleteAddress(indexPath: IndexPath, model: AddressModel) {
         do {
-            try DataBaseManager.DBManager.deleteTransferAddressFromTable(model: model)
+            try WalletManager.deleteContact(model: model)
             self.tableViewManager.dataModel = self.tableViewManager.dataModel?.filter({
                 $0.addressID != model.addressID
             })

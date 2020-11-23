@@ -553,6 +553,7 @@ wallet_add_address_remarks_invalid_error = "备注名无效";
 wallet_add_address_remarks_empty_error = "备注名为空";
 wallet_add_address_remarks_length_invalid_error = "备注名超长";
 wallet_add_address_type_invalid_error = "类型未选择";
+wallet_add_address_exist_error = "地址已存在";
 // 添加钱包相关
 wallet_add_wallet_name_invalid_error = "钱包名字无效";
 wallet_add_wallet_name_empty_error = "钱包名字为空";

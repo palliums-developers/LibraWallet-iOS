@@ -286,8 +286,9 @@ extension DataBaseManager {
             try tempDB.run(addressTable.create { t in
                 t.column(addressID, primaryKey: true)
                 t.column(addressName)
-                t.column(address, unique: true)
+                t.column(address)
                 t.column(addressType)
+                t.unique([address, addressType])
             })
         } catch {
             let errorString = error.localizedDescription
@@ -306,7 +307,7 @@ extension DataBaseManager {
         do {
             let insert = addressTable.insert(
                 Expression<String>("address_name") <- model.addressName,
-                Expression<String>("address") <- "\(model.addressType)_" + (model.address),
+                Expression<String>("address") <- (model.address),
                 Expression<String>("address_type") <- model.addressType)
             try tempDB.run(insert)
         } catch {
@@ -330,15 +331,9 @@ extension DataBaseManager {
                 let address = wallet[Expression<String>("address")]
                 // 地址类型（0=Libra、1=Violas、2=BTC）
                 let addressType = wallet[Expression<String>("address_type")]
-                
-                let contentArray = address.split(separator: "_").compactMap { (item) -> String in
-                    return "\(item)"
-                }
-                guard contentArray.count == 2 else {
-                    continue
-                }
+
                 let model = AddressModel.init(addressID: addressID,
-                                              address: contentArray.last!,
+                                              address: address,
                                               addressName: addressName,
                                               addressType: addressType)
                 
@@ -366,9 +361,25 @@ extension DataBaseManager {
         guard let tempDB = self.db else {
             throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
         }
-        let addressTable = Table("TransferAddress").filter(Expression<String>("address") == "\(model.addressType)_" + model.address)
+        let addressTable = Table("TransferAddress").filter(Expression<String>("address") == model.address && Expression<String>("address_type") == model.addressType)
         do {
             try tempDB.run(addressTable.delete())
+        } catch {
+            print(error.localizedDescription)
+            throw error
+        }
+    }
+    func isExistAddress(model: AddressModel) throws -> Bool {
+        guard let tempDB = self.db else {
+            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+        }
+        let tokenTable = Table("TransferAddress").filter(Expression<String>("address") == model.address && Expression<String>("address_type") == model.addressType)
+        do {
+            let count = try tempDB.scalar(tokenTable.count)
+            guard count != 0 else {
+                return false
+            }
+            return true
         } catch {
             print(error.localizedDescription)
             throw error

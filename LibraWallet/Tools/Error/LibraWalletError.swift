@@ -115,6 +115,8 @@ public enum LibraWalletError: Error {
         case addressTypeInvalidError
         /// 地址添加失败
         case addressInsertError
+        /// 地址已存在
+        case addressExistError
     }
     case WalletAddAddress(reason: AddAddressError)
     
@@ -535,6 +537,8 @@ extension LibraWalletError.AddAddressError {
             return localLanguage(keyString: "wallet_add_address_remarks_length_invalid_error")
         case .addressTypeInvalidError:
             return localLanguage(keyString: "wallet_add_address_type_invalid_error")
+        case .addressExistError:
+            return localLanguage(keyString: "wallet_add_address_exist_error")
         }
     }
 }

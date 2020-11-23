@@ -14,7 +14,7 @@ class AddressManagerModel: NSObject {
         //requestStatus: 0:第一页，1:更多
         let dataType = requestStatus == 0 ? "TransferAddressOrigin":"TransferAddressMore"
         do {
-            let dataArray = try DataBaseManager.DBManager.getTransferAddress(type: type)
+            let dataArray = try WalletManager.getContacts(type: type)
             guard dataArray.count != 0 else {
                 let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .dataEmpty), type: dataType)
                 self.setValue(data, forKey: "dataDic")

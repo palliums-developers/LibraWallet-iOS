@@ -108,9 +108,7 @@ class WalletConnectManager: NSObject {
     }
     private func walletInfo(state: Bool) -> Session.WalletInfo {
         do {
-            let tokens = try DataBaseManager.DBManager.getTokens().filter({
-                $0.tokenEnable == true
-            })
+            let tokens = try WalletManager.getLocalEnableTokens()
             var address = [String]()
             for item in tokens {
                 address.append(item.tokenAddress)
@@ -537,7 +535,7 @@ class GetAccountHandler: RequestHandler {
                 var address: String?
                 var chainId: Int?
             }
-            let localWallets = try DataBaseManager.DBManager.getTokens()
+            let localWallets = try WalletManager.getLocalEnableTokens()
             var tempWallets = [tempData]()
             for wallets in localWallets {
                 tempWallets.append(tempData.init(walletType: 0,
