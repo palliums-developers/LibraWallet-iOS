@@ -130,7 +130,6 @@ extension ExchangeTransactionsViewController {
             }
             #warning("已修改完成，可拷贝执行")
             if let error = dataDic.value(forKey: "error") as? LibraWalletError {
-                // 隐藏请求指示
                 self?.detailView.hideToastActivity()
                 if self?.detailView.tableView.mj_footer?.isRefreshing == true {
                     self?.detailView.tableView.mj_footer?.endRefreshingWithNoMoreData()
@@ -138,40 +137,28 @@ extension ExchangeTransactionsViewController {
                 if self?.detailView.tableView.mj_header?.isRefreshing == true {
                     self?.detailView.tableView.mj_header?.endRefreshing()
                 }
-                if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
-                    // 网络无法访问
-                    print(error.localizedDescription)
+                switch error {
+                case .WalletRequest(reason: .networkInvalid):
                     self?.detailView.makeToast(error.localizedDescription,
                                                position: .center)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionExpired).localizedDescription {
-                    // 版本太久
-                    print(error.localizedDescription)
+                case .WalletRequest(reason: .walletVersionExpired):
                     self?.detailView.makeToast(error.localizedDescription,
                                                position: .center)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
-                    // 解析失败
-                    print(error.localizedDescription)
+                case .WalletRequest(reason: .parseJsonError):
                     self?.detailView.makeToast(error.localizedDescription,
                                                position: .center)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
-                    print(error.localizedDescription)
-                    // 数据状态异常
+                case .WalletRequest(reason: .dataCodeInvalid):
                     self?.detailView.makeToast(error.localizedDescription,
                                                position: .center)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
-                    print(error.localizedDescription)
-                    // 下拉刷新请求数据为空
+                case .WalletRequest(reason: .dataEmpty):
                     self?.tableViewManager.dataModels?.removeAll()
                     self?.detailView.tableView.reloadData()
                     self?.detailView.makeToast(error.localizedDescription,
                                                position: .center)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .noMoreData).localizedDescription {
-                    // 上拉请求更多数据为空
-                    print(error.localizedDescription)
+                case .WalletRequest(reason: .noMoreData):
                     self?.detailView.tableView.mj_footer?.endRefreshingWithNoMoreData()
-                } else {
-                    self?.detailView.makeToast(error.localizedDescription,
-                                               position: .center)
+                default:
+                    print(error)
                 }
                 self?.endLoading()
                 return
@@ -188,14 +175,12 @@ extension ExchangeTransactionsViewController {
                     return
                 }
                 if let oldData = self?.tableViewManager.dataModels, oldData.isEmpty == false {
-                    let tempArray = NSMutableArray.init(array: oldData)
                     var insertIndexPath = [IndexPath]()
                     for index in 0..<tempData.count {
                         let indexPath = IndexPath.init(row: oldData.count + index, section: 0)
                         insertIndexPath.append(indexPath)
                     }
-                    tempArray.addObjects(from: tempData)
-                    self?.tableViewManager.dataModels = tempArray as? [ExchangeTransactionsDataModel]
+                    self?.tableViewManager.dataModels = oldData + tempData
                     self?.detailView.tableView.beginUpdates()
                     self?.detailView.tableView.insertRows(at: insertIndexPath, with: UITableView.RowAnimation.bottom)
                     self?.detailView.tableView.endUpdates()
