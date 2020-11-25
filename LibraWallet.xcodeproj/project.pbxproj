@@ -189,6 +189,8 @@
 		366AFE48256CEAE70007AAFC /* Countries.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 366AFE47256CEAE70007AAFC /* Countries.bundle */; };
 		366AFE4E256CF8190007AAFC /* GSCaptchaButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFE4D256CF8190007AAFC /* GSCaptchaButton.swift */; };
 		366AFE53256D113C0007AAFC /* ActiveModuleNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFE52256D113C0007AAFC /* ActiveModuleNetworkManager.swift */; };
+		366AFE5B256E5CAE0007AAFC /* InvitationRewardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFE5A256E5CAE0007AAFC /* InvitationRewardViewController.swift */; };
+		366AFE63256E5CBF0007AAFC /* InvitationRewardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFE62256E5CBF0007AAFC /* InvitationRewardView.swift */; };
 		3679149F250F742F008C7237 /* ScanBankRepaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3679149E250F742F008C7237 /* ScanBankRepaymentViewController.swift */; };
 		367914A1250F7446008C7237 /* ScanBankRepaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367914A0250F7446008C7237 /* ScanBankRepaymentView.swift */; };
 		367914A3250F7455008C7237 /* ScanBankRepaymentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367914A2250F7455008C7237 /* ScanBankRepaymentModel.swift */; };
@@ -641,6 +643,8 @@
 		366AFE47256CEAE70007AAFC /* Countries.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Countries.bundle; sourceTree = "<group>"; };
 		366AFE4D256CF8190007AAFC /* GSCaptchaButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GSCaptchaButton.swift; sourceTree = "<group>"; };
 		366AFE52256D113C0007AAFC /* ActiveModuleNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveModuleNetworkManager.swift; sourceTree = "<group>"; };
+		366AFE5A256E5CAE0007AAFC /* InvitationRewardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvitationRewardViewController.swift; sourceTree = "<group>"; };
+		366AFE62256E5CBF0007AAFC /* InvitationRewardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvitationRewardView.swift; sourceTree = "<group>"; };
 		3679149E250F742F008C7237 /* ScanBankRepaymentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBankRepaymentViewController.swift; sourceTree = "<group>"; };
 		367914A0250F7446008C7237 /* ScanBankRepaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBankRepaymentView.swift; sourceTree = "<group>"; };
 		367914A2250F7455008C7237 /* ScanBankRepaymentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBankRepaymentModel.swift; sourceTree = "<group>"; };
@@ -2298,6 +2302,31 @@
 			path = CountDownButton;
 			sourceTree = "<group>";
 		};
+		366AFE57256E5C710007AAFC /* InvitationReward */ = {
+			isa = PBXGroup;
+			children = (
+				366AFE59256E5C870007AAFC /* Controller */,
+				366AFE58256E5C810007AAFC /* View */,
+			);
+			path = InvitationReward;
+			sourceTree = "<group>";
+		};
+		366AFE58256E5C810007AAFC /* View */ = {
+			isa = PBXGroup;
+			children = (
+				366AFE62256E5CBF0007AAFC /* InvitationRewardView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		366AFE59256E5C870007AAFC /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				366AFE5A256E5CAE0007AAFC /* InvitationRewardViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
 		3679149B250F7410008C7237 /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -3435,6 +3464,7 @@
 		9D9B49D723602E6000354EF0 /* MineSection */ = {
 			isa = PBXGroup;
 			children = (
+				366AFE57256E5C710007AAFC /* InvitationReward */,
 				36EBF012245055AA007FD4C5 /* ActiveAccount */,
 				9D6264832358405000A79B3D /* Mine */,
 				9DF9BB572386D6C100FA800D /* WalletManagerModule */,
@@ -4823,6 +4853,7 @@
 				361BDACE24F8E7BD00C4C54E /* LoanDetailClearingListTableViewCell.swift in Sources */,
 				9D9B4A1723604A7200354EF0 /* CustomActionViewProtocol.swift in Sources */,
 				361BDA1324F89E7A00C4C54E /* ViolasContractEvent.swift in Sources */,
+				366AFE5B256E5CAE0007AAFC /* InvitationRewardViewController.swift in Sources */,
 				9DB515A823A327640069A909 /* ViolasMnemonic.swift in Sources */,
 				36B466A82476565000CFF438 /* ScanSendTransactionViewController.swift in Sources */,
 				9DC06A352371794100BCE1FE /* CheckBackupCollectionViewMananger.swift in Sources */,
@@ -4974,6 +5005,7 @@
 				361BDB0124F8E7BE00C4C54E /* DepositOrdersTableViewManager.swift in Sources */,
 				36677A99250F6C73009152B3 /* ScanBankLoanModel.swift in Sources */,
 				9DC4884923211180005FF254 /* WalletManager.swift in Sources */,
+				366AFE63256E5CBF0007AAFC /* InvitationRewardView.swift in Sources */,
 				36677A90250F6539009152B3 /* ScanBankWithdrawView.swift in Sources */,
 				36B466B6247656E400CFF438 /* ScanSendTransactionModel.swift in Sources */,
 				9D9B49AB235DA76100354EF0 /* AddressManagerTableViewManager.swift in Sources */,

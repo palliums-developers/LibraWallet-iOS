@@ -22,8 +22,10 @@ wallet_wallet_connect_state_title = "Web Wallet Logged";
 
 /************* 个人中心 *******************/
 wallet_mine_manager_wallet_title = "Manage Wallet";
-wallet_home_address_manager_title = "Address Book";
-wallet_home_setting_title = "Settings";
+wallet_mine_address_manager_title = "Address Book";
+wallet_mine_setting_title = "Settings";
+wallet_mine_yield_farming_button_title = "Yield Farming & Rules";
+wallet_mine_invitation_reward_title = "Invitation Reward";
 
 /************* 收款 *******************/
 wallet_receive_qrcode_title = "Receiving Address";
@@ -516,6 +518,7 @@ wallet_bank_deposit_orders_list_navigationbar_title = "Deposit List";
 wallet_bank_repayment_navigationbar_title = "Repayment";
 wallet_phone_area_navigation_title = "Region";
 wallet_phone_verify_navigation_title = "Verify Mobile Phone";
+wallet_invitatioin_reward_navigation_title = "Invitation Reward";
 
 /************* App错误 *******************/
 // 请求遇到错误

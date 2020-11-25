@@ -24,8 +24,9 @@ class MineView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         mineHeaderView.snp.makeConstraints { (make) in
-            make.top.left.right.equalTo(self)
-            make.height.equalTo(208)
+            make.top.equalTo(self).offset(statusBarHeight)
+            make.left.right.equalTo(self)
+            make.height.equalTo(251)
         }
         self.tableView.snp.makeConstraints { (make) in
             make.top.equalTo(mineHeaderView.snp.bottom)
@@ -43,7 +44,7 @@ class MineView: UIView {
         } else {
             // Fallback on earlier versions
         }
-        tableView.backgroundColor = UIColor.init(hex: "F7F7F9")//defaultBackgroundColor
+        tableView.backgroundColor = UIColor.init(hex: "F7F7F9")
         tableView.register(MineTableViewCell.classForCoder(), forCellReuseIdentifier: "CellNormal")
         return tableView
     }()

@@ -22,8 +22,10 @@ wallet_wallet_connect_state_title = "网页钱包已登录";
 
 /************* 个人中心 *******************/
 wallet_mine_manager_wallet_title = "钱包管理";
-wallet_home_address_manager_title = "地址簿";
-wallet_home_setting_title = "设置";
+wallet_mine_address_manager_title = "地址簿";
+wallet_mine_setting_title = "设置";
+wallet_mine_yield_farming_button_title = "挖矿奖励及规则";
+wallet_mine_invitation_reward_title = "邀请奖励";
 
 /************* 收款 *******************/
 wallet_receive_qrcode_title = "收款地址";
@@ -515,7 +517,8 @@ wallet_bank_loan_orders_list_navigationbar_title = "借款明细";
 wallet_bank_deposit_orders_list_navigationbar_title = "存款明细";
 wallet_bank_repayment_navigationbar_title = "还款";
 wallet_phone_area_navigation_title = "国家和地区";
-wallet_phone_verify_navigation_title = "V验证手机号";
+wallet_phone_verify_navigation_title = "验证手机号";
+wallet_invitatioin_reward_navigation_title = "邀请奖励";
 
 /************* App错误 *******************/
 // 请求遇到错误
