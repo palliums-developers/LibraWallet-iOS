@@ -349,6 +349,14 @@ wallet_bank_loan_legal_agreement_match_contnet = "Pledge & Loan Service Agreemen
 /************* 数字银行赎回 *******************/
 wallet_bank_redeem_amount_title = "Amount";
 
+/************* 绑定手机 *******************/
+wallet_bind_phone_get_secure_code_button_title = "Get Verification Code";
+wallet_bind_phone_tips_content = "1. Each phone number has three verification opportunities\n2. Please rest assured that phone number will not bind your wallet\n3. 10 VLS can be obtained after successful verification";
+wallet_bind_phone_phone_number_textfield_placeholder = "Phone Number";
+wallet_bind_phone_phone_secure_code_textfield_placeholder = "Secure Code";
+wallet_bind_phone_phone_invited_textfield_placeholder = "VLS address of the inviter (optional)";
+wallet_bind_phone_confirm_button_title = "Get It Now";
+
 /************* 弹出提示 *******************/
 // 转账弹出提示
 wallet_transfer_success_alert = "Transaction Submitted";
@@ -458,6 +466,8 @@ wallet_bank_redeem_alert_amount_title = "Available Quantity: ";
 wallet_bank_redeem_alert_amount_select_total_title = "Total";
 wallet_bank_redeem_alert_warring_content = "If you currently have a loan operation, you need to use part of the deposit as a pledge deposit. Withdrawal of the pledge deposit needs to repay the corresponding amount of loan amount.";
 wallet_bank_redeem_alert_confirm_button_title = "Confirm";
+// 验证手机号
+wallet_verify_mobile_phone_successful = "Verify Successful";
 
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "Safety Warning";
@@ -504,6 +514,8 @@ wallet_bank_deposit_orders_navigationbar_title = "Deposit Orders";
 wallet_bank_loan_orders_list_navigationbar_title = "Loan List";
 wallet_bank_deposit_orders_list_navigationbar_title = "Deposit List";
 wallet_bank_repayment_navigationbar_title = "Repayment";
+wallet_phone_area_navigation_title = "Region";
+wallet_phone_verify_navigation_title = "Verify Mobile Phone";
 
 /************* App错误 *******************/
 // 请求遇到错误
@@ -656,3 +668,7 @@ wallet_bank_withdraw_amount_empty_error = "Input empty";
 wallet_bank_withdraw_amount_invalid_error = "Input invalid";
 wallet_bank_withdraw_amount_too_large_error = "The input amount is higher than the minimum withdraw amount";
 wallet_bank_withdraw_data_invalid_error = "Data invalid";
+// 验证手机号
+wallet_verify_mobile_phone_area_unselect_error = "Please choose your mobile phone region";
+wallet_verify_mobile_phone_number_empty_error = "Please input mobile phone number";
+wallet_verify_mobile_secure_code_empty_error = "Please input secure code";

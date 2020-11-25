@@ -348,6 +348,14 @@ wallet_bank_loan_legal_agreement_match_contnet = "《质押借款服务协议》
 /************* 数字银行赎回 *******************/
 wallet_bank_redeem_amount_title = "提取数量";
 
+/************* 绑定手机 *******************/
+wallet_bind_phone_get_secure_code_button_title = "获取验证码";
+wallet_bind_phone_tips_content = "1. 每个手机号有三次验证机会\n2. 请您放心，手机号不会绑定您的钱包\n3. 验证成功后可获取 10 VLS";
+wallet_bind_phone_phone_number_textfield_placeholder = "请输入手机号";
+wallet_bind_phone_phone_secure_code_textfield_placeholder = "请输入验证码";
+wallet_bind_phone_phone_invited_textfield_placeholder = "邀请人VLS地址（选填）";
+wallet_bind_phone_confirm_button_title = "立即获取";
+
 /************* 弹出提示 *******************/
 // 转账弹出提示
 wallet_transfer_success_alert = "转账成功";
@@ -457,6 +465,8 @@ wallet_bank_redeem_alert_amount_title = "可提数量：";
 wallet_bank_redeem_alert_amount_select_total_title = "全部";
 wallet_bank_redeem_alert_warring_content = "如果您当前有借贷操作，则需将部分存款作为质押金。提取质押金需还对应数量的借款金额。";
 wallet_bank_redeem_alert_confirm_button_title = "提取";
+// 验证手机号
+wallet_verify_mobile_phone_successful = "验证成功";
 
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "安全提醒";
@@ -504,6 +514,8 @@ wallet_bank_deposit_orders_navigationbar_title = "存款订单";
 wallet_bank_loan_orders_list_navigationbar_title = "借款明细";
 wallet_bank_deposit_orders_list_navigationbar_title = "存款明细";
 wallet_bank_repayment_navigationbar_title = "还款";
+wallet_phone_area_navigation_title = "国家和地区";
+wallet_phone_verify_navigation_title = "V验证手机号";
 
 /************* App错误 *******************/
 // 请求遇到错误
@@ -656,3 +668,7 @@ wallet_bank_withdraw_amount_empty_error = "未输入";
 wallet_bank_withdraw_amount_invalid_error = "输入无效";
 wallet_bank_withdraw_amount_too_large_error = "输入金额高于贷款金额";
 wallet_bank_withdraw_data_invalid_error = "数据异常";
+// 验证手机号
+wallet_verify_mobile_phone_area_unselect_error = "请选择您的手机号区域";
+wallet_verify_mobile_phone_number_empty_error = "请填写手机号";
+wallet_verify_mobile_secure_code_empty_error = "请填写验证码";

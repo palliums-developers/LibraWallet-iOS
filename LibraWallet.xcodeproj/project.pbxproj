@@ -178,6 +178,17 @@
 		36677A97250F6C64009152B3 /* ScanBankLoanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36677A96250F6C64009152B3 /* ScanBankLoanView.swift */; };
 		36677A99250F6C73009152B3 /* ScanBankLoanModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36677A98250F6C73009152B3 /* ScanBankLoanModel.swift */; };
 		3667A79B2475011F0000F119 /* WalletConnectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3667A79A2475011F0000F119 /* WalletConnectManager.swift */; };
+		366AFE0A256CE2BB0007AAFC /* EnrollPhoneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFE09256CE2BB0007AAFC /* EnrollPhoneView.swift */; };
+		366AFE12256CE2D80007AAFC /* EnrollPhoneModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFE11256CE2D80007AAFC /* EnrollPhoneModel.swift */; };
+		366AFE17256CE2E70007AAFC /* EnrollPhoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFE16256CE2E70007AAFC /* EnrollPhoneViewController.swift */; };
+		366AFE23256CE9E20007AAFC /* PhoneAreaTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFE22256CE9E20007AAFC /* PhoneAreaTableViewManager.swift */; };
+		366AFE28256CE9E90007AAFC /* PhoneAreaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFE27256CE9E90007AAFC /* PhoneAreaViewController.swift */; };
+		366AFE2D256CE9F10007AAFC /* PhoneAreaModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFE2C256CE9F10007AAFC /* PhoneAreaModel.swift */; };
+		366AFE33256CE9F90007AAFC /* PhoneAreaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFE31256CE9F90007AAFC /* PhoneAreaView.swift */; };
+		366AFE34256CE9F90007AAFC /* PhoneAreaTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFE32256CE9F90007AAFC /* PhoneAreaTableViewCell.swift */; };
+		366AFE48256CEAE70007AAFC /* Countries.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 366AFE47256CEAE70007AAFC /* Countries.bundle */; };
+		366AFE4E256CF8190007AAFC /* GSCaptchaButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFE4D256CF8190007AAFC /* GSCaptchaButton.swift */; };
+		366AFE53256D113C0007AAFC /* ActiveModuleNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFE52256D113C0007AAFC /* ActiveModuleNetworkManager.swift */; };
 		3679149F250F742F008C7237 /* ScanBankRepaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3679149E250F742F008C7237 /* ScanBankRepaymentViewController.swift */; };
 		367914A1250F7446008C7237 /* ScanBankRepaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367914A0250F7446008C7237 /* ScanBankRepaymentView.swift */; };
 		367914A3250F7455008C7237 /* ScanBankRepaymentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367914A2250F7455008C7237 /* ScanBankRepaymentModel.swift */; };
@@ -619,6 +630,17 @@
 		36677A96250F6C64009152B3 /* ScanBankLoanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBankLoanView.swift; sourceTree = "<group>"; };
 		36677A98250F6C73009152B3 /* ScanBankLoanModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBankLoanModel.swift; sourceTree = "<group>"; };
 		3667A79A2475011F0000F119 /* WalletConnectManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectManager.swift; sourceTree = "<group>"; };
+		366AFE09256CE2BB0007AAFC /* EnrollPhoneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnrollPhoneView.swift; sourceTree = "<group>"; };
+		366AFE11256CE2D80007AAFC /* EnrollPhoneModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnrollPhoneModel.swift; sourceTree = "<group>"; };
+		366AFE16256CE2E70007AAFC /* EnrollPhoneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnrollPhoneViewController.swift; sourceTree = "<group>"; };
+		366AFE22256CE9E20007AAFC /* PhoneAreaTableViewManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneAreaTableViewManager.swift; sourceTree = "<group>"; };
+		366AFE27256CE9E90007AAFC /* PhoneAreaViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneAreaViewController.swift; sourceTree = "<group>"; };
+		366AFE2C256CE9F10007AAFC /* PhoneAreaModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneAreaModel.swift; sourceTree = "<group>"; };
+		366AFE31256CE9F90007AAFC /* PhoneAreaView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneAreaView.swift; sourceTree = "<group>"; };
+		366AFE32256CE9F90007AAFC /* PhoneAreaTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneAreaTableViewCell.swift; sourceTree = "<group>"; };
+		366AFE47256CEAE70007AAFC /* Countries.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Countries.bundle; sourceTree = "<group>"; };
+		366AFE4D256CF8190007AAFC /* GSCaptchaButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GSCaptchaButton.swift; sourceTree = "<group>"; };
+		366AFE52256D113C0007AAFC /* ActiveModuleNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveModuleNetworkManager.swift; sourceTree = "<group>"; };
 		3679149E250F742F008C7237 /* ScanBankRepaymentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBankRepaymentViewController.swift; sourceTree = "<group>"; };
 		367914A0250F7446008C7237 /* ScanBankRepaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBankRepaymentView.swift; sourceTree = "<group>"; };
 		367914A2250F7455008C7237 /* ScanBankRepaymentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBankRepaymentModel.swift; sourceTree = "<group>"; };
@@ -2190,6 +2212,92 @@
 			path = WalletConnect;
 			sourceTree = "<group>";
 		};
+		366AFE05256CE1C80007AAFC /* EnrollPhone */ = {
+			isa = PBXGroup;
+			children = (
+				366AFE06256CE28E0007AAFC /* Controller */,
+				366AFE08256CE29F0007AAFC /* Model */,
+				366AFE07256CE29A0007AAFC /* View */,
+			);
+			path = EnrollPhone;
+			sourceTree = "<group>";
+		};
+		366AFE06256CE28E0007AAFC /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				366AFE16256CE2E70007AAFC /* EnrollPhoneViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		366AFE07256CE29A0007AAFC /* View */ = {
+			isa = PBXGroup;
+			children = (
+				366AFE09256CE2BB0007AAFC /* EnrollPhoneView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		366AFE08256CE29F0007AAFC /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				366AFE11256CE2D80007AAFC /* EnrollPhoneModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		366AFE1C256CE9840007AAFC /* PhoneArea */ = {
+			isa = PBXGroup;
+			children = (
+				366AFE20256CE9B20007AAFC /* TableViewManager */,
+				366AFE1F256CE9AC0007AAFC /* Conroller */,
+				366AFE1E256CE9A70007AAFC /* Model */,
+				366AFE1D256CE9A20007AAFC /* View */,
+			);
+			path = PhoneArea;
+			sourceTree = "<group>";
+		};
+		366AFE1D256CE9A20007AAFC /* View */ = {
+			isa = PBXGroup;
+			children = (
+				366AFE32256CE9F90007AAFC /* PhoneAreaTableViewCell.swift */,
+				366AFE31256CE9F90007AAFC /* PhoneAreaView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		366AFE1E256CE9A70007AAFC /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				366AFE2C256CE9F10007AAFC /* PhoneAreaModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		366AFE1F256CE9AC0007AAFC /* Conroller */ = {
+			isa = PBXGroup;
+			children = (
+				366AFE27256CE9E90007AAFC /* PhoneAreaViewController.swift */,
+			);
+			path = Conroller;
+			sourceTree = "<group>";
+		};
+		366AFE20256CE9B20007AAFC /* TableViewManager */ = {
+			isa = PBXGroup;
+			children = (
+				366AFE22256CE9E20007AAFC /* PhoneAreaTableViewManager.swift */,
+			);
+			path = TableViewManager;
+			sourceTree = "<group>";
+		};
+		366AFE4C256CF8190007AAFC /* CountDownButton */ = {
+			isa = PBXGroup;
+			children = (
+				366AFE4D256CF8190007AAFC /* GSCaptchaButton.swift */,
+			);
+			path = CountDownButton;
+			sourceTree = "<group>";
+		};
 		3679149B250F7410008C7237 /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -2984,6 +3092,7 @@
 				361051812563CAA0008407F5 /* BTCModuleNetworkManager.swift */,
 				361051862563CF54008407F5 /* ViolasModuleNetworkManager.swift */,
 				361051B42563D67F008407F5 /* LibraModuleNetworkManager.swift */,
+				366AFE52256D113C0007AAFC /* ActiveModuleNetworkManager.swift */,
 			);
 			path = Netwrok;
 			sourceTree = "<group>";
@@ -3007,6 +3116,7 @@
 		9D626476235718D700A79B3D /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				366AFE47256CEAE70007AAFC /* Countries.bundle */,
 				36E9AB472531A1D40083E965 /* GoogleService-Info.plist */,
 				9DA8E2AA2317ABC600E28D07 /* LaunchScreen.storyboard */,
 				9D712442232F7662009DED52 /* Assets.xcassets */,
@@ -3864,6 +3974,8 @@
 		9DC06A6F2374059100BCE1FE /* HomeSection */ = {
 			isa = PBXGroup;
 			children = (
+				366AFE1C256CE9840007AAFC /* PhoneArea */,
+				366AFE05256CE1C80007AAFC /* EnrollPhone */,
 				9DC902372328E78A0097FD85 /* Home */,
 				3650F0A1248763830086F578 /* WalletDetail */,
 				3650F0B2248A42470086F578 /* Transaction */,
@@ -3925,6 +4037,7 @@
 		9DC4885B23220E30005FF254 /* Vendors */ = {
 			isa = PBXGroup;
 			children = (
+				366AFE4C256CF8190007AAFC /* CountDownButton */,
 				36F8270024BEAA7E0007ACC3 /* Dropper */,
 				365A89BE23B9A79E00C55A10 /* WYDTextField */,
 				9DF9BB5B2387CBCD00FA800D /* ViolasKit */,
@@ -4370,6 +4483,7 @@
 				36F8270D24BEAA7E0007ACC3 /* LICENSE in Resources */,
 				9DA8E2AC2317ABC600E28D07 /* LaunchScreen.storyboard in Resources */,
 				36828CEB24B808760085A165 /* ColorAssets.xcassets in Resources */,
+				366AFE48256CEAE70007AAFC /* Countries.bundle in Resources */,
 				36F8270E24BEAA7F0007ACC3 /* README.md in Resources */,
 				36828CED24BBFA300085A165 /* MarketContracts.bundle in Resources */,
 				9D7124342329EA1C009DED52 /* Localizable.strings in Resources */,
@@ -4504,6 +4618,7 @@
 				361BDAC824F8E7BD00C4C54E /* LoanListModel.swift in Sources */,
 				3682E5BA24A865DB007CA2CA /* ScanLogoutViewController.swift in Sources */,
 				361BDACD24F8E7BD00C4C54E /* LoanDetailClearingListModel.swift in Sources */,
+				366AFE23256CE9E20007AAFC /* PhoneAreaTableViewManager.swift in Sources */,
 				361BDADE24F8E7BE00C4C54E /* LoanMarketView.swift in Sources */,
 				361BDAEF24F8E7BE00C4C54E /* RepaymentTableViewHeaderView.swift in Sources */,
 				3623AB7C23FC0C93004A01BF /* MappingTransactionsViewController.swift in Sources */,
@@ -4535,6 +4650,7 @@
 				9DC4886E232222CF005FF254 /* LBXPermissions.swift in Sources */,
 				368F7BD724FCFC5700CCF3FB /* BankLegalView.swift in Sources */,
 				361BDAE624F8E7BE00C4C54E /* LoanOrdersViewController.swift in Sources */,
+				366AFE12256CE2D80007AAFC /* EnrollPhoneModel.swift in Sources */,
 				9D9B4A652366D65800354EF0 /* WalletConfigModel.swift in Sources */,
 				9D628A8C239A4A2B00E222FB /* PrivateLegalViewController.swift in Sources */,
 				9DC8778D237958EB006378C3 /* LibraManager.swift in Sources */,
@@ -4599,6 +4715,7 @@
 				9DA0265723702AED0084905B /* BackupWarningViewController.swift in Sources */,
 				9DB515B023A32BA80069A909 /* ViolasError.swift in Sources */,
 				361BDAE724F8E7BE00C4C54E /* LoanOrdersModel.swift in Sources */,
+				366AFE53256D113C0007AAFC /* ActiveModuleNetworkManager.swift in Sources */,
 				361BDAF024F8E7BE00C4C54E /* RepaymentTableViewCell.swift in Sources */,
 				3623AB8223FC0CC7004A01BF /* MappingTransactionsTableViewCell.swift in Sources */,
 				3623AB7E23FC0CA4004A01BF /* MappingTransactionsModel.swift in Sources */,
@@ -4636,6 +4753,7 @@
 				9DB515AE23A32B7C0069A909 /* ViolasNetwork.swift in Sources */,
 				361BDAFF24F8E7BE00C4C54E /* DepositOrdersView.swift in Sources */,
 				361BDACB24F8E7BD00C4C54E /* LoanListTableViewManager.swift in Sources */,
+				366AFE33256CE9F90007AAFC /* PhoneAreaView.swift in Sources */,
 				9D9B4A06236048A000354EF0 /* AboutUsViewController.swift in Sources */,
 				9DC4887E2322320B005FF254 /* ScanView.swift in Sources */,
 				361BDAB524F8E7BD00C4C54E /* LoanViewController.swift in Sources */,
@@ -4670,6 +4788,7 @@
 				9DC4880B2320E6C1005FF254 /* LibraHDPrivateKey.swift in Sources */,
 				361BDAB424F8E7BD00C4C54E /* LoanViewModel.swift in Sources */,
 				36828CC124B707C80085A165 /* AssetsPoolTransactionDetailModel.swift in Sources */,
+				366AFE4E256CF8190007AAFC /* GSCaptchaButton.swift in Sources */,
 				36F8270C24BEAA7E0007ACC3 /* DropperExtensions.swift in Sources */,
 				9D9B49B1235DA76100354EF0 /* AddAddressView.swift in Sources */,
 				9DC06A2D2371786B00BCE1FE /* CheckBackupViewController.swift in Sources */,
@@ -4713,8 +4832,10 @@
 				9D62646C2355A0E300A79B3D /* PasswordCrypto.swift in Sources */,
 				9D9B49EF2360387B00354EF0 /* LanguageViewController.swift in Sources */,
 				36F826F524BD9F1B0007ACC3 /* AssetsPoolTransactionsViewController.swift in Sources */,
+				366AFE0A256CE2BB0007AAFC /* EnrollPhoneView.swift in Sources */,
 				36F42E8B2431B56A00DBBF8F /* LibraStructTag.swift in Sources */,
 				361BDA0D24F89ACB00C4C54E /* ViolasTransactionPayload.swift in Sources */,
+				366AFE2D256CE9F10007AAFC /* PhoneAreaModel.swift in Sources */,
 				3617835B24440BDB003C6588 /* ViolasUtils.swift in Sources */,
 				367914A1250F7446008C7237 /* ScanBankRepaymentView.swift in Sources */,
 				9DC4884F2321F051005FF254 /* LibraWordList.swift in Sources */,
@@ -4768,6 +4889,7 @@
 				36677A8E250F652A009152B3 /* ScanBankWithdrawModel.swift in Sources */,
 				9D9B49CF235FFADB00354EF0 /* MineTableViewManager.swift in Sources */,
 				361F2F3924FCA28C003EFA2E /* LoanQuestionTableViewHeaderView.swift in Sources */,
+				366AFE17256CE2E70007AAFC /* EnrollPhoneViewController.swift in Sources */,
 				9DA02652237011F00084905B /* BackupMnemonicFlowLayout.swift in Sources */,
 				361BDAE224F8E7BE00C4C54E /* LoanDetailDepositListTableViewHeaderView.swift in Sources */,
 				9DC488032320D6A1005FF254 /* LibraMnemonic.swift in Sources */,
@@ -4824,6 +4946,7 @@
 				36836D3924B3059B0031AC6E /* ExchangeTransactionDetailHeaderView.swift in Sources */,
 				361BDAF724F8E7BE00C4C54E /* DepositMarketViewController.swift in Sources */,
 				3622F20724E4003E00CFB754 /* TransferView.swift in Sources */,
+				366AFE34256CE9F90007AAFC /* PhoneAreaTableViewCell.swift in Sources */,
 				9D628A8D239A4A2B00E222FB /* PrivateLegalView.swift in Sources */,
 				9D68D2F9237D24FF005B7593 /* BTCTransferViewController.swift in Sources */,
 				36828CE424B74C6E0085A165 /* ExchangeViewHeaderView.swift in Sources */,
@@ -4882,6 +5005,7 @@
 				361BDB0D24F905E200C4C54E /* DepositDescribeTableViewHeaderView.swift in Sources */,
 				9DB515AC23A32B530069A909 /* ViolasCommon.swift in Sources */,
 				9DF9BB542383E5EF00FA800D /* ScanResultInvalidViewController.swift in Sources */,
+				366AFE28256CE9E90007AAFC /* PhoneAreaViewController.swift in Sources */,
 				9D9B4A5D2366D1E000354EF0 /* WalletConfigViewController.swift in Sources */,
 				9D9B4A09236048A000354EF0 /* AboutUsTableViewCell.swift in Sources */,
 				36836D3724B304700031AC6E /* ExchangeTransactionDetailTableViewMananger.swift in Sources */,

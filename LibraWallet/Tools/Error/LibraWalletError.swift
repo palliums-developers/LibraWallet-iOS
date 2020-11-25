@@ -350,6 +350,16 @@ public enum LibraWalletError: Error {
         case dataInvalid
     }
     case WalletBankWithdraw(reason: BankWithdrawError)
+    
+    public enum VerifyMobilePhoneError {
+        /// 区域未选择
+        case phoneAreaUnselect
+        /// 手机号未输入
+        case phoneNumberEmpty
+        /// 验证码未输入
+        case secureCodeEmpty
+    }
+    case WalletVerifyMobile(reason: VerifyMobilePhoneError)
 }
 extension LibraWalletError: LocalizedError {
     public var errorDescription: String? {
@@ -393,6 +403,8 @@ extension LibraWalletError: LocalizedError {
         case .WalletBankRepayment(reason: let reason):
             return reason.localizedDescription
         case .WalletBankWithdraw(reason: let reason):
+            return reason.localizedDescription
+        case .WalletVerifyMobile(reason: let reason):
             return reason.localizedDescription
         }
     }
@@ -833,6 +845,21 @@ extension LibraWalletError.BankWithdrawError {
         /// 数据异常
         case .dataInvalid:
             return localLanguage(keyString: "wallet_bank_withdraw_data_invalid_error")
+        }
+    }
+}
+extension LibraWalletError.VerifyMobilePhoneError {
+    var localizedDescription: String {
+        switch self {
+        /// 手机区域未选择
+        case .phoneAreaUnselect:
+            return localLanguage(keyString: "wallet_verify_mobile_phone_area_unselect_error")
+        /// 手机号为空
+        case .phoneNumberEmpty:
+            return localLanguage(keyString: "wallet_verify_mobile_phone_number_empty_error")
+        /// 验证码为空
+        case .secureCodeEmpty:
+            return localLanguage(keyString: "wallet_verify_mobile_secure_code_empty_error")
         }
     }
 }
