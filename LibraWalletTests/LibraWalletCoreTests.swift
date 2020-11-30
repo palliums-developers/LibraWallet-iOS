@@ -104,11 +104,11 @@ class LibraWalletCoreTests: XCTestCase {
 //        let model = AddressModel.init(addressID: 0, address: "test", addressName: "test", addressType: "Libra")
 //        _ = DataBaseManager.DBManager.insertTransferAddress(model: model)
         
-        let data = DataBaseManager.DBManager.getTransferAddress(type: "Libra")
+        let data = try? DataBaseManager.DBManager.getTransferAddress(type: "Libra")
         print(data)
-        let updateResult = DataBaseManager.DBManager.updateTransferAddressName(model: data.firstObject as! AddressModel, name: "haha")
-        print(updateResult)
-        let data2 = DataBaseManager.DBManager.getTransferAddress(type: "Libra")
+//        let updateResult = try? DataBaseManager.DBManager.updateTransferAddressName(model: data.firstObject as! AddressModel, name: "haha")
+//        print(updateResult)
+        let data2 = try? DataBaseManager.DBManager.getTransferAddress(type: "Libra")
         print(data2)        
     }
     func testMnemonicCount() {

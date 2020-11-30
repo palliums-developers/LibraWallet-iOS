@@ -139,10 +139,10 @@ extension AppDelegate: MessagingDelegate {
     // FCM tokens are always provided here. It is called generally during app start, but may be called
     // more than once, if the token is invalidated or updated. This is the right spot to upload this
     // token to your application server, or to subscribe to any topics.
-    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         if let token = Messaging.messaging().fcmToken {
             print("FCM Token: \(token)")
-            let dataDict:[String: String] = ["token": fcmToken]
+            let dataDict:[String: String] = ["token": fcmToken ?? ""]
             NotificationCenter.default.post(name: Notification.Name("FCMToken"), object: nil, userInfo: dataDict)
         } else {
             print("FCM Token: nil")

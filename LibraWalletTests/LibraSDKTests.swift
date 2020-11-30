@@ -9,6 +9,8 @@
 import XCTest
 import CryptoSwift
 import BigInt
+import BitcoinKit
+
 @testable import ViolasPay
 class LibraSDKTests: XCTestCase {
     
@@ -600,4 +602,53 @@ class LibraSDKTests: XCTestCase {
             print(error.localizedDescription)
         }
     }
+    func testLibraBech32() {
+        let payload = Data.init(Array<UInt8>(hex: "f72589b71ff4f8d139674a3f7369c69b")) + Data.init(Array<UInt8>(hex: "cf64428bdeb62af2"))
+        let cashaddr: String = LibraBech32.encode(payload: payload,
+                                                  prefix: "lbr",
+                                                  version: 1,
+                                                  separator: "1")
+        print(cashaddr)
+        XCTAssertEqual(cashaddr, "lbr1p7ujcndcl7nudzwt8fglhx6wxn08kgs5tm6mz4usw5p72t")
+        do {
+            let (prifix, hahah) = try LibraBech32.decode("lbr1p7ujcndcl7nudzwt8fglhx6wxn08kgs5tm6mz4usw5p72t",
+                                                         version: 1,
+                                                         separator: "1")
+            XCTAssertEqual(prifix, "lbr")
+            XCTAssertEqual(hahah.dropLast(8).toHexString(), "f72589b71ff4f8d139674a3f7369c69b")
+        } catch {
+            print(error)
+        }
+    }
+//    func expand(_ prefix: String) -> Data {
+//        var ret: Data = Data()
+//        let buf: [UInt8] = Array(prefix.utf8)
+//        for b in buf {
+//            ret += b & 0x1f
+//        }
+//        ret += Data(repeating: 0, count: 1)
+//        return ret
+//    }
+//    func createChecksum(prefix: String, payload: Data) -> Data {
+//        let enc: Data = expand(prefix) + payload + Data(repeating: 0, count: 6)
+//        let mod: UInt64 = PolyMod(enc)
+//        var ret: Data = Data()
+//        for i in 0..<6 {
+//            ret += UInt8((mod >> (5 * (5 - i))) & 0x1f)
+//        }
+//        return ret
+//    }
+//    func PolyMod(_ data: Data) -> UInt64 {
+//        var c: UInt64 = 1
+//        for d in data {
+//            let c0: UInt8 = UInt8(c >> 35)
+//            c = ((c & 0x07ffffffff) << 5) ^ UInt64(d)
+//            if c0 & 0x01 != 0 { c ^= 0x98f2bc8e61 }
+//            if c0 & 0x02 != 0 { c ^= 0x79b76d99e2 }
+//            if c0 & 0x04 != 0 { c ^= 0xf33e5fb3c4 }
+//            if c0 & 0x08 != 0 { c ^= 0xae2eabe2a8 }
+//            if c0 & 0x10 != 0 { c ^= 0x1e4f43e470 }
+//        }
+//        return c ^ 1
+//    }
 }
