@@ -75,9 +75,7 @@ class MineHeaderView: UIView {
     }()
     lazy var farmingRuleButton: UIButton = {
         let button = UIButton(type: .custom)
-        button.setImage(UIImage.init(named: "mine_farming_rule_button_background"), for: UIControl.State.normal)
-        // 调整位置
-        button.imagePosition(at: .right, space: 4, imageViewSize: CGSize.init(width: 14, height: 8))
+        button.setBackgroundImage(UIImage.init(named: "mine_farming_rule_button_background"), for: .normal)
 //        button.addTarget(self, action: #selector(changeToHideMode(button:)), for: .touchUpInside)
         return button
      }()

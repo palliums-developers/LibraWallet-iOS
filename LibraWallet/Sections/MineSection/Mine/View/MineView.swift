@@ -46,6 +46,7 @@ class MineView: UIView {
         }
         tableView.backgroundColor = UIColor.init(hex: "F7F7F9")
         tableView.register(MineTableViewCell.classForCoder(), forCellReuseIdentifier: "CellNormal")
+        tableView.isScrollEnabled = false
         return tableView
     }()
     private lazy var mineHeaderView : MineHeaderView = {
