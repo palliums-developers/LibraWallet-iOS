@@ -8,6 +8,8 @@
 
 import Foundation
 import BigInt
+import CryptoSwift
+
 struct LibraManager {
     /// 获取助词数组
     /// - Throws: 异常
@@ -65,6 +67,47 @@ struct LibraManager {
         } else {
             return ("", address)
         }
+    }
+    public static func isValidTransferAddress(address: String) throws -> String {
+        do {
+            let (prifix, result) = try ViolasBech32.decode(address, separator: "1")
+            guard prifix.isEmpty == false else {
+                throw LibraWalletError.WalletScan(reason: .handleInvalid)
+            }
+            let address = result.dropLast(8).toHexString()
+            guard isValidLibraAddress(address: address) == true else {
+                throw LibraWalletError.WalletScan(reason: .libraAddressInvalid)
+            }
+            return address
+        } catch {
+            throw error
+        }
+    }
+    /// 获取二维码地址
+    /// - Parameters:
+    ///   - rootAccount: 是否是默认根账户地址（默认不是）
+    ///   - version: 版本（默认为1）
+    /// - Returns: 返回地址
+    static func getQRAddress(address: String, rootAccount: Bool = false, version: UInt8 = 1) -> String {
+        let tempData = Data(Array<UInt8>(hex: address)) + Data.init(hex: "00")
+        let tempAddressData = tempData.bytes.sha3(SHA3.Variant.sha256)
+        var randomData = Data()
+        if rootAccount == false {
+            for _ in 0..<8 {
+                let randomValue = UInt8.random(in: 0...255)
+                let tempData = Data([randomValue])
+                randomData.append(tempData)
+            }
+        } else {
+            let tempData = Data.init(count: 8)
+            randomData.append(tempData)
+        }
+        let payload = tempAddressData.dropFirst(16) + randomData
+        let address: String = LibraBech32.encode(payload: Data.init(payload),
+                                                 prefix: "lbr",
+                                                 version: version,
+                                                 separator: "1")
+        return address
     }
 }
 extension LibraManager {

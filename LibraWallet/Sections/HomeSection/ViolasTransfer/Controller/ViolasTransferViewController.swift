@@ -55,7 +55,7 @@ class ViolasTransferViewController: BaseViewController {
            self.detailView.addressTextField.text = address
         }
     }
-    var amount: Int64? {
+    var amount: UInt64? {
         didSet {
             guard let tempAmount = amount else {
                 return

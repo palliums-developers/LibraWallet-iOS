@@ -139,7 +139,7 @@ func getDecimalNumber(amount: NSDecimalNumber, scale: Int16, unit: Int) -> NSDec
 struct libraWalletTool {
     public static func scanResultHandle(content: String, contracts: [Token]?) throws -> QRCodeHandleResult {
          if content.hasPrefix("bitcoin:") {
-            let (contentPrefix, amount) = self.handleAmount(content: content)
+            let (contentPrefix, amount) = self.handleBTCAmount(content: content)
              let tempAddress = contentPrefix.replacingOccurrences(of: "bitcoin:", with: "")
              guard BTCManager.isValidBTCAddress(address: tempAddress) else {
                  throw LibraWalletError.WalletScan(reason: .btcAddressInvalid)
@@ -150,77 +150,77 @@ struct libraWalletTool {
                                             amount: amount,
                                             contract: nil,
                                             type: .transfer)
-         } else if content.hasPrefix("libra-") {
-            let (contentPrefix, amount) = handleAmount(content: content)
-            let coinAddress = contentPrefix.split(separator: ":").last?.description ?? ""
-            let addressPrifix = contentPrefix.split(separator: ":").first?.description
-            // 匹配已有Module
-            let coinName = addressPrifix?.replacingOccurrences(of: "libra-", with: "")
-            guard coinName?.isEmpty == false else {
-                print("token名称为空")
-                throw LibraWalletError.WalletScan(reason: .libraTokenNameEmpty)
-            }
-            // 检测地址是否合法
-            guard LibraManager.isValidLibraAddress(address: coinAddress) else {
-                throw LibraWalletError.WalletScan(reason: .libraAddressInvalid)
-            }
-            if contracts?.isEmpty == false {
-                let tokens = contracts?.filter({ item in
-                    item.tokenModule.lowercased() == coinName?.lowercased() && item.tokenType == .Libra
-                })
-                guard (tokens?.count ?? 0) > 0 else {
-                    // 不支持或未开启
-                    print("不支持或未开启")
-                    throw LibraWalletError.WalletScan(reason: .libraModuleInvalid)
+         } else if content.hasPrefix("libra://") {
+            do {
+                let (contentPrefix, currency, amount) = try self.handleLibraAmount(content: content)
+                let qrAddress = contentPrefix.replacingOccurrences(of: "libra://", with: "")
+                // 检测地址是否合法
+                let address = try LibraManager.isValidTransferAddress(address: qrAddress)
+                if contracts?.isEmpty == false {
+                    let tokens = contracts?.filter({ item in
+                        item.tokenModule.lowercased() == currency.lowercased() && item.tokenType == .Libra
+                    })
+                    guard (tokens?.count ?? 0) > 0 else {
+                        // 不支持或未开启
+                        print("不支持或未开启")
+                        throw LibraWalletError.WalletScan(reason: .libraModuleInvalid)
+                    }
+                    return QRCodeHandleResult.init(addressType: .Libra,
+                                                   originContent: content,
+                                                   address: address,
+                                                   amount: amount,
+                                                   contract: tokens?.first,
+                                                   type: .transfer)
+                } else {
+                    return QRCodeHandleResult.init(addressType: .Libra,
+                                                   originContent: content,
+                                                   address: address,
+                                                   amount: amount,
+                                                   contract: nil,
+                                                   type: .transfer)
                 }
-                return QRCodeHandleResult.init(addressType: .Libra,
+            } catch {
+                return QRCodeHandleResult.init(addressType: .Violas,
                                                originContent: content,
-                                               address: coinAddress,
-                                               amount: amount,
-                                               contract: tokens?.first,
-                                               type: .transfer)
-            } else {
-                return QRCodeHandleResult.init(addressType: .Libra,
-                                               originContent: content,
-                                               address: coinAddress,
-                                               amount: amount,
+                                               address: nil,
+                                               amount: nil,
                                                contract: nil,
                                                type: .transfer)
             }
-         } else if content.hasPrefix("violas-") {
-            let (contentPrefix, amount) = handleAmount(content: content)
-            let coinAddress = contentPrefix.split(separator: ":").last?.description
-            let addressPrifix = contentPrefix.split(separator: ":").first?.description
-            // 匹配已有Module
-            let coinName = addressPrifix?.replacingOccurrences(of: "violas-", with: "")
-            guard coinName?.isEmpty == false else {
-                print("token名称为空")
-                throw LibraWalletError.WalletScan(reason: .violasTokenNameEmpty)
-            }
-            // 检测地址是否合法
-            guard ViolasManager.isValidViolasAddress(address: coinAddress ?? "") else {
-                throw LibraWalletError.WalletScan(reason: .violasAddressInvalid)
-            }
-            if contracts?.isEmpty == false {
-                let tokens = contracts?.filter({ item in
-                    item.tokenModule.lowercased() == coinName?.lowercased() && item.tokenType == .Violas
-                })
-                guard (tokens?.count ?? 0) > 0 else {
-                    // 不支持或未开启
-                    print("不支持或未开启")
-                    throw LibraWalletError.WalletScan(reason: .violasModuleInvalid)
+         } else if content.hasPrefix("violas://") {
+            do {
+                let (contentPrefix, currency, amount) = try self.handleViolasAmount(content: content)
+                let qrAddress = contentPrefix.replacingOccurrences(of: "violas://", with: "")
+                // 检测地址是否合法
+                let address = try ViolasManager.isValidTransferAddress(address: qrAddress)
+                if contracts?.isEmpty == false {
+                    let tokens = contracts?.filter({ item in
+                        item.tokenModule.lowercased() == currency.lowercased() && item.tokenType == .Violas
+                    })
+                    guard (tokens?.count ?? 0) > 0 else {
+                        // 不支持或未开启
+                        print("不支持或未开启")
+                        throw LibraWalletError.WalletScan(reason: .violasModuleInvalid)
+                    }
+                    return QRCodeHandleResult.init(addressType: .Violas,
+                                                   originContent: content,
+                                                   address: address,
+                                                   amount: amount,
+                                                   contract: tokens?.first,
+                                                   type: .transfer)
+                } else {
+                    return QRCodeHandleResult.init(addressType: .Violas,
+                                                   originContent: content,
+                                                   address: address,
+                                                   amount: amount,
+                                                   contract: nil,
+                                                   type: .transfer)
                 }
+            } catch {
                 return QRCodeHandleResult.init(addressType: .Violas,
                                                originContent: content,
-                                               address: coinAddress,
-                                               amount: amount,
-                                               contract: tokens?.first,
-                                               type: .transfer)
-            } else {
-                return QRCodeHandleResult.init(addressType: .Violas,
-                                               originContent: content,
-                                               address: coinAddress,
-                                               amount: amount,
+                                               address: nil,
+                                               amount: nil,
                                                contract: nil,
                                                type: .transfer)
             }
@@ -262,7 +262,7 @@ struct libraWalletTool {
         var addressType: WalletType?
         var originContent: String
         var address: String?
-        var amount: Int64?
+        var amount: UInt64?
         var contract: Token?
         var type: QRCodeType
     }
@@ -272,16 +272,64 @@ struct libraWalletTool {
         case others
         case walletConnect
     }
-    private static func handleAmount(content: String) -> (String, Int64?) {
+    private static func handleBTCAmount(content: String) -> (String, UInt64?) {
         let contentArray = content.split(separator: "?")
         if contentArray.count == 2 {
             let amountContent = contentArray[1].split(separator: "&")
             let amountString = amountContent[0].replacingOccurrences(of: "amount=", with: "")
             let amount = NSDecimalNumber.init(string: amountString)
-            return (contentArray.first!.description, amount.int64Value)
+            return (contentArray.first!.description, amount.uint64Value)
         } else {
             return (content, nil)
         }
+    }
+    private static func handleLibraAmount(content: String) throws -> (String, String, UInt64?) {
+        let contentArray = content.split(separator: "?")
+        guard contentArray.count == 2 else {
+            throw LibraWalletError.error("Invalid Content")
+        }
+        guard let dataArray = contentArray.last?.split(separator: "&"), dataArray.isEmpty == false else {
+            throw LibraWalletError.error("Invalid Content Data")
+        }
+        var tempCurrency = ""
+        var tempAmount: UInt64?
+        for data in dataArray {
+            let tempData = data
+            if tempData.hasPrefix("c=") {
+                tempCurrency = tempData.replacingOccurrences(of: "c=", with: "")
+            }
+            if tempData.hasPrefix("am=") {
+                tempAmount = NSDecimalNumber.init(string: tempData.replacingOccurrences(of: "am=", with: "")).uint64Value
+            }
+        }
+        guard tempCurrency.isEmpty == false else {
+            throw LibraWalletError.WalletScan(reason: .libraTokenNameEmpty)
+        }
+        return (contentArray.first!.description, tempCurrency, tempAmount)
+    }
+    private static func handleViolasAmount(content: String) throws -> (String, String, UInt64?) {
+        let contentArray = content.split(separator: "?")
+        guard contentArray.count == 2 else {
+            throw LibraWalletError.error("Invalid Content")
+        }
+        guard let dataArray = contentArray.last?.split(separator: "&"), dataArray.isEmpty == false else {
+            throw LibraWalletError.error("Invalid Content Data")
+        }
+        var tempCurrency = ""
+        var tempAmount: UInt64?
+        for data in dataArray {
+            var tempData = data
+            if tempData.hasPrefix("c=") {
+                tempCurrency = tempData.replacingOccurrences(of: "c=", with: "")
+            }
+            if tempData.hasPrefix("am=") {
+                tempAmount = NSDecimalNumber.init(string: tempData.replacingOccurrences(of: "am=", with: "")).uint64Value
+            }
+        }
+        guard tempCurrency.isEmpty == false else {
+            throw LibraWalletError.WalletScan(reason: .violasTokenNameEmpty)
+        }
+        return (contentArray.first!.description, tempCurrency, tempAmount)
     }
 }
 // MARK: 计算文字宽高

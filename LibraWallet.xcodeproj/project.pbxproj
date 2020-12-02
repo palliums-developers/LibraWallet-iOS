@@ -192,6 +192,7 @@
 		366AFE5B256E5CAE0007AAFC /* InvitationRewardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFE5A256E5CAE0007AAFC /* InvitationRewardViewController.swift */; };
 		366AFE63256E5CBF0007AAFC /* InvitationRewardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFE62256E5CBF0007AAFC /* InvitationRewardView.swift */; };
 		366AFEC32570DF470007AAFC /* LibraBech32.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFEC22570DF470007AAFC /* LibraBech32.swift */; };
+		366AFED7257627AB0007AAFC /* ViolasBech32.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFED6257627AB0007AAFC /* ViolasBech32.swift */; };
 		3679149F250F742F008C7237 /* ScanBankRepaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3679149E250F742F008C7237 /* ScanBankRepaymentViewController.swift */; };
 		367914A1250F7446008C7237 /* ScanBankRepaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367914A0250F7446008C7237 /* ScanBankRepaymentView.swift */; };
 		367914A3250F7455008C7237 /* ScanBankRepaymentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367914A2250F7455008C7237 /* ScanBankRepaymentModel.swift */; };
@@ -647,6 +648,7 @@
 		366AFE5A256E5CAE0007AAFC /* InvitationRewardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvitationRewardViewController.swift; sourceTree = "<group>"; };
 		366AFE62256E5CBF0007AAFC /* InvitationRewardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvitationRewardView.swift; sourceTree = "<group>"; };
 		366AFEC22570DF470007AAFC /* LibraBech32.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraBech32.swift; sourceTree = "<group>"; };
+		366AFED6257627AB0007AAFC /* ViolasBech32.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasBech32.swift; sourceTree = "<group>"; };
 		3679149E250F742F008C7237 /* ScanBankRepaymentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBankRepaymentViewController.swift; sourceTree = "<group>"; };
 		367914A0250F7446008C7237 /* ScanBankRepaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBankRepaymentView.swift; sourceTree = "<group>"; };
 		367914A2250F7455008C7237 /* ScanBankRepaymentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBankRepaymentModel.swift; sourceTree = "<group>"; };
@@ -4341,6 +4343,7 @@
 				3617835A24440BDB003C6588 /* ViolasUtils.swift */,
 				9DB515A723A327640069A909 /* ViolasMnemonic.swift */,
 				3617835C24440C1E003C6588 /* ViolasWordList.swift */,
+				366AFED6257627AB0007AAFC /* ViolasBech32.swift */,
 				361BDA1424F8A47F00C4C54E /* ViolasContracts.bundle */,
 			);
 			path = ViolasKit;
@@ -4986,6 +4989,7 @@
 				9D68D2F9237D24FF005B7593 /* BTCTransferViewController.swift in Sources */,
 				36828CE424B74C6E0085A165 /* ExchangeViewHeaderView.swift in Sources */,
 				36677A85250F0D3D009152B3 /* ScanBankDepositModel.swift in Sources */,
+				366AFED7257627AB0007AAFC /* ViolasBech32.swift in Sources */,
 				361BDABA24F8E7BD00C4C54E /* LoanTableViewCell.swift in Sources */,
 				3650F0BA248A46280086F578 /* TransactionDetailModel.swift in Sources */,
 				9D712441232F621B009DED52 /* LibraWalletTool.swift in Sources */,

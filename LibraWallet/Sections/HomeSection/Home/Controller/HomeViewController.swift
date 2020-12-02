@@ -160,13 +160,13 @@ extension HomeViewController {
                 }
                 
             } catch {
-                self.view.makeToast(error.localizedDescription, position: .center)
+                self.detailView.makeToast(error.localizedDescription, position: .center)
             }
         }
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
-    func showBTCTransferViewController(address: String, tokenModel: Token, amount: Int64?) {
+    func showBTCTransferViewController(address: String, tokenModel: Token, amount: UInt64?) {
         let vc = BTCTransferViewController()
         vc.actionClosure = {
             //            self.dataModel.getLocalUserInfo()
@@ -177,7 +177,7 @@ extension HomeViewController {
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
-    func showLibraTransferViewController(address: String, tokenModel: Token, amount: Int64?) {
+    func showLibraTransferViewController(address: String, tokenModel: Token, amount: UInt64?) {
         let vc = LibraTransferViewController()
         vc.actionClosure = {
             //            self.dataModel.getLocalUserInfo()
@@ -188,7 +188,7 @@ extension HomeViewController {
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
-    func showViolasTokenViewController(address: String, tokenModel: Token, amount: Int64?) {
+    func showViolasTokenViewController(address: String, tokenModel: Token, amount: UInt64?) {
         let vc = ViolasTransferViewController()
         vc.actionClosure = {
             //            self.dataModel.getLocalUserInfo()

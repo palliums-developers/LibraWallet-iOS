@@ -145,10 +145,10 @@ class ReceiveView: UIView {
                 tempAddress = "bitcoin:" + tempAddress
                 break
             case .Libra:
-                tempAddress = "libra-\(model.tokenModule.lowercased()):" + tempAddress
+                tempAddress = "libra://" + LibraManager.getQRAddress(address: tempAddress) + "?c=\(model.tokenModule.lowercased())"
                 break
             case .Violas:
-                tempAddress = "violas-\(model.tokenModule.lowercased()):" + tempAddress
+                tempAddress = "violas://" + ViolasManager.getQRAddress(address: tempAddress) + "?c=\(model.tokenModule.lowercased())"
                 break
             }
             qrcodeImageView.image = QRCodeGenerator.generate(from: tempAddress)
