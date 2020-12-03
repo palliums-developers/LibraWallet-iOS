@@ -359,6 +359,22 @@ wallet_bind_phone_phone_secure_code_textfield_placeholder = "Secure Code";
 wallet_bind_phone_phone_invited_textfield_placeholder = "VLS address of the inviter (optional)";
 wallet_bind_phone_confirm_button_title = "Get It Now";
 
+/************* 收益明细 *******************/
+wallet_profit_invitation_title = "Invited";
+wallet_profit_pool_title = "Pool";
+wallet_profit_bank_title = "Bank";
+wallet_profit_invitation_address_title = "Invited Account";
+wallet_profit_invitation_amount_title = "Farming Profit";
+wallet_profit_invitation_date_title = "Invitation time";
+wallet_profit_invitation_status_title = "Status";
+wallet_profit_pool_type_title = "Type";
+wallet_profit_pool_type_withdraw_title = "Withdrawal";
+wallet_profit_pool_type_loan_title = "Loan";
+wallet_profit_pool_type_deposit_title = "Deposit";
+wallet_profit_pool_amount_title = "Withdraw Amount";
+wallet_profit_pool_date_title = "Withdraw Date";
+
+
 /************* 弹出提示 *******************/
 // 转账弹出提示
 wallet_transfer_success_alert = "Transaction Submitted";
@@ -519,6 +535,7 @@ wallet_bank_repayment_navigationbar_title = "Repayment";
 wallet_phone_area_navigation_title = "Region";
 wallet_phone_verify_navigation_title = "Verify Mobile Phone";
 wallet_invitatioin_reward_navigation_title = "Invitation Reward";
+wallet_profit_list_navigation_title = "Profit Details";
 
 /************* App错误 *******************/
 // 请求遇到错误

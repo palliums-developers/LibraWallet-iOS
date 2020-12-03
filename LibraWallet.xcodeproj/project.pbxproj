@@ -193,6 +193,26 @@
 		366AFE63256E5CBF0007AAFC /* InvitationRewardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFE62256E5CBF0007AAFC /* InvitationRewardView.swift */; };
 		366AFEC32570DF470007AAFC /* LibraBech32.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFEC22570DF470007AAFC /* LibraBech32.swift */; };
 		366AFED7257627AB0007AAFC /* ViolasBech32.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFED6257627AB0007AAFC /* ViolasBech32.swift */; };
+		366AFEEA257782B60007AAFC /* ProfitMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFEE9257782B60007AAFC /* ProfitMainViewController.swift */; };
+		366AFEF2257782DB0007AAFC /* ProfitMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFEF1257782DB0007AAFC /* ProfitMainView.swift */; };
+		366AFF0025778B050007AAFC /* ProfitBankView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFEFF25778B050007AAFC /* ProfitBankView.swift */; };
+		366AFF0825778B160007AAFC /* ProfitBankModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFF0725778B160007AAFC /* ProfitBankModel.swift */; };
+		366AFF0D25778B290007AAFC /* ProfitBankViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFF0C25778B290007AAFC /* ProfitBankViewController.swift */; };
+		366AFF1225778B3C0007AAFC /* ProfitPoolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFF1125778B3C0007AAFC /* ProfitPoolView.swift */; };
+		366AFF1725778B470007AAFC /* ProfitPoolModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFF1625778B470007AAFC /* ProfitPoolModel.swift */; };
+		366AFF1C25778B530007AAFC /* ProfitPoolViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFF1B25778B530007AAFC /* ProfitPoolViewController.swift */; };
+		366AFF2125778B670007AAFC /* ProfitInvitationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFF2025778B670007AAFC /* ProfitInvitationView.swift */; };
+		366AFF2625778B760007AAFC /* ProfitInvitationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFF2525778B760007AAFC /* ProfitInvitationModel.swift */; };
+		366AFF2B25778B860007AAFC /* ProfitInvitationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFF2A25778B860007AAFC /* ProfitInvitationViewController.swift */; };
+		366AFF3025778F1A0007AAFC /* ProfitInvitationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFF2F25778F1A0007AAFC /* ProfitInvitationTableViewCell.swift */; };
+		366AFF3625778F460007AAFC /* ProfitInvitationTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFF3525778F460007AAFC /* ProfitInvitationTableViewManager.swift */; };
+		366AFF3E25778FBA0007AAFC /* ProfitInvitationTabViewHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFF3D25778FBA0007AAFC /* ProfitInvitationTabViewHeaderView.swift */; };
+		366AFF432578CD3D0007AAFC /* ProfitPoolTableViewHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFF422578CD3D0007AAFC /* ProfitPoolTableViewHeaderView.swift */; };
+		366AFF482578CD510007AAFC /* ProfitPoolTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFF472578CD510007AAFC /* ProfitPoolTableViewCell.swift */; };
+		366AFF4E2578CD6D0007AAFC /* ProfitPoolTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFF4D2578CD6D0007AAFC /* ProfitPoolTableViewManager.swift */; };
+		366AFF562578D34F0007AAFC /* ProfitBankTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFF552578D34F0007AAFC /* ProfitBankTableViewCell.swift */; };
+		366AFF5B2578D3700007AAFC /* ProfitBankTableViewHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFF5A2578D3700007AAFC /* ProfitBankTableViewHeaderView.swift */; };
+		366AFF612578D3A40007AAFC /* ProfitBankTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFF602578D3A40007AAFC /* ProfitBankTableViewManager.swift */; };
 		3679149F250F742F008C7237 /* ScanBankRepaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3679149E250F742F008C7237 /* ScanBankRepaymentViewController.swift */; };
 		367914A1250F7446008C7237 /* ScanBankRepaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367914A0250F7446008C7237 /* ScanBankRepaymentView.swift */; };
 		367914A3250F7455008C7237 /* ScanBankRepaymentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367914A2250F7455008C7237 /* ScanBankRepaymentModel.swift */; };
@@ -248,8 +268,6 @@
 		36E95D8C242A084B0004B86D /* ScanLoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E95D88242A084B0004B86D /* ScanLoginModel.swift */; };
 		36E95D8D242A084B0004B86D /* ScanLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E95D8A242A084B0004B86D /* ScanLoginView.swift */; };
 		36E9AB482531A1D40083E965 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 36E9AB472531A1D40083E965 /* GoogleService-Info.plist */; };
-		36EBF016245055D8007FD4C5 /* ActiveAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36EBF015245055D8007FD4C5 /* ActiveAccountViewController.swift */; };
-		36EBF018245055E9007FD4C5 /* ActiveAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36EBF017245055E9007FD4C5 /* ActiveAccountView.swift */; };
 		36F42E89242E347300DBBF8F /* LibraTypeTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F42E88242E347300DBBF8F /* LibraTypeTag.swift */; };
 		36F42E8B2431B56A00DBBF8F /* LibraStructTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F42E8A2431B56A00DBBF8F /* LibraStructTag.swift */; };
 		36F42EB1243C80DE00DBBF8F /* LibraMultiPrivateKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F42EB0243C80DE00DBBF8F /* LibraMultiPrivateKey.swift */; };
@@ -649,6 +667,26 @@
 		366AFE62256E5CBF0007AAFC /* InvitationRewardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvitationRewardView.swift; sourceTree = "<group>"; };
 		366AFEC22570DF470007AAFC /* LibraBech32.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraBech32.swift; sourceTree = "<group>"; };
 		366AFED6257627AB0007AAFC /* ViolasBech32.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasBech32.swift; sourceTree = "<group>"; };
+		366AFEE9257782B60007AAFC /* ProfitMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfitMainViewController.swift; sourceTree = "<group>"; };
+		366AFEF1257782DB0007AAFC /* ProfitMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfitMainView.swift; sourceTree = "<group>"; };
+		366AFEFF25778B050007AAFC /* ProfitBankView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfitBankView.swift; sourceTree = "<group>"; };
+		366AFF0725778B160007AAFC /* ProfitBankModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfitBankModel.swift; sourceTree = "<group>"; };
+		366AFF0C25778B290007AAFC /* ProfitBankViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfitBankViewController.swift; sourceTree = "<group>"; };
+		366AFF1125778B3C0007AAFC /* ProfitPoolView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfitPoolView.swift; sourceTree = "<group>"; };
+		366AFF1625778B470007AAFC /* ProfitPoolModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfitPoolModel.swift; sourceTree = "<group>"; };
+		366AFF1B25778B530007AAFC /* ProfitPoolViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfitPoolViewController.swift; sourceTree = "<group>"; };
+		366AFF2025778B670007AAFC /* ProfitInvitationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfitInvitationView.swift; sourceTree = "<group>"; };
+		366AFF2525778B760007AAFC /* ProfitInvitationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfitInvitationModel.swift; sourceTree = "<group>"; };
+		366AFF2A25778B860007AAFC /* ProfitInvitationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfitInvitationViewController.swift; sourceTree = "<group>"; };
+		366AFF2F25778F1A0007AAFC /* ProfitInvitationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfitInvitationTableViewCell.swift; sourceTree = "<group>"; };
+		366AFF3525778F460007AAFC /* ProfitInvitationTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfitInvitationTableViewManager.swift; sourceTree = "<group>"; };
+		366AFF3D25778FBA0007AAFC /* ProfitInvitationTabViewHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfitInvitationTabViewHeaderView.swift; sourceTree = "<group>"; };
+		366AFF422578CD3D0007AAFC /* ProfitPoolTableViewHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfitPoolTableViewHeaderView.swift; sourceTree = "<group>"; };
+		366AFF472578CD510007AAFC /* ProfitPoolTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfitPoolTableViewCell.swift; sourceTree = "<group>"; };
+		366AFF4D2578CD6D0007AAFC /* ProfitPoolTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfitPoolTableViewManager.swift; sourceTree = "<group>"; };
+		366AFF552578D34F0007AAFC /* ProfitBankTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfitBankTableViewCell.swift; sourceTree = "<group>"; };
+		366AFF5A2578D3700007AAFC /* ProfitBankTableViewHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfitBankTableViewHeaderView.swift; sourceTree = "<group>"; };
+		366AFF602578D3A40007AAFC /* ProfitBankTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfitBankTableViewManager.swift; sourceTree = "<group>"; };
 		3679149E250F742F008C7237 /* ScanBankRepaymentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBankRepaymentViewController.swift; sourceTree = "<group>"; };
 		367914A0250F7446008C7237 /* ScanBankRepaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBankRepaymentView.swift; sourceTree = "<group>"; };
 		367914A2250F7455008C7237 /* ScanBankRepaymentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBankRepaymentModel.swift; sourceTree = "<group>"; };
@@ -704,8 +742,6 @@
 		36E95D88242A084B0004B86D /* ScanLoginModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanLoginModel.swift; sourceTree = "<group>"; };
 		36E95D8A242A084B0004B86D /* ScanLoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanLoginView.swift; sourceTree = "<group>"; };
 		36E9AB472531A1D40083E965 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		36EBF015245055D8007FD4C5 /* ActiveAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveAccountViewController.swift; sourceTree = "<group>"; };
-		36EBF017245055E9007FD4C5 /* ActiveAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveAccountView.swift; sourceTree = "<group>"; };
 		36F42E88242E347300DBBF8F /* LibraTypeTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraTypeTag.swift; sourceTree = "<group>"; };
 		36F42E8A2431B56A00DBBF8F /* LibraStructTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraStructTag.swift; sourceTree = "<group>"; };
 		36F42EB0243C80DE00DBBF8F /* LibraMultiPrivateKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraMultiPrivateKey.swift; sourceTree = "<group>"; };
@@ -2331,6 +2367,188 @@
 			path = Controller;
 			sourceTree = "<group>";
 		};
+		366AFEDB257780D90007AAFC /* ExcitationPlan */ = {
+			isa = PBXGroup;
+			children = (
+				366AFEE2257781920007AAFC /* ProfitListModule */,
+				366AFE57256E5C710007AAFC /* InvitationReward */,
+				366AFE1C256CE9840007AAFC /* PhoneArea */,
+				366AFE05256CE1C80007AAFC /* EnrollPhone */,
+			);
+			path = ExcitationPlan;
+			sourceTree = "<group>";
+		};
+		366AFEE2257781920007AAFC /* ProfitListModule */ = {
+			isa = PBXGroup;
+			children = (
+				366AFEE3257781DD0007AAFC /* ProfitMain */,
+				366AFEE62577827A0007AAFC /* ProfitInvitation */,
+				366AFEE5257782620007AAFC /* ProfitPool */,
+				366AFEE4257782320007AAFC /* ProfitBank */,
+			);
+			path = ProfitListModule;
+			sourceTree = "<group>";
+		};
+		366AFEE3257781DD0007AAFC /* ProfitMain */ = {
+			isa = PBXGroup;
+			children = (
+				366AFEE8257782970007AAFC /* Controller */,
+				366AFEE7257782920007AAFC /* View */,
+			);
+			path = ProfitMain;
+			sourceTree = "<group>";
+		};
+		366AFEE4257782320007AAFC /* ProfitBank */ = {
+			isa = PBXGroup;
+			children = (
+				366AFF5F2578D3850007AAFC /* TableViewManager */,
+				366AFEFE25778AF60007AAFC /* Controller */,
+				366AFEFD25778AF10007AAFC /* Model */,
+				366AFEFC25778AED0007AAFC /* View */,
+			);
+			path = ProfitBank;
+			sourceTree = "<group>";
+		};
+		366AFEE5257782620007AAFC /* ProfitPool */ = {
+			isa = PBXGroup;
+			children = (
+				366AFF4C2578CD570007AAFC /* TableViewManager */,
+				366AFEFB25778AE70007AAFC /* Controller */,
+				366AFEFA25778AE10007AAFC /* Model */,
+				366AFEF925778ADD0007AAFC /* View */,
+			);
+			path = ProfitPool;
+			sourceTree = "<group>";
+		};
+		366AFEE62577827A0007AAFC /* ProfitInvitation */ = {
+			isa = PBXGroup;
+			children = (
+				366AFF3425778F1F0007AAFC /* TableViewManager */,
+				366AFEF825778AD70007AAFC /* Controller */,
+				366AFEF725778AD10007AAFC /* Model */,
+				366AFEF625778ACC0007AAFC /* View */,
+			);
+			path = ProfitInvitation;
+			sourceTree = "<group>";
+		};
+		366AFEE7257782920007AAFC /* View */ = {
+			isa = PBXGroup;
+			children = (
+				366AFEF1257782DB0007AAFC /* ProfitMainView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		366AFEE8257782970007AAFC /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				366AFEE9257782B60007AAFC /* ProfitMainViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		366AFEF625778ACC0007AAFC /* View */ = {
+			isa = PBXGroup;
+			children = (
+				366AFF2025778B670007AAFC /* ProfitInvitationView.swift */,
+				366AFF2F25778F1A0007AAFC /* ProfitInvitationTableViewCell.swift */,
+				366AFF3D25778FBA0007AAFC /* ProfitInvitationTabViewHeaderView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		366AFEF725778AD10007AAFC /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				366AFF2525778B760007AAFC /* ProfitInvitationModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		366AFEF825778AD70007AAFC /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				366AFF2A25778B860007AAFC /* ProfitInvitationViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		366AFEF925778ADD0007AAFC /* View */ = {
+			isa = PBXGroup;
+			children = (
+				366AFF1125778B3C0007AAFC /* ProfitPoolView.swift */,
+				366AFF472578CD510007AAFC /* ProfitPoolTableViewCell.swift */,
+				366AFF422578CD3D0007AAFC /* ProfitPoolTableViewHeaderView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		366AFEFA25778AE10007AAFC /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				366AFF1625778B470007AAFC /* ProfitPoolModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		366AFEFB25778AE70007AAFC /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				366AFF1B25778B530007AAFC /* ProfitPoolViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		366AFEFC25778AED0007AAFC /* View */ = {
+			isa = PBXGroup;
+			children = (
+				366AFEFF25778B050007AAFC /* ProfitBankView.swift */,
+				366AFF552578D34F0007AAFC /* ProfitBankTableViewCell.swift */,
+				366AFF5A2578D3700007AAFC /* ProfitBankTableViewHeaderView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		366AFEFD25778AF10007AAFC /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				366AFF0725778B160007AAFC /* ProfitBankModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		366AFEFE25778AF60007AAFC /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				366AFF0C25778B290007AAFC /* ProfitBankViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		366AFF3425778F1F0007AAFC /* TableViewManager */ = {
+			isa = PBXGroup;
+			children = (
+				366AFF3525778F460007AAFC /* ProfitInvitationTableViewManager.swift */,
+			);
+			path = TableViewManager;
+			sourceTree = "<group>";
+		};
+		366AFF4C2578CD570007AAFC /* TableViewManager */ = {
+			isa = PBXGroup;
+			children = (
+				366AFF4D2578CD6D0007AAFC /* ProfitPoolTableViewManager.swift */,
+			);
+			path = TableViewManager;
+			sourceTree = "<group>";
+		};
+		366AFF5F2578D3850007AAFC /* TableViewManager */ = {
+			isa = PBXGroup;
+			children = (
+				366AFF602578D3A40007AAFC /* ProfitBankTableViewManager.swift */,
+			);
+			path = TableViewManager;
+			sourceTree = "<group>";
+		};
 		3679149B250F7410008C7237 /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -2796,31 +3014,6 @@
 			isa = PBXGroup;
 			children = (
 				36E95D8A242A084B0004B86D /* ScanLoginView.swift */,
-			);
-			path = View;
-			sourceTree = "<group>";
-		};
-		36EBF012245055AA007FD4C5 /* ActiveAccount */ = {
-			isa = PBXGroup;
-			children = (
-				36EBF013245055B9007FD4C5 /* Controller */,
-				36EBF014245055C3007FD4C5 /* View */,
-			);
-			path = ActiveAccount;
-			sourceTree = "<group>";
-		};
-		36EBF013245055B9007FD4C5 /* Controller */ = {
-			isa = PBXGroup;
-			children = (
-				36EBF015245055D8007FD4C5 /* ActiveAccountViewController.swift */,
-			);
-			path = Controller;
-			sourceTree = "<group>";
-		};
-		36EBF014245055C3007FD4C5 /* View */ = {
-			isa = PBXGroup;
-			children = (
-				36EBF017245055E9007FD4C5 /* ActiveAccountView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -3468,8 +3661,6 @@
 		9D9B49D723602E6000354EF0 /* MineSection */ = {
 			isa = PBXGroup;
 			children = (
-				366AFE57256E5C710007AAFC /* InvitationReward */,
-				36EBF012245055AA007FD4C5 /* ActiveAccount */,
 				9D6264832358405000A79B3D /* Mine */,
 				9DF9BB572386D6C100FA800D /* WalletManagerModule */,
 				9DF9BB582386D73000FA800D /* AddressManagerModule */,
@@ -4008,8 +4199,6 @@
 		9DC06A6F2374059100BCE1FE /* HomeSection */ = {
 			isa = PBXGroup;
 			children = (
-				366AFE1C256CE9840007AAFC /* PhoneArea */,
-				366AFE05256CE1C80007AAFC /* EnrollPhone */,
 				9DC902372328E78A0097FD85 /* Home */,
 				3650F0A1248763830086F578 /* WalletDetail */,
 				3650F0B2248A42470086F578 /* Transaction */,
@@ -4198,6 +4387,7 @@
 		9DC902362328E7820097FD85 /* Sections */ = {
 			isa = PBXGroup;
 			children = (
+				366AFEDB257780D90007AAFC /* ExcitationPlan */,
 				361BDA1624F8E7BD00C4C54E /* BankSection */,
 				9D1A6147233204B1009DDA07 /* Base */,
 				9DC87792237A529D006378C3 /* FirstInSection */,
@@ -4641,6 +4831,7 @@
 				3623AB5F23ED70E2004A01BF /* TokenMappingModel.swift in Sources */,
 				9DBC267923408D55009650EA /* ed25519_sign.swift in Sources */,
 				361051B52563D67F008407F5 /* LibraModuleNetworkManager.swift in Sources */,
+				366AFF482578CD510007AAFC /* ProfitPoolTableViewCell.swift in Sources */,
 				9DA02644236FFCE00084905B /* BackupMnemonicView.swift in Sources */,
 				9D9B49D52360270800354EF0 /* BaseNavigationViewController.swift in Sources */,
 				9D626480235719A400A79B3D /* WelcomeViewController.swift in Sources */,
@@ -4653,10 +4844,12 @@
 				36F826FF24BDA1DF0007ACC3 /* AssetsPoolTransactionsTableViewManager.swift in Sources */,
 				361BDAC824F8E7BD00C4C54E /* LoanListModel.swift in Sources */,
 				3682E5BA24A865DB007CA2CA /* ScanLogoutViewController.swift in Sources */,
+				366AFF3025778F1A0007AAFC /* ProfitInvitationTableViewCell.swift in Sources */,
 				361BDACD24F8E7BD00C4C54E /* LoanDetailClearingListModel.swift in Sources */,
 				366AFE23256CE9E20007AAFC /* PhoneAreaTableViewManager.swift in Sources */,
 				361BDADE24F8E7BE00C4C54E /* LoanMarketView.swift in Sources */,
 				361BDAEF24F8E7BE00C4C54E /* RepaymentTableViewHeaderView.swift in Sources */,
+				366AFF4E2578CD6D0007AAFC /* ProfitPoolTableViewManager.swift in Sources */,
 				3623AB7C23FC0C93004A01BF /* MappingTransactionsViewController.swift in Sources */,
 				9DFFA88723683E1C00EA74F9 /* WalletTransactionsTableViewCell.swift in Sources */,
 				9DA0264A236FFE0A0084905B /* BackupMnemonicCollectionViewCell.swift in Sources */,
@@ -4675,7 +4868,6 @@
 				9D9B4A4A2362F4DC00354EF0 /* MineHeaderView.swift in Sources */,
 				361BDAD424F8E7BD00C4C54E /* BankView.swift in Sources */,
 				36677A87250F0DD9009152B3 /* ScanBankDepositView.swift in Sources */,
-				36EBF016245055D8007FD4C5 /* ActiveAccountViewController.swift in Sources */,
 				9DFFA87F23683C3400EA74F9 /* WalletTransactionsModel.swift in Sources */,
 				361BDB0624F8E7BE00C4C54E /* DepositListView.swift in Sources */,
 				9D68D305237D49E5005B7593 /* LibraTransactionScriptPayload.swift in Sources */,
@@ -4692,6 +4884,7 @@
 				9DC8778D237958EB006378C3 /* LibraManager.swift in Sources */,
 				361BDAC124F8E7BD00C4C54E /* DepositQuestionTableViewCell.swift in Sources */,
 				361BDAE124F8E7BE00C4C54E /* LoanDetailDepositListModel.swift in Sources */,
+				366AFF0D25778B290007AAFC /* ProfitBankViewController.swift in Sources */,
 				9D9B4A502366953600354EF0 /* ImportWalletView.swift in Sources */,
 				9DC901F82327A3B70097FD85 /* LibraWriteSet.swift in Sources */,
 				9DC9023F2328EA480097FD85 /* HomeView.swift in Sources */,
@@ -4702,9 +4895,11 @@
 				361BDAEB24F8E7BE00C4C54E /* LoanOrdersTableViewManager.swift in Sources */,
 				9D3954FE235D4C0F0068019F /* BTCManager.swift in Sources */,
 				36828CCC24B736240085A165 /* MarketMineView.swift in Sources */,
+				366AFF2125778B670007AAFC /* ProfitInvitationView.swift in Sources */,
 				36F826FC24BD9FD90007ACC3 /* ExchangeTransactionsTableViewManager.swift in Sources */,
 				3682E5C824AC36FB007CA2CA /* AssetsPoolViewController.swift in Sources */,
 				3622F20324E3FFF400CFB754 /* TransferViewController.swift in Sources */,
+				366AFF3E25778FBA0007AAFC /* ProfitInvitationTabViewHeaderView.swift in Sources */,
 				361BDB0324F8E7BE00C4C54E /* DepositListViewController.swift in Sources */,
 				361BDABD24F8E7BD00C4C54E /* DepositViewModel.swift in Sources */,
 				9DC06A3F2372A9B100BCE1FE /* MarketViewController.swift in Sources */,
@@ -4721,6 +4916,7 @@
 				9D9B4A07236048A000354EF0 /* AboutUsTableViewHeader.swift in Sources */,
 				9DFFA88123683C4400EA74F9 /* WalletTransactionsViewController.swift in Sources */,
 				9D68D307238039D7005B7593 /* BTCTransferModel.swift in Sources */,
+				366AFF1C25778B530007AAFC /* ProfitPoolViewController.swift in Sources */,
 				361BDAD524F8E7BD00C4C54E /* LoanDetailLoanListViewController.swift in Sources */,
 				3682E5C624AC36DC007CA2CA /* AssetsPoolView.swift in Sources */,
 				361BDAEE24F8E7BE00C4C54E /* RepaymentModel.swift in Sources */,
@@ -4763,6 +4959,8 @@
 				361BDADA24F8E7BD00C4C54E /* LoanDetailLoanListTableViewManager.swift in Sources */,
 				3622F21424E539ED00CFB754 /* ReceiveView.swift in Sources */,
 				361BDADB24F8E7BD00C4C54E /* LoanMarketViewController.swift in Sources */,
+				366AFF0825778B160007AAFC /* ProfitBankModel.swift in Sources */,
+				366AFF1725778B470007AAFC /* ProfitPoolModel.swift in Sources */,
 				9DC902472328FDB90097FD85 /* DataBaseManager.swift in Sources */,
 				361BDAFB24F8E7BE00C4C54E /* DepositMarketTableViewManager.swift in Sources */,
 				9D5B4E70236BCBDB00F4D99C /* AddAssetModel.swift in Sources */,
@@ -4779,6 +4977,7 @@
 				9DC4880D2320EDF8005FF254 /* LibraUtils.swift in Sources */,
 				9DC4886D232222CF005FF254 /* LBXScanViewStyle.swift in Sources */,
 				9DC8778F23796884006378C3 /* ToastView.swift in Sources */,
+				366AFEEA257782B60007AAFC /* ProfitMainViewController.swift in Sources */,
 				9D628A86239A495500E222FB /* PrivateAlertView.swift in Sources */,
 				36F826F324BD9F060007ACC3 /* ExchangeTransactionsModel.swift in Sources */,
 				3650F0A624888FAE0086F578 /* WalletMainViewController.swift in Sources */,
@@ -4863,17 +5062,18 @@
 				9DB515A823A327640069A909 /* ViolasMnemonic.swift in Sources */,
 				36B466A82476565000CFF438 /* ScanSendTransactionViewController.swift in Sources */,
 				9DC06A352371794100BCE1FE /* CheckBackupCollectionViewMananger.swift in Sources */,
-				36EBF018245055E9007FD4C5 /* ActiveAccountView.swift in Sources */,
 				3682E5BC24A865EB007CA2CA /* ScanLogoutView.swift in Sources */,
 				361BDAD324F8E7BD00C4C54E /* BankViewHeaderView.swift in Sources */,
 				9D62646C2355A0E300A79B3D /* PasswordCrypto.swift in Sources */,
 				9D9B49EF2360387B00354EF0 /* LanguageViewController.swift in Sources */,
+				366AFF432578CD3D0007AAFC /* ProfitPoolTableViewHeaderView.swift in Sources */,
 				36F826F524BD9F1B0007ACC3 /* AssetsPoolTransactionsViewController.swift in Sources */,
 				366AFE0A256CE2BB0007AAFC /* EnrollPhoneView.swift in Sources */,
 				36F42E8B2431B56A00DBBF8F /* LibraStructTag.swift in Sources */,
 				361BDA0D24F89ACB00C4C54E /* ViolasTransactionPayload.swift in Sources */,
 				366AFE2D256CE9F10007AAFC /* PhoneAreaModel.swift in Sources */,
 				3617835B24440BDB003C6588 /* ViolasUtils.swift in Sources */,
+				366AFF0025778B050007AAFC /* ProfitBankView.swift in Sources */,
 				367914A1250F7446008C7237 /* ScanBankRepaymentView.swift in Sources */,
 				9DC4884F2321F051005FF254 /* LibraWordList.swift in Sources */,
 				3682E5CC24AC3753007CA2CA /* AssetsPoolViewHeaderView.swift in Sources */,
@@ -4882,6 +5082,7 @@
 				361BDAC024F8E7BD00C4C54E /* DepositTableViewHeaderView.swift in Sources */,
 				361BDAE024F8E7BE00C4C54E /* LoanDetailDepositListViewController.swift in Sources */,
 				3623AB6323F15F5F004A01BF /* TokenMappingHeaderView.swift in Sources */,
+				366AFF562578D34F0007AAFC /* ProfitBankTableViewCell.swift in Sources */,
 				9D9B4A5A2366D1C400354EF0 /* WalletConfigView.swift in Sources */,
 				9D68D2F5237D24DD005B7593 /* BTCTransferView.swift in Sources */,
 				9D9B49AC235DA76100354EF0 /* AddressManagerModel.swift in Sources */,
@@ -4917,12 +5118,15 @@
 				361BDABC24F8E7BD00C4C54E /* LoanTableViewManager.swift in Sources */,
 				361051822563CAA0008407F5 /* BTCModuleNetworkManager.swift in Sources */,
 				361BDAE324F8E7BE00C4C54E /* LoanDetailDepositListView.swift in Sources */,
+				366AFF2B25778B860007AAFC /* ProfitInvitationViewController.swift in Sources */,
 				9D68D301237D260E005B7593 /* ViolasTransferModel.swift in Sources */,
 				366AFEC32570DF470007AAFC /* LibraBech32.swift in Sources */,
+				366AFF612578D3A40007AAFC /* ProfitBankTableViewManager.swift in Sources */,
 				36828CBF24B707B90085A165 /* AssetsPoolTransactionDetailViewController.swift in Sources */,
 				9DC902432328FC4A0097FD85 /* HomeModel.swift in Sources */,
 				363D90F024CAAC6700F6374C /* LibraContractEvent.swift in Sources */,
 				361783672444684F003C6588 /* ViolasStructTag.swift in Sources */,
+				366AFF1225778B3C0007AAFC /* ProfitPoolView.swift in Sources */,
 				9D9B49F52360389200354EF0 /* LanguageTableViewCell.swift in Sources */,
 				36677A8E250F652A009152B3 /* ScanBankWithdrawModel.swift in Sources */,
 				9D9B49CF235FFADB00354EF0 /* MineTableViewManager.swift in Sources */,
@@ -4933,6 +5137,7 @@
 				9DC488032320D6A1005FF254 /* LibraMnemonic.swift in Sources */,
 				9DC488052320DBCB005FF254 /* LibraHDPublicKey.swift in Sources */,
 				9DBC267723408D55009650EA /* ed25519_utility.swift in Sources */,
+				366AFF3625778F460007AAFC /* ProfitInvitationTableViewManager.swift in Sources */,
 				36828CD024B736630085A165 /* MarketMineViewController.swift in Sources */,
 				361BDAB824F8E7BD00C4C54E /* LoanDescribeTableViewCell.swift in Sources */,
 				9DC06A2F2371788100BCE1FE /* CheckBackupViewModel.swift in Sources */,
@@ -4949,6 +5154,7 @@
 				361BDAC524F8E7BD00C4C54E /* DepositTableViewManager.swift in Sources */,
 				361BDAC724F8E7BD00C4C54E /* LoanListViewController.swift in Sources */,
 				361BDADD24F8E7BD00C4C54E /* LoanMarketTableViewCell.swift in Sources */,
+				366AFEF2257782DB0007AAFC /* ProfitMainView.swift in Sources */,
 				36836D3124B301250031AC6E /* ExchangeTransactionDetailView.swift in Sources */,
 				9DB515C323A32F660069A909 /* ViolasTransactionScriptPayload.swift in Sources */,
 				9D9B4A152360496900354EF0 /* FeedbackAlert.swift in Sources */,
@@ -5001,6 +5207,7 @@
 				361BDAC224F8E7BD00C4C54E /* DepositView.swift in Sources */,
 				9D9B4A522366954700354EF0 /* ImportWalletModel.swift in Sources */,
 				9D5B4E65236ABB8700F4D99C /* TransferFeeSliderCustom.swift in Sources */,
+				366AFF2625778B760007AAFC /* ProfitInvitationModel.swift in Sources */,
 				361BDABB24F8E7BD00C4C54E /* LoanQuestionTableViewCell.swift in Sources */,
 				361BDAF624F8E7BE00C4C54E /* LoanOrderDetailView.swift in Sources */,
 				9D5D13C523692D3800A2C6AF /* HomeHeaderView.swift in Sources */,
@@ -5040,6 +5247,7 @@
 				9D9B49DD23602EB900354EF0 /* SettingTableViewManager.swift in Sources */,
 				9D9B4A462362967200354EF0 /* AddWalletViewController.swift in Sources */,
 				9D9B49CD235FFAAB00354EF0 /* MineView.swift in Sources */,
+				366AFF5B2578D3700007AAFC /* ProfitBankTableViewHeaderView.swift in Sources */,
 				3623AB8523FC0CE2004A01BF /* MappingTransactionsTableViewManager.swift in Sources */,
 				361BDAE524F8E7BE00C4C54E /* LoanDetailDepositListTableViewManager.swift in Sources */,
 				361BDB0D24F905E200C4C54E /* DepositDescribeTableViewHeaderView.swift in Sources */,

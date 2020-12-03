@@ -97,10 +97,10 @@ extension MineViewController: MineTableViewManagerDelegate {
             }
         } else if indexPath.section == 4 {
             if indexPath.row == 0 {
-                let vc = ActiveAccountViewController()
-                //                vc.authKey = LibraWalletManager.shared.walletAuthenticationKey
-                vc.hidesBottomBarWhenPushed = true
-                self.navigationController?.pushViewController(vc, animated: true)
+//                let vc = ActiveAccountViewController()
+//                //                vc.authKey = LibraWalletManager.shared.walletAuthenticationKey
+//                vc.hidesBottomBarWhenPushed = true
+//                self.navigationController?.pushViewController(vc, animated: true)
             }
         }
     }

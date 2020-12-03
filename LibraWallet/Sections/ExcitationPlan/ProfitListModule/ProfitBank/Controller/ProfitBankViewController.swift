@@ -1,8 +1,8 @@
 //
-//  LoanDetailLoanListViewController.swift
+//  ProfitBankViewController.swift
 //  LibraWallet
 //
-//  Created by wangyingdong on 2020/8/24.
+//  Created by wangyingdong on 2020/12/2.
 //  Copyright © 2020 palliums. All rights reserved.
 //
 
@@ -10,7 +10,7 @@ import UIKit
 import MJRefresh
 import JXSegmentedView
 
-class LoanDetailLoanListViewController: BaseViewController {
+class ProfitBankViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // 初始化本地配置
@@ -45,22 +45,22 @@ class LoanDetailLoanListViewController: BaseViewController {
         }
     }
     deinit {
-        print("LoanDetailLoanListViewController销毁了")
+        print("ProfitBankViewController销毁了")
     }
     /// 网络请求、数据模型
-    lazy var dataModel: LoanDetailLoanListModel = {
-        let model = LoanDetailLoanListModel.init()
+    lazy var dataModel: ProfitBankModel = {
+        let model = ProfitBankModel.init()
         return model
     }()
     /// tableView管理类
-    lazy var tableViewManager: LoanDetailLoanListTableViewManager = {
-        let manager = LoanDetailLoanListTableViewManager.init()
+    lazy var tableViewManager: ProfitBankTableViewManager = {
+        let manager = ProfitBankTableViewManager.init()
         //        manager.delegate = self
         return manager
     }()
     /// 子View
-    lazy var detailView : LoanDetailLoanListView = {
-        let view = LoanDetailLoanListView.init()
+    lazy var detailView : ProfitBankView = {
+        let view = ProfitBankView.init()
         view.tableView.delegate = self.tableViewManager
         view.tableView.dataSource = self.tableViewManager
         view.tableView.mj_header = MJRefreshNormalHeader.init(refreshingTarget: self, refreshingAction:  #selector(refreshData))
@@ -92,7 +92,7 @@ class LoanDetailLoanListViewController: BaseViewController {
                                                   requestStatus: requestState)
     }
 }
-extension LoanDetailLoanListViewController {
+extension ProfitBankViewController {
     func initKVO() {
         self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
             guard let dataDic = change.newValue, dataDic.count != 0 else {
@@ -198,7 +198,7 @@ extension LoanDetailLoanListViewController {
         self.endLoading()
     }
 }
-extension LoanDetailLoanListViewController: JXSegmentedListContainerViewListDelegate {
+extension ProfitBankViewController: JXSegmentedListContainerViewListDelegate {
     func listView() -> UIView {
         return self.detailView
     }

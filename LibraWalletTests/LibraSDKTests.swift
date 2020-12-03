@@ -637,4 +637,31 @@ class LibraSDKTests: XCTestCase {
             XCTFail()
         }
     }
+    func testDecode() {
+        do {
+            let (prifix, hahah) = try ViolasBech32.decode("tlb1pgc28wuxspzzmvghzen74dczc8am9etx050ndlncpq2nfd",
+                                                          version: 1,
+                                                          separator: "1")
+//            XCTAssertEqual(prifix, "tlb")
+            print(hahah.toHexString())
+            XCTAssertEqual(hahah.dropLast(8).toHexString(), "46147770d00885b622e2ccfd56e0583f")
+//            010001089b38d65f0ad9a32d0108aebee5fb81dd6fac00
+            //01000108bb3cd3e1a7ebc4e601086550903ff07436db00
+            //01000108eb596c4b5fefd1cd01088fefe132c7d486f200
+            //313fb3f4eb846ee8
+            //765caccfa3e6dfcf
+            //46147770d00885b622e2ccfd56e0583f
+            
+        } catch {
+            XCTFail()
+        }
+        /*
+         0100
+         0108
+         111111153010a111
+         0108
+         8f8b82153010a1bd
+         00
+         */
+    }
 }
