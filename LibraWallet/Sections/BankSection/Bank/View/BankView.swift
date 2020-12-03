@@ -10,7 +10,12 @@ import UIKit
 import JXSegmentedView
 import Localize_Swift
 
+protocol BankViewDelegate: NSObjectProtocol {
+    func checkYieldFramingRules()
+}
 class BankView: UIView {
+    weak var delegate: BankViewDelegate?
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.init(hex: "F7F7F9")
@@ -18,6 +23,7 @@ class BankView: UIView {
         addSubview(headerView)
         addSubview(segmentView)
         addSubview(listContainerView)
+        segmentView.addSubview(yieldFramingRuleButton)
         // 添加语言变换通知
         NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
     }
@@ -38,13 +44,17 @@ class BankView: UIView {
         headerView.snp.makeConstraints { (make) in
             make.top.equalTo(self).offset(navigationBarHeight)
             make.left.right.equalTo(self)
-            make.height.equalTo(174 - navigationBarHeight)
+            make.height.equalTo(110)
         }
         segmentView.snp.makeConstraints { (make) in
             make.top.equalTo(headerView.snp.bottom)
             make.left.equalTo(self).offset(15)
             make.right.equalTo(self.snp.right).offset(-15)
             make.height.equalTo(50)
+        }
+        yieldFramingRuleButton.snp.makeConstraints { (make) in
+            make.centerY.equalTo(segmentView)
+            make.right.equalTo(segmentView.snp.right).offset(-3)
         }
         segmentView.corner(byRoundingCorners: [UIRectCorner.topLeft, UIRectCorner.topRight], radii: 8)
         listContainerView.snp.makeConstraints { (make) in
@@ -93,6 +103,19 @@ class BankView: UIView {
         return data
     }()
     var controllers: [UIViewController]?
+    lazy var yieldFramingRuleButton: UIButton = {
+        let button = UIButton.init()
+        button.setBackgroundImage(UIImage.init(named: "yield_framing_rule_background"), for: .normal)
+        button.setTitle(localLanguage(keyString: "wallet_bank_yield_framing_rules_button_title"), for: UIControl.State.normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.semibold)
+        button.setTitleColor(UIColor.init(hex: "7540FD"), for: UIControl.State.normal)
+        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
+        button.tag = 20
+        return button
+    }()
+    @objc func buttonClick(button: UIButton) {
+        self.delegate?.checkYieldFramingRules()
+    }
 }
 extension BankView: JXSegmentedListContainerViewDataSource {
     func numberOfLists(in listContainerView: JXSegmentedListContainerView) -> Int {

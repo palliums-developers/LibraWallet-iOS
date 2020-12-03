@@ -53,6 +53,7 @@ class BankViewController: UIViewController {
         let view = BankView.init()
         view.segmentView.delegate = self
         view.controllers = [depositController, withdrawController]
+        view.delegate = self
         return view
     }()
     /// 存款市场Controller
@@ -200,6 +201,11 @@ extension BankViewController: DropperDelegate {
             vc.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController(vc, animated: true)
         }
+    }
+}
+extension BankViewController: BankViewDelegate {
+    func checkYieldFramingRules() {
+        <#code#>
     }
 }
 // MARK: - 网络请求

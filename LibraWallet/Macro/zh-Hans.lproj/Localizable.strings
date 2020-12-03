@@ -259,6 +259,7 @@ wallet_bank_deposit_market_title = "存款市场";
 wallet_bank_loan_market_title = "借款市场";
 wallet_bank_deposit_orders_alert_title = "存款订单";
 wallet_bank_loan_orders_alert_title = "借款订单";
+wallet_bank_yield_framing_rules_button_title = "存 | 借挖矿规则";
 
 /************* 数字银行存款订单 *******************/
 wallet_deposit_orders_title = "当前存款";
