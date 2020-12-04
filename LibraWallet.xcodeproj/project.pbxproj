@@ -165,6 +165,11 @@
 		3650F0C1248F2A850086F578 /* TransactionDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3650F0C0248F2A850086F578 /* TransactionDetailTableViewCell.swift */; };
 		3650F0C3248F7ED30086F578 /* HomeWithoutWalletView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3650F0C2248F7ED30086F578 /* HomeWithoutWalletView.swift */; };
 		365A89C023B9A7CE00C55A10 /* WYDTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 365A89BF23B9A7CE00C55A10 /* WYDTextField.swift */; };
+		3666E514257A0C2F007DC62F /* YieldFarmingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3666E513257A0C2F007DC62F /* YieldFarmingViewController.swift */; };
+		3666E51C257A0C42007DC62F /* YieldFarmingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3666E51B257A0C42007DC62F /* YieldFarmingView.swift */; };
+		3666E54B257A14EA007DC62F /* YieldFarmingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3666E54A257A14EA007DC62F /* YieldFarmingModel.swift */; };
+		3666E559257A2D65007DC62F /* YieldFarmingRulesWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3666E558257A2D65007DC62F /* YieldFarmingRulesWebViewController.swift */; };
+		3666E564257A2D8C007DC62F /* YieldFarmingRulesWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3666E563257A2D8C007DC62F /* YieldFarmingRulesWebView.swift */; };
 		36677A742507598E009152B3 /* RedeemAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36677A732507598E009152B3 /* RedeemAlert.swift */; };
 		36677A7725077BBB009152B3 /* DepositOrdersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36677A7625077BBB009152B3 /* DepositOrdersViewModel.swift */; };
 		36677A79250A1908009152B3 /* DropperCellConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36677A78250A1908009152B3 /* DropperCellConfig.swift */; };
@@ -639,6 +644,11 @@
 		3650F0C0248F2A850086F578 /* TransactionDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionDetailTableViewCell.swift; sourceTree = "<group>"; };
 		3650F0C2248F7ED30086F578 /* HomeWithoutWalletView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeWithoutWalletView.swift; sourceTree = "<group>"; };
 		365A89BF23B9A7CE00C55A10 /* WYDTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WYDTextField.swift; sourceTree = "<group>"; };
+		3666E513257A0C2F007DC62F /* YieldFarmingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YieldFarmingViewController.swift; sourceTree = "<group>"; };
+		3666E51B257A0C42007DC62F /* YieldFarmingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YieldFarmingView.swift; sourceTree = "<group>"; };
+		3666E54A257A14EA007DC62F /* YieldFarmingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YieldFarmingModel.swift; sourceTree = "<group>"; };
+		3666E558257A2D65007DC62F /* YieldFarmingRulesWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YieldFarmingRulesWebViewController.swift; sourceTree = "<group>"; };
+		3666E563257A2D8C007DC62F /* YieldFarmingRulesWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YieldFarmingRulesWebView.swift; sourceTree = "<group>"; };
 		36677A732507598E009152B3 /* RedeemAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedeemAlert.swift; sourceTree = "<group>"; };
 		36677A7625077BBB009152B3 /* DepositOrdersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositOrdersViewModel.swift; sourceTree = "<group>"; };
 		36677A78250A1908009152B3 /* DropperCellConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropperCellConfig.swift; sourceTree = "<group>"; };
@@ -2128,6 +2138,65 @@
 			path = SwapSection;
 			sourceTree = "<group>";
 		};
+		3666E510257A0BF8007DC62F /* YieldFarming */ = {
+			isa = PBXGroup;
+			children = (
+				3666E512257A0C16007DC62F /* Controller */,
+				3666E549257A14A7007DC62F /* Model */,
+				3666E511257A0C11007DC62F /* View */,
+			);
+			path = YieldFarming;
+			sourceTree = "<group>";
+		};
+		3666E511257A0C11007DC62F /* View */ = {
+			isa = PBXGroup;
+			children = (
+				3666E51B257A0C42007DC62F /* YieldFarmingView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		3666E512257A0C16007DC62F /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				3666E513257A0C2F007DC62F /* YieldFarmingViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		3666E549257A14A7007DC62F /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				3666E54A257A14EA007DC62F /* YieldFarmingModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		3666E555257A2D2B007DC62F /* YieldFarmingRulesWeb */ = {
+			isa = PBXGroup;
+			children = (
+				3666E557257A2D4A007DC62F /* Controller */,
+				3666E556257A2D45007DC62F /* View */,
+			);
+			path = YieldFarmingRulesWeb;
+			sourceTree = "<group>";
+		};
+		3666E556257A2D45007DC62F /* View */ = {
+			isa = PBXGroup;
+			children = (
+				3666E563257A2D8C007DC62F /* YieldFarmingRulesWebView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		3666E557257A2D4A007DC62F /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				3666E558257A2D65007DC62F /* YieldFarmingRulesWebViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
 		36677A7525077BA3009152B3 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
@@ -2370,6 +2439,8 @@
 		366AFEDB257780D90007AAFC /* ExcitationPlan */ = {
 			isa = PBXGroup;
 			children = (
+				3666E555257A2D2B007DC62F /* YieldFarmingRulesWeb */,
+				3666E510257A0BF8007DC62F /* YieldFarming */,
 				366AFEE2257781920007AAFC /* ProfitListModule */,
 				366AFE57256E5C710007AAFC /* InvitationReward */,
 				366AFE1C256CE9840007AAFC /* PhoneArea */,
@@ -4852,6 +4923,7 @@
 				366AFF4E2578CD6D0007AAFC /* ProfitPoolTableViewManager.swift in Sources */,
 				3623AB7C23FC0C93004A01BF /* MappingTransactionsViewController.swift in Sources */,
 				9DFFA88723683E1C00EA74F9 /* WalletTransactionsTableViewCell.swift in Sources */,
+				3666E559257A2D65007DC62F /* YieldFarmingRulesWebViewController.swift in Sources */,
 				9DA0264A236FFE0A0084905B /* BackupMnemonicCollectionViewCell.swift in Sources */,
 				361BDB0424F8E7BE00C4C54E /* DepositListModel.swift in Sources */,
 				3650F0B8248A46140086F578 /* TransactionDetailViewController.swift in Sources */,
@@ -4965,6 +5037,7 @@
 				361BDAFB24F8E7BE00C4C54E /* DepositMarketTableViewManager.swift in Sources */,
 				9D5B4E70236BCBDB00F4D99C /* AddAssetModel.swift in Sources */,
 				9D5B4E5E236976D500F4D99C /* HomeTableViewCell.swift in Sources */,
+				3666E514257A0C2F007DC62F /* YieldFarmingViewController.swift in Sources */,
 				361BDAE424F8E7BE00C4C54E /* LoanDetailDepositListTableViewCell.swift in Sources */,
 				36677A7725077BBB009152B3 /* DepositOrdersViewModel.swift in Sources */,
 				361051872563CF54008407F5 /* ViolasModuleNetworkManager.swift in Sources */,
@@ -4988,6 +5061,7 @@
 				9DB515AE23A32B7C0069A909 /* ViolasNetwork.swift in Sources */,
 				361BDAFF24F8E7BE00C4C54E /* DepositOrdersView.swift in Sources */,
 				361BDACB24F8E7BD00C4C54E /* LoanListTableViewManager.swift in Sources */,
+				3666E51C257A0C42007DC62F /* YieldFarmingView.swift in Sources */,
 				366AFE33256CE9F90007AAFC /* PhoneAreaView.swift in Sources */,
 				9D9B4A06236048A000354EF0 /* AboutUsViewController.swift in Sources */,
 				9DC4887E2322320B005FF254 /* ScanView.swift in Sources */,
@@ -5196,6 +5270,7 @@
 				36828CE424B74C6E0085A165 /* ExchangeViewHeaderView.swift in Sources */,
 				36677A85250F0D3D009152B3 /* ScanBankDepositModel.swift in Sources */,
 				366AFED7257627AB0007AAFC /* ViolasBech32.swift in Sources */,
+				3666E564257A2D8C007DC62F /* YieldFarmingRulesWebView.swift in Sources */,
 				361BDABA24F8E7BD00C4C54E /* LoanTableViewCell.swift in Sources */,
 				3650F0BA248A46280086F578 /* TransactionDetailModel.swift in Sources */,
 				9D712441232F621B009DED52 /* LibraWalletTool.swift in Sources */,
@@ -5231,6 +5306,7 @@
 				9D5B4E602369788500F4D99C /* HomeTableViewManager.swift in Sources */,
 				36B466B0247656A000CFF438 /* ScanSendTransactionView.swift in Sources */,
 				361BDAEA24F8E7BE00C4C54E /* LoanOrdersTableViewHeaderView.swift in Sources */,
+				3666E54B257A14EA007DC62F /* YieldFarmingModel.swift in Sources */,
 				9D9B4A08236048A000354EF0 /* AboutUsView.swift in Sources */,
 				9DC487FF2320AFB8005FF254 /* LibraError.swift in Sources */,
 				36B466AE2476568E00CFF438 /* ScanSendRawTransactionView.swift in Sources */,

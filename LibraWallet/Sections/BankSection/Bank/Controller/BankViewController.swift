@@ -205,7 +205,7 @@ extension BankViewController: DropperDelegate {
 }
 extension BankViewController: BankViewDelegate {
     func checkYieldFramingRules() {
-        <#code#>
+        
     }
 }
 // MARK: - 网络请求

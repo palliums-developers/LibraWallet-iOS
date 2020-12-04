@@ -31,6 +31,7 @@ target 'LibraWallet' do
   pod 'WalletConnectSwift'
   pod 'Firebase/Messaging'
   pod "DropDownMenuKit"
+  pod 'WKWebViewJavascriptBridge'
   # Pods for LibraWallet
 
   target 'LibraWalletTests' do
