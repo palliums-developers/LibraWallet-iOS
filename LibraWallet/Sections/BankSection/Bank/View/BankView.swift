@@ -39,7 +39,7 @@ class BankView: UIView {
         super.layoutSubviews()
         topBackgroundImageView.snp.makeConstraints { (make) in
             make.top.left.right.equalTo(self)
-            make.height.equalTo((225 * ratio))
+            make.height.equalTo(((162 + Int(navigationBarHeight)) * ratio))
         }
         headerView.snp.makeConstraints { (make) in
             make.top.equalTo(self).offset(navigationBarHeight)

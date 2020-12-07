@@ -40,4 +40,8 @@ class YieldFarmingView: UIView {
         let request = URLRequest.init(url: URL(string: "https://www.baidu.com")!)
         return request
     }()
+    lazy var toastView: ToastView? = {
+        let toast = ToastView.init()
+        return toast
+    }()
 }

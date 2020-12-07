@@ -218,6 +218,8 @@ wallet_market_assets_pool_output_amount_title = "转出";
 wallet_market_assets_pool_output_token_wallet_connect_title = "通证：";
 wallet_assets_pool_transfer_in_title = "转入";
 wallet_assets_pool_transfer_out_title = "转出";
+wallet_market_assets_pool_yield_farming_title = "挖矿福利";
+wallet_market_assets_pool_yield_farming_describe = "现在加入资金池可获得同手续费奖励等价的VLS挖矿福利";
 
 /************* 资金池交易记录 *******************/
 wallet_assets_pool_transaction_token_title = "通证：";

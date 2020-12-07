@@ -254,6 +254,7 @@
 		36836D3724B304700031AC6E /* ExchangeTransactionDetailTableViewMananger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36836D3624B304700031AC6E /* ExchangeTransactionDetailTableViewMananger.swift */; };
 		36836D3924B3059B0031AC6E /* ExchangeTransactionDetailHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36836D3824B3059B0031AC6E /* ExchangeTransactionDetailHeaderView.swift */; };
 		36836D3B24B305D00031AC6E /* ExchangeTransactionDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36836D3A24B305D00031AC6E /* ExchangeTransactionDetailTableViewCell.swift */; };
+		36842148257E1E30000B87D6 /* AssetsPoolProfitHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36842147257E1E30000B87D6 /* AssetsPoolProfitHeaderView.swift */; };
 		368CD5E324D26F4E0092F12E /* MarketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368CD5E224D26F4E0092F12E /* MarketManager.swift */; };
 		368F7BD524FCFC4700CCF3FB /* BankLegalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368F7BD424FCFC4700CCF3FB /* BankLegalViewController.swift */; };
 		368F7BD724FCFC5700CCF3FB /* BankLegalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368F7BD624FCFC5700CCF3FB /* BankLegalView.swift */; };
@@ -733,6 +734,7 @@
 		36836D3624B304700031AC6E /* ExchangeTransactionDetailTableViewMananger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeTransactionDetailTableViewMananger.swift; sourceTree = "<group>"; };
 		36836D3824B3059B0031AC6E /* ExchangeTransactionDetailHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeTransactionDetailHeaderView.swift; sourceTree = "<group>"; };
 		36836D3A24B305D00031AC6E /* ExchangeTransactionDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeTransactionDetailTableViewCell.swift; sourceTree = "<group>"; };
+		36842147257E1E30000B87D6 /* AssetsPoolProfitHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsPoolProfitHeaderView.swift; sourceTree = "<group>"; };
 		368CD5E224D26F4E0092F12E /* MarketManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketManager.swift; sourceTree = "<group>"; };
 		368F7BD424FCFC4700CCF3FB /* BankLegalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankLegalViewController.swift; sourceTree = "<group>"; };
 		368F7BD624FCFC5700CCF3FB /* BankLegalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankLegalView.swift; sourceTree = "<group>"; };
@@ -2811,6 +2813,7 @@
 			isa = PBXGroup;
 			children = (
 				3682E5C524AC36DC007CA2CA /* AssetsPoolView.swift */,
+				36842147257E1E30000B87D6 /* AssetsPoolProfitHeaderView.swift */,
 				3682E5CB24AC3753007CA2CA /* AssetsPoolViewHeaderView.swift */,
 			);
 			path = View;
@@ -4994,6 +4997,7 @@
 				361BDAEE24F8E7BE00C4C54E /* RepaymentModel.swift in Sources */,
 				9D9B4A132360491C00354EF0 /* HelpCenterView.swift in Sources */,
 				361BDB0724F8E7BE00C4C54E /* DepositListTableViewManager.swift in Sources */,
+				36842148257E1E30000B87D6 /* AssetsPoolProfitHeaderView.swift in Sources */,
 				361BDB0924F8E7C700C4C54E /* DepositTokensAlert.swift in Sources */,
 				368F7BD524FCFC4700CCF3FB /* BankLegalViewController.swift in Sources */,
 				361BDAF824F8E7BE00C4C54E /* DepositMarketModel.swift in Sources */,

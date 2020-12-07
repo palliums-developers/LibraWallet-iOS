@@ -218,6 +218,8 @@ wallet_market_assets_pool_output_amount_title = "Withdraw";
 wallet_market_assets_pool_output_token_wallet_connect_title = "Tokens：";
 wallet_assets_pool_transfer_in_title = "Add Liquidity";
 wallet_assets_pool_transfer_out_title = "Remove Liquidity";
+wallet_market_assets_pool_yield_farming_title = "Yield Farming Benefit";
+wallet_market_assets_pool_yield_farming_describe = "Join the fund pool now to get VLS mining benefits equivalent to the fee reward";
 
 /************* 资金池交易记录 *******************/
 wallet_assets_pool_transaction_token_title = "Token: ";
