@@ -135,20 +135,26 @@ extension HomeViewController {
         let vc = ScanViewController()
         vc.actionClosure = { address in
             do {
-                let result = try libraWalletTool.scanResultHandle(content: address, contracts: self.tableViewManager.dataModel)
+                let result = try ScanHandleManager.scanResultHandle(content: address, contracts: self.tableViewManager.dataModel)
                 if result.type == .transfer {
                     switch result.addressType {
                     case .BTC:
-                        if let model = result.contract {
+                        if let model = result.token {
                             self.showBTCTransferViewController(address: result.address ?? "", tokenModel: model, amount: result.amount)
+                        } else {
+                            self.showScanContent(content: address)
                         }
                     case .Violas:
-                        if let model = result.contract {
-                            self.showViolasTokenViewController(address: result.address ?? "", tokenModel: model, amount: result.amount)
+                        if let model = result.token {
+                            self.showViolasTokenViewController(address: result.address ?? "", subAddress: result.subAddress ?? "", tokenModel: model, amount: result.amount)
+                        } else {
+                            self.showScanContent(content: address)
                         }
                     case .Libra:
-                        if let model = result.contract {
-                            self.showLibraTransferViewController(address: result.address ?? "", tokenModel: model, amount: result.amount)
+                        if let model = result.token {
+                            self.showLibraTransferViewController(address: result.address ?? "", subAddress: result.subAddress ?? "", tokenModel: model, amount: result.amount)
+                        } else {
+                            self.showScanContent(content: address)
                         }
                     default:
                         self.showScanContent(content: address)
@@ -177,24 +183,26 @@ extension HomeViewController {
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
-    func showLibraTransferViewController(address: String, tokenModel: Token, amount: UInt64?) {
+    func showLibraTransferViewController(address: String, subAddress: String, tokenModel: Token, amount: UInt64?) {
         let vc = LibraTransferViewController()
         vc.actionClosure = {
             //            self.dataModel.getLocalUserInfo()
         }
         vc.wallet = tokenModel
         vc.address = address
+        vc.subAddress = subAddress
         vc.amount = amount
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
-    func showViolasTokenViewController(address: String, tokenModel: Token, amount: UInt64?) {
+    func showViolasTokenViewController(address: String, subAddress: String, tokenModel: Token, amount: UInt64?) {
         let vc = ViolasTransferViewController()
         vc.actionClosure = {
             //            self.dataModel.getLocalUserInfo()
         }
         vc.wallet = tokenModel
         vc.address = address
+//        vc.subAddress = subAddress
         vc.amount = amount
         //        vc.sendViolasTokenState = false
         vc.hidesBottomBarWhenPushed = true

@@ -68,17 +68,22 @@ struct ViolasManager {
             return ("", address)
         }
     }
-    public static func isValidTransferAddress(address: String) throws -> String {
+    /// 检查有效地址
+    /// - Parameter address: Bech 32地址
+    /// - Throws: 异常
+    /// - Returns: 主地址、子地址
+    public static func isValidTransferAddress(address: String) throws -> (String, String) {
         do {
             let (prifix, result) = try ViolasBech32.decode(address, separator: "1")
-            guard prifix.isEmpty == false, prifix == "lbr" else {
+            guard prifix.isEmpty == false else {
                 throw LibraWalletError.WalletScan(reason: .handleInvalid)
             }
-            let address = result.dropLast(8).toHexString()
+            let address = result.prefix(16).toHexString()
+            let subAddress = result.suffix(8).toHexString()
             guard isValidViolasAddress(address: address) == true else {
                 throw LibraWalletError.WalletScan(reason: .violasAddressInvalid)
             }
-            return address
+            return (address, subAddress)
         } catch {
             throw error
         }

@@ -43,4 +43,3 @@ struct LibraTransactionScriptPayload {
         return result
     }
 }
-

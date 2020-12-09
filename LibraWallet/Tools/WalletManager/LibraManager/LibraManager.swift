@@ -68,17 +68,22 @@ struct LibraManager {
             return ("", address)
         }
     }
-    public static func isValidTransferAddress(address: String) throws -> String {
+    /// 检查有效地址
+    /// - Parameter address: Bech 32地址
+    /// - Throws: 异常
+    /// - Returns: 主地址、子地址
+    public static func isValidTransferAddress(address: String) throws -> (String, String) {
         do {
             let (prifix, result) = try ViolasBech32.decode(address, separator: "1")
             guard prifix.isEmpty == false else {
                 throw LibraWalletError.WalletScan(reason: .handleInvalid)
             }
-            let address = result.dropLast(8).toHexString()
+            let address = result.prefix(16).toHexString()
+            let subAddress = result.suffix(8).toHexString()
             guard isValidLibraAddress(address: address) == true else {
                 throw LibraWalletError.WalletScan(reason: .libraAddressInvalid)
             }
-            return address
+            return (address, subAddress)
         } catch {
             throw error
         }
@@ -122,7 +127,7 @@ extension LibraManager {
     ///   - module: 消耗Module
     /// - Throws: 异常
     /// - Returns: 签名
-    public static func getNormalTransactionHex(sendAddress: String, receiveAddress: String, amount: UInt64, fee: UInt64, mnemonic: [String], sequenceNumber: UInt64, module: String) throws -> String {
+    public static func getNormalTransactionHex(sendAddress: String, receiveAddress: String, amount: UInt64, fee: UInt64, mnemonic: [String], sequenceNumber: UInt64, module: String, toSubAddress: String, fromSubAddress: String, referencedEvent: String) throws -> String {
         do {
             let wallet = try LibraManager.getWallet(mnemonic: mnemonic)
             let (_, address) = try LibraManager.splitAddress(address: receiveAddress)
@@ -130,7 +135,16 @@ extension LibraManager {
             let argument0 = LibraTransactionArgument.init(code: .Address(address))
             let argument1 = LibraTransactionArgument.init(code: .U64("\(amount)"))
             // metadata
-            let argument2 = LibraTransactionArgument.init(code: .U8Vector(Data()))
+            if toSubAddress.isEmpty == true && fromSubAddress.isEmpty == true {
+                // NC To NC
+            } else {
+                // NC to C && C To C
+            }
+            let metadataV0 = LibraGeneralMetadataV0.init(to_subaddress: toSubAddress,
+                                                         from_subaddress: fromSubAddress,
+                                                         referenced_event: referencedEvent)
+            let metadata = LibraMetadata.init(code: LibraMetadataTypes.GeneralMetadata(LibraGeneralMetadata.init(code: .GeneralMetadataVersion0(metadataV0))))
+            let argument2 = LibraTransactionArgument.init(code: .U8Vector(metadata.serialize()))
             // metadata_signature
             let argument3 = LibraTransactionArgument.init(code: .U8Vector(Data()))
             let script = LibraTransactionScriptPayload.init(code: Data.init(hex: LibraUtils.getMoveCode(name: "peer_to_peer_with_metadata")),

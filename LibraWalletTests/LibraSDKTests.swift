@@ -639,29 +639,125 @@ class LibraSDKTests: XCTestCase {
     }
     func testDecode() {
         do {
-            let (prifix, hahah) = try ViolasBech32.decode("tlb1pgc28wuxspzzmvghzen74dczc8am9etx050ndlncpq2nfd",
+            let (prifix, hahah) = try ViolasBech32.decode("tlb1pgc28wuxspzzmvghzen74dczc87uepu64p2md5eqvg6tux",
                                                           version: 1,
                                                           separator: "1")
 //            XCTAssertEqual(prifix, "tlb")
             print(hahah.toHexString())
             XCTAssertEqual(hahah.dropLast(8).toHexString(), "46147770d00885b622e2ccfd56e0583f")
-//            010001089b38d65f0ad9a32d0108aebee5fb81dd6fac00
-            //01000108bb3cd3e1a7ebc4e601086550903ff07436db00
-            //01000108eb596c4b5fefd1cd01088fefe132c7d486f200
-            //313fb3f4eb846ee8
-            //765caccfa3e6dfcf
             //46147770d00885b622e2ccfd56e0583f
-            
+            //fbcb5fa38090e834
         } catch {
             XCTFail()
         }
-        /*
-         0100
-         0108
-         111111153010a111
-         0108
-         8f8b82153010a1bd
-         00
-         */
+    }
+    func testMetaDataToSubAddress() {
+        let fromSubAddress = ""
+        let toSubAddress = "8f8b82153010a1bd"
+        let referencedEvent = ""
+        let metadataV0 = LibraGeneralMetadataV0.init(to_subaddress: toSubAddress,
+                                                     from_subaddress: fromSubAddress,
+                                                     referenced_event: referencedEvent)
+        let metadata = LibraMetadata.init(code: LibraMetadataTypes.GeneralMetadata(LibraGeneralMetadata.init(code: .GeneralMetadataVersion0(metadataV0))))
+        let tempMetadata = metadata.serialize().toHexString()
+        print(tempMetadata)
+        
+        XCTAssertEqual(tempMetadata, "010001088f8b82153010a1bd0000")
+    }
+    func testMetaDataFromSubAddress() {
+        let fromSubAddress = "8f8b82153010a1bd"
+        let toSubAddress = ""
+        let referencedEvent = ""
+        let metadataV0 = LibraGeneralMetadataV0.init(to_subaddress: toSubAddress,
+                                                     from_subaddress: fromSubAddress,
+                                                     referenced_event: referencedEvent)
+        let metadata = LibraMetadata.init(code: LibraMetadataTypes.GeneralMetadata(LibraGeneralMetadata.init(code: .GeneralMetadataVersion0(metadataV0))))
+        let tempMetadata = metadata.serialize().toHexString()
+        print(tempMetadata)
+        
+        XCTAssertEqual(tempMetadata, "01000001088f8b82153010a1bd00")
+    }
+    func testMetaDataFromToSubAddress() {
+        let fromSubAddress = "8f8b82153010a1bd"
+        let toSubAddress = "111111153010a111"
+        let referencedEvent = ""
+        let metadataV0 = LibraGeneralMetadataV0.init(to_subaddress: toSubAddress,
+                                                     from_subaddress: fromSubAddress,
+                                                     referenced_event: referencedEvent)
+        let metadata = LibraMetadata.init(code: LibraMetadataTypes.GeneralMetadata(LibraGeneralMetadata.init(code: .GeneralMetadataVersion0(metadataV0))))
+        let tempMetadata = metadata.serialize().toHexString()
+        print(tempMetadata)
+        //010001088f8b82153010a1bd0108111111153010a11100
+        //01000108111111153010a11101088f8b82153010a1bd00
+        XCTAssertEqual(tempMetadata, "01000108111111153010a11101088f8b82153010a1bd00")
+    }
+    func testMetaDataReferencedEvent() {
+        // 测试退款
+        let fromSubAddress = "8f8b82153010a1bd"
+        let toSubAddress = "111111153010a111"
+        let referencedEvent = "324"
+        let metadataV0 = LibraGeneralMetadataV0.init(to_subaddress: fromSubAddress,
+                                                     from_subaddress: toSubAddress,
+                                                     referenced_event: referencedEvent)
+        let metadata = LibraMetadata.init(code: LibraMetadataTypes.GeneralMetadata(LibraGeneralMetadata.init(code: .GeneralMetadataVersion0(metadataV0))))
+        let tempMetadata = metadata.serialize().toHexString()
+        print(tempMetadata)
+        
+        //010001088f8b82153010a1bd0108111111153010a111014401000000000000
+        //010001088f8b82153010a1bd0108111111153010a111014401000000000000
+        XCTAssertEqual(tempMetadata, "010001088f8b82153010a1bd0108111111153010a111014401000000000000")
+    }
+    func testMetaTravelRuleMetadata() {
+        let address = "f72589b71ff4f8d139674a3f7369c69b"
+        let referenceID = "off chain reference id"
+        let amount: UInt64 = 1000
+        let TravelRuleMetadataV0 = LibraTravelRuleMetadataV0.init(off_chain_reference_id: referenceID)
+        let metadata = LibraMetadata.init(code: LibraMetadataTypes.TravelRuleMetadata(LibraTravelRuleMetadata.init(code: .TravelRuleMetadataVersion0(TravelRuleMetadataV0))))
+        let tempMetadata = metadata.serialize()
+        print(tempMetadata.toHexString())
+        XCTAssertEqual(tempMetadata.toHexString(), "020001166f666620636861696e207265666572656e6365206964")
+        let amountData = LibraUtils.getLengthData(length: NSDecimalNumber.init(value: amount).uint64Value, appendBytesCount: 8)
+        let sigMessage = tempMetadata + Data.init(Array<UInt8>(hex: address)) + amountData + Array("@@$$LIBRA_ATTEST$$@@".utf8)
+        print(sigMessage.toHexString())
+        XCTAssertEqual(sigMessage.toHexString(), "020001166f666620636861696e207265666572656e6365206964f72589b71ff4f8d139674a3f7369c69be803000000000000404024244c494252415f41545445535424244040")
+    }
+    func testLibraNCToCTransaction() {
+        let mnemonic = ["wrist", "post", "hover", "mixed", "like", "update", "salute", "access", "venture", "grant", "another", "team"]
+        do {
+            let seed = try LibraMnemonic.seed(mnemonic: mnemonic)
+            let wallet = try LibraHDWallet.init(seed: seed, depth: 0)
+            let walletAddress = wallet.publicKey.toLegacy()
+            // 拼接交易
+            let argument0 = LibraTransactionArgument.init(code: .Address("46147770d00885b622e2ccfd56e0583f"))
+            let argument1 = LibraTransactionArgument.init(code: .U64("\(11000000)"))
+            
+            let fromSubAddress = ""
+            let toSubAddress = "b990f3550ab6da64"
+            let referencedEvent = ""
+            let metadataV0 = LibraGeneralMetadataV0.init(to_subaddress: toSubAddress,
+                                                         from_subaddress: fromSubAddress,
+                                                         referenced_event: referencedEvent)
+            let metadata = LibraMetadata.init(code: LibraMetadataTypes.GeneralMetadata(LibraGeneralMetadata.init(code: .GeneralMetadataVersion0(metadataV0))))
+            // metadata
+            let argument2 = LibraTransactionArgument.init(code: .U8Vector(metadata.serialize()))
+            // metadata_signature
+            let argument3 = LibraTransactionArgument.init(code: .U8Vector(Data()))
+            let script = LibraTransactionScriptPayload.init(code: Data.init(hex: LibraUtils.getMoveCode(name: "peer_to_peer_with_metadata")),
+                                                            typeTags: [LibraTypeTag.init(typeTag: .Struct(LibraStructTag.init(type: .Normal("Coin1"))))],
+                                                            argruments: [argument0, argument1, argument2, argument3])
+            let transactionPayload = LibraTransactionPayload.init(payload: .script(script))
+            let rawTransaction = LibraRawTransaction.init(senderAddres: walletAddress,
+                                                          sequenceNumber: 7,
+                                                          maxGasAmount: 1000000,
+                                                          gasUnitPrice: 10,
+                                                          expirationTime: UInt64(Date().timeIntervalSince1970 + 600),
+                                                          payload: transactionPayload,
+                                                          module: "Coin1",
+                                                          chainID: 2)
+            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            print(signature.toHexString())
+        } catch {
+            
+        }
     }
 }

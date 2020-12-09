@@ -218,6 +218,8 @@
 		366AFF562578D34F0007AAFC /* ProfitBankTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFF552578D34F0007AAFC /* ProfitBankTableViewCell.swift */; };
 		366AFF5B2578D3700007AAFC /* ProfitBankTableViewHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFF5A2578D3700007AAFC /* ProfitBankTableViewHeaderView.swift */; };
 		366AFF612578D3A40007AAFC /* ProfitBankTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFF602578D3A40007AAFC /* ProfitBankTableViewManager.swift */; };
+		367024272580BF320080B7FC /* ScanHandleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367024262580BF320080B7FC /* ScanHandleManager.swift */; };
+		367024582580CD930080B7FC /* ViolasQRCodeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367024572580CD920080B7FC /* ViolasQRCodeTests.swift */; };
 		3679149F250F742F008C7237 /* ScanBankRepaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3679149E250F742F008C7237 /* ScanBankRepaymentViewController.swift */; };
 		367914A1250F7446008C7237 /* ScanBankRepaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367914A0250F7446008C7237 /* ScanBankRepaymentView.swift */; };
 		367914A3250F7455008C7237 /* ScanBankRepaymentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367914A2250F7455008C7237 /* ScanBankRepaymentModel.swift */; };
@@ -255,6 +257,12 @@
 		36836D3924B3059B0031AC6E /* ExchangeTransactionDetailHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36836D3824B3059B0031AC6E /* ExchangeTransactionDetailHeaderView.swift */; };
 		36836D3B24B305D00031AC6E /* ExchangeTransactionDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36836D3A24B305D00031AC6E /* ExchangeTransactionDetailTableViewCell.swift */; };
 		36842148257E1E30000B87D6 /* AssetsPoolProfitHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36842147257E1E30000B87D6 /* AssetsPoolProfitHeaderView.swift */; };
+		36842151257F169D000B87D6 /* LibraMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36842150257F169D000B87D6 /* LibraMetadata.swift */; };
+		3684215C257F51BF000B87D6 /* LibraGeneralMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3684215B257F51BF000B87D6 /* LibraGeneralMetadata.swift */; };
+		36842161257F520B000B87D6 /* LibraGeneralMetadataV0.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36842160257F520B000B87D6 /* LibraGeneralMetadataV0.swift */; };
+		36842166257F5241000B87D6 /* LibraTravelRuleMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36842165257F5241000B87D6 /* LibraTravelRuleMetadata.swift */; };
+		3684216B257F5256000B87D6 /* LibraTravelRuleMetadataV0.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3684216A257F5256000B87D6 /* LibraTravelRuleMetadataV0.swift */; };
+		36842170257F5270000B87D6 /* LibraUnstructuredBytesMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3684216F257F5270000B87D6 /* LibraUnstructuredBytesMetadata.swift */; };
 		368CD5E324D26F4E0092F12E /* MarketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368CD5E224D26F4E0092F12E /* MarketManager.swift */; };
 		368F7BD524FCFC4700CCF3FB /* BankLegalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368F7BD424FCFC4700CCF3FB /* BankLegalViewController.swift */; };
 		368F7BD724FCFC5700CCF3FB /* BankLegalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368F7BD624FCFC5700CCF3FB /* BankLegalView.swift */; };
@@ -698,6 +706,8 @@
 		366AFF552578D34F0007AAFC /* ProfitBankTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfitBankTableViewCell.swift; sourceTree = "<group>"; };
 		366AFF5A2578D3700007AAFC /* ProfitBankTableViewHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfitBankTableViewHeaderView.swift; sourceTree = "<group>"; };
 		366AFF602578D3A40007AAFC /* ProfitBankTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfitBankTableViewManager.swift; sourceTree = "<group>"; };
+		367024262580BF320080B7FC /* ScanHandleManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanHandleManager.swift; sourceTree = "<group>"; };
+		367024572580CD920080B7FC /* ViolasQRCodeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasQRCodeTests.swift; sourceTree = "<group>"; };
 		3679149E250F742F008C7237 /* ScanBankRepaymentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBankRepaymentViewController.swift; sourceTree = "<group>"; };
 		367914A0250F7446008C7237 /* ScanBankRepaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBankRepaymentView.swift; sourceTree = "<group>"; };
 		367914A2250F7455008C7237 /* ScanBankRepaymentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBankRepaymentModel.swift; sourceTree = "<group>"; };
@@ -735,6 +745,12 @@
 		36836D3824B3059B0031AC6E /* ExchangeTransactionDetailHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeTransactionDetailHeaderView.swift; sourceTree = "<group>"; };
 		36836D3A24B305D00031AC6E /* ExchangeTransactionDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeTransactionDetailTableViewCell.swift; sourceTree = "<group>"; };
 		36842147257E1E30000B87D6 /* AssetsPoolProfitHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsPoolProfitHeaderView.swift; sourceTree = "<group>"; };
+		36842150257F169D000B87D6 /* LibraMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraMetadata.swift; sourceTree = "<group>"; };
+		3684215B257F51BF000B87D6 /* LibraGeneralMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraGeneralMetadata.swift; sourceTree = "<group>"; };
+		36842160257F520B000B87D6 /* LibraGeneralMetadataV0.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraGeneralMetadataV0.swift; sourceTree = "<group>"; };
+		36842165257F5241000B87D6 /* LibraTravelRuleMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraTravelRuleMetadata.swift; sourceTree = "<group>"; };
+		3684216A257F5256000B87D6 /* LibraTravelRuleMetadataV0.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraTravelRuleMetadataV0.swift; sourceTree = "<group>"; };
+		3684216F257F5270000B87D6 /* LibraUnstructuredBytesMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraUnstructuredBytesMetadata.swift; sourceTree = "<group>"; };
 		368CD5E224D26F4E0092F12E /* MarketManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketManager.swift; sourceTree = "<group>"; };
 		368F7BD424FCFC4700CCF3FB /* BankLegalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankLegalViewController.swift; sourceTree = "<group>"; };
 		368F7BD624FCFC5700CCF3FB /* BankLegalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankLegalView.swift; sourceTree = "<group>"; };
@@ -2915,6 +2931,43 @@
 			path = TableViewManager;
 			sourceTree = "<group>";
 		};
+		3684214F257F1663000B87D6 /* Metadata */ = {
+			isa = PBXGroup;
+			children = (
+				36842150257F169D000B87D6 /* LibraMetadata.swift */,
+				36842174257F52A5000B87D6 /* LibraGeneralMetadata */,
+				36842175257F52B6000B87D6 /* LibraTravelRuleMetadata */,
+				36842176257F52CB000B87D6 /* LibraUnstructuredBytesMetadata */,
+			);
+			path = Metadata;
+			sourceTree = "<group>";
+		};
+		36842174257F52A5000B87D6 /* LibraGeneralMetadata */ = {
+			isa = PBXGroup;
+			children = (
+				3684215B257F51BF000B87D6 /* LibraGeneralMetadata.swift */,
+				36842160257F520B000B87D6 /* LibraGeneralMetadataV0.swift */,
+			);
+			path = LibraGeneralMetadata;
+			sourceTree = "<group>";
+		};
+		36842175257F52B6000B87D6 /* LibraTravelRuleMetadata */ = {
+			isa = PBXGroup;
+			children = (
+				36842165257F5241000B87D6 /* LibraTravelRuleMetadata.swift */,
+				3684216A257F5256000B87D6 /* LibraTravelRuleMetadataV0.swift */,
+			);
+			path = LibraTravelRuleMetadata;
+			sourceTree = "<group>";
+		};
+		36842176257F52CB000B87D6 /* LibraUnstructuredBytesMetadata */ = {
+			isa = PBXGroup;
+			children = (
+				3684216F257F5270000B87D6 /* LibraUnstructuredBytesMetadata.swift */,
+			);
+			path = LibraUnstructuredBytesMetadata;
+			sourceTree = "<group>";
+		};
 		368CD5E124D26F360092F12E /* MarketManager */ = {
 			isa = PBXGroup;
 			children = (
@@ -4136,6 +4189,7 @@
 				9D62646D2355C79600A79B3D /* LibraWalletCoreTests.swift */,
 				9DC06A6A2373F40400BCE1FE /* BTCManagerTests.swift */,
 				9DA8E2B82317ABC600E28D07 /* Info.plist */,
+				367024572580CD920080B7FC /* ViolasQRCodeTests.swift */,
 			);
 			path = LibraWalletTests;
 			sourceTree = "<group>";
@@ -4292,6 +4346,7 @@
 		9DC487F9231FA0C6005FF254 /* LibraKit */ = {
 			isa = PBXGroup;
 			children = (
+				3684214F257F1663000B87D6 /* Metadata */,
 				361783742444A052003C6588 /* LibraHDWallet */,
 				361783752444A067003C6588 /* LibraMultiHDWallet */,
 				9DC901E5232628860097FD85 /* MakeTransaction */,
@@ -4523,6 +4578,7 @@
 				9D62646F2356F90E00A79B3D /* Error */,
 				9DC9023C2328E8290097FD85 /* CommonData.swift */,
 				9D712440232F621B009DED52 /* LibraWalletTool.swift */,
+				367024262580BF320080B7FC /* ScanHandleManager.swift */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -4957,6 +5013,7 @@
 				9D9B4A652366D65800354EF0 /* WalletConfigModel.swift in Sources */,
 				9D628A8C239A4A2B00E222FB /* PrivateLegalViewController.swift in Sources */,
 				9DC8778D237958EB006378C3 /* LibraManager.swift in Sources */,
+				3684215C257F51BF000B87D6 /* LibraGeneralMetadata.swift in Sources */,
 				361BDAC124F8E7BD00C4C54E /* DepositQuestionTableViewCell.swift in Sources */,
 				361BDAE124F8E7BE00C4C54E /* LoanDetailDepositListModel.swift in Sources */,
 				366AFF0D25778B290007AAFC /* ProfitBankViewController.swift in Sources */,
@@ -5101,6 +5158,7 @@
 				9DC4880B2320E6C1005FF254 /* LibraHDPrivateKey.swift in Sources */,
 				361BDAB424F8E7BD00C4C54E /* LoanViewModel.swift in Sources */,
 				36828CC124B707C80085A165 /* AssetsPoolTransactionDetailModel.swift in Sources */,
+				36842166257F5241000B87D6 /* LibraTravelRuleMetadata.swift in Sources */,
 				366AFE4E256CF8190007AAFC /* GSCaptchaButton.swift in Sources */,
 				36F8270C24BEAA7E0007ACC3 /* DropperExtensions.swift in Sources */,
 				9D9B49B1235DA76100354EF0 /* AddAddressView.swift in Sources */,
@@ -5116,6 +5174,7 @@
 				36F826F124BD9EEB0007ACC3 /* ExchangeTransactionsView.swift in Sources */,
 				361BDAF524F8E7BE00C4C54E /* LoanOrderDetailHeaderView.swift in Sources */,
 				9DB515C123A32F3E0069A909 /* ViolasTransactionWriteSetPayload.swift in Sources */,
+				3684216B257F5256000B87D6 /* LibraTravelRuleMetadataV0.swift in Sources */,
 				9DC4886F232222CF005FF254 /* LBXScanWrapper.swift in Sources */,
 				9DB515B223A32BC50069A909 /* ViolasHDPrivateKey.swift in Sources */,
 				361BDAC324F8E7BD00C4C54E /* DepositTableViewCell.swift in Sources */,
@@ -5226,8 +5285,10 @@
 				36F826F724BD9F390007ACC3 /* AssetsPoolTransactionsView.swift in Sources */,
 				36F826F924BD9F460007ACC3 /* AssetsPoolTransactionsModel.swift in Sources */,
 				3682E5CA24AC3728007CA2CA /* AssetsPoolModel.swift in Sources */,
+				36842161257F520B000B87D6 /* LibraGeneralMetadataV0.swift in Sources */,
 				9D9B4A05236048A000354EF0 /* AboutUsTableViewManager.swift in Sources */,
 				9DC06A332371789D00BCE1FE /* CheckBackupView.swift in Sources */,
+				36842170257F5270000B87D6 /* LibraUnstructuredBytesMetadata.swift in Sources */,
 				9D9B49B0235DA76100354EF0 /* AddAddressModel.swift in Sources */,
 				361BDAC524F8E7BD00C4C54E /* DepositTableViewManager.swift in Sources */,
 				361BDAC724F8E7BD00C4C54E /* LoanListViewController.swift in Sources */,
@@ -5259,6 +5320,7 @@
 				9DB515B423A32C130069A909 /* ViolasHDPublicKey.swift in Sources */,
 				9D9B49FC236046CF00354EF0 /* ServiceLegalView.swift in Sources */,
 				9DC902452328FCD00097FD85 /* LibraWalletError.swift in Sources */,
+				36842151257F169D000B87D6 /* LibraMetadata.swift in Sources */,
 				361BDAE924F8E7BE00C4C54E /* LoanOrdersTableViewCell.swift in Sources */,
 				9D9B49F32360388C00354EF0 /* LanguageView.swift in Sources */,
 				9D08AD372330BA75004687E8 /* NetworkManager.swift in Sources */,
@@ -5299,6 +5361,7 @@
 				361BDB0124F8E7BE00C4C54E /* DepositOrdersTableViewManager.swift in Sources */,
 				36677A99250F6C73009152B3 /* ScanBankLoanModel.swift in Sources */,
 				9DC4884923211180005FF254 /* WalletManager.swift in Sources */,
+				367024272580BF320080B7FC /* ScanHandleManager.swift in Sources */,
 				366AFE63256E5CBF0007AAFC /* InvitationRewardView.swift in Sources */,
 				36677A90250F6539009152B3 /* ScanBankWithdrawView.swift in Sources */,
 				36B466B6247656E400CFF438 /* ScanSendTransactionModel.swift in Sources */,
@@ -5346,6 +5409,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9D62646E2355C79600A79B3D /* LibraWalletCoreTests.swift in Sources */,
+				367024582580CD930080B7FC /* ViolasQRCodeTests.swift in Sources */,
 				9DA8E2B72317ABC600E28D07 /* LibraWalletTests.swift in Sources */,
 				9DC488072320E419005FF254 /* LibraSDKTests.swift in Sources */,
 				9DC06A6B2373F40400BCE1FE /* BTCManagerTests.swift in Sources */,

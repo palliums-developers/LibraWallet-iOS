@@ -127,7 +127,7 @@ extension BTCTransferViewController: BTCTransferViewDelegate {
 //                self.detailView.makeToast(error.localizedDescription, position: .center)
 //            }
             do {
-                let result = try libraWalletTool.scanResultHandle(content: address, contracts: [self.wallet!])
+                let result = try ScanHandleManager.scanResultHandle(content: address, contracts: [self.wallet!])
                 if result.type == .transfer {
                     switch result.addressType {
                     case .BTC:

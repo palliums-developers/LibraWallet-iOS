@@ -72,7 +72,7 @@ extension ViolasTransferViewController: ViolasTransferViewDelegate {
         let vc = ScanViewController()
         vc.actionClosure = { address in
             do {
-                let result = try libraWalletTool.scanResultHandle(content: address, contracts: [self.wallet!])
+                let result = try ScanHandleManager.scanResultHandle(content: address, contracts: [self.wallet!])
                 print(result)
                 if result.type == .transfer {
                     switch result.addressType {

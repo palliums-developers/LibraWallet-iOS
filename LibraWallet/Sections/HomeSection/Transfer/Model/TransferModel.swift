@@ -24,7 +24,7 @@ class TransferModel: NSObject {
 }
 //MARK: - Libra
 extension TransferModel {
-    func sendLibraTransaction(sendAddress: String, receiveAddress: String, amount: UInt64, fee: UInt64, mnemonic: [String], module: String) {
+    func sendLibraTransaction(sendAddress: String, receiveAddress: String, subAddress: String, amount: UInt64, fee: UInt64, mnemonic: [String], module: String) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
         queue.async {
@@ -40,7 +40,10 @@ extension TransferModel {
                                                                          fee: fee,
                                                                          mnemonic: mnemonic,
                                                                          sequenceNumber: self.sequenceNumber ?? 0,
-                                                                         module: module)
+                                                                         module: module,
+                                                                         toSubAddress: subAddress,
+                                                                         fromSubAddress: "",
+                                                                         referencedEvent: "")
                 self.makeLibraTransaction(signature: signature)
             } catch {
                 print(error.localizedDescription)

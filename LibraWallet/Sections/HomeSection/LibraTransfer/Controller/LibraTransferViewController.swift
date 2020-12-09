@@ -56,6 +56,7 @@ class LibraTransferViewController: BaseViewController {
             self.detailView.addressTextField.text = address
         }
     }
+    var subAddress: String?
     var amount: UInt64? {
         didSet {
             guard let tempAmount = amount else {
@@ -76,12 +77,13 @@ extension LibraTransferViewController: LibraTransferViewDelegate {
         let vc = ScanViewController()
         vc.actionClosure = { address in
             do {
-                let result = try libraWalletTool.scanResultHandle(content: address, contracts: [self.wallet!])
+                let result = try ScanHandleManager.scanResultHandle(content: address, contracts: [self.wallet!])
                 if result.type == .transfer {
                     switch result.addressType {
                     case .Libra:
                         self.detailView.addressTextField.text = result.address
                         self.amount = result.amount
+                        self.subAddress = result.subAddress
                     default:
                         //                        self.showScanContent(content: address)
                         self.detailView.addressTextField.text?.removeAll()
@@ -116,6 +118,7 @@ extension LibraTransferViewController: LibraTransferViewDelegate {
                 self?.detailView.toastView?.show(tag: 99)
                 self?.dataModel.sendLibraTransaction(sendAddress: self?.wallet?.tokenAddress ?? "",
                                                      receiveAddress: address,
+                                                     subAddress: self?.subAddress ?? "",
                                                      amount: amount,
                                                      fee: fee,
                                                      mnemonic: mnemonic,

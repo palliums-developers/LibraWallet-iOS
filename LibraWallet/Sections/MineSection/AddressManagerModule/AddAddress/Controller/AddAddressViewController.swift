@@ -107,7 +107,7 @@ extension AddAddressViewController: AddAddressViewDelegate {
         let vc = ScanViewController()
         vc.actionClosure = { address in
             do {
-                let result = try libraWalletTool.scanResultHandle(content: address, contracts: [])
+                let result = try ScanHandleManager.scanResultHandle(content: address, contracts: [])
                 if result.type == .transfer {
                     switch result.addressType {
                     case .Violas:

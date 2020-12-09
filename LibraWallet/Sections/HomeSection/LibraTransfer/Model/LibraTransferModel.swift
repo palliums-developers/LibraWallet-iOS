@@ -24,12 +24,11 @@ class LibraTransferModel: NSObject {
     @objc dynamic var dataDic: NSMutableDictionary = [:]
     private var requests: [Cancellable] = []
     private var sequenceNumber: UInt64?
-    func sendLibraTransaction(sendAddress: String, receiveAddress: String, amount: UInt64, fee: UInt64, mnemonic: [String], module: String) {
+    func sendLibraTransaction(sendAddress: String, receiveAddress: String, subAddress: String, amount: UInt64, fee: UInt64, mnemonic: [String], module: String) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
         queue.async {
             semaphore.wait()
-//            self.getLibraSequenceNumber(sendAddress: "cd35f1a78093554f5dc9c61301f204e4", semaphore: semaphore)
             self.getLibraSequenceNumber(sendAddress: sendAddress, semaphore: semaphore)
 
         }
@@ -42,7 +41,10 @@ class LibraTransferModel: NSObject {
                                                                          fee: fee,
                                                                          mnemonic: mnemonic,
                                                                          sequenceNumber: self.sequenceNumber ?? 0,
-                                                                         module: module)
+                                                                         module: module,
+                                                                         toSubAddress: subAddress,
+                                                                         fromSubAddress: "",
+                                                                         referencedEvent: "")
 //                let signature = try LibraManager.getMultiTransactionHex(sendAddress: "cd35f1a78093554f5dc9c61301f204e4",
 //                                                                         receiveAddress: "7f4644ae2b51b65bd3c9d414aa853407",
 //                                                                         amount: amount,

@@ -28,6 +28,7 @@ class TransferViewModel: NSObject {
         }
     }
     var controllerClosure: ((UIViewController)->())?
+    var subAddress: String?
 }
 //MARK: - 网络请求数据处理中心
 extension TransferViewModel {
@@ -114,25 +115,27 @@ extension TransferViewModel: TransferViewDelegate {
                     if let token = self.view?.token {
                         tempTokens = [token]
                     }
-                    let result = try libraWalletTool.scanResultHandle(content: address, contracts: tempTokens)
+                    let result = try ScanHandleManager.scanResultHandle(content: address, contracts: tempTokens)
                     if result.type == .transfer {
                         switch result.addressType {
                         case .Libra:
-                            self.view?.token = result.contract
+                            self.view?.token = result.token
                             self.view?.addressTextField.text = result.address
                             let amountContent = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: result.amount ?? 0),
                                                                        scale: 6,
                                                                        unit: 1000000)
                             self.view?.amountTextField.text = "\(amountContent)"
+                            self.subAddress = result.subAddress
                         case .Violas:
-                            self.view?.token = result.contract
+                            self.view?.token = result.token
                             self.view?.addressTextField.text = result.address
                             let amountContent = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: result.amount ?? 0),
                                                                        scale: 6,
                                                                        unit: 1000000)
                             self.view?.amountTextField.text = "\(amountContent)"
+                            self.subAddress = result.subAddress
                         case .BTC:
-                            self.view?.token = result.contract
+                            self.view?.token = result.token
                             self.view?.addressTextField.text = result.address
                             let amountContent = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: result.amount ?? 0),
                                                                        scale: 8,
@@ -263,6 +266,7 @@ extension TransferViewModel: TransferViewDelegate {
                     print("Send Libra Transaction")
                     self?.dataModel.sendLibraTransaction(sendAddress: token.tokenAddress,
                                                          receiveAddress: address,
+                                                         subAddress: self?.subAddress ?? "",
                                                          amount: amount.uint64Value,
                                                          fee: fee.uint64Value,
                                                          mnemonic: mnemonic,
