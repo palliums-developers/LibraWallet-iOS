@@ -21,7 +21,7 @@ extension actionViewProtocol where Self: UIView {
             blurView.frame.size = CGSize(width: window.frame.size.width, height: window.frame.size.height)
             blurView.center = window.center
             blurView.alpha = 0.2
-            
+            blurView.tag = tag + 1
             blurView.isUserInteractionEnabled = true
             let tap = UITapGestureRecognizer.init()
 //            tap.addTarget(self, action: #selector(self.hideActionView))
@@ -34,7 +34,10 @@ extension actionViewProtocol where Self: UIView {
     func hide(tag: Int) {
         if let app = UIApplication.shared.delegate as? AppDelegate, let window = app.window {
             for views in window.subviews {
-                views.viewWithTag(tag)?.removeFromSuperview()
+                if views.tag == 99 {
+                    views.viewWithTag(tag + 1)?.removeFromSuperview()
+                    views.removeFromSuperview()
+                }
             }
         } else {
             for views in self.subviews {
