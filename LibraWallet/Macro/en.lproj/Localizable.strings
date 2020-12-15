@@ -9,7 +9,7 @@
 wallet_tabbar_wallet_title = "Wallet";
 wallet_tabbar_market_title = "Market";
 wallet_tabbar_bank_title = "Bank";
-wallet_tabbar_mine_title = "My Profile";
+wallet_tabbar_mine_title = "Me";
 
 /************* 首页 *******************/
 wallet_home_transfer_button_title = "Transfer";
@@ -55,7 +55,7 @@ wallet_add_wallet_password_confirm_textfield_placeholder = "Enter wallet access 
 wallet_add_wallet_confirm_button_title = "Create";
 
 /************* 已存在身份钱包导入钱包 *******************/
-wallet_import_mnemonic_textview_placeholder = "Import Mnemonic Words Separated by a Space";
+wallet_import_mnemonic_textview_placeholder = "Import mnemonic words separated by a space";
 wallet_import_wallet_confirm_button_title = "Start Import";
 wallet_import_wallet_legal_content_title = "I agree to the Service Agreement and Privacy Policy";
 
@@ -92,6 +92,7 @@ wallet_backup_mnemonic_confirm_button_title = "Next";
 
 /************* 校验助记词 *******************/
 wallet_backup_check_mnemonic_title = "Please write down these words in order";
+wallet_backup_check_mnemonic_final_title = "Please click on the mnemonic order to make sure that you properly backed up";
 wallet_backup_check_mnemonic_confirm_button_title = "Complete";
 
 /************* 欢迎来到Violas弹出View *******************/
@@ -126,20 +127,21 @@ wallet_mapping_mapping_miner_fees_title = "Miner Fees: ";
 wallet_mapping_confirm_title = "Confirm";
 wallet_mapping_pay_amount_least_title = "Least pay amount：";
 wallet_mapping_exchange_amount_least_title = "Least exchange amount：";
+wallet_mapping_token_search_textfield_placeholder = "Search";
 
 /************* 映射交易列表 *******************/
-wallet_mapping_transactions_state_processing_title = "Mapping Pending";
+wallet_mapping_transactions_state_processing_title = "Mapping Processing";
 wallet_mapping_transactions_state_success_title = "Mapping Successful";
 wallet_mapping_transactions_state_failed_title = "Mapping Failed";
 wallet_mapping_transactions_state_canceled_title = "Mapping Canceled";
 wallet_mapping_transactions_fees_title = "Miner Fees: ";
 
 /************* WalletConnect *******************/
-wallet_wallet_connect_login_title = "Web ViolasPay Wallet Sign In";
+wallet_wallet_connect_login_title = "Web ViolasPay Sign In";
 wallet_wallet_connect_logout_title = "Web ViolasPay Logged";
-wallet_wallet_connect_exchange_title = "Web ViolasPay Wallet Exchange";
-wallet_wallet_connect_sign_title = "Web ViolasPay Wallet Require Signature";
-wallet_wallet_connect_transfer_title = "Web ViolasPay Wallet Transfer";
+wallet_wallet_connect_exchange_title = "Web ViolasPay Exchange";
+wallet_wallet_connect_sign_title = "Web ViolasPay Require Signature";
+wallet_wallet_connect_transfer_title = "Web ViolasPay Transfer";
 wallet_wallet_connect_publish_title = "Web ViolasPay Publish Token";
 wallet_wallet_connect_swap_title = "Web ViolasPay Swap";
 wallet_wallet_connect_add_liquidity_title = "Web ViolasPay Add Liquidity";
@@ -152,10 +154,10 @@ wallet_wallet_connect_transfer_receive_address_title = "Receive Address";
 wallet_wallet_connect_transfer_amount_title = "Amount";
 wallet_wallet_connect_publish_module_title = "Token";
 wallet_wallet_connect_publish_address_title = "Address";
-wallet_wallet_connect_login_warnning_content = "Web ViolasPay wallet apply to access your wallet address, Are you sure to disclose the wallet address to this website?";
-wallet_wallet_connect_login_warnning_describe = "*The usage behavior also applies to《User Agreement》and《Private Agreement》";
-wallet_wallet_connect_transfer_confirm_button_title = "Transfer";
-wallet_wallet_connect_login_confirm_button_title = "Sign In";
+wallet_wallet_connect_login_warnning_content = "Web ViolasPay apply to access your wallet address, Are you sure to disclose the wallet address to this website?";
+wallet_wallet_connect_login_warnning_describe = "*The usage behavior also applies to User Agreement & Private Agreement";
+wallet_wallet_connect_transfer_confirm_button_title = "Confirm";
+wallet_wallet_connect_login_confirm_button_title = "Sign in";
 wallet_wallet_connect_exchange_confirm_button_title = "Confirm";
 wallet_wallet_connect_sign_button_title = "Confirm Signature";
 wallet_wallet_connect_publish_confirm_button_title = "Confirm Publish";
@@ -315,7 +317,7 @@ wallet_bank_repayment_textfield_placeholder_c = "递增";
 wallet_bank_repayment_repayment_amount_title = "Remaining loan: ";
 wallet_bank_repayment_repayment_amount_total_button_title = "Total";
 wallet_bank_repayment_loan_rate_title = "Loan Rate";
-wallet_bank_repayment_miner_fees_title = "Miner Fees";
+wallet_bank_repayment_miner_fees_title = "Gas Fee";
 wallet_bank_repayment_pay_account_title = "Repayment Account";
 wallet_bank_repayment_pay_account_content = "Account Balance";
 // 还款WalletConnect
@@ -510,11 +512,11 @@ wallet_address_navigation_title = "Address Book";
 wallet_address_add_navigation_title = "Add Address";
 wallet_wallet_manager_navigation_title = "Manage Wallet";
 wallet_wallet_add_navigation_title = "Add Wallet";
-wallet_assert_add_navigation_title = "Add token";
+wallet_assert_add_navigation_title = "Add Currency";
 wallet_wallet_manager_change_wallet_name_navigationbar_title = "Wallet Detail";
-wallet_backup_mnemonic_warning_navigationbar_title = "Backup alert";
+wallet_backup_mnemonic_warning_navigationbar_title = "Backup Tips";
 wallet_backup_mnemonic_show_navigationbar_title = "Backup mnemonic";
-wallet_backup_mnemonic_check_navigationbar_title = "Confirm mnemonic";
+wallet_backup_mnemonic_check_navigationbar_title = "Confirm Mnemonic";
 wallet_first_in_create_identity_wallet_navigationbar_title = "Create identity wallet";
 wallet_first_in_import_identity_wallet_navigationbar_title = "Import identity wallet";
 wallet_order_center_navigationbar_title = "Order";
@@ -575,7 +577,7 @@ wallet_create_wallet_failed_error = "Create Wallet Error";
 wallet_import_wallet_failed_error = "Import Wallet Error";
 // 助记词排查相关(备份校对)
 wallet_mnemonic_check_array_not_enough_error = "Incomplete Mnemonic Words";
-wallet_mnemonic_order_invalid_error = "Wrong Order";
+wallet_mnemonic_order_invalid_error = "The order of mnemonic words is incorrect, please check";
 // 添加地址相关
 wallet_add_address_insert_error = "Save Address Error";
 wallet_add_address_invalid_error = "Invalid Address";

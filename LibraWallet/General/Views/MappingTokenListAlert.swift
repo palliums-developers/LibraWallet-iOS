@@ -74,7 +74,7 @@ class MappingTokenListAlert: UIView {
     }()
     lazy var searchBar: UISearchBar = {
         let bar = UISearchBar.init()
-        bar.placeholder = localLanguage(keyString: "搜索Token")
+        bar.placeholder = localLanguage(keyString: "wallet_mapping_token_search_textfield_placeholder")
 //        bar.backgroundColor = UIColor.red//UIColor.init(hex: "F8F8F8")
         bar.tintColor = DefaultGreenColor
         bar.backgroundImage = UIImage().imageWithColor(color: UIColor.init(hex: "F8F8F8"))

@@ -92,6 +92,7 @@ wallet_backup_mnemonic_confirm_button_title = "下一步";
 
 /************* 校验助记词 *******************/
 wallet_backup_check_mnemonic_title = "请将这些词按顺序写在纸上";
+wallet_backup_check_mnemonic_final_title = "请按顺序点击助记词，以确认您正确备份";
 wallet_backup_check_mnemonic_confirm_button_title = "完成";
 
 /************* 欢迎来到Violas弹出View *******************/
@@ -126,6 +127,7 @@ wallet_mapping_mapping_miner_fees_title = "矿工费用：";
 wallet_mapping_confirm_title = "确认";
 wallet_mapping_pay_amount_least_title = "最少付出金额：";
 wallet_mapping_exchange_amount_least_title = "最少兑换金额：";
+wallet_mapping_token_search_textfield_placeholder = "搜索";
 
 /************* 映射交易列表 *******************/
 wallet_mapping_transactions_state_processing_title = "映射中";
@@ -135,24 +137,24 @@ wallet_mapping_transactions_state_canceled_title = "映射取消";
 wallet_mapping_transactions_fees_title = "矿工费：";
 
 /************* WalletConnect *******************/
-wallet_wallet_connect_login_title = "网页ViolasPay钱包登录确认";
-wallet_wallet_connect_logout_title = "网页ViolasPay钱包已登录";
-wallet_wallet_connect_exchange_title = "网页ViolasPay钱包兑换确认";
-wallet_wallet_connect_sign_title = "网页ViolasPay钱包请求签名";
-wallet_wallet_connect_transfer_title = "网页ViolasPay钱包转账";
-wallet_wallet_connect_publish_title = "网页ViolasPay注册币种";
-wallet_wallet_connect_swap_title = "网页ViolasPay兑换币种";
-wallet_wallet_connect_add_liquidity_title = "网页ViolasPay添加流动性";
-wallet_wallet_connect_remove_liquidity_title = "网页ViolasPay移除流动性";
-wallet_wallet_connect_bank_deposit_title = "网页ViolasPay存款";
-wallet_wallet_connect_bank_withdraw_title = "网页ViolasPay取款";
-wallet_wallet_connect_bank_loan_title = "网页ViolasPay借款";
-wallet_wallet_connect_bank_repayment_title = "网页ViolasPay还款";
+wallet_wallet_connect_login_title = "网页 ViolasPay 登录确认";
+wallet_wallet_connect_logout_title = "网页 ViolasPay 已登录";
+wallet_wallet_connect_exchange_title = "网页 ViolasPay 兑换确认";
+wallet_wallet_connect_sign_title = "网页 ViolasPay 请求签名";
+wallet_wallet_connect_transfer_title = "网页 ViolasPay 转账";
+wallet_wallet_connect_publish_title = "网页 ViolasPay 注册币种";
+wallet_wallet_connect_swap_title = "网页 ViolasPay 兑换币种";
+wallet_wallet_connect_add_liquidity_title = "网页 ViolasPay 添加流动性";
+wallet_wallet_connect_remove_liquidity_title = "网页 ViolasPay 移除流动性";
+wallet_wallet_connect_bank_deposit_title = "网页 ViolasPay 存款";
+wallet_wallet_connect_bank_withdraw_title = "网页 ViolasPay 取款";
+wallet_wallet_connect_bank_loan_title = "网页 ViolasPay 借款";
+wallet_wallet_connect_bank_repayment_title = "网页 ViolasPay 还款";
 wallet_wallet_connect_transfer_receive_address_title = "转账地址";
 wallet_wallet_connect_transfer_amount_title = "金额";
 wallet_wallet_connect_publish_module_title = "注册币种";
 wallet_wallet_connect_publish_address_title = "注册地址";
-wallet_wallet_connect_login_warnning_content = "网页ViolasPay正在申请访问你的钱包地址,你确认将钱包地址公开给此网站吗?";
+wallet_wallet_connect_login_warnning_content = "网页 ViolasPay 正在申请访问你的钱包地址，你确认将钱包地址公开给此网站吗？";
 wallet_wallet_connect_login_warnning_describe = "*其使用行为同样适用《用户协议》和《隐私协议》";
 wallet_wallet_connect_transfer_confirm_button_title = "确认转账";
 wallet_wallet_connect_login_confirm_button_title = "确认登录";
@@ -381,7 +383,7 @@ wallet_profit_pool_date_title = "提取时间";
 wallet_transfer_success_alert = "转账成功";
 // 解锁钱包
 wallet_type_in_password_title = "提示";
-wallet_type_in_password_content = "请输入钱包密码";
+wallet_type_in_password_content = "输入密码";
 wallet_type_in_password_textfield_placeholder = "密码";
 wallet_type_in_password_cancel_button_title = "取消";
 wallet_type_in_password_confirm_button_title = "确定";
@@ -490,7 +492,7 @@ wallet_verify_mobile_phone_successful = "验证成功";
 
 /************* 备份提醒弹出页面 *******************/
 wallet_alert_backup_warning_title = "安全提醒";
-wallet_alert_backup_warning_detail_title = "您的身份助记词未备份，请务必备份助记词\n助记词可用于恢复身份下钱包资产，防止忘记密码、应用删除、手机丢失等情况导致资产损失";
+wallet_alert_backup_warning_detail_title = "您的助记词未备份，请务必备份助记词\n助记词可用于恢复钱包资产，防止忘记密码、应用删除、手机丢失等情况导致资产损失";
 wallet_alert_backup_warning_button_title = "立即备份";
 
 /************* 页面标题 *******************/
@@ -575,7 +577,7 @@ wallet_create_wallet_failed_error = "钱包创建失败";
 wallet_import_wallet_failed_error = "钱包导入失败";
 // 助记词排查相关(备份校对)
 wallet_mnemonic_check_array_not_enough_error = "未选择全部";
-wallet_mnemonic_order_invalid_error = "顺序不对";
+wallet_mnemonic_order_invalid_error = "助记词顺序不正确，请校对";
 // 添加地址相关
 wallet_add_address_insert_error = "地址保存失败";
 wallet_add_address_invalid_error = "地址无效";
