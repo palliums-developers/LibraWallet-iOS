@@ -66,6 +66,7 @@ class HomeViewController: UIViewController {
         let view = HomeView.init()
         view.tableView.delegate = self.tableViewManager
         view.tableView.dataSource = self.tableViewManager
+        view.delegate = self
         view.headerView.delegate = self
         view.tableView.mj_header = MJRefreshNormalHeader.init(refreshingTarget: self, refreshingAction:  #selector(refreshData))
         view.importOrCreateView.delegate = self
@@ -234,6 +235,18 @@ extension HomeViewController {
             }
         }
         
+    }
+}
+extension HomeViewController: HomeViewDelegate {
+    func getFreeCoin() {
+        let vc = EnrollPhoneViewController()
+        let navi = BaseNavigationViewController.init(rootViewController: vc)
+        vc.hidesBottomBarWhenPushed = true
+        vc.successClosure = {
+            print("success")
+            self.detailView.showActiveButtonState = false
+        }
+        self.navigationController?.present(navi, animated: true, completion: nil)
     }
 }
 //MARK: - APP初次进入处理
@@ -655,10 +668,17 @@ extension HomeViewController {
                     self?.detailView.tableView.mj_header?.endRefreshing()
                 }
                 self?.refreshing = false
+            } else if type == "IsNewWallet" {
+                if let tempData = dataDic.value(forKey: "data") as? Int {
+                    if tempData == 0 {
+                        self?.detailView.showActiveButtonState = true
+                    }
+                }
             }
             self?.detailView.hideToastActivity()
         })
         self.detailView.makeToastActivity(.center)
         self.dataModel.getLocalTokens()
+        self.dataModel.isNewWallet(address: WalletManager.shared.violasAddress ?? "")
     }
 }

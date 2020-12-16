@@ -205,7 +205,7 @@ class EnrollPhoneView: UIView {
         button.tag = 10
         return button
     }()
-    lazy var toastView: ToastView? = {
+    lazy var toastView: ToastView = {
         let toast = ToastView.init()
         return toast
     }()

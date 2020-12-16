@@ -17,12 +17,15 @@ enum ActiveModuleRequest {
     case secureCode(String, String, String)
     /// 获取Libra账户信息（钱包地址，手机号区域，手机号，验证码，邀请地址）
     case verifyMobilePhone(String, String, String, String, String)
+    /// 是否是新账户（钱包地址）
+    case isNewWallet(String)
 }
 extension ActiveModuleRequest: TargetType {
     var baseURL: URL {
         switch self {
         case .secureCode(_, _, _),
-             .verifyMobilePhone(_, _, _, _, _):
+             .verifyMobilePhone(_, _, _, _, _),
+             .isNewWallet(_):
             if PUBLISH_VERSION == true {
                 return URL(string:"https://api.violas.io")!
             } else {
@@ -33,9 +36,11 @@ extension ActiveModuleRequest: TargetType {
     var path: String {
         switch self {
         case .secureCode(_, _, _):
-            return ""
+            return "/1.0/violas/verify_code"
         case .verifyMobilePhone(_, _, _, _, _):
-            return ""
+            return "/violas/1.0/incentive/mobile/verify"
+        case .isNewWallet(_):
+            return "/violas/1.0/incentive/check/verified"
         }
     }
     var method: Moya.Method {
@@ -43,11 +48,8 @@ extension ActiveModuleRequest: TargetType {
         case .secureCode(_, _, _),
              .verifyMobilePhone(_, _, _, _, _):
             return .post
-//        case .accountTransactions(_, _, _, _, _),
-//             .currencyList,
-//             .price(_),
-//             .activeAccount(_):
-//            return .get
+        case .isNewWallet(_):
+            return .get
         }
     }
     public var validate: Bool {
@@ -62,17 +64,20 @@ extension ActiveModuleRequest: TargetType {
     var task: Task {
         switch self {
         case .secureCode(let address, let phoneArea, let phoneNumber):
-            return .requestParameters(parameters: ["addr": address,
-                                                   "area": phoneArea,
-                                                   "phone": phoneNumber],
+            return .requestParameters(parameters: ["address": address,
+                                                   "phone_local_number": phoneArea,
+                                                   "receiver": phoneNumber],
                                       encoding: JSONEncoding.default)
         case .verifyMobilePhone(let address, let phoneArea, let phoneNumber, let secureCode, let invitedAddress):
-            return .requestParameters(parameters: ["addr": address,
-                                                   "area": phoneArea,
-                                                   "phone": phoneNumber,
-                                                   "secure_code":secureCode,
-                                                   "invited_address":invitedAddress],
+            return .requestParameters(parameters: ["wallet_address": address,
+                                                   "local_number": phoneArea,
+                                                   "mobile_number": phoneNumber,
+                                                   "verify_code":secureCode,
+                                                   "inviter_address":invitedAddress],
                                       encoding: JSONEncoding.default)
+        case .isNewWallet(let address):
+            return .requestParameters(parameters: ["address": address],
+                                      encoding: URLEncoding.queryString)
         }
     }
     var headers: [String : String]? {

@@ -8,12 +8,18 @@
 
 import UIKit
 import Localize_Swift
+
+protocol HomeViewDelegate: NSObjectProtocol {
+    func getFreeCoin()
+}
 class HomeView: UIView {
+    weak var delegate: HomeViewDelegate?
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(topBackgroundImageView)
         addSubview(headerView)
         addSubview(tableView)
+//        addSubview(activeButton)
         if getIdentityWalletState() == false {
             addSubview(importOrCreateView)
         }
@@ -54,6 +60,13 @@ class HomeView: UIView {
             }
             importOrCreateView.corner(byRoundingCorners: [UIRectCorner.topLeft, UIRectCorner.topRight], radii: 24)
         }
+        if showActiveButtonState == true {
+            activeButton.snp.makeConstraints { (make) in
+                make.right.equalTo(self.snp.right).offset(-22)
+                make.bottom.equalTo(self.snp.bottom).offset(-179)
+                make.size.equalTo(CGSize.init(width: 50, height: 55))
+            }
+        }
     }
     //MARK: - 懒加载对象
     lazy var walletTitleLabel: UILabel = {
@@ -74,6 +87,19 @@ class HomeView: UIView {
         let view = HomeHeaderView.init()
         return view
     }()
+    lazy var activeButton: UIButton = {
+        let button = UIButton.init()
+        button.setBackgroundImage(UIImage.init(named: "free_coin_background"), for: .normal)
+        button.setTitle(localLanguage(keyString: "Free coin"), for: UIControl.State.normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 9, weight: UIFont.Weight.semibold)
+        button.titleLabel?.textAlignment = .center
+        button.setTitleColor(UIColor.init(hex: "7540FD"), for: UIControl.State.normal)
+        // 调整位置
+        button.titleEdgeInsets = UIEdgeInsets(top: 19, left: 0, bottom: -19, right: 0)
+        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
+        button.alpha = 1
+        return button
+    }()
     //MARK: - 懒加载对象
     lazy var tableView: UITableView = {
         let tableView = UITableView.init()
@@ -85,7 +111,6 @@ class HomeView: UIView {
 
         tableView.backgroundColor = UIColor.white
         tableView.register(HomeTableViewCell.classForCoder(), forCellReuseIdentifier: "CellNormal")
-//        tableView.register(HomeTableViewHeader.classForCoder(), forHeaderFooterViewReuseIdentifier: "Header")
         return tableView
     }()
     lazy var importOrCreateView: HomeWithoutWalletView = {
@@ -104,6 +129,19 @@ class HomeView: UIView {
         addSubview(importOrCreateView)
         self.layoutIfNeeded()
         self.setNeedsLayout()
+    }
+    var showActiveButtonState: Bool? {
+        didSet {
+            if showActiveButtonState == true {
+                self.addSubview(activeButton)
+            } else if showActiveButtonState == false {
+                activeButton.removeFromSuperview()
+            }
+            self.layoutIfNeeded()
+        }
+    }
+    @objc func buttonClick(button: UIButton) {
+        self.delegate?.getFreeCoin()
     }
 }
 extension UIView {

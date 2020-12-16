@@ -16,6 +16,8 @@ class EnrollPhoneViewController: BaseViewController {
         self.title = localLanguage(keyString: "wallet_phone_verify_navigation_title")
         // 加载子View
         self.view.addSubview(detailView)
+        // 添加数据监听
+        self.initKVO()
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -25,6 +27,10 @@ class EnrollPhoneViewController: BaseViewController {
     }
     deinit {
         print("EnrollPhoneViewController销毁了")
+    }
+    override func back() {
+        super.back()
+        self.dismiss(animated: true, completion: nil)
     }
     private lazy var detailView : EnrollPhoneView = {
         let view = EnrollPhoneView.init()
@@ -39,6 +45,7 @@ class EnrollPhoneViewController: BaseViewController {
     var tokens: [Token]?
     /// 数据监听KVO
     var observer: NSKeyValueObservation?
+    var successClosure: (()->Void)?
 }
 extension EnrollPhoneViewController: EnrollPhoneViewDelegate {
     func selectPhoneArea() {
@@ -56,7 +63,7 @@ extension EnrollPhoneViewController: EnrollPhoneViewDelegate {
             self.detailView.phoneNumberTextField.resignFirstResponder()
             self.detailView.invitedAddressTextField.resignFirstResponder()
             self.detailView.secureCodeTextField.becomeFirstResponder()
-            self.detailView.toastView?.show(tag: 99)
+            self.detailView.toastView.show(tag: 99)
             self.dataModel.getSecureCode(address: WalletManager.shared.violasAddress ?? "",
                                          phoneArea: phoneArea,
                                          phoneNumber: phoneNumber)
@@ -81,7 +88,7 @@ extension EnrollPhoneViewController: EnrollPhoneViewDelegate {
             self.detailView.phoneNumberTextField.resignFirstResponder()
             self.detailView.secureCodeTextField.resignFirstResponder()
             self.detailView.invitedAddressTextField.resignFirstResponder()
-            self.detailView.toastView?.show(tag: 99)
+            self.detailView.toastView.show(tag: 99)
             self.dataModel.sendVerifyPhone(address: WalletManager.shared.violasAddress ?? "",
                                            phoneArea: phoneArea,
                                            phoneNumber: phoneNumber,
@@ -107,13 +114,13 @@ extension EnrollPhoneViewController {
     func initKVO() {
         self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
             guard let dataDic = change.newValue, dataDic.count != 0 else {
-                self?.detailView.toastView?.hide(tag: 99)
+                self?.detailView.toastView.hide(tag: 99)
                 self?.detailView.hideToastActivity()
                 return
             }
             if let error = dataDic.value(forKey: "error") as? LibraWalletError {
                 // 隐藏请求指示
-                self?.detailView.toastView?.hide(tag: 99)
+                self?.detailView.toastView.hide(tag: 99)
                 self?.detailView.hideToastActivity()
                 switch error {
                 case .WalletRequest(reason: .networkInvalid):
@@ -132,11 +139,14 @@ extension EnrollPhoneViewController {
             }
             let type = dataDic.value(forKey: "type") as! String
             self?.detailView.hideToastActivity()
-            self?.detailView.toastView?.hide(tag: 99)
+            self?.detailView.toastView.hide(tag: 99)
             if type == "GetSecureCode" {
                 self?.detailView.secureCodeButton.countdown = true
             } else if type == "GetVerifyMobilePhone" {
                 self?.detailView.makeToast(localLanguage(keyString: "wallet_verify_mobile_phone_successful"), duration: toastDuration, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
+                    if let action = self?.successClosure {
+                        action()
+                    }
                     self?.navigationController?.dismiss(animated: true, completion: nil)
                 })
             }

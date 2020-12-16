@@ -31,13 +31,19 @@ extension EnrollPhoneModel {
             case let .success(response):
                 do {
                     let json = try response.map(SecureCodeMainModel.self)
-                    guard json.code == 2000 else {
-                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "GetSecureCode")
+                    if json.code == 2000 {
+                        let data = setKVOData(type: "GetSecureCode")
                         self?.setValue(data, forKey: "dataDic")
-                        return
+                    } else {
+                        print("GetVerifyMobilePhone_状态异常")
+                        if let message = json.message, message.isEmpty == false {
+                            let data = setKVOData(error: LibraWalletError.error(message), type: "GetVerifyMobilePhone")
+                            self?.setValue(data, forKey: "dataDic")
+                        } else {
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "GetSecureCode")
+                            self?.setValue(data, forKey: "dataDic")
+                        }
                     }
-                    let data = setKVOData(type: "GetSecureCode")
-                    self?.setValue(data, forKey: "dataDic")
                 } catch {
                     print("GetSecureCode_解析异常\(error.localizedDescription)")
                     DispatchQueue.main.async(execute: {
@@ -64,13 +70,19 @@ extension EnrollPhoneModel {
             case let .success(response):
                 do {
                     let json = try response.map(SecureCodeMainModel.self)
-                    guard json.code == 2000 else {
-                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "GetVerifyMobilePhone")
+                    if json.code == 2000 {
+                        let data = setKVOData(type: "GetVerifyMobilePhone")
                         self?.setValue(data, forKey: "dataDic")
-                        return
+                    } else {
+                        print("GetVerifyMobilePhone_状态异常")
+                        if let message = json.message, message.isEmpty == false {
+                            let data = setKVOData(error: LibraWalletError.error(message), type: "GetVerifyMobilePhone")
+                            self?.setValue(data, forKey: "dataDic")
+                        } else {
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "GetVerifyMobilePhone")
+                            self?.setValue(data, forKey: "dataDic")
+                        }
                     }
-                    let data = setKVOData(type: "GetSecureCode")
-                    self?.setValue(data, forKey: "dataDic")
                 } catch {
                     print("GetVerifyMobilePhone_解析异常\(error.localizedDescription)")
                     DispatchQueue.main.async(execute: {

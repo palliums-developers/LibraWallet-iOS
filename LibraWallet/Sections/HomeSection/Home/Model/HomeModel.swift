@@ -9,6 +9,14 @@
 import UIKit
 import Moya
 
+struct isNewWalletDataModel: Codable {
+    var is_new: Int?
+}
+struct isNewWalletMainModel: Codable {
+    var code: Int?
+    var message: String?
+    var data: isNewWalletDataModel?
+}
 struct ModelPriceDataModel: Codable {
     var name: String?
     var rate: Double?
@@ -562,5 +570,41 @@ extension HomeModel {
                 print(error)
             }
         }
+    }
+}
+extension HomeModel {
+    func isNewWallet(address: String) {
+        let request = ActiveModuleProvide.request(.isNewWallet(address)) {[weak self](result) in
+            switch  result {
+            case let .success(response):
+                do {
+                    let json = try response.map(isNewWalletMainModel.self)
+                    if json.code == 2000 {
+                        let data = setKVOData(type: "IsNewWallet", data: json.data?.is_new)
+                        self?.setValue(data, forKey: "dataDic")
+                    } else {
+                        if let message = json.message, message.isEmpty == false {
+                            let data = setKVOData(error: LibraWalletError.error(message), type: "IsNewWallet")
+                            self?.setValue(data, forKey: "dataDic")
+                        } else {
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "IsNewWallet")
+                            self?.setValue(data, forKey: "dataDic")
+                        }
+                    }
+                } catch {
+                    print("IsNewWallet_解析异常\(error.localizedDescription)")
+                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "IsNewWallet")
+                    self?.setValue(data, forKey: "dataDic")
+                }
+            case let .failure(error):
+                guard error.errorCode != -999 else {
+                    print("IsNewWallet_网络请求已取消")
+                    return
+                }
+                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "IsNewWallet")
+                self?.setValue(data, forKey: "dataDic")
+            }
+        }
+        self.requests.append(request)
     }
 }
