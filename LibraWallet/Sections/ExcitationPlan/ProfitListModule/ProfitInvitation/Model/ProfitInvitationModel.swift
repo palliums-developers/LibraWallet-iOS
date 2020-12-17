@@ -9,6 +9,24 @@
 import UIKit
 import Moya
 
+struct InviteProfitDataModel: Codable {
+    /// 金额
+    var amount: UInt64?
+    /// 邀请地址
+    var be_invited: String?
+    /// 邀请时间
+    var date: Int?
+    /// 状态（0：未到帐；1： 已到帐）
+    var status: Int?
+    ///
+    var total_count: UInt64?
+}
+struct InviteProfitMainModel: Codable {
+    var code: Int?
+    var message: String?
+    var data: [InviteProfitDataModel]?
+}
+
 class ProfitInvitationModel: NSObject {
     private var requests: [Cancellable] = []
     @objc dynamic var dataDic: NSMutableDictionary = [:]
@@ -20,14 +38,14 @@ class ProfitInvitationModel: NSObject {
         print("ProfitInvitationModel销毁了")
     }
     func getLoanOrderDetailLoanList(address: String, orderID: String, page: Int, limit: Int, requestStatus: Int) {
-        let type = requestStatus == 0 ? "GetBankLoanOrderDetailLoanListOrigin":"GetBankLoanOrderDetailLoanListMore"
-        let request = bankModuleProvide.request(.loanTransactionDetail(address, orderID, 0, page, limit)) {[weak self](result) in
+        let type = requestStatus == 0 ? "GetInviteProfitListOrigin":"GetInviteProfitListMore"
+        let request = ActiveModuleProvide.request(.inviteProfitList(address, page, limit)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(LoanOrderDetailMainModel.self)
+                    let json = try response.map(InviteProfitMainModel.self)
                     if json.code == 2000 {
-                        guard let models = json.data?.list, models.isEmpty == false else {
+                        guard let models = json.data, models.isEmpty == false else {
                             let error = requestStatus == 0 ? LibraWalletError.RequestError.dataEmpty:LibraWalletError.RequestError.noMoreData
                             let data = setKVOData(error: LibraWalletError.WalletRequest(reason: error), type: type)
                             self?.setValue(data, forKey: "dataDic")

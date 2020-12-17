@@ -82,7 +82,7 @@ class ProfitInvitationViewController: BaseViewController {
     }
     var firstIn: Bool = true
     var itemID: String?
-    var updateAction: ((LoanOrderDetailMainDataModel)->())?
+    var updateAction: ((InviteProfitDataModel)->())?
     func transactionRequest(refresh: Bool) {
         let requestState = refresh == true ? 0:1
         self.dataModel.getLoanOrderDetailLoanList(address: WalletManager.shared.violasAddress ?? "",
@@ -105,33 +105,31 @@ extension ProfitInvitationViewController {
                 self?.handleError(requestType: type, error: error)
                 return
             }
-            if type == "GetBankLoanOrderDetailLoanListOrigin" {
-                guard let tempData = dataDic.value(forKey: "data") as? LoanOrderDetailMainDataModel else {
+            if type == "GetInviteProfitListOrigin" {
+                guard let tempData = dataDic.value(forKey: "data") as? [InviteProfitDataModel] else {
                     return
                 }
-                self?.tableViewManager.dataModels = tempData.list
-                if let action = self?.updateAction {
-                    action(tempData)
-                }
+                self?.tableViewManager.dataModels = tempData
+//                if let action = self?.updateAction {
+//                    action(tempData)
+//                }
                 self?.detailView.tableView.reloadData()
-            } else if type == "GetBankLoanOrderDetailLoanListMore" {
-                guard let tempData = dataDic.value(forKey: "data") as? LoanOrderDetailMainDataModel else {
+            } else if type == "GetInviteProfitListMore" {
+                guard let tempData = dataDic.value(forKey: "data") as? [InviteProfitDataModel] else {
                     return
                 }
                 if let oldData = self?.tableViewManager.dataModels, oldData.isEmpty == false {
-                    let tempArray = NSMutableArray.init(array: oldData)
                     var insertIndexPath = [IndexPath]()
-                    for index in 0..<tempData.list!.count {
+                    for index in 0..<tempData.count {
                         let indexPath = IndexPath.init(row: oldData.count + index, section: 0)
                         insertIndexPath.append(indexPath)
                     }
-                    tempArray.addObjects(from: tempData.list!)
-                    self?.tableViewManager.dataModels = tempArray as? [LoanOrderDetailMainDataListModel]
+                    self?.tableViewManager.dataModels = oldData + tempData
                     self?.detailView.tableView.beginUpdates()
                     self?.detailView.tableView.insertRows(at: insertIndexPath, with: UITableView.RowAnimation.bottom)
                     self?.detailView.tableView.endUpdates()
                 } else {
-                    self?.tableViewManager.dataModels = tempData.list
+                    self?.tableViewManager.dataModels = tempData
                     self?.detailView.tableView.reloadData()
                 }
                 self?.detailView.tableView.mj_footer?.endRefreshing()

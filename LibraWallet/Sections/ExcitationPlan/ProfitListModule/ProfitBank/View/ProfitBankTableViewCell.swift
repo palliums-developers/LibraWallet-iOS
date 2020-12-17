@@ -52,7 +52,7 @@ class ProfitBankTableViewCell: UITableViewCell {
         label.textColor = UIColor.init(hex: "333333")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
         label.lineBreakMode = .byTruncatingMiddle
-        label.text = localLanguage(keyString: "wallet_profit_pool_type_loan_title")
+        label.text = "---"
         return label
     }()
     lazy var itemAmountLabel: UILabel = {
@@ -60,7 +60,7 @@ class ProfitBankTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.center
         label.textColor = UIColor.init(hex: "13B788")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.medium)
-        label.text = "10VLS"
+        label.text = "---"
         return label
     }()
     lazy var itemDateLabel: UILabel = {
@@ -68,7 +68,7 @@ class ProfitBankTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "333333")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = "18:22 05/24"
+        label.text = "---"
         return label
     }()
     lazy var itemStatusLabel: UILabel = {
@@ -76,30 +76,44 @@ class ProfitBankTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "333333")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = "Done"
+        label.text = "---"
         return label
     }()
     // MARK: - 设置数据
-    var model: LoanOrderDetailMainDataListModel? {
+    var model: BankProfitDataModel? {
         didSet {
             guard let tempModel = model else {
                 return
             }
+            // 订单状态：3: deposit; 4: withdraw; 5: borrow; 6: repayment; 7: bank extract;
+            if tempModel.type == 3 {
+                itemAddressTitleLabel.text = localLanguage(keyString: "wallet_profit_pool_type_deposit_title")
+            } else if tempModel.type == 4 {
+                itemAddressTitleLabel.text = localLanguage(keyString: "wallet_profit_pool_type_withdraw_title")
+            } else if tempModel.type == 5 {
+                itemAddressTitleLabel.text = localLanguage(keyString: "wallet_profit_pool_type_loan_title")
+            } else if tempModel.type == 6 {
+                itemAddressTitleLabel.text = localLanguage(keyString: "wallet_profit_pool_type_repayment_title")
+            } else if tempModel.type == 7 {
+                itemAddressTitleLabel.text = localLanguage(keyString: "wallet_profit_pool_type_profit_title")
+            } else {
+                itemAddressTitleLabel.text = localLanguage(keyString: "wallet_profit_invitation_status_unknown_title")
+            }
             itemDateLabel.text = timestampToDateString(timestamp: (tempModel.date ?? 0), dateFormat: "HH:mm MM/dd")
             itemAmountLabel.text = getDecimalNumber(amount: NSDecimalNumber.init(value: tempModel.amount ?? 0),
                                                     scale: 6,
-                                                    unit: 1000000).stringValue
-            //订单状态，0（已借款），1（已还款），-1（借款失败），-2（还款失败）2（已清算）
+                                                    unit: 1000000).stringValue + "VLS"
+            //订单状态：0：未到帐；1： 已到帐
             if tempModel.status == 0 {
-                itemStatusLabel.text = localLanguage(keyString: "wallet_bank_loan_detail_loan_status_loaned_title")
+                itemStatusLabel.textColor = UIColor.init(hex: "FB8F0B")
+                itemStatusLabel.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: .medium)
+                itemStatusLabel.text = localLanguage(keyString: "wallet_profit_invitation_status_processing_title")
             } else if tempModel.status == 1 {
-                itemStatusLabel.text = localLanguage(keyString: "wallet_bank_loan_detail_deposit_status_deposited_title")
-            } else if tempModel.status == 2 {
-                itemStatusLabel.text = localLanguage(keyString: "wallet_bank_loan_detail_clearing_detail_status_title")
-            } else if tempModel.status == -1 {
-                itemStatusLabel.text = localLanguage(keyString: "wallet_bank_loan_detail_loan_status_failed_title")
-            } else if tempModel.status == -2 {
-                itemStatusLabel.text = localLanguage(keyString: "wallet_bank_loan_detail_deposit_status_failed_title")
+                itemStatusLabel.textColor = UIColor.init(hex: "333333")
+                itemStatusLabel.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: .regular)
+                itemStatusLabel.text = localLanguage(keyString: "wallet_profit_invitation_status_success_title")
+            } else {
+                itemStatusLabel.text = localLanguage(keyString: "wallet_profit_invitation_status_unknown_title")
             }
         }
     }

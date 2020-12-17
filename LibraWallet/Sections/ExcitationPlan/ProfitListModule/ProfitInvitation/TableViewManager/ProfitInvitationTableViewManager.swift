@@ -11,7 +11,7 @@ import UIKit
 class ProfitInvitationTableViewManager: NSObject {
     //    weak var delegate: HomeTableViewManagerDelegate?
     /// 数据
-    var dataModels: [LoanOrderDetailMainDataListModel]?
+    var dataModels: [InviteProfitDataModel]?
     deinit {
         print("ProfitInvitationTableViewManager销毁了")
     }
@@ -35,7 +35,7 @@ extension ProfitInvitationTableViewManager: UITableViewDelegate {
 }
 extension ProfitInvitationTableViewManager: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10//dataModels?.count ?? 0
+        return dataModels?.count ?? 0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let identifier = "CellNormal"

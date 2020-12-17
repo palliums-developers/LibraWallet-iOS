@@ -19,13 +19,22 @@ enum ActiveModuleRequest {
     case verifyMobilePhone(String, String, String, String, String)
     /// 是否是新账户（钱包地址）
     case isNewWallet(String)
+    /// 邀请奖励记录（钱包地址、offset、limit）
+    case inviteProfitList(String, Int, Int)
+    /// 资金池奖励记录（钱包地址、offset、limit）
+    case poolProfitList(String, Int, Int)
+    /// 数字银行奖励记录（钱包地址、offset、limit）
+    case bankProfitList(String, Int, Int)
 }
 extension ActiveModuleRequest: TargetType {
     var baseURL: URL {
         switch self {
         case .secureCode(_, _, _),
              .verifyMobilePhone(_, _, _, _, _),
-             .isNewWallet(_):
+             .isNewWallet(_),
+             .inviteProfitList(_, _, _),
+             .poolProfitList(_, _, _),
+             .bankProfitList(_, _, _):
             if PUBLISH_VERSION == true {
                 return URL(string:"https://api.violas.io")!
             } else {
@@ -41,6 +50,12 @@ extension ActiveModuleRequest: TargetType {
             return "/violas/1.0/incentive/mobile/verify"
         case .isNewWallet(_):
             return "/violas/1.0/incentive/check/verified"
+        case .inviteProfitList(_, _, _):
+            return "/violas/1.0/incentive/orders/invite"
+        case .poolProfitList(_, _, _):
+            return "/violas/1.0/incentive/orders/pool"
+        case .bankProfitList(_, _, _):
+            return "/violas/1.0/incentive/orders/bank"
         }
     }
     var method: Moya.Method {
@@ -48,7 +63,10 @@ extension ActiveModuleRequest: TargetType {
         case .secureCode(_, _, _),
              .verifyMobilePhone(_, _, _, _, _):
             return .post
-        case .isNewWallet(_):
+        case .isNewWallet(_),
+             .inviteProfitList(_, _, _),
+             .poolProfitList(_, _, _),
+             .bankProfitList(_, _, _):
             return .get
         }
     }
@@ -77,6 +95,21 @@ extension ActiveModuleRequest: TargetType {
                                       encoding: JSONEncoding.default)
         case .isNewWallet(let address):
             return .requestParameters(parameters: ["address": address],
+                                      encoding: URLEncoding.queryString)
+        case .inviteProfitList(let address, let page, let limit):
+            return .requestParameters(parameters: ["address": address,
+                                                   "offset": page,
+                                                   "limit": limit],
+                                      encoding: URLEncoding.queryString)
+        case .poolProfitList(let address, let page, let limit):
+            return .requestParameters(parameters: ["address": address,
+                                                   "offset": page,
+                                                   "limit": limit],
+                                      encoding: URLEncoding.queryString)
+        case .bankProfitList(let address, let page, let limit):
+            return .requestParameters(parameters: ["address": address,
+                                                   "offset": page,
+                                                   "limit": limit],
                                       encoding: URLEncoding.queryString)
         }
     }

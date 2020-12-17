@@ -371,10 +371,16 @@ wallet_profit_invitation_address_title = "Invited Account";
 wallet_profit_invitation_amount_title = "Farming Profit";
 wallet_profit_invitation_date_title = "Invitation time";
 wallet_profit_invitation_status_title = "Status";
+wallet_profit_invitation_status_success_title = "Done";
+wallet_profit_invitation_status_processing_title = "Processing";
+wallet_profit_invitation_status_unknown_title = "Unknown";
 wallet_profit_pool_type_title = "Type";
 wallet_profit_pool_type_withdraw_title = "Withdrawal";
 wallet_profit_pool_type_loan_title = "Loan";
 wallet_profit_pool_type_deposit_title = "Deposit";
+wallet_profit_pool_type_withdraw_title = "Withdraw";
+wallet_profit_pool_type_repayment_title = "Repayment";
+wallet_profit_pool_type_profit_title = "Extract";
 wallet_profit_pool_amount_title = "Withdraw Amount";
 wallet_profit_pool_date_title = "Withdraw Date";
 
