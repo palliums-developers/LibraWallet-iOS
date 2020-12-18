@@ -14,6 +14,8 @@ class MineModel: NSObject {
                   "icon":"mine_wallet"]],
                 [["name":localLanguage(keyString: "wallet_mine_address_manager_title"),
                   "icon":"mine_address_list"]],
+                [["name":localLanguage(keyString: "wallet_mine_yield_farming_button_title"),
+                  "icon":"mine_yield_farming_rule"]],
                 [["name":localLanguage(keyString: "wallet_mine_invitation_reward_title"),
                   "icon":"mine_invitation_reward"]],
                 [["name":localLanguage(keyString: "wallet_mine_setting_title"),

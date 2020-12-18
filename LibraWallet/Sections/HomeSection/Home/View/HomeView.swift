@@ -45,7 +45,7 @@ class HomeView: UIView {
         headerView.snp.makeConstraints { (make) in
             make.top.equalTo(self).offset(navigationBarHeight)
             make.left.right.equalTo(self)
-            let height = 202 - navigationBarHeight + 51
+            let height = 202 - navigationBarHeight + 51 + 78
             make.height.equalTo(height)
         }
         tableView.snp.makeConstraints { (make) in
@@ -100,7 +100,7 @@ class HomeView: UIView {
         button.alpha = 1
         return button
     }()
-    //MARK: - 懒加载对象
+    // MARK: - 懒加载对象
     lazy var tableView: UITableView = {
         let tableView = UITableView.init()
         tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
@@ -117,7 +117,6 @@ class HomeView: UIView {
         let view = HomeWithoutWalletView.init()
         return view
     }()
-    var model: Token?
     var toastView: ToastView? {
         let toast = ToastView.init()
         return toast
@@ -144,18 +143,4 @@ class HomeView: UIView {
         self.delegate?.getFreeCoin()
     }
 }
-extension UIView {
 
-    /// 部分圆角
-    ///
-    /// - Parameters:
-    ///   - corners: 需要实现为圆角的角，可传入多个
-    ///   - radii: 圆角半径
-    func corner(byRoundingCorners corners: UIRectCorner, radii: CGFloat) {
-        let maskPath = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radii, height: radii))
-        let maskLayer = CAShapeLayer()
-        maskLayer.frame = self.bounds
-        maskLayer.path = maskPath.cgPath
-        self.layer.mask = maskLayer
-    }
-}

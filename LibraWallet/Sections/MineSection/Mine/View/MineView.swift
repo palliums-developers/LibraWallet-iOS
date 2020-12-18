@@ -26,7 +26,7 @@ class MineView: UIView {
         mineHeaderView.snp.makeConstraints { (make) in
             make.top.equalTo(self).offset(statusBarHeight)
             make.left.right.equalTo(self)
-            make.height.equalTo(251)
+            make.height.equalTo(175)
         }
         self.tableView.snp.makeConstraints { (make) in
             make.top.equalTo(mineHeaderView.snp.bottom)
@@ -49,7 +49,7 @@ class MineView: UIView {
         tableView.isScrollEnabled = false
         return tableView
     }()
-    private lazy var mineHeaderView : MineHeaderView = {
+    lazy var mineHeaderView : MineHeaderView = {
         let view = MineHeaderView.init()
 //        view.model = WalletData.wallet
         return view

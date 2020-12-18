@@ -345,8 +345,19 @@ extension HomeViewController: HomeHeaderViewDelegate {
     }
     
     func mapping() {
-        let vc = TokenMappingViewController()
+//        let vc = TokenMappingViewController()
+//        //        vc.wallet = self.wallet
+//        vc.hidesBottomBarWhenPushed = true
+//        self.navigationController?.pushViewController(vc, animated: true)
+        
+        
+        let vc = ProfitMainViewController()
         //        vc.wallet = self.wallet
+        vc.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    func yieldFarmingRules() {
+        let vc = YieldFarmingViewController()
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }

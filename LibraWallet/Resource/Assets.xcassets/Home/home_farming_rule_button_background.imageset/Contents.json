@@ -5,12 +5,12 @@
       "scale" : "1x"
     },
     {
-      "filename" : "mine_farming_rule_button_background@2x.png",
+      "filename" : "home_farming_rule_button_background@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "mine_farming_rule_button_background@3x.png",
+      "filename" : "home_farming_rule_button_background@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

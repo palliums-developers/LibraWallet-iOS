@@ -85,17 +85,23 @@ extension MineViewController: MineTableViewManagerDelegate {
             }
         } else if indexPath.section == 2 {
             if indexPath.row == 0 {
-                let vc = InvitationRewardViewController()
+                let vc = YieldFarmingViewController()
                 vc.hidesBottomBarWhenPushed = true
                 self.navigationController?.pushViewController(vc, animated: true)
             }
         } else if indexPath.section == 3 {
             if indexPath.row == 0 {
-                let vc = SettingViewController()
+                let vc = InvitationRewardViewController()
                 vc.hidesBottomBarWhenPushed = true
                 self.navigationController?.pushViewController(vc, animated: true)
             }
         } else if indexPath.section == 4 {
+            if indexPath.row == 0 {
+                let vc = SettingViewController()
+                vc.hidesBottomBarWhenPushed = true
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
+        } else if indexPath.section == 5 {
             if indexPath.row == 0 {
 //                let vc = ActiveAccountViewController()
 //                //                vc.authKey = LibraWalletManager.shared.walletAuthenticationKey
@@ -105,3 +111,4 @@ extension MineViewController: MineTableViewManagerDelegate {
         }
     }
 }
+//

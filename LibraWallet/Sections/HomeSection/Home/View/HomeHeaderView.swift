@@ -14,6 +14,7 @@ protocol HomeHeaderViewDelegate: NSObjectProtocol {
     func transfer()
     func receive()
     func mapping()
+    func yieldFarmingRules()
 }
 class HomeHeaderView: UIView {
     weak var delegate: HomeHeaderViewDelegate?
@@ -30,6 +31,9 @@ class HomeHeaderView: UIView {
         addSubview(receiveButton)
         addSubview(spaceLabelTwo)
         addSubview(exchangeButton)
+        
+        addSubview(farmingRuleButton)
+        farmingRuleButton.addSubview(farmingTitleLabel)
         
         // 添加语言变换通知
         NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
@@ -50,11 +54,6 @@ class HomeHeaderView: UIView {
         super.layoutSubviews()
         assetLabel.snp.makeConstraints { (make) in
             make.left.equalTo(self).offset(25)
-//            if statusBarHeight < 44 {
-//                make.top.equalTo(self).offset(2 + (44 - statusBarHeight))
-//            } else {
-//                make.top.equalTo(self).offset(2)
-//            }
             make.top.equalTo(self).offset(2)
         }
         walletConnectStateButton.snp.makeConstraints { (make) in
@@ -94,12 +93,11 @@ class HomeHeaderView: UIView {
             make.height.equalTo(40)
             make.width.equalTo(transferButton)
         }
-        
         // 第三部分
         coinBackgroundView.snp.makeConstraints { (make) in
             make.bottom.equalTo(self.snp.bottom)
             make.left.right.equalTo(self)
-            make.height.equalTo(51)
+            make.height.equalTo(128)
         }
         coinTitleLabel.snp.makeConstraints { (make) in
             make.centerY.equalTo(addCoinButton)
@@ -109,6 +107,16 @@ class HomeHeaderView: UIView {
             make.bottom.equalTo(coinBackgroundView.snp.bottom).offset(-11)
             make.right.equalTo(coinBackgroundView.snp.right).offset(-28)
             make.size.equalTo(CGSize.init(width: 22, height: 22))
+        }
+        farmingRuleButton.snp.makeConstraints { (make) in
+            make.top.equalTo(coinBackgroundView).offset(18)
+            make.left.equalTo(coinBackgroundView).offset(15)
+            make.right.equalTo(coinBackgroundView.snp.right).offset(-15)
+            make.height.equalTo(60)
+        }
+        farmingTitleLabel.snp.makeConstraints { (make) in
+            make.centerY.equalTo(farmingRuleButton)
+            make.right.equalTo(farmingRuleButton.snp.right).offset(-59)
         }
         coinBackgroundView.corner(byRoundingCorners: [UIRectCorner.topLeft, UIRectCorner.topRight], radii: 24)
     }
@@ -203,6 +211,21 @@ class HomeHeaderView: UIView {
         button.tag = 50
         return button
     }()
+    lazy var farmingRuleButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setBackgroundImage(UIImage.init(named: "home_farming_rule_button_background"), for: .normal)
+        button.addTarget(self, action: #selector(buttonClick(button:)), for: .touchUpInside)
+        button.tag = 60
+        return button
+    }()
+    lazy var farmingTitleLabel: UILabel = {
+        let label = UILabel.init()
+        label.textAlignment = NSTextAlignment.right
+        label.textColor = UIColor.white
+        label.font = UIFont.systemFont(ofSize: 21, weight: .semibold)
+        label.text = localLanguage(keyString: "wallet_mine_yield_farming_button_title")
+        return label
+    }()
     @objc func buttonClick(button: UIButton) {
         if button.tag == 10 {
             // WalletConnect
@@ -219,6 +242,8 @@ class HomeHeaderView: UIView {
         } else if button.tag == 50 {
             // 映射
             self.delegate?.mapping()
+        } else if button.tag == 60 {
+            self.delegate?.yieldFarmingRules()
         }
     }
     var assetsModel: String? {
