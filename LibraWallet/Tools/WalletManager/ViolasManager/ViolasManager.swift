@@ -597,6 +597,37 @@ extension ViolasManager {
             throw error
         }
     }
+    /// 提取收益
+    /// - Parameters:
+    ///   - sendAddress: 发送地址
+    ///   - mnemonic: 助记词
+    ///   - feeModule: 手续费Module
+    ///   - fee: 手续费
+    ///   - sequenceNumber: 序列码
+    /// - Throws: 异常
+    /// - Returns: 签名
+    public static func getBankExtractProfitTransactionHex(sendAddress: String, mnemonic: [String], feeModule: String, fee: UInt64, sequenceNumber: UInt64) throws -> String {
+        do {
+            let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
+            let script = ViolasTransactionScriptPayload.init(code: Data.init(hex: ViolasManager.getBankMoveCode(name: "claim_incentive")),
+                                                             typeTags: [],
+                                                             argruments: [])
+            let transactionPayload = ViolasTransactionPayload.init(payload: .script(script))
+            let rawTransaction = ViolasRawTransaction.init(senderAddres: sendAddress,
+                                                           sequenceNumber: sequenceNumber,
+                                                           maxGasAmount: 1000000,
+                                                           gasUnitPrice: fee,
+                                                           expirationTime: NSDecimalNumber.init(value: Date().timeIntervalSince1970 + 600).uint64Value,
+                                                           payload: transactionPayload,
+                                                           module: feeModule,
+                                                           chainID: 4)
+            // 签名交易
+            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            return signature.toHexString()
+        } catch {
+            throw error
+        }
+    }
 }
 //MARK: - WalletConnect
 extension ViolasManager {
