@@ -30,8 +30,8 @@ class InvitationRewardViewController: BaseViewController {
         }
     }
     override func back() {
-        if needDismissViewController == true {
-            self.dismiss(animated: true, completion: nil)
+        if self.detailView.webView.canGoBack == true {
+            self.detailView.webView.goBack()
         } else {
             self.navigationController?.popViewController(animated: true)
         }

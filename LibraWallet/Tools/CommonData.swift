@@ -242,7 +242,8 @@ func removeWalletConnectSession() {
 /************* 限制 *******************/
 let privateLegalURL = "https://violas.io/violas_service_html/Privacy_Policy/"
 let useLegalURL = "https://violas.io/violas_service_html/Terms_of_Service/"
-let invitationRewardURL = "https://www.violas.io"
+let invitationRewardURL = "https://wallet.violas.io/homepage/home/inviteRewards"
+let yieldFarmingRulesURL = "https://wallet.violas.io/homepage/home/miningAwards"
 let transferFeeMax = 0.001
 let transferFeeMin = 0.0001
 let transferBTCLeast = 0.0001

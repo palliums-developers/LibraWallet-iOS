@@ -18,8 +18,8 @@ class YieldFarmingViewController: BaseViewController {
         // 加载子View
         self.view.addSubview(detailView)
         
-        let request = URLRequest.init(url: URL(string: self.requestURL!)!)
-        detailView.webView.load(request)
+//        let request = URLRequest.init(url: URL(string: self.requestURL!)!)
+//        detailView.webView.load(request)
         self.addWebListen()
         self.initKVO()
     }
@@ -38,8 +38,8 @@ class YieldFarmingViewController: BaseViewController {
         print("YieldFarmingViewController销毁了")
     }
     override func back() {
-        if needDismissViewController == true {
-            self.dismiss(animated: true, completion: nil)
+        if self.detailView.webView.canGoBack == true {
+            self.detailView.webView.goBack()
         } else {
             self.navigationController?.popViewController(animated: true)
         }
@@ -59,129 +59,59 @@ class YieldFarmingViewController: BaseViewController {
     var requestURL: String?
     var bridge: WKWebViewJavascriptBridge!
     private var observer: NSKeyValueObservation?
-//        = {
-//        let bridge = WKWebViewJavascriptBridge.init(webView: detailView.webView)
-//        bridge.isLogEnable = true
-//        return bridge
-//    }()
     var publishClosure: (()->Void)?
     var payTokenClosure: (()->Void)?
     func addWebListen() {
         bridge = WKWebViewJavascriptBridge.init(webView: detailView.webView)
         bridge.isLogEnable = true
         bridge.register(handlerName: "callNative") { [weak self] (paramters, callback) in
-            if paramters!["method"] as? String == "checkFarmingRules" {
-                // 查看规则
-//                if let passwords = paramters!["params"] as? [String], passwords.isEmpty == false {
-//                    do {
-//                        let tempMenmonic = try WalletManager.getMnemonicFromKeychain(password: passwords[0])
-//                        print(tempMenmonic)
-//                        callback?("{\"id\":\"\(String(describing: paramters!["id"]!))\",\"result\":\"success\"}")
-//                    } catch {
-//                        callback?("{\"id\":\"\(String(describing: paramters!["id"]!))\",\"result\":\"failed\"}")
-//                    }
-//                }
-            } else if paramters!["method"] as? String == "getPoolProfit" {
-                // 提取资金池挖矿激励
-//                if let passwords = paramters!["params"] as? [String], passwords.isEmpty == false {
-//                    do {
-//                        let tempMenmonic = try WalletManager.getMnemonicFromKeychain(password: passwords[0])
-//                        print(tempMenmonic)
-////                        self?.detailView.toastView?.show(tag: 99)
-////                        self?.dataModel.publishToken(sendAddress: WalletManager.shared.walletAddress ?? "",
-////                                                     mnemonic: tempMenmonic,
-////                                                     modules: [passwords[1], passwords[2]])
-//                        self?.publishClosure = {
-//                            callback?("{\"id\":\"\(String(describing: paramters!["id"]!))\",\"result\":\"success\"}")
-//                        }
-//                    } catch {
-//                        callback?("{\"id\":\"\(String(describing: paramters!["id"]!))\",\"result\":\"failed\"}")
-//                    }
-//                }
-            } else if paramters!["method"] as? String == "getBankProfit" {
-                // 提取银行挖矿激励
-//                if let passwords = paramters!["params"] as? [String], passwords.isEmpty == false {
-//                    do {
-//                        let tempMenmonic = try WalletManager.getMnemonicFromKeychain(password: passwords[0])
-//                        print(tempMenmonic)
-////                        self?.detailView.toastView?.show(tag: 99)
-////                        self?.dataModel.sendTransaction(sendAddress: WalletManager.shared.walletAddress ?? "",
-////                                                        receiveAddress: passwords[1],
-////                                                        amount: NSDecimalNumber.init(string: passwords[3]).uint64Value,
-////                                                        fee: 1,
-////                                                        mnemonic: tempMenmonic,
-////                                                        module: passwords[2])
-//                        self?.payTokenClosure = {
-//                            callback?("{\"id\":\"\(String(describing: paramters!["id"]!))\",\"result\":\"success\"}")
-//                        }
-//                    } catch {
-//                        callback?("{\"id\":\"\(String(describing: paramters!["id"]!))\",\"result\":\"failed\"}")
-//                    }
-//                }
-            } else if paramters!["method"] as? String == "isNewAccount" {
+            if paramters!["method"] as? String == "yield_farming_detail" {
+                // 挖矿明细
+                let vc = ProfitMainViewController()
+                self?.navigationController?.pushViewController(vc, animated: true)
+            } else if paramters!["method"] as? String == "withdraw_pool_profit" {
+                // 资金池挖矿激励提取
+                
+            } else if paramters!["method"] as? String == "withdraw_bank_profit" {
+                // 数字银行挖矿激励提取
+                WalletManager.unlockWallet { [weak self] (result) in
+                    switch result {
+                    case let .success(mnemonic):
+                        self?.detailView.toastView.show(tag: 99)
+                        self?.dataModel.sendBankExtractProfit(sendAddress: WalletManager.shared.violasAddress ?? "",
+                                                              mnemonic: mnemonic)
+                    case let .failure(error):
+                        guard error.localizedDescription != "Cancel" else {
+                            self?.detailView.toastView.hide(tag: 99)
+                            return
+                        }
+                        self?.view?.makeToast(error.localizedDescription, position: .center)
+                    }
+                }
+            } else if paramters!["method"] as? String == "new_user_check" {
                 // 新用户检查
-//                if self?.needDismissViewController == true {
-//                    self?.dismiss(animated: true, completion: nil)
-//                } else {
-//                    self?.navigationController?.popViewController(animated: true)
-//                }
-            } else if paramters!["method"] as? String == "assignmentIP" {
-//                if let contents = paramters!["params"] as? [String], contents.isEmpty == false, contents.count == 2 {
-//                    guard contents[0].isEmpty == false else {
-//                        callback?("{\"id\":\"\(String(describing: paramters!["id"]!))\",\"result\":\"failed\"}")
-//                        return
-//                    }
-//                    guard contents[1].isEmpty == false else {
-//                        callback?("{\"id\":\"\(String(describing: paramters!["id"]!))\",\"result\":\"failed\"}")
-//                        return
-//                    }
-////                    let vc = AuthorizedIPViewController()
-////                    vc.IPID = contents[0]
-////                    vc.moduleName = contents[1]
-////                    self?.navigationController?.pushViewController(vc, animated: true)
-//                }
-            } else if paramters!["method"] as? String == "isNewAccount" {
-                // 新用户检查
-//                if self?.needDismissViewController == true {
-//                    self?.dismiss(animated: true, completion: nil)
-//                } else {
-//                    self?.navigationController?.popViewController(animated: true)
-//                }
-            } else if paramters!["method"] as? String == "inviteFriend" {
-                // 邀请好友
-//                if self?.needDismissViewController == true {
-//                    self?.dismiss(animated: true, completion: nil)
-//                } else {
-//                    self?.navigationController?.popViewController(animated: true)
-//                }
-            } else if paramters!["method"] as? String == "PoolFarming" {
+                let vc = EnrollPhoneViewController()
+                let navi = BaseNavigationViewController.init(rootViewController: vc)
+                self?.present(navi, animated: true, completion: nil)
+            } else if paramters!["method"] as? String == "pool_farming" {
                 // 资金池挖矿
-//                if self?.needDismissViewController == true {
-//                    self?.dismiss(animated: true, completion: nil)
-//                } else {
-//                    self?.navigationController?.popViewController(animated: true)
-//                }
-            } else if paramters!["method"] as? String == "loanFarming" {
+                self?.navigationController?.dismiss(animated: true, completion: {
+                    self?.navigationController?.tabBarController?.selectedIndex = 1
+                })
+            } else if paramters!["method"] as? String == "bank_loan_farming" {
                 // 借款挖矿
-//                if self?.needDismissViewController == true {
-//                    self?.dismiss(animated: true, completion: nil)
-//                } else {
-//                    self?.navigationController?.popViewController(animated: true)
-//                }
-            } else if paramters!["method"] as? String == "depositFarming" {
+                self?.navigationController?.dismiss(animated: true, completion: {
+                    self?.navigationController?.tabBarController?.selectedIndex = 2
+                })
+            } else if paramters!["method"] as? String == "bank_deposit_farming" {
                 // 存款挖矿
-//                if self?.needDismissViewController == true {
-//                    self?.dismiss(animated: true, completion: nil)
-//                } else {
-//                    self?.navigationController?.popViewController(animated: true)
-//                }
-            } else if paramters!["method"] as? String == "ProfitList" {
-                // 收益排行榜
-//                if self?.needDismissViewController == true {
-//                    self?.dismiss(animated: true, completion: nil)
-//                } else {
-//                    self?.navigationController?.popViewController(animated: true)
-//                }
+                self?.navigationController?.dismiss(animated: true, completion: {
+                    self?.navigationController?.tabBarController?.selectedIndex = 2
+                })
+            } else if paramters!["method"] as? String == "mine_invite" {
+                // 我的邀请
+                let vc = ProfitMainViewController()
+                self?.navigationController?.pushViewController(vc, animated: true)
             }
             print("testiOSCallback called: \(String(describing: paramters))")
             callback?("Response from testiOSCallback")
@@ -264,18 +194,18 @@ extension YieldFarmingViewController {
                     // 数据状态异常
                     self?.detailView.makeToast(LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription, position: .center)
                 }
-                self?.detailView.toastView?.hide(tag: 99)
+                self?.detailView.toastView.hide(tag: 99)
 //                self?.endLoading(animated: true, error: nil, completion: nil)
                 return
             }
             let type = dataDic.value(forKey: "type") as! String
             if type == "PublishToken" {
-                self?.detailView.toastView?.hide(tag: 99)
+                self?.detailView.toastView.hide(tag: 99)
                 if let action = self?.publishClosure {
                     action()
                 }
             } else if type == "SendPayTokenTransaction" {
-                self?.detailView.toastView?.hide(tag: 99)
+                self?.detailView.toastView.hide(tag: 99)
                 if let action = self?.payTokenClosure {
                     action()
                 }

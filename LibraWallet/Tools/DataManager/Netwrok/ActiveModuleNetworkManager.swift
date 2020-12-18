@@ -47,15 +47,15 @@ extension ActiveModuleRequest: TargetType {
         case .secureCode(_, _, _):
             return "/1.0/violas/verify_code"
         case .verifyMobilePhone(_, _, _, _, _):
-            return "/violas/1.0/incentive/mobile/verify"
+            return "/1.0/violas/incentive/mobile/verify"
         case .isNewWallet(_):
-            return "/violas/1.0/incentive/check/verified"
+            return "/1.0/violas/incentive/check/verified"
         case .inviteProfitList(_, _, _):
-            return "/violas/1.0/incentive/orders/invite"
+            return "/1.0/violas/incentive/orders/invite"
         case .poolProfitList(_, _, _):
-            return "/violas/1.0/incentive/orders/pool"
+            return "/1.0/violas/incentive/orders/pool"
         case .bankProfitList(_, _, _):
-            return "/violas/1.0/incentive/orders/bank"
+            return "/1.0/violas/incentive/orders/bank"
         }
     }
     var method: Moya.Method {
