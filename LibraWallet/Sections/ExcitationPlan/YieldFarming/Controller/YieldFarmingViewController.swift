@@ -71,7 +71,20 @@ class YieldFarmingViewController: BaseViewController {
                 self?.navigationController?.pushViewController(vc, animated: true)
             } else if paramters!["method"] as? String == "withdraw_pool_profit" {
                 // 资金池挖矿激励提取
-                
+                WalletManager.unlockWallet { [weak self] (result) in
+                    switch result {
+                    case let .success(mnemonic):
+                        self?.detailView.toastView.show(tag: 99)
+                        self?.dataModel.sendMarketExtractProfit(sendAddress: WalletManager.shared.violasAddress ?? "",
+                                                                mnemonic: mnemonic)
+                    case let .failure(error):
+                        guard error.localizedDescription != "Cancel" else {
+                            self?.detailView.toastView.hide(tag: 99)
+                            return
+                        }
+                        self?.view?.makeToast(error.localizedDescription, position: .center)
+                    }
+                }
             } else if paramters!["method"] as? String == "withdraw_bank_profit" {
                 // 数字银行挖矿激励提取
                 WalletManager.unlockWallet { [weak self] (result) in

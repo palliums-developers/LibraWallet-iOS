@@ -138,35 +138,32 @@ extension YieldFarmingModel {
     }
 }
 extension YieldFarmingModel {
-//    func sendTransaction(sendAddress: String, receiveAddress: String, amount: UInt64, fee: UInt64, mnemonic: [String], module: String) {
-//        let semaphore = DispatchSemaphore.init(value: 1)
-//        let queue = DispatchQueue.init(label: "SendQueue")
-//        queue.async {
-//            semaphore.wait()
-//            self.getAccountSequenceNumber(sendAddress: sendAddress, semaphore: semaphore)
-//        }
-//        queue.async {
-//            semaphore.wait()
-//            do {
-//                let signature = try ViolasManager.getDefaultTransactionHex(sendAddress: sendAddress,
-//                                                                           receiveAddress: receiveAddress,
-//                                                                           amount: amount,
-//                                                                           fee: fee,
-//                                                                           mnemonic: mnemonic,
-//                                                                           sequenceNumber: self.sequenceNumber ?? 0,
-//                                                                           module: module)
-//                self.makeViolasTransaction(signature: signature,
-//                                           next: false,
-//                                           type: "SendPayTokenTransaction",
-//                                           semaphore: nil)
-//            } catch {
-//                print(error.localizedDescription)
-//                DispatchQueue.main.async(execute: {
-//                    let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "SendPayTokenTransaction")
-//                    self.setValue(data, forKey: "dataDic")
-//                })
-//            }
-//            semaphore.signal()
-//        }
-//    }
+    func sendMarketExtractProfit(sendAddress: String, mnemonic: [String]) {
+        let semaphore = DispatchSemaphore.init(value: 1)
+        let queue = DispatchQueue.init(label: "SendQueue")
+        queue.async {
+            semaphore.wait()
+            self.getAccountSequenceNumber(sendAddress: sendAddress, semaphore: semaphore)
+        }
+        queue.async {
+            semaphore.wait()
+            do {
+                let signature = try ViolasManager.getMarketExtractProfitTransactionHex(sendAddress: sendAddress,
+                                                                                       mnemonic: mnemonic,
+                                                                                       feeModule: "VLS",
+                                                                                       fee: 1,
+                                                                                       sequenceNumber: self.sequenceNumber!)
+                
+                self.makeViolasTransaction(signature: signature, type: "SendMarketExtractTransaction", semaphore: semaphore)
+            } catch {
+                print(error.localizedDescription)
+                DispatchQueue.main.async(execute: {
+                    let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "SendMarketExtractTransaction")
+                    self.setValue(data, forKey: "dataDic")
+                })
+                return
+            }
+            semaphore.signal()
+        }
+    }
 }

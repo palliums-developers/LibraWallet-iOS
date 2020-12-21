@@ -278,6 +278,7 @@
 		36B466B4247656D100CFF438 /* ScanSignTransactionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B466B3247656D100CFF438 /* ScanSignTransactionModel.swift */; };
 		36B466B6247656E400CFF438 /* ScanSendTransactionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B466B5247656E400CFF438 /* ScanSendTransactionModel.swift */; };
 		36DA3FCE23B5E5C6001D7733 /* UIButton + imageTitleLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36DA3FCD23B5E5C6001D7733 /* UIButton + imageTitleLocation.swift */; };
+		36E35F90258CA97500A3904A /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E35F8F258CA97500A3904A /* HomeViewModel.swift */; };
 		36E95D8B242A084B0004B86D /* ScanLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E95D86242A084B0004B86D /* ScanLoginViewController.swift */; };
 		36E95D8C242A084B0004B86D /* ScanLoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E95D88242A084B0004B86D /* ScanLoginModel.swift */; };
 		36E95D8D242A084B0004B86D /* ScanLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E95D8A242A084B0004B86D /* ScanLoginView.swift */; };
@@ -766,6 +767,7 @@
 		36B466B3247656D100CFF438 /* ScanSignTransactionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanSignTransactionModel.swift; sourceTree = "<group>"; };
 		36B466B5247656E400CFF438 /* ScanSendTransactionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanSendTransactionModel.swift; sourceTree = "<group>"; };
 		36DA3FCD23B5E5C6001D7733 /* UIButton + imageTitleLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton + imageTitleLocation.swift"; sourceTree = "<group>"; };
+		36E35F8F258CA97500A3904A /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		36E95D86242A084B0004B86D /* ScanLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanLoginViewController.swift; sourceTree = "<group>"; };
 		36E95D88242A084B0004B86D /* ScanLoginModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanLoginModel.swift; sourceTree = "<group>"; };
 		36E95D8A242A084B0004B86D /* ScanLoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanLoginView.swift; sourceTree = "<group>"; };
@@ -3111,6 +3113,14 @@
 			path = Extension;
 			sourceTree = "<group>";
 		};
+		36E35F8E258CA95A00A3904A /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				36E35F8F258CA97500A3904A /* HomeViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		36E95D84242A084B0004B86D /* ScanLogin */ = {
 			isa = PBXGroup;
 			children = (
@@ -4530,6 +4540,7 @@
 		9DC902372328E78A0097FD85 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				36E35F8E258CA95A00A3904A /* ViewModel */,
 				9DC9023A2328E7A40097FD85 /* Controller */,
 				9DDC9E912374170B00F5AE6A /* TableViewManager */,
 				9DC902392328E79F0097FD85 /* Model */,
@@ -5025,6 +5036,7 @@
 				3623AB6123ED70F5004A01BF /* TokenMappingViewController.swift in Sources */,
 				361BDAF324F8E7BE00C4C54E /* LoanOrderDetailViewController.swift in Sources */,
 				361BDAEB24F8E7BE00C4C54E /* LoanOrdersTableViewManager.swift in Sources */,
+				36E35F90258CA97500A3904A /* HomeViewModel.swift in Sources */,
 				9D3954FE235D4C0F0068019F /* BTCManager.swift in Sources */,
 				36828CCC24B736240085A165 /* MarketMineView.swift in Sources */,
 				366AFF2125778B670007AAFC /* ProfitInvitationView.swift in Sources */,

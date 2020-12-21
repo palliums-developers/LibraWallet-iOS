@@ -275,7 +275,7 @@ class SendTransactionHandler: RequestHandler {
                             print(signature)
                         }
                         appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
-                    } else if model.payload?.code == ViolasManager.getCodeData(move: ViolasManager.getLocalMoveCode(name: "add_liquidity"), address: "00000000000000000000000000000001").toHexString() {
+                    } else if model.payload?.code == ViolasManager.getCodeData(move: ViolasManager.getLocalMoveCode(bundle: "MarketContracts", contract: "add_liquidity"), address: "00000000000000000000000000000001").toHexString() {
                         // 添加流动性
                         let vc = ScanSwapViewController()
                         vc.model = model
@@ -291,7 +291,7 @@ class SendTransactionHandler: RequestHandler {
                             print(signature)
                         }
                         appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
-                    } else if model.payload?.code == ViolasManager.getCodeData(move: ViolasManager.getLocalMoveCode(name: "remove_liquidity"), address: "00000000000000000000000000000001").toHexString() {
+                    } else if model.payload?.code == ViolasManager.getCodeData(move: ViolasManager.getLocalMoveCode(bundle: "MarketContracts", contract: "remove_liquidity"), address: "00000000000000000000000000000001").toHexString() {
                         // 移除流动性
                         let vc = ScanSwapViewController()
                         vc.model = model
@@ -307,7 +307,7 @@ class SendTransactionHandler: RequestHandler {
                             print(signature)
                         }
                         appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
-                    } else if model.payload?.code == ViolasManager.getCodeData(move: ViolasManager.getLocalMoveCode(name: "swap"), address: "00000000000000000000000000000001").toHexString() {
+                    } else if model.payload?.code == ViolasManager.getCodeData(move: ViolasManager.getLocalMoveCode(bundle: "MarketContracts", contract: "swap"), address: "00000000000000000000000000000001").toHexString() {
                         // 交换
                         let vc = ScanSwapViewController()
                         vc.model = model
@@ -450,7 +450,7 @@ class SignRawTransactionHandler: RequestHandler {
             let model = try request.parameter(of: WCRawTransaction.self, at: 0)
             DispatchQueue.main.async {
                 if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-                    if model.payload?.code == ViolasManager.getBankMoveCode(name: "lock") {
+                    if model.payload?.code == ViolasManager.getLocalMoveCode(bundle: "BankContracts", contract: "lock") {
                         // 存款
                         let vc = ScanBankDepositViewController()
                         vc.model = model
@@ -466,7 +466,7 @@ class SignRawTransactionHandler: RequestHandler {
                             print(signature)
                         }
                         appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
-                    } else if model.payload?.code == ViolasManager.getBankMoveCode(name: "borrow") {
+                    } else if model.payload?.code == ViolasManager.getLocalMoveCode(bundle: "BankContracts", contract: "borrow") {
                         // 借款
                         let vc = ScanBankLoanViewController()
                         vc.model = model
@@ -482,7 +482,7 @@ class SignRawTransactionHandler: RequestHandler {
                             print(signature)
                         }
                         appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
-                    } else if model.payload?.code == ViolasManager.getBankMoveCode(name: "repay_borrow") {
+                    } else if model.payload?.code == ViolasManager.getLocalMoveCode(bundle: "BankContracts", contract: "repay_borrow") {
                         // 还款
                         let vc = ScanBankRepaymentViewController()
                         vc.model = model
@@ -498,7 +498,7 @@ class SignRawTransactionHandler: RequestHandler {
                             print(signature)
                         }
                         appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
-                    } else if model.payload?.code == ViolasManager.getBankMoveCode(name: "redeem") {
+                    } else if model.payload?.code == ViolasManager.getLocalMoveCode(bundle: "BankContracts", contract: "redeem") {
                         // 取款
                         let vc = ScanBankWithdrawViewController()
                         vc.model = model

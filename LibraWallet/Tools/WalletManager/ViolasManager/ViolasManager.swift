@@ -141,9 +141,9 @@ extension ViolasManager {
     /// 获取合约
     /// - Parameter name: 合约名字
     /// - Returns: 合约Hex
-    static func getLocalMoveCode(name: String) -> String {
+    static func getLocalMoveCode(bundle: String, contract: String) -> String {
         // 1.获取Bundle路径
-        let marketContractBundlePath = Bundle.main.path(forResource:"MarketContracts", ofType:"bundle") ?? ""
+        let marketContractBundlePath = Bundle.main.path(forResource: bundle, ofType: "bundle") ?? ""
         guard marketContractBundlePath.isEmpty == false else {
             return ""
         }
@@ -152,33 +152,7 @@ extension ViolasManager {
             return ""
         }
         // 3.获取Bundle下合约
-        guard let path = marketContractBundle.path(forResource:name, ofType:"mv", inDirectory:""), path.isEmpty == false else {
-            return ""
-        }
-        // 4.读取此合约
-        do {
-            let data = try Data.init(contentsOf: URL.init(fileURLWithPath: path))
-            return data.toHexString()
-        } catch {
-            print(error.localizedDescription)
-            return ""
-        }
-    }
-    /// 获取合约
-    /// - Parameter name: 合约名字
-    /// - Returns: 合约Hex
-    static func getBankMoveCode(name: String) -> String {
-        // 1.获取Bundle路径
-        let marketContractBundlePath = Bundle.main.path(forResource:"BankContracts", ofType:"bundle") ?? ""
-        guard marketContractBundlePath.isEmpty == false else {
-            return ""
-        }
-        // 2.获取Bundle
-        guard let marketContractBundle = Bundle.init(path: marketContractBundlePath) else {
-            return ""
-        }
-        // 3.获取Bundle下合约
-        guard let path = marketContractBundle.path(forResource:name, ofType:"mv", inDirectory:""), path.isEmpty == false else {
+        guard let path = marketContractBundle.path(forResource: contract, ofType: "mv", inDirectory: ""), path.isEmpty == false else {
             return ""
         }
         // 4.读取此合约
@@ -293,7 +267,7 @@ extension ViolasManager {
             let data:Data = Data(bytes: path, count: path.count);
             let argument3 = ViolasTransactionArgument.init(code: .U8Vector(data))
             let argument4 = ViolasTransactionArgument.init(code: .U8Vector(Data()))
-            let script = ViolasTransactionScriptPayload.init(code: ViolasManager.getCodeData(move: ViolasManager.getLocalMoveCode(name: "swap"), address: "00000000000000000000000000000001"),
+            let script = ViolasTransactionScriptPayload.init(code: ViolasManager.getCodeData(move: ViolasManager.getLocalMoveCode(bundle: "MarketContracts", contract: "swap"), address: "00000000000000000000000000000001"),
                                                              typeTags: [ViolasTypeTag.init(typeTag: ViolasTypeTags.Struct(ViolasStructTag.init(type: ViolasStructTagType.Normal(inputModule)))),
                                                                         ViolasTypeTag.init(typeTag: ViolasTypeTags.Struct(ViolasStructTag.init(type: ViolasStructTagType.Normal(outputModule))))],
                                                              argruments: [argument0, argument1, argument2, argument3, argument4])
@@ -337,7 +311,7 @@ extension ViolasManager {
             let argument2 = ViolasTransactionArgument.init(code: .U64("\(minAmountA)"))
             let argument3 = ViolasTransactionArgument.init(code: .U64("\(minAmountB)"))
             //Data.init(hex: ViolasManager.getLocalMoveCode(name: "add_liquidity"))
-            let script = ViolasTransactionScriptPayload.init(code: ViolasManager.getCodeData(move: ViolasManager.getLocalMoveCode(name: "add_liquidity"), address: "00000000000000000000000000000001"),
+            let script = ViolasTransactionScriptPayload.init(code: ViolasManager.getCodeData(move: ViolasManager.getLocalMoveCode(bundle: "MarketContracts", contract: "add_liquidity"), address: "00000000000000000000000000000001"),
                                                              typeTags: [ViolasTypeTag.init(typeTag: ViolasTypeTags.Struct(ViolasStructTag.init(type: ViolasStructTagType.Normal(inputModuleA)))),
                                                                         ViolasTypeTag.init(typeTag: ViolasTypeTags.Struct(ViolasStructTag.init(type: ViolasStructTagType.Normal(inputModuleB))))],
                                                              argruments: [argument0, argument1, argument2, argument3])
@@ -378,7 +352,7 @@ extension ViolasManager {
             let argument0 = ViolasTransactionArgument.init(code: .U64("\(liquidity)"))
             let argument1 = ViolasTransactionArgument.init(code: .U64("\(minAmountA)"))
             let argument2 = ViolasTransactionArgument.init(code: .U64("\(minAmountB)"))
-            let script = ViolasTransactionScriptPayload.init(code: ViolasManager.getCodeData(move: ViolasManager.getLocalMoveCode(name: "remove_liquidity"), address: "00000000000000000000000000000001"),
+            let script = ViolasTransactionScriptPayload.init(code: ViolasManager.getCodeData(move: ViolasManager.getLocalMoveCode(bundle: "MarketContracts", contract:  "remove_liquidity"), address: "00000000000000000000000000000001"),
                                                              typeTags: [ViolasTypeTag.init(typeTag: ViolasTypeTags.Struct(ViolasStructTag.init(type: ViolasStructTagType.Normal(inputModuleA)))),
                                                                         ViolasTypeTag.init(typeTag: ViolasTypeTags.Struct(ViolasStructTag.init(type: ViolasStructTagType.Normal(inputModuleB))))],
                                                              argruments: [argument0, argument1, argument2])
@@ -398,8 +372,39 @@ extension ViolasManager {
             throw error
         }
     }
+    /// 交易所提取收益
+    /// - Parameters:
+    ///   - sendAddress: 发送地址
+    ///   - mnemonic: 助记词
+    ///   - feeModule: 手续费Module
+    ///   - fee: 手续费
+    ///   - sequenceNumber: 序列码
+    /// - Throws: 异常
+    /// - Returns: 签名
+    public static func getMarketExtractProfitTransactionHex(sendAddress: String, mnemonic: [String], feeModule: String, fee: UInt64, sequenceNumber: UInt64) throws -> String {
+        do {
+            let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
+            let script = ViolasTransactionScriptPayload.init(code: Data.init(hex: ViolasManager.getLocalMoveCode(bundle: "MarketContracts", contract: "withdraw_mine_reward")),
+                                                             typeTags: [],
+                                                             argruments: [])
+            let transactionPayload = ViolasTransactionPayload.init(payload: .script(script))
+            let rawTransaction = ViolasRawTransaction.init(senderAddres: sendAddress,
+                                                           sequenceNumber: sequenceNumber,
+                                                           maxGasAmount: 1000000,
+                                                           gasUnitPrice: fee,
+                                                           expirationTime: NSDecimalNumber.init(value: Date().timeIntervalSince1970 + 600).uint64Value,
+                                                           payload: transactionPayload,
+                                                           module: feeModule,
+                                                           chainID: 4)
+            // 签名交易
+            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            return signature.toHexString()
+        } catch {
+            throw error
+        }
+    }
 }
-//MARK: - Violas映射Libra、BTC
+// MARK: - Violas映射Libra、BTC
 extension ViolasManager {
     /// Violas映射交易Hex
     /// - Parameters:
@@ -467,7 +472,7 @@ extension ViolasManager {
             let argument0 = ViolasTransactionArgument.init(code: .U64("\(amount)"))
             // metadata
             let argument1 = ViolasTransactionArgument.init(code: .U8Vector(Data()))
-            let script = ViolasTransactionScriptPayload.init(code: Data.init(hex: ViolasManager.getBankMoveCode(name: "lock")),
+            let script = ViolasTransactionScriptPayload.init(code: Data.init(hex: ViolasManager.getLocalMoveCode(bundle: "BankContracts", contract: "lock")),
                                                              typeTags: [ViolasTypeTag.init(typeTag: ViolasTypeTags.Struct(ViolasStructTag.init(type: ViolasStructTagType.Normal(module))))],
                                                              argruments: [argument0, argument1])
             let transactionPayload = ViolasTransactionPayload.init(payload: .script(script))
@@ -504,7 +509,7 @@ extension ViolasManager {
             let argument0 = ViolasTransactionArgument.init(code: .U64("\(amount)"))
             // metadata
             let argument1 = ViolasTransactionArgument.init(code: .U8Vector(Data()))
-            let script = ViolasTransactionScriptPayload.init(code: Data.init(hex: ViolasManager.getBankMoveCode(name: "borrow")),
+            let script = ViolasTransactionScriptPayload.init(code: Data.init(hex: ViolasManager.getLocalMoveCode(bundle: "BankContracts", contract: "borrow")),
                                                              typeTags: [ViolasTypeTag.init(typeTag: ViolasTypeTags.Struct(ViolasStructTag.init(type: ViolasStructTagType.Normal(module))))],
                                                              argruments: [argument0, argument1])
             let transactionPayload = ViolasTransactionPayload.init(payload: .script(script))
@@ -541,7 +546,7 @@ extension ViolasManager {
             let argument0 = ViolasTransactionArgument.init(code: .U64("\(amount)"))
             // metadata
             let argument1 = ViolasTransactionArgument.init(code: .U8Vector(Data()))
-            let script = ViolasTransactionScriptPayload.init(code: Data.init(hex: ViolasManager.getBankMoveCode(name: "repay_borrow")),
+            let script = ViolasTransactionScriptPayload.init(code: Data.init(hex: ViolasManager.getLocalMoveCode(bundle: "BankContracts", contract: "repay_borrow")),
                                                              typeTags: [ViolasTypeTag.init(typeTag: ViolasTypeTags.Struct(ViolasStructTag.init(type: ViolasStructTagType.Normal(module))))],
                                                              argruments: [argument0, argument1])
             let transactionPayload = ViolasTransactionPayload.init(payload: .script(script))
@@ -578,7 +583,7 @@ extension ViolasManager {
             let argument0 = ViolasTransactionArgument.init(code: .U64("\(amount)"))
             // metadata
             let argument1 = ViolasTransactionArgument.init(code: .U8Vector(Data()))
-            let script = ViolasTransactionScriptPayload.init(code: Data.init(hex: ViolasManager.getBankMoveCode(name: "redeem")),
+            let script = ViolasTransactionScriptPayload.init(code: Data.init(hex: ViolasManager.getLocalMoveCode(bundle: "BankContracts", contract: "redeem")),
                                                              typeTags: [ViolasTypeTag.init(typeTag: ViolasTypeTags.Struct(ViolasStructTag.init(type: ViolasStructTagType.Normal(module))))],
                                                              argruments: [argument0, argument1])
             let transactionPayload = ViolasTransactionPayload.init(payload: .script(script))
@@ -597,7 +602,7 @@ extension ViolasManager {
             throw error
         }
     }
-    /// 提取收益
+    /// 数字银行提取收益
     /// - Parameters:
     ///   - sendAddress: 发送地址
     ///   - mnemonic: 助记词
@@ -609,7 +614,7 @@ extension ViolasManager {
     public static func getBankExtractProfitTransactionHex(sendAddress: String, mnemonic: [String], feeModule: String, fee: UInt64, sequenceNumber: UInt64) throws -> String {
         do {
             let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
-            let script = ViolasTransactionScriptPayload.init(code: Data.init(hex: ViolasManager.getBankMoveCode(name: "claim_incentive")),
+            let script = ViolasTransactionScriptPayload.init(code: Data.init(hex: ViolasManager.getLocalMoveCode(bundle: "BankContracts", contract: "claim_incentive")),
                                                              typeTags: [],
                                                              argruments: [])
             let transactionPayload = ViolasTransactionPayload.init(payload: .script(script))
