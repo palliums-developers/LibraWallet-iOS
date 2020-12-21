@@ -34,7 +34,7 @@ extension actionViewProtocol where Self: UIView {
     func hide(tag: Int) {
         if let app = UIApplication.shared.delegate as? AppDelegate, let window = app.window {
             for views in window.subviews {
-                if views.tag == 99 {
+                if views.tag == self.tag {
                     views.viewWithTag(tag + 1)?.removeFromSuperview()
                     views.removeFromSuperview()
                 }
