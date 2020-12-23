@@ -9,6 +9,7 @@
 import UIKit
 import WebKit
 import WKWebViewJavascriptBridge
+import Photos
 
 class YieldFarmingViewController: BaseViewController {
     override func viewDidLoad() {
@@ -35,6 +36,7 @@ class YieldFarmingViewController: BaseViewController {
         }
     }
     deinit {
+        self.detailView.webView.removeObserver(self, forKeyPath: #keyPath(WKWebView.title))
         print("YieldFarmingViewController销毁了")
     }
     override func back() {
@@ -61,6 +63,7 @@ class YieldFarmingViewController: BaseViewController {
     private var observer: NSKeyValueObservation?
     var publishClosure: (()->Void)?
     var payTokenClosure: (()->Void)?
+    private var callClosure: ((Bool)->Void)?
     func addWebListen() {
         bridge = WKWebViewJavascriptBridge.init(webView: detailView.webView)
         bridge.isLogEnable = true
@@ -109,29 +112,81 @@ class YieldFarmingViewController: BaseViewController {
             } else if paramters!["method"] as? String == "pool_farming" {
                 // 资金池挖矿
                 self?.navigationController?.dismiss(animated: true, completion: {
-                    self?.navigationController?.tabBarController?.selectedIndex = 1
+                    let rootViewController = UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.rootViewController
+                    if let tabBarController = rootViewController as? UITabBarController {
+                        tabBarController.selectedIndex = 1
+                    }
                 })
             } else if paramters!["method"] as? String == "bank_loan_farming" {
                 // 借款挖矿
                 self?.navigationController?.dismiss(animated: true, completion: {
-                    self?.navigationController?.tabBarController?.selectedIndex = 2
+                    let rootViewController = UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.rootViewController
+                    if let tabBarController = rootViewController as? UITabBarController {
+                        tabBarController.selectedIndex = 2
+                    }
                 })
             } else if paramters!["method"] as? String == "bank_deposit_farming" {
                 // 存款挖矿
                 self?.navigationController?.dismiss(animated: true, completion: {
-                    self?.navigationController?.tabBarController?.selectedIndex = 2
+                    let rootViewController = UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.rootViewController
+                    if let tabBarController = rootViewController as? UITabBarController {
+                        tabBarController.selectedIndex = 2
+                    }
                 })
             } else if paramters!["method"] as? String == "mine_invite" {
                 // 我的邀请
                 let vc = ProfitMainViewController()
                 self?.navigationController?.pushViewController(vc, animated: true)
+            } else if paramters!["method"] as? String == "save_picture" {
+                if let dataString = (paramters!["params"] as? [String])?.first, dataString.isEmpty == false {
+                    if let imageData = Data.init(base64Encoded: dataString, options: Data.Base64DecodingOptions.init(rawValue: 0)) {
+                        let image = UIImage.init(data: imageData)
+                        self?.loadImage(image: image!)
+                        self?.callClosure  = { result in
+                            if result == true {
+                                callback?("{\"id\":\"\(String(describing: paramters!["id"]!))\",\"result\":\"success\"}")
+                            } else {
+                                callback?("{\"id\":\"\(String(describing: paramters!["id"]!))\",\"result\":\"failed\"}")
+                            }
+                        }
+                    } else {
+                        // 返回失败
+                        callback?("{\"id\":\"\(String(describing: paramters!["id"]!))\",\"result\":\"failed\"}")
+                    }
+                }
+            } else if paramters!["method"] as? String == "share_link" {
+                if let dataString = (paramters!["params"] as? [String])?.first, dataString.isEmpty == false {
+//                    UIPasteboard.general.string = dataString
+//                    self?.detailView.makeToast(localLanguage(keyString: "wallet_copy_address_success_title"),
+//                                               position: .center)
+                    let activityVC = UIActivityViewController(activityItems: [dataString], applicationActivities: nil)
+                        // 顯示出我們的 activityVC。
+                        self?.present(activityVC, animated: true, completion: nil)
+                }
             }
             print("testiOSCallback called: \(String(describing: paramters))")
-            callback?("Response from testiOSCallback")
+//            callback?("{\"id\":\"\(String(describing: paramters!["id"]!))\",\"result\":\"success\"}")
         }
         //        bridge.call(handlerName: "callJavaScript", data: ["foo": "before ready"], callback: nil)
         //                        self?.bridge.call(handlerName: "callJavaScript", data: "{\"id\": \"\(String(describing: paramters!["id"]!))\",\"result\": \"failed\"}", callback: nil)
     }
+    func loadImage(image:UIImage) {
+        UIImageWriteToSavedPhotosAlbum(image, self, #selector(saveImage(image:didFinishSavingWithError:contextInfo:)), nil)
+    }
+    @objc private func saveImage(image: UIImage, didFinishSavingWithError error: NSError?, contextInfo: AnyObject) {
+        if error != nil {
+            print("保存失败")
+            if let call = self.callClosure {
+                call(false)
+            }
+        } else {
+            print("保存成功")
+            if let call = self.callClosure {
+                call(true)
+            }
+        }
+    }
+
 }
 extension YieldFarmingViewController :WKNavigationDelegate{
     // 页面开始加载时调用
@@ -145,6 +200,13 @@ extension YieldFarmingViewController :WKNavigationDelegate{
     // 页面加载完成之后调用
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         self.view.hideToastActivity()
+//        self.title = webView.title
+//        webView.evaluateJavaScript("document.getElementById('pageTitle').innerHTML") { (result, error) -> Void in
+//                if error != nil {
+//                    print(result)
+//                    self.title = result as! String
+//                }
+//            }
         
     }
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
@@ -177,6 +239,8 @@ extension YieldFarmingViewController :WKNavigationDelegate{
 }
 extension YieldFarmingViewController {
     func initKVO() {
+        self.detailView.webView.addObserver(self, forKeyPath: #keyPath(WKWebView.title), options: .new, context: nil)
+        
         self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
             guard let dataDic = change.newValue, dataDic.count != 0 else {
                 self?.detailView.hideToastActivity()
@@ -225,5 +289,12 @@ extension YieldFarmingViewController {
             }
             self?.detailView.hideToastActivity()
         })
+    }
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "title" {
+            if let title = self.detailView.webView.title, title.isEmpty == false {
+                self.title = title
+            }
+        }
     }
 }

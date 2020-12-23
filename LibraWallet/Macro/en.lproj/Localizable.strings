@@ -24,7 +24,7 @@ wallet_wallet_connect_state_title = "Web Wallet Logged";
 wallet_mine_manager_wallet_title = "Manage Wallet";
 wallet_mine_address_manager_title = "Address Book";
 wallet_mine_setting_title = "Settings";
-wallet_mine_yield_farming_button_title = "Yield Farming & Rules";
+wallet_mine_yield_farming_button_title = "Mining rules";
 wallet_mine_invitation_reward_title = "Invitation Reward";
 
 /************* 收款 *******************/
