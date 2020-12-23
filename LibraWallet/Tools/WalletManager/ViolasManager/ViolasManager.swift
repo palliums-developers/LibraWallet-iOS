@@ -16,7 +16,7 @@ struct ViolasManager {
     /// - Returns: 助记词
     public static func getLibraMnemonic() throws -> [String] {
         do {
-            let mnemonic = try LibraMnemonic.generate(strength: .default, language: .english)
+            let mnemonic = try ViolasMnemonic.generate(strength: .default, language: .english)
             return mnemonic
         } catch {
             print(error.localizedDescription)
@@ -29,7 +29,7 @@ struct ViolasManager {
     /// - Returns: 钱包对象
     public static func getWallet(mnemonic: [String]) throws -> ViolasHDWallet {
         do {
-            let seed = try LibraMnemonic.seed(mnemonic: mnemonic)
+            let seed = try ViolasMnemonic.seed(mnemonic: mnemonic)
             let wallet = try ViolasHDWallet.init(seed: seed, depth: 0)
             return wallet
         } catch {
@@ -108,7 +108,7 @@ struct ViolasManager {
             randomData.append(tempData)
         }
         let payload = tempAddressData.dropFirst(16) + randomData
-        let address: String = LibraBech32.encode(payload: Data.init(payload),
+        let address: String = ViolasBech32.encode(payload: Data.init(payload),
                                                  prefix: "lbr",
                                                  version: version,
                                                  separator: "1")

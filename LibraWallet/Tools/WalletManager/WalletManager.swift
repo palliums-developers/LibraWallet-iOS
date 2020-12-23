@@ -283,7 +283,7 @@ extension WalletManager {
         do {
             let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
             let token = Token.init(tokenID: 999,
-                                   tokenName: "LBR",
+                                   tokenName: "VLS",
                                    tokenBalance: 0,
                                    tokenAddress: wallet.publicKey.toLegacy(),
                                    tokenType: .Violas,
@@ -292,8 +292,8 @@ extension WalletManager {
                                    tokenActiveState: false,
                                    tokenIcon: "violas_icon",
                                    tokenContract: "00000000000000000000000000000001",
-                                   tokenModule: "LBR",
-                                   tokenModuleName: "LBR",
+                                   tokenModule: "VLS",
+                                   tokenModuleName: "VLS",
                                    tokenEnable: true,
                                    tokenPrice: "0.0")
             try DataBaseManager.DBManager.insertToken(token: token)
@@ -305,9 +305,9 @@ extension WalletManager {
     }
     private static func initLibraToken(mnemonic: [String]) throws -> String {
         do {
-            let wallet = try LibraManager.getWallet(mnemonic: mnemonic)
+            let wallet = try DiemManager.getWallet(mnemonic: mnemonic)
             let token = Token.init(tokenID: 999,
-                                   tokenName: "LBR",
+                                   tokenName: "XUS",
                                    tokenBalance: 0,
                                    tokenAddress: wallet.publicKey.toLegacy(),
                                    tokenType: .Libra,
@@ -316,8 +316,8 @@ extension WalletManager {
                                    tokenActiveState: false,
                                    tokenIcon: "libra_icon",
                                    tokenContract: "00000000000000000000000000000001",
-                                   tokenModule: "LBR",
-                                   tokenModuleName: "LBR",
+                                   tokenModule: "XUS",
+                                   tokenModuleName: "XUS",
                                    tokenEnable: true,
                                    tokenPrice: "0.0")
             try DataBaseManager.DBManager.insertToken(token: token)

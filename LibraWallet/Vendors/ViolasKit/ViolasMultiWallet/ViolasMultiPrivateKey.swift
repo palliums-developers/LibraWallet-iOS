@@ -31,7 +31,7 @@ struct ViolasMultiPrivateKey {
         var privateKeyData = Data()
         privateKeyData += ViolasUtils.uleb128Format(length: self.raw.count)
         privateKeyData += self.raw.reduce(Data(), {
-            $0 + LibraUtils.uleb128Format(length: $1.raw.count) + $1.raw
+            $0 + ViolasUtils.uleb128Format(length: $1.raw.count) + $1.raw
         })
         privateKeyData += BigUInt(self.threshold).serialize()
         return privateKeyData.toHexString()

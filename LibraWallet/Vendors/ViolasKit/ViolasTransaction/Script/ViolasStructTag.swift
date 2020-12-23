@@ -29,8 +29,8 @@ extension ViolasStructTag {
         switch type {
         case .ViolasDefault:
             self.address = "00000000000000000000000000000001"
-            self.module = "LBR"
-            self.name = "LBR"
+            self.module = "VLS"
+            self.name = "VLS"
             self.typeParams = [String]()
         case .Normal(let module):
             self.address = "00000000000000000000000000000001"

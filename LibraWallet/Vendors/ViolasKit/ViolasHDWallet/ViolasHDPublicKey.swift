@@ -58,7 +58,7 @@ struct ViolasHDPublicKey {
             randomData.append(tempData)
         }
         let payload = tempAddressData.dropFirst(16) + randomData
-        let address: String = LibraBech32.encode(payload: Data.init(payload),
+        let address: String = ViolasBech32.encode(payload: Data.init(payload),
                                                  prefix: "lbr",
                                                  version: version,
                                                  separator: "1")

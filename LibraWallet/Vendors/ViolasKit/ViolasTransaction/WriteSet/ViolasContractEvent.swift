@@ -14,11 +14,11 @@ struct ViolasContractEvent {
     //
     fileprivate let sequenceNumber: UInt64
     
-    fileprivate let typeTag: LibraTypeTag
+    fileprivate let typeTag: ViolasTypeTag
     
     fileprivate let eventData: String
     
-    init(key: String, sequenceNumber: UInt64, typeTag: LibraTypeTag, eventData: String) {
+    init(key: String, sequenceNumber: UInt64, typeTag: ViolasTypeTag, eventData: String) {
         self.key = key
         
         self.sequenceNumber = sequenceNumber

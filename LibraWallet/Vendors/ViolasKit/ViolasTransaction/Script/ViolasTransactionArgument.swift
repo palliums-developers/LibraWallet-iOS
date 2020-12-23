@@ -44,18 +44,18 @@ struct ViolasTransactionArgument {
         result += self.code.raw
         switch self.code {
         case .U8(let value):
-            result += LibraUtils.getLengthData(length: NSDecimalNumber.init(string: value).uint64Value, appendBytesCount: 1)
+            result += ViolasUtils.getLengthData(length: NSDecimalNumber.init(string: value).uint64Value, appendBytesCount: 1)
         case .U64(let value):
-            result += LibraUtils.getLengthData(length: NSDecimalNumber.init(string: value).uint64Value, appendBytesCount: 8)
+            result += ViolasUtils.getLengthData(length: NSDecimalNumber.init(string: value).uint64Value, appendBytesCount: 8)
         case .U128(let value):
-            result += LibraUtils.getLengthData(length: NSDecimalNumber.init(string: value).uint64Value, appendBytesCount: 16)
+            result += ViolasUtils.getLengthData(length: NSDecimalNumber.init(string: value).uint64Value, appendBytesCount: 16)
         case .Address(let address):
             result += Data.init(Array<UInt8>(hex: address))
         case .U8Vector(let value):
-            result += LibraUtils.uleb128Format(length: value.bytes.count)
+            result += ViolasUtils.uleb128Format(length: value.bytes.count)
             result += value
         case .Bool(let value):
-            result += LibraUtils.getLengthData(length: NSDecimalNumber.init(value: value).uint64Value, appendBytesCount: 1)
+            result += ViolasUtils.getLengthData(length: NSDecimalNumber.init(value: value).uint64Value, appendBytesCount: 1)
         }
         return result
     }
