@@ -32,9 +32,9 @@ class LibraWalletCoreTests: XCTestCase {
     func testKeychainManager() {
         let mnemonic = ["legal","winner","thank","year","wave","sausage","worth","useful","legal","winner","thank","year","wave","sausage","worth","useful","legal","will"]
         do {
-            let seed = try LibraMnemonic.seed(mnemonic: mnemonic)
+            let seed = try DiemMnemonic.seed(mnemonic: mnemonic)
             
-            let testWallet = try LibraHDWallet.init(seed: seed, depth: 0)
+            let testWallet = try DiemHDWallet.init(seed: seed, depth: 0)
             let walletAddress = testWallet.publicKey.toAddress()
 //            try KeychainManager.KeyManager.savePayPasswordToKeychain(walletAddress: walletAddress, password: "123456")
 //            let paymentPassword = try KeychainManager.KeyManager.getPayPasswordFromKeychain(walletAddress: walletAddress)
@@ -112,15 +112,79 @@ class LibraWalletCoreTests: XCTestCase {
         print(data2)        
     }
     func testMnemonicCount() {
-        let mnemonic = try? LibraMnemonic.generate(strength: .veryHigh, language: .english)
+        let mnemonic = try? DiemMnemonic.generate(strength: .veryHigh, language: .english)
         print(mnemonic!.count)
-        let mnemonic2 = try? LibraMnemonic.generate(strength: .high, language: .english)
+        let mnemonic2 = try? DiemMnemonic.generate(strength: .high, language: .english)
         print(mnemonic2!.count)
-        let mnemonic3 = try? LibraMnemonic.generate(strength: .medium, language: .english)
+        let mnemonic3 = try? DiemMnemonic.generate(strength: .medium, language: .english)
         print(mnemonic3!.count)
-        let mnemonic4 = try? LibraMnemonic.generate(strength: .low, language: .english)
+        let mnemonic4 = try? DiemMnemonic.generate(strength: .low, language: .english)
         print(mnemonic4!.count)
-        let mnemonic5 = try? LibraMnemonic.generate(strength: .default, language: .english)
+        let mnemonic5 = try? DiemMnemonic.generate(strength: .default, language: .english)
         print(mnemonic5!.count)
+    }
+    func testMarketTransaction() {
+        //        let signature = try librama
+        let mnemonic1 = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
+//        let signature = try! ViolasManager.getMarketAddLiquidityTransactionHex(sendAddress: "fa279f2615270daed6061313a48360f7",
+//                                                                               fee: 0,
+//                                                                               mnemonic: mnemonic1,
+//                                                                               amounta_desired: 5000,
+//                                                                               amountb_desired: 5000,
+//                                                                               amounta_min: 1,
+//                                                                               amountb_min: 1,
+//                                                                               sequenceNumber: 67,
+//                                                                               inputModuleA: "VLSUSD",
+//                                                                               inputModuleB: "VLSGBP",
+//                                                                               feeModule: "LBR")
+        //        let signature = try! ViolasManager.getMarketRemoveLiquidityTransactionHex(sendAddress: "fa279f2615270daed6061313a48360f7",
+        //                                                                                  fee: 0,
+        //                                                                                  mnemonic: mnemonic1,
+        //                                                                                  liquidity: 2,
+        //                                                                                  amounta_min: 1,
+        //                                                                                  amountb_min: 1,
+        //                                                                                  sequenceNumber: 9,
+        //                                                                                  moduleA: "VLSUSD",
+        //                                                                                  moduleB: "VLSEUR",
+        //                                                                                  feeModule: "LBR")
+        //        let signature = try! ViolasManager.getMarketSwapTransactionHex(sendAddress: "fa279f2615270daed6061313a48360f7",
+        //                                                                           amountIn: 2,
+        //                                                                           amountOutMin: 1,
+        //                                                                           path: [0,1],
+        //                                                                           fee: 0,
+        //                                                                           mnemonic: mnemonic1,
+        //                                                                           sequenceNumber: 30,
+        //                                                                           moduleA: "VLSUSD",
+        //                                                                           moduleB: "VLSEUR",
+        //                                                                           feeModule: "LBR")
+//        print(signature)
+    }
+    func testMarketMappingTransaction() {
+        let mnemonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
+//        let signature = try! ViolasManager.getViolasToLibraMappingTransactionHex(sendAddress: "fa279f2615270daed6061313a48360f7",
+//                                                                                 module: "VLSUSD",
+//                                                                                 amountIn: 15,
+//                                                                                 amountOut: 14,
+//                                                                                 fee: 0,
+//                                                                                 mnemonic: mnemonic,
+//                                                                                 sequenceNumber: 94,
+//                                                                                 exchangeCenterAddress: "dc49a7c8979f83cde4bc229fb35fd27f",
+//                                                                                 libraReceiveAddress: "fa279f2615270daed6061313a48360f7",
+//                                                                                 feeModule: "LBR",
+//                                                                                 type: "v2lusd")
+        //        let signature = try! LibraManager.getLibraToViolasMappingTransactionHex(sendAddress: "fa279f2615270daed6061313a48360f7",
+        //                                                                         module: "LBR",
+        //                                                                         amountIn: 10,
+        //                                                                         amountOut: 10,
+        //                                                                         fee: 0,
+        //                                                                         mnemonic: mnemonic,
+        //                                                                         sequenceNumber: 6,
+        //                                                                         exchangeCenterAddress: "c5e53097c9f82f81513d02eeb515ecce",
+        //                                                                         violasReceiveAddress: "fa279f2615270daed6061313a48360f7",
+        //                                                                         feeModule: "LBR",
+        //                                                                         type: "l2vusd")
+        
+//        print(signature)
+        
     }
 }

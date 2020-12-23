@@ -15,7 +15,7 @@
 		361051822563CAA0008407F5 /* BTCModuleNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361051812563CAA0008407F5 /* BTCModuleNetworkManager.swift */; };
 		361051872563CF54008407F5 /* ViolasModuleNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361051862563CF54008407F5 /* ViolasModuleNetworkManager.swift */; };
 		361051B52563D67F008407F5 /* LibraModuleNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361051B42563D67F008407F5 /* LibraModuleNetworkManager.swift */; };
-		36178322243F1455003C6588 /* LibraMultiHDWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36178321243F1455003C6588 /* LibraMultiHDWallet.swift */; };
+		36178322243F1455003C6588 /* DiemMultiHDWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36178321243F1455003C6588 /* DiemMultiHDWallet.swift */; };
 		3617835B24440BDB003C6588 /* ViolasUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3617835A24440BDB003C6588 /* ViolasUtils.swift */; };
 		3617835D24440C1E003C6588 /* ViolasWordList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3617835C24440C1E003C6588 /* ViolasWordList.swift */; };
 		3617835F244465B7003C6588 /* ViolasMultiHDWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3617835E244465B7003C6588 /* ViolasMultiHDWallet.swift */; };
@@ -24,7 +24,7 @@
 		361783652444683B003C6588 /* ViolasTypeTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361783642444683B003C6588 /* ViolasTypeTag.swift */; };
 		361783672444684F003C6588 /* ViolasStructTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361783662444684F003C6588 /* ViolasStructTag.swift */; };
 		3617836B24449B53003C6588 /* ViolasTransactionModulePayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3617836A24449B53003C6588 /* ViolasTransactionModulePayload.swift */; };
-		3617837024449D85003C6588 /* LibraTransactionModulePayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3617836F24449D85003C6588 /* LibraTransactionModulePayload.swift */; };
+		3617837024449D85003C6588 /* DiemTransactionModulePayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3617836F24449D85003C6588 /* DiemTransactionModulePayload.swift */; };
 		361BDA0D24F89ACB00C4C54E /* ViolasTransactionPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361BDA0C24F89ACB00C4C54E /* ViolasTransactionPayload.swift */; };
 		361BDA0F24F89E0D00C4C54E /* ViolasWriteSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361BDA0E24F89E0D00C4C54E /* ViolasWriteSet.swift */; };
 		361BDA1124F89E3900C4C54E /* ViolasAccessPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361BDA1024F89E3900C4C54E /* ViolasAccessPath.swift */; };
@@ -138,10 +138,10 @@
 		3623AB8023FC0CB3004A01BF /* MappingTransactionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB7F23FC0CB3004A01BF /* MappingTransactionsView.swift */; };
 		3623AB8223FC0CC7004A01BF /* MappingTransactionsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB8123FC0CC7004A01BF /* MappingTransactionsTableViewCell.swift */; };
 		3623AB8523FC0CE2004A01BF /* MappingTransactionsTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB8423FC0CE2004A01BF /* MappingTransactionsTableViewManager.swift */; };
-		363D90EE24CAA6C500F6374C /* LibraTransactionWriteSetPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363D90ED24CAA6C500F6374C /* LibraTransactionWriteSetPayload.swift */; };
-		363D90F024CAAC6700F6374C /* LibraContractEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363D90EF24CAAC6700F6374C /* LibraContractEvent.swift */; };
-		363D90F224CAB7C300F6374C /* LibraContracts.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 363D90F124CAB7C300F6374C /* LibraContracts.bundle */; };
-		363D90F424CAE79600F6374C /* LibraTransactionPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363D90F324CAE79600F6374C /* LibraTransactionPayload.swift */; };
+		363D90EE24CAA6C500F6374C /* DiemTransactionWriteSetPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363D90ED24CAA6C500F6374C /* DiemTransactionWriteSetPayload.swift */; };
+		363D90F024CAAC6700F6374C /* DiemContractEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363D90EF24CAAC6700F6374C /* DiemContractEvent.swift */; };
+		363D90F224CAB7C300F6374C /* DiemContracts.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 363D90F124CAB7C300F6374C /* DiemContracts.bundle */; };
+		363D90F424CAE79600F6374C /* DiemTransactionPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363D90F324CAE79600F6374C /* DiemTransactionPayload.swift */; };
 		3642EB7123CC654500C7B04A /* Serialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3642EB7023CC654500C7B04A /* Serialization.swift */; };
 		3646E4FB24D3E99600B8C20B /* ExchangeTransactionDetailFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3646E4FA24D3E99600B8C20B /* ExchangeTransactionDetailFooterView.swift */; };
 		3646E4FD24D3EFEE00B8C20B /* AssetsPoolTransactionDetailHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3646E4FC24D3EFEE00B8C20B /* AssetsPoolTransactionDetailHeaderView.swift */; };
@@ -196,7 +196,7 @@
 		366AFE53256D113C0007AAFC /* ActiveModuleNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFE52256D113C0007AAFC /* ActiveModuleNetworkManager.swift */; };
 		366AFE5B256E5CAE0007AAFC /* InvitationRewardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFE5A256E5CAE0007AAFC /* InvitationRewardViewController.swift */; };
 		366AFE63256E5CBF0007AAFC /* InvitationRewardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFE62256E5CBF0007AAFC /* InvitationRewardView.swift */; };
-		366AFEC32570DF470007AAFC /* LibraBech32.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFEC22570DF470007AAFC /* LibraBech32.swift */; };
+		366AFEC32570DF470007AAFC /* DiemBech32.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFEC22570DF470007AAFC /* DiemBech32.swift */; };
 		366AFED7257627AB0007AAFC /* ViolasBech32.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFED6257627AB0007AAFC /* ViolasBech32.swift */; };
 		366AFEEA257782B60007AAFC /* ProfitMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFEE9257782B60007AAFC /* ProfitMainViewController.swift */; };
 		366AFEF2257782DB0007AAFC /* ProfitMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFEF1257782DB0007AAFC /* ProfitMainView.swift */; };
@@ -257,12 +257,12 @@
 		36836D3924B3059B0031AC6E /* ExchangeTransactionDetailHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36836D3824B3059B0031AC6E /* ExchangeTransactionDetailHeaderView.swift */; };
 		36836D3B24B305D00031AC6E /* ExchangeTransactionDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36836D3A24B305D00031AC6E /* ExchangeTransactionDetailTableViewCell.swift */; };
 		36842148257E1E30000B87D6 /* AssetsPoolProfitHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36842147257E1E30000B87D6 /* AssetsPoolProfitHeaderView.swift */; };
-		36842151257F169D000B87D6 /* LibraMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36842150257F169D000B87D6 /* LibraMetadata.swift */; };
-		3684215C257F51BF000B87D6 /* LibraGeneralMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3684215B257F51BF000B87D6 /* LibraGeneralMetadata.swift */; };
-		36842161257F520B000B87D6 /* LibraGeneralMetadataV0.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36842160257F520B000B87D6 /* LibraGeneralMetadataV0.swift */; };
-		36842166257F5241000B87D6 /* LibraTravelRuleMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36842165257F5241000B87D6 /* LibraTravelRuleMetadata.swift */; };
-		3684216B257F5256000B87D6 /* LibraTravelRuleMetadataV0.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3684216A257F5256000B87D6 /* LibraTravelRuleMetadataV0.swift */; };
-		36842170257F5270000B87D6 /* LibraUnstructuredBytesMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3684216F257F5270000B87D6 /* LibraUnstructuredBytesMetadata.swift */; };
+		36842151257F169D000B87D6 /* DiemMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36842150257F169D000B87D6 /* DiemMetadata.swift */; };
+		3684215C257F51BF000B87D6 /* DiemGeneralMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3684215B257F51BF000B87D6 /* DiemGeneralMetadata.swift */; };
+		36842161257F520B000B87D6 /* DiemGeneralMetadataV0.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36842160257F520B000B87D6 /* DiemGeneralMetadataV0.swift */; };
+		36842166257F5241000B87D6 /* DiemTravelRuleMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36842165257F5241000B87D6 /* DiemTravelRuleMetadata.swift */; };
+		3684216B257F5256000B87D6 /* DiemTravelRuleMetadataV0.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3684216A257F5256000B87D6 /* DiemTravelRuleMetadataV0.swift */; };
+		36842170257F5270000B87D6 /* DiemUnstructuredBytesMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3684216F257F5270000B87D6 /* DiemUnstructuredBytesMetadata.swift */; };
 		368CD5E324D26F4E0092F12E /* MarketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368CD5E224D26F4E0092F12E /* MarketManager.swift */; };
 		368F7BD524FCFC4700CCF3FB /* BankLegalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368F7BD424FCFC4700CCF3FB /* BankLegalViewController.swift */; };
 		368F7BD724FCFC5700CCF3FB /* BankLegalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368F7BD624FCFC5700CCF3FB /* BankLegalView.swift */; };
@@ -283,10 +283,10 @@
 		36E95D8C242A084B0004B86D /* ScanLoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E95D88242A084B0004B86D /* ScanLoginModel.swift */; };
 		36E95D8D242A084B0004B86D /* ScanLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E95D8A242A084B0004B86D /* ScanLoginView.swift */; };
 		36E9AB482531A1D40083E965 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 36E9AB472531A1D40083E965 /* GoogleService-Info.plist */; };
-		36F42E89242E347300DBBF8F /* LibraTypeTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F42E88242E347300DBBF8F /* LibraTypeTag.swift */; };
-		36F42E8B2431B56A00DBBF8F /* LibraStructTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F42E8A2431B56A00DBBF8F /* LibraStructTag.swift */; };
-		36F42EB1243C80DE00DBBF8F /* LibraMultiPrivateKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F42EB0243C80DE00DBBF8F /* LibraMultiPrivateKey.swift */; };
-		36F42EB3243C80F700DBBF8F /* LibraMultiPublicKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F42EB2243C80F700DBBF8F /* LibraMultiPublicKey.swift */; };
+		36F42E89242E347300DBBF8F /* DiemTypeTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F42E88242E347300DBBF8F /* DiemTypeTag.swift */; };
+		36F42E8B2431B56A00DBBF8F /* DiemStructTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F42E8A2431B56A00DBBF8F /* DiemStructTag.swift */; };
+		36F42EB1243C80DE00DBBF8F /* DiemMultiPrivateKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F42EB0243C80DE00DBBF8F /* DiemMultiPrivateKey.swift */; };
+		36F42EB3243C80F700DBBF8F /* DiemMultiPublicKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F42EB2243C80F700DBBF8F /* DiemMultiPublicKey.swift */; };
 		36F826EF24BD9ED50007ACC3 /* ExchangeTransactionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F826EE24BD9ED50007ACC3 /* ExchangeTransactionsViewController.swift */; };
 		36F826F124BD9EEB0007ACC3 /* ExchangeTransactionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F826F024BD9EEB0007ACC3 /* ExchangeTransactionsView.swift */; };
 		36F826F324BD9F060007ACC3 /* ExchangeTransactionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F826F224BD9F060007ACC3 /* ExchangeTransactionsModel.swift */; };
@@ -318,7 +318,7 @@
 		9D5B4E72236BCBEE00F4D99C /* AddAssetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B4E71236BCBEE00F4D99C /* AddAssetViewController.swift */; };
 		9D5B4E76236BCC1700F4D99C /* AddAssetTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B4E75236BCC1700F4D99C /* AddAssetTableViewManager.swift */; };
 		9D5B4E78236BCE1700F4D99C /* AddAssetViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B4E77236BCE1700F4D99C /* AddAssetViewTableViewCell.swift */; };
-		9D5C7C6723AA243A0090385C /* LibraCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5C7C6623AA24390090385C /* LibraCommon.swift */; };
+		9D5C7C6723AA243A0090385C /* DiemCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5C7C6623AA24390090385C /* DiemCommon.swift */; };
 		9D5D13C523692D3800A2C6AF /* HomeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5D13C423692D3800A2C6AF /* HomeHeaderView.swift */; };
 		9D62646C2355A0E300A79B3D /* PasswordCrypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D62646B2355A0E300A79B3D /* PasswordCrypto.swift */; };
 		9D62646E2355C79600A79B3D /* LibraWalletCoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D62646D2355C79600A79B3D /* LibraWalletCoreTests.swift */; };
@@ -335,7 +335,7 @@
 		9D68D2FF237D25FD005B7593 /* ViolasTransferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D68D2FE237D25FD005B7593 /* ViolasTransferView.swift */; };
 		9D68D301237D260E005B7593 /* ViolasTransferModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D68D300237D260E005B7593 /* ViolasTransferModel.swift */; };
 		9D68D303237D261B005B7593 /* ViolasTransferViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D68D302237D261B005B7593 /* ViolasTransferViewController.swift */; };
-		9D68D305237D49E5005B7593 /* LibraTransactionScriptPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D68D304237D49E5005B7593 /* LibraTransactionScriptPayload.swift */; };
+		9D68D305237D49E5005B7593 /* DiemTransactionScriptPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D68D304237D49E5005B7593 /* DiemTransactionScriptPayload.swift */; };
 		9D68D307238039D7005B7593 /* BTCTransferModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D68D306238039D6005B7593 /* BTCTransferModel.swift */; };
 		9D7124342329EA1C009DED52 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9D7124362329EA1C009DED52 /* Localizable.strings */; };
 		9D712441232F621B009DED52 /* LibraWalletTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D712440232F621B009DED52 /* LibraWalletTool.swift */; };
@@ -431,17 +431,17 @@
 		9DC06A452372A9F200BCE1FE /* MarketModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC06A442372A9F200BCE1FE /* MarketModel.swift */; };
 		9DC06A6B2373F40400BCE1FE /* BTCManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC06A6A2373F40400BCE1FE /* BTCManagerTests.swift */; };
 		9DC06A6E2373FEB900BCE1FE /* ViolasManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC06A6D2373FEB900BCE1FE /* ViolasManager.swift */; };
-		9DC487FD2320AF4E005FF254 /* LibraHDWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC487FC2320AF4E005FF254 /* LibraHDWallet.swift */; };
-		9DC487FF2320AFB8005FF254 /* LibraError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC487FE2320AFB8005FF254 /* LibraError.swift */; };
-		9DC488012320BE88005FF254 /* LibraNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488002320BE88005FF254 /* LibraNetwork.swift */; };
-		9DC488032320D6A1005FF254 /* LibraMnemonic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488022320D6A1005FF254 /* LibraMnemonic.swift */; };
-		9DC488052320DBCB005FF254 /* LibraHDPublicKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488042320DBCB005FF254 /* LibraHDPublicKey.swift */; };
+		9DC487FD2320AF4E005FF254 /* DiemHDWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC487FC2320AF4E005FF254 /* DiemHDWallet.swift */; };
+		9DC487FF2320AFB8005FF254 /* DiemError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC487FE2320AFB8005FF254 /* DiemError.swift */; };
+		9DC488012320BE88005FF254 /* DiemNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488002320BE88005FF254 /* DiemNetwork.swift */; };
+		9DC488032320D6A1005FF254 /* DiemMnemonic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488022320D6A1005FF254 /* DiemMnemonic.swift */; };
+		9DC488052320DBCB005FF254 /* DiemHDPublicKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488042320DBCB005FF254 /* DiemHDPublicKey.swift */; };
 		9DC488072320E419005FF254 /* LibraSDKTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488062320E419005FF254 /* LibraSDKTests.swift */; };
-		9DC4880B2320E6C1005FF254 /* LibraHDPrivateKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4880A2320E6C1005FF254 /* LibraHDPrivateKey.swift */; };
-		9DC4880D2320EDF8005FF254 /* LibraUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4880C2320EDF8005FF254 /* LibraUtils.swift */; };
+		9DC4880B2320E6C1005FF254 /* DiemHDPrivateKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4880A2320E6C1005FF254 /* DiemHDPrivateKey.swift */; };
+		9DC4880D2320EDF8005FF254 /* DiemUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4880C2320EDF8005FF254 /* DiemUtils.swift */; };
 		9DC4884923211180005FF254 /* WalletManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4884823211180005FF254 /* WalletManager.swift */; };
 		9DC4884B232111E9005FF254 /* LibraTransferViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4884A232111E9005FF254 /* LibraTransferViewController.swift */; };
-		9DC4884F2321F051005FF254 /* LibraWordList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4884E2321F051005FF254 /* LibraWordList.swift */; };
+		9DC4884F2321F051005FF254 /* DiemWordList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4884E2321F051005FF254 /* DiemWordList.swift */; };
 		9DC4885523220D6D005FF254 /* WalletReceiveViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4885423220D6D005FF254 /* WalletReceiveViewController.swift */; };
 		9DC4885A23220DA6005FF254 /* WalletReceiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4885923220DA6005FF254 /* WalletReceiveView.swift */; };
 		9DC4885F23220E47005FF254 /* QRCodeConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4885D23220E47005FF254 /* QRCodeConvertible.swift */; };
@@ -456,12 +456,12 @@
 		9DC488752322249E005FF254 /* LibraTransferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC488742322249E005FF254 /* LibraTransferView.swift */; };
 		9DC4887C23223204005FF254 /* ScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4887B23223204005FF254 /* ScanViewController.swift */; };
 		9DC4887E2322320B005FF254 /* ScanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC4887D2322320B005FF254 /* ScanView.swift */; };
-		9DC8778D237958EB006378C3 /* LibraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC8778C237958EB006378C3 /* LibraManager.swift */; };
+		9DC8778D237958EB006378C3 /* DiemManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC8778C237958EB006378C3 /* DiemManager.swift */; };
 		9DC8778F23796884006378C3 /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC8778E23796884006378C3 /* ToastView.swift */; };
-		9DC901E7232628A40097FD85 /* LibraRawTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC901E6232628A40097FD85 /* LibraRawTransaction.swift */; };
-		9DC901E923262CB80097FD85 /* LibraTransactionArgument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC901E823262CB80097FD85 /* LibraTransactionArgument.swift */; };
-		9DC901F2232788C30097FD85 /* LibraAccessPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC901F1232788C30097FD85 /* LibraAccessPath.swift */; };
-		9DC901F82327A3B70097FD85 /* LibraWriteSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC901F72327A3B60097FD85 /* LibraWriteSet.swift */; };
+		9DC901E7232628A40097FD85 /* DiemRawTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC901E6232628A40097FD85 /* DiemRawTransaction.swift */; };
+		9DC901E923262CB80097FD85 /* DiemTransactionArgument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC901E823262CB80097FD85 /* DiemTransactionArgument.swift */; };
+		9DC901F2232788C30097FD85 /* DiemAccessPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC901F1232788C30097FD85 /* DiemAccessPath.swift */; };
+		9DC901F82327A3B70097FD85 /* DiemWriteSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC901F72327A3B60097FD85 /* DiemWriteSet.swift */; };
 		9DC9023D2328E8290097FD85 /* CommonData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC9023C2328E8290097FD85 /* CommonData.swift */; };
 		9DC9023F2328EA480097FD85 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC9023E2328EA480097FD85 /* HomeView.swift */; };
 		9DC902412328EA640097FD85 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC902402328EA640097FD85 /* HomeViewController.swift */; };
@@ -504,7 +504,7 @@
 		361051812563CAA0008407F5 /* BTCModuleNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTCModuleNetworkManager.swift; sourceTree = "<group>"; };
 		361051862563CF54008407F5 /* ViolasModuleNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasModuleNetworkManager.swift; sourceTree = "<group>"; };
 		361051B42563D67F008407F5 /* LibraModuleNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraModuleNetworkManager.swift; sourceTree = "<group>"; };
-		36178321243F1455003C6588 /* LibraMultiHDWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraMultiHDWallet.swift; sourceTree = "<group>"; };
+		36178321243F1455003C6588 /* DiemMultiHDWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemMultiHDWallet.swift; sourceTree = "<group>"; };
 		3617835A24440BDB003C6588 /* ViolasUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasUtils.swift; sourceTree = "<group>"; };
 		3617835C24440C1E003C6588 /* ViolasWordList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasWordList.swift; sourceTree = "<group>"; };
 		3617835E244465B7003C6588 /* ViolasMultiHDWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasMultiHDWallet.swift; sourceTree = "<group>"; };
@@ -513,7 +513,7 @@
 		361783642444683B003C6588 /* ViolasTypeTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasTypeTag.swift; sourceTree = "<group>"; };
 		361783662444684F003C6588 /* ViolasStructTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasStructTag.swift; sourceTree = "<group>"; };
 		3617836A24449B53003C6588 /* ViolasTransactionModulePayload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViolasTransactionModulePayload.swift; sourceTree = "<group>"; };
-		3617836F24449D85003C6588 /* LibraTransactionModulePayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraTransactionModulePayload.swift; sourceTree = "<group>"; };
+		3617836F24449D85003C6588 /* DiemTransactionModulePayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemTransactionModulePayload.swift; sourceTree = "<group>"; };
 		361BDA0C24F89ACB00C4C54E /* ViolasTransactionPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasTransactionPayload.swift; sourceTree = "<group>"; };
 		361BDA0E24F89E0D00C4C54E /* ViolasWriteSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasWriteSet.swift; sourceTree = "<group>"; };
 		361BDA1024F89E3900C4C54E /* ViolasAccessPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasAccessPath.swift; sourceTree = "<group>"; };
@@ -627,10 +627,10 @@
 		3623AB7F23FC0CB3004A01BF /* MappingTransactionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MappingTransactionsView.swift; sourceTree = "<group>"; };
 		3623AB8123FC0CC7004A01BF /* MappingTransactionsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MappingTransactionsTableViewCell.swift; sourceTree = "<group>"; };
 		3623AB8423FC0CE2004A01BF /* MappingTransactionsTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MappingTransactionsTableViewManager.swift; sourceTree = "<group>"; };
-		363D90ED24CAA6C500F6374C /* LibraTransactionWriteSetPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraTransactionWriteSetPayload.swift; sourceTree = "<group>"; };
-		363D90EF24CAAC6700F6374C /* LibraContractEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraContractEvent.swift; sourceTree = "<group>"; };
-		363D90F124CAB7C300F6374C /* LibraContracts.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = LibraContracts.bundle; sourceTree = "<group>"; };
-		363D90F324CAE79600F6374C /* LibraTransactionPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraTransactionPayload.swift; sourceTree = "<group>"; };
+		363D90ED24CAA6C500F6374C /* DiemTransactionWriteSetPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemTransactionWriteSetPayload.swift; sourceTree = "<group>"; };
+		363D90EF24CAAC6700F6374C /* DiemContractEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemContractEvent.swift; sourceTree = "<group>"; };
+		363D90F124CAB7C300F6374C /* DiemContracts.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = DiemContracts.bundle; sourceTree = "<group>"; };
+		363D90F324CAE79600F6374C /* DiemTransactionPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemTransactionPayload.swift; sourceTree = "<group>"; };
 		3642EB7023CC654500C7B04A /* Serialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Serialization.swift; sourceTree = "<group>"; };
 		3646E4FA24D3E99600B8C20B /* ExchangeTransactionDetailFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeTransactionDetailFooterView.swift; sourceTree = "<group>"; };
 		3646E4FC24D3EFEE00B8C20B /* AssetsPoolTransactionDetailHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsPoolTransactionDetailHeaderView.swift; sourceTree = "<group>"; };
@@ -685,7 +685,7 @@
 		366AFE52256D113C0007AAFC /* ActiveModuleNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveModuleNetworkManager.swift; sourceTree = "<group>"; };
 		366AFE5A256E5CAE0007AAFC /* InvitationRewardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvitationRewardViewController.swift; sourceTree = "<group>"; };
 		366AFE62256E5CBF0007AAFC /* InvitationRewardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvitationRewardView.swift; sourceTree = "<group>"; };
-		366AFEC22570DF470007AAFC /* LibraBech32.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraBech32.swift; sourceTree = "<group>"; };
+		366AFEC22570DF470007AAFC /* DiemBech32.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemBech32.swift; sourceTree = "<group>"; };
 		366AFED6257627AB0007AAFC /* ViolasBech32.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasBech32.swift; sourceTree = "<group>"; };
 		366AFEE9257782B60007AAFC /* ProfitMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfitMainViewController.swift; sourceTree = "<group>"; };
 		366AFEF1257782DB0007AAFC /* ProfitMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfitMainView.swift; sourceTree = "<group>"; };
@@ -746,12 +746,12 @@
 		36836D3824B3059B0031AC6E /* ExchangeTransactionDetailHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeTransactionDetailHeaderView.swift; sourceTree = "<group>"; };
 		36836D3A24B305D00031AC6E /* ExchangeTransactionDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeTransactionDetailTableViewCell.swift; sourceTree = "<group>"; };
 		36842147257E1E30000B87D6 /* AssetsPoolProfitHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsPoolProfitHeaderView.swift; sourceTree = "<group>"; };
-		36842150257F169D000B87D6 /* LibraMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraMetadata.swift; sourceTree = "<group>"; };
-		3684215B257F51BF000B87D6 /* LibraGeneralMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraGeneralMetadata.swift; sourceTree = "<group>"; };
-		36842160257F520B000B87D6 /* LibraGeneralMetadataV0.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraGeneralMetadataV0.swift; sourceTree = "<group>"; };
-		36842165257F5241000B87D6 /* LibraTravelRuleMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraTravelRuleMetadata.swift; sourceTree = "<group>"; };
-		3684216A257F5256000B87D6 /* LibraTravelRuleMetadataV0.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraTravelRuleMetadataV0.swift; sourceTree = "<group>"; };
-		3684216F257F5270000B87D6 /* LibraUnstructuredBytesMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraUnstructuredBytesMetadata.swift; sourceTree = "<group>"; };
+		36842150257F169D000B87D6 /* DiemMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemMetadata.swift; sourceTree = "<group>"; };
+		3684215B257F51BF000B87D6 /* DiemGeneralMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemGeneralMetadata.swift; sourceTree = "<group>"; };
+		36842160257F520B000B87D6 /* DiemGeneralMetadataV0.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemGeneralMetadataV0.swift; sourceTree = "<group>"; };
+		36842165257F5241000B87D6 /* DiemTravelRuleMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemTravelRuleMetadata.swift; sourceTree = "<group>"; };
+		3684216A257F5256000B87D6 /* DiemTravelRuleMetadataV0.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemTravelRuleMetadataV0.swift; sourceTree = "<group>"; };
+		3684216F257F5270000B87D6 /* DiemUnstructuredBytesMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemUnstructuredBytesMetadata.swift; sourceTree = "<group>"; };
 		368CD5E224D26F4E0092F12E /* MarketManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketManager.swift; sourceTree = "<group>"; };
 		368F7BD424FCFC4700CCF3FB /* BankLegalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankLegalViewController.swift; sourceTree = "<group>"; };
 		368F7BD624FCFC5700CCF3FB /* BankLegalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankLegalView.swift; sourceTree = "<group>"; };
@@ -772,10 +772,10 @@
 		36E95D88242A084B0004B86D /* ScanLoginModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanLoginModel.swift; sourceTree = "<group>"; };
 		36E95D8A242A084B0004B86D /* ScanLoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanLoginView.swift; sourceTree = "<group>"; };
 		36E9AB472531A1D40083E965 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		36F42E88242E347300DBBF8F /* LibraTypeTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraTypeTag.swift; sourceTree = "<group>"; };
-		36F42E8A2431B56A00DBBF8F /* LibraStructTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraStructTag.swift; sourceTree = "<group>"; };
-		36F42EB0243C80DE00DBBF8F /* LibraMultiPrivateKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraMultiPrivateKey.swift; sourceTree = "<group>"; };
-		36F42EB2243C80F700DBBF8F /* LibraMultiPublicKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraMultiPublicKey.swift; sourceTree = "<group>"; };
+		36F42E88242E347300DBBF8F /* DiemTypeTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemTypeTag.swift; sourceTree = "<group>"; };
+		36F42E8A2431B56A00DBBF8F /* DiemStructTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemStructTag.swift; sourceTree = "<group>"; };
+		36F42EB0243C80DE00DBBF8F /* DiemMultiPrivateKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemMultiPrivateKey.swift; sourceTree = "<group>"; };
+		36F42EB2243C80F700DBBF8F /* DiemMultiPublicKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemMultiPublicKey.swift; sourceTree = "<group>"; };
 		36F826EE24BD9ED50007ACC3 /* ExchangeTransactionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeTransactionsViewController.swift; sourceTree = "<group>"; };
 		36F826F024BD9EEB0007ACC3 /* ExchangeTransactionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeTransactionsView.swift; sourceTree = "<group>"; };
 		36F826F224BD9F060007ACC3 /* ExchangeTransactionsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeTransactionsModel.swift; sourceTree = "<group>"; };
@@ -811,7 +811,7 @@
 		9D5B4E71236BCBEE00F4D99C /* AddAssetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAssetViewController.swift; sourceTree = "<group>"; };
 		9D5B4E75236BCC1700F4D99C /* AddAssetTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAssetTableViewManager.swift; sourceTree = "<group>"; };
 		9D5B4E77236BCE1700F4D99C /* AddAssetViewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAssetViewTableViewCell.swift; sourceTree = "<group>"; };
-		9D5C7C6623AA24390090385C /* LibraCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraCommon.swift; sourceTree = "<group>"; };
+		9D5C7C6623AA24390090385C /* DiemCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemCommon.swift; sourceTree = "<group>"; };
 		9D5D13C423692D3800A2C6AF /* HomeHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeHeaderView.swift; sourceTree = "<group>"; };
 		9D62646B2355A0E300A79B3D /* PasswordCrypto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordCrypto.swift; sourceTree = "<group>"; };
 		9D62646D2355C79600A79B3D /* LibraWalletCoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraWalletCoreTests.swift; sourceTree = "<group>"; };
@@ -828,7 +828,7 @@
 		9D68D2FE237D25FD005B7593 /* ViolasTransferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasTransferView.swift; sourceTree = "<group>"; };
 		9D68D300237D260E005B7593 /* ViolasTransferModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasTransferModel.swift; sourceTree = "<group>"; };
 		9D68D302237D261B005B7593 /* ViolasTransferViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasTransferViewController.swift; sourceTree = "<group>"; };
-		9D68D304237D49E5005B7593 /* LibraTransactionScriptPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraTransactionScriptPayload.swift; sourceTree = "<group>"; };
+		9D68D304237D49E5005B7593 /* DiemTransactionScriptPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemTransactionScriptPayload.swift; sourceTree = "<group>"; };
 		9D68D306238039D6005B7593 /* BTCTransferModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BTCTransferModel.swift; sourceTree = "<group>"; };
 		9D7124352329EA1C009DED52 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		9D7124372329EA3E009DED52 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -932,17 +932,17 @@
 		9DC06A442372A9F200BCE1FE /* MarketModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketModel.swift; sourceTree = "<group>"; };
 		9DC06A6A2373F40400BCE1FE /* BTCManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTCManagerTests.swift; sourceTree = "<group>"; };
 		9DC06A6D2373FEB900BCE1FE /* ViolasManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasManager.swift; sourceTree = "<group>"; };
-		9DC487FC2320AF4E005FF254 /* LibraHDWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraHDWallet.swift; sourceTree = "<group>"; };
-		9DC487FE2320AFB8005FF254 /* LibraError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraError.swift; sourceTree = "<group>"; };
-		9DC488002320BE88005FF254 /* LibraNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraNetwork.swift; sourceTree = "<group>"; };
-		9DC488022320D6A1005FF254 /* LibraMnemonic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraMnemonic.swift; sourceTree = "<group>"; };
-		9DC488042320DBCB005FF254 /* LibraHDPublicKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraHDPublicKey.swift; sourceTree = "<group>"; };
+		9DC487FC2320AF4E005FF254 /* DiemHDWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemHDWallet.swift; sourceTree = "<group>"; };
+		9DC487FE2320AFB8005FF254 /* DiemError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemError.swift; sourceTree = "<group>"; };
+		9DC488002320BE88005FF254 /* DiemNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemNetwork.swift; sourceTree = "<group>"; };
+		9DC488022320D6A1005FF254 /* DiemMnemonic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemMnemonic.swift; sourceTree = "<group>"; };
+		9DC488042320DBCB005FF254 /* DiemHDPublicKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemHDPublicKey.swift; sourceTree = "<group>"; };
 		9DC488062320E419005FF254 /* LibraSDKTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraSDKTests.swift; sourceTree = "<group>"; };
-		9DC4880A2320E6C1005FF254 /* LibraHDPrivateKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraHDPrivateKey.swift; sourceTree = "<group>"; };
-		9DC4880C2320EDF8005FF254 /* LibraUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraUtils.swift; sourceTree = "<group>"; };
+		9DC4880A2320E6C1005FF254 /* DiemHDPrivateKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemHDPrivateKey.swift; sourceTree = "<group>"; };
+		9DC4880C2320EDF8005FF254 /* DiemUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemUtils.swift; sourceTree = "<group>"; };
 		9DC4884823211180005FF254 /* WalletManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletManager.swift; sourceTree = "<group>"; };
 		9DC4884A232111E9005FF254 /* LibraTransferViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraTransferViewController.swift; sourceTree = "<group>"; };
-		9DC4884E2321F051005FF254 /* LibraWordList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraWordList.swift; sourceTree = "<group>"; };
+		9DC4884E2321F051005FF254 /* DiemWordList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiemWordList.swift; sourceTree = "<group>"; };
 		9DC4885423220D6D005FF254 /* WalletReceiveViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletReceiveViewController.swift; sourceTree = "<group>"; };
 		9DC4885923220DA6005FF254 /* WalletReceiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletReceiveView.swift; sourceTree = "<group>"; };
 		9DC4885D23220E47005FF254 /* QRCodeConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeConvertible.swift; sourceTree = "<group>"; };
@@ -957,12 +957,12 @@
 		9DC488742322249E005FF254 /* LibraTransferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraTransferView.swift; sourceTree = "<group>"; };
 		9DC4887B23223204005FF254 /* ScanViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanViewController.swift; sourceTree = "<group>"; };
 		9DC4887D2322320B005FF254 /* ScanView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanView.swift; sourceTree = "<group>"; };
-		9DC8778C237958EB006378C3 /* LibraManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraManager.swift; sourceTree = "<group>"; };
+		9DC8778C237958EB006378C3 /* DiemManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemManager.swift; sourceTree = "<group>"; };
 		9DC8778E23796884006378C3 /* ToastView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
-		9DC901E6232628A40097FD85 /* LibraRawTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraRawTransaction.swift; sourceTree = "<group>"; };
-		9DC901E823262CB80097FD85 /* LibraTransactionArgument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraTransactionArgument.swift; sourceTree = "<group>"; };
-		9DC901F1232788C30097FD85 /* LibraAccessPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraAccessPath.swift; sourceTree = "<group>"; };
-		9DC901F72327A3B60097FD85 /* LibraWriteSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraWriteSet.swift; sourceTree = "<group>"; };
+		9DC901E6232628A40097FD85 /* DiemRawTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemRawTransaction.swift; sourceTree = "<group>"; };
+		9DC901E823262CB80097FD85 /* DiemTransactionArgument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemTransactionArgument.swift; sourceTree = "<group>"; };
+		9DC901F1232788C30097FD85 /* DiemAccessPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemAccessPath.swift; sourceTree = "<group>"; };
+		9DC901F72327A3B60097FD85 /* DiemWriteSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiemWriteSet.swift; sourceTree = "<group>"; };
 		9DC9023C2328E8290097FD85 /* CommonData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonData.swift; sourceTree = "<group>"; };
 		9DC9023E2328EA480097FD85 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		9DC902402328EA640097FD85 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
@@ -1038,10 +1038,10 @@
 		3617836C24449B72003C6588 /* Script */ = {
 			isa = PBXGroup;
 			children = (
-				9D68D304237D49E5005B7593 /* LibraTransactionScriptPayload.swift */,
-				9DC901E823262CB80097FD85 /* LibraTransactionArgument.swift */,
-				36F42E88242E347300DBBF8F /* LibraTypeTag.swift */,
-				36F42E8A2431B56A00DBBF8F /* LibraStructTag.swift */,
+				9D68D304237D49E5005B7593 /* DiemTransactionScriptPayload.swift */,
+				9DC901E823262CB80097FD85 /* DiemTransactionArgument.swift */,
+				36F42E88242E347300DBBF8F /* DiemTypeTag.swift */,
+				36F42E8A2431B56A00DBBF8F /* DiemStructTag.swift */,
 			);
 			path = Script;
 			sourceTree = "<group>";
@@ -1049,10 +1049,10 @@
 		3617836D24449B80003C6588 /* WriteSet */ = {
 			isa = PBXGroup;
 			children = (
-				363D90ED24CAA6C500F6374C /* LibraTransactionWriteSetPayload.swift */,
-				9DC901F72327A3B60097FD85 /* LibraWriteSet.swift */,
-				9DC901F1232788C30097FD85 /* LibraAccessPath.swift */,
-				363D90EF24CAAC6700F6374C /* LibraContractEvent.swift */,
+				363D90ED24CAA6C500F6374C /* DiemTransactionWriteSetPayload.swift */,
+				9DC901F72327A3B60097FD85 /* DiemWriteSet.swift */,
+				9DC901F1232788C30097FD85 /* DiemAccessPath.swift */,
+				363D90EF24CAAC6700F6374C /* DiemContractEvent.swift */,
 			);
 			path = WriteSet;
 			sourceTree = "<group>";
@@ -1060,7 +1060,7 @@
 		3617836E24449D71003C6588 /* Module */ = {
 			isa = PBXGroup;
 			children = (
-				3617836F24449D85003C6588 /* LibraTransactionModulePayload.swift */,
+				3617836F24449D85003C6588 /* DiemTransactionModulePayload.swift */,
 			);
 			path = Module;
 			sourceTree = "<group>";
@@ -1095,24 +1095,24 @@
 			path = Module;
 			sourceTree = "<group>";
 		};
-		361783742444A052003C6588 /* LibraHDWallet */ = {
+		361783742444A052003C6588 /* DiemHDWallet */ = {
 			isa = PBXGroup;
 			children = (
-				9DC487FC2320AF4E005FF254 /* LibraHDWallet.swift */,
-				9DC488042320DBCB005FF254 /* LibraHDPublicKey.swift */,
-				9DC4880A2320E6C1005FF254 /* LibraHDPrivateKey.swift */,
+				9DC487FC2320AF4E005FF254 /* DiemHDWallet.swift */,
+				9DC488042320DBCB005FF254 /* DiemHDPublicKey.swift */,
+				9DC4880A2320E6C1005FF254 /* DiemHDPrivateKey.swift */,
 			);
-			path = LibraHDWallet;
+			path = DiemHDWallet;
 			sourceTree = "<group>";
 		};
-		361783752444A067003C6588 /* LibraMultiHDWallet */ = {
+		361783752444A067003C6588 /* DiemMultiHDWallet */ = {
 			isa = PBXGroup;
 			children = (
-				36178321243F1455003C6588 /* LibraMultiHDWallet.swift */,
-				36F42EB0243C80DE00DBBF8F /* LibraMultiPrivateKey.swift */,
-				36F42EB2243C80F700DBBF8F /* LibraMultiPublicKey.swift */,
+				36178321243F1455003C6588 /* DiemMultiHDWallet.swift */,
+				36F42EB0243C80DE00DBBF8F /* DiemMultiPrivateKey.swift */,
+				36F42EB2243C80F700DBBF8F /* DiemMultiPublicKey.swift */,
 			);
-			path = LibraMultiHDWallet;
+			path = DiemMultiHDWallet;
 			sourceTree = "<group>";
 		};
 		361BDA1624F8E7BD00C4C54E /* BankSection */ = {
@@ -2936,7 +2936,7 @@
 		3684214F257F1663000B87D6 /* Metadata */ = {
 			isa = PBXGroup;
 			children = (
-				36842150257F169D000B87D6 /* LibraMetadata.swift */,
+				36842150257F169D000B87D6 /* DiemMetadata.swift */,
 				36842174257F52A5000B87D6 /* LibraGeneralMetadata */,
 				36842175257F52B6000B87D6 /* LibraTravelRuleMetadata */,
 				36842176257F52CB000B87D6 /* LibraUnstructuredBytesMetadata */,
@@ -2947,8 +2947,8 @@
 		36842174257F52A5000B87D6 /* LibraGeneralMetadata */ = {
 			isa = PBXGroup;
 			children = (
-				3684215B257F51BF000B87D6 /* LibraGeneralMetadata.swift */,
-				36842160257F520B000B87D6 /* LibraGeneralMetadataV0.swift */,
+				3684215B257F51BF000B87D6 /* DiemGeneralMetadata.swift */,
+				36842160257F520B000B87D6 /* DiemGeneralMetadataV0.swift */,
 			);
 			path = LibraGeneralMetadata;
 			sourceTree = "<group>";
@@ -2956,8 +2956,8 @@
 		36842175257F52B6000B87D6 /* LibraTravelRuleMetadata */ = {
 			isa = PBXGroup;
 			children = (
-				36842165257F5241000B87D6 /* LibraTravelRuleMetadata.swift */,
-				3684216A257F5256000B87D6 /* LibraTravelRuleMetadataV0.swift */,
+				36842165257F5241000B87D6 /* DiemTravelRuleMetadata.swift */,
+				3684216A257F5256000B87D6 /* DiemTravelRuleMetadataV0.swift */,
 			);
 			path = LibraTravelRuleMetadata;
 			sourceTree = "<group>";
@@ -2965,7 +2965,7 @@
 		36842176257F52CB000B87D6 /* LibraUnstructuredBytesMetadata */ = {
 			isa = PBXGroup;
 			children = (
-				3684216F257F5270000B87D6 /* LibraUnstructuredBytesMetadata.swift */,
+				3684216F257F5270000B87D6 /* DiemUnstructuredBytesMetadata.swift */,
 			);
 			path = LibraUnstructuredBytesMetadata;
 			sourceTree = "<group>";
@@ -4353,23 +4353,23 @@
 			path = HomeSection;
 			sourceTree = "<group>";
 		};
-		9DC487F9231FA0C6005FF254 /* LibraKit */ = {
+		9DC487F9231FA0C6005FF254 /* DiemKit */ = {
 			isa = PBXGroup;
 			children = (
 				3684214F257F1663000B87D6 /* Metadata */,
-				361783742444A052003C6588 /* LibraHDWallet */,
-				361783752444A067003C6588 /* LibraMultiHDWallet */,
+				361783742444A052003C6588 /* DiemHDWallet */,
+				361783752444A067003C6588 /* DiemMultiHDWallet */,
 				9DC901E5232628860097FD85 /* MakeTransaction */,
-				9D5C7C6623AA24390090385C /* LibraCommon.swift */,
-				9DC487FE2320AFB8005FF254 /* LibraError.swift */,
-				9DC488002320BE88005FF254 /* LibraNetwork.swift */,
-				9DC4880C2320EDF8005FF254 /* LibraUtils.swift */,
-				9DC488022320D6A1005FF254 /* LibraMnemonic.swift */,
-				9DC4884E2321F051005FF254 /* LibraWordList.swift */,
-				366AFEC22570DF470007AAFC /* LibraBech32.swift */,
-				363D90F124CAB7C300F6374C /* LibraContracts.bundle */,
+				9D5C7C6623AA24390090385C /* DiemCommon.swift */,
+				9DC487FE2320AFB8005FF254 /* DiemError.swift */,
+				9DC488002320BE88005FF254 /* DiemNetwork.swift */,
+				9DC4880C2320EDF8005FF254 /* DiemUtils.swift */,
+				9DC488022320D6A1005FF254 /* DiemMnemonic.swift */,
+				9DC4884E2321F051005FF254 /* DiemWordList.swift */,
+				366AFEC22570DF470007AAFC /* DiemBech32.swift */,
+				363D90F124CAB7C300F6374C /* DiemContracts.bundle */,
 			);
-			path = LibraKit;
+			path = DiemKit;
 			sourceTree = "<group>";
 		};
 		9DC4885623220D73005FF254 /* WalletReceive */ = {
@@ -4405,7 +4405,7 @@
 				365A89BE23B9A79E00C55A10 /* WYDTextField */,
 				9DF9BB5B2387CBCD00FA800D /* ViolasKit */,
 				9DBC266F23408D3A009650EA /* ED25519 */,
-				9DC487F9231FA0C6005FF254 /* LibraKit */,
+				9DC487F9231FA0C6005FF254 /* DiemKit */,
 				9DC48861232222CE005FF254 /* SwiftScan */,
 				9DC4885C23220E46005FF254 /* QRCode */,
 			);
@@ -4498,7 +4498,7 @@
 		9DC8778B237958D2006378C3 /* LibraManager */ = {
 			isa = PBXGroup;
 			children = (
-				9DC8778C237958EB006378C3 /* LibraManager.swift */,
+				9DC8778C237958EB006378C3 /* DiemManager.swift */,
 			);
 			path = LibraManager;
 			sourceTree = "<group>";
@@ -4514,8 +4514,8 @@
 		9DC901E5232628860097FD85 /* MakeTransaction */ = {
 			isa = PBXGroup;
 			children = (
-				9DC901E6232628A40097FD85 /* LibraRawTransaction.swift */,
-				363D90F324CAE79600F6374C /* LibraTransactionPayload.swift */,
+				9DC901E6232628A40097FD85 /* DiemRawTransaction.swift */,
+				363D90F324CAE79600F6374C /* DiemTransactionPayload.swift */,
 				3617836C24449B72003C6588 /* Script */,
 				3617836D24449B80003C6588 /* WriteSet */,
 				3617836E24449D71003C6588 /* Module */,
@@ -4846,7 +4846,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				363D90F224CAB7C300F6374C /* LibraContracts.bundle in Resources */,
+				363D90F224CAB7C300F6374C /* DiemContracts.bundle in Resources */,
 				36F8270D24BEAA7E0007ACC3 /* LICENSE in Resources */,
 				9DA8E2AC2317ABC600E28D07 /* LaunchScreen.storyboard in Resources */,
 				36828CEB24B808760085A165 /* ColorAssets.xcassets in Resources */,
@@ -4968,7 +4968,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				36F42EB3243C80F700DBBF8F /* LibraMultiPublicKey.swift in Sources */,
+				36F42EB3243C80F700DBBF8F /* DiemMultiPublicKey.swift in Sources */,
 				3623AB5F23ED70E2004A01BF /* TokenMappingModel.swift in Sources */,
 				9DBC267923408D55009650EA /* ed25519_sign.swift in Sources */,
 				361051B52563D67F008407F5 /* LibraModuleNetworkManager.swift in Sources */,
@@ -5000,7 +5000,7 @@
 				36E95D8C242A084B0004B86D /* ScanLoginModel.swift in Sources */,
 				361BDAD024F8E7BD00C4C54E /* LoanDetailClearingListTableViewManager.swift in Sources */,
 				36B466B4247656D100CFF438 /* ScanSignTransactionModel.swift in Sources */,
-				9DC488012320BE88005FF254 /* LibraNetwork.swift in Sources */,
+				9DC488012320BE88005FF254 /* DiemNetwork.swift in Sources */,
 				3682E5DB24AC9E09007CA2CA /* ScanPublishModel.swift in Sources */,
 				361BDAFD24F8E7BE00C4C54E /* DepositOrdersModel.swift in Sources */,
 				9D9B4A672366D93900354EF0 /* WalletConfigTableViewCell.swift in Sources */,
@@ -5012,7 +5012,7 @@
 				36677A87250F0DD9009152B3 /* ScanBankDepositView.swift in Sources */,
 				9DFFA87F23683C3400EA74F9 /* WalletTransactionsModel.swift in Sources */,
 				361BDB0624F8E7BE00C4C54E /* DepositListView.swift in Sources */,
-				9D68D305237D49E5005B7593 /* LibraTransactionScriptPayload.swift in Sources */,
+				9D68D305237D49E5005B7593 /* DiemTransactionScriptPayload.swift in Sources */,
 				3650F0A824888FC40086F578 /* WalletMainModel.swift in Sources */,
 				361BDAB724F8E7BD00C4C54E /* LoanView.swift in Sources */,
 				9DC4885A23220DA6005FF254 /* WalletReceiveView.swift in Sources */,
@@ -5023,13 +5023,13 @@
 				366AFE12256CE2D80007AAFC /* EnrollPhoneModel.swift in Sources */,
 				9D9B4A652366D65800354EF0 /* WalletConfigModel.swift in Sources */,
 				9D628A8C239A4A2B00E222FB /* PrivateLegalViewController.swift in Sources */,
-				9DC8778D237958EB006378C3 /* LibraManager.swift in Sources */,
-				3684215C257F51BF000B87D6 /* LibraGeneralMetadata.swift in Sources */,
+				9DC8778D237958EB006378C3 /* DiemManager.swift in Sources */,
+				3684215C257F51BF000B87D6 /* DiemGeneralMetadata.swift in Sources */,
 				361BDAC124F8E7BD00C4C54E /* DepositQuestionTableViewCell.swift in Sources */,
 				361BDAE124F8E7BE00C4C54E /* LoanDetailDepositListModel.swift in Sources */,
 				366AFF0D25778B290007AAFC /* ProfitBankViewController.swift in Sources */,
 				9D9B4A502366953600354EF0 /* ImportWalletView.swift in Sources */,
-				9DC901F82327A3B70097FD85 /* LibraWriteSet.swift in Sources */,
+				9DC901F82327A3B70097FD85 /* DiemWriteSet.swift in Sources */,
 				9DC9023F2328EA480097FD85 /* HomeView.swift in Sources */,
 				9D9B49E123602EE400354EF0 /* SettingModel.swift in Sources */,
 				36B466AA2476565D00CFF438 /* ScanSendRawTransactionViewController.swift in Sources */,
@@ -5055,7 +5055,7 @@
 				9D08AD4D2330D8F5004687E8 /* TransactionDetailWebView.swift in Sources */,
 				3650F0C1248F2A850086F578 /* TransactionDetailTableViewCell.swift in Sources */,
 				9DC4886A232222CF005FF254 /* LBXScanView.swift in Sources */,
-				9DC901E7232628A40097FD85 /* LibraRawTransaction.swift in Sources */,
+				9DC901E7232628A40097FD85 /* DiemRawTransaction.swift in Sources */,
 				9D9B49E323602EF900354EF0 /* SettingView.swift in Sources */,
 				9D9B4A07236048A000354EF0 /* AboutUsTableViewHeader.swift in Sources */,
 				9DFFA88123683C4400EA74F9 /* WalletTransactionsViewController.swift in Sources */,
@@ -5074,7 +5074,7 @@
 				361BDA1124F89E3900C4C54E /* ViolasAccessPath.swift in Sources */,
 				9D56EA4823516C3C00A55F02 /* KeychainManager.swift in Sources */,
 				361BDADC24F8E7BD00C4C54E /* LoanMarketModel.swift in Sources */,
-				363D90EE24CAA6C500F6374C /* LibraTransactionWriteSetPayload.swift in Sources */,
+				363D90EE24CAA6C500F6374C /* DiemTransactionWriteSetPayload.swift in Sources */,
 				9D9B4A5F2366D51200354EF0 /* WalletConfigTableViewManager.swift in Sources */,
 				9DF9BB562383E5FD00FA800D /* ScanResultInvalidView.swift in Sources */,
 				9D9B4A122360491C00354EF0 /* HelpCenterModel.swift in Sources */,
@@ -5086,7 +5086,7 @@
 				9DC4885523220D6D005FF254 /* WalletReceiveViewController.swift in Sources */,
 				9D9B4A482362968700354EF0 /* AddWalletModel.swift in Sources */,
 				9D9B49FA236046C100354EF0 /* ServiceLegalViewController.swift in Sources */,
-				363D90F424CAE79600F6374C /* LibraTransactionPayload.swift in Sources */,
+				363D90F424CAE79600F6374C /* DiemTransactionPayload.swift in Sources */,
 				9D9B49AD235DA76100354EF0 /* AddressManagerView.swift in Sources */,
 				36828CD724B736DE0085A165 /* MarketMineTableViewCell.swift in Sources */,
 				9DA0265723702AED0084905B /* BackupWarningViewController.swift in Sources */,
@@ -5099,7 +5099,7 @@
 				361BDB0024F8E7BE00C4C54E /* DepositOrdersTableViewHeaderView.swift in Sources */,
 				9DBC267623408D55009650EA /* ed25519_sc.swift in Sources */,
 				9D9B49F12360388200354EF0 /* LanguageTabViewManager.swift in Sources */,
-				36178322243F1455003C6588 /* LibraMultiHDWallet.swift in Sources */,
+				36178322243F1455003C6588 /* DiemMultiHDWallet.swift in Sources */,
 				9DB515B623A32C3A0069A909 /* ViolasHDWallet.swift in Sources */,
 				361BDADA24F8E7BD00C4C54E /* LoanDetailLoanListTableViewManager.swift in Sources */,
 				3622F21424E539ED00CFB754 /* ReceiveView.swift in Sources */,
@@ -5115,12 +5115,12 @@
 				36677A7725077BBB009152B3 /* DepositOrdersViewModel.swift in Sources */,
 				361051872563CF54008407F5 /* ViolasModuleNetworkManager.swift in Sources */,
 				3622F21924E66A6400CFB754 /* MappingTokensAlert.swift in Sources */,
-				3617837024449D85003C6588 /* LibraTransactionModulePayload.swift in Sources */,
+				3617837024449D85003C6588 /* DiemTransactionModulePayload.swift in Sources */,
 				36828CD324B736860085A165 /* MarketMineTableViewManager.swift in Sources */,
 				3682E5D924AC9DC0007CA2CA /* ScanPublishView.swift in Sources */,
 				36F826EF24BD9ED50007ACC3 /* ExchangeTransactionsViewController.swift in Sources */,
 				361051542563C61E008407F5 /* MappingModuleNetworkManager.swift in Sources */,
-				9DC4880D2320EDF8005FF254 /* LibraUtils.swift in Sources */,
+				9DC4880D2320EDF8005FF254 /* DiemUtils.swift in Sources */,
 				9DC4886D232222CF005FF254 /* LBXScanViewStyle.swift in Sources */,
 				9DC8778F23796884006378C3 /* ToastView.swift in Sources */,
 				366AFEEA257782B60007AAFC /* ProfitMainViewController.swift in Sources */,
@@ -5149,7 +5149,7 @@
 				36828CDE24B74C270085A165 /* ExchangeView.swift in Sources */,
 				36178363244465EB003C6588 /* ViolasMultiPublicKey.swift in Sources */,
 				9D5B4E78236BCE1700F4D99C /* AddAssetViewTableViewCell.swift in Sources */,
-				9DC901F2232788C30097FD85 /* LibraAccessPath.swift in Sources */,
+				9DC901F2232788C30097FD85 /* DiemAccessPath.swift in Sources */,
 				9DBC267823408D55009650EA /* ed25519_ge.swift in Sources */,
 				36677A79250A1908009152B3 /* DropperCellConfig.swift in Sources */,
 				9DFFA88323683C5700EA74F9 /* WalletTransactionsTableViewManager.swift in Sources */,
@@ -5167,16 +5167,16 @@
 				3646E4FF24D3EFFB00B8C20B /* AssetsPoolTransactionDetailFooterView.swift in Sources */,
 				361BDADF24F8E7BE00C4C54E /* LoanMarketTableViewManager.swift in Sources */,
 				36828CE624B74C9A0085A165 /* ExchangeTransactionsTableViewCell.swift in Sources */,
-				9DC4880B2320E6C1005FF254 /* LibraHDPrivateKey.swift in Sources */,
+				9DC4880B2320E6C1005FF254 /* DiemHDPrivateKey.swift in Sources */,
 				361BDAB424F8E7BD00C4C54E /* LoanViewModel.swift in Sources */,
 				36828CC124B707C80085A165 /* AssetsPoolTransactionDetailModel.swift in Sources */,
-				36842166257F5241000B87D6 /* LibraTravelRuleMetadata.swift in Sources */,
+				36842166257F5241000B87D6 /* DiemTravelRuleMetadata.swift in Sources */,
 				366AFE4E256CF8190007AAFC /* GSCaptchaButton.swift in Sources */,
 				36F8270C24BEAA7E0007ACC3 /* DropperExtensions.swift in Sources */,
 				9D9B49B1235DA76100354EF0 /* AddAddressView.swift in Sources */,
 				9DC06A2D2371786B00BCE1FE /* CheckBackupViewController.swift in Sources */,
 				3622F20524E4000500CFB754 /* TransferModel.swift in Sources */,
-				36F42EB1243C80DE00DBBF8F /* LibraMultiPrivateKey.swift in Sources */,
+				36F42EB1243C80DE00DBBF8F /* DiemMultiPrivateKey.swift in Sources */,
 				3622F21724E6628E00CFB754 /* TokenMappingViewModel.swift in Sources */,
 				9DA8E2A22317ABC400E28D07 /* AppDelegate.swift in Sources */,
 				361BDAC924F8E7BD00C4C54E /* LoanListTableViewCell.swift in Sources */,
@@ -5186,7 +5186,7 @@
 				36F826F124BD9EEB0007ACC3 /* ExchangeTransactionsView.swift in Sources */,
 				361BDAF524F8E7BE00C4C54E /* LoanOrderDetailHeaderView.swift in Sources */,
 				9DB515C123A32F3E0069A909 /* ViolasTransactionWriteSetPayload.swift in Sources */,
-				3684216B257F5256000B87D6 /* LibraTravelRuleMetadataV0.swift in Sources */,
+				3684216B257F5256000B87D6 /* DiemTravelRuleMetadataV0.swift in Sources */,
 				9DC4886F232222CF005FF254 /* LBXScanWrapper.swift in Sources */,
 				9DB515B223A32BC50069A909 /* ViolasHDPrivateKey.swift in Sources */,
 				361BDAC324F8E7BD00C4C54E /* DepositTableViewCell.swift in Sources */,
@@ -5218,13 +5218,13 @@
 				366AFF432578CD3D0007AAFC /* ProfitPoolTableViewHeaderView.swift in Sources */,
 				36F826F524BD9F1B0007ACC3 /* AssetsPoolTransactionsViewController.swift in Sources */,
 				366AFE0A256CE2BB0007AAFC /* EnrollPhoneView.swift in Sources */,
-				36F42E8B2431B56A00DBBF8F /* LibraStructTag.swift in Sources */,
+				36F42E8B2431B56A00DBBF8F /* DiemStructTag.swift in Sources */,
 				361BDA0D24F89ACB00C4C54E /* ViolasTransactionPayload.swift in Sources */,
 				366AFE2D256CE9F10007AAFC /* PhoneAreaModel.swift in Sources */,
 				3617835B24440BDB003C6588 /* ViolasUtils.swift in Sources */,
 				366AFF0025778B050007AAFC /* ProfitBankView.swift in Sources */,
 				367914A1250F7446008C7237 /* ScanBankRepaymentView.swift in Sources */,
-				9DC4884F2321F051005FF254 /* LibraWordList.swift in Sources */,
+				9DC4884F2321F051005FF254 /* DiemWordList.swift in Sources */,
 				3682E5CC24AC3753007CA2CA /* AssetsPoolViewHeaderView.swift in Sources */,
 				9DFFA87D23683C1D00EA74F9 /* WalletTransactionsView.swift in Sources */,
 				3650F0C3248F7ED30086F578 /* HomeWithoutWalletView.swift in Sources */,
@@ -5236,7 +5236,7 @@
 				9D68D2F5237D24DD005B7593 /* BTCTransferView.swift in Sources */,
 				9D9B49AC235DA76100354EF0 /* AddressManagerModel.swift in Sources */,
 				36677A97250F6C64009152B3 /* ScanBankLoanView.swift in Sources */,
-				9DC901E923262CB80097FD85 /* LibraTransactionArgument.swift in Sources */,
+				9DC901E923262CB80097FD85 /* DiemTransactionArgument.swift in Sources */,
 				9D9B4A542366955B00354EF0 /* ImportWalletViewController.swift in Sources */,
 				9DA0264D236FFEB10084905B /* BackupMnemonicCollectionViewManager.swift in Sources */,
 				36B466AC2476566F00CFF438 /* ScanSendRawTransactionModel.swift in Sources */,
@@ -5255,12 +5255,12 @@
 				36E95D8B242A084B0004B86D /* ScanLoginViewController.swift in Sources */,
 				9DBC267A23408D55009650EA /* ed25519_verify.swift in Sources */,
 				9DBC267B23408D55009650EA /* ed25519_fe.swift in Sources */,
-				9D5C7C6723AA243A0090385C /* LibraCommon.swift in Sources */,
+				9D5C7C6723AA243A0090385C /* DiemCommon.swift in Sources */,
 				9D9B49AF235DA76100354EF0 /* AddAddressViewController.swift in Sources */,
 				3650F0AA24888FD40086F578 /* WalletMainView.swift in Sources */,
 				9D9B4A442362966100354EF0 /* AddWalletView.swift in Sources */,
 				3623AB5D23ED70CF004A01BF /* TokenMappingView.swift in Sources */,
-				9DC487FD2320AF4E005FF254 /* LibraHDWallet.swift in Sources */,
+				9DC487FD2320AF4E005FF254 /* DiemHDWallet.swift in Sources */,
 				36828CD524B736D10085A165 /* MarketMineViewHeaderView.swift in Sources */,
 				361BDAF224F8E7BE00C4C54E /* RepaymentTableViewManager.swift in Sources */,
 				3623AB8023FC0CB3004A01BF /* MappingTransactionsView.swift in Sources */,
@@ -5269,11 +5269,11 @@
 				361BDAE324F8E7BE00C4C54E /* LoanDetailDepositListView.swift in Sources */,
 				366AFF2B25778B860007AAFC /* ProfitInvitationViewController.swift in Sources */,
 				9D68D301237D260E005B7593 /* ViolasTransferModel.swift in Sources */,
-				366AFEC32570DF470007AAFC /* LibraBech32.swift in Sources */,
+				366AFEC32570DF470007AAFC /* DiemBech32.swift in Sources */,
 				366AFF612578D3A40007AAFC /* ProfitBankTableViewManager.swift in Sources */,
 				36828CBF24B707B90085A165 /* AssetsPoolTransactionDetailViewController.swift in Sources */,
 				9DC902432328FC4A0097FD85 /* HomeModel.swift in Sources */,
-				363D90F024CAAC6700F6374C /* LibraContractEvent.swift in Sources */,
+				363D90F024CAAC6700F6374C /* DiemContractEvent.swift in Sources */,
 				361783672444684F003C6588 /* ViolasStructTag.swift in Sources */,
 				366AFF1225778B3C0007AAFC /* ProfitPoolView.swift in Sources */,
 				9D9B49F52360389200354EF0 /* LanguageTableViewCell.swift in Sources */,
@@ -5283,8 +5283,8 @@
 				366AFE17256CE2E70007AAFC /* EnrollPhoneViewController.swift in Sources */,
 				9DA02652237011F00084905B /* BackupMnemonicFlowLayout.swift in Sources */,
 				361BDAE224F8E7BE00C4C54E /* LoanDetailDepositListTableViewHeaderView.swift in Sources */,
-				9DC488032320D6A1005FF254 /* LibraMnemonic.swift in Sources */,
-				9DC488052320DBCB005FF254 /* LibraHDPublicKey.swift in Sources */,
+				9DC488032320D6A1005FF254 /* DiemMnemonic.swift in Sources */,
+				9DC488052320DBCB005FF254 /* DiemHDPublicKey.swift in Sources */,
 				9DBC267723408D55009650EA /* ed25519_utility.swift in Sources */,
 				366AFF3625778F460007AAFC /* ProfitInvitationTableViewManager.swift in Sources */,
 				36828CD024B736630085A165 /* MarketMineViewController.swift in Sources */,
@@ -5297,10 +5297,10 @@
 				36F826F724BD9F390007ACC3 /* AssetsPoolTransactionsView.swift in Sources */,
 				36F826F924BD9F460007ACC3 /* AssetsPoolTransactionsModel.swift in Sources */,
 				3682E5CA24AC3728007CA2CA /* AssetsPoolModel.swift in Sources */,
-				36842161257F520B000B87D6 /* LibraGeneralMetadataV0.swift in Sources */,
+				36842161257F520B000B87D6 /* DiemGeneralMetadataV0.swift in Sources */,
 				9D9B4A05236048A000354EF0 /* AboutUsTableViewManager.swift in Sources */,
 				9DC06A332371789D00BCE1FE /* CheckBackupView.swift in Sources */,
-				36842170257F5270000B87D6 /* LibraUnstructuredBytesMetadata.swift in Sources */,
+				36842170257F5270000B87D6 /* DiemUnstructuredBytesMetadata.swift in Sources */,
 				9D9B49B0235DA76100354EF0 /* AddAddressModel.swift in Sources */,
 				361BDAC524F8E7BD00C4C54E /* DepositTableViewManager.swift in Sources */,
 				361BDAC724F8E7BD00C4C54E /* LoanListViewController.swift in Sources */,
@@ -5332,7 +5332,7 @@
 				9DB515B423A32C130069A909 /* ViolasHDPublicKey.swift in Sources */,
 				9D9B49FC236046CF00354EF0 /* ServiceLegalView.swift in Sources */,
 				9DC902452328FCD00097FD85 /* LibraWalletError.swift in Sources */,
-				36842151257F169D000B87D6 /* LibraMetadata.swift in Sources */,
+				36842151257F169D000B87D6 /* DiemMetadata.swift in Sources */,
 				361BDAE924F8E7BE00C4C54E /* LoanOrdersTableViewCell.swift in Sources */,
 				9D9B49F32360388C00354EF0 /* LanguageView.swift in Sources */,
 				9D08AD372330BA75004687E8 /* NetworkManager.swift in Sources */,
@@ -5387,7 +5387,7 @@
 				361BDAEA24F8E7BE00C4C54E /* LoanOrdersTableViewHeaderView.swift in Sources */,
 				3666E54B257A14EA007DC62F /* YieldFarmingModel.swift in Sources */,
 				9D9B4A08236048A000354EF0 /* AboutUsView.swift in Sources */,
-				9DC487FF2320AFB8005FF254 /* LibraError.swift in Sources */,
+				9DC487FF2320AFB8005FF254 /* DiemError.swift in Sources */,
 				36B466AE2476568E00CFF438 /* ScanSendRawTransactionView.swift in Sources */,
 				9D68D303237D261B005B7593 /* ViolasTransferViewController.swift in Sources */,
 				9DC488752322249E005FF254 /* LibraTransferView.swift in Sources */,
@@ -5398,7 +5398,7 @@
 				36836D2F24B3010F0031AC6E /* ExchangeTransactionDetailViewController.swift in Sources */,
 				3682E5D724AC9DA3007CA2CA /* ScanPublishViewController.swift in Sources */,
 				36677A95250F6C54009152B3 /* ScanBankLoanViewController.swift in Sources */,
-				36F42E89242E347300DBBF8F /* LibraTypeTag.swift in Sources */,
+				36F42E89242E347300DBBF8F /* DiemTypeTag.swift in Sources */,
 				9D9B49DD23602EB900354EF0 /* SettingTableViewManager.swift in Sources */,
 				9D9B4A462362967200354EF0 /* AddWalletViewController.swift in Sources */,
 				9D9B49CD235FFAAB00354EF0 /* MineView.swift in Sources */,

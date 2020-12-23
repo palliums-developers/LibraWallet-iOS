@@ -145,7 +145,7 @@ class ReceiveView: UIView {
                 tempAddress = "bitcoin:" + tempAddress
                 break
             case .Libra:
-                tempAddress = "libra://" + LibraManager.getQRAddress(address: tempAddress) + "?c=\(model.tokenModule.lowercased())"
+                tempAddress = "diem://" + DiemManager.getQRAddress(address: tempAddress) + "?c=\(model.tokenModule.lowercased())"
                 break
             case .Violas:
                 tempAddress = "violas://" + ViolasManager.getQRAddress(address: tempAddress) + "?c=\(model.tokenModule.lowercased())"

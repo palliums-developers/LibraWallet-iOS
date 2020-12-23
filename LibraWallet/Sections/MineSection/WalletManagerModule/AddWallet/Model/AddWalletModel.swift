@@ -18,7 +18,7 @@ class AddWalletModel: NSObject {
         let quene = DispatchQueue.init(label: "createWalletQuene")
         quene.async {
             do {
-                let mnemonic = try LibraMnemonic.generate(strength: .default, language: .english)
+                let mnemonic = try DiemMnemonic.generate(strength: .default, language: .english)
                 try WalletManager.createWallet(password: password, mnemonic: mnemonic)
                 DispatchQueue.main.async(execute: {
                     //需更新

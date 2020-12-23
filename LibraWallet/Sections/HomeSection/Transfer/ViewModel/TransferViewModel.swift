@@ -233,7 +233,7 @@ extension TransferViewModel: TransferViewDelegate {
             return
         }
         // 是否有效地址
-        guard LibraManager.isValidLibraAddress(address: address) else {
+        guard DiemManager.isValidDiemAddress(address: address) else {
             self.view?.makeToast(LibraWalletError.WalletTransfer(reason: .addressInvalid).localizedDescription,
                                  position: .center)
             return

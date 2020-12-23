@@ -129,7 +129,7 @@ extension ScanHandleManager {
             let (contentPrefix, currency, amount) = try self.handleLibraAmount(content: content)
             let qrAddress = contentPrefix.replacingOccurrences(of: "diem://", with: "")
             // 检测地址是否合法
-            let (address, subAddress) = try LibraManager.isValidTransferAddress(address: qrAddress)
+            let (address, subAddress) = try DiemManager.isValidTransferAddress(address: qrAddress)
             if tokens?.isEmpty == false {
                 let tempTokens = tokens?.filter({ item in
                     item.tokenModule.lowercased() == currency.lowercased() && item.tokenType == .Libra

@@ -265,7 +265,7 @@ class AddAddressView: UIView {
                 }
                 type = "1"
             } else if index == 32 {
-                guard LibraManager.isValidLibraAddress(address: address) == true else {
+                guard DiemManager.isValidDiemAddress(address: address) == true else {
                     self.makeToast(LibraWalletError.WalletAddAddress(reason: .libraAddressInvalidError).localizedDescription,
                                    position: .center)
                     return

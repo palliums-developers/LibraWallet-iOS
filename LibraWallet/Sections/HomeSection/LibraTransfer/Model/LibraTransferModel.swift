@@ -35,7 +35,7 @@ class LibraTransferModel: NSObject {
         queue.async {
             semaphore.wait()
             do {
-                let signature = try LibraManager.getNormalTransactionHex(sendAddress: sendAddress,
+                let signature = try DiemManager.getNormalTransactionHex(sendAddress: sendAddress,
                                                                          receiveAddress: receiveAddress,
                                                                          amount: amount,
                                                                          fee: fee,

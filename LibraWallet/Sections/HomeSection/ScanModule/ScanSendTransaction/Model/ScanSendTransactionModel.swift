@@ -147,7 +147,7 @@ extension ScanSendTransactionModel {
         queue.async {
             semaphore.wait()
             do {
-                let signature = try LibraManager.getWalletConnectTransactionHex(mnemonic: mnemonic,
+                let signature = try DiemManager.getWalletConnectTransactionHex(mnemonic: mnemonic,
                                                                                 sequenceNumber: self.sequenceNumber!,
                                                                                 model: model,
                                                                                 module: module)

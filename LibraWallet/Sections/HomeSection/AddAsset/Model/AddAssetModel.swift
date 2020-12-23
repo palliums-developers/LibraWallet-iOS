@@ -405,7 +405,7 @@ class AddAssetModel: NSObject {
     private func makeTransaction(sendAddress: String, mnemonic: [String], sequenceNumber: UInt64, type: WalletType, module: String) {
         do {
             if type == .Libra {
-                let signature = try LibraManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
+                let signature = try DiemManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
                                                                                sequenceNumber: sequenceNumber,
                                                                                fee: 0,
                                                                                module: module)

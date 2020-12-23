@@ -841,7 +841,7 @@ extension ExchangeModel {
             queue.async {
                 semaphore.wait()
                 do {
-                    let signature = try LibraManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
+                    let signature = try DiemManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
                                                                                    sequenceNumber: self.sequenceNumber ?? 0,
                                                                                    fee: 0,
                                                                                    module: moduleOutput)
@@ -962,7 +962,7 @@ extension ExchangeModel {
         queue.async {
             semaphore.wait()
             do {
-                let signature = try LibraManager.getLibraMappingTransactionHex(sendAddress: sendAddress,
+                let signature = try DiemManager.getLibraMappingTransactionHex(sendAddress: sendAddress,
                                                                                mnemonic: mnemonic,
                                                                                feeModule: feeModule,
                                                                                fee: fee,
@@ -1079,7 +1079,7 @@ extension ExchangeModel {
                 semaphore.wait()
                 if chainType == "libra" {
                     do {
-                        let signature = try LibraManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
+                        let signature = try DiemManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
                                                                                        sequenceNumber: self.sequenceNumber ?? 0,
                                                                                        fee: 0,
                                                                                        module: moduleOutput)
