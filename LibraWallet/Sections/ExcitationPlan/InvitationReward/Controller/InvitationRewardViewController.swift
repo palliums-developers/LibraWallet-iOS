@@ -8,6 +8,8 @@
 
 import UIKit
 import WebKit
+import WKWebViewJavascriptBridge
+import Photos
 
 class InvitationRewardViewController: BaseViewController {
     override func viewDidLoad() {
@@ -43,6 +45,65 @@ class InvitationRewardViewController: BaseViewController {
         return view
     }()
     var needDismissViewController: Bool?
+    var bridge: WKWebViewJavascriptBridge!
+    private var callClosure: ((Bool)->Void)?
+    func addWebListen() {
+        bridge = WKWebViewJavascriptBridge.init(webView: detailView.webView)
+        bridge.isLogEnable = true
+        bridge.register(handlerName: "callNative") { [weak self] (paramters, callback) in
+            if paramters!["method"] as? String == "save_picture" {
+                if let dataString = (paramters!["params"] as? [String])?.first, dataString.isEmpty == false {
+                    if let imageData = Data.init(base64Encoded: dataString, options: Data.Base64DecodingOptions.init(rawValue: 0)) {
+                        let image = UIImage.init(data: imageData)
+                        self?.loadImage(image: image!)
+                        self?.callClosure  = { result in
+                            if result == true {
+                                callback?("{\"id\":\"\(String(describing: paramters!["id"]!))\",\"result\":\"success\"}")
+                            } else {
+                                callback?("{\"id\":\"\(String(describing: paramters!["id"]!))\",\"result\":\"failed\"}")
+                            }
+                        }
+                    } else {
+                        // 返回失败
+                        callback?("{\"id\":\"\(String(describing: paramters!["id"]!))\",\"result\":\"failed\"}")
+                    }
+                }
+            } else if paramters!["method"] as? String == "share_link" {
+                if let dataString = (paramters!["params"] as? [String])?.first, dataString.isEmpty == false {
+//                    UIPasteboard.general.string = dataString
+//                    self?.detailView.makeToast(localLanguage(keyString: "wallet_copy_address_success_title"),
+//                                               position: .center)
+                    let activityVC = UIActivityViewController(activityItems: [dataString], applicationActivities: nil)
+                        // 顯示出我們的 activityVC。
+                        self?.present(activityVC, animated: true, completion: nil)
+                }
+            } else if paramters!["method"] as? String == "mine_invite" {
+                // 我的邀请
+                let vc = ProfitMainViewController()
+                self?.navigationController?.pushViewController(vc, animated: true)
+            } 
+            print("testiOSCallback called: \(String(describing: paramters))")
+//            callback?("{\"id\":\"\(String(describing: paramters!["id"]!))\",\"result\":\"success\"}")
+        }
+        //        bridge.call(handlerName: "callJavaScript", data: ["foo": "before ready"], callback: nil)
+        //                        self?.bridge.call(handlerName: "callJavaScript", data: "{\"id\": \"\(String(describing: paramters!["id"]!))\",\"result\": \"failed\"}", callback: nil)
+    }
+    func loadImage(image:UIImage) {
+        UIImageWriteToSavedPhotosAlbum(image, self, #selector(saveImage(image:didFinishSavingWithError:contextInfo:)), nil)
+    }
+    @objc private func saveImage(image: UIImage, didFinishSavingWithError error: NSError?, contextInfo: AnyObject) {
+        if error != nil {
+            print("保存失败")
+            if let call = self.callClosure {
+                call(false)
+            }
+        } else {
+            print("保存成功")
+            if let call = self.callClosure {
+                call(true)
+            }
+        }
+    }
     deinit {
         print("InvitationRewardViewController销毁了")
     }

@@ -38,7 +38,12 @@ class InvitationRewardView: UIView {
         return webView
     }()
     lazy var webRequest: URLRequest = {
-        let request = URLRequest.init(url: URL(string: invitationRewardURL + "?address=\(WalletManager.shared.violasAddress ?? "")&language=\(Localize.currentLanguage())")!)
+        var request = URLRequest.init(url: URL(string: invitationRewardURL + "?address=\(WalletManager.shared.violasAddress ?? "")&language=\(Localize.currentLanguage())")!)
+        request.cachePolicy = .reloadIgnoringCacheData
         return request
+    }()
+    lazy var toastView: ToastView = {
+        let toast = ToastView.init()
+        return toast
     }()
 }
