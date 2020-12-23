@@ -529,7 +529,7 @@ extension HomeModel {
         self.requests.append(request)
     }
     func activeViolasAccount(tokenID: Int64, address: String, authKey: String, tokens: [Token]) {
-        let request = violasModuleProvide.request(.activeAccount(authKey)) {[weak self](result) in
+        let request = violasModuleProvide.request(.activeAccount(authKey, address)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {

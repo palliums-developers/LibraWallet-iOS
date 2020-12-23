@@ -28,7 +28,7 @@ enum ViolasModuleRequest {
     /// 获取Violas链资产价格（钱包地址）
     case price(String)
     /// 激活Violas（临时）
-    case activeAccount(String)
+    case activeAccount(String, String)
 }
 extension ViolasModuleRequest: TargetType {
     var baseURL: URL {
@@ -43,7 +43,7 @@ extension ViolasModuleRequest: TargetType {
                 return URL(string:"https://ab.testnet.violas.io")!
             }
         case .price(_),
-             .activeAccount(_):
+             .activeAccount(_, _):
             if PUBLISH_VERSION == true {
                 return URL(string:"https://api.violas.io")!
             } else {
@@ -77,7 +77,7 @@ extension ViolasModuleRequest: TargetType {
             return "/1.0/violas/currency"
         case .price(_):
             return "/1.0/violas/value/violas"
-        case .activeAccount(_):
+        case .activeAccount(_, _):
             return "/1.0/violas/mint"
         }
     }
@@ -91,7 +91,7 @@ extension ViolasModuleRequest: TargetType {
              .accountTransactions(_, _, _, _, _),
              .currencyList,
              .price(_),
-             .activeAccount(_):
+             .activeAccount(_, _):
             return .get
         }
     }
@@ -145,13 +145,10 @@ extension ViolasModuleRequest: TargetType {
         case .price(let address):
             return .requestParameters(parameters: ["address":address],
                                       encoding: URLEncoding.queryString)
-        case .activeAccount(let authKey):
-            let index = authKey.index(authKey.startIndex, offsetBy: 32)
-            let address = authKey.suffix(from: index)
-            let authPrefix = authKey.prefix(upTo: index)
+        case .activeAccount(let authKey, let address):
             return .requestParameters(parameters: ["address": address,
-                                                   "auth_key_perfix": authPrefix,
-                                                   "currency":"LBR"],
+                                                   "auth_key_perfix": authKey,
+                                                   "currency":"VLS"],
                                       encoding: URLEncoding.queryString)
         }
     }
