@@ -9,6 +9,15 @@
 import UIKit
 import Moya
 
+struct ViolasSequenceDataModel: Codable {
+    var seqnum: UInt64?
+}
+struct ViolasSequenceMainDataModel: Codable {
+    var code: Int?
+    var data: ViolasSequenceDataModel?
+    var message: String?
+}
+
 class YieldFarmingModel: NSObject {
     private var requests: [Cancellable] = []
     @objc dynamic var dataDic: NSMutableDictionary = [:]
@@ -56,14 +65,14 @@ extension YieldFarmingModel {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BalanceViolasMainModel.self)
-                    if json.result != nil {
-                       self?.sequenceNumber = json.result?.sequence_number ?? 0
+                    let json = try response.map(ViolasSequenceMainDataModel.self)
+                    if json.code == 2000 {
+                       self?.sequenceNumber = json.data?.seqnum ?? 0
                        semaphore.signal()
                     } else {
                         print("GetAccountSequenceNumber_状态异常")
                         DispatchQueue.main.async(execute: {
-                            if let message = json.error?.message, message.isEmpty == false {
+                            if let message = json.message, message.isEmpty == false {
                                 let data = setKVOData(error: LibraWalletError.error(message), type: "GetAccountSequenceNumber")
                                 self?.setValue(data, forKey: "dataDic")
                             } else {
