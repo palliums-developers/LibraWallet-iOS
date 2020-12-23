@@ -11,18 +11,14 @@ import BigInt
 
 struct DiemUtils {
     static func getLengthData(length: UInt64, appendBytesCount: Int) -> Data {
-        var newData = Data()
         let lengthData = BigUInt(length).serialize()
         // 补全长度
-        for _ in 0..<(appendBytesCount - lengthData.count) {
-            newData.append(Data.init(hex: "00"))
-        }
+        var newData = Data.init(count: (appendBytesCount - lengthData.count))
         // 追加原始数据
         newData.append(lengthData)
         // 倒序输出
         let reversedAmount = newData.bytes.reversed()
         return Data() + reversedAmount
-        //    return uleb128Format(length: length)
     }
     static func uleb128Format(length: Int) -> Data {
         if length == 0 {
