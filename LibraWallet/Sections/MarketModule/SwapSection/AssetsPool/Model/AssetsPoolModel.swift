@@ -67,8 +67,9 @@ class AssetsPoolModel: NSObject {
     private var requests: [Cancellable] = []
     @objc dynamic var dataDic: NSMutableDictionary = [:]
     private var sequenceNumber: UInt64?
+    private var maxGasAmount: UInt64 = 600
     private var marketTokens: [MarketSupportTokensDataModel]?
-    private var accountTokens: [ViolasBalanceModel]?
+    private var accountTokens: [ViolasBalanceDataModel]?
     var tokenModel: AssetsPoolsInfoDataModel?
     func getAssetsPoolTransactions(address: String, page: Int, pageSize: Int, requestStatus: Int) {
         let type = requestStatus == 0 ? "AssetsPoolTransactionsOrigin":"AssetsPoolTransactionsMore"
@@ -139,7 +140,8 @@ extension AssetsPoolModel {
                 let signature = try ViolasManager.getMarketAddLiquidityTransactionHex(sendAddress: sendAddress,
                                                                                       mnemonic: mnemonic,
                                                                                       feeModule: feeModule,
-                                                                                      fee: fee,
+                                                                                      maxGasAmount: self.maxGasAmount,
+                                                                                      maxGasUnitPrice: 1,
                                                                                       sequenceNumber: self.sequenceNumber ?? 0,
                                                                                       desiredAmountA: amounta_desired,
                                                                                       desiredAmountB: amountb_desired,
@@ -171,7 +173,8 @@ extension AssetsPoolModel {
                 let signature = try ViolasManager.getMarketRemoveLiquidityTransactionHex(sendAddress: sendAddress,
                                                                                          mnemonic: mnemonic,
                                                                                          feeModule: feeModule,
-                                                                                         fee: fee,
+                                                                                         maxGasAmount: self.maxGasAmount,
+                                                                                         maxGasUnitPrice: 1,
                                                                                          sequenceNumber: self.sequenceNumber ?? 0,
                                                                                          liquidity: (NSDecimalNumber.init(value: liquidity).multiplying(by: NSDecimalNumber.init(value: 1000000))).uint64Value,
                                                                                          minAmountA: (NSDecimalNumber.init(value: amounta_min).multiplying(by: NSDecimalNumber.init(value: 1000000))).uint64Value,
@@ -194,9 +197,10 @@ extension AssetsPoolModel {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BalanceViolasMainModel.self)
+                    let json = try response.map(ViolasAccountMainModel.self)
                     if json.result != nil {
                         self?.sequenceNumber = json.result?.sequence_number ?? 0
+                        self?.maxGasAmount = ViolasManager.handleMaxGasAmount(balances: json.result?.balances ?? [ViolasBalanceDataModel.init(amount: 0, currency: "VLS")])
                         semaphore.signal()
                     } else {
                         print("SendLibraTransaction_状态异常")
@@ -472,9 +476,9 @@ extension AssetsPoolModel {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BalanceViolasMainModel.self)
+                    let json = try response.map(ViolasAccountMainModel.self)
                     if json.result == nil {
-                        let data = setKVOData(type: "UpdateViolasBalance", data: [ViolasBalanceModel.init(amount: 0, currency: "LBR")])
+                        let data = setKVOData(type: "UpdateViolasBalance", data: [ViolasBalanceDataModel.init(amount: 0, currency: "LBR")])
                         self?.setValue(data, forKey: "dataDic")
                         print("激活失败")
                     } else {

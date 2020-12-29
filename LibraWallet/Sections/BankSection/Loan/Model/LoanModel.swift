@@ -57,7 +57,8 @@ class LoanModel: NSObject {
     private var requests: [Cancellable] = []
     @objc dynamic var dataDic: NSMutableDictionary = [:]
     private var sequenceNumber: UInt64?
-    private var walletTokens: [ViolasBalanceModel]?
+    private var maxGasAmount: UInt64 = 600
+    private var walletTokens: [ViolasBalanceDataModel]?
     private var loanItemModel: BankLoanMarketDataModel?
     deinit {
         requests.forEach { cancellable in
@@ -163,9 +164,9 @@ extension LoanModel {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BalanceViolasMainModel.self)
-                    if json.result == nil {
-                        self?.walletTokens = [ViolasBalanceModel.init(amount: 0, currency: "LBR")]
+                    let json = try response.map(ViolasAccountMainModel.self)
+                    if json.result != nil {
+                        self?.walletTokens = [ViolasBalanceDataModel.init(amount: 0, currency: "LBR")]
                     } else {
                         self?.walletTokens = json.result?.balances
                     }
@@ -220,7 +221,8 @@ extension LoanModel {
                 semaphore.wait()
                 do {
                     let signature = try ViolasManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
-                                                                                    fee: 0,
+                                                                                    maxGasAmount: self.maxGasAmount,
+                                                                                    maxGasUnitPrice: 1,
                                                                                     sequenceNumber: self.sequenceNumber ?? 0,
                                                                                     inputModule: module)
                     self.makeViolasTransaction(signature: signature, type: "SendPublishOutputModuleViolasTransaction", semaphore: semaphore)
@@ -243,7 +245,8 @@ extension LoanModel {
                 let signature = try ViolasManager.getBankLoanTransactionHex(sendAddress: sendAddress,
                                                                             mnemonic: mnemonic,
                                                                             feeModule: feeModule,
-                                                                            fee: fee,
+                                                                            maxGasAmount: self.maxGasAmount,
+                                                                            maxGasUnitPrice: 1,
                                                                             sequenceNumber: self.sequenceNumber ?? 0,
                                                                             module: module,
                                                                             amount: amount)
@@ -263,9 +266,10 @@ extension LoanModel {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BalanceViolasMainModel.self)
+                    let json = try response.map(ViolasAccountMainModel.self)
                     if json.error == nil {
                         self?.sequenceNumber = json.result?.sequence_number ?? 0
+                        self?.maxGasAmount = ViolasManager.handleMaxGasAmount(balances: json.result?.balances ?? [ViolasBalanceDataModel.init(amount: 0, currency: "VLS")])
                         semaphore.signal()
                     } else {
                         print("GetViolasSequenceNumber_状态异常")
@@ -305,7 +309,7 @@ extension LoanModel {
             case let .success(response):
                 do {
                     let json = try response.map(LibraTransferMainModel.self)
-                    if json.result == nil {
+                    if json.result != nil {
                         DispatchQueue.main.async(execute: {
                             if let sema = semaphore {
                                 sema.signal()

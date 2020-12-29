@@ -13,6 +13,7 @@ class ScanSwapModel: NSObject {
     private var requests: [Cancellable] = []
     @objc dynamic var dataDic: NSMutableDictionary = [:]
     private var sequenceNumber: UInt64?
+    private var maxGasAmount: UInt64 = 600
     func sendSwapViolasTransaction(model: WCRawTransaction,  mnemonic: [String], module: String) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
@@ -31,8 +32,9 @@ class ScanSwapModel: NSObject {
                 
                 let signature = try ViolasManager.getMarketSwapTransactionHex(sendAddress: model.from ?? "",
                                                                               mnemonic: mnemonic,
-                                                                              feeModule: model.gasCurrencyCode ?? "LBR",
-                                                                              fee: model.gasUnitPrice ?? 0,
+                                                                              feeModule: model.gasCurrencyCode ?? "VLS",
+                                                                              maxGasAmount: self.maxGasAmount,
+                                                                              maxGasUnitPrice: model.gasUnitPrice ?? 1,
                                                                               sequenceNumber: self.sequenceNumber ?? 0,
                                                                               inputAmount: NSDecimalNumber.init(string: model.payload?.args?[1].value ?? "0").uint64Value,
                                                                               outputAmountMin: NSDecimalNumber.init(string: model.payload?.args?[2].value ?? "0").multiplying(by: NSDecimalNumber.init(value: 0.99)).uint64Value,
@@ -55,9 +57,10 @@ class ScanSwapModel: NSObject {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BalanceViolasMainModel.self)
+                    let json = try response.map(ViolasAccountMainModel.self)
                     if json.result != nil {
                         self?.sequenceNumber = json.result?.sequence_number ?? 0
+                        self?.maxGasAmount = ViolasManager.handleMaxGasAmount(balances: json.result?.balances ?? [ViolasBalanceDataModel.init(amount: 0, currency: "VLS")])
                         semaphore.signal()
                     } else {
                         print("GetViolasSequenceNumber_状态异常")
@@ -161,7 +164,8 @@ extension ScanSwapModel {
                 let signature = try ViolasManager.getMarketAddLiquidityTransactionHex(sendAddress: model.from ?? "",
                                                                                       mnemonic: mnemonic,
                                                                                       feeModule: module1,
-                                                                                      fee: 0,
+                                                                                      maxGasAmount: self.maxGasAmount,
+                                                                                      maxGasUnitPrice: 1,
                                                                                       sequenceNumber: self.sequenceNumber ?? 0,
                                                                                       desiredAmountA: NSDecimalNumber.init(string: model.payload?.args?[0].value ?? "0").uint64Value,
                                                                                       desiredAmountB: NSDecimalNumber.init(string: model.payload?.args?[1].value ?? "0").uint64Value,
@@ -197,7 +201,8 @@ extension ScanSwapModel {
                 let signature = try ViolasManager.getMarketRemoveLiquidityTransactionHex(sendAddress: model.from ?? "",
                                                                                          mnemonic: mnemonic,
                                                                                          feeModule: module1,
-                                                                                         fee: 0,
+                                                                                         maxGasAmount: self.maxGasAmount,
+                                                                                         maxGasUnitPrice: 1,
                                                                                          sequenceNumber: self.sequenceNumber ?? 0,
                                                                                          liquidity: NSDecimalNumber.init(string: model.payload?.args?[0].value ?? "0").uint64Value,
                                                                                          minAmountA: NSDecimalNumber.init(string: model.payload?.args?[1].value ?? "0").multiplying(by: NSDecimalNumber.init(value: 0.99)).uint64Value,

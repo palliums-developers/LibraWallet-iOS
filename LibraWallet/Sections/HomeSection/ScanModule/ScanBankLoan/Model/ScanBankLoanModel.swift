@@ -13,6 +13,7 @@ class ScanBankLoanModel: NSObject {
     private var requests: [Cancellable] = []
     @objc dynamic var dataDic: NSMutableDictionary = [:]
     private var sequenceNumber: UInt64?
+    private var maxGasAmount: UInt64 = 600
     deinit {
         requests.forEach { cancellable in
             cancellable.cancel()
@@ -37,8 +38,9 @@ extension ScanBankLoanModel {
                 
                 let signature = try ViolasManager.getBankLoanTransactionHex(sendAddress: model.from ?? "",
                                                                             mnemonic: mnemonic,
-                                                                            feeModule: model.gasCurrencyCode ?? "LBR",
-                                                                            fee: model.gasUnitPrice ?? 0,
+                                                                            feeModule: model.gasCurrencyCode ?? "VLS",
+                                                                            maxGasAmount: self.maxGasAmount,
+                                                                            maxGasUnitPrice: model.gasUnitPrice ?? 1,
                                                                             sequenceNumber: self.sequenceNumber ?? 0,
                                                                             module: module1,
                                                                             amount: amount)
@@ -62,9 +64,10 @@ extension ScanBankLoanModel {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BalanceViolasMainModel.self)
+                    let json = try response.map(ViolasAccountMainModel.self)
                     if json.error == nil {
                         self?.sequenceNumber = json.result?.sequence_number ?? 0
+                        self?.maxGasAmount = ViolasManager.handleMaxGasAmount(balances: json.result?.balances ?? [ViolasBalanceDataModel.init(amount: 0, currency: "VLS")])
                         semaphore.signal()
                     } else {
                         print("GetViolasSequenceNumber_状态异常")

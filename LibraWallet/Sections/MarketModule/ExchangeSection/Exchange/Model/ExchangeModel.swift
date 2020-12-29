@@ -111,9 +111,10 @@ class ExchangeModel: NSObject {
     private var requests: [Cancellable] = []
     @objc dynamic var dataDic: NSMutableDictionary = [:]
     private var sequenceNumber: UInt64?
+    private var maxGasAmount: UInt64 = 600
     private var marketTokens: MarketSupportTokensChainModel?
-    private var accountViolasTokens: [ViolasBalanceModel]?
-    private var accountLibraTokens: [LibraBalanceModel]?
+    private var accountViolasTokens: [ViolasBalanceDataModel]?
+    private var accountLibraTokens: [DiemBalanceDataModel]?
     private var accountBTCAmount: String?
     private var supportSwapData: MarketSupportMappingTokensDataModel?
     var utxos: [TrezorBTCUTXOMainModel]?
@@ -309,11 +310,11 @@ extension ExchangeModel {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BalanceViolasMainModel.self)
+                    let json = try response.map(ViolasAccountMainModel.self)
                     if json.result == nil {
 //                        let data = setKVOData(type: "UpdateViolasBalance", data: [ViolasBalanceModel.init(amount: 0, currency: "LBR")])
 //                        self?.setValue(data, forKey: "dataDic")
-                        self?.accountViolasTokens = [ViolasBalanceModel.init(amount: 0, currency: "LBR")]
+                        self?.accountViolasTokens = [ViolasBalanceDataModel.init(amount: 0, currency: "LBR")]
                         group.leave()
                     } else {
                         self?.accountViolasTokens = json.result?.balances
@@ -340,11 +341,11 @@ extension ExchangeModel {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BalanceLibraMainModel.self)
+                    let json = try response.map(DiemAccountMainModel.self)
                     if json.result == nil {
 //                        let data = setKVOData(type: "UpdateLibraBalance", data: [LibraBalanceModel.init(amount: 0, currency: "LBR")])
 //                        self?.setValue(data, forKey: "dataDic")
-                        self?.accountLibraTokens = [LibraBalanceModel.init(amount: 0, currency: "LBR")]
+                        self?.accountLibraTokens = [DiemBalanceDataModel.init(amount: 0, currency: "LBR")]
                         group.leave()
                     } else {
                         self?.accountLibraTokens = json.result?.balances
@@ -380,7 +381,7 @@ extension ExchangeModel {
                 token.activeState = false
                 token.amount = 0
                 token.chainType = 1
-                for activeToken in (self.accountViolasTokens ?? [ViolasBalanceModel]()) {
+                for activeToken in (self.accountViolasTokens ?? [ViolasBalanceDataModel]()) {
                     if token.module == activeToken.currency {
                         token.activeState = true
                         token.amount = activeToken.amount
@@ -395,7 +396,7 @@ extension ExchangeModel {
                 token.activeState = false
                 token.amount = 0
                 token.chainType = 0
-                for activeToken in (self.accountLibraTokens ?? [LibraBalanceModel]()) {
+                for activeToken in (self.accountLibraTokens ?? [DiemBalanceDataModel]()) {
                     if token.module == activeToken.currency {
                         token.activeState = true
                         token.amount = activeToken.amount
@@ -697,7 +698,8 @@ extension ExchangeModel {
                 semaphore.wait()
                 do {
                     let signature = try ViolasManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
-                                                                                    fee: 0,
+                                                                                    maxGasAmount: self.maxGasAmount,
+                                                                                    maxGasUnitPrice: 1,
                                                                                     sequenceNumber: self.sequenceNumber ?? 0,
                                                                                     inputModule: moduleB)
                     self.makeViolasTransaction(signature: signature, type: "SendPublishOutputModuleViolasTransaction", semaphore: semaphore)
@@ -720,7 +722,8 @@ extension ExchangeModel {
                 let signature = try ViolasManager.getMarketSwapTransactionHex(sendAddress: sendAddress,
                                                                               mnemonic: mnemonic,
                                                                               feeModule: feeModule,
-                                                                              fee: 1,
+                                                                              maxGasAmount: self.maxGasAmount,
+                                                                              maxGasUnitPrice: 1,
                                                                               sequenceNumber: self.sequenceNumber ?? 0,
                                                                               inputAmount: amountIn,
                                                                               outputAmountMin: AmountOutMin,
@@ -743,9 +746,10 @@ extension ExchangeModel {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BalanceViolasMainModel.self)
+                    let json = try response.map(ViolasAccountMainModel.self)
                     if json.error == nil {
                         self?.sequenceNumber = json.result?.sequence_number ?? 0
+                        self?.maxGasAmount = ViolasManager.handleMaxGasAmount(balances: json.result?.balances ?? [ViolasBalanceDataModel.init(amount: 0, currency: "VLS")])
                         semaphore.signal()
                     } else {
                         print("GetViolasSequenceNumber_状态异常")
@@ -869,7 +873,8 @@ extension ExchangeModel {
                 let signature = try ViolasManager.getViolasMappingTransactionHex(sendAddress: sendAddress,
                                                                                  mnemonic: mnemonic,
                                                                                  feeModule: feeModule,
-                                                                                 fee: fee,
+                                                                                 maxGasAmount: self.maxGasAmount,
+                                                                                 maxGasUnitPrice: 1,
                                                                                  sequenceNumber: self.sequenceNumber ?? 0,
                                                                                  inputModule: moduleInput,
                                                                                  inputAmount: amountIn,
@@ -904,7 +909,8 @@ extension ExchangeModel {
                 let signature = try ViolasManager.getViolasMappingTransactionHex(sendAddress: sendAddress,
                                                                                  mnemonic: mnemonic,
                                                                                  feeModule: feeModule,
-                                                                                 fee: fee,
+                                                                                 maxGasAmount: self.maxGasAmount,
+                                                                                 maxGasUnitPrice: 1,
                                                                                  sequenceNumber: self.sequenceNumber ?? 0,
                                                                                  inputModule: moduleInput,
                                                                                  inputAmount: amountIn,
@@ -938,7 +944,8 @@ extension ExchangeModel {
                 semaphore.wait()
                 do {
                     let signature = try ViolasManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
-                                                                                    fee: 0,
+                                                                                    maxGasAmount: self.maxGasAmount,
+                                                                                    maxGasUnitPrice: 1,
                                                                                     sequenceNumber: self.sequenceNumber ?? 0,
                                                                                     inputModule: moduleOutput)
                     self.makeViolasTransaction(signature: signature, type: "SendPublishOutputModuleViolasTransaction", semaphore: semaphore)
@@ -989,7 +996,7 @@ extension ExchangeModel {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BalanceLibraMainModel.self)
+                    let json = try response.map(DiemAccountMainModel.self)
                     self?.sequenceNumber = json.result?.sequence_number
                     semaphore.signal()
                 } catch {
@@ -1094,7 +1101,8 @@ extension ExchangeModel {
                 } else {
                     do {
                         let signature = try ViolasManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
-                                                                                        fee: 0,
+                                                                                        maxGasAmount: self.maxGasAmount,
+                                                                                        maxGasUnitPrice: 1,
                                                                                         sequenceNumber: self.sequenceNumber ?? 0,
                                                                                         inputModule: moduleOutput)
                         self.makeViolasTransaction(signature: signature, type: "SendPublishOutputModuleViolasTransaction", semaphore: semaphore)

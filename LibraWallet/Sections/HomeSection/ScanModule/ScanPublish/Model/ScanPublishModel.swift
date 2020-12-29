@@ -44,7 +44,7 @@ class ScanPublishModel: NSObject {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BalanceViolasMainModel.self)
+                    let json = try response.map(ViolasAccountMainModel.self)
                     if json.result != nil {
                         self?.sequenceNumber = json.result?.sequence_number ?? 0
                         semaphore.signal()

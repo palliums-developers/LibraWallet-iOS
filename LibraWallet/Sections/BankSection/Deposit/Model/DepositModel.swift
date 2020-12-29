@@ -21,6 +21,8 @@ struct DepositItemDetailMainDataModel: Codable {
     var intor: [DepositItemDetailMainDataIntroduceModel]?
     /// 产品最少借贷额度
     var minimum_amount: UInt64?
+    /// 最少增长额度
+    var minimum_step: Int?
     /// 产品名称
     var name: String?
     /// 质押率
@@ -33,6 +35,8 @@ struct DepositItemDetailMainDataModel: Codable {
     var quota_used: UInt64?
     /// 借贷率
     var rate: Double?
+    /// 借贷率描述
+    var rate_desc: String?
     /// 借贷币地址
     var token_address: String?
     /// 借贷币Module
@@ -63,9 +67,10 @@ struct DepositLocalDataModel {
 class DepositModel: NSObject {
     private var requests: [Cancellable] = []
     @objc dynamic var dataDic: NSMutableDictionary = [:]
-    private var walletTokens: [ViolasBalanceModel]?
+    private var walletTokens: [ViolasBalanceDataModel]?
     private var depositItemModel: DepositItemDetailMainDataModel?
     private var sequenceNumber: UInt64?
+    private var maxGasAmount: UInt64 = 600
     deinit {
         requests.forEach { cancellable in
             cancellable.cancel()
@@ -157,9 +162,9 @@ extension DepositModel {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BalanceViolasMainModel.self)
+                    let json = try response.map(ViolasAccountMainModel.self)
                     if json.result == nil {
-                        self?.walletTokens = [ViolasBalanceModel.init(amount: 0, currency: "LBR")]
+                        self?.walletTokens = [ViolasBalanceDataModel.init(amount: 0, currency: "LBR")]
                     } else {
                         self?.walletTokens = json.result?.balances
                     }
@@ -211,7 +216,8 @@ extension DepositModel {
                 let signature = try ViolasManager.getBankDepositTransactionHex(sendAddress: sendAddress,
                                                                                 mnemonic: mnemonic,
                                                                                 feeModule: feeModule,
-                                                                                fee: fee,
+                                                                                maxGasAmount: self.maxGasAmount,
+                                                                                maxGasUnitPrice: 1,
                                                                                 sequenceNumber: self.sequenceNumber ?? 0,
                                                                                 module: module,
                                                                                 amount: amount)
@@ -231,9 +237,10 @@ extension DepositModel {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BalanceViolasMainModel.self)
+                    let json = try response.map(ViolasAccountMainModel.self)
                     if json.error == nil {
                         self?.sequenceNumber = json.result?.sequence_number ?? 0
+                        self?.maxGasAmount = ViolasManager.handleMaxGasAmount(balances: json.result?.balances ?? [ViolasBalanceDataModel.init(amount: 0, currency: "VLS")])
                         semaphore.signal()
                     } else {
                         print("GetViolasSequenceNumber_状态异常")

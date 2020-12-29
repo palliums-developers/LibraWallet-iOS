@@ -194,7 +194,7 @@ extension DepositViewModel: DepositViewDelegate {
             throw LibraWalletError.WalletBankDeposit(reason: .amountTooLittle)
         }
         // 检查是否比每日限额少
-        guard amount.uint64Value < (NSDecimalNumber.init(value: header.productModel?.quota_limit ?? 0).subtracting(NSDecimalNumber.init(value: header.productModel?.quota_used ?? 0))).uint64Value else {
+        guard amount.uint64Value <= (NSDecimalNumber.init(value: header.productModel?.quota_limit ?? 0).subtracting(NSDecimalNumber.init(value: header.productModel?.quota_used ?? 0))).uint64Value else {
             throw LibraWalletError.WalletBankDeposit(reason: .quotaInsufficient)
         }
         return amount.uint64Value

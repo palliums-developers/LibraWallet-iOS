@@ -619,7 +619,7 @@ extension WalletManager {
 }
 // MARK: 更新钱包余额
 extension WalletManager {
-    static func updateLibraTokensBalance(tokens: [Token], tokenBalances: [LibraBalanceModel]) {
+    static func updateLibraTokensBalance(tokens: [Token], tokenBalances: [DiemBalanceDataModel]) {
         // 刷新本地缓存数据
         for model in tokenBalances {
             for token in tokens {
@@ -635,7 +635,7 @@ extension WalletManager {
             }
         }
     }
-    static func updateViolasTokensBalance(tokens: [Token], tokenBalances: [ViolasBalanceModel]) {
+    static func updateViolasTokensBalance(tokens: [Token], tokenBalances: [ViolasBalanceDataModel]) {
         // 刷新本地缓存数据
         for model in tokenBalances {
             for token in tokens {

@@ -26,6 +26,7 @@ class ViolasTransferModel: NSObject {
     @objc dynamic var dataDic: NSMutableDictionary = [:]
     private var requests: [Cancellable] = []
     private var sequenceNumber: UInt64?
+    private var maxGasAmount: UInt64 = 600
     func sendViolasTransaction(sendAddress: String, receiveAddress: String, amount: UInt64, fee: UInt64, mnemonic: [String], module: String) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
@@ -39,7 +40,8 @@ class ViolasTransferModel: NSObject {
                 let signature = try ViolasManager.getDefaultTransactionHex(sendAddress: sendAddress,
                                                                            receiveAddress: receiveAddress,
                                                                            amount: amount,
-                                                                           fee: fee,
+                                                                           maxGasAmount: self.maxGasAmount,
+                                                                           maxGasUnitPrice: 1,
                                                                            mnemonic: mnemonic,
                                                                            sequenceNumber: self.sequenceNumber ?? 0,
                                                                            module: module)
@@ -59,10 +61,11 @@ class ViolasTransferModel: NSObject {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BalanceViolasMainModel.self)
+                    let json = try response.map(ViolasAccountMainModel.self)
                     if json.result != nil {
-                       self?.sequenceNumber = json.result?.sequence_number ?? 0
-                       semaphore.signal()
+                        self?.sequenceNumber = json.result?.sequence_number ?? 0
+                        self?.maxGasAmount = ViolasManager.handleMaxGasAmount(balances: json.result?.balances ?? [ViolasBalanceDataModel.init(amount: 0, currency: "VLS")])
+                        semaphore.signal()
                     } else {
                         print("SendLibraTransaction_状态异常")
                         DispatchQueue.main.async(execute: {

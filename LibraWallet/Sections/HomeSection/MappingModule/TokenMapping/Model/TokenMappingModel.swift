@@ -42,8 +42,9 @@ class TokenMappingModel: NSObject {
     private var requests: [Cancellable] = []
     @objc dynamic var dataDic: NSMutableDictionary = [:]
     private var sequenceNumber: UInt64?
-    private var accountViolasTokens: [ViolasBalanceModel]?
-    private var accountLibraTokens: [LibraBalanceModel]?
+    private var maxGasAmount: UInt64 = 600
+    private var accountViolasTokens: [ViolasBalanceDataModel]?
+    private var accountLibraTokens: [DiemBalanceDataModel]?
     private var accountBTCAmount: String?
     private var mappingTokenList: [TokenMappingListDataModel]?
 //    var utxos: [BTCUnspentUTXOListModel]?
@@ -90,7 +91,8 @@ extension TokenMappingModel {
                 } else {
                     do {
                         let signature = try ViolasManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
-                                                                                        fee: 0,
+                                                                                        maxGasAmount: self.maxGasAmount,
+                                                                                        maxGasUnitPrice: 1,
                                                                                         sequenceNumber: self.sequenceNumber ?? 0,
                                                                                         inputModule: moduleOutput)
                         self.makeViolasTransaction(signature: signature, type: "SendPublishOutputModuleViolasTransaction", semaphore: semaphore)
@@ -264,7 +266,8 @@ extension TokenMappingModel {
                 semaphore.wait()
                 do {
                     let signature = try ViolasManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
-                                                                                    fee: 0,
+                                                                                    maxGasAmount: self.maxGasAmount,
+                                                                                    maxGasUnitPrice: 1,
                                                                                     sequenceNumber: self.sequenceNumber ?? 0,
                                                                                     inputModule: moduleOutput)
                     self.makeViolasTransaction(signature: signature, type: "SendPublishOutputModuleViolasTransaction", semaphore: semaphore)
@@ -311,7 +314,7 @@ extension TokenMappingModel {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BalanceLibraMainModel.self)
+                    let json = try response.map(DiemAccountMainModel.self)
                     self?.sequenceNumber = json.result?.sequence_number
                     semaphore.signal()
                 } catch {
@@ -419,7 +422,8 @@ extension TokenMappingModel {
                 let signature = try ViolasManager.getViolasMappingTransactionHex(sendAddress: sendAddress,
                                                                                  mnemonic: mnemonic,
                                                                                  feeModule: module,
-                                                                                 fee: fee,
+                                                                                 maxGasAmount: self.maxGasAmount,
+                                                                                 maxGasUnitPrice: 1,
                                                                                  sequenceNumber: self.sequenceNumber ?? 0,
                                                                                  inputModule: module,
                                                                                  inputAmount: amountIn,
@@ -444,9 +448,10 @@ extension TokenMappingModel {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BalanceViolasMainModel.self)
+                    let json = try response.map(ViolasAccountMainModel.self)
                     if json.error == nil {
                         self?.sequenceNumber = json.result?.sequence_number ?? 0
+                        self?.maxGasAmount = ViolasManager.handleMaxGasAmount(balances: json.result?.balances ?? [ViolasBalanceDataModel.init(amount: 0, currency: "VLS")])
                         semaphore.signal()
                     } else {
                         print("GetViolasSequenceNumber_状态异常")
@@ -624,9 +629,9 @@ extension TokenMappingModel {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BalanceViolasMainModel.self)
+                    let json = try response.map(ViolasAccountMainModel.self)
                     if json.result == nil {
-                        self?.accountViolasTokens = [ViolasBalanceModel.init(amount: 0, currency: "LBR")]
+                        self?.accountViolasTokens = [ViolasBalanceDataModel.init(amount: 0, currency: "LBR")]
                         group.leave()
                     } else {
                         self?.accountViolasTokens = json.result?.balances
@@ -653,9 +658,9 @@ extension TokenMappingModel {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BalanceLibraMainModel.self)
+                    let json = try response.map(DiemAccountMainModel.self)
                     if json.result == nil {
-                        self?.accountLibraTokens = [LibraBalanceModel.init(amount: 0, currency: "LBR")]
+                        self?.accountLibraTokens = [DiemBalanceDataModel.init(amount: 0, currency: "LBR")]
                         group.leave()
                     } else {
                         self?.accountLibraTokens = json.result?.balances

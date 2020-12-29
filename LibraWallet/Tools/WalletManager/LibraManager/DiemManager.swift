@@ -114,6 +114,23 @@ struct DiemManager {
                                                 separator: "1")
         return address
     }
+    static func handleMaxGasAmount(balances: [ViolasBalanceDataModel]) -> UInt64 {
+        let model = balances.filter {
+            $0.currency == "VLS"
+        }
+        guard model.isEmpty == false else {
+            return 1_000_000
+        }
+        if let balance = model.first?.amount, balance > 0 {
+            if balance < 1_000_000 {
+                return NSDecimalNumber.init(value: balance).uint64Value
+            } else {
+                return 1_000_000
+            }
+        } else {
+            return 1_000_000
+        }
+    }
 }
 extension DiemManager {
     /// Diem交易Hex

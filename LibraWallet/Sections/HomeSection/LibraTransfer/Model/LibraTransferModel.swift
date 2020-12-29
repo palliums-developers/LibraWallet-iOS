@@ -8,12 +8,16 @@
 
 import UIKit
 import Moya
+
 struct LibraTransferErrorModel: Codable {
     var code: Int?
-    var data: String?
+    var data: DiemErrorStatusCode?
     var message: String?
 }
 struct LibraTransferMainModel: Codable {
+    var diem_chain_id: Int?
+    var diem_ledger_version: UInt64?
+    var diem_ledger_timestampusec: UInt64?
     var id: String?
     var jsonrpc: String?
     var result: String?
@@ -67,7 +71,7 @@ class LibraTransferModel: NSObject {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BalanceLibraMainModel.self)
+                    let json = try response.map(DiemAccountMainModel.self)
                     self?.sequenceNumber = json.result?.sequence_number
                     semaphore.signal()
                 } catch {

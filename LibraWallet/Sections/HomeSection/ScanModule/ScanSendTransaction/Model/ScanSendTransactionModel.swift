@@ -46,7 +46,7 @@ class ScanSendTransactionModel: NSObject {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BalanceViolasMainModel.self)
+                    let json = try response.map(ViolasAccountMainModel.self)
                     if json.result != nil {
                         self?.sequenceNumber = UInt64(json.result?.sequence_number ?? 0)
                         semaphore.signal()
@@ -173,7 +173,7 @@ extension ScanSendTransactionModel {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BalanceLibraMainModel.self)
+                    let json = try response.map(DiemAccountMainModel.self)
                     self?.sequenceNumber = UInt64(json.result?.sequence_number ?? 0)
                     semaphore.signal()
                 } catch {

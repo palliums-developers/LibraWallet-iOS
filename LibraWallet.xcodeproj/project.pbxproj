@@ -266,6 +266,8 @@
 		368CD5E324D26F4E0092F12E /* MarketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368CD5E224D26F4E0092F12E /* MarketManager.swift */; };
 		368F7BD524FCFC4700CCF3FB /* BankLegalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368F7BD424FCFC4700CCF3FB /* BankLegalViewController.swift */; };
 		368F7BD724FCFC5700CCF3FB /* BankLegalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368F7BD624FCFC5700CCF3FB /* BankLegalView.swift */; };
+		36957508259B120000D8A45E /* DiemAccountMainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36957507259B120000D8A45E /* DiemAccountMainModel.swift */; };
+		3695750D259B124400D8A45E /* ViolasAccountMainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3695750C259B124400D8A45E /* ViolasAccountMainModel.swift */; };
 		36AA10F925008A1E00BEF941 /* BankContracts.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 36AA10F825008A1E00BEF941 /* BankContracts.bundle */; };
 		36B43A7223BDE967008E2EEA /* LBXScanError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B43A7123BDE967008E2EEA /* LBXScanError.swift */; };
 		36B466A62476563800CFF438 /* ScanSignTransactionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B466A52476563800CFF438 /* ScanSignTransactionViewController.swift */; };
@@ -755,6 +757,8 @@
 		368CD5E224D26F4E0092F12E /* MarketManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketManager.swift; sourceTree = "<group>"; };
 		368F7BD424FCFC4700CCF3FB /* BankLegalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankLegalViewController.swift; sourceTree = "<group>"; };
 		368F7BD624FCFC5700CCF3FB /* BankLegalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankLegalView.swift; sourceTree = "<group>"; };
+		36957507259B120000D8A45E /* DiemAccountMainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemAccountMainModel.swift; sourceTree = "<group>"; };
+		3695750C259B124400D8A45E /* ViolasAccountMainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasAccountMainModel.swift; sourceTree = "<group>"; };
 		36AA10F825008A1E00BEF941 /* BankContracts.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = BankContracts.bundle; sourceTree = "<group>"; };
 		36B43A7123BDE967008E2EEA /* LBXScanError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LBXScanError.swift; sourceTree = "<group>"; };
 		36B466A52476563800CFF438 /* ScanSignTransactionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanSignTransactionViewController.swift; sourceTree = "<group>"; };
@@ -3423,6 +3427,8 @@
 				9DC8778B237958D2006378C3 /* LibraManager */,
 				9DC06A6C2373FEA300BCE1FE /* ViolasManager */,
 				9D3954FC235D4ABB0068019F /* BTCManager */,
+				36957507259B120000D8A45E /* DiemAccountMainModel.swift */,
+				3695750C259B124400D8A45E /* ViolasAccountMainModel.swift */,
 			);
 			path = WalletManager;
 			sourceTree = "<group>";
@@ -5049,6 +5055,7 @@
 				9DC06A3F2372A9B100BCE1FE /* MarketViewController.swift in Sources */,
 				361051472563BDC7008407F5 /* MarketModuleNetworkManager.swift in Sources */,
 				3646E4FD24D3EFEE00B8C20B /* AssetsPoolTransactionDetailHeaderView.swift in Sources */,
+				3695750D259B124400D8A45E /* ViolasAccountMainModel.swift in Sources */,
 				3646E50F24DBF5C600B8C20B /* ScanSwapModel.swift in Sources */,
 				361BDAEC24F8E7BE00C4C54E /* RepaymentViewModel.swift in Sources */,
 				9D9B49AA235DA76100354EF0 /* AddressManagerViewController.swift in Sources */,
@@ -5209,6 +5216,7 @@
 				361BDA1324F89E7A00C4C54E /* ViolasContractEvent.swift in Sources */,
 				366AFE5B256E5CAE0007AAFC /* InvitationRewardViewController.swift in Sources */,
 				9DB515A823A327640069A909 /* ViolasMnemonic.swift in Sources */,
+				36957508259B120000D8A45E /* DiemAccountMainModel.swift in Sources */,
 				36B466A82476565000CFF438 /* ScanSendTransactionViewController.swift in Sources */,
 				9DC06A352371794100BCE1FE /* CheckBackupCollectionViewMananger.swift in Sources */,
 				3682E5BC24A865EB007CA2CA /* ScanLogoutView.swift in Sources */,

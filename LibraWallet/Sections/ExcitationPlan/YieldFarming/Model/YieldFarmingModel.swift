@@ -22,6 +22,7 @@ class YieldFarmingModel: NSObject {
     private var requests: [Cancellable] = []
     @objc dynamic var dataDic: NSMutableDictionary = [:]
     private var sequenceNumber: UInt64?
+    private var maxGasAmount: UInt64 = 600
     deinit {
         requests.forEach { cancellable in
             cancellable.cancel()
@@ -45,7 +46,8 @@ extension YieldFarmingModel {
                 let signature = try ViolasManager.getBankExtractProfitTransactionHex(sendAddress: sendAddress,
                                                                                      mnemonic: mnemonic,
                                                                                      feeModule: "VLS",
-                                                                                     fee: 1,
+                                                                                     maxGasAmount: self.maxGasAmount,
+                                                                                     maxGasUnitPrice: 1,
                                                                                      sequenceNumber: self.sequenceNumber!)
                 
                 self.makeViolasTransaction(signature: signature, type: "SendBankExtractTransaction", semaphore: semaphore)
@@ -61,18 +63,19 @@ extension YieldFarmingModel {
         }
     }
     private func getAccountSequenceNumber(sendAddress: String, semaphore: DispatchSemaphore) {
-        let request = violasModuleProvide.request(.accountSequenceNumber(sendAddress)) {[weak self](result) in
+        let request = violasModuleProvide.request(.accountInfo(sendAddress)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(ViolasSequenceMainDataModel.self)
-                    if json.code == 2000 {
-                       self?.sequenceNumber = json.data?.seqnum ?? 0
-                       semaphore.signal()
+                    let json = try response.map(ViolasAccountMainModel.self)
+                    if json.error == nil {
+                        self?.sequenceNumber = json.result?.sequence_number ?? 0
+                        self?.maxGasAmount = ViolasManager.handleMaxGasAmount(balances: json.result?.balances ?? [ViolasBalanceDataModel.init(amount: 0, currency: "VLS")])
+                        semaphore.signal()
                     } else {
                         print("GetAccountSequenceNumber_状态异常")
                         DispatchQueue.main.async(execute: {
-                            if let message = json.message, message.isEmpty == false {
+                            if let message = json.error?.message, message.isEmpty == false {
                                 let data = setKVOData(error: LibraWalletError.error(message), type: "GetAccountSequenceNumber")
                                 self?.setValue(data, forKey: "dataDic")
                             } else {
@@ -107,7 +110,7 @@ extension YieldFarmingModel {
             case let .success(response):
                 do {
                     let json = try response.map(LibraTransferMainModel.self)
-                    if json.result == nil {
+                    if json.error == nil {
                        DispatchQueue.main.async(execute: {
                            let data = setKVOData(type: type)
                            self?.setValue(data, forKey: "dataDic")
@@ -160,7 +163,8 @@ extension YieldFarmingModel {
                 let signature = try ViolasManager.getMarketExtractProfitTransactionHex(sendAddress: sendAddress,
                                                                                        mnemonic: mnemonic,
                                                                                        feeModule: "VLS",
-                                                                                       fee: 1,
+                                                                                       maxGasAmount: self.maxGasAmount,
+                                                                                       maxGasUnitPrice: 1,
                                                                                        sequenceNumber: self.sequenceNumber!)
                 
                 self.makeViolasTransaction(signature: signature, type: "SendMarketExtractTransaction", semaphore: semaphore)

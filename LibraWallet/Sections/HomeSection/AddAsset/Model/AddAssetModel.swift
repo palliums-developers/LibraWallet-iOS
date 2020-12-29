@@ -82,14 +82,15 @@ struct LibraTokensMainModel: Codable {
 class AddAssetModel: NSObject {
     private var requests: [Cancellable] = []
     @objc dynamic var dataDic: NSMutableDictionary = [:]
-    private var violasEnableTokens: [ViolasBalanceModel]?
-    private var libraEnableTokens: [LibraBalanceModel]?
+    private var violasEnableTokens: [ViolasBalanceDataModel]?
+    private var libraEnableTokens: [DiemBalanceDataModel]?
     private var violasTokens: [ViolasTokensCurrenciesModel]?
     private var libraTokens: [LibraTokensCurrenciesModel]?
     private var resultTokens = [AssetsModel]()
     private var violasWalletActiveState: Bool = false
     private var libraWalletActiveState: Bool = false
     private var contract: String?
+    private var maxGasAmount: UInt64 = 600
     func getSupportToken(localTokens: [Token]) {
         let group = DispatchGroup.init()
         let quene = DispatchQueue.init(label: "SupportTokenQuene")
@@ -165,12 +166,12 @@ class AddAssetModel: NSObject {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BalanceViolasMainModel.self)
+                    let json = try response.map(ViolasAccountMainModel.self)
                     if json.result == nil {
 //                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: "GetViolasAccountInfo")
 //                        self?.setValue(data, forKey: "dataDic")
                         print("ViolasWallet尚未激活")
-                        self?.violasEnableTokens = [ViolasBalanceModel]()
+                        self?.violasEnableTokens = [ViolasBalanceDataModel]()
                     } else {
 //                        let data = setKVOData(type: "UpdateViolasBalance", data: json.result?.balances)
 //                        self?.setValue(data, forKey: "dataDic")
@@ -242,12 +243,12 @@ class AddAssetModel: NSObject {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BalanceLibraMainModel.self)
+                    let json = try response.map(DiemAccountMainModel.self)
                     if json.result == nil {
 //                        let data = setKVOData(type: "UpdateLibraBalance", data: [LibraBalanceModel.init(amount: 0, currency: "LBR")])
 //                        self?.setValue(data, forKey: "dataDic")
                         print("LibraWallet尚未激活")
-                        self?.libraEnableTokens = [LibraBalanceModel]()
+                        self?.libraEnableTokens = [DiemBalanceDataModel]()
                     } else {
 //                        let data = setKVOData(type: "UpdateLibraBalance", data: json.result?.balances)
 //                        self?.setValue(data, forKey: "dataDic")
@@ -271,7 +272,7 @@ class AddAssetModel: NSObject {
         }
         self.requests.append(request)
     }
-    private func rebuiltViolasData(enableTokens: [ViolasBalanceModel], allTokens: [ViolasTokensCurrenciesModel], localTokens: [Token]) {
+    private func rebuiltViolasData(enableTokens: [ViolasBalanceDataModel], allTokens: [ViolasTokensCurrenciesModel], localTokens: [Token]) {
         for item in allTokens {
             var tempModel = AssetsModel.init(icon: item.show_icon,
                                              show_name: item.show_name,
@@ -306,7 +307,7 @@ class AddAssetModel: NSObject {
             self.resultTokens.append(tempModel)
         }
     }
-    private func rebuiltLibraData(enableTokens: [LibraBalanceModel], allTokens: [LibraTokensCurrenciesModel], localTokens: [Token]) {
+    private func rebuiltLibraData(enableTokens: [DiemBalanceDataModel], allTokens: [LibraTokensCurrenciesModel], localTokens: [Token]) {
         for item in allTokens {
             var tempModel = AssetsModel.init(icon: item.show_icon,
                                              show_name: item.show_name,
@@ -351,12 +352,13 @@ class AddAssetModel: NSObject {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BalanceViolasMainModel.self)
+                    let json = try response.map(ViolasAccountMainModel.self)
                     guard json.result != nil else {
                         let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.walletUnActive), type: "GetLibraSequenceNumber")
                         self?.setValue(data, forKey: "dataDic")
                         return
                     }
+                    self?.maxGasAmount = ViolasManager.handleMaxGasAmount(balances: json.result?.balances ?? [ViolasBalanceDataModel.init(amount: 0, currency: "VLS")])
                     self?.makeTransaction(sendAddress: sendAddress, mnemonic: mnemonic, sequenceNumber: UInt64(json.result?.sequence_number ?? 0), type: type, module: module)
                 } catch {
                     print("GetViolasSequenceNumber__解析异常\(error.localizedDescription)")
@@ -379,7 +381,7 @@ class AddAssetModel: NSObject {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BalanceLibraMainModel.self)
+                    let json = try response.map(DiemAccountMainModel.self)
                     guard json.result != nil else {
                         let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.walletUnActive), type: "GetLibraSequenceNumber")
                         self?.setValue(data, forKey: "dataDic")
@@ -412,7 +414,8 @@ class AddAssetModel: NSObject {
                 makeLibraTransaction(signature: signature)
             } else if type == .Violas  {
                 let signature = try ViolasManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
-                                                                                fee: 0,
+                                                                                maxGasAmount: self.maxGasAmount,
+                                                                                maxGasUnitPrice: 1,
                                                                                 sequenceNumber: sequenceNumber,
                                                                                 inputModule: module)
                 makeViolasTransaction(signature: signature)

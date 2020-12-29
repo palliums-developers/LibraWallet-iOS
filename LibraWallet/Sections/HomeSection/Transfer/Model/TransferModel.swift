@@ -13,6 +13,7 @@ class TransferModel: NSObject {
     @objc dynamic var dataDic: NSMutableDictionary = [:]
     private var requests: [Cancellable] = []
     private var sequenceNumber: UInt64?
+    private var maxGasAmount: UInt64 = 600
     private var utxos: [TrezorBTCUTXOMainModel]?
     deinit {
         requests.forEach { cancellable in
@@ -60,7 +61,7 @@ extension TransferModel {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BalanceLibraMainModel.self)
+                    let json = try response.map(DiemAccountMainModel.self)
                     self?.sequenceNumber = json.result?.sequence_number
                     semaphore.signal()
                 } catch {
@@ -143,7 +144,8 @@ extension TransferModel {
                 let signature = try ViolasManager.getDefaultTransactionHex(sendAddress: sendAddress,
                                                                            receiveAddress: receiveAddress,
                                                                            amount: amount,
-                                                                           fee: fee,
+                                                                           maxGasAmount: self.maxGasAmount,
+                                                                           maxGasUnitPrice: 1,
                                                                            mnemonic: mnemonic,
                                                                            sequenceNumber: self.sequenceNumber ?? 0,
                                                                            module: module)
@@ -163,9 +165,10 @@ extension TransferModel {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BalanceViolasMainModel.self)
+                    let json = try response.map(ViolasAccountMainModel.self)
                     if json.result != nil {
                         self?.sequenceNumber = json.result?.sequence_number ?? 0
+                        self?.maxGasAmount = ViolasManager.handleMaxGasAmount(balances: json.result?.balances ?? [ViolasBalanceDataModel.init(amount: 0, currency: "VLS")])
                         semaphore.signal()
                     } else {
                         print("GetViolasSequenceNumber_状态异常")

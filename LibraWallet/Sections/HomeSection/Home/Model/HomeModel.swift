@@ -34,64 +34,6 @@ struct ScanLoginDataModel: Codable {
     var type: Int?
     var session_id: String?
 }
-struct LibraBalanceModel: Codable {
-    var amount: Int64?
-    var currency: String?
-}
-struct BalanceLibraModel: Codable {
-    /// 余额
-    var balances: [LibraBalanceModel]?
-    /// 验证密钥
-    var authentication_key: String?
-    ///
-    var delegated_key_rotation_capability: Bool?
-    ///
-    var delegated_withdrawal_capability: Bool?
-    ///
-    var received_events_key: String?
-    ///
-    var sent_events_key: String?
-    ///
-    var sequence_number: UInt64?
-}
-struct BalanceLibraMainModel: Codable {
-    /// 请求ID
-    var id: String?
-    /// JSON RPC版本
-    var jsonrpc: String?
-    /// 数据体
-    var result: BalanceLibraModel?
-    var error: LibraTransferErrorModel?
-}
-struct ViolasBalanceModel: Codable {
-    var amount: Int64?
-    var currency: String?
-}
-struct BalanceViolasModel: Codable {
-    /// 余额
-    var balances: [ViolasBalanceModel]?
-    /// 验证密钥
-    var authentication_key: String?
-    ///
-    var delegated_key_rotation_capability: Bool?
-    ///
-    var delegated_withdrawal_capability: Bool?
-    ///
-    var received_events_key: String?
-    ///
-    var sent_events_key: String?
-    ///
-    var sequence_number: UInt64?
-}
-struct BalanceViolasMainModel: Codable {
-    /// 请求ID
-    var id: String?
-    /// JSON RPC版本
-    var jsonrpc: String?
-    /// 数据体
-    var result: BalanceViolasModel?
-    var error: LibraTransferErrorModel?
-}
 struct TrezorBTCBalanceMainModel: Codable {
     ///
     var page: Int64?
@@ -230,13 +172,13 @@ class HomeModel: NSObject {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BalanceLibraMainModel.self)
+                    let json = try response.map(DiemAccountMainModel.self)
                     if json.result == nil {
                         if (self?.activeCount ?? 0) < 5 {
                             self?.activeLibraAccount(tokenID: tokenID, address: address, authKey: authKey, tokens: tokens)
                             self?.activeCount += 1
                         } else {
-                            let data = setKVOData(type: "UpdateLibraBalance", data: [LibraBalanceModel.init(amount: 0, currency: "LBR")])
+                            let data = setKVOData(type: "UpdateLibraBalance", data: [DiemBalanceDataModel.init(amount: 0, currency: "LBR")])
                             self?.setValue(data, forKey: "dataDic")
                             print("激活失败")
                         }
@@ -247,7 +189,7 @@ class HomeModel: NSObject {
                         })
                     }
                     // 刷新本地数据
-                    self?.updateLocalTokenBalance(tokens: tokens, type: .Libra, tokenBalances: json.result?.balances ?? [LibraBalanceModel.init(amount: 0, currency: "LBR")])
+                    self?.updateLocalTokenBalance(tokens: tokens, type: .Libra, tokenBalances: json.result?.balances ?? [DiemBalanceDataModel.init(amount: 0, currency: "LBR")])
                 } catch {
                     print("UpdateLibraBalance_解析异常\(error.localizedDescription)")
                     DispatchQueue.main.async(execute: {
@@ -273,13 +215,13 @@ class HomeModel: NSObject {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(BalanceViolasMainModel.self)
+                    let json = try response.map(ViolasAccountMainModel.self)
                     if json.result == nil {
                         if (self?.activeCount ?? 0) < 5 {
                             self?.activeViolasAccount(tokenID: tokenID, address: address, authKey: authKey, tokens: tokens)
                             self?.activeCount += 1
                         } else {
-                            let data = setKVOData(type: "UpdateViolasBalance", data: [ViolasBalanceModel.init(amount: 0, currency: "LBR")])
+                            let data = setKVOData(type: "UpdateViolasBalance", data: [ViolasBalanceDataModel.init(amount: 0, currency: "LBR")])
                             self?.setValue(data, forKey: "dataDic")
                             print("激活失败")
                         }
@@ -290,7 +232,7 @@ class HomeModel: NSObject {
                         })
                     }
                     // 刷新本地数据
-                    self?.updateLocalTokenBalance(tokens: tokens, type: .Violas, tokenBalances: json.result?.balances ?? [ViolasBalanceModel.init(amount: 0, currency: "LBR")])
+                    self?.updateLocalTokenBalance(tokens: tokens, type: .Violas, tokenBalances: json.result?.balances ?? [ViolasBalanceDataModel.init(amount: 0, currency: "LBR")])
                 } catch {
                     print("UpdateViolasBalance_解析异常\(error.localizedDescription)")
                     DispatchQueue.main.async(execute: {
@@ -467,14 +409,14 @@ class HomeModel: NSObject {
         }
         self.requests.append(request)
     }
-    func updateLocalTokenBalance(tokens: [Token], type: WalletType, tokenBalances: [LibraBalanceModel]) {
+    func updateLocalTokenBalance(tokens: [Token], type: WalletType, tokenBalances: [DiemBalanceDataModel]) {
         // 刷新本地缓存数据
         let tempTokens = tokens.filter {
             $0.tokenType == type
         }
         WalletManager.updateLibraTokensBalance(tokens: tempTokens, tokenBalances: tokenBalances)
     }
-    func updateLocalTokenBalance(tokens: [Token], type: WalletType, tokenBalances: [ViolasBalanceModel]) {
+    func updateLocalTokenBalance(tokens: [Token], type: WalletType, tokenBalances: [ViolasBalanceDataModel]) {
         // 刷新本地缓存数据
         let tempTokens = tokens.filter {
             $0.tokenType == type

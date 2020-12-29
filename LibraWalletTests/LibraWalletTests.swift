@@ -30,5 +30,12 @@ class LibraWalletTests: XCTestCase {
             // Put the code you want to measure the time of here.
         }
     }
-
+    func testHandleFee() {
+        let result = ViolasManager.handleGasFee(balances: [ViolasBalanceDataModel.init(amount: 10000, currency: "VLS")])
+        XCTAssertEqual(result, 0.01)
+        let result2 = ViolasManager.handleGasFee(balances: [ViolasBalanceDataModel.init(amount: 1000000000, currency: "VLS")])
+        XCTAssertEqual(result2, 1)
+        let result3 = ViolasManager.handleGasFee(balances: [ViolasBalanceDataModel.init(amount: 10500, currency: "VLS")])
+        XCTAssertEqual(result3, 0.0105)
+    }
 }

@@ -53,7 +53,7 @@ class DepositDescribeTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "5C5C5C")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.medium)
-        label.text = localLanguage(keyString: "wallet_bank_deposit_describe_title")
+        label.text = ""
         return label
     }()
     lazy var itemContentLabel: UILabel = {
@@ -71,8 +71,8 @@ class DepositDescribeTableViewCell: UITableViewCell {
             guard let tempModel = model else {
                 return
             }
-            itemTitleLabel.text = tempModel.title
-            itemContentLabel.text = tempModel.text
+//            itemTitleLabel.text = tempModel.title
+            itemContentLabel.text = (tempModel.title ?? "") + " " + (tempModel.text ?? "")
         }
     }
 }
