@@ -107,6 +107,9 @@ class YieldFarmingViewController: BaseViewController {
             } else if paramters!["method"] as? String == "new_user_check" {
                 // 新用户检查
                 let vc = EnrollPhoneViewController()
+                vc.successClosure = {
+                    callback?("{\"id\":\"\(String(describing: paramters!["id"]!))\",\"result\":\"success\"}")
+                }
                 let navi = BaseNavigationViewController.init(rootViewController: vc)
                 self?.present(navi, animated: true, completion: nil)
             } else if paramters!["method"] as? String == "pool_farming" {
@@ -272,20 +275,26 @@ extension YieldFarmingViewController {
                     self?.detailView.makeToast(LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription, position: .center)
                 }
                 self?.detailView.toastView.hide(tag: 99)
+                self?.detailView.makeToast(error.localizedDescription, position: .center)
 //                self?.endLoading(animated: true, error: nil, completion: nil)
                 return
             }
             let type = dataDic.value(forKey: "type") as! String
             if type == "PublishToken" {
                 self?.detailView.toastView.hide(tag: 99)
-                if let action = self?.publishClosure {
-                    action()
-                }
+//                if let action = self?.publishClosure {
+//                    action()
+//                }
             } else if type == "SendPayTokenTransaction" {
                 self?.detailView.toastView.hide(tag: 99)
-                if let action = self?.payTokenClosure {
-                    action()
-                }
+//                if let action = self?.payTokenClosure {
+//                    action()
+//                }
+            } else if type == "SendBankExtractTransaction" {
+                self?.detailView.toastView.hide(tag: 99)
+//                if let action = self?.payTokenClosure {
+//                    action()
+//                }
             }
             self?.detailView.hideToastActivity()
         })
