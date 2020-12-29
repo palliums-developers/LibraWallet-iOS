@@ -9,7 +9,7 @@
 import Foundation
 enum ViolasArgumentsCode {
     case U8(String)
-    case U64(String)
+    case U64(UInt64)
     case U128(String)
     case Address(String)
     case U8Vector(Data)
@@ -46,7 +46,7 @@ struct ViolasTransactionArgument {
         case .U8(let value):
             result += ViolasUtils.getLengthData(length: NSDecimalNumber.init(string: value).uint64Value, appendBytesCount: 1)
         case .U64(let value):
-            result += ViolasUtils.getLengthData(length: NSDecimalNumber.init(string: value).uint64Value, appendBytesCount: 8)
+            result += ViolasUtils.getLengthData(length: value, appendBytesCount: 8)
         case .U128(let value):
             result += ViolasUtils.getLengthData(length: NSDecimalNumber.init(string: value).uint64Value, appendBytesCount: 16)
         case .Address(let address):
