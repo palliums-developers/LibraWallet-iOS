@@ -108,7 +108,7 @@ extension LoanViewModel: LoanViewDelegate {
             throw LibraWalletError.WalletBankLoan(reason: .amountTooLittle)
         }
         // 检查是否超过每日限额
-        guard amount.uint64Value < (NSDecimalNumber.init(value: header.productModel?.quota_limit ?? 0).subtracting(NSDecimalNumber.init(value: header.productModel?.quota_used ?? 0))).uint64Value else {
+        guard amount.uint64Value <= (NSDecimalNumber.init(value: header.productModel?.quota_limit ?? 0).subtracting(NSDecimalNumber.init(value: header.productModel?.quota_used ?? 0))).uint64Value else {
             throw LibraWalletError.WalletBankLoan(reason: .quotaInsufficient)
         }
         // 检查是否同意协议
