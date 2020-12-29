@@ -345,20 +345,16 @@ extension HomeViewController: HomeHeaderViewDelegate {
     }
     
     func mapping() {
-//        let vc = TokenMappingViewController()
-//        //        vc.wallet = self.wallet
-//        vc.hidesBottomBarWhenPushed = true
-//        self.navigationController?.pushViewController(vc, animated: true)
-        
-        
-        let vc = ProfitMainViewController()
+        let vc = TokenMappingViewController()
         //        vc.wallet = self.wallet
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
     func yieldFarmingRules() {
         let vc = YieldFarmingViewController()
+//        let navi = BaseNavigationViewController.init(rootViewController: vc)
         vc.hidesBottomBarWhenPushed = true
+//        self.present(navi, animated: true, completion: nil)
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }
@@ -462,7 +458,7 @@ extension HomeViewController {
                     }
                 }
             } else if type == "UpdateLibraBalance" {
-                if let tempData = dataDic.value(forKey: "data") as? [LibraBalanceModel] {
+                if let tempData = dataDic.value(forKey: "data") as? [DiemBalanceDataModel] {
                     guard let dataModels = self?.tableViewManager.dataModel else {
                         return
                     }
@@ -498,7 +494,7 @@ extension HomeViewController {
                     }
                 }
             } else if type == "UpdateViolasBalance" {
-                if let tempData = dataDic.value(forKey: "data") as? [ViolasBalanceModel] {
+                if let tempData = dataDic.value(forKey: "data") as? [ViolasBalanceDataModel] {
                     guard let dataModels = self?.tableViewManager.dataModel else {
                         return
                     }
