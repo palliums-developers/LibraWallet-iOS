@@ -92,7 +92,7 @@ extension TokenMappingModel {
                     do {
                         let signature = try ViolasManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
                                                                                         maxGasAmount: self.maxGasAmount,
-                                                                                        maxGasUnitPrice: 1,
+                                                                                        maxGasUnitPrice: ViolasManager.handleMaxGasUnitPrice(maxGasAmount: self.maxGasAmount),
                                                                                         sequenceNumber: self.sequenceNumber ?? 0,
                                                                                         inputModule: moduleOutput)
                         self.makeViolasTransaction(signature: signature, type: "SendPublishOutputModuleViolasTransaction", semaphore: semaphore)
@@ -267,7 +267,7 @@ extension TokenMappingModel {
                 do {
                     let signature = try ViolasManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
                                                                                     maxGasAmount: self.maxGasAmount,
-                                                                                    maxGasUnitPrice: 1,
+                                                                                    maxGasUnitPrice: ViolasManager.handleMaxGasUnitPrice(maxGasAmount: self.maxGasAmount),
                                                                                     sequenceNumber: self.sequenceNumber ?? 0,
                                                                                     inputModule: moduleOutput)
                     self.makeViolasTransaction(signature: signature, type: "SendPublishOutputModuleViolasTransaction", semaphore: semaphore)
@@ -423,7 +423,7 @@ extension TokenMappingModel {
                                                                                  mnemonic: mnemonic,
                                                                                  feeModule: module,
                                                                                  maxGasAmount: self.maxGasAmount,
-                                                                                 maxGasUnitPrice: 1,
+                                                                                 maxGasUnitPrice: ViolasManager.handleMaxGasUnitPrice(maxGasAmount: self.maxGasAmount),
                                                                                  sequenceNumber: self.sequenceNumber ?? 0,
                                                                                  inputModule: module,
                                                                                  inputAmount: amountIn,

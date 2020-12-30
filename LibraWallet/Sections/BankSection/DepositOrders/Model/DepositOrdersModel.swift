@@ -171,7 +171,7 @@ extension DepositOrdersModel {
                                                                               mnemonic: mnemonic,
                                                                               feeModule: feeModule,
                                                                               maxGasAmount: self.maxGasAmount,
-                                                                              maxGasUnitPrice: 1,
+                                                                              maxGasUnitPrice: ViolasManager.handleMaxGasUnitPrice(maxGasAmount: self.maxGasAmount),
                                                                               sequenceNumber: self.sequenceNumber ?? 0,
                                                                               module: module,
                                                                               amount: amount)

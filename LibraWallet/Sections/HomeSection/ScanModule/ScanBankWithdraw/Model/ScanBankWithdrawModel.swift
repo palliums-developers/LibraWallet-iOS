@@ -40,7 +40,7 @@ extension ScanBankWithdrawModel {
                                                                               mnemonic: mnemonic,
                                                                               feeModule: model.gasCurrencyCode ?? "VLS",
                                                                               maxGasAmount: self.maxGasAmount,
-                                                                              maxGasUnitPrice: 1,
+                                                                              maxGasUnitPrice: ViolasManager.handleMaxGasUnitPrice(maxGasAmount: self.maxGasAmount),
                                                                               sequenceNumber: self.sequenceNumber ?? 0,
                                                                               module: module1,
                                                                               amount: amount)

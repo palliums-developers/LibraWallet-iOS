@@ -41,7 +41,7 @@ class ViolasTransferModel: NSObject {
                                                                            receiveAddress: receiveAddress,
                                                                            amount: amount,
                                                                            maxGasAmount: self.maxGasAmount,
-                                                                           maxGasUnitPrice: 1,
+                                                                           maxGasUnitPrice: ViolasManager.handleMaxGasUnitPrice(maxGasAmount: self.maxGasAmount),
                                                                            mnemonic: mnemonic,
                                                                            sequenceNumber: self.sequenceNumber ?? 0,
                                                                            module: module)

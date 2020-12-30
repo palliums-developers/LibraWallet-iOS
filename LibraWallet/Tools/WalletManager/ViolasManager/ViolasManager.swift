@@ -117,8 +117,12 @@ struct ViolasManager {
         }
     }
     // 0 < Price > 10000
-    static func handleMaxGasUnitPrice() -> UInt64 {
+    static func handleMaxGasUnitPrice(maxGasAmount: UInt64) -> UInt64 {
+        #warning("正式链处理方法待定")
         // 计算方法未知，暂定1
+        guard maxGasAmount > 600 else {
+            return 0
+        }
         return 1
     }
 }

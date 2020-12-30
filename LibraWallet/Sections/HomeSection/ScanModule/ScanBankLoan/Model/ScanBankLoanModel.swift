@@ -40,7 +40,7 @@ extension ScanBankLoanModel {
                                                                             mnemonic: mnemonic,
                                                                             feeModule: model.gasCurrencyCode ?? "VLS",
                                                                             maxGasAmount: self.maxGasAmount,
-                                                                            maxGasUnitPrice: model.gasUnitPrice ?? 1,
+                                                                            maxGasUnitPrice: model.gasUnitPrice ?? ViolasManager.handleMaxGasUnitPrice(maxGasAmount: self.maxGasAmount),
                                                                             sequenceNumber: self.sequenceNumber ?? 0,
                                                                             module: module1,
                                                                             amount: amount)

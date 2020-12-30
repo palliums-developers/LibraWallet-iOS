@@ -699,7 +699,7 @@ extension ExchangeModel {
                 do {
                     let signature = try ViolasManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
                                                                                     maxGasAmount: self.maxGasAmount,
-                                                                                    maxGasUnitPrice: 1,
+                                                                                    maxGasUnitPrice: ViolasManager.handleMaxGasUnitPrice(maxGasAmount: self.maxGasAmount),
                                                                                     sequenceNumber: self.sequenceNumber ?? 0,
                                                                                     inputModule: moduleB)
                     self.makeViolasTransaction(signature: signature, type: "SendPublishOutputModuleViolasTransaction", semaphore: semaphore)
@@ -723,7 +723,7 @@ extension ExchangeModel {
                                                                               mnemonic: mnemonic,
                                                                               feeModule: feeModule,
                                                                               maxGasAmount: self.maxGasAmount,
-                                                                              maxGasUnitPrice: 1,
+                                                                              maxGasUnitPrice: ViolasManager.handleMaxGasUnitPrice(maxGasAmount: self.maxGasAmount),
                                                                               sequenceNumber: self.sequenceNumber ?? 0,
                                                                               inputAmount: amountIn,
                                                                               outputAmountMin: AmountOutMin,
@@ -874,7 +874,7 @@ extension ExchangeModel {
                                                                                  mnemonic: mnemonic,
                                                                                  feeModule: feeModule,
                                                                                  maxGasAmount: self.maxGasAmount,
-                                                                                 maxGasUnitPrice: 1,
+                                                                                 maxGasUnitPrice: ViolasManager.handleMaxGasUnitPrice(maxGasAmount: self.maxGasAmount),
                                                                                  sequenceNumber: self.sequenceNumber ?? 0,
                                                                                  inputModule: moduleInput,
                                                                                  inputAmount: amountIn,
@@ -910,7 +910,7 @@ extension ExchangeModel {
                                                                                  mnemonic: mnemonic,
                                                                                  feeModule: feeModule,
                                                                                  maxGasAmount: self.maxGasAmount,
-                                                                                 maxGasUnitPrice: 1,
+                                                                                 maxGasUnitPrice: ViolasManager.handleMaxGasUnitPrice(maxGasAmount: self.maxGasAmount),
                                                                                  sequenceNumber: self.sequenceNumber ?? 0,
                                                                                  inputModule: moduleInput,
                                                                                  inputAmount: amountIn,
@@ -945,7 +945,7 @@ extension ExchangeModel {
                 do {
                     let signature = try ViolasManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
                                                                                     maxGasAmount: self.maxGasAmount,
-                                                                                    maxGasUnitPrice: 1,
+                                                                                    maxGasUnitPrice: ViolasManager.handleMaxGasUnitPrice(maxGasAmount: self.maxGasAmount),
                                                                                     sequenceNumber: self.sequenceNumber ?? 0,
                                                                                     inputModule: moduleOutput)
                     self.makeViolasTransaction(signature: signature, type: "SendPublishOutputModuleViolasTransaction", semaphore: semaphore)
@@ -1102,7 +1102,7 @@ extension ExchangeModel {
                     do {
                         let signature = try ViolasManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
                                                                                         maxGasAmount: self.maxGasAmount,
-                                                                                        maxGasUnitPrice: 1,
+                                                                                        maxGasUnitPrice: ViolasManager.handleMaxGasUnitPrice(maxGasAmount: self.maxGasAmount),
                                                                                         sequenceNumber: self.sequenceNumber ?? 0,
                                                                                         inputModule: moduleOutput)
                         self.makeViolasTransaction(signature: signature, type: "SendPublishOutputModuleViolasTransaction", semaphore: semaphore)

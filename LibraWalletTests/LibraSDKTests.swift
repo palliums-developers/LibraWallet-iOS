@@ -304,7 +304,7 @@ class LibraSDKTests: XCTestCase {
             let argument1 = ViolasTransactionArgument.init(code: .U8Vector(Data.init(hex: "2e797751e6ae643d129a854f8c739b72")))
             let argument2 = ViolasTransactionArgument.init(code: .Bool(true))
             
-            let argument3 = ViolasTransactionArgument.init(code: .U64("1000000"))
+            let argument3 = ViolasTransactionArgument.init(code: .U64(1000000))
 
             let script = ViolasTransactionScriptPayload.init(code: Data.init(hex: ViolasUtils.getMoveCode(name: "create_child_vasp_account")),
                                                              typeTags: [ViolasTypeTag.init(typeTag: ViolasTypeTags.Struct(ViolasStructTag.init(type: ViolasStructTagType.Normal("Coin1"))))],
@@ -449,7 +449,7 @@ class LibraSDKTests: XCTestCase {
             let argument1 = ViolasTransactionArgument.init(code: .U8Vector(Data.init(hex: "0b53278836e90d7f5aaa4346d47b7246")))
             let argument2 = ViolasTransactionArgument.init(code: .Bool(true))
             
-            let argument3 = ViolasTransactionArgument.init(code: .U64("1000000"))
+            let argument3 = ViolasTransactionArgument.init(code: .U64(1000000))
             
             let script = ViolasTransactionScriptPayload.init(code: Data.init(hex: ViolasUtils.getMoveCode(name: "create_child_vasp_account")),
                                                              typeTags: [ViolasTypeTag.init(typeTag: ViolasTypeTags.Struct(ViolasStructTag.init(type: ViolasStructTagType.Normal("XUS"))))],
@@ -484,7 +484,7 @@ class LibraSDKTests: XCTestCase {
             print(walletAddress, active)
             let argument0 = ViolasTransactionArgument.init(code: .Address("3bfb3f8051721b8140631d862a637b2d"))
             
-            let argument1 = ViolasTransactionArgument.init(code: .U64("\(6000_000_000)"))
+            let argument1 = ViolasTransactionArgument.init(code: .U64(6000_000_000))
             // metadata
             let argument2 = ViolasTransactionArgument.init(code: .U8Vector(Data()))
             // metadata_signature

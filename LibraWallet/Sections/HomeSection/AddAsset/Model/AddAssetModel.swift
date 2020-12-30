@@ -415,7 +415,7 @@ class AddAssetModel: NSObject {
             } else if type == .Violas  {
                 let signature = try ViolasManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
                                                                                 maxGasAmount: self.maxGasAmount,
-                                                                                maxGasUnitPrice: 1,
+                                                                                maxGasUnitPrice: ViolasManager.handleMaxGasUnitPrice(maxGasAmount: self.maxGasAmount),
                                                                                 sequenceNumber: sequenceNumber,
                                                                                 inputModule: module)
                 makeViolasTransaction(signature: signature)

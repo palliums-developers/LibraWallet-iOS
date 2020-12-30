@@ -47,7 +47,7 @@ extension YieldFarmingModel {
                                                                                      mnemonic: mnemonic,
                                                                                      feeModule: "VLS",
                                                                                      maxGasAmount: self.maxGasAmount,
-                                                                                     maxGasUnitPrice: 1,
+                                                                                     maxGasUnitPrice: ViolasManager.handleMaxGasUnitPrice(maxGasAmount: self.maxGasAmount),
                                                                                      sequenceNumber: self.sequenceNumber!)
                 
                 self.makeViolasTransaction(signature: signature, type: "SendBankExtractTransaction", semaphore: semaphore)
@@ -164,7 +164,7 @@ extension YieldFarmingModel {
                                                                                        mnemonic: mnemonic,
                                                                                        feeModule: "VLS",
                                                                                        maxGasAmount: self.maxGasAmount,
-                                                                                       maxGasUnitPrice: 1,
+                                                                                       maxGasUnitPrice: ViolasManager.handleMaxGasUnitPrice(maxGasAmount: self.maxGasAmount),
                                                                                        sequenceNumber: self.sequenceNumber!)
                 
                 self.makeViolasTransaction(signature: signature, type: "SendMarketExtractTransaction", semaphore: semaphore)

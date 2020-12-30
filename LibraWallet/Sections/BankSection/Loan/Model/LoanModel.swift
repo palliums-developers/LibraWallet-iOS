@@ -222,7 +222,7 @@ extension LoanModel {
                 do {
                     let signature = try ViolasManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
                                                                                     maxGasAmount: self.maxGasAmount,
-                                                                                    maxGasUnitPrice: 1,
+                                                                                    maxGasUnitPrice: ViolasManager.handleMaxGasUnitPrice(maxGasAmount: self.maxGasAmount),
                                                                                     sequenceNumber: self.sequenceNumber ?? 0,
                                                                                     inputModule: module)
                     self.makeViolasTransaction(signature: signature, type: "SendPublishOutputModuleViolasTransaction", semaphore: semaphore)
@@ -246,7 +246,7 @@ extension LoanModel {
                                                                             mnemonic: mnemonic,
                                                                             feeModule: feeModule,
                                                                             maxGasAmount: self.maxGasAmount,
-                                                                            maxGasUnitPrice: 1,
+                                                                            maxGasUnitPrice: ViolasManager.handleMaxGasUnitPrice(maxGasAmount: self.maxGasAmount),
                                                                             sequenceNumber: self.sequenceNumber ?? 0,
                                                                             module: module,
                                                                             amount: amount)
