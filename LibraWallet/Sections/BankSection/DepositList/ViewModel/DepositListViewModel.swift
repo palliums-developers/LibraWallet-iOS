@@ -145,7 +145,12 @@ extension DepositListViewModel: DepositListViewDelegate {
             $0.token_module ?? ""
         }
         tempContent.insert(localLanguage(keyString: "wallet_deposit_list_order_token_select_title"), at: 0)
-        self.showDropDown(button: button, datas: tempContent, tag: 10)
+        let view = BankStatusSelectView.init(data: tempContent, showLeft: true) { [weak self] item in
+            self?.view?.orderTokenSelectButton.setTitle(item, for: UIControl.State.normal)
+            self?.view?.orderTokenSelectButton.imagePosition(at: .right, space: 5, imageViewSize: CGSize.init(width: 10, height: 10))
+            self?.refreshView()
+        }
+        view.show()
     }
     func filterOrdersWithStatus(button: UIButton) {
         let datas = [localLanguage(keyString: "wallet_deposit_list_order_status_title"),
@@ -153,39 +158,14 @@ extension DepositListViewModel: DepositListViewDelegate {
                      localLanguage(keyString: "wallet_deposit_list_order_status_withdrawal_finish_title"),
                      localLanguage(keyString: "wallet_deposit_list_order_status_deposit_failed_title"),
                      localLanguage(keyString: "wallet_deposit_list_order_status_withdrawal_failed_title")]
-        self.showDropDown(button: button, datas: datas, tag: 20)
-    }
-    func showDropDown(button: UIButton, datas: [String], tag: Int) {
-        let dropper = Dropper.init(x: 0, y: 0, width: 132, height: 36*5)
-        dropper.items = datas
-        dropper.theme = .black(UIColor.white)
-        dropper.cellTextFont = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
-        dropper.cellColor = UIColor.init(hex: "5C5C5C")
-        dropper.spacing = 12
-        dropper.delegate = self
-        // 定义阴影颜色
-        dropper.layer.shadowColor = UIColor.init(hex: "3D3949").cgColor
-        // 阴影的模糊半径
-        dropper.layer.shadowRadius = 3
-        // 阴影的偏移量
-        dropper.layer.shadowOffset = CGSize(width: 0, height: 0)
-        // 阴影的透明度，默认为0，不设置则不会显示阴影****
-        dropper.layer.shadowOpacity = 0.1
-        dropper.tag = tag
-        dropper.show(Dropper.Alignment.center, position: .bottom, button: button)
-    }
-}
-extension DepositListViewModel: DropperDelegate {
-    func DropperSelectedRow(_ path: IndexPath, contents: String, tag: Int) {
-        if tag == 10 {
-            self.view?.orderTokenSelectButton.setTitle(contents, for: UIControl.State.normal)
-            self.view?.orderTokenSelectButton.imagePosition(at: .right, space: 5, imageViewSize: CGSize.init(width: 10, height: 10))
-            
-        } else {
-            self.view?.orderStateButton.setTitle(contents, for: UIControl.State.normal)
-            self.view?.orderStateButton.imagePosition(at: .right, space: 5, imageViewSize: CGSize.init(width: 10, height: 10))
-            
+        let view = BankStatusSelectView.init(data: datas, showLeft: false) { [weak self] item in
+            self?.view?.orderStateButton.setTitle(item, for: UIControl.State.normal)
+            self?.view?.orderStateButton.imagePosition(at: .right, space: 5, imageViewSize: CGSize.init(width: 10, height: 10))
+            self?.refreshView()
         }
+        view.show()
+    }
+    func refreshView() {
         //999999: 默认 0（已存款），1（已提取），-1（提取失败），-2（存款失败）
         var tempStatus = 999999
         if self.view?.orderStateButton.titleLabel?.text == localLanguage(keyString: "wallet_deposit_list_order_status_deposit_finish_title") {

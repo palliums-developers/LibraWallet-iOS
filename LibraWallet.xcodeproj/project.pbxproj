@@ -268,6 +268,7 @@
 		368F7BD724FCFC5700CCF3FB /* BankLegalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368F7BD624FCFC5700CCF3FB /* BankLegalView.swift */; };
 		36957508259B120000D8A45E /* DiemAccountMainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36957507259B120000D8A45E /* DiemAccountMainModel.swift */; };
 		3695750D259B124400D8A45E /* ViolasAccountMainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3695750C259B124400D8A45E /* ViolasAccountMainModel.swift */; };
+		3695758D259C60F000D8A45E /* BankStatusSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3695758C259C60F000D8A45E /* BankStatusSelectView.swift */; };
 		36AA10F925008A1E00BEF941 /* BankContracts.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 36AA10F825008A1E00BEF941 /* BankContracts.bundle */; };
 		36B43A7223BDE967008E2EEA /* LBXScanError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B43A7123BDE967008E2EEA /* LBXScanError.swift */; };
 		36B466A62476563800CFF438 /* ScanSignTransactionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B466A52476563800CFF438 /* ScanSignTransactionViewController.swift */; };
@@ -759,6 +760,7 @@
 		368F7BD624FCFC5700CCF3FB /* BankLegalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankLegalView.swift; sourceTree = "<group>"; };
 		36957507259B120000D8A45E /* DiemAccountMainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemAccountMainModel.swift; sourceTree = "<group>"; };
 		3695750C259B124400D8A45E /* ViolasAccountMainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasAccountMainModel.swift; sourceTree = "<group>"; };
+		3695758C259C60F000D8A45E /* BankStatusSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankStatusSelectView.swift; sourceTree = "<group>"; };
 		36AA10F825008A1E00BEF941 /* BankContracts.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = BankContracts.bundle; sourceTree = "<group>"; };
 		36B43A7123BDE967008E2EEA /* LBXScanError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LBXScanError.swift; sourceTree = "<group>"; };
 		36B466A52476563800CFF438 /* ScanSignTransactionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanSignTransactionViewController.swift; sourceTree = "<group>"; };
@@ -3520,6 +3522,7 @@
 				3622F21824E66A6400CFB754 /* MappingTokensAlert.swift */,
 				361BDB0824F8E7C700C4C54E /* DepositTokensAlert.swift */,
 				36677A732507598E009152B3 /* RedeemAlert.swift */,
+				3695758C259C60F000D8A45E /* BankStatusSelectView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -5406,6 +5409,7 @@
 				36836D2F24B3010F0031AC6E /* ExchangeTransactionDetailViewController.swift in Sources */,
 				3682E5D724AC9DA3007CA2CA /* ScanPublishViewController.swift in Sources */,
 				36677A95250F6C54009152B3 /* ScanBankLoanViewController.swift in Sources */,
+				3695758D259C60F000D8A45E /* BankStatusSelectView.swift in Sources */,
 				36F42E89242E347300DBBF8F /* DiemTypeTag.swift in Sources */,
 				9D9B49DD23602EB900354EF0 /* SettingTableViewManager.swift in Sources */,
 				9D9B4A462362967200354EF0 /* AddWalletViewController.swift in Sources */,
