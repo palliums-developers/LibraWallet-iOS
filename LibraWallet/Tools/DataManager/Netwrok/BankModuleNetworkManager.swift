@@ -201,15 +201,24 @@ extension BankModuleRequest:TargetType {
                                       encoding: URLEncoding.queryString)
         case .loanList(let address, let currency, let status, let page, let limit):
             var dic = [String: Any]()
-            if status == 999999 {
+            if status != 999999 && currency.isEmpty == false {
+                dic = ["address": address,
+                       "currency": currency,
+                       "status": status,
+                       "offset": page,
+                       "limit": limit]
+            } else if status == 999999 && currency.isEmpty == false {
                 dic = ["address": address,
                        "currency": currency,
                        "offset": page,
                        "limit": limit]
-            } else {
+            } else if status != 999999 && currency.isEmpty == true {
                 dic = ["address": address,
-                       "currency": currency,
                        "status": status,
+                       "offset": page,
+                       "limit": limit]
+            } else if status == 999999 && currency.isEmpty == true {
+                dic = ["address": address,
                        "offset": page,
                        "limit": limit]
             }
