@@ -314,7 +314,7 @@ extension ExchangeModel {
                     if json.result == nil {
 //                        let data = setKVOData(type: "UpdateViolasBalance", data: [ViolasBalanceModel.init(amount: 0, currency: "LBR")])
 //                        self?.setValue(data, forKey: "dataDic")
-                        self?.accountViolasTokens = [ViolasBalanceDataModel.init(amount: 0, currency: "LBR")]
+                        self?.accountViolasTokens = [ViolasBalanceDataModel.init(amount: 0, currency: "VLS")]
                         group.leave()
                     } else {
                         self?.accountViolasTokens = json.result?.balances

@@ -280,7 +280,7 @@ extension ViolasManager {
             let data:Data = Data(bytes: path, count: path.count);
             let argument3 = ViolasTransactionArgument.init(code: .U8Vector(data))
             let argument4 = ViolasTransactionArgument.init(code: .U8Vector(Data()))
-            let script = ViolasTransactionScriptPayload.init(code: ViolasManager.getCodeData(move: ViolasManager.getLocalMoveCode(bundle: "MarketContracts", contract: "swap"), address: "00000000000000000000000000000001"),
+            let script = ViolasTransactionScriptPayload.init(code: Data.init(Array<UInt8>(hex: ViolasManager.getLocalMoveCode(bundle: "MarketContracts", contract: "swap"))),
                                                              typeTags: [ViolasTypeTag.init(typeTag: ViolasTypeTags.Struct(ViolasStructTag.init(type: ViolasStructTagType.Normal(inputModule)))),
                                                                         ViolasTypeTag.init(typeTag: ViolasTypeTags.Struct(ViolasStructTag.init(type: ViolasStructTagType.Normal(outputModule))))],
                                                              argruments: [argument0, argument1, argument2, argument3, argument4])
@@ -321,10 +321,11 @@ extension ViolasManager {
             let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
             // 拼接交易
             let argument0 = ViolasTransactionArgument.init(code: .U64(desiredAmountA))
-            let argument1 = ViolasTransactionArgument.init(code: .U64(desiredAmountA))
+            let argument1 = ViolasTransactionArgument.init(code: .U64(desiredAmountB))
             let argument2 = ViolasTransactionArgument.init(code: .U64(minAmountA))
             let argument3 = ViolasTransactionArgument.init(code: .U64(minAmountB))
-            let script = ViolasTransactionScriptPayload.init(code: ViolasManager.getCodeData(move: ViolasManager.getLocalMoveCode(bundle: "MarketContracts", contract: "add_liquidity"), address: "00000000000000000000000000000001"),
+            //
+            let script = ViolasTransactionScriptPayload.init(code: Data.init(Array<UInt8>(hex: ViolasManager.getLocalMoveCode(bundle: "MarketContracts", contract: "add_liquidity"))),
                                                              typeTags: [ViolasTypeTag.init(typeTag: ViolasTypeTags.Struct(ViolasStructTag.init(type: ViolasStructTagType.Normal(inputModuleA)))),
                                                                         ViolasTypeTag.init(typeTag: ViolasTypeTags.Struct(ViolasStructTag.init(type: ViolasStructTagType.Normal(inputModuleB))))],
                                                              argruments: [argument0, argument1, argument2, argument3])
@@ -366,7 +367,7 @@ extension ViolasManager {
             let argument0 = ViolasTransactionArgument.init(code: .U64(liquidity))
             let argument1 = ViolasTransactionArgument.init(code: .U64(minAmountA))
             let argument2 = ViolasTransactionArgument.init(code: .U64(minAmountB))
-            let script = ViolasTransactionScriptPayload.init(code: ViolasManager.getCodeData(move: ViolasManager.getLocalMoveCode(bundle: "MarketContracts", contract:  "remove_liquidity"), address: "00000000000000000000000000000001"),
+            let script = ViolasTransactionScriptPayload.init(code: Data.init(Array<UInt8>(hex: ViolasManager.getLocalMoveCode(bundle: "MarketContracts", contract:  "remove_liquidity"))),
                                                              typeTags: [ViolasTypeTag.init(typeTag: ViolasTypeTags.Struct(ViolasStructTag.init(type: ViolasStructTagType.Normal(inputModuleA)))),
                                                                         ViolasTypeTag.init(typeTag: ViolasTypeTags.Struct(ViolasStructTag.init(type: ViolasStructTagType.Normal(inputModuleB))))],
                                                              argruments: [argument0, argument1, argument2])
