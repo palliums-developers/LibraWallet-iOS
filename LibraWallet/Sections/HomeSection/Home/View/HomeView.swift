@@ -55,7 +55,7 @@ class HomeView: UIView {
         if getIdentityWalletState() == false {
             importOrCreateView.snp.makeConstraints { (make) in
                 make.left.right.equalTo(self)
-                make.top.equalTo(headerView.snp.bottom).offset(-64)
+                make.top.equalTo(headerView.snp.bottom).offset(-128)
                 make.bottom.equalTo(self)
             }
             importOrCreateView.corner(byRoundingCorners: [UIRectCorner.topLeft, UIRectCorner.topRight], radii: 24)

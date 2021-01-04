@@ -85,12 +85,20 @@ extension MineViewController: MineTableViewManagerDelegate {
             }
         } else if indexPath.section == 2 {
             if indexPath.row == 0 {
+                guard getIdentityWalletState() == true else {
+                    self.tabBarController?.selectedIndex = 0
+                    return
+                }
                 let vc = YieldFarmingViewController()
                 vc.hidesBottomBarWhenPushed = true
                 self.navigationController?.pushViewController(vc, animated: true)
             }
         } else if indexPath.section == 3 {
             if indexPath.row == 0 {
+                guard getIdentityWalletState() == true else {
+                    self.tabBarController?.selectedIndex = 0
+                    return
+                }
                 let vc = InvitationRewardViewController()
                 vc.hidesBottomBarWhenPushed = true
                 self.navigationController?.pushViewController(vc, animated: true)

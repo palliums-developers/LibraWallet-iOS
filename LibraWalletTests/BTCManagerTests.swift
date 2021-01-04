@@ -8,6 +8,9 @@
 
 import XCTest
 @testable import ViolasPay
+import BigInt
+import BitcoinKit
+
 class BTCManagerTests: XCTestCase {
 
     override func setUp() {
@@ -32,7 +35,9 @@ class BTCManagerTests: XCTestCase {
     func testBTC() {
         let mnemonicArray = ["net", "dice", "divide", "amount", "stamp", "flock", "brave", "nuclear", "fox", "aim", "father", "apology"]
         let wallet = try! BTCManager().getWallet(mnemonic: mnemonicArray)
+        //BIP39 Seed
         XCTAssertEqual("f12e202e367bd9b24354b264b347eba79ac325ea429580425cc0a8d74cd9622ac3aeac1c40286b08e7ab7a29ae18c1fc5f15ba1376cbebcdf822d01a81bae503", wallet.seed.toHexString())
+        //BIP32 Root Key
         XCTAssertEqual("tprv8ZgxMBicQKsPezAPNT5LRtjx51VvYgtTcT4mRZTMLXrLvX6kwnpBWPAY97pbYKPuMBfYTzPLV1ZnFyYSriqf8Lqjq4F37ujEcdpe4t8Rn2D", wallet.rootXPrivKey.qrcodeString)
         print()
         print(wallet.privKeys)
@@ -58,156 +63,23 @@ class BTCManagerTests: XCTestCase {
         let result4 = ViolasManager.isValidViolasAddress(address: str4)
         XCTAssertEqual(result4, false)
     }
-    func testCaculll(number: String) -> String {
-//        let code = Data.init(Array<UInt8>(hex: ViolasPublishScriptCode))
-//        print(code.toHexString())
-//        let range: Range = code.toHexString().range(of: "7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614")!
-//        let location: Int = code.toHexString().distance(from: code.toHexString().startIndex, to: range.lowerBound)
-//        print("location = \((location / 2) - 1)")
-//        let location2 = ViolasManager().getViolasTokenContractLocation(code: ViolasPublishScriptCode, contract: "7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614")
-//        print(location2)
-//
-//        let data = ViolasManager.getCodeData(move: ViolasPublishScriptCode, address: "238adce0d1b40db648145473a7ba42e42d637dfbe8f7dd007c49a85f0e3a5d89")
-//        print(data.toHexString())
-//        let originNumberString = "f12e202e367bd9b24354b264b347eba79ac325ea429580425cc0a8d74cd9622ac3aeac1c40286b08e7ab7a29ae18c1fc5f15ba1376cbebcdf822d01a81bae5ff"
-        var originNumberData = Data.init(Array<UInt8>(hex: number))
-        if var lastNumber = originNumberData.bytes.last, lastNumber >= 0 {
-            if lastNumber < 255 {
-                lastNumber += 1
-                originNumberData.removeLast()
-                originNumberData.append(Data.init(bytes: &lastNumber, count: 1))
-            } else {
-                var handleCount = 0
-                for i in (0..<(originNumberData.count - 1)).reversed() {
-                    if originNumberData[i] >= 255  {
-                        handleCount += 1
-                    } else {
-                        break
-                    }
-                }
-                var lastData = originNumberData.prefix(originNumberData.count - handleCount - 1)
-                if var middleLastNumber = lastData.bytes.last, lastNumber >= 0 {
-                    lastData.removeLast()
-                    middleLastNumber += 1
-                    lastData.append(Data.init(bytes: &middleLastNumber, count: 1))
-                }
-                lastData.append(Data.init(count: (handleCount + 1)))
-                originNumberData = lastData
-            }
-        }
-//        let lastBytes = originNumber.bytes.last
-        print(originNumberData.toHexString())
-//        print("final")
-        return originNumberData.toHexString()
-    }
-    func testCalcuteNumber(origin: String, add: Int) -> String {
-        let originNumberData = Data.init(Array<UInt8>(hex: origin))
-        if var lastNumber = originNumberData.bytes.last, lastNumber >= 0 {
-            // 进位次数
-            let main = UInt8(add / 256)
-            // 余数
-            var remainder = UInt8(add % 256)
-            // 减去最后一位数字
-            let space: UInt8 = 255 - lastNumber
-            var totalMain = main
-            var handleCount = 0
-            
-
-            // 判断最后一位是否能增加余数
-            if remainder > space {
-                // 进位加一
-                totalMain += 1
-                //
-                remainder = UInt8(abs(Int32(remainder - space)))
-            } else {
-                for i in (0..<(originNumberData.count - 1)).reversed() {
-                    if (255 - originNumberData[i]) > totalMain {
-                        // 足够加
-                        break
-                    } else {
-                        // 不够加
-                        handleCount += 1
-                    }
-                }
-            }
-            var lastData = originNumberData.prefix(originNumberData.count - handleCount - 1)
-            if var middleLastNumber = lastData.bytes.last {
-                lastData.removeLast()
-                middleLastNumber += UInt8(totalMain)
-                lastData.append(Data.init(bytes: &middleLastNumber, count: 1))
-            }
-            lastData.append(Data.init(count: (handleCount)))
-            lastData.append(Data.init(bytes: &remainder, count: 1))
-            return lastData.toHexString()
-        }
-        return ""
-    }
-    func testCall() {
-        let origin = "f12e202e367bd9b24354b264b347eba79ac325ea429580425cc0a8d74cd9622ac3aeac1c40286b08e7ab7a29ae18c1fc5f15ba1376cbebcdf822d01a81bae500"
-        // 计算次数
-        let total = 200
-        // 分组量
-        let count = total / 10
-        // 分组起始数
-        var calculateArray = [String]()
-        var tempOrigin = origin
-        // 分组
-        for i in 0..<count {
-            if i != 0 {
-                tempOrigin = testCalcuteNumber(origin: tempOrigin, add: 10)
-            }
-            calculateArray.append(tempOrigin)
-        }
-        let queue = DispatchQueue.init(label: "SendQueue")
-        // 线程数
-        let threadLimit = 10
-        let semaphore = DispatchSemaphore.init(value: threadLimit)
-        while calculateArray.isEmpty == false {
-//            for _ in 0..<count {
-                queue.async {
-                    semaphore.wait()
-                    print("currentThread: \(Thread.current)")
-                    tempOrigin = calculateArray[0]
-                    for _ in 0..<10 {
-                        tempOrigin = self.testCaculll(number: tempOrigin)
-                        print(tempOrigin)
-                    }
-                    if calculateArray.isEmpty == false {
-                        calculateArray.removeFirst()
-                    }
-                    semaphore.signal()
-                }
-//            }
-//            if calculateArray.count > threadLimit {
-//                calculateArray = calculateArray.suffix(calculateArray.count - threadLimit)
-//            } else {
-//                calculateArray.removeAll()
-//            }
-        }
-        //59879
-        //59884
-//        let result = testCalcuteNumber(origin: origin, add: 1000)
-//        print(result)
-        print("final")
-    }
     func testExchange() {
-        let originNumberData = Data.init(Array<UInt8>(hex: "f12e202e367bd9b24354b264b347eba79ac325ea429580425cc0a8d74cd9622ac3aeac1c40286b08e7ab7a29ae18c1fc5f15ba1376cbebcdf822d01a81bae500"))
-        var tempOrigin = originNumberData
-        // 进位次数
-        var main = UInt8(10 / 256)
-        // 余数
-        var remainder = UInt8(10 % 256)
-        var realRemainder = (255 - originNumberData.bytes.last! - remainder) < 0 ? (main + 1):main
-        for tempData in originNumberData.bytes.reversed() {
-            tempOrigin.removeLast()
-        }
-//        let code = Data.init(Array<UInt8>(hex: ViolasStableCoinScriptWithDataCode))
-//        print(code.toHexString())
-//        let range: Range = code.toHexString().range(of: "7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614")!
-//        let location: Int = code.toHexString().distance(from: code.toHexString().startIndex, to: range.lowerBound)
-//        print("location = \((location / 2) - 1)")
-//        let location2 = ViolasManager().getViolasTokenContractLocation(code: ViolasStableCoinScriptWithDataCode, contract: "7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614")
-//        print(location2)
+//        let seed = Data.init(Array<UInt8>(hex: "f12e202e367bd9b24354b264b347eba79ac325ea429580425cc0a8d74cd9622ac3aeac1c40286b08e7ab7a29ae18c1fc5f15ba1376cbebcdf822d01a81bae500"))
+//        let wallet = HDWallet.init(seed: seed, externalIndex: 0, internalIndex: 0, network: .mainnetBTC)
+//        print(wallet.privKeys)
+//        let testBigUInt = BigUInt.init(seed) + 256
+//        print(testBigUInt.serialize().toHexString())
+//        let privateKey = PrivateKey.init()
+//        print(privateKey.data.toHexString())
+        //998befae8fbe932299e61cab53084be05ca01d7d9a886f5ad20cc218bcaa7c20
+        let privateKeyData = Data.init(Array<UInt8>(hex: "998befae8fbe932299e61cab53084be05ca01d7d9a886f5ad20cc218bcaa7c20"))
+
+        let privateKeyNumber = BigUInt.init(Data.init(Array<UInt8>(hex: "998befae8fbe932299e61cab53084be05ca01d7d9a886f5ad20cc218bcaa7c20")))
+        let privateKey = PrivateKey.init(data: privateKeyData, network: .mainnetBTC, isPublicKeyCompressed: true)
+        let address = privateKey.publicKey().toBitcoinAddress()
+        print(address)
+        print("final")
+
     }
     func testPasswordLogic() {
         XCTAssertEqual(false, handlePassword(password: "A"))
