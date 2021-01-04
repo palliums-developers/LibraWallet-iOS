@@ -25,17 +25,19 @@ class ExchangeTransactionDetailModel: NSObject {
                                                        raiseOnUnderflow: false,
                                                        raiseOnDivideByZero: false)
         let rate = outputAmount.dividing(by: inputAmount, withBehavior: numberConfig)
+        let minerFees = NSDecimalNumber.init(value: model.gas_used ?? 0).dividing(by: inputAmount, withBehavior: numberConfig)
+
         let rateValue = rate.stringValue == "NaN" ? "---":"1:\(rate.stringValue)"
         tempModels.append(TransactionDetailCustomDataModel.init(name: localLanguage(keyString: "wallet_market_transaction_content_exchange_rate_title"),
                                                                 value: rateValue))
         tempModels.append(TransactionDetailCustomDataModel.init(name: localLanguage(keyString: "wallet_market_transaction_content_order_fee_title"),
                                                                 value: "---"))
         tempModels.append(TransactionDetailCustomDataModel.init(name: localLanguage(keyString: "wallet_market_transaction_content_miner_fee_title"),
-                                                                value: "---"))
+                                                                value: minerFees.stringValue))
         tempModels.append(TransactionDetailCustomDataModel.init(name: localLanguage(keyString: "wallet_market_transaction_content_order_time_title"),
-                                                                value: timestampToDateString(timestamp: model.date ?? 0, dateFormat: "yyyy-MM-dd HH:mm:ss")))
+                                                                value: timestampToDateString(timestamp: model.confirmed_time ?? 0, dateFormat: "yyyy-MM-dd HH:mm:ss")))
         tempModels.append(TransactionDetailCustomDataModel.init(name: localLanguage(keyString: "wallet_market_transaction_content_order_done_time_title"),
-                                                                value: "---"))
+                                                                value: timestampToDateString(timestamp: model.confirmed_time ?? 0, dateFormat: "yyyy-MM-dd HH:mm:ss")))
         return tempModels
     }
 }

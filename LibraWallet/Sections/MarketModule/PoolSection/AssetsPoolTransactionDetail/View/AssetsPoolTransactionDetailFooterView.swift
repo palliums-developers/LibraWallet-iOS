@@ -147,7 +147,7 @@ class AssetsPoolTransactionDetailFooterView: UITableViewHeaderFooterView {
     var model: AssetsPoolTransactionsDataModel? {
         didSet {
             exchangeTitleLabel.text = localLanguage(keyString: "wallet_market_transaction_status_packing_title")
-            if model?.status == 4001 {
+            if model?.status == "Executed" {
                 retryButton.alpha = 0
                 finalTitleLabel.textColor = UIColor.init(hex: "13B788")
                 if model?.transaction_type == "ADD_LIQUIDITY" {
@@ -178,7 +178,7 @@ class AssetsPoolTransactionDetailFooterView: UITableViewHeaderFooterView {
         didSet {
             exchangeTitleLabel.text = localLanguage(keyString: "wallet_market_transaction_status_exchanging_title")
             
-            if exchangeModel?.status == 4001 {
+            if exchangeModel?.status == "Executed" {
                 retryButton.alpha = 0
                 finalTitleLabel.textColor = UIColor.init(hex: "13B788")
                 finalIndicatorImageView.image = UIImage.init(named: "transaction_detail_finish")

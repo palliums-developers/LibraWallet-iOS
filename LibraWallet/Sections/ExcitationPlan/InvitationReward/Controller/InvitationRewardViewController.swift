@@ -19,6 +19,7 @@ class InvitationRewardViewController: BaseViewController {
         // 加载子View
         self.view.addSubview(detailView)
         
+        self.addWebListen()
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()

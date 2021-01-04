@@ -61,8 +61,8 @@ class YieldFarmingViewController: BaseViewController {
     var requestURL: String?
     var bridge: WKWebViewJavascriptBridge!
     private var observer: NSKeyValueObservation?
-    var publishClosure: (()->Void)?
-    var payTokenClosure: (()->Void)?
+    private var withdrawMarketClosure: ((Bool)->Void)?
+    private var withdrawBankClosure: ((Bool)->Void)?
     private var callClosure: ((Bool)->Void)?
     func addWebListen() {
         bridge = WKWebViewJavascriptBridge.init(webView: detailView.webView)
@@ -80,6 +80,13 @@ class YieldFarmingViewController: BaseViewController {
                         self?.detailView.toastView.show(tag: 99)
                         self?.dataModel.sendMarketExtractProfit(sendAddress: WalletManager.shared.violasAddress ?? "",
                                                                 mnemonic: mnemonic)
+                        self?.withdrawMarketClosure = { result in
+                            if result == true {
+                                callback?("{\"id\":\"\(String(describing: paramters!["id"]!))\",\"result\":\"success\"}")
+                            } else {
+                                callback?("{\"id\":\"\(String(describing: paramters!["id"]!))\",\"result\":\"failed\"}")
+                            }
+                        }
                     case let .failure(error):
                         guard error.localizedDescription != "Cancel" else {
                             self?.detailView.toastView.hide(tag: 99)
@@ -96,6 +103,13 @@ class YieldFarmingViewController: BaseViewController {
                         self?.detailView.toastView.show(tag: 99)
                         self?.dataModel.sendBankExtractProfit(sendAddress: WalletManager.shared.violasAddress ?? "",
                                                               mnemonic: mnemonic)
+                        self?.withdrawBankClosure = { result in
+                            if result == true {
+                                callback?("{\"id\":\"\(String(describing: paramters!["id"]!))\",\"result\":\"success\"}")
+                            } else {
+                                callback?("{\"id\":\"\(String(describing: paramters!["id"]!))\",\"result\":\"failed\"}")
+                            }
+                        }
                     case let .failure(error):
                         guard error.localizedDescription != "Cancel" else {
                             self?.detailView.toastView.hide(tag: 99)
@@ -250,6 +264,7 @@ extension YieldFarmingViewController {
                 self?.endLoading()
                 return
             }
+            let type = dataDic.value(forKey: "type") as! String
             if let error = dataDic.value(forKey: "error") as? LibraWalletError {
                 if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
                     // 网络无法访问
@@ -277,24 +292,34 @@ extension YieldFarmingViewController {
                 self?.detailView.toastView.hide(tag: 99)
                 self?.detailView.makeToast(error.localizedDescription, position: .center)
 //                self?.endLoading(animated: true, error: nil, completion: nil)
+                if type == "SendMarketExtractTransaction" {
+                    self?.detailView.toastView.hide(tag: 99)
+                    if let action = self?.withdrawMarketClosure {
+                        action(false)
+                    }
+                } else if type == "SendBankExtractTransaction" {
+                    self?.detailView.toastView.hide(tag: 99)
+                    if let action = self?.withdrawBankClosure {
+                        action(false)
+                    }
+                }
                 return
             }
-            let type = dataDic.value(forKey: "type") as! String
             if type == "PublishToken" {
                 self?.detailView.toastView.hide(tag: 99)
 //                if let action = self?.publishClosure {
 //                    action()
 //                }
-            } else if type == "SendPayTokenTransaction" {
+            } else if type == "SendMarketExtractTransaction" {
                 self?.detailView.toastView.hide(tag: 99)
-//                if let action = self?.payTokenClosure {
-//                    action()
-//                }
+                if let action = self?.withdrawMarketClosure {
+                    action(true)
+                }
             } else if type == "SendBankExtractTransaction" {
                 self?.detailView.toastView.hide(tag: 99)
-//                if let action = self?.payTokenClosure {
-//                    action()
-//                }
+                if let action = self?.withdrawBankClosure {
+                    action(true)
+                }
             }
             self?.detailView.hideToastActivity()
         })

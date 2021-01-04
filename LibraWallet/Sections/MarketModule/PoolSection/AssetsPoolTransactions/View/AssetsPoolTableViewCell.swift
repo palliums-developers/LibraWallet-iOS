@@ -145,7 +145,7 @@ class AssetsPoolTableViewCell: UITableViewCell {
                                                             unit: 1000000) + (model?.coinb ?? "")
             dateLabel.text = timestampToDateString(timestamp: model?.date ?? 0,
                                                    dateFormat: "MM.dd HH:mm")
-            if model?.status == 4001 {
+            if model?.status == "Executed" {
                 stateLabel.textColor = UIColor.init(hex: "13B788")
                 if model?.transaction_type == "ADD_LIQUIDITY" {
                     transactionTypeImageView.image = UIImage.init(named: "receive_sign")
@@ -180,7 +180,7 @@ class AssetsPoolTableViewCell: UITableViewCell {
     }
     /// 语言切换
     @objc func setText() {
-        if model?.status == 4001 {
+        if model?.status == "Executed" {
             stateLabel.textColor = UIColor.init(hex: "13B788")
             if model?.transaction_type == "ADD_LIQUIDITY" {
                 stateLabel.text = localLanguage(keyString: "wallet_assets_pool_transaction_status_transfer_in_success_title")

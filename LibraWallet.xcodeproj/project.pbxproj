@@ -1361,7 +1361,6 @@
 			children = (
 				361BDA4C24F8E7BD00C4C54E /* Controller */,
 				361BDA4E24F8E7BD00C4C54E /* Model */,
-				361BDA5024F8E7BD00C4C54E /* View */,
 			);
 			path = Bank;
 			sourceTree = "<group>";
@@ -1369,6 +1368,7 @@
 		361BDA4C24F8E7BD00C4C54E /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				361BDA5024F8E7BD00C4C54E /* View */,
 				361BDA4D24F8E7BD00C4C54E /* BankViewController.swift */,
 			);
 			path = Controller;
@@ -2154,14 +2154,14 @@
 			path = ExchangeSection;
 			sourceTree = "<group>";
 		};
-		36658C66256BB57500964005 /* SwapSection */ = {
+		36658C66256BB57500964005 /* PoolSection */ = {
 			isa = PBXGroup;
 			children = (
 				3682E5C124AC30D4007CA2CA /* AssetsPool */,
 				36F826E724BD9E970007ACC3 /* AssetsPoolTransactions */,
 				36828CBA24B707820085A165 /* AssetsPoolTransactionDetail */,
 			);
-			path = SwapSection;
+			path = PoolSection;
 			sourceTree = "<group>";
 		};
 		3666E510257A0BF8007DC62F /* YieldFarming */ = {
@@ -4294,8 +4294,8 @@
 			isa = PBXGroup;
 			children = (
 				9DC06A392372A92C00BCE1FE /* Market */,
-				36658C66256BB57500964005 /* SwapSection */,
 				36658C65256BB56600964005 /* ExchangeSection */,
+				36658C66256BB57500964005 /* PoolSection */,
 				36828CC724B735F00085A165 /* MarketMine */,
 			);
 			path = MarketModule;

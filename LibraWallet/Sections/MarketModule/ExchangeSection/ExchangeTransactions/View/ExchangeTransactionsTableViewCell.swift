@@ -130,15 +130,15 @@ class ExchangeTransactionsTableViewCell: UITableViewCell {
                                                             unit: 1000000) + (model?.output_name ?? "")
             dateLabel.text = timestampToDateString(timestamp: model?.date ?? 0,
                                                    dateFormat: "MM.dd HH:mm")
-            if model?.status == 4001 {
+            if model?.status == "Executed" {
                 // 已完成
                 stateLabel.textColor = UIColor.init(hex: "13B788")
                 stateLabel.text = localLanguage(keyString: "wallet_market_exchange_transaction_status_success_title")
-            } else if model?.status == 4002 {
+            } else if model?.status == "4002" {
                 // 兑换中
                 stateLabel.textColor = UIColor.init(hex: "FB8F0B")
                 stateLabel.text = localLanguage(keyString: "wallet_market_exchange_transaction_status_processing_title")
-            } else if model?.status == 4004 {
+            } else if model?.status == "4004" {
                 // 已取消
                 stateLabel.textColor = UIColor.init(hex: "E54040")
                 stateLabel.text = localLanguage(keyString: "wallet_market_exchange_transaction_status_cancel_title")

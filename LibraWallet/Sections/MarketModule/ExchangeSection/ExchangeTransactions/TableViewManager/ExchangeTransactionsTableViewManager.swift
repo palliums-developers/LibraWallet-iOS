@@ -37,7 +37,7 @@ extension ExchangeTransactionsTableViewManager: UITableViewDataSource {
         //        let identifier = "NormalCell"
         var identifier = "NormalCell"
         if let data = dataModels, data.isEmpty == false {
-            if data[indexPath.row].status == 4001 {
+            if data[indexPath.row].status == "Executed" {
                 identifier = "NormalCell"
             } else {
                 identifier = "FailedCell"

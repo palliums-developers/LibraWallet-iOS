@@ -40,19 +40,30 @@ struct AssetsPoolTransferOutInfoMainModel: Codable {
 }
 struct AssetsPoolTransactionsDataModel: Codable {
     /// 输入数量
-    var amounta: Int64?
+    var amounta: UInt64?
     /// 兑换数量
-    var amountb: Int64?
+    var amountb: UInt64?
     /// 输入币名
     var coina: String?
+    ///
+    var coina_show_name: String?
     /// 兑换币名
     var coinb: String?
+    ///
+    var coinb_show_name: String?
+    ///
+    var confirmed_time: Int?
     /// 日期
     var date: Int?
-    /// 状态（同链上状态）
-    var status: Int?
     ///
-    var token: Int64?
+    var gas_currency: String?
+    ///
+    var gas_used: UInt64?
+    
+    /// 状态（同链上状态）
+    var status: String?
+    ///
+    var token: UInt64?
     /// 交易状态
     var transaction_type: String?
     /// 交易唯一ID
