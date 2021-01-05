@@ -15,9 +15,7 @@ class DepositListViewController: BaseViewController {
         // 设置标题
         self.title = localLanguage(keyString: "wallet_bank_deposit_orders_list_navigationbar_title")
         // 加载子View
-        self.view.addSubview(detailView)
-        self.viewModel.initKVO()
-        
+        self.view.addSubview(detailView)        
         self.detailView.makeToastActivity(.center)
         self.viewModel.requestData()
     }
@@ -48,7 +46,6 @@ class DepositListViewController: BaseViewController {
     /// viewModel
     lazy var viewModel: DepositListViewModel = {
         let viewModel = DepositListViewModel.init(handleView: self.detailView)
-        viewModel.supprotTokens = self.supprotTokens
         return viewModel
     }()
     var supprotTokens: [BankDepositMarketDataModel]?
