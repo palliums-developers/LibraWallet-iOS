@@ -14,6 +14,13 @@ class LoanListViewModel: NSObject {
     override init() {
         super.init()
     }
+    convenience init(handleView: LoanListView) {
+        self.init()
+        self.view = handleView
+    }
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     deinit {
         print("LoanListViewModel销毁了")
     }
@@ -26,22 +33,21 @@ class LoanListViewModel: NSObject {
             view?.tableView.mj_footer = MJRefreshBackNormalFooter.init(refreshingTarget: self, refreshingAction:  #selector(getMoreData))
             self.setEmptyView()
             self.setPlaceholderView()
+            view?.tableView.mj_header?.beginRefreshing()
         }
     }
     /// 网络请求、数据模型
-    lazy var dataModel: LoanListModel = {
+    private lazy var dataModel: LoanListModel = {
         let model = LoanListModel.init()
         return model
     }()
     /// tableView管理类
-    lazy var tableViewManager: LoanListTableViewManager = {
+    private lazy var tableViewManager: LoanListTableViewManager = {
         let manager = LoanListTableViewManager.init()
         //        manager.delegate = self
         return manager
     }()
-    /// 数据监听KVO
-    var observer: NSKeyValueObservation?
-    var dataOffset: Int = 0
+    private var dataOffset: Int = 0
     @objc func refreshData() {
         dataOffset = 0
         view?.tableView.mj_footer?.resetNoMoreData()
@@ -51,18 +57,33 @@ class LoanListViewModel: NSObject {
         dataOffset += 10
         transactionRequest(refresh: false)
     }
-    func transactionRequest(refresh: Bool) {
-        let requestState = refresh == true ? 0:1
-        self.dataModel.getLoanList(address: WalletManager.shared.violasAddress!,
-                                   currency: requestOrderCurrency,
-                                   status: requestOrderStatus,
-                                   page: self.dataOffset,
-                                   limit: 10,
-                                   requestStatus: requestState)
-    }
     private var requestOrderStatus: Int = 999999
     private var requestOrderCurrency: String = ""
-    var supprotTokens: [BankDepositMarketDataModel]?
+    private var supprotTokens = [BankDepositMarketDataModel]()
+//    var controllerState: LoanControllerState = .normal {
+//        didSet {
+//            switch controllerState {
+//            case .normal:
+//                if oldValue == .headerRefresh {
+//
+//                } else if oldValue == .footerRefresh {
+//
+//                }
+//                print("")
+//            case .headerRefresh:
+//                print("")
+//            case .footerRefresh:
+//                print("")
+//            default:
+//                print("")
+//            }
+//        }
+//    }
+//    enum LoanControllerState {
+//        case normal
+//        case headerRefresh
+//        case footerRefresh
+//    }
 }
 extension LoanListViewModel: StatefulViewController {
     var backingView: UIView {
@@ -70,7 +91,6 @@ extension LoanListViewModel: StatefulViewController {
             return self.view!
         }
     }
-    
     func setEmptyView() {
         //空数据
         emptyView = EmptyDataPlaceholderView.init()
@@ -102,9 +122,28 @@ extension LoanListViewModel: StatefulViewController {
 // MARK: - 网络请求逻辑处理
 extension LoanListViewModel: LoanListViewDelegate {
     func filterOrdersWithCurrency(button: UIButton) {
-        guard let tokens = self.supprotTokens else {
-            return
+        var tempTokens = [BankDepositMarketDataModel]()
+        if self.supprotTokens.isEmpty == false {
+            tempTokens = self.supprotTokens
+            showStatusView(tokens: tempTokens)
+        } else {
+            self.view?.makeToastActivity(.center)
+            self.dataModel.getLoanMarket(requestStatus: 0) { [weak self] (result) in
+                self?.view?.hideToastActivity()
+                switch result {
+                case let .success(models):
+                    self?.supprotTokens = models
+                    tempTokens = models
+                    self?.showStatusView(tokens: tempTokens)
+                case let .failure(error):
+                    print(error.localizedDescription)
+                    self?.view?.makeToast(error.localizedDescription, position: .center)
+                }
+            }
         }
+
+    }
+    func showStatusView(tokens: [BankDepositMarketDataModel]) {
         var tempContent = tokens.map {
             $0.token_module ?? ""
         }
@@ -116,7 +155,6 @@ extension LoanListViewModel: LoanListViewDelegate {
         }
         view.show()
     }
-    
     func filterOrdersWithStatus(button: UIButton) {
         let datas = [localLanguage(keyString: "wallet_deposit_list_order_status_title"),
                      localLanguage(keyString: "wallet_bank_loan_detail_loan_status_loaned_title"),
@@ -159,91 +197,77 @@ extension LoanListViewModel: LoanListViewDelegate {
 }
 // MARK: - 网络请求
 extension LoanListViewModel {
-    func initKVO() {
-        self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
-            guard let dataDic = change.newValue, dataDic.count != 0 else {
-                self?.view?.toastView?.hide(tag: 99)
-                self?.view?.toastView?.hide(tag: 299)
-                self?.view?.hideToastActivity()
-                return
-            }
-            if let error = dataDic.value(forKey: "error") as? LibraWalletError {
-                // 隐藏请求指示
-                self?.view?.hideToastActivity()
-                self?.view?.toastView?.hide(tag: 99)
-                self?.view?.toastView?.hide(tag: 299)
-                self?.view?.toastView?.hide(tag: 399)
-                if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
-                    // 网络无法访问
-                    print(error.localizedDescription)
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionExpired).localizedDescription {
-                    // 版本太久
-                    print(error.localizedDescription)
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
-                    // 解析失败
-                    print(error.localizedDescription)
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
-                    print(error.localizedDescription)
-                    // 数据状态异常
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
-                    print(error.localizedDescription)
-                    // 下拉刷新请求数据为空
-                    self?.tableViewManager.dataModels?.removeAll()
+    func transactionRequest(refresh: Bool) {
+        self.dataModel.getLoanList(address: WalletManager.shared.violasAddress!, currency: requestOrderCurrency, status: requestOrderStatus, page: self.dataOffset, limit: 10, refresh: refresh) { [weak self] (result) in
+            switch result {
+            case let .success(models):
+                if refresh == true {
+                    guard models.isEmpty == false else {
+                        self?.tableViewManager.dataModels?.removeAll()
+                        self?.view?.tableView.reloadData()
+                        self?.view?.tableView.mj_header?.endRefreshing()
+                        self?.endLoading()
+                        return
+                    }
+                    // 下拉刷新
+                    self?.tableViewManager.dataModels = models
                     self?.view?.tableView.reloadData()
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
                     self?.view?.tableView.mj_header?.endRefreshing()
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .noMoreData).localizedDescription {
-                    // 上拉请求更多数据为空
-                    print(error.localizedDescription)
-                    self?.view?.tableView.mj_footer?.endRefreshingWithNoMoreData()
                 } else {
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
-                }
-                self?.endLoading()
-                return
-            }
-            let type = dataDic.value(forKey: "type") as! String
-            if type == "GetBankLoanListOrigin" {
-                guard let tempData = dataDic.value(forKey: "data") as? [LoanListMainDataModel] else {
-                    return
-                }
-                self?.tableViewManager.dataModels = tempData
-                self?.view?.tableView.reloadData()
-                self?.view?.tableView.mj_header?.endRefreshing()
-            } else if type == "GetBankLoanListMore" {
-                guard let tempData = dataDic.value(forKey: "data") as? [LoanListMainDataModel] else {
-                    return
-                }
-                if let oldData = self?.tableViewManager.dataModels, oldData.isEmpty == false {
-                    let tempArray = NSMutableArray.init(array: oldData)
+                    // 上拉刷新
+                    guard models.isEmpty == false else {
+                        self?.view?.tableView.mj_footer?.endRefreshingWithNoMoreData()
+                        return
+                    }
+                    guard let oldData = self?.tableViewManager.dataModels, oldData.isEmpty == false else {
+                        self?.tableViewManager.dataModels = models
+                        self?.view?.tableView.reloadData()
+                        return
+                    }
                     var insertIndexPath = [IndexPath]()
-                    for index in 0..<tempData.count {
+                    for index in 0..<models.count {
                         let indexPath = IndexPath.init(row: oldData.count + index, section: 0)
                         insertIndexPath.append(indexPath)
                     }
-                    tempArray.addObjects(from: tempData)
-                    self?.tableViewManager.dataModels = tempArray as? [LoanListMainDataModel]
+                    self?.tableViewManager.dataModels = oldData + models
                     self?.view?.tableView.beginUpdates()
                     self?.view?.tableView.insertRows(at: insertIndexPath, with: UITableView.RowAnimation.bottom)
                     self?.view?.tableView.endUpdates()
-                } else {
-                    self?.tableViewManager.dataModels = tempData
-                    self?.view?.tableView.reloadData()
+                    self?.view?.tableView.mj_footer?.endRefreshing()
                 }
-                self?.view?.tableView.mj_footer?.endRefreshing()
+            case let .failure(error):
+                if refresh == true {
+                    if self?.view?.tableView.mj_header?.isRefreshing == true {
+                        self?.view?.tableView.mj_header?.endRefreshing()
+                    }
+                } else {
+                    if self?.view?.tableView.mj_footer?.isRefreshing == true {
+                        self?.view?.tableView.mj_footer?.endRefreshing()
+                    }
+                }
+                self?.handleError(requestType: "type", error: error)
             }
-            self?.view?.hideToastActivity()
             self?.endLoading()
-        })
+        }
+    }
+    func handleError(requestType: String, error: LibraWalletError) {
+        switch error {
+        case .WalletRequest(reason: .networkInvalid):
+            // 网络无法访问
+            print(error.localizedDescription)
+        case .WalletRequest(reason: .walletVersionExpired):
+            // 版本太久
+            print(error.localizedDescription)
+        case .WalletRequest(reason: .parseJsonError):
+            // 解析失败
+            print(error.localizedDescription)
+        case .WalletRequest(reason: .dataCodeInvalid):
+            // 数据状态异常
+            print(error.localizedDescription)
+        default:
+            // 其他错误
+            print(error.localizedDescription)
+        }
+        self.view?.makeToast(error.localizedDescription, position: .center)
     }
 }

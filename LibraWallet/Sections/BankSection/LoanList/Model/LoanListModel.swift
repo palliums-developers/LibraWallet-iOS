@@ -29,7 +29,6 @@ struct LoanListMainModel: Codable {
 }
 class LoanListModel: NSObject {
     private var requests: [Cancellable] = []
-    @objc dynamic var dataDic: NSMutableDictionary = [:]
     deinit {
         requests.forEach { cancellable in
             cancellable.cancel()
@@ -37,47 +36,78 @@ class LoanListModel: NSObject {
         requests.removeAll()
         print("LoanListModel销毁了")
     }
-    func getLoanList(address: String, currency: String, status: Int, page: Int, limit: Int, requestStatus: Int) {
-         let type = requestStatus == 0 ? "GetBankLoanListOrigin":"GetBankLoanListMore"
-         let request = bankModuleProvide.request(.loanList(address, currency, status, page, limit)) {[weak self](result) in
-             switch  result {
-             case let .success(response):
-                 do {
-                     let json = try response.map(LoanListMainModel.self)
-                     if json.code == 2000 {
-                         guard let models = json.data, models.isEmpty == false else {
-                            let error = requestStatus == 0 ? LibraWalletError.RequestError.dataEmpty:LibraWalletError.RequestError.noMoreData
-                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: error), type: type)
-                            self?.setValue(data, forKey: "dataDic")
-                             print("\(type)_状态异常")
-                             return
-                         }
-                         let data = setKVOData(type: type, data: models)
-                         self?.setValue(data, forKey: "dataDic")
-                     } else {
-                         print("\(type)_状态异常")
-                         if let message = json.message, message.isEmpty == false {
-                             let data = setKVOData(error: LibraWalletError.error(message), type: type)
-                             self?.setValue(data, forKey: "dataDic")
-                         } else {
-                             let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: type)
-                             self?.setValue(data, forKey: "dataDic")
-                         }
-                     }
-                 } catch {
-                     print("\(type)_解析异常\(error.localizedDescription)")
-                     let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: type)
-                     self?.setValue(data, forKey: "dataDic")
-                 }
-             case let .failure(error):
-                 guard error.errorCode != -999 else {
-                     print("\(type)_网络请求已取消")
-                     return
-                 }
-                 let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: type)
-                 self?.setValue(data, forKey: "dataDic")
-             }
-         }
-         self.requests.append(request)
-     }
+    func getLoanList(address: String, currency: String, status: Int, page: Int, limit: Int, refresh: Bool, completion: @escaping (Result<[LoanListMainDataModel], LibraWalletError>) -> Void) {
+        let type = refresh == true ? "GetBankLoanListOrigin":"GetBankLoanListMore"
+        let request = bankModuleProvide.request(.loanList(address, currency, status, page, limit)) { (result) in
+            switch  result {
+            case let .success(response):
+                do {
+                    let json = try response.map(LoanListMainModel.self)
+                    if json.code == 2000 {
+                        guard let models = json.data, models.isEmpty == false else {
+                            print("\(type)_数据为空")
+                            completion(.success([LoanListMainDataModel]()))
+                            return
+                        }
+                        completion(.success(models))
+                    } else {
+                        print("\(type)_状态异常")
+                        if let message = json.message, message.isEmpty == false {
+                            completion(.failure(LibraWalletError.error(message)))
+                        } else {
+                            completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid)))
+                        }
+                    }
+                } catch {
+                    print("\(type)_解析异常\(error.localizedDescription)")
+                    completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError)))
+                }
+            case let .failure(error):
+                guard error.errorCode != -999 else {
+                    print("\(type)_网络请求已取消")
+                    return
+                }
+                completion(.failure(LibraWalletError.WalletRequest(reason: .networkInvalid)))
+            }
+        }
+        self.requests.append(request)
+    }
+}
+extension LoanListModel {
+    func getLoanMarket(requestStatus: Int, completion: @escaping (Result<[BankDepositMarketDataModel], LibraWalletError>) -> Void) {
+        let type = requestStatus == 0 ? "GetBankLoanMarketOrigin":"GetBankLoanMarketMore"
+        let request = bankModuleProvide.request(.loanMarket) {[weak self](result) in
+            switch  result {
+            case let .success(response):
+                do {
+                    let json = try response.map(BankDepositMarketMainModel.self)
+                    if json.code == 2000 {
+                        guard let models = json.data, models.isEmpty == false else {
+                            print("\(type)_数据为空")
+                            completion(.success([BankDepositMarketDataModel]()))
+                            return
+                        }
+                        completion(.success(models))
+                    } else {
+                        print("\(type)_状态异常")
+                        if let message = json.message, message.isEmpty == false {
+                            completion(.failure(LibraWalletError.error(message)))
+                        } else {
+                            completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid)))
+                        }
+                    }
+                } catch {
+                    print("\(type)_解析异常\(error.localizedDescription)")
+                    completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError)))
+                }
+            case let .failure(error):
+                guard error.errorCode != -999 else {
+                    print("\(type)_网络请求已取消")
+                    return
+                }
+                completion(.failure(LibraWalletError.WalletRequest(reason: .networkInvalid)))
+            }
+        }
+        self.requests.append(request)
+    }
 }

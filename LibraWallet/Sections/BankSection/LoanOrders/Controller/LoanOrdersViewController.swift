@@ -111,7 +111,6 @@ class LoanOrdersViewController: BaseViewController {
         self.dataModel.getLoanTransactions(address: WalletManager.shared.violasAddress!, page: self.dataOffset, limit: 10, requestStatus: requestState)
 
     }
-    var supprotTokens: [BankDepositMarketDataModel]?
 }
 //MARK: - 导航栏添加按钮
 extension LoanOrdersViewController {
@@ -125,7 +124,6 @@ extension LoanOrdersViewController {
     }
     @objc func checkOrder() {
         let vc = LoanListViewController.init()
-        vc.supprotTokens = self.supprotTokens
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }

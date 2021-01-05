@@ -263,7 +263,7 @@ wallet_bank_deposit_market_title = "Deposit Market";
 wallet_bank_loan_market_title = "Loan Market";
 wallet_bank_deposit_orders_alert_title = "Deposit Orders";
 wallet_bank_loan_orders_alert_title = "Loan Orders";
-wallet_bank_yield_framing_rules_button_title = "Deposit | Loan Yield Framing Rules";
+wallet_bank_yield_framing_rules_button_title = "Deposit | Borrowing mining rules";
 
 /************* 数字银行存款订单 *******************/
 wallet_deposit_orders_title = "Current Deposit";
