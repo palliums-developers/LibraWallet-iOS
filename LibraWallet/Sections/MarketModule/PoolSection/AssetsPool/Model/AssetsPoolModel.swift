@@ -449,7 +449,7 @@ extension AssetsPoolModel {
                 do {
                     let json = try response.map(MarketSupportTokensMainModel.self)
                     if json.code == 2000 {
-                        guard let violasTokens = json.data?.violas, violasTokens.isEmpty == false else {
+                        guard let violasTokens = json.data, violasTokens.isEmpty == false else {
                             let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .dataEmpty), type: "GetMarketSupportTokens")
                             self?.setValue(data, forKey: "dataDic")
                             return

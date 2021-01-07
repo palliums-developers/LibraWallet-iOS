@@ -264,10 +264,16 @@ extension AssetsPoolViewController {
             } else if type == "SendViolasTransaction" {
                 if self?.detailView.headerView.viewState == .AssetsPoolTransferInConfirm {
                     print("资金池转入成功")
-                    self?.detailView.makeToast("发送成功", position: .center)
+                    self?.detailView.headerView.inputAmountTextField.text = ""
+                    self?.detailView.headerView.outputAmountTextField.text = ""
+                    self?.detailView.makeToast(localLanguage(keyString: "wallet_transfer_success_alert"), position: .center)
                 } else {
                     print("资金池转出成功")
-                    self?.detailView.makeToast("发送成功", position: .center)
+                    self?.detailView.headerView.inputAmountTextField.text = ""
+                    self?.detailView.headerView.outputAmountTextField.text = ""
+                    self?.detailView.headerView.outputCoinAAmountLabel.text = "---"
+                    self?.detailView.headerView.outputCoinBAmountLabel.text = "---"
+                    self?.detailView.makeToast(localLanguage(keyString: "wallet_transfer_success_alert"), position: .center)
                 }
                 self?.detailView.headerView.viewState = .Normal
             } else if type == "GetAssetsPoolTransferInInfo" {
@@ -279,14 +285,12 @@ extension AssetsPoolViewController {
                     self?.detailView.headerView.outputAmountTextField.text = getDecimalNumber(amount: NSDecimalNumber.init(value: tempData),
                                                                                               scale: 4,
                                                                                               unit: 1000000).stringValue
-                    
                 } else {
                     self?.detailView.headerView.inputAmountTextField.text = getDecimalNumber(amount: NSDecimalNumber.init(value: tempData),
                                                                                              scale: 4,
                                                                                              unit: 1000000).stringValue
                 }
                 self?.detailView.headerView.viewState = .Normal
-                
             } else if type == "GetPoolTokenInfo" {
                 guard let tempData = dataDic.value(forKey: "data") as? AssetsPoolsInfoDataModel else {
                     return
