@@ -118,7 +118,7 @@ extension DepositViewModel: UITextFieldDelegate {
     private func handleInputAmount(textField: UITextField, content: String) -> Bool {
         let amount = NSDecimalNumber.init(string: content).multiplying(by: NSDecimalNumber.init(value: 1000000)).uint64Value
         let leastAmount = (NSDecimalNumber.init(value: self.tableViewManager.model?.quota_limit ?? 0).subtracting(NSDecimalNumber.init(value: self.tableViewManager.model?.quota_used ?? 0)))
-        if amount >= (self.tableViewManager.model?.minimum_amount ?? 0) && amount <= (self.tableViewManager.model?.token_balance ?? 0) {
+        if amount <= (self.tableViewManager.model?.token_balance ?? 0) {
             return true
         } else {
             if (self.tableViewManager.model?.token_balance ?? 0) > leastAmount.uint64Value {
