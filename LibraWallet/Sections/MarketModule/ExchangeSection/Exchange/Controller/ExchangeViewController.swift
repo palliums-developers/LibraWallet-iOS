@@ -37,17 +37,12 @@ class ExchangeViewController: UIViewController {
     deinit {
         print("ExchangeViewController销毁了")
     }
-    /// 网络请求、数据模型
-    lazy var dataModel: ExchangeModel = {
-        let model = ExchangeModel.init()
-        return model
-    }()
     /// 子View
     lazy var detailView : ExchangeView = {
         let view = ExchangeView.init()
         return view
     }()
-    /// viewModel
+    /// ViewModel
     lazy var viewModel: ExchangeViewModel = {
         let viewModel = ExchangeViewModel.init()
         viewModel.view = self.detailView

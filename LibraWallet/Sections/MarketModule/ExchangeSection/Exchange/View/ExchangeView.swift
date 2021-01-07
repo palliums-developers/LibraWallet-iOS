@@ -20,23 +20,22 @@ class ExchangeView: UIView {
     deinit {
         print("ExchangeView销毁了")
     }
-    //MARK: - 布局
+    // MARK: - 布局
     override func layoutSubviews() {
         super.layoutSubviews()
         headerView.snp.makeConstraints { (make) in
-            make.top.left.right.equalTo(self)
-            make.bottom.equalTo(self)
+            make.top.left.right.bottom.equalTo(self.safeAreaLayoutGuide)
         }
     }
-    //MARK: - 懒加载对象
+    // MARK: - 懒加载对象
     lazy var headerView: ExchangeViewHeaderView = {
         let header = ExchangeViewHeaderView.init()
         return header
     }()
-    var toastView: ToastView? {
+    lazy var toastView: ToastView = {
         let toast = ToastView.init()
         return toast
-    }
+    }()
     func deleteRowInTableView(indexPaths: [IndexPath]) {
         
     }
