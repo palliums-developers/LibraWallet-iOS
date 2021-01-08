@@ -26,7 +26,7 @@ struct BankProfitDataModel: Codable {
 struct BankProfitMainModel: Codable {
     var code: Int?
     var message: String?
-    var data: [PoolProfitDataModel]?
+    var data: [BankProfitDataModel]?
 }
 class ProfitBankModel: NSObject {
     private var requests: [Cancellable] = []
