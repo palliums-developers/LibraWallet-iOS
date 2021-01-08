@@ -115,7 +115,7 @@ extension LoanViewModel: LoanViewDelegate {
         guard self.view?.legalButton.imageView?.image != UIImage.init(named: "unselect") else {
             throw LibraWalletError.WalletBankLoan(reason: .disagreeLegal)
         }
-        return (amount.uint64Value, header.productModel?.token_active_state ?? false)
+        return (amount.uint64Value, header.productModel?.token_active_state ?? header.productModel?.token_active_state ?? false)
     }
     func unactivatedAlert(amount: UInt64) {
         let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_bank_loan_token_unactivated_alert_title"), message: localLanguage(keyString: "wallet_bank_loan_token_unactivated_alert_content"), preferredStyle: .alert)

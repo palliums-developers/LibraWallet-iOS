@@ -165,8 +165,8 @@ extension LoanModel {
             case let .success(response):
                 do {
                     let json = try response.map(ViolasAccountMainModel.self)
-                    if json.result != nil {
-                        self?.walletTokens = [ViolasBalanceDataModel.init(amount: 0, currency: "LBR")]
+                    if json.result == nil {
+                        self?.walletTokens = [ViolasBalanceDataModel.init(amount: 0, currency: "XUS")]
                     } else {
                         self?.walletTokens = json.result?.balances
                     }
