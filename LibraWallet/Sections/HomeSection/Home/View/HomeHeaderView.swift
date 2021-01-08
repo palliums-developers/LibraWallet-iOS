@@ -124,7 +124,7 @@ class HomeHeaderView: UIView {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "FFFFFF")
-        label.font = UIFont.init(name: "Helvetica", size: 28)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 28)
         label.text = "$ 0.00"
         return label
     }()

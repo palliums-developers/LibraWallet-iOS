@@ -74,7 +74,8 @@ class BankViewHeaderView: UIView {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "FFFFFF")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 20), weight: .medium)
+//        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 20), weight: .medium)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 20)
         label.text = "≈$ 0.00"
         return label
     }()
@@ -96,7 +97,8 @@ class BankViewHeaderView: UIView {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.white
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: .regular)
+//        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: .regular)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 10)
         label.text = "≈0.00"
         return label
     }()
@@ -118,7 +120,8 @@ class BankViewHeaderView: UIView {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.white
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: .regular)
+//        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: .regular)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 10)
         label.text = "≈0.00"
         return label
     }()

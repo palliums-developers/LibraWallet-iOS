@@ -78,9 +78,9 @@ class AssetsPoolTransactionDetailHeaderView: UITableViewHeaderFooterView {
                                                scale: 6,
                                                unit: 1000000)
             let inputAmountString = NSAttributedString(string: inputAmount.stringValue,
-                                                       attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "333333"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: .bold)])
+                                                       attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "333333"),NSAttributedString.Key.font: UIFont.init(name: "DIN Alternate Bold", size: 16) ?? UIFont.systemFont(ofSize: 16, weight: .bold)])
             let inputUnitString = NSAttributedString(string: model?.coina ?? "---",
-                                                     attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "333333"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: .bold)])
+                                                     attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "333333"),NSAttributedString.Key.font: UIFont.init(name: "DIN Alternate Bold", size: 16) ?? UIFont.systemFont(ofSize: 16, weight: .bold)])
             let tempInputAtt = NSMutableAttributedString.init(attributedString: inputAmountString)
             tempInputAtt.append(inputUnitString)
             inputAmountLabel.attributedText = tempInputAtt
@@ -89,9 +89,9 @@ class AssetsPoolTransactionDetailHeaderView: UITableViewHeaderFooterView {
                                                 scale: 6,
                                                 unit: 1000000)
             let outputAmountString = NSAttributedString(string: outputAmount.stringValue,
-                                                        attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "333333"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: .bold)])
+                                                        attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "333333"),NSAttributedString.Key.font: UIFont.init(name: "DIN Alternate Bold", size: 16) ?? UIFont.systemFont(ofSize: 16, weight: .bold)])
             let outputUnitString = NSAttributedString(string: model?.coinb ?? "---",
-                                                      attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "333333"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: .bold)])
+                                                      attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "333333"),NSAttributedString.Key.font: UIFont.init(name: "DIN Alternate Bold", size: 16) ?? UIFont.systemFont(ofSize: 16, weight: .bold)])
             let tempOutputAtt = NSMutableAttributedString.init(attributedString: outputAmountString)
             tempOutputAtt.append(outputUnitString)
             outputAmountLabel.attributedText = tempOutputAtt

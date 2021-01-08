@@ -85,7 +85,8 @@ class WalletMainViewHeaderView: UIView {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "333333")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 18), weight: .bold)
+//        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 18), weight: .bold)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 18)
         label.text = "0.00"
         return label
     }()
@@ -93,7 +94,8 @@ class WalletMainViewHeaderView: UIView {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "999999")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: .regular)
+//        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: .regular)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 12)
         label.text = "≈$0.00"
         return label
     }()

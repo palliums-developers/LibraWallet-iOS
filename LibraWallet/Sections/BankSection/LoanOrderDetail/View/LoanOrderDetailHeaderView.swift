@@ -49,7 +49,8 @@ class LoanOrderDetailHeaderView: UIView {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "7038FD")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 24), weight: .bold)
+//        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 24), weight: .bold)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 24)
         label.text = "---"
         return label
     }()

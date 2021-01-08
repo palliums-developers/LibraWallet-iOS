@@ -160,7 +160,8 @@ class BTCTransferView: UIView {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.center
         label.textColor = UIColor.init(hex: "3C3848")
-        label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+//        label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 14)
         label.text = localLanguage(keyString: "wallet_transfer_balance_title") + " --- BTC"
         return label
     }()
@@ -176,6 +177,7 @@ class BTCTransferView: UIView {
         let textField = UITextField.init()
         textField.textAlignment = NSTextAlignment.left
         textField.textColor = UIColor.init(hex: "333333")
+        textField.font = UIFont.init(name: "DIN Alternate Bold", size: 14)
         textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_transfer_address_btc_textfield_placeholder"),
                                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C4C3C7"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16)])
         //        textField.delegate = self

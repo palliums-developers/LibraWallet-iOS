@@ -118,7 +118,8 @@ class TokenMappingHeaderView: UIView {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.center
         label.textColor = UIColor.init(hex: "3C3848")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
+//        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 12)
         label.text = localLanguage(keyString: "wallet_mapping_balance_title")
         return label
     }()
@@ -126,6 +127,7 @@ class TokenMappingHeaderView: UIView {
         let textField = WYDTextField.init()
         textField.textAlignment = NSTextAlignment.left
         textField.textColor = UIColor.init(hex: "333333")
+        textField.font = UIFont.init(name: "DIN Alternate Bold", size: 14)
         textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_mapping_input_amount_textfield_placeholder"),
                                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "BABABA"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)])
         textField.keyboardType = .decimalPad
@@ -170,6 +172,7 @@ class TokenMappingHeaderView: UIView {
         let textField = WYDTextField.init()
         textField.textAlignment = NSTextAlignment.left
         textField.textColor = UIColor.init(hex: "333333")
+        textField.font = UIFont.init(name: "DIN Alternate Bold", size: 14)
         textField.text = "0"
         textField.keyboardType = .decimalPad
         textField.tintColor = DefaultGreenColor
@@ -214,7 +217,8 @@ class TokenMappingHeaderView: UIView {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "333333")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: UIFont.Weight.regular)
+//        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: UIFont.Weight.regular)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 10)
         label.text = "---"
         return label
     }()
@@ -230,7 +234,8 @@ class TokenMappingHeaderView: UIView {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "333333")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: UIFont.Weight.regular)
+//        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: UIFont.Weight.regular)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 10)
         label.text = "---"
         return label
     }()

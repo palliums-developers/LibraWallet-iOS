@@ -140,7 +140,8 @@ class ScanSendTransactionView: UIView {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "333333")
-        label.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+//        label.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 24)
         label.text = "---"
         label.numberOfLines = 0
         return label

@@ -147,7 +147,8 @@ class DepositOrdersTableViewCell: UITableViewCell {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "333333")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
+//        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 14)
         label.text = "---"
         return label
     }()
@@ -163,7 +164,8 @@ class DepositOrdersTableViewCell: UITableViewCell {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "333333")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
+//        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 14)
         label.text = "---"
         return label
     }()
@@ -180,6 +182,7 @@ class DepositOrdersTableViewCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "13B788")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.bold)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 14)
         label.text = "---"
         return label
     }()

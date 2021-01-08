@@ -106,7 +106,8 @@ class LoanMarketTableViewCell: UITableViewCell {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "13B788")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 18), weight: UIFont.Weight.bold)
+//        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 18), weight: UIFont.Weight.bold)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 18)
         label.text = "---"
         return label
     }()

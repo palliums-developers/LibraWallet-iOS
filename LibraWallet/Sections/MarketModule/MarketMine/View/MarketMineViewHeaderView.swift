@@ -85,7 +85,8 @@ class MarketMineViewHeaderView: UIView {
         let textField = WYDTextField.init()
         textField.textAlignment = NSTextAlignment.left
         textField.textColor = UIColor.init(hex: "333333")
-        textField.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+//        textField.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+        textField.font = UIFont.init(name: "DIN Alternate Bold", size: 24)
         textField.attributedPlaceholder = NSAttributedString(string: "0.00",
                                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C2C2C2"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20)])
         textField.isEnabled = false

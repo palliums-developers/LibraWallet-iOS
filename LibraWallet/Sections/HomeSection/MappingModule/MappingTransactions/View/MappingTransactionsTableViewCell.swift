@@ -86,7 +86,8 @@ class MappingTransactionsTableViewCell: UITableViewCell {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "000000")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
+//        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 12)
         label.text = "---"
         return label
     }()
@@ -114,7 +115,8 @@ class MappingTransactionsTableViewCell: UITableViewCell {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "999999")
-        label.font = UIFont.systemFont(ofSize: 10, weight: .regular)
+//        label.font = UIFont.systemFont(ofSize: 10, weight: .regular)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 10)
         label.text = localLanguage(keyString: "wallet_mapping_transactions_fees_title") + "---"
         label.numberOfLines = 0
         return label

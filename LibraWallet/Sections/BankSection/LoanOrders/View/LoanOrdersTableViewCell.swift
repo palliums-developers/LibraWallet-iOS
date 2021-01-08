@@ -93,7 +93,8 @@ class LoanOrdersTableViewCell: UITableViewCell {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "333333")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 20), weight: UIFont.Weight.bold)
+//        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 20), weight: UIFont.Weight.bold)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 20)
         label.text = "---"
         return label
     }()

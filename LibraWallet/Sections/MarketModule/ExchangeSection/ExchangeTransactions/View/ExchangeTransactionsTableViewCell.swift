@@ -76,7 +76,8 @@ class ExchangeTransactionsTableViewCell: UITableViewCell {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "000000")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
+//        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 14)
         label.text = "---"
         return label
     }()
@@ -89,7 +90,8 @@ class ExchangeTransactionsTableViewCell: UITableViewCell {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "000000")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
+//        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 14)
         label.text = "---"
         return label
     }()

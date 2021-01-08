@@ -167,7 +167,8 @@ class ScanBankDepositView: UIView {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "333333")
-        label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+//        label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 16)
         label.text = "---"
         label.numberOfLines = 0
         return label
@@ -186,7 +187,8 @@ class ScanBankDepositView: UIView {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "13B788")
-        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+//        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 12)
         label.text = "---"
         label.numberOfLines = 0
         return label
@@ -204,7 +206,8 @@ class ScanBankDepositView: UIView {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "333333")
-        label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+//        label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 14)
         label.text = "---"
         label.numberOfLines = 0
         return label

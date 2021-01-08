@@ -157,7 +157,8 @@ class ExchangeViewHeaderView: UIView {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "5C5C5C")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
+//        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 12)
         label.text = localLanguage(keyString: "wallet_market_exchange_fee_title") + "---"
         return label
     }()
@@ -185,7 +186,8 @@ class ExchangeViewHeaderView: UIView {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "333333")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
+//        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 12)
         label.text = localLanguage(keyString: "wallet_market_exchange_token_title") + "---"
         return label
     }()
@@ -194,7 +196,8 @@ class ExchangeViewHeaderView: UIView {
         textField.textAlignment = NSTextAlignment.left
         textField.textColor = UIColor.init(hex: "333333")
         textField.tintColor = DefaultGreenColor
-        textField.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+//        textField.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        textField.font = UIFont.init(name: "DIN Alternate Bold", size: 20)
         textField.attributedPlaceholder = NSAttributedString(string: "0.00",
                                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C2C2C2"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20)])
         textField.keyboardType = .decimalPad
@@ -248,7 +251,8 @@ class ExchangeViewHeaderView: UIView {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "333333")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
+//        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 12)
         label.text = localLanguage(keyString: "wallet_market_exchange_token_title") + "---"
         return label
     }()
@@ -257,7 +261,8 @@ class ExchangeViewHeaderView: UIView {
         textField.textAlignment = NSTextAlignment.left
         textField.textColor = UIColor.init(hex: "333333")
         textField.tintColor = DefaultGreenColor
-        textField.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+//        textField.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        textField.font = UIFont.init(name: "DIN Alternate Bold", size: 20)
         textField.attributedPlaceholder = NSAttributedString(string: "0.00",
                                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C2C2C2"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20)])
         textField.keyboardType = .decimalPad
@@ -284,7 +289,8 @@ class ExchangeViewHeaderView: UIView {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "5C5C5C")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: UIFont.Weight.regular)
+//        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: UIFont.Weight.regular)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 10)
         label.text = localLanguage(keyString: "wallet_market_exchange_rate_title") + "---"
         return label
     }()
@@ -292,7 +298,8 @@ class ExchangeViewHeaderView: UIView {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "5C5C5C")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: UIFont.Weight.regular)
+//        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: UIFont.Weight.regular)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 10)
         label.text = localLanguage(keyString: "wallet_market_exchange_miner_fee_title") + "---"
         return label
     }()

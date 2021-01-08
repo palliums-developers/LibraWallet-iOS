@@ -135,6 +135,7 @@ class TransferView: UIView {
         let textField = WYDTextField.init()
         textField.textAlignment = NSTextAlignment.left
         textField.textColor = UIColor.init(hex: "333333")
+        textField.font = UIFont.init(name: "DIN Alternate Bold", size: 14)
         textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_transfer_amount_textfield_placeholder"),
                                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "BABABA"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)])
         textField.delegate = self
@@ -177,7 +178,8 @@ class TransferView: UIView {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.center
         label.textColor = UIColor.init(hex: "5C5C5C")
-        label.font = UIFont.systemFont(ofSize: 12, weight: .regular)
+//        label.font = UIFont.systemFont(ofSize: 12, weight: .regular)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 14)
         label.text = localLanguage(keyString: "wallet_transfer_balance_title") + " ---"
         return label
     }()
@@ -266,7 +268,8 @@ class TransferView: UIView {
     lazy var transferFeeLabel: UILabel = {
         let label = UILabel.init()
         label.textColor = UIColor.init(hex: "3C3848")
-        label.font = UIFont.boldSystemFont(ofSize: 10)
+//        label.font = UIFont.boldSystemFont(ofSize: 10)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 10)
         label.textAlignment = NSTextAlignment.center
         label.text = "0.00"
         return label
