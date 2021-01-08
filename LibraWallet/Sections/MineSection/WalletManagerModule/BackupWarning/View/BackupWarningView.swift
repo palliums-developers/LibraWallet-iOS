@@ -80,7 +80,7 @@ class BackupWarningView: UIView {
             make.right.equalTo(self.snp.right).offset(-50)
         }
         confirmButton.snp.makeConstraints { (make) in
-            make.top.equalTo(alertImageView.snp.bottom).offset(271)
+            make.bottom.equalTo(self.snp.bottom).offset(-10)
             make.left.equalTo(self).offset(69)
             make.right.equalTo(self).offset(-69)
             make.height.equalTo(40)
