@@ -384,6 +384,11 @@ wallet_profit_pool_type_profit_title = "一键提取";
 wallet_profit_pool_amount_title = "提取数量";
 wallet_profit_pool_date_title = "提取时间";
 
+/************* 消息通知中心 *******************/
+wallet_notification_wallet_messages_title = "转账通知";
+wallet_notification_system_messages_title = "系统通知";
+wallet_notification_empty_default_title = "暂无消息";
+
 /************* 弹出提示 *******************/
 // 转账弹出提示
 wallet_transfer_success_alert = "转账成功";
@@ -546,6 +551,7 @@ wallet_phone_area_navigation_title = "国家和地区";
 wallet_phone_verify_navigation_title = "验证手机号";
 wallet_invitatioin_reward_navigation_title = "邀请奖励";
 wallet_profit_list_navigation_title = "收益明细";
+wallet_notification_navigation_title = "消息中心";
 
 /************* App错误 *******************/
 // 请求遇到错误

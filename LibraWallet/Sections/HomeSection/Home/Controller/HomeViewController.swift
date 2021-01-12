@@ -91,6 +91,13 @@ class HomeViewController: UIViewController {
         button.addTarget(self, action: #selector(scanToTransfer), for: .touchUpInside)
         return button
     }()
+    /// 二维码扫描按钮
+    lazy var messageButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setImage(UIImage.init(named: "home_notification"), for: UIControl.State.normal)
+        button.addTarget(self, action: #selector(checkNotificationCenter), for: .touchUpInside)
+        return button
+    }()
     deinit {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
         print("HomeViewController销毁了")
@@ -114,8 +121,10 @@ extension HomeViewController {
         // 重要方法，用来调整自定义返回view距离左边的距离
         let rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
         rightBarButtonItem.width = 15
+        
+        let notiView = UIBarButtonItem(customView: messageButton)
         // 返回按钮设置成功
-        self.navigationItem.rightBarButtonItems = [rightBarButtonItem, scanView]
+        self.navigationItem.rightBarButtonItems = [rightBarButtonItem, scanView, notiView]
     }
     /// 切换钱包
     @objc func changeWallet() {
@@ -234,7 +243,12 @@ extension HomeViewController {
                 self.detailView.makeToast(localLanguage(keyString: "wallet_connect_connect_time_invalid_title"), position: .center)
             }
         }
-        
+    }
+    @objc func checkNotificationCenter() {
+        let vc = NotificationCenterViewController()
+        //        vc.wallet = self.wallet
+        vc.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }
 extension HomeViewController: HomeViewDelegate {

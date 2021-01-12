@@ -384,6 +384,10 @@ wallet_profit_pool_type_profit_title = "Extract";
 wallet_profit_pool_amount_title = "Withdraw Amount";
 wallet_profit_pool_date_title = "Withdraw Date";
 
+/************* 消息通知中心 *******************/
+wallet_notification_wallet_messages_title = "Wallet";
+wallet_notification_system_messages_title = "System";
+wallet_notification_empty_default_title = "Nothing to see here - yet.";
 
 /************* 弹出提示 *******************/
 // 转账弹出提示
@@ -546,6 +550,7 @@ wallet_phone_area_navigation_title = "Region";
 wallet_phone_verify_navigation_title = "Verify Mobile Phone";
 wallet_invitatioin_reward_navigation_title = "Invitation Reward";
 wallet_profit_list_navigation_title = "Profit Details";
+wallet_notification_navigation_title = "Notifications";
 
 /************* App错误 *******************/
 // 请求遇到错误

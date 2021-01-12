@@ -41,7 +41,7 @@ class EmptyDataPlaceholderView: UIView {
     }()
     internal lazy var tipLabel: UILabel = {
         let label = UILabel()
-        label.textColor = UIColor.init(hex: "263C4E")
+        label.textColor = UIColor.init(hex: "3D3949")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 14), weight: UIFont.Weight.regular)
 //        label.font = PingFangRegular(15)
 //        label.textColor = twLightGrayColor

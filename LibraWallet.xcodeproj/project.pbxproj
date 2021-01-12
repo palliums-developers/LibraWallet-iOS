@@ -165,11 +165,11 @@
 		3650F0C1248F2A850086F578 /* TransactionDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3650F0C0248F2A850086F578 /* TransactionDetailTableViewCell.swift */; };
 		3650F0C3248F7ED30086F578 /* HomeWithoutWalletView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3650F0C2248F7ED30086F578 /* HomeWithoutWalletView.swift */; };
 		365A89C023B9A7CE00C55A10 /* WYDTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 365A89BF23B9A7CE00C55A10 /* WYDTextField.swift */; };
+		365CE3CF25AD913200948B2B /* MessageWebDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 365CE3CE25AD913200948B2B /* MessageWebDetailViewController.swift */; };
+		365CE3D725AD913F00948B2B /* MessageWebDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 365CE3D625AD913F00948B2B /* MessageWebDetailView.swift */; };
 		3666E514257A0C2F007DC62F /* YieldFarmingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3666E513257A0C2F007DC62F /* YieldFarmingViewController.swift */; };
 		3666E51C257A0C42007DC62F /* YieldFarmingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3666E51B257A0C42007DC62F /* YieldFarmingView.swift */; };
 		3666E54B257A14EA007DC62F /* YieldFarmingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3666E54A257A14EA007DC62F /* YieldFarmingModel.swift */; };
-		3666E559257A2D65007DC62F /* YieldFarmingRulesWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3666E558257A2D65007DC62F /* YieldFarmingRulesWebViewController.swift */; };
-		3666E564257A2D8C007DC62F /* YieldFarmingRulesWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3666E563257A2D8C007DC62F /* YieldFarmingRulesWebView.swift */; };
 		36677A742507598E009152B3 /* RedeemAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36677A732507598E009152B3 /* RedeemAlert.swift */; };
 		36677A7725077BBB009152B3 /* DepositOrdersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36677A7625077BBB009152B3 /* DepositOrdersViewModel.swift */; };
 		36677A79250A1908009152B3 /* DropperCellConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36677A78250A1908009152B3 /* DropperCellConfig.swift */; };
@@ -218,6 +218,18 @@
 		366AFF562578D34F0007AAFC /* ProfitBankTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFF552578D34F0007AAFC /* ProfitBankTableViewCell.swift */; };
 		366AFF5B2578D3700007AAFC /* ProfitBankTableViewHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFF5A2578D3700007AAFC /* ProfitBankTableViewHeaderView.swift */; };
 		366AFF612578D3A40007AAFC /* ProfitBankTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366AFF602578D3A40007AAFC /* ProfitBankTableViewManager.swift */; };
+		366C440A25ABEA73004B9B66 /* NotificationCenterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366C440925ABEA73004B9B66 /* NotificationCenterViewController.swift */; };
+		366C440F25ABEA83004B9B66 /* NotificationCenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366C440E25ABEA83004B9B66 /* NotificationCenterView.swift */; };
+		366C441A25ABEAC4004B9B66 /* WalletMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366C441925ABEAC4004B9B66 /* WalletMessagesViewController.swift */; };
+		366C441F25ABEB4D004B9B66 /* WalletMessagesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366C441E25ABEB4D004B9B66 /* WalletMessagesModel.swift */; };
+		366C442425ABEB5E004B9B66 /* WalletMessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366C442325ABEB5E004B9B66 /* WalletMessagesView.swift */; };
+		366C442925ABEB7E004B9B66 /* SystemMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366C442825ABEB7E004B9B66 /* SystemMessagesViewController.swift */; };
+		366C442E25ABEFB9004B9B66 /* SystemMessagesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366C442D25ABEFB9004B9B66 /* SystemMessagesModel.swift */; };
+		366C443325ABEFC7004B9B66 /* SystemMessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366C443225ABEFC7004B9B66 /* SystemMessagesView.swift */; };
+		366C443825AC2970004B9B66 /* WalletMessagesCellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366C443725AC2970004B9B66 /* WalletMessagesCellTableViewCell.swift */; };
+		366C443E25AC2B61004B9B66 /* WalletMessagesTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366C443D25AC2B61004B9B66 /* WalletMessagesTableViewManager.swift */; };
+		366C444625AC407B004B9B66 /* SystemMessagesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366C444525AC407B004B9B66 /* SystemMessagesTableViewCell.swift */; };
+		366C444C25AC40AF004B9B66 /* SystemMessagesTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366C444B25AC40AF004B9B66 /* SystemMessagesTableViewManager.swift */; };
 		367024272580BF320080B7FC /* ScanHandleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367024262580BF320080B7FC /* ScanHandleManager.swift */; };
 		367024582580CD930080B7FC /* ViolasQRCodeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367024572580CD920080B7FC /* ViolasQRCodeTests.swift */; };
 		3679149F250F742F008C7237 /* ScanBankRepaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3679149E250F742F008C7237 /* ScanBankRepaymentViewController.swift */; };
@@ -659,11 +671,11 @@
 		3650F0C0248F2A850086F578 /* TransactionDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionDetailTableViewCell.swift; sourceTree = "<group>"; };
 		3650F0C2248F7ED30086F578 /* HomeWithoutWalletView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeWithoutWalletView.swift; sourceTree = "<group>"; };
 		365A89BF23B9A7CE00C55A10 /* WYDTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WYDTextField.swift; sourceTree = "<group>"; };
+		365CE3CE25AD913200948B2B /* MessageWebDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageWebDetailViewController.swift; sourceTree = "<group>"; };
+		365CE3D625AD913F00948B2B /* MessageWebDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageWebDetailView.swift; sourceTree = "<group>"; };
 		3666E513257A0C2F007DC62F /* YieldFarmingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YieldFarmingViewController.swift; sourceTree = "<group>"; };
 		3666E51B257A0C42007DC62F /* YieldFarmingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YieldFarmingView.swift; sourceTree = "<group>"; };
 		3666E54A257A14EA007DC62F /* YieldFarmingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YieldFarmingModel.swift; sourceTree = "<group>"; };
-		3666E558257A2D65007DC62F /* YieldFarmingRulesWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YieldFarmingRulesWebViewController.swift; sourceTree = "<group>"; };
-		3666E563257A2D8C007DC62F /* YieldFarmingRulesWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YieldFarmingRulesWebView.swift; sourceTree = "<group>"; };
 		36677A732507598E009152B3 /* RedeemAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedeemAlert.swift; sourceTree = "<group>"; };
 		36677A7625077BBB009152B3 /* DepositOrdersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositOrdersViewModel.swift; sourceTree = "<group>"; };
 		36677A78250A1908009152B3 /* DropperCellConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropperCellConfig.swift; sourceTree = "<group>"; };
@@ -712,6 +724,18 @@
 		366AFF552578D34F0007AAFC /* ProfitBankTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfitBankTableViewCell.swift; sourceTree = "<group>"; };
 		366AFF5A2578D3700007AAFC /* ProfitBankTableViewHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfitBankTableViewHeaderView.swift; sourceTree = "<group>"; };
 		366AFF602578D3A40007AAFC /* ProfitBankTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfitBankTableViewManager.swift; sourceTree = "<group>"; };
+		366C440925ABEA73004B9B66 /* NotificationCenterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCenterViewController.swift; sourceTree = "<group>"; };
+		366C440E25ABEA83004B9B66 /* NotificationCenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCenterView.swift; sourceTree = "<group>"; };
+		366C441925ABEAC4004B9B66 /* WalletMessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletMessagesViewController.swift; sourceTree = "<group>"; };
+		366C441E25ABEB4D004B9B66 /* WalletMessagesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletMessagesModel.swift; sourceTree = "<group>"; };
+		366C442325ABEB5E004B9B66 /* WalletMessagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletMessagesView.swift; sourceTree = "<group>"; };
+		366C442825ABEB7E004B9B66 /* SystemMessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMessagesViewController.swift; sourceTree = "<group>"; };
+		366C442D25ABEFB9004B9B66 /* SystemMessagesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMessagesModel.swift; sourceTree = "<group>"; };
+		366C443225ABEFC7004B9B66 /* SystemMessagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMessagesView.swift; sourceTree = "<group>"; };
+		366C443725AC2970004B9B66 /* WalletMessagesCellTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletMessagesCellTableViewCell.swift; sourceTree = "<group>"; };
+		366C443D25AC2B61004B9B66 /* WalletMessagesTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletMessagesTableViewManager.swift; sourceTree = "<group>"; };
+		366C444525AC407B004B9B66 /* SystemMessagesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMessagesTableViewCell.swift; sourceTree = "<group>"; };
+		366C444B25AC40AF004B9B66 /* SystemMessagesTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMessagesTableViewManager.swift; sourceTree = "<group>"; };
 		367024262580BF320080B7FC /* ScanHandleManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanHandleManager.swift; sourceTree = "<group>"; };
 		367024572580CD920080B7FC /* ViolasQRCodeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasQRCodeTests.swift; sourceTree = "<group>"; };
 		3679149E250F742F008C7237 /* ScanBankRepaymentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBankRepaymentViewController.swift; sourceTree = "<group>"; };
@@ -2148,6 +2172,31 @@
 			path = WYDTextField;
 			sourceTree = "<group>";
 		};
+		365CE3CB25AD910000948B2B /* MessageWebDetail */ = {
+			isa = PBXGroup;
+			children = (
+				365CE3CC25AD911300948B2B /* Controller */,
+				365CE3CD25AD911E00948B2B /* View */,
+			);
+			path = MessageWebDetail;
+			sourceTree = "<group>";
+		};
+		365CE3CC25AD911300948B2B /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				365CE3CE25AD913200948B2B /* MessageWebDetailViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		365CE3CD25AD911E00948B2B /* View */ = {
+			isa = PBXGroup;
+			children = (
+				365CE3D625AD913F00948B2B /* MessageWebDetailView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		36658C65256BB56600964005 /* ExchangeSection */ = {
 			isa = PBXGroup;
 			children = (
@@ -2200,31 +2249,6 @@
 				3666E54A257A14EA007DC62F /* YieldFarmingModel.swift */,
 			);
 			path = Model;
-			sourceTree = "<group>";
-		};
-		3666E555257A2D2B007DC62F /* YieldFarmingRulesWeb */ = {
-			isa = PBXGroup;
-			children = (
-				3666E557257A2D4A007DC62F /* Controller */,
-				3666E556257A2D45007DC62F /* View */,
-			);
-			path = YieldFarmingRulesWeb;
-			sourceTree = "<group>";
-		};
-		3666E556257A2D45007DC62F /* View */ = {
-			isa = PBXGroup;
-			children = (
-				3666E563257A2D8C007DC62F /* YieldFarmingRulesWebView.swift */,
-			);
-			path = View;
-			sourceTree = "<group>";
-		};
-		3666E557257A2D4A007DC62F /* Controller */ = {
-			isa = PBXGroup;
-			children = (
-				3666E558257A2D65007DC62F /* YieldFarmingRulesWebViewController.swift */,
-			);
-			path = Controller;
 			sourceTree = "<group>";
 		};
 		36677A7525077BA3009152B3 /* ViewModel */ = {
@@ -2469,7 +2493,6 @@
 		366AFEDB257780D90007AAFC /* ExcitationPlan */ = {
 			isa = PBXGroup;
 			children = (
-				3666E555257A2D2B007DC62F /* YieldFarmingRulesWeb */,
 				3666E510257A0BF8007DC62F /* YieldFarming */,
 				366AFEE2257781920007AAFC /* ProfitListModule */,
 				366AFE57256E5C710007AAFC /* InvitationReward */,
@@ -2646,6 +2669,130 @@
 			isa = PBXGroup;
 			children = (
 				366AFF602578D3A40007AAFC /* ProfitBankTableViewManager.swift */,
+			);
+			path = TableViewManager;
+			sourceTree = "<group>";
+		};
+		366C440025A85B1A004B9B66 /* NotificationSection */ = {
+			isa = PBXGroup;
+			children = (
+				365CE3CB25AD910000948B2B /* MessageWebDetail */,
+				366C440125A86225004B9B66 /* NotificationCenter */,
+				366C440325A86268004B9B66 /* WalletMessages */,
+				366C440225A86246004B9B66 /* SystemMessages */,
+			);
+			path = NotificationSection;
+			sourceTree = "<group>";
+		};
+		366C440125A86225004B9B66 /* NotificationCenter */ = {
+			isa = PBXGroup;
+			children = (
+				366C440525A86287004B9B66 /* Model */,
+				366C440425A86281004B9B66 /* View */,
+			);
+			path = NotificationCenter;
+			sourceTree = "<group>";
+		};
+		366C440225A86246004B9B66 /* SystemMessages */ = {
+			isa = PBXGroup;
+			children = (
+				366C444A25AC408B004B9B66 /* TableViewManager */,
+				366C441825ABEAA8004B9B66 /* Controller */,
+				366C441725ABEAA2004B9B66 /* Model */,
+				366C441625ABEA9D004B9B66 /* View */,
+			);
+			path = SystemMessages;
+			sourceTree = "<group>";
+		};
+		366C440325A86268004B9B66 /* WalletMessages */ = {
+			isa = PBXGroup;
+			children = (
+				366C443C25AC2B49004B9B66 /* TableViewManager */,
+				366C441525ABEA96004B9B66 /* Controller */,
+				366C441425ABEA91004B9B66 /* Model */,
+				366C441325ABEA8B004B9B66 /* View */,
+			);
+			path = WalletMessages;
+			sourceTree = "<group>";
+		};
+		366C440425A86281004B9B66 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				366C440E25ABEA83004B9B66 /* NotificationCenterView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		366C440525A86287004B9B66 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				366C440925ABEA73004B9B66 /* NotificationCenterViewController.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		366C441325ABEA8B004B9B66 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				366C442325ABEB5E004B9B66 /* WalletMessagesView.swift */,
+				366C443725AC2970004B9B66 /* WalletMessagesCellTableViewCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		366C441425ABEA91004B9B66 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				366C441E25ABEB4D004B9B66 /* WalletMessagesModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		366C441525ABEA96004B9B66 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				366C441925ABEAC4004B9B66 /* WalletMessagesViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		366C441625ABEA9D004B9B66 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				366C443225ABEFC7004B9B66 /* SystemMessagesView.swift */,
+				366C444525AC407B004B9B66 /* SystemMessagesTableViewCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		366C441725ABEAA2004B9B66 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				366C442D25ABEFB9004B9B66 /* SystemMessagesModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		366C441825ABEAA8004B9B66 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				366C442825ABEB7E004B9B66 /* SystemMessagesViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		366C443C25AC2B49004B9B66 /* TableViewManager */ = {
+			isa = PBXGroup;
+			children = (
+				366C443D25AC2B61004B9B66 /* WalletMessagesTableViewManager.swift */,
+			);
+			path = TableViewManager;
+			sourceTree = "<group>";
+		};
+		366C444A25AC408B004B9B66 /* TableViewManager */ = {
+			isa = PBXGroup;
+			children = (
+				366C444B25AC40AF004B9B66 /* SystemMessagesTableViewManager.swift */,
 			);
 			path = TableViewManager;
 			sourceTree = "<group>";
@@ -4541,6 +4688,7 @@
 		9DC902362328E7820097FD85 /* Sections */ = {
 			isa = PBXGroup;
 			children = (
+				366C440025A85B1A004B9B66 /* NotificationSection */,
 				366AFEDB257780D90007AAFC /* ExcitationPlan */,
 				361BDA1624F8E7BD00C4C54E /* BankSection */,
 				9D1A6147233204B1009DDA07 /* Base */,
@@ -5008,7 +5156,6 @@
 				366AFF4E2578CD6D0007AAFC /* ProfitPoolTableViewManager.swift in Sources */,
 				3623AB7C23FC0C93004A01BF /* MappingTransactionsViewController.swift in Sources */,
 				9DFFA88723683E1C00EA74F9 /* WalletTransactionsTableViewCell.swift in Sources */,
-				3666E559257A2D65007DC62F /* YieldFarmingRulesWebViewController.swift in Sources */,
 				9DA0264A236FFE0A0084905B /* BackupMnemonicCollectionViewCell.swift in Sources */,
 				361BDB0424F8E7BE00C4C54E /* DepositListModel.swift in Sources */,
 				3650F0B8248A46140086F578 /* TransactionDetailViewController.swift in Sources */,
@@ -5018,9 +5165,11 @@
 				9DC488012320BE88005FF254 /* DiemNetwork.swift in Sources */,
 				3682E5DB24AC9E09007CA2CA /* ScanPublishModel.swift in Sources */,
 				361BDAFD24F8E7BE00C4C54E /* DepositOrdersModel.swift in Sources */,
+				366C443325ABEFC7004B9B66 /* SystemMessagesView.swift in Sources */,
 				9D9B4A672366D93900354EF0 /* WalletConfigTableViewCell.swift in Sources */,
 				9D626481235719A400A79B3D /* WelcomeView.swift in Sources */,
 				9DFFA8752368316900EA74F9 /* SettingViewHeader.swift in Sources */,
+				366C441A25ABEAC4004B9B66 /* WalletMessagesViewController.swift in Sources */,
 				9DA0265923702AFE0084905B /* BackupWarningView.swift in Sources */,
 				9D9B4A4A2362F4DC00354EF0 /* MineHeaderView.swift in Sources */,
 				361BDAD424F8E7BD00C4C54E /* BankView.swift in Sources */,
@@ -5035,6 +5184,7 @@
 				9DC4886E232222CF005FF254 /* LBXPermissions.swift in Sources */,
 				368F7BD724FCFC5700CCF3FB /* BankLegalView.swift in Sources */,
 				361BDAE624F8E7BE00C4C54E /* LoanOrdersViewController.swift in Sources */,
+				366C443825AC2970004B9B66 /* WalletMessagesCellTableViewCell.swift in Sources */,
 				366AFE12256CE2D80007AAFC /* EnrollPhoneModel.swift in Sources */,
 				9D9B4A652366D65800354EF0 /* WalletConfigModel.swift in Sources */,
 				9D628A8C239A4A2B00E222FB /* PrivateLegalViewController.swift in Sources */,
@@ -5146,6 +5296,7 @@
 				361BDAE824F8E7BE00C4C54E /* LoanOrdersView.swift in Sources */,
 				36677A8C250F651A009152B3 /* ScanBankWithdrawViewController.swift in Sources */,
 				361BDAD224F8E7BD00C4C54E /* BankModel.swift in Sources */,
+				365CE3CF25AD913200948B2B /* MessageWebDetailViewController.swift in Sources */,
 				3646E51124DBF5D400B8C20B /* ScanSwapView.swift in Sources */,
 				9DB515AE23A32B7C0069A909 /* ViolasNetwork.swift in Sources */,
 				361BDAFF24F8E7BE00C4C54E /* DepositOrdersView.swift in Sources */,
@@ -5156,6 +5307,7 @@
 				9DC4887E2322320B005FF254 /* ScanView.swift in Sources */,
 				361BDAB524F8E7BD00C4C54E /* LoanViewController.swift in Sources */,
 				361BDAF124F8E7BE00C4C54E /* RepaymentView.swift in Sources */,
+				366C442425ABEB5E004B9B66 /* WalletMessagesView.swift in Sources */,
 				36677A742507598E009152B3 /* RedeemAlert.swift in Sources */,
 				3622F20C24E4DE8600CFB754 /* TransferTokensAlert.swift in Sources */,
 				361BDAC624F8E7BD00C4C54E /* LoanListViewModel.swift in Sources */,
@@ -5202,6 +5354,7 @@
 				36F826F124BD9EEB0007ACC3 /* ExchangeTransactionsView.swift in Sources */,
 				361BDAF524F8E7BE00C4C54E /* LoanOrderDetailHeaderView.swift in Sources */,
 				9DB515C123A32F3E0069A909 /* ViolasTransactionWriteSetPayload.swift in Sources */,
+				366C442925ABEB7E004B9B66 /* SystemMessagesViewController.swift in Sources */,
 				3684216B257F5256000B87D6 /* DiemTravelRuleMetadataV0.swift in Sources */,
 				9DC4886F232222CF005FF254 /* LBXScanWrapper.swift in Sources */,
 				9DB515B223A32BC50069A909 /* ViolasHDPrivateKey.swift in Sources */,
@@ -5220,11 +5373,13 @@
 				368CD5E324D26F4E0092F12E /* MarketManager.swift in Sources */,
 				361BDB0B24F9016300C4C54E /* DepositQuestionTableViewHeaderView.swift in Sources */,
 				36DA3FCE23B5E5C6001D7733 /* UIButton + imageTitleLocation.swift in Sources */,
+				366C443E25AC2B61004B9B66 /* WalletMessagesTableViewManager.swift in Sources */,
 				361BDACE24F8E7BD00C4C54E /* LoanDetailClearingListTableViewCell.swift in Sources */,
 				9D9B4A1723604A7200354EF0 /* CustomActionViewProtocol.swift in Sources */,
 				361BDA1324F89E7A00C4C54E /* ViolasContractEvent.swift in Sources */,
 				366AFE5B256E5CAE0007AAFC /* InvitationRewardViewController.swift in Sources */,
 				9DB515A823A327640069A909 /* ViolasMnemonic.swift in Sources */,
+				366C440A25ABEA73004B9B66 /* NotificationCenterViewController.swift in Sources */,
 				36957508259B120000D8A45E /* DiemAccountMainModel.swift in Sources */,
 				36B466A82476565000CFF438 /* ScanSendTransactionViewController.swift in Sources */,
 				9DC06A352371794100BCE1FE /* CheckBackupCollectionViewMananger.swift in Sources */,
@@ -5265,6 +5420,7 @@
 				36828CE224B74C530085A165 /* ExchangeViewController.swift in Sources */,
 				3650F0AC2488907A0086F578 /* WalletMainViewHeaderView.swift in Sources */,
 				3617835D24440C1E003C6588 /* ViolasWordList.swift in Sources */,
+				366C442E25ABEFB9004B9B66 /* SystemMessagesModel.swift in Sources */,
 				9D628AC7239F9F6D00E222FB /* ViolasSocketManager.swift in Sources */,
 				36836D3B24B305D00031AC6E /* ExchangeTransactionDetailTableViewCell.swift in Sources */,
 				9D08AD4B2330D8E6004687E8 /* TransactionDetailWebViewController.swift in Sources */,
@@ -5280,6 +5436,7 @@
 				3623AB5D23ED70CF004A01BF /* TokenMappingView.swift in Sources */,
 				9DC487FD2320AF4E005FF254 /* DiemHDWallet.swift in Sources */,
 				36828CD524B736D10085A165 /* MarketMineViewHeaderView.swift in Sources */,
+				366C440F25ABEA83004B9B66 /* NotificationCenterView.swift in Sources */,
 				361BDAF224F8E7BE00C4C54E /* RepaymentTableViewManager.swift in Sources */,
 				3623AB8023FC0CB3004A01BF /* MappingTransactionsView.swift in Sources */,
 				361BDABC24F8E7BD00C4C54E /* LoanTableViewManager.swift in Sources */,
@@ -5310,10 +5467,12 @@
 				9DC06A2F2371788100BCE1FE /* CheckBackupViewModel.swift in Sources */,
 				361BDAFE24F8E7BE00C4C54E /* DepositOrdersTableViewCell.swift in Sources */,
 				361BDAD124F8E7BD00C4C54E /* BankViewController.swift in Sources */,
+				366C444C25AC40AF004B9B66 /* SystemMessagesTableViewManager.swift in Sources */,
 				9D5B4E76236BCC1700F4D99C /* AddAssetTableViewManager.swift in Sources */,
 				9DB515BB23A32E4C0069A909 /* ViolasRawTransaction.swift in Sources */,
 				36F826F724BD9F390007ACC3 /* AssetsPoolTransactionsView.swift in Sources */,
 				36F826F924BD9F460007ACC3 /* AssetsPoolTransactionsModel.swift in Sources */,
+				366C444625AC407B004B9B66 /* SystemMessagesTableViewCell.swift in Sources */,
 				3682E5CA24AC3728007CA2CA /* AssetsPoolModel.swift in Sources */,
 				36842161257F520B000B87D6 /* DiemGeneralMetadataV0.swift in Sources */,
 				9D9B4A05236048A000354EF0 /* AboutUsTableViewManager.swift in Sources */,
@@ -5329,6 +5488,7 @@
 				9D9B4A152360496900354EF0 /* FeedbackAlert.swift in Sources */,
 				9DC9023D2328E8290097FD85 /* CommonData.swift in Sources */,
 				36E95D8D242A084B0004B86D /* ScanLoginView.swift in Sources */,
+				365CE3D725AD913F00948B2B /* MessageWebDetailView.swift in Sources */,
 				3679149F250F742F008C7237 /* ScanBankRepaymentViewController.swift in Sources */,
 				9D9B49AE235DA76100354EF0 /* AddressManagerTableViewCell.swift in Sources */,
 				365A89C023B9A7CE00C55A10 /* WYDTextField.swift in Sources */,
@@ -5367,7 +5527,6 @@
 				36828CE424B74C6E0085A165 /* ExchangeViewHeaderView.swift in Sources */,
 				36677A85250F0D3D009152B3 /* ScanBankDepositModel.swift in Sources */,
 				366AFED7257627AB0007AAFC /* ViolasBech32.swift in Sources */,
-				3666E564257A2D8C007DC62F /* YieldFarmingRulesWebView.swift in Sources */,
 				361BDABA24F8E7BD00C4C54E /* LoanTableViewCell.swift in Sources */,
 				3650F0BA248A46280086F578 /* TransactionDetailModel.swift in Sources */,
 				9D712441232F621B009DED52 /* LibraWalletTool.swift in Sources */,
@@ -5376,6 +5535,7 @@
 				361BDACF24F8E7BD00C4C54E /* LoanDetailClearingListView.swift in Sources */,
 				361BDB0524F8E7BE00C4C54E /* DepositListTableViewCell.swift in Sources */,
 				36178361244465CF003C6588 /* ViolasMultiPrivateKey.swift in Sources */,
+				366C441F25ABEB4D004B9B66 /* WalletMessagesModel.swift in Sources */,
 				361BDAC224F8E7BD00C4C54E /* DepositView.swift in Sources */,
 				9D9B4A522366954700354EF0 /* ImportWalletModel.swift in Sources */,
 				9D5B4E65236ABB8700F4D99C /* TransferFeeSliderCustom.swift in Sources */,

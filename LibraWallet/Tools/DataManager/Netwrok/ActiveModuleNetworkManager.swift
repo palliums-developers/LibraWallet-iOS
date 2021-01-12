@@ -13,9 +13,9 @@ import Localize_Swift
 let ActiveModuleProvide = MoyaProvider<ActiveModuleRequest>()
 //let mainProvide = MoyaProvider<mainRequest>(stubClosure: MoyaProvider.immediatelyStub)
 enum ActiveModuleRequest {
-    /// 获取Libra账户信息（钱包地址，手机号区域，手机号）
+    /// 发送验证码（钱包地址，手机号区域，手机号）
     case secureCode(String, String, String)
-    /// 获取Libra账户信息（钱包地址，手机号区域，手机号，验证码，邀请地址）
+    /// 验证手机号（钱包地址，手机号区域，手机号，验证码，邀请地址）
     case verifyMobilePhone(String, String, String, String, String)
     /// 是否是新账户（钱包地址）
     case isNewWallet(String)

@@ -12,18 +12,38 @@ import Localize_Swift
 let mainProvide = MoyaProvider<MainRequest>()
 //let mainProvide = MoyaProvider<mainRequest>(stubClosure: MoyaProvider.immediatelyStub)
 enum MainRequest {
+    /// 获取钱包消息（钱包地址、offset、limit）
+    case walletMessages(String, Int, Int)
+    /// 获取系统消息（钱包地址、offset、limit）
+    case systemMessages(String, Int, Int)
+    /// 获取系统消息数
+    
 }
 extension MainRequest:TargetType {
     var baseURL: URL {
         switch self {
+        case .walletMessages(_, _, _),
+             .systemMessages(_, _, _):
+            if PUBLISH_VERSION == true {
+                return URL(string:"https://api.violas.io")!
+            } else {
+                return URL(string:"https://api4.violas.io")!
+            }
         }
     }
     var path: String {
         switch self {
+        case .walletMessages(_, _, _):
+            return "/1.0/violas/notificatioin/walletMessages"
+        case .systemMessages(_, _, _):
+            return "/1.0/violas/notificatioin/systemMessages"
         }
     }
     var method: Moya.Method {
         switch self {
+        case .walletMessages(_, _, _),
+             .systemMessages(_, _, _):
+            return .get
         }
     }
     public var validate: Bool {
@@ -37,6 +57,16 @@ extension MainRequest:TargetType {
     }
     var task: Task {
         switch self {
+        case .walletMessages(let address, let page, let limit):
+            return .requestParameters(parameters: ["address": address,
+                                                   "offset": page,
+                                                   "limit": limit],
+                                      encoding: URLEncoding.queryString)
+        case .systemMessages(let address, let page, let limit):
+            return .requestParameters(parameters: ["address": address,
+                                                   "offset": page,
+                                                   "limit": limit],
+                                      encoding: URLEncoding.queryString)
         }
     }
     var headers: [String : String]? {
