@@ -153,7 +153,7 @@ class EnrollPhoneView: UIView {
         textField.font = UIFont.systemFont(ofSize: 16, weight: .bold)
         textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_bind_phone_phone_invited_textfield_placeholder"),
                                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "BABABA"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16)])
-        textField.delegate = self
+//        textField.delegate = self
         textField.keyboardType = .default
         textField.tintColor = DefaultGreenColor
         textField.tag = 30
