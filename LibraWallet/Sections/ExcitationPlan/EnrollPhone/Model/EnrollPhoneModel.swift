@@ -71,6 +71,12 @@ extension EnrollPhoneModel {
                 do {
                     let json = try response.map(SecureCodeMainModel.self)
                     if json.code == 2000 {
+                        do {
+                            WalletManager.shared.changeWalletIsNewState(state: false)
+                            try WalletManager.updateIsNewWallet()
+                        } catch {
+                            print(error.localizedDescription)
+                        }
                         let data = setKVOData(type: "GetVerifyMobilePhone")
                         self?.setValue(data, forKey: "dataDic")
                     } else {

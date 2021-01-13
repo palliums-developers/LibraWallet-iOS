@@ -34,6 +34,7 @@ class HomeViewController: UIViewController {
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationController?.navigationBar.isTranslucent = true
         self.navigationController?.navigationBar.barStyle = .black
+        self.detailView.activeButton.alpha = WalletManager.shared.isNewWallet == true ? 1:0
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)

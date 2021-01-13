@@ -87,6 +87,8 @@ extension DataBaseManager {
             let walletViolasAddress = Expression<String>("wallet_violas_address")
             // 钱包Libra地址
             let walletLibraAddress = Expression<String>("wallet_libra_address")
+            // 是否是新钱包
+            let isNewWallet = Expression<Bool>("wallet_new_state")
             // 建表
             try tempDB.run(walletTable.create { t in
                 t.column(walletID, primaryKey: true)
@@ -101,6 +103,7 @@ extension DataBaseManager {
                 t.column(walletBTCAddress)
                 t.column(walletViolasAddress)
                 t.column(walletLibraAddress)
+                t.column(isNewWallet)
             })
         } catch {
             let errorString = error.localizedDescription
@@ -128,7 +131,8 @@ extension DataBaseManager {
                 Expression<Bool>("wallet_use_state") <- model.walletUseState ?? false,
                 Expression<String>("wallet_btc_address") <- model.btcAddress ?? "",
                 Expression<String>("wallet_violas_address") <- model.violasAddress ?? "",
-                Expression<String>("wallet_libra_address") <- model.libraAddress ?? "")
+                Expression<String>("wallet_libra_address") <- model.libraAddress ?? "",
+                Expression<Bool>("wallet_new_state") <- model.isNewWallet ?? true)
             let rowid = try tempDB.run(insert)
             print(rowid)
         } catch {
@@ -183,6 +187,8 @@ extension DataBaseManager {
                 let walletViolasAddress = wallet[Expression<String>("wallet_violas_address")]
                 // 钱包Libra地址
                 let walletLibraAddress = wallet[Expression<String>("wallet_libra_address")]
+                // 是否是新钱包
+                let isNewWallet = wallet[Expression<Bool>("wallet_new_state")]
                 
                 WalletManager.shared.initWallet(walletID: walletID,
                                                 walletName: walletName,
@@ -195,7 +201,8 @@ extension DataBaseManager {
                                                 walletUseState: walletUseState,
                                                 btcAddress: walletBTCAddress,
                                                 violasAddress: walletViolasAddress,
-                                                libraAddress: walletLibraAddress)
+                                                libraAddress: walletLibraAddress,
+                                                isNewWallet: isNewWallet)
                 return
             }
             // 未获取到默认钱包
@@ -260,6 +267,18 @@ extension DataBaseManager {
         let walletTable = Table("Wallet")
         do {
             try tempDB.run(walletTable.delete())
+        } catch {
+            print(error.localizedDescription)
+            throw error
+        }
+    }
+    func updateIsNewWalletState(wallet: WalletManager) throws {
+        guard let tempDB = self.db else {
+            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+        }
+        let walletTable = Table("Wallet").filter(Expression<Int64>("wallet_id") == wallet.walletID ?? 9999)
+        do {
+            try tempDB.run(walletTable.update(Expression<Bool>("wallet_backup_state") <- wallet.isNewWallet ?? true))
         } catch {
             print(error.localizedDescription)
             throw error

@@ -64,10 +64,12 @@ struct WalletManager {
     private(set) var violasAddress: String?
     /// 当前钱包Libra地址
     private(set) var libraAddress: String?
+    /// 是否是新钱包
+    private(set) var isNewWallet: Bool?
 }
 
 extension WalletManager {
-    mutating func initWallet(walletID: Int64, walletName: String, walletCreateTime: Double, walletBiometricLock: Bool, walletCreateType: Int, walletBackupState: Bool, walletSubscription: Bool, walletMnemonicHash: String, walletUseState: Bool, btcAddress: String, violasAddress: String, libraAddress: String) {
+    mutating func initWallet(walletID: Int64, walletName: String, walletCreateTime: Double, walletBiometricLock: Bool, walletCreateType: Int, walletBackupState: Bool, walletSubscription: Bool, walletMnemonicHash: String, walletUseState: Bool, btcAddress: String, violasAddress: String, libraAddress: String, isNewWallet: Bool) {
         self.semaphore.wait()
         
         self.walletID = walletID
@@ -82,6 +84,7 @@ extension WalletManager {
         self.btcAddress = btcAddress
         self.violasAddress = violasAddress
         self.libraAddress = libraAddress
+        self.isNewWallet = isNewWallet
         
         self.semaphore.signal()
     }
@@ -137,6 +140,11 @@ extension WalletManager {
         self.violasAddress = nil
         self.libraAddress = nil
         
+        self.semaphore.signal()
+    }
+    mutating func changeWalletIsNewState(state: Bool) {
+        self.semaphore.wait()
+        self.isNewWallet = state
         self.semaphore.signal()
     }
 }
@@ -273,7 +281,8 @@ extension WalletManager {
                                             walletUseState: true,
                                             btcAddress: btcAddress,
                                             violasAddress: violasAddress,
-                                            libraAddress: libraAddress)
+                                            libraAddress: libraAddress,
+                                            isNewWallet: true)
             try DataBaseManager.DBManager.insertWallet(model: wallet)
         } catch {
             throw error
@@ -726,6 +735,18 @@ extension WalletManager {
         do {
             let dataArray = try DataBaseManager.DBManager.getTransferAddress(type: type)
             return dataArray
+        } catch {
+            throw error
+        }
+    }
+}
+// MARK: 更新是否是新钱包状态
+extension WalletManager {
+    static func updateIsNewWallet() throws {
+        do {
+            try DataBaseManager.DBManager.updateIsNewWalletState(wallet: WalletManager.shared)
+            print("钱包更新备份状态-\(true)")
+            WalletManager.shared.changeWalletBackupState(state: true)
         } catch {
             throw error
         }

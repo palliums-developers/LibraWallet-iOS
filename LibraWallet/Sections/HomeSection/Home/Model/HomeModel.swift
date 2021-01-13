@@ -522,6 +522,13 @@ extension HomeModel {
                 do {
                     let json = try response.map(isNewWalletMainModel.self)
                     if json.code == 2000 {
+                        do {
+                            let state = json.data?.is_new == 0 ? true:false
+                            WalletManager.shared.changeWalletIsNewState(state: state)
+                            try WalletManager.updateIsNewWallet()
+                        } catch {
+                            print(error.localizedDescription)
+                        }
                         let data = setKVOData(type: "IsNewWallet", data: json.data?.is_new)
                         self?.setValue(data, forKey: "dataDic")
                     } else {

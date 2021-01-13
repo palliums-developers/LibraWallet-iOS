@@ -57,7 +57,6 @@ class YieldFarmingViewController: BaseViewController {
         let model = YieldFarmingModel.init()
         return model
     }()
-    var needDismissViewController: Bool?
     var requestURL: String?
     var bridge: WKWebViewJavascriptBridge!
     private var observer: NSKeyValueObservation?
