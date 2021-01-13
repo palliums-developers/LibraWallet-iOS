@@ -19,10 +19,18 @@ class BaseTabBarViewController: UITabBarController {
         } else {
             // Fallback on earlier versions
         }
+        // 添加Child
         addAllChildViewController()
+        // 设置默认位置
         self.selectedIndex = 0
-        // 添加语言变换通知
-         NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
+        // 添加语言切换监听
+        addLanguageListen()
+        // 自定义TabBar样式
+        customTabBar()
+    }
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
+        print("BaseTabBarViewController销毁了")
     }
     private func addAllChildViewController(){
         let home = HomeViewController.init()
@@ -50,10 +58,18 @@ class BaseTabBarViewController: UITabBarController {
         addChild(childNaviagation)
         subViewControllers.append(childViewController)
     }
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
-
-        print("BaseTabBarViewController销毁了")
+    private func addLanguageListen() {
+        // 添加语言变换通知
+         NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
+    }
+    private func customTabBar() {
+        // 移除顶部线条
+        self.tabBar.backgroundImage = UIImage()
+        self.tabBar.shadowImage = UIImage()
+        // 添加阴影
+        self.tabBar.layer.shadowColor = UIColor.lightGray.cgColor
+        self.tabBar.layer.shadowOffset = CGSize.init(width: 0, height: -3)
+        self.tabBar.layer.shadowOpacity = 0.1
     }
     lazy var subViewControllers: [UIViewController] = {
         let con = [UIViewController]()
