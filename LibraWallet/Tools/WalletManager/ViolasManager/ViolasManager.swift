@@ -62,6 +62,15 @@ struct ViolasManager {
             guard prifix.isEmpty == false else {
                 throw LibraWalletError.WalletScan(reason: .handleInvalid)
             }
+            if PUBLISH_VERSION == true {
+                guard prifix.lowercased() == "lbr" else {
+                    throw LibraWalletError.WalletScan(reason: .handleInvalid)
+                }
+            } else {
+                guard prifix.lowercased() == "tlb" else {
+                    throw LibraWalletError.WalletScan(reason: .handleInvalid)
+                }
+            }
             let address = result.prefix(16).toHexString()
             let subAddress = result.suffix(8).toHexString()
             guard isValidViolasAddress(address: address) == true else {
@@ -78,8 +87,6 @@ struct ViolasManager {
     ///   - version: 版本（默认为1）
     /// - Returns: 返回地址
     static func getQRAddress(address: String, rootAccount: Bool = false, version: UInt8 = 1) -> String {
-        let tempData = Data(Array<UInt8>(hex: address)) + Data.init(hex: "00")
-        let tempAddressData = tempData.bytes.sha3(SHA3.Variant.sha256)
         var randomData = Data()
         if rootAccount == false {
             for _ in 0..<8 {
@@ -91,9 +98,9 @@ struct ViolasManager {
             let tempData = Data.init(count: 8)
             randomData.append(tempData)
         }
-        let payload = tempAddressData.dropFirst(16) + randomData
+        let payload = Data(Array<UInt8>(hex: address)) + randomData
         let address: String = ViolasBech32.encode(payload: Data.init(payload),
-                                                  prefix: "lbr",
+                                                  prefix: PUBLISH_VERSION == true ? "lbr":"tlb",
                                                   version: version,
                                                   separator: "1")
         return address
