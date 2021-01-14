@@ -103,10 +103,10 @@ class WalletReceiveView: UIView {
                 tempAddress = "bitcoin:" + tempAddress
                 break
             case .Libra:
-                tempAddress = "diem://" + DiemManager.getQRAddress(address: tempAddress) + "?c=\(tokenModel.tokenModule.lowercased())"
+                tempAddress = "diem://" + DiemManager.getQRAddress(address: tempAddress, rootAccount: true) + "?c=\(tokenModel.tokenModule.lowercased())"
                 break
             case .Violas:
-                tempAddress = "violas://" + ViolasManager.getQRAddress(address: tempAddress) + "?c=\(tokenModel.tokenModule.lowercased())"
+                tempAddress = "violas://" + ViolasManager.getQRAddress(address: tempAddress, rootAccount: true) + "?c=\(tokenModel.tokenModule.lowercased())"
                 break
             }
             qrcodeImageView.image = QRCodeGenerator.generate(from: tempAddress)
