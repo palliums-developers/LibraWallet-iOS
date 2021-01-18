@@ -260,14 +260,14 @@ class HomeModel: NSObject {
                 do {
                     let json = try response.map(ModelPriceMainModel.self)
                     if json.code == 2000 {
-                        guard let models = json.data, models.isEmpty == false else {
-                            DispatchQueue.main.async(execute: {
-                                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: "GetBTCPrice")
-                                self?.setValue(data, forKey: "dataDic")
-                            })
-                            print("GetBTCPrice_状态异常")
-                            return
-                        }
+//                        guard let models = json.data, models.isEmpty == false else {
+//                            DispatchQueue.main.async(execute: {
+//                                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: "GetBTCPrice")
+//                                self?.setValue(data, forKey: "dataDic")
+//                            })
+//                            print("GetBTCPrice_状态异常")
+//                            return
+//                        }
                         DispatchQueue.main.async(execute: {
                             let data = setKVOData(type: "GetBTCPrice", data: json.data)
                             self?.setValue(data, forKey: "dataDic")
@@ -312,14 +312,14 @@ class HomeModel: NSObject {
                 do {
                     let json = try response.map(ModelPriceMainModel.self)
                     if json.code == 2000 {
-                        guard let models = json.data, models.isEmpty == false else {
-                            DispatchQueue.main.async(execute: {
-                                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: "GetViolasPrice")
-                                self?.setValue(data, forKey: "dataDic")
-                            })
-                            print("GetViolasPrice_状态异常")
-                            return
-                        }
+//                        guard let models = json.data, models.isEmpty == false else {
+//                            DispatchQueue.main.async(execute: {
+//                                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: "GetViolasPrice")
+//                                self?.setValue(data, forKey: "dataDic")
+//                            })
+//                            print("GetViolasPrice_状态异常")
+//                            return
+//                        }
                         DispatchQueue.main.async(execute: {
                             let data = setKVOData(type: "GetViolasPrice", data: json.data)
                             self?.setValue(data, forKey: "dataDic")
@@ -364,14 +364,14 @@ class HomeModel: NSObject {
                 do {
                     let json = try response.map(ModelPriceMainModel.self)
                     if json.code == 2000 {
-                        guard let models = json.data, models.isEmpty == false else {
-                            DispatchQueue.main.async(execute: {
-                                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: "GetLibraPrice")
-                                self?.setValue(data, forKey: "dataDic")
-                            })
-                            print("GetLibraPrice_状态异常")
-                            return
-                        }
+//                        guard let models = json.data, models.isEmpty == false else {
+//                            DispatchQueue.main.async(execute: {
+//                                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: "GetLibraPrice")
+//                                self?.setValue(data, forKey: "dataDic")
+//                            })
+//                            print("GetLibraPrice_状态异常")
+//                            return
+//                        }
                         DispatchQueue.main.async(execute: {
                             let data = setKVOData(type: "GetLibraPrice", data: json.data)
                             self?.setValue(data, forKey: "dataDic")
