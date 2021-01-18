@@ -53,9 +53,9 @@ class ScanView: UIView {
         // 扫描区域四边颜色
         style.colorRetangleLine = UIColor.init(hex: "504ACB")
         // 扫描区域动画类型
-        style.anmiationStyle = LBXScanViewAnimationStyle.NetGrid
+        style.anmiationStyle = LBXScanViewAnimationStyle.LineMove
         // 扫描区域动画图片
-        style.animationImage = UIImage(named: "scan_full_net")
+        style.animationImage = UIImage(named: "scan_line")
         return style
     }()    
     func stopScan() {
@@ -65,3 +65,4 @@ class ScanView: UIView {
         scanView.startScanAnimation()
     }
 }
+//scan_line
