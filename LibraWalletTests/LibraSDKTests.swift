@@ -565,7 +565,7 @@ class LibraSDKTests: XCTestCase {
             
             result += ViolasUtils.getLengthData(length: NSDecimalNumber.init(string: "10000000000").uint64Value, appendBytesCount: 8)
             
-            result += Array("@@$$LIBRA_ATTEST$$@@".utf8)
+            result += Array("@@$$DIEM_ATTEST$$@@".utf8)
 
             print(result.toHexString())
             // 4.3签名数据
@@ -650,14 +650,12 @@ class LibraSDKTests: XCTestCase {
     }
     func testDecode() {
         do {
-            let (prifix, hahah) = try ViolasBech32.decode("tlb1pgc28wuxspzzmvghzen74dczc87uepu64p2md5eqvg6tux",
+            let (prifix, hahah) = try ViolasBech32.decode("tlb1pdswa2re47ysqvxatc2q5e7fh30l7edxa7r0lvnqxz04rj",
                                                           version: 1,
                                                           separator: "1")
-//            XCTAssertEqual(prifix, "tlb")
+            XCTAssertEqual(prifix, "tlb")
             print(hahah.toHexString())
-            XCTAssertEqual(hahah.dropLast(8).toHexString(), "46147770d00885b622e2ccfd56e0583f")
-            //46147770d00885b622e2ccfd56e0583f
-            //fbcb5fa38090e834
+            XCTAssertEqual(hahah.dropLast(8).toHexString(), "6c1dd50f35f120061babc2814cf9378b")
         } catch {
             XCTFail()
         }

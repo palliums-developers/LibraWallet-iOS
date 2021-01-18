@@ -138,6 +138,8 @@
 		3623AB8023FC0CB3004A01BF /* MappingTransactionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB7F23FC0CB3004A01BF /* MappingTransactionsView.swift */; };
 		3623AB8223FC0CC7004A01BF /* MappingTransactionsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB8123FC0CC7004A01BF /* MappingTransactionsTableViewCell.swift */; };
 		3623AB8523FC0CE2004A01BF /* MappingTransactionsTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB8423FC0CE2004A01BF /* MappingTransactionsTableViewManager.swift */; };
+		362E6D0325B53BCD007777D9 /* YieldFarmingRulesWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362E6D0025B53BCD007777D9 /* YieldFarmingRulesWebViewController.swift */; };
+		362E6D0425B53BCD007777D9 /* YieldFarmingRulesWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362E6D0225B53BCD007777D9 /* YieldFarmingRulesWebView.swift */; };
 		363D90EE24CAA6C500F6374C /* DiemTransactionWriteSetPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363D90ED24CAA6C500F6374C /* DiemTransactionWriteSetPayload.swift */; };
 		363D90F024CAAC6700F6374C /* DiemContractEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363D90EF24CAAC6700F6374C /* DiemContractEvent.swift */; };
 		363D90F224CAB7C300F6374C /* DiemContracts.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 363D90F124CAB7C300F6374C /* DiemContracts.bundle */; };
@@ -167,6 +169,7 @@
 		365A89C023B9A7CE00C55A10 /* WYDTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 365A89BF23B9A7CE00C55A10 /* WYDTextField.swift */; };
 		365CE3CF25AD913200948B2B /* MessageWebDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 365CE3CE25AD913200948B2B /* MessageWebDetailViewController.swift */; };
 		365CE3D725AD913F00948B2B /* MessageWebDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 365CE3D625AD913F00948B2B /* MessageWebDetailView.swift */; };
+		365CE3E025AEE58700948B2B /* WYDDropper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 365CE3DF25AEE58700948B2B /* WYDDropper.swift */; };
 		3666E514257A0C2F007DC62F /* YieldFarmingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3666E513257A0C2F007DC62F /* YieldFarmingViewController.swift */; };
 		3666E51C257A0C42007DC62F /* YieldFarmingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3666E51B257A0C42007DC62F /* YieldFarmingView.swift */; };
 		3666E54B257A14EA007DC62F /* YieldFarmingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3666E54A257A14EA007DC62F /* YieldFarmingModel.swift */; };
@@ -644,6 +647,8 @@
 		3623AB7F23FC0CB3004A01BF /* MappingTransactionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MappingTransactionsView.swift; sourceTree = "<group>"; };
 		3623AB8123FC0CC7004A01BF /* MappingTransactionsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MappingTransactionsTableViewCell.swift; sourceTree = "<group>"; };
 		3623AB8423FC0CE2004A01BF /* MappingTransactionsTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MappingTransactionsTableViewManager.swift; sourceTree = "<group>"; };
+		362E6D0025B53BCD007777D9 /* YieldFarmingRulesWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YieldFarmingRulesWebViewController.swift; sourceTree = "<group>"; };
+		362E6D0225B53BCD007777D9 /* YieldFarmingRulesWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YieldFarmingRulesWebView.swift; sourceTree = "<group>"; };
 		363D90ED24CAA6C500F6374C /* DiemTransactionWriteSetPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemTransactionWriteSetPayload.swift; sourceTree = "<group>"; };
 		363D90EF24CAAC6700F6374C /* DiemContractEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemContractEvent.swift; sourceTree = "<group>"; };
 		363D90F124CAB7C300F6374C /* DiemContracts.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = DiemContracts.bundle; sourceTree = "<group>"; };
@@ -673,6 +678,7 @@
 		365A89BF23B9A7CE00C55A10 /* WYDTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WYDTextField.swift; sourceTree = "<group>"; };
 		365CE3CE25AD913200948B2B /* MessageWebDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageWebDetailViewController.swift; sourceTree = "<group>"; };
 		365CE3D625AD913F00948B2B /* MessageWebDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageWebDetailView.swift; sourceTree = "<group>"; };
+		365CE3DF25AEE58700948B2B /* WYDDropper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WYDDropper.swift; sourceTree = "<group>"; };
 		3666E513257A0C2F007DC62F /* YieldFarmingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YieldFarmingViewController.swift; sourceTree = "<group>"; };
 		3666E51B257A0C42007DC62F /* YieldFarmingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YieldFarmingView.swift; sourceTree = "<group>"; };
 		3666E54A257A14EA007DC62F /* YieldFarmingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YieldFarmingModel.swift; sourceTree = "<group>"; };
@@ -1986,6 +1992,31 @@
 			path = TableViewManager;
 			sourceTree = "<group>";
 		};
+		362E6CFE25B53BCD007777D9 /* YieldFarmingRulesWeb */ = {
+			isa = PBXGroup;
+			children = (
+				362E6CFF25B53BCD007777D9 /* Controller */,
+				362E6D0125B53BCD007777D9 /* View */,
+			);
+			path = YieldFarmingRulesWeb;
+			sourceTree = "<group>";
+		};
+		362E6CFF25B53BCD007777D9 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				362E6D0025B53BCD007777D9 /* YieldFarmingRulesWebViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		362E6D0125B53BCD007777D9 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				362E6D0225B53BCD007777D9 /* YieldFarmingRulesWebView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		3646E50224D7C0DF00B8C20B /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
@@ -2195,6 +2226,14 @@
 				365CE3D625AD913F00948B2B /* MessageWebDetailView.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		365CE3DE25AEE56500948B2B /* WYDDropper */ = {
+			isa = PBXGroup;
+			children = (
+				365CE3DF25AEE58700948B2B /* WYDDropper.swift */,
+			);
+			path = WYDDropper;
 			sourceTree = "<group>";
 		};
 		36658C65256BB56600964005 /* ExchangeSection */ = {
@@ -2493,6 +2532,7 @@
 		366AFEDB257780D90007AAFC /* ExcitationPlan */ = {
 			isa = PBXGroup;
 			children = (
+				362E6CFE25B53BCD007777D9 /* YieldFarmingRulesWeb */,
 				3666E510257A0BF8007DC62F /* YieldFarming */,
 				366AFEE2257781920007AAFC /* ProfitListModule */,
 				366AFE57256E5C710007AAFC /* InvitationReward */,
@@ -4562,6 +4602,7 @@
 		9DC4885B23220E30005FF254 /* Vendors */ = {
 			isa = PBXGroup;
 			children = (
+				365CE3DE25AEE56500948B2B /* WYDDropper */,
 				366AFE4C256CF8190007AAFC /* CountDownButton */,
 				36F8270024BEAA7E0007ACC3 /* Dropper */,
 				365A89BE23B9A79E00C55A10 /* WYDTextField */,
@@ -5185,6 +5226,7 @@
 				368F7BD724FCFC5700CCF3FB /* BankLegalView.swift in Sources */,
 				361BDAE624F8E7BE00C4C54E /* LoanOrdersViewController.swift in Sources */,
 				366C443825AC2970004B9B66 /* WalletMessagesCellTableViewCell.swift in Sources */,
+				362E6D0325B53BCD007777D9 /* YieldFarmingRulesWebViewController.swift in Sources */,
 				366AFE12256CE2D80007AAFC /* EnrollPhoneModel.swift in Sources */,
 				9D9B4A652366D65800354EF0 /* WalletConfigModel.swift in Sources */,
 				9D628A8C239A4A2B00E222FB /* PrivateLegalViewController.swift in Sources */,
@@ -5266,6 +5308,7 @@
 				9DBC267623408D55009650EA /* ed25519_sc.swift in Sources */,
 				9D9B49F12360388200354EF0 /* LanguageTabViewManager.swift in Sources */,
 				36178322243F1455003C6588 /* DiemMultiHDWallet.swift in Sources */,
+				362E6D0425B53BCD007777D9 /* YieldFarmingRulesWebView.swift in Sources */,
 				9DB515B623A32C3A0069A909 /* ViolasHDWallet.swift in Sources */,
 				361BDADA24F8E7BD00C4C54E /* LoanDetailLoanListTableViewManager.swift in Sources */,
 				3622F21424E539ED00CFB754 /* ReceiveView.swift in Sources */,
@@ -5412,6 +5455,7 @@
 				9D9B4A542366955B00354EF0 /* ImportWalletViewController.swift in Sources */,
 				9DA0264D236FFEB10084905B /* BackupMnemonicCollectionViewManager.swift in Sources */,
 				36B466AC2476566F00CFF438 /* ScanSendRawTransactionModel.swift in Sources */,
+				365CE3E025AEE58700948B2B /* WYDDropper.swift in Sources */,
 				361BDAB624F8E7BD00C4C54E /* LoanModel.swift in Sources */,
 				9D9B49C7235FFA7800354EF0 /* MineViewController.swift in Sources */,
 				36B466A62476563800CFF438 /* ScanSignTransactionViewController.swift in Sources */,

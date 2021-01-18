@@ -8,6 +8,7 @@
 
 import UIKit
 import WebKit
+import Localize_Swift
 
 class YieldFarmingRulesWebView: UIView {
     override init(frame: CGRect) {
@@ -37,7 +38,9 @@ class YieldFarmingRulesWebView: UIView {
         return webView
     }()
     lazy var webRequest: URLRequest = {
-        let request = URLRequest.init(url: URL(string: "https://www.baidu.com")!)
+        var request = URLRequest.init(url: URL(string: yieldFarmingRulesURL + "?address=\(WalletManager.shared.violasAddress!)&language=\(Localize.currentLanguage())")!)
+        request.cachePolicy = .reloadIgnoringCacheData
         return request
     }()
 }
+

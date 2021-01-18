@@ -32,7 +32,11 @@ class YieldFarmingRulesWebViewController: BaseViewController {
         print("YieldFarmingRulesWebViewController销毁了")
     }
     override func back() {
-        self.dismiss(animated: true, completion: nil)
+        if self.detailView.webView.canGoBack == true {
+            self.detailView.webView.goBack()
+        } else {
+            self.navigationController?.popViewController(animated: true)
+        }
     }
     //子View
     private lazy var detailView : YieldFarmingRulesWebView = {

@@ -135,19 +135,35 @@ extension BankViewController {
         self.navigationItem.rightBarButtonItems = [rightBarButtonItem, scanView]
     }
     @objc func checkOrder(button: UIButton) {
-        let dropper = Dropper.init(x: 0, y: statusBarHeight - 5, width: 110, height: 90)
-        dropper.items = [localLanguage(keyString: "wallet_bank_deposit_orders_alert_title"), localLanguage(keyString: "wallet_bank_loan_orders_alert_title")]
-        dropper.cornerRadius = 8
-        dropper.theme = .black(UIColor.init(hex: "F1EEFB"))
-        dropper.spacing = 12
-        dropper.delegate = self
-        let config = DropperCellConfig.init(textFont: UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular),
-                                            textColor: UIColor.init(hex: "333333"),
-                                            showSeperator: false,
-                                            seperatorColor: nil,
-                                            backgroundColor: nil)
-        dropper.cellConfig = config
-        dropper.show(Dropper.Alignment.center, position: .top, button: self.detailView.headerView.yesterdayBenefitButton)
+//        let dropper = Dropper.init(x: 0, y: statusBarHeight - 5, width: 110, height: 90)
+//        dropper.items = [localLanguage(keyString: "wallet_bank_deposit_orders_alert_title"), localLanguage(keyString: "wallet_bank_loan_orders_alert_title")]
+//        dropper.cornerRadius = 8
+//        dropper.theme = .black(UIColor.init(hex: "F1EEFB"))
+//        dropper.spacing = 12
+//        dropper.delegate = self
+//        let config = DropperCellConfig.init(textFont: UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular),
+//                                            textColor: UIColor.init(hex: "333333"),
+//                                            showSeperator: false,
+//                                            seperatorColor: nil,
+//                                            backgroundColor: nil)
+//        dropper.cellConfig = config
+//        dropper.show(Dropper.Alignment.center, position: .top, button: self.detailView.headerView.yesterdayBenefitButton)
+        let dropper = WYDDropper.init(data: [
+                                        DropperData.init(title: localLanguage(keyString: "wallet_bank_deposit_orders_alert_title"), icon: "bank_deposit"),
+                                        DropperData.init(title: localLanguage(keyString: "wallet_bank_loan_orders_alert_title"), icon: "bank_loan")],
+                                      button: button) { (result, row) in
+            if row == 0 {
+                let vc = DepositOrdersViewController.init()
+                vc.supprotTokens = self.depositController.tableViewManager.dataModels
+                vc.hidesBottomBarWhenPushed = true
+                self.navigationController?.pushViewController(vc, animated: true)
+            } else {
+                let vc = LoanOrdersViewController.init()
+                vc.hidesBottomBarWhenPushed = true
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
+        }
+        dropper.show()
     }
     @objc func changeToHideMode(button: UIButton) {
         if self.detailView.headerView.assetLabel.text == "≈$******" {

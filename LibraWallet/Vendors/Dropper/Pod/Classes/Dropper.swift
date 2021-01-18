@@ -329,8 +329,23 @@ open class Dropper: UIView {
     }()
     private lazy var invisableBackgroundView: UIView = {
         let view = UIView.init(frame: CGRect.init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
+        view.addGestureRecognizer(tap)
         return view
     }()
+    private lazy var tap: UIGestureRecognizer = {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.tapRecognized(_:)))
+        tapGesture.cancelsTouchesInView = false
+        //        tapGesture.delegate = self
+        return tapGesture
+    }()
+    @objc private func tapRecognized(_ gesture: UITapGestureRecognizer) {
+        
+        if gesture.state == .ended {
+            
+            //Resigning currently responder textField.
+            self.invisableBackgroundView.removeFromSuperview()
+        }
+    }
     var cellConfig: DropperCellConfig?
 
 }
