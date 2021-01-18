@@ -32,13 +32,16 @@ class WalletMainViewFooterView: UIView {
         transferButton.snp.makeConstraints { (make) in
             make.top.equalTo(self).offset(5)
             make.left.equalTo(self).offset(29)
-            let width = (mainWidth - 58 - 26) / 2
-            make.width.equalTo(width)
+//            let width = (mainWidth - 58 - 26) / 2
+            make.width.equalTo(receiveButton)
+            make.height.equalTo(35)
         }
         receiveButton.snp.makeConstraints { (make) in
             make.top.equalTo(self).offset(5)
             make.width.equalTo(transferButton)
             make.left.equalTo(transferButton.snp.right).offset(13)
+            make.right.equalTo(self.snp.right).offset(-29)
+            make.height.equalTo(35)
         }
 //        exchangeButton.snp.makeConstraints { (make) in
 //            make.top.equalTo(self).offset(5)

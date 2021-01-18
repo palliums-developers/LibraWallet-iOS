@@ -12,6 +12,7 @@ import JXSegmentedView
 class WalletTransactionsViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.addSubview(self.detailView)
         // 初始化本地配置
         self.setNavigationWithoutShadowImage()
         // 设置标题
@@ -21,17 +22,17 @@ class WalletTransactionsViewController: BaseViewController {
         //设置默认页面（无数据、无网络）
         self.setPlaceholderView()
     }
-//    override func viewWillLayoutSubviews() {
-//        super.viewWillLayoutSubviews()
-//        detailView.snp.makeConstraints { (make) in
-//            if #available(iOS 11.0, *) {
-//                make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
-//            } else {
-//                make.top.bottom.equalTo(self.view)
-//            }
-//            make.left.right.equalTo(self.view)
-//        }
-//    }
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        detailView.snp.makeConstraints { (make) in
+            if #available(iOS 11.0, *) {
+                make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
+            } else {
+                make.top.bottom.equalTo(self.view)
+            }
+            make.left.right.equalTo(self.view)
+        }
+    }
     //MARK: - 默认页面
     func setPlaceholderView() {
         if let empty = emptyView as? EmptyDataPlaceholderView {
@@ -155,7 +156,7 @@ extension WalletTransactionsViewController {
                     print(error.localizedDescription)
                     // 数据为空
                     self?.detailView.tableView.mj_footer?.endRefreshingWithNoMoreData()
-                    self?.detailView.makeToast(LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription, position: .center)
+//                    self?.detailView.makeToast(LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription, position: .center)
                     // 数据为空
                     if self?.detailView.tableView.mj_header?.isRefreshing == true {
                         self?.detailView.tableView.mj_header?.endRefreshing()
@@ -174,6 +175,7 @@ extension WalletTransactionsViewController {
                     }
                     self?.detailView.tableView.reloadData()
                     self?.endLoading()
+                    return
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .noMoreData).localizedDescription {
                     print(error.localizedDescription)
                 } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
@@ -330,7 +332,7 @@ extension WalletTransactionsViewController: WalletTransactionsTableViewManagerDe
 }
 extension WalletTransactionsViewController: JXSegmentedListContainerViewListDelegate {
     func listView() -> UIView {
-        return self.detailView
+        return self.view
     }
     /// 可选实现，列表显示的时候调用
     func listDidAppear() {
