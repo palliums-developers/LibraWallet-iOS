@@ -199,7 +199,7 @@ class ExchangeViewHeaderView: UIView {
 //        textField.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         textField.font = UIFont.init(name: "DIN Alternate Bold", size: 20)
         textField.attributedPlaceholder = NSAttributedString(string: "0.00",
-                                                             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C2C2C2"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20)])
+                                                             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C2C2C2"),NSAttributedString.Key.font: UIFont.init(name: "DIN Alternate Bold", size: 20) ?? UIFont.systemFont(ofSize: 20)])
         textField.keyboardType = .decimalPad
         textField.tag = 10
         return textField
@@ -264,7 +264,7 @@ class ExchangeViewHeaderView: UIView {
 //        textField.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         textField.font = UIFont.init(name: "DIN Alternate Bold", size: 20)
         textField.attributedPlaceholder = NSAttributedString(string: "0.00",
-                                                             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C2C2C2"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20)])
+                                                             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C2C2C2"),NSAttributedString.Key.font: UIFont.init(name: "DIN Alternate Bold", size: 20) ?? UIFont.systemFont(ofSize: 20)])
         textField.keyboardType = .decimalPad
         textField.tag = 20
         return textField
