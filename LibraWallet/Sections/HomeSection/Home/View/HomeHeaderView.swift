@@ -54,7 +54,7 @@ class HomeHeaderView: UIView {
         super.layoutSubviews()
         assetLabel.snp.makeConstraints { (make) in
             make.left.equalTo(self).offset(25)
-            make.top.equalTo(self).offset(2)
+            make.top.equalTo(self).offset(4)
         }
         walletConnectStateButton.snp.makeConstraints { (make) in
 //            make.bottom.equalTo(coinBackgroundView.snp.top).offset(-9)
@@ -123,8 +123,8 @@ class HomeHeaderView: UIView {
     lazy var assetLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
-        label.textColor = UIColor.init(hex: "FFFFFF")
-        label.font = UIFont.init(name: "DIN Alternate Bold", size: 28)
+        label.textColor = UIColor.white
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 24)
         label.text = "$ 0.00"
         return label
     }()

@@ -73,11 +73,12 @@ class HomeViewController: UIViewController {
         view.importOrCreateView.delegate = self
         return view
     }()
+    
     /// 全部资产价值按钮
     lazy var totalAssetsButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setTitle(localLanguage(keyString: "wallet_home_wallet_total_asset_title"), for: UIControl.State.normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.regular)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
         button.setTitleColor(UIColor.white, for: UIControl.State.normal)
         button.setImage(UIImage.init(named: "eyes_open_white"), for: UIControl.State.normal)
         // 调整位置
