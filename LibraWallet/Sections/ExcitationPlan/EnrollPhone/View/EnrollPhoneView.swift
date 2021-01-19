@@ -132,9 +132,9 @@ class EnrollPhoneView: UIView {
         textField.tintColor = DefaultGreenColor
         textField.tag = 20
         let width = libraWalletTool.ga_widthForComment(content: localLanguage(keyString: "wallet_bind_phone_get_secure_code_button_title"),
-                                                       fontSize: 12,
-                                                       height: 52)
-        let rightView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: width + 2.5, height: 52))
+                                                       fontSize: 14,
+                                                       height: 16)
+        let rightView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: width + 11, height: 52))
         rightView.addSubview(secureCodeButtonSpaceLabel)
         rightView.addSubview(secureCodeButton)
         textField.rightView = rightView
@@ -180,12 +180,12 @@ class EnrollPhoneView: UIView {
     }()
     lazy var secureCodeButton: GSCaptchaButton = {
         let width = libraWalletTool.ga_widthForComment(content: localLanguage(keyString: "wallet_bind_phone_get_secure_code_button_title"),
-                                                       fontSize: 12,
-                                                       height: 52)
-        let button = GSCaptchaButton.init(frame: CGRect.init(x: 2.5, y: 0, width: width, height: 52))
+                                                       fontSize: 14,
+                                                       height: 16)
+        let button = GSCaptchaButton.init(frame: CGRect.init(x: 11, y: 0, width: width, height: 52))
         button.setTitle(localLanguage(keyString: "wallet_bind_phone_get_secure_code_button_title"), for: UIControl.State.normal)
         button.titleLabel?.textAlignment = .center
-        button.titleLabel?.numberOfLines = 0
+//        button.titleLabel?.numberOfLines = 0
         button.setTitleColor(UIColor.init(hex: "7038FD"), for: UIControl.State.normal)
         button.setTitleColor(UIColor.init(hex: "5C5C5C"), for: UIControl.State.disabled)
         button.titleLabel?.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.bold)
