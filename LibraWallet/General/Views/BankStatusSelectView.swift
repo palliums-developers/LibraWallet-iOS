@@ -118,7 +118,7 @@ extension BankStatusSelectView {
 }
 extension BankStatusSelectView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 36
+        return 40
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
@@ -196,7 +196,7 @@ extension BankStatusSelectView {
                 self.whiteBackgroundView.snp.remakeConstraints { (make) in
                     make.top.equalTo(self).offset(navigationBarHeight + 24 + 5).priority(250)
                     if let models = self.dataModels, models.isEmpty == false {
-                        let height = models.count > 5 ? (5 * 36):(models.count * 36)
+                        let height = models.count > 5 ? (5 * 40):(models.count * 40)
                         make.height.equalTo(height).priority(250)
                     } else {
                         make.height.equalTo(50).priority(250)
