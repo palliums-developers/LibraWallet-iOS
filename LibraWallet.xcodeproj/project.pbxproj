@@ -142,6 +142,7 @@
 		362E6D0425B53BCD007777D9 /* YieldFarmingRulesWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362E6D0225B53BCD007777D9 /* YieldFarmingRulesWebView.swift */; };
 		362E6D0925B6724E007777D9 /* NotificationModuleNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362E6D0825B6724E007777D9 /* NotificationModuleNetworkManager.swift */; };
 		362E6D1125B68076007777D9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 362E6D1025B68076007777D9 /* GoogleService-Info.plist */; };
+		362E6D4025B6D2B4007777D9 /* WYDLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362E6D3F25B6D2B4007777D9 /* WYDLabel.swift */; };
 		363D90EE24CAA6C500F6374C /* DiemTransactionWriteSetPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363D90ED24CAA6C500F6374C /* DiemTransactionWriteSetPayload.swift */; };
 		363D90F024CAAC6700F6374C /* DiemContractEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363D90EF24CAAC6700F6374C /* DiemContractEvent.swift */; };
 		363D90F224CAB7C300F6374C /* DiemContracts.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 363D90F124CAB7C300F6374C /* DiemContracts.bundle */; };
@@ -652,6 +653,7 @@
 		362E6D0225B53BCD007777D9 /* YieldFarmingRulesWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YieldFarmingRulesWebView.swift; sourceTree = "<group>"; };
 		362E6D0825B6724E007777D9 /* NotificationModuleNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationModuleNetworkManager.swift; sourceTree = "<group>"; };
 		362E6D1025B68076007777D9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		362E6D3F25B6D2B4007777D9 /* WYDLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WYDLabel.swift; sourceTree = "<group>"; };
 		363D90ED24CAA6C500F6374C /* DiemTransactionWriteSetPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemTransactionWriteSetPayload.swift; sourceTree = "<group>"; };
 		363D90EF24CAAC6700F6374C /* DiemContractEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemContractEvent.swift; sourceTree = "<group>"; };
 		363D90F124CAB7C300F6374C /* DiemContracts.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = DiemContracts.bundle; sourceTree = "<group>"; };
@@ -2017,6 +2019,14 @@
 				362E6D0225B53BCD007777D9 /* YieldFarmingRulesWebView.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		362E6D3E25B6D2A3007777D9 /* WYDLabel */ = {
+			isa = PBXGroup;
+			children = (
+				362E6D3F25B6D2B4007777D9 /* WYDLabel.swift */,
+			);
+			path = WYDLabel;
 			sourceTree = "<group>";
 		};
 		3646E50224D7C0DF00B8C20B /* ViewModel */ = {
@@ -4605,6 +4615,7 @@
 		9DC4885B23220E30005FF254 /* Vendors */ = {
 			isa = PBXGroup;
 			children = (
+				362E6D3E25B6D2A3007777D9 /* WYDLabel */,
 				365CE3DE25AEE56500948B2B /* WYDDropper */,
 				366AFE4C256CF8190007AAFC /* CountDownButton */,
 				36F8270024BEAA7E0007ACC3 /* Dropper */,
@@ -5181,6 +5192,7 @@
 				361051B52563D67F008407F5 /* LibraModuleNetworkManager.swift in Sources */,
 				366AFF482578CD510007AAFC /* ProfitPoolTableViewCell.swift in Sources */,
 				9DA02644236FFCE00084905B /* BackupMnemonicView.swift in Sources */,
+				362E6D4025B6D2B4007777D9 /* WYDLabel.swift in Sources */,
 				9D9B49D52360270800354EF0 /* BaseNavigationViewController.swift in Sources */,
 				9D626480235719A400A79B3D /* WelcomeViewController.swift in Sources */,
 				3650F0AE2488908E0086F578 /* WalletMainViewFooterView.swift in Sources */,

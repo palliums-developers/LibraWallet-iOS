@@ -19,7 +19,7 @@ class EnrollPhoneView: UIView {
     weak var delegate: EnrollPhoneViewDelegate?
     override init(frame: CGRect) {
         super.init(frame: frame)
-        addSubview(tipsTextView)
+        addSubview(tipsLabel)
         addSubview(phoneNumberTextField)
         addSubview(phoneNumberSpaceLabel)
         addSubview(secureCodeTextField)
@@ -37,11 +37,10 @@ class EnrollPhoneView: UIView {
     //MARK: - 布局
     override func layoutSubviews() {
         super.layoutSubviews()
-        tipsTextView.snp.makeConstraints { (make) in
+        tipsLabel.snp.makeConstraints { (make) in
             make.top.equalTo(self).offset(10)
             make.left.equalTo(self).offset(18)
             make.right.equalTo(self).offset(-18)
-            make.height.equalTo(88)
         }
         phoneNumberTextField.snp.makeConstraints { (make) in
             make.bottom.equalTo(phoneNumberSpaceLabel.snp.top)
@@ -49,7 +48,7 @@ class EnrollPhoneView: UIView {
             make.height.equalTo(52)
         }
         phoneNumberSpaceLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(tipsTextView.snp.bottom).offset(82)
+            make.top.equalTo(tipsLabel.snp.bottom).offset(82)
             make.left.equalTo(self).offset(34)
             make.right.equalTo(self.snp.right).offset(-30)
             make.height.equalTo(0.5)
@@ -83,19 +82,25 @@ class EnrollPhoneView: UIView {
         }
     }
     // MARK: - 懒加载对象
-    lazy var tipsTextView: RSKPlaceholderTextView = {
-        let textView = RSKPlaceholderTextView.init()
-        textView.textAlignment = NSTextAlignment.left
-        textView.textColor = UIColor.init(hex: "5C5C5C")
-        textView.font = UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.medium)
-        textView.backgroundColor = UIColor.init(hex: "F7F7F7")
-        textView.layer.cornerRadius = 16
-        textView.tintColor = DefaultGreenColor
-        textView.isEditable = false
-        textView.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_bind_phone_tips_content"),
+    lazy var tipsLabel: WYDLabel = {
+        let label = WYDLabel.init()
+        label.textAlignment = NSTextAlignment.left
+        label.backgroundColor = UIColor.init(hex: "F7F7F7")
+        label.layer.cornerRadius = 16
+        label.layer.masksToBounds = true
+        label.textInsets = UIEdgeInsets.init(top: 14, left: 15, bottom: 14, right: 15)
+        label.tintColor = DefaultGreenColor
+        label.numberOfLines = 0
+//        textView.isEditable = false
+        //通过富文本来设置行间距
+        let paraph = NSMutableParagraphStyle()
+        //将行间距设置为5
+        paraph.lineSpacing = 5
+        label.attributedText = NSAttributedString(string: localLanguage(keyString: "wallet_bind_phone_tips_content"),
                                                             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "5C5C5C"),
-                                                                         NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12)])
-        return textView
+                                                                         NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12),
+                                                                         NSAttributedString.Key.paragraphStyle: paraph])
+        return label
     }()
     lazy var phoneNumberTextField: UITextField = {
         let textField = UITextField.init()
