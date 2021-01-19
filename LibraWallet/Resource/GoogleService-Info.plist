@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>1041521306945-b9ojeg3n6dc3eg51ho6rmv2a60cf7cg8.apps.googleusercontent.com</string>
+	<string>675290848213-m1uag4thq6ks4ikli7jhludkfbiegsjr.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.1041521306945-b9ojeg3n6dc3eg51ho6rmv2a60cf7cg8</string>
+	<string>com.googleusercontent.apps.675290848213-m1uag4thq6ks4ikli7jhludkfbiegsjr</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDbqvgcbd7Cxf2yG0iS2Y20aU7fVOqeBss</string>
+	<string>AIzaSyCoirpqrRzwQfHGVty44nbBQR-gXaMTM0s</string>
 	<key>GCM_SENDER_ID</key>
-	<string>1041521306945</string>
+	<string>675290848213</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.palliums.violas</string>
 	<key>PROJECT_ID</key>
-	<string>test-ec4df</string>
+	<string>violas-push-server</string>
 	<key>STORAGE_BUCKET</key>
-	<string>test-ec4df.appspot.com</string>
+	<string>violas-push-server.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,8 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1041521306945:ios:41f4b523bb72cfd5f8c5c0</string>
-	<key>DATABASE_URL</key>
-	<string>https://test-ec4df.firebaseio.com</string>
+	<string>1:675290848213:ios:a4833b409a96ff7c8fbb5c</string>
 </dict>
 </plist>
