@@ -154,9 +154,9 @@ extension ViolasModuleRequest: TargetType {
     }
     var headers: [String : String]? {
         return ["Content-Type":"application/json",
-                "app_version": appversion,
+                "versionName": appversion,
                 "platform": "ios",
-                "app_bundle_id":bundleID!,
+                "bundleId":bundleID!,
                 "language":Localize.currentLanguage()]
     }
 }

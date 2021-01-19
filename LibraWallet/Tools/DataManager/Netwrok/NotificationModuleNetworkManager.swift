@@ -1,20 +1,20 @@
 //
-//  ActiveModuleNetworkManager.swift
+//  NotificationModuleNetworkManager.swift
 //  LibraWallet
 //
-//  Created by wangyingdong on 2020/11/24.
-//  Copyright © 2020 palliums. All rights reserved.
+//  Created by wangyingdong on 2021/1/19.
+//  Copyright © 2021 palliums. All rights reserved.
 //
 
 import UIKit
 import Moya
 import Localize_Swift
 
-let ActiveModuleProvide = MoyaProvider<ActiveModuleRequest>()
+let NotificationModuleProvide = MoyaProvider<ActiveModuleRequest>()
 //let mainProvide = MoyaProvider<mainRequest>(stubClosure: MoyaProvider.immediatelyStub)
-enum ActiveModuleRequest {
-    /// 发送验证码（钱包地址，手机号区域，手机号）
-    case secureCode(String, String, String)
+enum NotificationModuleRequest {
+    /// 注册设备（钱包地址，FCM Token，设备类型，语言）
+    case registerNotification(String, String, String, String)
     /// 验证手机号（钱包地址，手机号区域，手机号，验证码，邀请地址）
     case verifyMobilePhone(String, String, String, String, String)
     /// 是否是新账户（钱包地址）
@@ -26,10 +26,10 @@ enum ActiveModuleRequest {
     /// 数字银行奖励记录（钱包地址、offset、limit）
     case bankProfitList(String, Int, Int)
 }
-extension ActiveModuleRequest: TargetType {
+extension NotificationModuleRequest: TargetType {
     var baseURL: URL {
         switch self {
-        case .secureCode(_, _, _),
+        case .registerNotification(_, _, _, _),
              .verifyMobilePhone(_, _, _, _, _),
              .isNewWallet(_),
              .inviteProfitList(_, _, _),
@@ -44,7 +44,7 @@ extension ActiveModuleRequest: TargetType {
     }
     var path: String {
         switch self {
-        case .secureCode(_, _, _):
+        case .registerNotification(_, _, _, _):
             return "/1.0/violas/verify_code"
         case .verifyMobilePhone(_, _, _, _, _):
             return "/1.0/violas/incentive/mobile/verify"
@@ -60,7 +60,7 @@ extension ActiveModuleRequest: TargetType {
     }
     var method: Moya.Method {
         switch self {
-        case .secureCode(_, _, _),
+        case .registerNotification(_, _, _, _),
              .verifyMobilePhone(_, _, _, _, _):
             return .post
         case .isNewWallet(_),
@@ -81,10 +81,11 @@ extension ActiveModuleRequest: TargetType {
     }
     var task: Task {
         switch self {
-        case .secureCode(let address, let phoneArea, let phoneNumber):
+        case .registerNotification(let address, let FCMToken, let device, let language):
             return .requestParameters(parameters: ["address": address,
-                                                   "phone_local_number": phoneArea,
-                                                   "receiver": phoneNumber],
+                                                   "token": FCMToken,
+                                                   "device_type": device,
+                                                   "language": language],
                                       encoding: JSONEncoding.default)
         case .verifyMobilePhone(let address, let phoneArea, let phoneNumber, let secureCode, let invitedAddress):
             return .requestParameters(parameters: ["wallet_address": address,

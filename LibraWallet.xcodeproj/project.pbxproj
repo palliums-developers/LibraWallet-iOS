@@ -140,6 +140,8 @@
 		3623AB8523FC0CE2004A01BF /* MappingTransactionsTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3623AB8423FC0CE2004A01BF /* MappingTransactionsTableViewManager.swift */; };
 		362E6D0325B53BCD007777D9 /* YieldFarmingRulesWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362E6D0025B53BCD007777D9 /* YieldFarmingRulesWebViewController.swift */; };
 		362E6D0425B53BCD007777D9 /* YieldFarmingRulesWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362E6D0225B53BCD007777D9 /* YieldFarmingRulesWebView.swift */; };
+		362E6D0925B6724E007777D9 /* NotificationModuleNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362E6D0825B6724E007777D9 /* NotificationModuleNetworkManager.swift */; };
+		362E6D1125B68076007777D9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 362E6D1025B68076007777D9 /* GoogleService-Info.plist */; };
 		363D90EE24CAA6C500F6374C /* DiemTransactionWriteSetPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363D90ED24CAA6C500F6374C /* DiemTransactionWriteSetPayload.swift */; };
 		363D90F024CAAC6700F6374C /* DiemContractEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363D90EF24CAAC6700F6374C /* DiemContractEvent.swift */; };
 		363D90F224CAB7C300F6374C /* DiemContracts.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 363D90F124CAB7C300F6374C /* DiemContracts.bundle */; };
@@ -302,7 +304,6 @@
 		36E95D8B242A084B0004B86D /* ScanLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E95D86242A084B0004B86D /* ScanLoginViewController.swift */; };
 		36E95D8C242A084B0004B86D /* ScanLoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E95D88242A084B0004B86D /* ScanLoginModel.swift */; };
 		36E95D8D242A084B0004B86D /* ScanLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E95D8A242A084B0004B86D /* ScanLoginView.swift */; };
-		36E9AB482531A1D40083E965 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 36E9AB472531A1D40083E965 /* GoogleService-Info.plist */; };
 		36F42E89242E347300DBBF8F /* DiemTypeTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F42E88242E347300DBBF8F /* DiemTypeTag.swift */; };
 		36F42E8B2431B56A00DBBF8F /* DiemStructTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F42E8A2431B56A00DBBF8F /* DiemStructTag.swift */; };
 		36F42EB1243C80DE00DBBF8F /* DiemMultiPrivateKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F42EB0243C80DE00DBBF8F /* DiemMultiPrivateKey.swift */; };
@@ -649,6 +650,8 @@
 		3623AB8423FC0CE2004A01BF /* MappingTransactionsTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MappingTransactionsTableViewManager.swift; sourceTree = "<group>"; };
 		362E6D0025B53BCD007777D9 /* YieldFarmingRulesWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YieldFarmingRulesWebViewController.swift; sourceTree = "<group>"; };
 		362E6D0225B53BCD007777D9 /* YieldFarmingRulesWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YieldFarmingRulesWebView.swift; sourceTree = "<group>"; };
+		362E6D0825B6724E007777D9 /* NotificationModuleNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationModuleNetworkManager.swift; sourceTree = "<group>"; };
+		362E6D1025B68076007777D9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		363D90ED24CAA6C500F6374C /* DiemTransactionWriteSetPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemTransactionWriteSetPayload.swift; sourceTree = "<group>"; };
 		363D90EF24CAAC6700F6374C /* DiemContractEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemContractEvent.swift; sourceTree = "<group>"; };
 		363D90F124CAB7C300F6374C /* DiemContracts.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = DiemContracts.bundle; sourceTree = "<group>"; };
@@ -811,7 +814,6 @@
 		36E95D86242A084B0004B86D /* ScanLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanLoginViewController.swift; sourceTree = "<group>"; };
 		36E95D88242A084B0004B86D /* ScanLoginModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanLoginModel.swift; sourceTree = "<group>"; };
 		36E95D8A242A084B0004B86D /* ScanLoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanLoginView.swift; sourceTree = "<group>"; };
-		36E9AB472531A1D40083E965 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		36F42E88242E347300DBBF8F /* DiemTypeTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemTypeTag.swift; sourceTree = "<group>"; };
 		36F42E8A2431B56A00DBBF8F /* DiemStructTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemStructTag.swift; sourceTree = "<group>"; };
 		36F42EB0243C80DE00DBBF8F /* DiemMultiPrivateKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemMultiPrivateKey.swift; sourceTree = "<group>"; };
@@ -3657,6 +3659,7 @@
 				361051862563CF54008407F5 /* ViolasModuleNetworkManager.swift */,
 				361051B42563D67F008407F5 /* LibraModuleNetworkManager.swift */,
 				366AFE52256D113C0007AAFC /* ActiveModuleNetworkManager.swift */,
+				362E6D0825B6724E007777D9 /* NotificationModuleNetworkManager.swift */,
 			);
 			path = Netwrok;
 			sourceTree = "<group>";
@@ -3680,8 +3683,8 @@
 		9D626476235718D700A79B3D /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				362E6D1025B68076007777D9 /* GoogleService-Info.plist */,
 				366AFE47256CEAE70007AAFC /* Countries.bundle */,
-				36E9AB472531A1D40083E965 /* GoogleService-Info.plist */,
 				9DA8E2AA2317ABC600E28D07 /* LaunchScreen.storyboard */,
 				9D712442232F7662009DED52 /* Assets.xcassets */,
 				36828CEA24B808760085A165 /* ColorAssets.xcassets */,
@@ -5055,11 +5058,11 @@
 				9DA8E2AC2317ABC600E28D07 /* LaunchScreen.storyboard in Resources */,
 				36828CEB24B808760085A165 /* ColorAssets.xcassets in Resources */,
 				366AFE48256CEAE70007AAFC /* Countries.bundle in Resources */,
+				362E6D1125B68076007777D9 /* GoogleService-Info.plist in Resources */,
 				36F8270E24BEAA7F0007ACC3 /* README.md in Resources */,
 				36828CED24BBFA300085A165 /* MarketContracts.bundle in Resources */,
 				9D7124342329EA1C009DED52 /* Localizable.strings in Resources */,
 				36AA10F925008A1E00BEF941 /* BankContracts.bundle in Resources */,
-				36E9AB482531A1D40083E965 /* GoogleService-Info.plist in Resources */,
 				361BDA1524F8A47F00C4C54E /* ViolasContracts.bundle in Resources */,
 				9D712443232F7662009DED52 /* Assets.xcassets in Resources */,
 			);
@@ -5213,6 +5216,7 @@
 				366C441A25ABEAC4004B9B66 /* WalletMessagesViewController.swift in Sources */,
 				9DA0265923702AFE0084905B /* BackupWarningView.swift in Sources */,
 				9D9B4A4A2362F4DC00354EF0 /* MineHeaderView.swift in Sources */,
+				362E6D0925B6724E007777D9 /* NotificationModuleNetworkManager.swift in Sources */,
 				361BDAD424F8E7BD00C4C54E /* BankView.swift in Sources */,
 				36677A87250F0DD9009152B3 /* ScanBankDepositView.swift in Sources */,
 				9DFFA87F23683C3400EA74F9 /* WalletTransactionsModel.swift in Sources */,
