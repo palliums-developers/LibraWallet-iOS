@@ -151,6 +151,7 @@ extension AssetsPoolViewController: AssetsPoolViewHeaderViewDelegate {
     }
     
 }
+
 extension AssetsPoolViewController {
     func initKVO() {
         self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in

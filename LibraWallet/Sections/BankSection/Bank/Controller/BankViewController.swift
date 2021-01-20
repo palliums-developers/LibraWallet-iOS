@@ -220,7 +220,9 @@ extension BankViewController: DropperDelegate {
 }
 extension BankViewController: BankViewDelegate {
     func checkYieldFramingRules() {
-        
+        let vc = YieldFarmingRulesWebViewController()
+        vc.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }
 // MARK: - 网络请求

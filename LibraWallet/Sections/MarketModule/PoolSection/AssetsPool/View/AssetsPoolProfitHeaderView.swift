@@ -8,7 +8,12 @@
 
 import UIKit
 
+protocol AssetsPoolProfitHeaderViewDelegate: NSObjectProtocol {
+    func showYieldFarmingRules()
+}
 class AssetsPoolProfitHeaderView: UIView {
+    weak var delegate: AssetsPoolProfitHeaderViewDelegate?
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.white
@@ -16,6 +21,8 @@ class AssetsPoolProfitHeaderView: UIView {
         addSubview(backgroundImageView)
         backgroundImageView.addSubview(titleLabel)
         backgroundImageView.addSubview(describeLabel)
+        isUserInteractionEnabled = true
+        addGestureRecognizer(tap)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -61,4 +68,14 @@ class AssetsPoolProfitHeaderView: UIView {
         label.text = localLanguage(keyString: "wallet_market_assets_pool_yield_farming_describe") + "---"
         return label
     }()
+    private lazy var tap: UIGestureRecognizer = {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.tapRecognized(_:)))
+        tapGesture.cancelsTouchesInView = false
+        return tapGesture
+    }()
+    @objc private func tapRecognized(_ gesture: UITapGestureRecognizer) {
+        if gesture.state == .ended {
+            self.delegate?.showYieldFarmingRules()
+        }
+    }
 }

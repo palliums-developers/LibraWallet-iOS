@@ -149,6 +149,7 @@ class MarketViewController: UIViewController {
     }()
     lazy var assetsPoolCon: AssetsPoolViewController = {
         let vc = AssetsPoolViewController()
+        vc.detailView.profitView.delegate = self
         return vc
     }()
     @objc func changeSubViewButtonClick(button: UIButton) {
@@ -187,5 +188,12 @@ class MarketViewController: UIViewController {
     @objc func setText() {
         exchangeButton.setTitle(localLanguage(keyString: "wallet_market_exchange_navigation_title"), for: UIControl.State.normal)
         assetsPoolButton.setTitle(localLanguage(keyString: "wallet_market_assets_pool_navigation_title"), for: UIControl.State.normal)
+    }
+}
+extension MarketViewController : AssetsPoolProfitHeaderViewDelegate {
+    func showYieldFarmingRules() {
+        let vc = YieldFarmingRulesWebViewController()
+        vc.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }
