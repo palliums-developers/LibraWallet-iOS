@@ -21,6 +21,7 @@ class AssetsPoolProfitHeaderView: UIView {
         addSubview(backgroundImageView)
         backgroundImageView.addSubview(titleLabel)
         backgroundImageView.addSubview(describeLabel)
+        backgroundImageView.addSubview(detailImageView)
         isUserInteractionEnabled = true
         addGestureRecognizer(tap)
     }
@@ -45,6 +46,10 @@ class AssetsPoolProfitHeaderView: UIView {
             make.right.equalTo(backgroundImageView.snp.right).offset(-20)
             make.bottom.equalTo(backgroundImageView.snp.bottom).offset(-9)
         }
+        detailImageView.snp.makeConstraints { (make) in
+            make.centerY.equalTo(titleLabel)
+            make.right.equalTo(backgroundImageView.snp.right).offset(-22)
+        }
     }
     // MARK: - 懒加载对象
     lazy var backgroundImageView : UIImageView = {
@@ -67,6 +72,11 @@ class AssetsPoolProfitHeaderView: UIView {
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: UIFont.Weight.regular)
         label.text = localLanguage(keyString: "wallet_market_assets_pool_yield_farming_describe") + "---"
         return label
+    }()
+    private lazy var detailImageView: UIImageView = {
+        let view = UIImageView.init()
+        view.image = UIImage.init(named: "pool_yield_farming_detail")
+        return view
     }()
     private lazy var tap: UIGestureRecognizer = {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.tapRecognized(_:)))
