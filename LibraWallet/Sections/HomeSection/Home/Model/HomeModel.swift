@@ -8,6 +8,7 @@
 
 import UIKit
 import Moya
+import Localize_Swift
 
 struct isNewWalletDataModel: Codable {
     var is_new: Int?
@@ -552,6 +553,38 @@ extension HomeModel {
                 }
                 let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "IsNewWallet")
                 self?.setValue(data, forKey: "dataDic")
+            }
+        }
+        self.requests.append(request)
+    }
+}
+extension HomeModel {
+    func registerFCMToken(address: String, token: String, completion: @escaping (Result<Bool, LibraWalletError>) -> Void) {
+        let request = notificationModuleProvide.request(.registerNotification(address, token, "apple", Localize.currentLanguage())) { (result) in
+            switch  result {
+            case let .success(response):
+                do {
+                    let json = try response.map(isNewWalletMainModel.self)
+                    if json.code == 2000 {
+                        completion(.success(true))
+                    } else {
+                        print("RegisterFCMToken_状态异常")
+                        if let message = json.message, message.isEmpty == false {
+                            completion(.failure(LibraWalletError.error(message)))
+                        } else {
+                            completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid)))
+                        }
+                    }
+                } catch {
+                    print("RegisterFCMToken_解析异常\(error.localizedDescription)")
+                    completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError)))
+                }
+            case let .failure(error):
+                guard error.errorCode != -999 else {
+                    print("RegisterFCMToken_网络请求已取消")
+                    return
+                }
+                completion(.failure(LibraWalletError.WalletRequest(reason: .networkInvalid)))
             }
         }
         self.requests.append(request)

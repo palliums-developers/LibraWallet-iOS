@@ -23,6 +23,7 @@ class HomeViewController: UIViewController {
         // 添加语言变换通知
         NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(deleteWallet), name: NSNotification.Name("PalliumsWalletDelete"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(registerFCMToken(notification:)), name: NSNotification.Name("FCMToken"), object: nil)
         // 检查是否第一次打开app
         checkIsFisrtOpenApp()
         // 添加服务协议
@@ -319,6 +320,22 @@ extension HomeViewController {
         self.detailView.headerView.assetsModel = "0"
         self.tableViewManager.dataModel?.removeAll()
         self.detailView.tableView.reloadData()
+    }
+    @objc func registerFCMToken(notification: NSNotification) {
+        guard let address = WalletManager.shared.violasAddress else {
+            return
+        }
+        guard let token = notification.userInfo?["token"] as? String else {
+            return
+        }
+        self.dataModel.registerFCMToken(address: address, token: token) { (result) in
+            switch result {
+            case .success(_):
+                print("")
+            case let .failure(error):
+                print(error.localizedDescription)
+            }
+        }
     }
 }
 
