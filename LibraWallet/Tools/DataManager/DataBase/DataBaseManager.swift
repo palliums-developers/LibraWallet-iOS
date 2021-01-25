@@ -650,3 +650,140 @@ extension DataBaseManager {
         }
     }
 }
+// MARK: 创建通知表
+/*extension DataBaseManager {
+    func createNotificationListTable() throws {
+        guard let tempDB = self.db else {
+            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+        }
+        do {
+            let addressTable = Table("Notification")
+            // 消息ID（本地）
+            let id = Expression<Int64>("message_id")
+            // 标题
+            let title = Expression<String>("message_title")
+            // 内容
+            let body = Expression<String>("message_body")
+            // 发送时间
+            let date = Expression<String>("message_date")
+            // 消息类型
+            let service = Expression<String>("message_service")
+            // 消息已读状态
+            let readState = Expression<Bool>("message_read_state")
+            // 消息详细关键字段
+            let content = Expression<String>("message_content")
+            // 消息ID（服务端）
+            let messageServerID = Expression<String>("message_server_id")
+            // 钱包消息交易类型(钱包消息使用（PEER_TO_PEER_WITH_METADATA等），系统消息默认空)
+            let messageTransactionType = Expression<String>("message_transaction_type")
+            // 钱包消息交易状态(钱包消息使用（Executed、Failed），系统消息默认空)
+            let messageTransactionStatus = Expression<String>("message_transaction_status")
+            // 建表
+            try tempDB.run(addressTable.create { t in
+                t.column(id, primaryKey: true)
+                t.column(title)
+                t.column(body)
+                t.column(date)
+                t.column(service)
+                t.column(readState)
+                t.column(content)
+                t.column(messageServerID, unique: true)
+                t.column(messageTransactionType)
+                t.column(messageTransactionStatus)
+            })
+        } catch {
+            let errorString = error.localizedDescription
+            if errorString.hasSuffix("already exists") == true {
+                return
+            } else {
+                throw error
+            }
+        }
+    }
+    func insertNotification(model: AddressModel) throws {
+        guard let tempDB = self.db else {
+            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+        }
+        let addressTable = Table("TransferAddress")
+        do {
+            let insert = addressTable.insert(
+                Expression<String>("address_name") <- model.addressName,
+                Expression<String>("address") <- (model.address),
+                Expression<String>("address_type") <- model.addressType)
+            try tempDB.run(insert)
+        } catch {
+            print(error.localizedDescription)
+            throw error
+        }
+    }
+    func getNotifications(type: String) throws -> [AddressModel] {
+        guard let tempDB = self.db else {
+            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+        }
+        let addressTable = type.isEmpty == true ? Table("TransferAddress") : Table("TransferAddress").filter(Expression<String>("address_type") == type)
+        do {
+            var addressArray = [AddressModel]()
+            for wallet in try tempDB.prepare(addressTable) {
+                // 地址ID
+                let addressID = wallet[Expression<Int64>("address_id")]
+                // 地址名字
+                let addressName = wallet[Expression<String>("address_name")]
+                // 地址
+                let address = wallet[Expression<String>("address")]
+                // 地址类型（0=Libra、1=Violas、2=BTC）
+                let addressType = wallet[Expression<String>("address_type")]
+
+                let model = AddressModel.init(addressID: addressID,
+                                              address: address,
+                                              addressName: addressName,
+                                              addressType: addressType)
+                
+                addressArray.append(model)
+            }
+            return addressArray
+        } catch {
+            print(error.localizedDescription)
+            return [AddressModel]()
+        }
+    }
+//    func updateTransferAddressName(model: AddressModel, name: String) throws {
+//        guard let tempDB = self.db else {
+//            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+//        }
+//        let addressTable = Table("TransferAddress").filter(Expression<String>("address") == model.address)
+//        do {
+//            try tempDB.run(addressTable.update(Expression<String>("address_name") <- name))
+//        } catch {
+//            print(error.localizedDescription)
+//            throw error
+//        }
+//    }
+//    func deleteTransferAddressFromTable(model: AddressModel) throws {
+//        guard let tempDB = self.db else {
+//            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+//        }
+//        let addressTable = Table("TransferAddress").filter(Expression<String>("address") == model.address && Expression<String>("address_type") == model.addressType)
+//        do {
+//            try tempDB.run(addressTable.delete())
+//        } catch {
+//            print(error.localizedDescription)
+//            throw error
+//        }
+//    }
+//    func isExistAddress(model: AddressModel) throws -> Bool {
+//        guard let tempDB = self.db else {
+//            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+//        }
+//        let tokenTable = Table("TransferAddress").filter(Expression<String>("address") == model.address && Expression<String>("address_type") == model.addressType)
+//        do {
+//            let count = try tempDB.scalar(tokenTable.count)
+//            guard count != 0 else {
+//                return false
+//            }
+//            return true
+//        } catch {
+//            print(error.localizedDescription)
+//            throw error
+//        }
+//    }
+}*/

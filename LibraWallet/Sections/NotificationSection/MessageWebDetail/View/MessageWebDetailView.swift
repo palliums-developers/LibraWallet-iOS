@@ -33,11 +33,6 @@ class MessageWebDetailView: UIView {
         let webView = WKWebView.init()
         // 下面一行代码意思是充满的意思(一定要加，不然也会显示有问题)
         webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        webView.load(webRequest)
         return webView
-    }()
-    lazy var webRequest: URLRequest = {
-        let request = URLRequest.init(url: URL(string: "https://www.baidu.com")!)
-        return request
     }()
 }

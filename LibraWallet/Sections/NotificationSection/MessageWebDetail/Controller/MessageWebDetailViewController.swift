@@ -16,6 +16,7 @@ class MessageWebDetailViewController: BaseViewController {
 //        self.title = localLanguage(keyString: "wallet_service_navigation_title")
         // 加载子View
         self.view.addSubview(detailView)
+        self.loadURL()
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -31,6 +32,13 @@ class MessageWebDetailViewController: BaseViewController {
     deinit {
         print("MessageWebDetailViewController销毁了")
     }
+    func loadURL() {
+        guard let tempURL = self.url, tempURL.isEmpty == false else {
+            return
+        }
+        let request = URLRequest.init(url: URL(string: tempURL)!)
+        self.detailView.webView.load(request)
+    }
     //子View
     private lazy var detailView : MessageWebDetailView = {
         let view = MessageWebDetailView.init()
@@ -38,6 +46,7 @@ class MessageWebDetailViewController: BaseViewController {
         return view
     }()
     var successLoadClosure: (()->Void)?
+    var url: String?
 }
 extension MessageWebDetailViewController :WKNavigationDelegate{
     // 页面开始加载时调用
@@ -51,6 +60,7 @@ extension MessageWebDetailViewController :WKNavigationDelegate{
     // 页面加载完成之后调用
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         self.view.hideToastActivity()
+        self.title = webView.title
         if let action = self.successLoadClosure {
             action()
         }
@@ -62,6 +72,9 @@ extension MessageWebDetailViewController :WKNavigationDelegate{
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         /// 弹出提示框点击确定返回
         self.view.hideToastActivity()
+        guard error.localizedDescription.hasSuffix("code = -999") else {
+            return
+        }
         let alertView = UIAlertController.init(title: localLanguage(keyString: "wallet_service_legal_loaded_error_title"),
                                                message: nil,
                                                preferredStyle: .alert)

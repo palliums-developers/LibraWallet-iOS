@@ -152,24 +152,32 @@ struct ViolasDataModel: Codable {
     var amount: Int64?
     /// 确认时间
     var confirmed_time: Int64?
+    /// 交易币种
+    var currency: String?
     /// 过期时间
     var expiration_time: Int?
     /// 手续费
     var gas: Int64?
     /// 手续费币种
     var gas_currency: String?
+    /// Gas价格
+    var gas_unit_price: UInt64?
+    /// Gas最大值
+    var max_gas_amount: UInt64?
+    /// 公钥
+    var public_key: String?
     /// 接收方
     var receiver: String?
     /// 发送方
     var sender: String?
     /// 交易序列号
     var sequence_number: UInt64?
-    /// 币种名字
-    var currency: String?
+    /// 签名
+    var signature: String?
     /// 交易执行状态
     var status: String?
-    /// 类型超多，不一一展示
-    var type: Int?
+    /// 类型超多（PEER_TO_PEER_WITH_METADATA等）
+    var type: String?
     /// 交易序列号
     var version: Int?
     /// 判断接收发送(自行添加0:转账,1收款)
@@ -408,27 +416,21 @@ class WalletTransactionsModel: NSObject {
         return tempModels
     }
     func dealLibraTransactions(models: [LibraDataModel], walletAddress: String) -> [LibraDataModel] {
-            var tempModels = [LibraDataModel]()
-            for var item in models {
-                if item.receiver == walletAddress {
-                    // 收款
-                    item.transaction_type = 1
-                } else {
-                    // 转账
-                    item.transaction_type = 0
-                }
-    //            for token in tokenList {
-    //                if item.receiver_module == token.address {
-    //                    item.module_name = token.name
-    //                    break
-    //                }
-    //            }
-                if item.gas_currency == nil || item.gas_currency?.isEmpty == true {
-                    item.gas_currency = "LBR"
-                }
-                tempModels.append(item)
-                
+        var tempModels = [LibraDataModel]()
+        for var item in models {
+            if item.receiver == walletAddress {
+                // 收款
+                item.transaction_type = 1
+            } else {
+                // 转账
+                item.transaction_type = 0
             }
-            return tempModels
+            if item.gas_currency == nil || item.gas_currency?.isEmpty == true {
+                item.gas_currency = "XUS"
+            }
+            tempModels.append(item)
+            
         }
+        return tempModels
+    }
 }

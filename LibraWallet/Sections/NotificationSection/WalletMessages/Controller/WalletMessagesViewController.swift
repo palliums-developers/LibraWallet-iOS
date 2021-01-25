@@ -33,7 +33,6 @@ class WalletMessagesViewController: BaseViewController {
         if (lastState == .Loading) {return}
         startLoading ()
         self.detailView.makeToastActivity(.center)
-        
         transactionRequest(refresh: true)
     }
     // 默认页面
@@ -87,7 +86,7 @@ extension WalletMessagesViewController {
         transactionRequest(refresh: false)
     }
     func transactionRequest(refresh: Bool) {
-        self.dataModel.getWalletMessages(address: "", limit: dataOffset, count: 10, refresh: refresh) { [weak self] (result) in
+        self.dataModel.getWalletMessages(address: WalletManager.shared.violasAddress ?? "", limit: dataOffset, count: 10, refresh: refresh) { [weak self] (result) in
             switch result {
             case let .success(models):
                 if refresh == true {

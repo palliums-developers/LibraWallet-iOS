@@ -95,14 +95,14 @@ class WalletMessagesCellTableViewCell: UITableViewCell {
                 return
             }
             itemNameLabel.text = tempModel.title
-            itemDateLabel.text = timestampToDateString(timestamp: tempModel.date ?? 0, dateFormat: "MM.dd HH:mm")
-            itemDescribeLabel.text = tempModel.content
-            if let status = tempModel.is_read, status == false {
+            itemDateLabel.text = timestampToDateString(timestamp: NSDecimalNumber.init(string: tempModel.date).intValue, dateFormat: "MM.dd HH:mm")
+            itemDescribeLabel.text = tempModel.body
+            if let status = tempModel.readed, status == 0 {
                 contentView.backgroundColor = UIColor.init(hex: "FAF7FF")
             } else {
                 contentView.backgroundColor = UIColor.white
             }
-            if let success = tempModel.is_success, success == true {
+            if let success = tempModel.status, success == "Executed" {
                 itemIconImageView.image = UIImage.init(named: "transaction_detail_finish")
             } else {
                 itemIconImageView.image = UIImage.init(named: "transaction_detail_failed")

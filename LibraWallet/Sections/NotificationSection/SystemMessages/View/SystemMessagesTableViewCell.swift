@@ -83,8 +83,8 @@ class SystemMessagesTableViewCell: UITableViewCell {
                 return
             }
             itemNameLabel.text = tempModel.title
-            itemDateLabel.text = timestampToDateString(timestamp: tempModel.date ?? 0, dateFormat: "MM.dd HH:mm")
-            itemDescribeLabel.text = tempModel.content
+            itemDateLabel.text = timestampToDateString(timestamp: NSDecimalNumber.init(string: tempModel.date).intValue, dateFormat: "MM.dd HH:mm")
+            itemDescribeLabel.text = tempModel.body
             if let status = tempModel.is_read, status == false {
                 contentView.backgroundColor = UIColor.init(hex: "FAF7FF")
             } else {

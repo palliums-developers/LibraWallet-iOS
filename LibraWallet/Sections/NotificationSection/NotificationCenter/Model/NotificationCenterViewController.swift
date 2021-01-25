@@ -72,7 +72,19 @@ extension NotificationCenterViewController: WalletMessagesTableViewManagerDelega
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: WalletMessagesDataModel) {
         let vc = TransactionDetailViewController()
         //            vc.requestURL = address
+        vc.successLoadClosure = {
+            if model.readed == 0 {
+                self.walletMessageController.tableViewManager.dataModels?.remove(at: indexPath.row)
+                var tempModel = model
+                tempModel.readed = 1
+                self.walletMessageController.tableViewManager.dataModels?.insert(tempModel, at: indexPath.row)
+                self.walletMessageController.detailView.tableView.beginUpdates()
+                self.walletMessageController.detailView.tableView.reloadRows(at: [indexPath], with: .none)
+                self.walletMessageController.detailView.tableView.endUpdates()
+            }
+        }
         vc.tokenAddress = WalletManager.shared.violasAddress
+        vc.violasVersion = model.version
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }
@@ -90,6 +102,7 @@ extension NotificationCenterViewController: SystemMessagesTableViewManagerDelega
                 self.systemMessageController.detailView.tableView.endUpdates()
             }
         }
+        vc.url = model.content
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }

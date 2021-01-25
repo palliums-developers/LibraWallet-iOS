@@ -10,16 +10,22 @@ import UIKit
 import Moya
 
 struct SystemMessagesDataModel: Codable {
-    /// 存款总额
+    /// 标题
     var title: String?
-    /// 可借总额度
+    /// 内容
+    var body: String?
+    /// URL
     var content: String?
     /// 当前限额
-    var date: Int?
+    var date: String?
     /// 消息类型
     var type: Int?
-    /// 是否已读
+    /// 服务
+    var service: String?
+    /// 是否已读（自行添加）
     var is_read: Bool?
+    /// 消息ID
+    var id: Int?
 }
 struct SystemMessagesMainModel: Codable {
     var code: Int?
@@ -38,7 +44,7 @@ class SystemMessagesModel: NSObject {
     }
     func getSystemMessages(address: String, limit: Int, count: Int, refresh: Bool, completion: @escaping (Result<[SystemMessagesDataModel], LibraWalletError>) -> Void) {
         let type = refresh == true ? "GetSystemMessagesOrigin":"GetSystemMessagesMore"
-        let request = mainProvide.request(.systemMessages(address, limit, count)) { (result) in
+        let request = notificationModuleProvide.request(.systemMessages(address, limit, count)) { (result) in
             switch  result {
             case let .success(response):
                 do {

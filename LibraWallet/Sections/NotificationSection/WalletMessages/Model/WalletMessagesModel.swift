@@ -13,15 +13,21 @@ struct WalletMessagesDataModel: Codable {
     /// 标题
     var title: String?
     /// 内容
-    var content: String?
+    var body: String?
     /// 日期
-    var date: Int?
-    /// 交易类型
-    var type: Int?
+    var date: String?
     /// 是否已读
-    var is_read: Bool?
-    /// 是否成功
-    var is_success: Bool?
+    var readed: Int?
+    /// 服务
+    var service: String?
+    /// 执行状态（Executed、Failed）
+    var status: String?
+    /// 脚本类型
+    var type: String?
+    /// 交易ID
+    var version: String?
+    /// 消息ID
+    var id: Int?
 }
 struct WalletMessagesMainModel: Codable {
     var code: Int?
@@ -39,7 +45,7 @@ class WalletMessagesModel: NSObject {
     }
     func getWalletMessages(address: String, limit: Int, count: Int, refresh: Bool, completion: @escaping (Result<[WalletMessagesDataModel], LibraWalletError>) -> Void) {
         let type = refresh == true ? "GetWalletMessagesOrigin":"GetWalletMessagesMore"
-        let request = mainProvide.request(.walletMessages(address, limit, count)) { (result) in
+        let request = notificationModuleProvide.request(.walletMessages(address, limit, count)) { (result) in
             switch  result {
             case let .success(response):
                 do {
