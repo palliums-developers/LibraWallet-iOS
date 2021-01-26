@@ -81,10 +81,10 @@ class DepositListView: UIView {
         tableView.register(DepositListTableViewCell.classForCoder(), forCellReuseIdentifier: "CellNormal")
         return tableView
     }()
-    var toastView: ToastView? {
-        let toast = ToastView.init()
-        return toast
-    }
+//    var toastView: ToastView? {
+//        let toast = ToastView.init()
+//        return toast
+//    }
     @objc func buttonClick(button: UIButton) {
         if button.tag == 10 {
             self.delegate?.filterOrdersWithCurrency(button: button)

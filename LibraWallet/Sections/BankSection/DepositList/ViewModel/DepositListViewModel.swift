@@ -70,7 +70,7 @@ extension DepositListViewModel: StatefulViewController {
     func requestData() {
         if (lastState == .Loading) {return}
         startLoading ()
-        self.view?.makeToastActivity(.center)
+//        self.view?.makeToastActivity(.center)
         
         self.transactionRequest(refresh: true)
     }
