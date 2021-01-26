@@ -23,8 +23,7 @@ class LoanMarketView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         self.tableView.snp.makeConstraints { (make) in
-            make.top.equalTo(self)
-            make.left.right.bottom.equalTo(self)
+            make.top.left.right.bottom.equalTo(self)
         }
     }
     // MARK: - 懒加载对象

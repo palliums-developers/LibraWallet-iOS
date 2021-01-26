@@ -59,7 +59,6 @@ class BankViewController: UIViewController {
     /// 存款市场Controller
     lazy var depositController: DepositMarketViewController = {
         let con = DepositMarketViewController()
-        con.initKVO()
         con.tableViewManager.delegate = self
         con.delegate = self
         return con
@@ -67,7 +66,6 @@ class BankViewController: UIViewController {
     /// 贷款市场Controller
     lazy var withdrawController: LoanMarketViewController = {
         let con = LoanMarketViewController()
-        con.initKVO()
         con.tableViewManager.delegate = self
         con.delegate = self
         return con
