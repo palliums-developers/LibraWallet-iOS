@@ -11,7 +11,6 @@ import Moya
 
 class LoanMarketModel: NSObject {
     private var requests: [Cancellable] = []
-    @objc dynamic var dataDic: NSMutableDictionary = [:]
     deinit {
         requests.forEach { cancellable in
             cancellable.cancel()

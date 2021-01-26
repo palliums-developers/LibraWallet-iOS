@@ -21,10 +21,9 @@ class LoanOrdersViewController: BaseViewController {
         self.setNavigationWithoutShadowImage()
         // 设置标题
         self.title = localLanguage(keyString: "wallet_bank_loan_orders_navigationbar_title")
-        self.initKVO()
-        //设置空数据页面
+        // 设置空数据页面
         self.setEmptyView()
-        //设置默认页面（无数据、无网络）
+        // 设置默认页面（无数据、无网络）
         self.setPlaceholderView()
 
         self.requestData()
@@ -85,8 +84,6 @@ class LoanOrdersViewController: BaseViewController {
         view.tableView.mj_footer = MJRefreshBackNormalFooter.init(refreshingTarget: self, refreshingAction:  #selector(getMoreData))
         return view
     }()
-    var observer: NSKeyValueObservation?
-    
     var dataOffset: Int = 0
     @objc func refreshData() {
         dataOffset = 0
@@ -98,7 +95,6 @@ class LoanOrdersViewController: BaseViewController {
         transactionRequest(refresh: false)
     }
     var firstIn: Bool = true
-    var requestType: String?
     /// 二维码扫描按钮
     lazy var depositOrderListButton: UIButton = {
         let button = UIButton(type: .custom)
@@ -107,9 +103,83 @@ class LoanOrdersViewController: BaseViewController {
         return button
     }()
     func transactionRequest(refresh: Bool) {
-        let requestState = refresh == true ? 0:1
-        self.dataModel.getLoanTransactions(address: WalletManager.shared.violasAddress!, page: self.dataOffset, limit: 10, requestStatus: requestState)
-
+        self.dataModel.getLoanTransactions(address: WalletManager.shared.violasAddress!, page: self.dataOffset, limit: 10, refresh: refresh) { [weak self] (result) in
+            switch result {
+            case let .success(models):
+                if refresh == true {
+                    guard models.isEmpty == false else {
+                        self?.detailView.hideToastActivity()
+                        self?.tableViewManager.dataModels?.removeAll()
+                        self?.detailView.tableView.reloadData()
+                        self?.detailView.tableView.mj_header?.endRefreshing()
+                        self?.endLoading()
+                        return
+                    }
+                    self?.detailView.hideToastActivity()
+                    // 下拉刷新
+                    self?.tableViewManager.dataModels = models
+                    self?.detailView.tableView.reloadData()
+                    self?.detailView.tableView.mj_header?.endRefreshing()
+                } else {
+                    // 上拉刷新
+                    guard models.isEmpty == false else {
+                        self?.detailView.tableView.mj_footer?.endRefreshingWithNoMoreData()
+                        return
+                    }
+                    guard let oldData = self?.tableViewManager.dataModels, oldData.isEmpty == false else {
+                        self?.tableViewManager.dataModels = models
+                        self?.detailView.tableView.reloadData()
+                        return
+                    }
+                    var insertIndexPath = [IndexPath]()
+                    for index in 0..<models.count {
+                        let indexPath = IndexPath.init(row: oldData.count + index, section: 0)
+                        insertIndexPath.append(indexPath)
+                    }
+                    self?.tableViewManager.dataModels = oldData + models
+                    self?.detailView.tableView.beginUpdates()
+                    self?.detailView.tableView.insertRows(at: insertIndexPath, with: UITableView.RowAnimation.bottom)
+                    self?.detailView.tableView.endUpdates()
+                    self?.detailView.tableView.mj_footer?.endRefreshing()
+                }
+            case let .failure(error):
+                self?.detailView.hideToastActivity()
+                if refresh == true {
+                    if self?.detailView.tableView.mj_header?.isRefreshing == true {
+                        self?.detailView.tableView.mj_header?.endRefreshing()
+                    }
+                } else {
+                    if self?.detailView.tableView.mj_footer?.isRefreshing == true {
+                        self?.detailView.tableView.mj_footer?.endRefreshing()
+                    }
+                }
+                self?.handleError(requestType: "", error: error)
+            }
+            self?.endLoading()
+        }
+    }
+}
+// MARK: - 网络请求数据处理
+extension LoanOrdersViewController {
+    func handleError(requestType: String, error: LibraWalletError) {
+        switch error {
+        case .WalletRequest(reason: .networkInvalid):
+            // 网络无法访问
+            print(error.localizedDescription)
+        case .WalletRequest(reason: .walletVersionExpired):
+            // 版本太久
+            print(error.localizedDescription)
+        case .WalletRequest(reason: .parseJsonError):
+            // 解析失败
+            print(error.localizedDescription)
+        case .WalletRequest(reason: .dataCodeInvalid):
+            // 数据状态异常
+            print(error.localizedDescription)
+        default:
+            // 其他错误
+            print(error.localizedDescription)
+        }
+        self.view?.makeToast(error.localizedDescription, position: .center)
     }
 }
 //MARK: - 导航栏添加按钮
@@ -132,101 +202,5 @@ extension LoanOrdersViewController: LoanOrdersTableViewManagerDelegate {
         let vc = LoanOrderDetailViewController()
         vc.itemID = model.id
         self.navigationController?.pushViewController(vc, animated: true)
-    }
-}
-extension LoanOrdersViewController {
-    func initKVO() {
-        self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
-            guard let dataDic = change.newValue, dataDic.count != 0 else {
-                self?.detailView.hideToastActivity()
-                self?.endLoading()
-                return
-            }
-            if let error = dataDic.value(forKey: "error") as? LibraWalletError {
-                // 隐藏请求指示
-                self?.detailView.hideToastActivity()
-                if self?.detailView.tableView.mj_header?.isRefreshing == true {
-                    self?.detailView.tableView.mj_header?.endRefreshing()
-                }
-                if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
-                    // 网络无法访问
-                    print(error.localizedDescription)
-                    if self?.detailView.tableView.mj_footer?.isRefreshing == true {
-                        self?.detailView.tableView.mj_footer?.endRefreshing()
-                    }
-                    self?.detailView.makeToast(error.localizedDescription, position: .center)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionExpired).localizedDescription {
-                    // 版本太久
-                    print(error.localizedDescription)
-                    if self?.detailView.tableView.mj_footer?.isRefreshing == true {
-                        self?.detailView.tableView.mj_footer?.endRefreshing()
-                    }
-                    self?.detailView.makeToast(error.localizedDescription, position: .center)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
-                    // 解析失败
-                    print(error.localizedDescription)
-                    if self?.detailView.tableView.mj_footer?.isRefreshing == true {
-                        self?.detailView.tableView.mj_footer?.endRefreshing()
-                    }
-                    self?.detailView.makeToast(error.localizedDescription, position: .center)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
-                    print(error.localizedDescription)
-                    // 数据状态异常
-                    if self?.detailView.tableView.mj_footer?.isRefreshing == true {
-                        self?.detailView.tableView.mj_footer?.endRefreshing()
-                    }
-                    self?.detailView.makeToast(error.localizedDescription, position: .center)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
-                    print(error.localizedDescription)
-                    // 下拉刷新请求数据为空
-                    self?.detailView.makeToast(error.localizedDescription, position: .center)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .noMoreData).localizedDescription {
-                    // 上拉请求更多数据为空
-                    print(error.localizedDescription)
-                    if self?.detailView.tableView.mj_footer?.isRefreshing == true {
-                        self?.detailView.tableView.mj_footer?.endRefreshingWithNoMoreData()
-                    }
-                } else {
-                    if self?.detailView.tableView.mj_footer?.isRefreshing == true {
-                        self?.detailView.tableView.mj_footer?.endRefreshing()
-                    }
-                    self?.detailView.makeToast(error.localizedDescription, position: .center)
-                }
-                self?.endLoading()
-                return
-            }
-            let type = dataDic.value(forKey: "type") as! String
-            if type == "GetBankLoanTransactionsOrigin" {
-                guard let tempData = dataDic.value(forKey: "data") as? [LoanOrdersMainDataModel] else {
-                    return
-                }
-                self?.tableViewManager.dataModels = tempData
-                self?.detailView.tableView.reloadData()
-                self?.detailView.tableView.mj_header?.endRefreshing()
-            } else if type == "GetBankLoanTransactionsMore" {
-                guard let tempData = dataDic.value(forKey: "data") as? [LoanOrdersMainDataModel] else {
-                    return
-                }
-                if let oldData = self?.tableViewManager.dataModels, oldData.isEmpty == false {
-                    let tempArray = NSMutableArray.init(array: oldData)
-                    var insertIndexPath = [IndexPath]()
-                    for index in 0..<tempData.count {
-                        let indexPath = IndexPath.init(row: oldData.count + index, section: 0)
-                        insertIndexPath.append(indexPath)
-                    }
-                    tempArray.addObjects(from: tempData)
-                    self?.tableViewManager.dataModels = tempArray as? [LoanOrdersMainDataModel]
-                    self?.detailView.tableView.beginUpdates()
-                    self?.detailView.tableView.insertRows(at: insertIndexPath, with: UITableView.RowAnimation.bottom)
-                    self?.detailView.tableView.endUpdates()
-                } else {
-                    self?.tableViewManager.dataModels = tempData
-                    self?.detailView.tableView.reloadData()
-                }
-                self?.detailView.tableView.mj_footer?.endRefreshing()
-            }
-            self?.detailView.hideToastActivity()
-            self?.endLoading()
-        })
     }
 }

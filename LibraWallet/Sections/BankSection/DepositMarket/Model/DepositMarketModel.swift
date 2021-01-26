@@ -24,7 +24,6 @@ struct BankDepositMarketMainModel: Codable {
 }
 class DepositMarketModel: NSObject {
     private var requests: [Cancellable] = []
-    @objc dynamic var dataDic: NSMutableDictionary = [:]
     deinit {
         requests.forEach { cancellable in
             cancellable.cancel()

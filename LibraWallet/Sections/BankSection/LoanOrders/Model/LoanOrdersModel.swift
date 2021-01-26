@@ -25,7 +25,6 @@ struct LoanOrdersMainModel: Codable {
 }
 class LoanOrdersModel: NSObject {
     private var requests: [Cancellable] = []
-    @objc dynamic var dataDic: NSMutableDictionary = [:]
     deinit {
         requests.forEach { cancellable in
             cancellable.cancel()
@@ -33,45 +32,38 @@ class LoanOrdersModel: NSObject {
         requests.removeAll()
         print("LoanOrdersModel销毁了")
     }
-    func getLoanTransactions(address: String, page: Int, limit: Int, requestStatus: Int) {
-        let type = requestStatus == 0 ? "GetBankLoanTransactionsOrigin":"GetBankLoanTransactionsMore"
-        let request = bankModuleProvide.request(.loanTransactions(address, page, limit)) {[weak self](result) in
+    func getLoanTransactions(address: String, page: Int, limit: Int, refresh: Bool, completion: @escaping (Result<[LoanOrdersMainDataModel], LibraWalletError>) -> Void) {
+        let type = refresh == true ? "GetBankLoanTransactionsOrigin":"GetBankLoanTransactionsMore"
+        let request = bankModuleProvide.request(.loanTransactions(address, page, limit)) { (result) in
             switch  result {
             case let .success(response):
                 do {
                     let json = try response.map(LoanOrdersMainModel.self)
                     if json.code == 2000 {
                         guard let models = json.data, models.isEmpty == false else {
-                            let error = requestStatus == 0 ? LibraWalletError.RequestError.dataEmpty:LibraWalletError.RequestError.noMoreData
-                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: error), type: type)
-                            self?.setValue(data, forKey: "dataDic")
-                            print("\(type)_状态异常")
+                            print("\(type)_数据为空")
+                            completion(.success([LoanOrdersMainDataModel]()))
                             return
                         }
-                        let data = setKVOData(type: type, data: models)
-                        self?.setValue(data, forKey: "dataDic")
+                        completion(.success(models))
                     } else {
                         print("\(type)_状态异常")
                         if let message = json.message, message.isEmpty == false {
-                            let data = setKVOData(error: LibraWalletError.error(message), type: type)
-                            self?.setValue(data, forKey: "dataDic")
+                            completion(.failure(LibraWalletError.error(message)))
                         } else {
-                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: type)
-                            self?.setValue(data, forKey: "dataDic")
+                            completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid)))
                         }
                     }
                 } catch {
                     print("\(type)_解析异常\(error.localizedDescription)")
-                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: type)
-                    self?.setValue(data, forKey: "dataDic")
+                    completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError)))
                 }
             case let .failure(error):
                 guard error.errorCode != -999 else {
                     print("\(type)_网络请求已取消")
                     return
                 }
-                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: type)
-                self?.setValue(data, forKey: "dataDic")
+                completion(.failure(LibraWalletError.WalletRequest(reason: .networkInvalid)))
             }
         }
         self.requests.append(request)
