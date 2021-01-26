@@ -160,18 +160,6 @@ public enum LibraWalletError: Error {
     }
     case WalletImportWallet(reason: ImportWalletError)
     
-    public enum ChangeWalletNameError {
-        /// 钱包名称无效
-        case walletNameInvalidError
-        /// 钱包名称为空
-        case walletNameEmptyError
-        /// 钱包名称和以前相同
-        case walletNameSameAsOld
-        /// 改名失败
-        case changeWalletNameFailed
-    }
-    case WalletChangeWalletName(reason: ChangeWalletNameError)
-    
     public enum CheckPasswordError {
         /// 密码无效
         case passwordInvalidError
@@ -381,8 +369,6 @@ extension LibraWalletError: LocalizedError {
         case .WalletAddWallet(let reason):
             return reason.localizedDescription
         case .WalletImportWallet(let reason):
-            return reason.localizedDescription
-        case .WalletChangeWalletName(let reason):
             return reason.localizedDescription
         case .WalletCheckPassword(let reason):
             return reason.localizedDescription
@@ -596,20 +582,6 @@ extension LibraWalletError.ImportWalletError {
             return localLanguage(keyString: "wallet_mnemonic_count_unsupport_error")
         case .mnemonicCheckFailed:
             return localLanguage(keyString: "wallet_mnemonic_check_failed_error")
-        }
-    }
-}
-extension LibraWalletError.ChangeWalletNameError {
-    var localizedDescription: String {
-        switch self {
-        case .walletNameInvalidError:
-            return localLanguage(keyString: "wallet_change_name_invalid_error")
-        case .walletNameEmptyError:
-            return localLanguage(keyString: "wallet_change_name_empty_error")
-        case .walletNameSameAsOld:
-            return localLanguage(keyString: "wallet_change_name_same_as_old_error")
-        case .changeWalletNameFailed:
-            return localLanguage(keyString: "wallet_change_name_failed_error")
         }
     }
 }
