@@ -181,6 +181,7 @@ extension DepositListViewModel {
                         self?.endLoading()
                         return
                     }
+                    self?.view?.hideToastActivity()
                     // 下拉刷新
                     self?.tableViewManager.dataModels = models
                     self?.view?.tableView.reloadData()
@@ -208,6 +209,7 @@ extension DepositListViewModel {
                     self?.view?.tableView.mj_footer?.endRefreshing()
                 }
             case let .failure(error):
+                self?.view?.hideToastActivity()
                 if refresh == true {
                     if self?.view?.tableView.mj_header?.isRefreshing == true {
                         self?.view?.tableView.mj_header?.endRefreshing()
