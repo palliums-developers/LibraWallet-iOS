@@ -302,6 +302,34 @@ class WalletTransactionsTableViewCell: UITableViewCell {
             case "UNKNOWN":
                 //UNKNOWN
                 print("100")
+            case "LOCK2":
+                //存款
+                print("LOCK2")
+                amountLabel.text = "-" + amount
+                amountLabel.textColor = UIColor.init(hex: amountColor)
+                transactionTypeImageView.image = UIImage.init(named: "transfer_sign")
+                addressLabel.text = model.receiver
+            case "BORROW2":
+                //借款
+                print("BORROW2")
+                amountLabel.text = "+" + amount
+                amountLabel.textColor = UIColor.init(hex: amountColor)
+                transactionTypeImageView.image = UIImage.init(named: "receive_sign")
+                addressLabel.text = model.sender
+            case "REPAY_BORROW2":
+                //还款
+                print("REPAY_BORROW2")
+                amountLabel.text = "-" + amount
+                amountLabel.textColor = UIColor.init(hex: amountColor)
+                transactionTypeImageView.image = UIImage.init(named: "transfer_sign")
+                addressLabel.text = model.receiver
+            case "REDEEM2":
+                //取款
+                print("REDEEM2")
+                amountLabel.text = "+" + amount
+                amountLabel.textColor = UIColor.init(hex: amountColor)
+                transactionTypeImageView.image = UIImage.init(named: "receive_sign")
+                addressLabel.text = model.sender
             default:
                 print("others")
             }
