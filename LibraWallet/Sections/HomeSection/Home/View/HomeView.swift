@@ -62,7 +62,7 @@ class HomeView: UIView {
         }
         if showActiveButtonState == true {
             activeButton.snp.makeConstraints { (make) in
-                make.right.equalTo(self.snp.right).offset(-22)
+                make.right.equalTo(self.snp.right).offset(-22).priority(250)
                 make.bottom.equalTo(self.snp.bottom).offset(-179)
                 make.size.equalTo(CGSize.init(width: 50, height: 55))
             }
@@ -108,7 +108,6 @@ class HomeView: UIView {
         tableView.estimatedSectionHeaderHeight = 0;
         tableView.estimatedSectionFooterHeight = 0;
         tableView.contentInsetAdjustmentBehavior = .never
-
         tableView.backgroundColor = UIColor.white
         tableView.register(HomeTableViewCell.classForCoder(), forCellReuseIdentifier: "CellNormal")
         return tableView
@@ -139,8 +138,42 @@ class HomeView: UIView {
             self.layoutIfNeeded()
         }
     }
+    private var isButtonHiding: Bool = false
     @objc func buttonClick(button: UIButton) {
         self.delegate?.getFreeCoin()
     }
+    func hideActiveButtonAnimation() {
+        guard showActiveButtonState == true else {
+            return
+        }
+        guard isButtonHiding == false else {
+            return
+        }
+        UIView.animate(withDuration: 0.3) {
+            self.activeButton.snp.remakeConstraints { (make) in
+                make.right.equalTo(self.snp.right).offset(22)
+                make.bottom.equalTo(self.snp.bottom).offset(-179)
+                make.size.equalTo(CGSize.init(width: 50, height: 55))
+            }
+        }
+        self.layoutIfNeeded()
+        isButtonHiding = true
+    }
+    func showActiveButtonAnimation() {
+        guard showActiveButtonState == true else {
+            return
+        }
+        guard isButtonHiding == true else {
+            return
+        }
+        UIView.animate(withDuration: 0.3) {
+            self.activeButton.snp.remakeConstraints { (make) in
+                make.right.equalTo(self.snp.right).offset(-22)
+                make.bottom.equalTo(self.snp.bottom).offset(-179)
+                make.size.equalTo(CGSize.init(width: 50, height: 55))
+            }
+        }
+        self.layoutIfNeeded()
+        isButtonHiding = false
+    }
 }
-

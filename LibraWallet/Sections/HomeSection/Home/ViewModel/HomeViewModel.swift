@@ -8,29 +8,24 @@
 
 import UIKit
 
-class HomeViewModel: NSObject {
-    override init() {
-        super.init()
-    }
-    var view: HomeView? {
-        didSet {
-//            view?.headerView.delegate = self
-//            view?.headerView.inputAmountTextField.delegate = self
-//            view?.headerView.outputAmountTextField.delegate = self
-        }
+struct HomeViewModel {
+    private var view: HomeView
+    init(view: HomeView) {
+        self.view = view
+        initialData()
     }
     /// 网络请求、数据模型
     lazy var dataModel: HomeModel = {
         let model = HomeModel.init()
         return model
     }()
-    /// 数据监听KVO
-    var observer: NSKeyValueObservation?
     ///
     private var firstRequestRate: Bool = true
     /// timer
     private var timer: Timer?
 }
 extension HomeViewModel {
-    
+    mutating func initialData() {
+        self.dataModel.getLocalTokens()
+    }
 }

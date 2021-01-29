@@ -19,7 +19,7 @@ class HomeViewController: UIViewController {
         // 加载子View
         self.view.addSubview(detailView)
         // 初始化KVO
-        self.initKVO()
+//        self.initKVO()
         // 添加语言变换通知
         NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(deleteWallet), name: NSNotification.Name("PalliumsWalletDelete"), object: nil)
@@ -28,6 +28,9 @@ class HomeViewController: UIViewController {
         checkIsFisrtOpenApp()
         // 添加服务协议
         checkConfirmLegal()
+        
+        self.requestData()
+        self.requestWaletNewState()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -126,8 +129,10 @@ extension HomeViewController {
         rightBarButtonItem.width = 15
         
         let notiView = UIBarButtonItem(customView: messageButton)
-        // 返回按钮设置成功
+//         返回按钮设置成功
         self.navigationItem.rightBarButtonItems = [rightBarButtonItem, scanView, notiView]
+//        self.navigationItem.rightBarButtonItems = [rightBarButtonItem, scanView]
+
     }
     /// 切换钱包
     @objc func changeWallet() {
@@ -306,7 +311,75 @@ extension HomeViewController {
             return
         }
         self.refreshing = true
-        self.dataModel.getLocalTokens()
+//        self.dataModel.getLocalTokens()
+        self.requestData()
+    }
+    private func requestData() {
+        self.dataModel.getTokens { [weak self] result in
+            switch result {
+            case let .success(data):
+                print("")
+                if data.tokens.isEmpty == false && data.indexPath.isEmpty == true {
+                    // 首次进入
+                    self?.tableViewManager.dataModel = data.tokens
+                    self?.detailView.tableView.reloadData()
+                } else if data.tokens.isEmpty == false && data.indexPath.isEmpty == false {
+                    // 需要刷新
+                    print(data.indexPath)
+                    self?.tableViewManager.dataModel = data.tokens
+                    self?.detailView.tableView.beginUpdates()
+                    self?.detailView.tableView.reloadRows(at: data.indexPath, with: .fade)
+                    self?.detailView.tableView.endUpdates()
+                } else if data.tokens.isEmpty == true && data.indexPath.isEmpty == true {
+                    // 汇总价格
+                    var totalPrice = 0.0
+                    guard let tokens = self?.tableViewManager.dataModel else {
+                        return
+                    }
+                    for model in tokens {
+                        var unit = 1000000
+                        if model.tokenType == .BTC {
+                            unit = 100000000
+                        }
+                        let rate = NSDecimalNumber.init(string: model.tokenPrice)
+                        let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model.tokenBalance),
+                                                      scale: 4,
+                                                      unit: unit)
+                        let value = rate.multiplying(by: amount)
+                        totalPrice += value.doubleValue
+                    }
+                    let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
+                                                                   scale: 4,
+                                                                   raiseOnExactness: false,
+                                                                   raiseOnOverflow: false,
+                                                                   raiseOnUnderflow: false,
+                                                                   raiseOnDivideByZero: false)
+                    let value = NSDecimalNumber.init(value: totalPrice).multiplying(by: 1, withBehavior: numberConfig)
+                    if self?.detailView.headerView.assetsModel != value.stringValue {
+                        
+                        self?.detailView.headerView.assetsModel = value.stringValue
+                    }
+                    if self?.detailView.tableView.mj_header?.isRefreshing == true {
+                        self?.detailView.tableView.mj_header?.endRefreshing()
+                    }
+                    self?.refreshing = false
+                }
+            case let .failure(error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+    func requestWaletNewState() {
+        self.dataModel.isNewWallet(address: WalletManager.shared.violasAddress ?? "") { [weak self] (result) in
+            switch result {
+            case let .success(state):
+                if state == true {
+                    self?.detailView.showActiveButtonState = true
+                }
+            case let .failure(error):
+                print(error.localizedDescription)
+            }
+        }
     }
 }
 //MARK: - 语言切换方法
@@ -418,6 +491,12 @@ extension HomeViewController: HomeTableViewManagerDelegate {
         vc.wallet = model
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
+    }
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        self.detailView.hideActiveButtonAnimation()
+    }
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        self.detailView.showActiveButtonAnimation()
     }
 }
 //MARK: - 网络请求数据处理中心
@@ -719,6 +798,6 @@ extension HomeViewController {
         })
         self.detailView.makeToastActivity(.center)
         self.dataModel.getLocalTokens()
-        self.dataModel.isNewWallet(address: WalletManager.shared.violasAddress ?? "")
+//        self.dataModel.isNewWallet(address: WalletManager.shared.violasAddress ?? "")
     }
 }

@@ -9,6 +9,8 @@
 import UIKit
 protocol HomeTableViewManagerDelegate: NSObjectProtocol {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: Token)
+    func scrollViewDidScroll(_ scrollView: UIScrollView)
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView)
 }
 class HomeTableViewManager: NSObject {
     weak var delegate: HomeTableViewManagerDelegate?
@@ -52,5 +54,13 @@ extension HomeTableViewManager: UITableViewDataSource {
             }
             return cell
         }
+    }
+}
+extension HomeTableViewManager: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+//        self.delegate?.scrollViewDidScroll(scrollView)
+    }
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+//        self.delegate?.scrollViewDidEndDecelerating(scrollView)
     }
 }
