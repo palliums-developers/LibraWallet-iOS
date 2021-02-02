@@ -13,10 +13,10 @@ class MessageWebDetailViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // 设置标题
-//        self.title = localLanguage(keyString: "wallet_service_navigation_title")
+        self.title = localLanguage(keyString: "wallet_notification_system_message_detail_navigation_title")
         // 加载子View
         self.view.addSubview(detailView)
-        self.loadURL()
+        self.requetData()
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -32,21 +32,55 @@ class MessageWebDetailViewController: BaseViewController {
     deinit {
         print("MessageWebDetailViewController销毁了")
     }
-    func loadURL() {
-        guard let tempURL = self.url, tempURL.isEmpty == false else {
-            return
-        }
-        let request = URLRequest.init(url: URL(string: tempURL)!)
-        self.detailView.webView.load(request)
-    }
     //子View
     private lazy var detailView : MessageWebDetailView = {
         let view = MessageWebDetailView.init()
         view.webView.navigationDelegate = self
         return view
     }()
+    /// 网络请求、数据模型
+    lazy var dataModel: MessageWebDetailModel = {
+        let model = MessageWebDetailModel.init()
+        return model
+    }()
     var successLoadClosure: (()->Void)?
-    var url: String?
+    func requetData() {
+        self.view.makeToastActivity(.center)
+        self.dataModel.getWalletMessageDetail(address: WalletManager.shared.violasAddress ?? "", id: "") { [weak self] (result) in
+            switch result {
+            case let .success(model):
+//                self?.detailView.hideToastActivity()
+                self?.detailView.model = model
+            case let .failure(error):
+                self?.detailView.hideToastActivity()
+                self?.handleError(requestType: "", error: error)
+            }
+            self?.endLoading()
+        }
+    }
+}
+// MARK: - 网络请求数据处理
+extension MessageWebDetailViewController {
+    func handleError(requestType: String, error: LibraWalletError) {
+        switch error {
+        case .WalletRequest(reason: .networkInvalid):
+            // 网络无法访问
+            print(error.localizedDescription)
+        case .WalletRequest(reason: .walletVersionExpired):
+            // 版本太久
+            print(error.localizedDescription)
+        case .WalletRequest(reason: .parseJsonError):
+            // 解析失败
+            print(error.localizedDescription)
+        case .WalletRequest(reason: .dataCodeInvalid):
+            // 数据状态异常
+            print(error.localizedDescription)
+        default:
+            // 其他错误
+            print(error.localizedDescription)
+        }
+        self.view?.makeToast(error.localizedDescription, position: .center)
+    }
 }
 extension MessageWebDetailViewController :WKNavigationDelegate{
     // 页面开始加载时调用
@@ -60,7 +94,6 @@ extension MessageWebDetailViewController :WKNavigationDelegate{
     // 页面加载完成之后调用
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         self.view.hideToastActivity()
-        self.title = webView.title
         if let action = self.successLoadClosure {
             action()
         }

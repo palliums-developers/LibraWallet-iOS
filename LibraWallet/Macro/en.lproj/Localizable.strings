@@ -734,6 +734,10 @@ wallet_notification_wallet_messages_title = "Wallet";
 wallet_notification_system_messages_title = "System";
 wallet_notification_empty_default_title = "Nothing to see here - yet.";
 
+/************* 系统通知详情 *******************/
+// 标题
+wallet_notification_system_message_detail_navigation_title = "Detail";
+
 /************* 邀请奖励 *******************/
 // 标题
 wallet_invitatioin_reward_navigation_title = "Invitation Reward";

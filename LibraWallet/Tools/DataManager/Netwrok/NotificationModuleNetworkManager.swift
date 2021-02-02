@@ -21,11 +21,8 @@ enum NotificationModuleRequest {
     case getTransactionMessageDetail(String, String)
     /// 钱包通知（钱包地址、offset、limit）
     case systemMessages(String, Int, Int)
-    //
-    //    /// 资金池奖励记录（钱包地址、offset、limit）
-    //    case poolProfitList(String, Int, Int)
-    //    /// 数字银行奖励记录（钱包地址、offset、limit）
-    //    case bankProfitList(String, Int, Int)
+    /// 获取系统消息详情（钱包地址、消息ID）
+    case systemMessageDetail(String, String)
 }
 extension NotificationModuleRequest: TargetType {
     var baseURL: URL {
@@ -33,7 +30,8 @@ extension NotificationModuleRequest: TargetType {
         case .registerNotification(_, _, _, _),
              .walletMessages(_, _, _),
              .getTransactionMessageDetail(_, _),
-             .systemMessages(_, _, _):
+             .systemMessages(_, _, _),
+             .systemMessageDetail(_, _):
             if PUBLISH_VERSION == true {
                 return URL(string:"https://api.violas.io")!
             } else {
@@ -51,6 +49,8 @@ extension NotificationModuleRequest: TargetType {
             return "/1.0/violas/message/content"
         case .systemMessages(_, _, _):
             return "/1.0/violas/notifications"
+        case .systemMessageDetail(_, _):
+            return "/1.0/violas/notifications/test"
         //        case .poolProfitList(_, _, _):
         //            return "/1.0/violas/incentive/orders/pool"
         //        case .bankProfitList(_, _, _):
@@ -63,7 +63,8 @@ extension NotificationModuleRequest: TargetType {
             return .post
         case .walletMessages(_, _, _),
              .getTransactionMessageDetail(_, _),
-             .systemMessages(_, _, _):
+             .systemMessages(_, _, _),
+             .systemMessageDetail(_, _):
             return .get
         }
     }
@@ -97,6 +98,10 @@ extension NotificationModuleRequest: TargetType {
             return .requestParameters(parameters: ["address": address,
                                                    "offset": page,
                                                    "limit": limit],
+                                      encoding: URLEncoding.queryString)
+        case .systemMessageDetail(let address, let id):
+            return .requestParameters(parameters: ["address": address,
+                                                   "id": id],
                                       encoding: URLEncoding.queryString)
         }
     }

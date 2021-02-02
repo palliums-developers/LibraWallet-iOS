@@ -238,6 +238,7 @@
 		366C444C25AC40AF004B9B66 /* SystemMessagesTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366C444B25AC40AF004B9B66 /* SystemMessagesTableViewManager.swift */; };
 		367024272580BF320080B7FC /* ScanHandleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367024262580BF320080B7FC /* ScanHandleManager.swift */; };
 		367024582580CD930080B7FC /* ViolasQRCodeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367024572580CD920080B7FC /* ViolasQRCodeTests.swift */; };
+		367128C925C7B0200032DA30 /* MessageWebDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367128C825C7B0200032DA30 /* MessageWebDetailModel.swift */; };
 		3679149F250F742F008C7237 /* ScanBankRepaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3679149E250F742F008C7237 /* ScanBankRepaymentViewController.swift */; };
 		367914A1250F7446008C7237 /* ScanBankRepaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367914A0250F7446008C7237 /* ScanBankRepaymentView.swift */; };
 		367914A3250F7455008C7237 /* ScanBankRepaymentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367914A2250F7455008C7237 /* ScanBankRepaymentModel.swift */; };
@@ -749,6 +750,7 @@
 		366C444B25AC40AF004B9B66 /* SystemMessagesTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMessagesTableViewManager.swift; sourceTree = "<group>"; };
 		367024262580BF320080B7FC /* ScanHandleManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanHandleManager.swift; sourceTree = "<group>"; };
 		367024572580CD920080B7FC /* ViolasQRCodeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasQRCodeTests.swift; sourceTree = "<group>"; };
+		367128C825C7B0200032DA30 /* MessageWebDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageWebDetailModel.swift; sourceTree = "<group>"; };
 		3679149E250F742F008C7237 /* ScanBankRepaymentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBankRepaymentViewController.swift; sourceTree = "<group>"; };
 		367914A0250F7446008C7237 /* ScanBankRepaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBankRepaymentView.swift; sourceTree = "<group>"; };
 		367914A2250F7455008C7237 /* ScanBankRepaymentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanBankRepaymentModel.swift; sourceTree = "<group>"; };
@@ -2219,6 +2221,7 @@
 			isa = PBXGroup;
 			children = (
 				365CE3CC25AD911300948B2B /* Controller */,
+				367128C725C7B0110032DA30 /* Model */,
 				365CE3CD25AD911E00948B2B /* View */,
 			);
 			path = MessageWebDetail;
@@ -2847,6 +2850,14 @@
 				366C444B25AC40AF004B9B66 /* SystemMessagesTableViewManager.swift */,
 			);
 			path = TableViewManager;
+			sourceTree = "<group>";
+		};
+		367128C725C7B0110032DA30 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				367128C825C7B0200032DA30 /* MessageWebDetailModel.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		3679149B250F7410008C7237 /* View */ = {
@@ -5207,6 +5218,7 @@
 				366AFF3025778F1A0007AAFC /* ProfitInvitationTableViewCell.swift in Sources */,
 				361BDACD24F8E7BD00C4C54E /* LoanDetailClearingListModel.swift in Sources */,
 				366AFE23256CE9E20007AAFC /* PhoneAreaTableViewManager.swift in Sources */,
+				367128C925C7B0200032DA30 /* MessageWebDetailModel.swift in Sources */,
 				361BDADE24F8E7BE00C4C54E /* LoanMarketView.swift in Sources */,
 				361BDAEF24F8E7BE00C4C54E /* RepaymentTableViewHeaderView.swift in Sources */,
 				366AFF4E2578CD6D0007AAFC /* ProfitPoolTableViewManager.swift in Sources */,

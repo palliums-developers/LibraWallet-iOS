@@ -734,6 +734,10 @@ wallet_notification_wallet_messages_title = "转账通知";
 wallet_notification_system_messages_title = "系统通知";
 wallet_notification_empty_default_title = "暂无消息";
 
+/************* 系统通知详情 *******************/
+// 标题
+wallet_notification_system_message_detail_navigation_title = "详情";
+
 /************* 邀请奖励 *******************/
 // 标题
 wallet_invitatioin_reward_navigation_title = "邀请奖励";

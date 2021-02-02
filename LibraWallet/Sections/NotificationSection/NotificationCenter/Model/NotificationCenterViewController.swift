@@ -102,7 +102,7 @@ extension NotificationCenterViewController: SystemMessagesTableViewManagerDelega
                 self.systemMessageController.detailView.tableView.endUpdates()
             }
         }
-        vc.url = model.content
+//        vc.url = model.content
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }
