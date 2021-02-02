@@ -23,8 +23,8 @@ enum LibraModuleRequest {
     case currencyList
     /// 获取Libra链资产价格（钱包地址）
     case price(String)
-    /// 激活Libra（钱包地址）（临时）
-    case activeAccount(String)
+    /// 激活Libra（钱包地址,  前缀）（临时）
+    case activeAccount(String, String)
 }
 extension LibraModuleRequest: TargetType {
     var baseURL: URL {
@@ -35,7 +35,7 @@ extension LibraModuleRequest: TargetType {
         case .accountTransactions(_, _, _, _, _),
              .currencyList,
              .price(_),
-             .activeAccount(_):
+             .activeAccount(_, _):
             if PUBLISH_VERSION == true {
                 return URL(string:"https://api.violas.io")!
             } else {
@@ -55,7 +55,7 @@ extension LibraModuleRequest: TargetType {
             return "/1.0/libra/currency"
         case .price(_):
             return "/1.0/violas/value/libra"
-        case .activeAccount(_):
+        case .activeAccount(_, _):
             return "/1.0/libra/mint"
         }
     }
@@ -67,7 +67,7 @@ extension LibraModuleRequest: TargetType {
         case .accountTransactions(_, _, _, _, _),
              .currencyList,
              .price(_),
-             .activeAccount(_):
+             .activeAccount(_, _):
             return .get
         }
     }
@@ -106,13 +106,10 @@ extension LibraModuleRequest: TargetType {
         case .price(let address):
             return .requestParameters(parameters: ["address":address],
                                       encoding: URLEncoding.queryString)
-        case .activeAccount(let authKey):
-            let index = authKey.index(authKey.startIndex, offsetBy: 32)
-            let address = authKey.suffix(from: index)
-            let authPrefix = authKey.prefix(upTo: index)
+        case .activeAccount(let address, let authKey):
             return .requestParameters(parameters: ["address": address,
-                                                   "auth_key_perfix": authPrefix,
-                                                   "currency":"LBR"],
+                                                   "auth_key_perfix": authKey,
+                                                   "currency":"XUS"],
                                       encoding: URLEncoding.queryString)
         }
     }
