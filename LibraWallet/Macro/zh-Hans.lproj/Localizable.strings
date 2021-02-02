@@ -383,7 +383,7 @@ wallet_transaction_detail_explorer_check_title = "浏览器查询更详细信息
 wallet_add_assets_get_test_coin_title = "获取体验币";
 // 提示
 wallet_add_asset_alert_title = "提醒";
-wallet_add_asset_alert_content = "首次开启需要消耗一定量Gas费,请确保您的账户余额充足，是否立即开启";
+wallet_add_asset_alert_content = "首次开启需向系统支付少量费用激活，系统将默认选择同一链上有余额的币种进行支付";
 wallet_add_asset_alert_cancel_button_title = "取消";
 wallet_add_asset_alert_confirm_button_title = "确定";
 wallet_add_asset_alert_success_title = "开启成功";

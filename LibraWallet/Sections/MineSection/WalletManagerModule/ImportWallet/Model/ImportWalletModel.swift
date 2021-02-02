@@ -13,7 +13,7 @@ class ImportWalletModel: NSObject {
         let quene = DispatchQueue.init(label: "createWalletQuene")
         quene.async {
             do {
-                try WalletManager.createWallet(password: password, mnemonic: mnemonic)
+                try WalletManager.createWallet(password: password, mnemonic: mnemonic, isImport: true)
                 DispatchQueue.main.async(execute: {
                     // 需更新
                     let data = setKVOData(type: "ImportWallet")

@@ -278,7 +278,7 @@ extension DataBaseManager {
         }
         let walletTable = Table("Wallet").filter(Expression<Int64>("wallet_id") == wallet.walletID ?? 9999)
         do {
-            try tempDB.run(walletTable.update(Expression<Bool>("wallet_backup_state") <- wallet.isNewWallet ?? true))
+            try tempDB.run(walletTable.update(Expression<Bool>("wallet_new_state") <- wallet.isNewWallet ?? true))
         } catch {
             print(error.localizedDescription)
             throw error

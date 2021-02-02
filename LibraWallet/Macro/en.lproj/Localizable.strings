@@ -383,7 +383,7 @@ wallet_transaction_detail_explorer_check_title = "Browser for more detailed info
 wallet_add_assets_get_test_coin_title = "Get Test Coin";
 // 提示
 wallet_add_asset_alert_title = "Tips";
-wallet_add_asset_alert_content = "First Open Requires Gas Fee. Continue to Open?";
+wallet_add_asset_alert_content = "Require to have VLS in order to enable";
 wallet_add_asset_alert_cancel_button_title = "Cancel";
 wallet_add_asset_alert_confirm_button_title = "Confirm";
 wallet_add_asset_alert_success_title = "Open Successful";

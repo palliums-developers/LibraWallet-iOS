@@ -19,7 +19,7 @@ class AddWalletModel: NSObject {
         quene.async {
             do {
                 let mnemonic = try DiemMnemonic.generate(strength: .default, language: .english)
-                try WalletManager.createWallet(password: password, mnemonic: mnemonic)
+                try WalletManager.createWallet(password: password, mnemonic: mnemonic, isImport: false)
                 DispatchQueue.main.async(execute: {
                     //需更新
                     let data = setKVOData(type: "CreateWallet", data: mnemonic)

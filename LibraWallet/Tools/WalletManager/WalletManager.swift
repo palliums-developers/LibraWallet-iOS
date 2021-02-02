@@ -233,7 +233,7 @@ extension Token {
 }
 // MARK: 创建Palliums钱包
 extension WalletManager {
-    static func createWallet(password: String, mnemonic: [String]) throws {
+    static func createWallet(password: String, mnemonic: [String], isImport: Bool) throws {
         var step = 0
         do {
             // 创建Violas币
@@ -250,7 +250,8 @@ extension WalletManager {
             try WalletManager.createWallet(mnemonic: mnemonic,
                                            btcAddress: bitcoinTokenAddress,
                                            violasAddress: violasTokenAddress,
-                                           libraAddress: libraTokenAddress)
+                                           libraAddress: libraTokenAddress,
+                                           isImport: isImport)
             print("创建钱包 Successful")
             step += 1
             // 设置已创建钱包状态
@@ -268,14 +269,14 @@ extension WalletManager {
             throw error
         }
     }
-    private static func createWallet(mnemonic: [String], btcAddress: String, violasAddress: String, libraAddress: String) throws {
+    private static func createWallet(mnemonic: [String], btcAddress: String, violasAddress: String, libraAddress: String, isImport: Bool) throws {
         do {
             let wallet = WalletManager.init(walletID: 999,
                                             walletName: "PalliumsWallet",
                                             walletCreateTime: NSDate().timeIntervalSince1970,
                                             walletBiometricLock: false,
                                             walletCreateType: 0,
-                                            walletBackupState: true,
+                                            walletBackupState: isImport,
                                             walletSubscription: false,
                                             walletMnemonicHash: mnemonic.joined(separator: " ").md5(),
                                             walletUseState: true,
@@ -746,7 +747,7 @@ extension WalletManager {
         do {
             try DataBaseManager.DBManager.updateIsNewWalletState(wallet: WalletManager.shared)
             print("钱包更新备份状态-\(true)")
-            WalletManager.shared.changeWalletBackupState(state: true)
+            WalletManager.shared.changeWalletIsNewState(state: true)
         } catch {
             throw error
         }
