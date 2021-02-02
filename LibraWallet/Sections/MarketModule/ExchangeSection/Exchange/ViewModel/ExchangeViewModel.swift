@@ -178,10 +178,10 @@ extension ExchangeViewModel {
         }
         // 转换数字
         let amountOut = NSDecimalNumber.init(string: amountBString)
-        guard amountIn.int64Value > 0 else {
+        guard amountIn.doubleValue > 0 else {
             throw LibraWalletError.WalletTransfer(reason: .amountInvalid)
         }
-        guard amountOut.int64Value > 0 else {
+        guard amountOut.doubleValue > 0 else {
             throw LibraWalletError.WalletTransfer(reason: .amountInvalid)
         }
         // 金额超限检测
