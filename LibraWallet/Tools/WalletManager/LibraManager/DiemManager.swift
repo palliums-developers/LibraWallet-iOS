@@ -107,7 +107,7 @@ struct DiemManager {
         }
         let payload = Data(Array<UInt8>(hex: address)) + randomData
         let address: String = DiemBech32.encode(payload: Data.init(payload),
-                                                prefix: "lbr",
+                                                prefix: "dm",
                                                 version: version,
                                                 separator: "1")
         return address

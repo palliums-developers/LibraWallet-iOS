@@ -63,11 +63,11 @@ struct ViolasManager {
                 throw LibraWalletError.WalletScan(reason: .handleInvalid)
             }
             if PUBLISH_VERSION == true {
-                guard prifix.lowercased() == "lbr" else {
+                guard prifix.lowercased() == "pdm" else {
                     throw LibraWalletError.WalletScan(reason: .handleInvalid)
                 }
             } else {
-                guard prifix.lowercased() == "tlb" else {
+                guard prifix.lowercased() == "tdm" else {
                     throw LibraWalletError.WalletScan(reason: .handleInvalid)
                 }
             }
@@ -100,7 +100,7 @@ struct ViolasManager {
         }
         let payload = Data(Array<UInt8>(hex: address)) + randomData
         let address: String = ViolasBech32.encode(payload: Data.init(payload),
-                                                  prefix: PUBLISH_VERSION == true ? "lbr":"tlb",
+                                                  prefix: PUBLISH_VERSION == true ? "pdm":"tdm",
                                                   version: version,
                                                   separator: "1")
         return address
