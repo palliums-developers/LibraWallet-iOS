@@ -26,6 +26,6 @@ struct HomeViewModel {
 }
 extension HomeViewModel {
     mutating func initialData() {
-        self.dataModel.getLocalTokens()
+//        self.dataModel.getLocalTokens()
     }
 }

@@ -18,8 +18,6 @@ class HomeViewController: UIViewController {
         self.addNavigationBar()
         // 加载子View
         self.view.addSubview(detailView)
-        // 初始化KVO
-//        self.initKVO()
         // 添加语言变换通知
         NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(deleteWallet), name: NSNotification.Name("PalliumsWalletDelete"), object: nil)
@@ -314,61 +312,6 @@ extension HomeViewController {
 //        self.dataModel.getLocalTokens()
         self.requestData()
     }
-    private func requestData() {
-        self.dataModel.getTokens { [weak self] result in
-            switch result {
-            case let .success(data):
-                print("")
-                if data.tokens.isEmpty == false && data.indexPath.isEmpty == true {
-                    // 首次进入
-                    self?.tableViewManager.dataModel = data.tokens
-                    self?.detailView.tableView.reloadData()
-                } else if data.tokens.isEmpty == false && data.indexPath.isEmpty == false {
-                    // 需要刷新
-                    print(data.indexPath)
-                    self?.tableViewManager.dataModel = data.tokens
-                    self?.detailView.tableView.beginUpdates()
-                    self?.detailView.tableView.reloadRows(at: data.indexPath, with: .fade)
-                    self?.detailView.tableView.endUpdates()
-                } else if data.tokens.isEmpty == true && data.indexPath.isEmpty == true {
-                    // 汇总价格
-                    var totalPrice = 0.0
-                    guard let tokens = self?.tableViewManager.dataModel else {
-                        return
-                    }
-                    for model in tokens {
-                        var unit = 1000000
-                        if model.tokenType == .BTC {
-                            unit = 100000000
-                        }
-                        let rate = NSDecimalNumber.init(string: model.tokenPrice)
-                        let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model.tokenBalance),
-                                                      scale: 4,
-                                                      unit: unit)
-                        let value = rate.multiplying(by: amount)
-                        totalPrice += value.doubleValue
-                    }
-                    let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
-                                                                   scale: 4,
-                                                                   raiseOnExactness: false,
-                                                                   raiseOnOverflow: false,
-                                                                   raiseOnUnderflow: false,
-                                                                   raiseOnDivideByZero: false)
-                    let value = NSDecimalNumber.init(value: totalPrice).multiplying(by: 1, withBehavior: numberConfig)
-                    if self?.detailView.headerView.assetsModel != value.stringValue {
-                        
-                        self?.detailView.headerView.assetsModel = value.stringValue
-                    }
-                    if self?.detailView.tableView.mj_header?.isRefreshing == true {
-                        self?.detailView.tableView.mj_header?.endRefreshing()
-                    }
-                    self?.refreshing = false
-                }
-            case let .failure(error):
-                print(error.localizedDescription)
-            }
-        }
-    }
     func requestWaletNewState() {
         self.dataModel.isNewWallet(address: WalletManager.shared.violasAddress ?? "") { [weak self] (result) in
             switch result {
@@ -425,7 +368,7 @@ extension HomeViewController: HomeHeaderViewDelegate {
         vc.needUpdateClosure = { result in
             //            self.refreshData()
             self.detailView.makeToastActivity(.center)
-            self.dataModel.getLocalTokens()
+            self.requestData()
             print("刷新首页数据")
         }
         self.navigationController?.pushViewController(vc, animated: true)
@@ -469,7 +412,7 @@ extension HomeViewController: HomeWithoutWalletViewDelegate {
         let vc = AddWalletViewController()
         vc.successCreateClosure = {
             self.detailView.importOrCreateView.removeFromSuperview()
-            self.dataModel.getLocalTokens()
+            self.requestData()
         }
         let navi = BaseNavigationViewController.init(rootViewController: vc)
         self.present(navi, animated: true, completion: nil)
@@ -478,7 +421,7 @@ extension HomeViewController: HomeWithoutWalletViewDelegate {
         let vc = ImportWalletViewController()
         vc.successImportClosure = {
             self.detailView.importOrCreateView.removeFromSuperview()
-            self.dataModel.getLocalTokens()
+            self.requestData()
         }
         let navi = BaseNavigationViewController.init(rootViewController: vc)
         self.present(navi, animated: true, completion: nil)
@@ -501,303 +444,55 @@ extension HomeViewController: HomeTableViewManagerDelegate {
 }
 //MARK: - 网络请求数据处理中心
 extension HomeViewController {
-    func initKVO() {
-        self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
-            guard let dataDic = change.newValue, dataDic.count != 0 else {
-                self?.detailView.hideToastActivity()
-                //                self?.endLoading()
-                return
-            }
-            let type = dataDic.value(forKey: "type") as! String
-            if let error = dataDic.value(forKey: "error") as? LibraWalletError {
-                if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
-                    // 网络无法访问
-                    print(error.localizedDescription)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionExpired).localizedDescription {
-                    // 版本太久
-                    print(error.localizedDescription)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
-                    // 解析失败
-                    print(error.localizedDescription)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
-                    print(error.localizedDescription)
-                    // 数据为空
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
-                    print(error.localizedDescription)
-                    // 数据返回状态异常
-                }
-                self?.detailView.hideToastActivity()
-                if self?.detailView.tableView.mj_header?.isRefreshing == true {
-                    self?.detailView.tableView.mj_header?.endRefreshing()
-                }
-                return
-            }
-            if type == "LoadCurrentEnableTokens" {
-                // 加载本地默认钱包
-                if let tempData = dataDic.value(forKey: "data") as? [Token] {
-                    //                    self?.detailView.model = tempData
-                    self?.tableViewManager.dataModel = tempData
-                    self?.detailView.tableView.reloadData()
-                }
-            } else if type == "UpdateBTCBalance" {
-                if let tempData = dataDic.value(forKey: "data") as? TrezorBTCBalanceMainModel {
-                    guard let dataModels = self?.tableViewManager.dataModel else {
-                        return
-                    }
-                    var tempTokens = [Token]()
-                    var tempIndexPath = [IndexPath]()
-                    for i in 0..<dataModels.count {
-                        guard dataModels[i].tokenType == .BTC else {
-                            tempTokens.append(dataModels[i])
-                            continue
-                        }
-                        for var model in dataModels {
-                            guard model.tokenType == .BTC else {
-                                continue
-                            }
-                            if NSDecimalNumber.init(string: tempData.balance ?? "").int64Value != dataModels[i].tokenBalance {
-                                model.changeTokenBalance(banlance: NSDecimalNumber.init(string: tempData.balance ?? "").int64Value)
-                                tempIndexPath.append(IndexPath.init(item: i, section: 0))
-                            }
-                            tempTokens.append(model)
-                        }
-                    }
-                    if tempIndexPath.isEmpty == false {
-                        self?.tableViewManager.dataModel = tempTokens
-                        self?.detailView.tableView.beginUpdates()
-                        self?.detailView.tableView.reloadRows(at: tempIndexPath, with: .fade)
-                        self?.detailView.tableView.endUpdates()
-                    }
-                }
-            } else if type == "UpdateLibraBalance" {
-                if let tempData = dataDic.value(forKey: "data") as? [DiemBalanceDataModel] {
-                    guard let dataModels = self?.tableViewManager.dataModel else {
-                        return
-                    }
-                    var tempTokens = [Token]()
-                    var tempIndexPath = [IndexPath]()
-                    for i in 0..<dataModels.count {
-                        guard dataModels[i].tokenType == .Libra else {
-                            tempTokens.append(dataModels[i])
-                            continue
-                        }
-                        var changeState = false
-                        for token in tempData {
-                            if token.currency == dataModels[i].tokenModule {
-                                var tempLocalToken = dataModels[i]
-                                if token.amount != dataModels[i].tokenBalance {
-                                    tempLocalToken.changeTokenBalance(banlance: token.amount ?? 0)
-                                    tempIndexPath.append(IndexPath.init(item: i, section: 0))
-                                }
-                                tempTokens.append(tempLocalToken)
-                                changeState = true
-                                continue
-                            }
-                        }
-                        if changeState == false {
-                            tempTokens.append(dataModels[i])
-                        }
-                    }
-                    if tempIndexPath.isEmpty == false {
-                        self?.tableViewManager.dataModel = tempTokens
-                        self?.detailView.tableView.beginUpdates()
-                        self?.detailView.tableView.reloadRows(at: tempIndexPath, with: .fade)
-                        self?.detailView.tableView.endUpdates()
-                    }
-                }
-            } else if type == "UpdateViolasBalance" {
-                if let tempData = dataDic.value(forKey: "data") as? [ViolasBalanceDataModel] {
-                    guard let dataModels = self?.tableViewManager.dataModel else {
-                        return
-                    }
-                    var tempTokens = [Token]()
-                    var tempIndexPath = [IndexPath]()
-                    for i in 0..<dataModels.count {
-                        guard dataModels[i].tokenType == .Violas else {
-                            tempTokens.append(dataModels[i])
-                            continue
-                        }
-                        var changeState = false
-                        for token in tempData {
-                            if token.currency == dataModels[i].tokenModule {
-                                var tempLocalToken = dataModels[i]
-                                if token.amount != dataModels[i].tokenBalance {
-                                    tempLocalToken.changeTokenBalance(banlance: token.amount ?? 0)
-                                    tempIndexPath.append(IndexPath.init(item: i, section: 0))
-                                }
-                                tempTokens.append(tempLocalToken)
-                                changeState = true
-                                continue
-                            }
-                        }
-                        if changeState == false {
-                            tempTokens.append(dataModels[i])
-                        }
-                    }
-                    if tempIndexPath.isEmpty == false {
-                        self?.tableViewManager.dataModel = tempTokens
-                        self?.detailView.tableView.beginUpdates()
-                        self?.detailView.tableView.reloadRows(at: tempIndexPath, with: .fade)
-                        self?.detailView.tableView.endUpdates()
-                    }
-                }
-            } else if type == "GetBTCPrice" {
-                if let tempData = dataDic.value(forKey: "data") as? [ModelPriceDataModel] {
-                    guard let dataModels = self?.tableViewManager.dataModel else {
-                        return
-                    }
-                    var tempTokens = [Token]()
-                    var tempIndexPath = [IndexPath]()
-                    for i in 0..<dataModels.count {
-                        guard dataModels[i].tokenType == .BTC else {
-                            tempTokens.append(dataModels[i])
-                            continue
-                        }
-                        var changeState = false
-                        for token in tempData {
-                            if token.name == dataModels[i].tokenModule {
-                                var tempLocalToken = dataModels[i]
-                                let newPrice = NSDecimalNumber.init(value: token.rate ?? 0.0).stringValue
-                                if newPrice != dataModels[i].tokenPrice {
-                                    tempLocalToken.changeTokenPrice(price: newPrice)
-                                    WalletManager.updateTokenPrice(token: dataModels[i], price: newPrice)
-                                    tempIndexPath.append(IndexPath.init(item: i, section: 0))
-                                }
-                                tempTokens.append(tempLocalToken)
-                                changeState = true
-                                continue
-                            }
-                        }
-                        if changeState == false {
-                            tempTokens.append(dataModels[i])
-                        }
-                    }
-                    if tempIndexPath.isEmpty == false {
-                        self?.tableViewManager.dataModel = tempTokens
-                        self?.detailView.tableView.beginUpdates()
-                        self?.detailView.tableView.reloadRows(at: tempIndexPath, with: .fade)
-                        self?.detailView.tableView.endUpdates()
-                    }
-                }
-            } else if type == "GetViolasPrice" {
-                if let tempData = dataDic.value(forKey: "data") as? [ModelPriceDataModel] {
-                    guard let dataModels = self?.tableViewManager.dataModel else {
-                        return
-                    }
-                    var tempTokens = [Token]()
-                    var tempIndexPath = [IndexPath]()
-                    for i in 0..<dataModels.count {
-                        guard dataModels[i].tokenType == .Violas else {
-                            tempTokens.append(dataModels[i])
-                            continue
-                        }
-                        var changeState = false
-                        for token in tempData {
-                            if token.name == dataModels[i].tokenModule {
-                                var tempLocalToken = dataModels[i]
-                                let newPrice = NSDecimalNumber.init(value: token.rate ?? 0.0).stringValue
-                                if newPrice != dataModels[i].tokenPrice {
-                                    tempLocalToken.changeTokenPrice(price: newPrice)
-                                    WalletManager.updateTokenPrice(token: dataModels[i], price: newPrice)
-                                    tempIndexPath.append(IndexPath.init(item: i, section: 0))
-                                }
-                                tempTokens.append(tempLocalToken)
-                                changeState = true
-                                continue
-                            }
-                        }
-                        if changeState == false {
-                            tempTokens.append(dataModels[i])
-                        }
-                    }
-                    if tempIndexPath.isEmpty == false {
-                        self?.tableViewManager.dataModel = tempTokens
-                        self?.detailView.tableView.beginUpdates()
-                        self?.detailView.tableView.reloadRows(at: tempIndexPath, with: .fade)
-                        self?.detailView.tableView.endUpdates()
-                    }
-                }
-            } else if type == "GetLibraPrice" {
-                if let tempData = dataDic.value(forKey: "data") as? [ModelPriceDataModel] {
-                    guard let dataModels = self?.tableViewManager.dataModel else {
-                        return
-                    }
-                    var tempTokens = [Token]()
-                    var tempIndexPath = [IndexPath]()
-                    for i in 0..<dataModels.count {
-                        guard dataModels[i].tokenType == .Libra else {
-                            tempTokens.append(dataModels[i])
-                            continue
-                        }
-                        var changeState = false
-                        for token in tempData {
-                            if token.name == dataModels[i].tokenModule {
-                                var tempLocalToken = dataModels[i]
-                                let newPrice = NSDecimalNumber.init(value: token.rate ?? 0.0).stringValue
-                                if newPrice != dataModels[i].tokenPrice {
-                                    tempLocalToken.changeTokenPrice(price: newPrice)
-                                    WalletManager.updateTokenPrice(token: dataModels[i], price: newPrice)
-                                    tempIndexPath.append(IndexPath.init(item: i, section: 0))
-                                }
-                                tempTokens.append(tempLocalToken)
-                                changeState = true
-                                continue
-                            }
-                        }
-                        if changeState == false {
-                            tempTokens.append(dataModels[i])
-                        }
-                    }
-                    if tempIndexPath.isEmpty == false {
-                        self?.tableViewManager.dataModel = tempTokens
-                        self?.detailView.tableView.beginUpdates()
-                        self?.detailView.tableView.reloadRows(at: tempIndexPath, with: .fade)
-                        self?.detailView.tableView.endUpdates()
-                    }
-                }
-            } else if type == "GetTotalPrice" {
-                var totalPrice = 0.0
-                guard let dataModels = self?.tableViewManager.dataModel, dataModels.isEmpty == false else {
-                    return
-                }
-                for model in dataModels {
-                    var unit = 1000000
-                    if model.tokenType == .BTC {
-                        unit = 100000000
-                    }
-                    let rate = NSDecimalNumber.init(string: model.tokenPrice)
-                    let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model.tokenBalance),
-                                                  scale: 4,
-                                                  unit: unit)
-                    let value = rate.multiplying(by: amount)
-                    totalPrice += value.doubleValue
-                }
-                let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
-                                                               scale: 4,
-                                                               raiseOnExactness: false,
-                                                               raiseOnOverflow: false,
-                                                               raiseOnUnderflow: false,
-                                                               raiseOnDivideByZero: false)
-                let value = NSDecimalNumber.init(value: totalPrice).multiplying(by: 1, withBehavior: numberConfig)
-                if self?.detailView.headerView.assetsModel != value.stringValue {
-                    
-                    self?.detailView.headerView.assetsModel = value.stringValue
-                }
-                if self?.detailView.tableView.mj_header?.isRefreshing == true {
-                    self?.detailView.tableView.mj_header?.endRefreshing()
-                }
-                self?.refreshing = false
-            } else if type == "IsNewWallet" {
-                if let tempData = dataDic.value(forKey: "data") as? Int {
-                    if tempData == 0 {
-                        self?.detailView.showActiveButtonState = true
-                    }
-                }
-            }
+    private func requestData() {
+        self.dataModel.getTokens { [weak self] result in
             self?.detailView.hideToastActivity()
-        })
-        self.detailView.makeToastActivity(.center)
-        self.dataModel.getLocalTokens()
-//        self.dataModel.isNewWallet(address: WalletManager.shared.violasAddress ?? "")
+            switch result {
+            case let .success(data):
+                if data.tokens.isEmpty == false && data.indexPath.isEmpty == true {
+                    // 首次进入
+                    self?.tableViewManager.dataModel = data.tokens
+                    self?.detailView.tableView.reloadData()
+                } else if data.tokens.isEmpty == false && data.indexPath.isEmpty == false {
+                    // 需要刷新
+                    self?.tableViewManager.dataModel = data.tokens
+                    self?.detailView.tableView.beginUpdates()
+                    self?.detailView.tableView.reloadRows(at: data.indexPath, with: .fade)
+                    self?.detailView.tableView.endUpdates()
+                } else if data.tokens.isEmpty == true && data.indexPath.isEmpty == true {
+                    // 汇总价格
+                    if self?.detailView.headerView.assetsModel != data.totalPrice {
+                        self?.detailView.headerView.assetsModel = data.totalPrice
+                    }
+                    if self?.detailView.tableView.mj_header?.isRefreshing == true {
+                        self?.detailView.tableView.mj_header?.endRefreshing()
+                    }
+                    self?.refreshing = false
+                }
+            case let .failure(error):
+                print(error.localizedDescription)
+                self?.handleError(requestType: "", error: error)
+            }
+        }
+    }
+    private func handleError(requestType: String, error: LibraWalletError) {
+        switch error {
+        case .WalletRequest(reason: .networkInvalid):
+            // 网络无法访问
+            print(error.localizedDescription)
+        case .WalletRequest(reason: .walletVersionExpired):
+            // 版本太久
+            print(error.localizedDescription)
+        case .WalletRequest(reason: .parseJsonError):
+            // 解析失败
+            print(error.localizedDescription)
+        case .WalletRequest(reason: .dataCodeInvalid):
+            // 数据状态异常
+            print(error.localizedDescription)
+        default:
+            // 其他错误
+            print(error.localizedDescription)
+        }
+        self.view?.makeToast(error.localizedDescription, position: .center)
     }
 }
