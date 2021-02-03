@@ -14,16 +14,17 @@ class BackupWarningView: UIView {
     weak var delegate: BackupWarningViewDelegate?
     override init(frame: CGRect) {
         super.init(frame: frame)
-        addSubview(alertTitleLabel)
-        addSubview(alertTitleDetailLabel)
-        addSubview(alertImageView)
-        addSubview(alertItemOneIndicatorLabel)
-        addSubview(alertItemOneTitleLabel)
-        addSubview(alertItemOneContentLabel)
-        addSubview(alertItemTwoIndicatorLabel)
-        addSubview(alertItemTwoTitleLabel)
-        addSubview(alertItemTwoContentLabel)
-        addSubview(confirmButton)
+        addSubview(scrollView)
+        scrollView.addSubview(alertTitleLabel)
+        scrollView.addSubview(alertTitleDetailLabel)
+        scrollView.addSubview(alertImageView)
+        scrollView.addSubview(alertItemOneIndicatorLabel)
+        scrollView.addSubview(alertItemOneTitleLabel)
+        scrollView.addSubview(alertItemOneContentLabel)
+        scrollView.addSubview(alertItemTwoIndicatorLabel)
+        scrollView.addSubview(alertItemTwoTitleLabel)
+        scrollView.addSubview(alertItemTwoContentLabel)
+        scrollView.addSubview(confirmButton)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -38,6 +39,9 @@ class BackupWarningView: UIView {
     //MARK: - 布局
     override func layoutSubviews() {
         super.layoutSubviews()
+        scrollView.snp.makeConstraints { (make) in
+            make.top.left.right.bottom.equalTo(self)
+        }
         alertTitleLabel.snp.makeConstraints { (make) in
             make.centerX.equalTo(self)
             make.top.equalTo(32)
@@ -47,7 +51,7 @@ class BackupWarningView: UIView {
             make.top.equalTo(alertTitleLabel.snp.bottom).offset(2)
         }
         alertImageView.snp.makeConstraints { (make) in
-            make.top.equalTo(self).offset(128)
+            make.top.equalTo(scrollView).offset(128)
             make.centerX.equalTo(self)
             make.size.equalTo(CGSize.init(width: 236, height: 171))
         }
@@ -80,13 +84,20 @@ class BackupWarningView: UIView {
             make.right.equalTo(self.snp.right).offset(-50)
         }
         confirmButton.snp.makeConstraints { (make) in
-            make.bottom.equalTo(self.snp.bottom).offset(-10)
+//            make.bottom.equalTo(self.snp.bottom).offset(-10)
+            make.top.equalTo(alertImageView.snp.bottom).offset(271)
             make.left.equalTo(self).offset(69)
             make.right.equalTo(self).offset(-69)
             make.height.equalTo(40)
         }
+        scrollView.contentSize = CGSize.init(width: mainWidth, height: confirmButton.frame.maxY + 20)
     }
     //MARK: - 懒加载对象
+    private lazy var scrollView : UIScrollView = {
+        let scrollView = UIScrollView.init()
+        scrollView.showsHorizontalScrollIndicator = false
+        return scrollView
+    }()
     lazy var alertTitleLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.center
