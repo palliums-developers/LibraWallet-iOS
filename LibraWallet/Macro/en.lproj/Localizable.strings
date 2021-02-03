@@ -9,11 +9,11 @@
 wallet_tabbar_wallet_title = "Wallet";
 wallet_tabbar_market_title = "Market";
 wallet_tabbar_bank_title = "Bank";
-wallet_tabbar_mine_title = "Me";
+wallet_tabbar_mine_title = "Profile";
 
 /************* 首页 *******************/
 // 内容
-wallet_home_transfer_button_title = "Transfer";
+wallet_home_transfer_button_title = "Send";
 wallet_home_receive_button_title = "Receive";
 wallet_home_mapping_button_title = "Mapping";
 wallet_home_wallet_asset_title = "Assets";
@@ -59,7 +59,7 @@ wallet_copy_address_success_title = "Address Copied";
 
 /************* 转账 *******************/
 // 标题
-wallet_transfer_navigation_title = "Transfer";
+wallet_transfer_navigation_title = "Send";
 // 内容
 wallet_transfer_amount_title = "Amount";
 wallet_transfer_balance_title = "Balance: ";
@@ -509,14 +509,14 @@ wallet_market_transaction_content_order_fee_title = "Fees: ";
 /************* 数字银行首页 *******************/
 // 内容
 wallet_bank_total_deposit_title = "Total Deposit($)";
-wallet_bank_loan_amount_limit_title = "Loanable Funds($)";
-wallet_bank_total_benefit_title = "Accumulated Earnings($)";
-wallet_bank_yesterday_earnings_button_title = "Yesterday's earnings";
-wallet_bank_deposit_market_title = "Deposit Market";
-wallet_bank_loan_market_title = "Loan Market";
+wallet_bank_loan_amount_limit_title = "Market liquidity($)";
+wallet_bank_total_benefit_title = "Cumulative interest($)";
+wallet_bank_yesterday_earnings_button_title = "24 hours interest";
+wallet_bank_deposit_market_title = "Deposit Pool";
+wallet_bank_loan_market_title = "Borrowing Pool";
 wallet_bank_deposit_orders_alert_title = "Deposit Orders";
-wallet_bank_loan_orders_alert_title = "Loan Orders";
-wallet_bank_yield_framing_rules_button_title = "Deposit | Borrowing mining rules";
+wallet_bank_loan_orders_alert_title = "Borrowing Orders";
+wallet_bank_yield_framing_rules_button_title = "Mining rules";
 
 /************* 数字银行存款订单 *******************/
 // 标题
@@ -559,7 +559,7 @@ wallet_deposit_list_order_status_deposit_processing_title = "Deposit Processing"
 
 /************* 数字银行借款订单 *******************/
 // 标题
-wallet_bank_loan_orders_navigationbar_title = "Loan Orders";
+wallet_bank_loan_orders_navigationbar_title = "Borrowing Orders";
 wallet_bank_loan_detail_navigationbar_title = "Order Detail";
 // 内容
 wallet_bank_loan_orders_title = "Current Loan";
@@ -623,17 +623,17 @@ wallet_bank_repayment_submit_failed = "Transaction Submitted Failed";
 wallet_bank_deposit_navigationbar_title = "Deposit";
 // 内容
 wallet_bank_deposit_button_title = "Deposit";
-wallet_bank_deposit_title = "I want to deposit";
+wallet_bank_deposit_title = "To deposit";
 wallet_bank_deposit_select_token_button_title = "Selcet a token";
-wallet_bank_deposit_amount_title = "Balance: ";
-wallet_bank_deposit_limit_amount_title = "Daily Limit: ";
+wallet_bank_deposit_amount_title = "Available fund: ";
+wallet_bank_deposit_limit_amount_title = "Daily limit: ";
 wallet_bank_deposit_year_rate_title = "Annual interest rate";
 wallet_bank_deposit_pledge_rate_title = "Pledge Rate";
-wallet_bank_deposit_pledge_rate_descript_title = "Pledge rate = Loan/Deposit";
-wallet_bank_deposit_pay_account_title = "Deposit way";
-wallet_bank_deposit_pay_account_content = "Account Balance";
+wallet_bank_deposit_pledge_rate_descript_title = "Pledge rate = Borrowing/Deposit";
+wallet_bank_deposit_pay_account_title = "Payment methods";
+wallet_bank_deposit_pay_account_content = "Fund balance";
 wallet_bank_deposit_describe_title = "Introduce";
-wallet_bank_deposit_question_title = "FAQs";
+wallet_bank_deposit_question_title = "FAQ";
 // 错误
 wallet_bank_deposit_token_unactivated_error = "Deposit token unactivated";
 wallet_bank_deposit_balance_empty_error = "Balance 0";
@@ -648,18 +648,18 @@ wallet_bank_deposit_submit_failed = "Transaction Submitted Failed";
 
 /************* 数字银行借贷 *******************/
 // 标题
-wallet_bank_loan_navigationbar_title = "Loan";
+wallet_bank_loan_navigationbar_title = "Borrow";
 // 内容
-wallet_bank_loan_button_title = "Loan";
-wallet_bank_loan_title = "I want to loan";
+wallet_bank_loan_button_title = "Borrow";
+wallet_bank_loan_title = "To borrow";
 wallet_bank_loan_balance_title = "Lending Quota：";
-wallet_bank_loan_year_rate_title = "Loan Rate";
+wallet_bank_loan_year_rate_title = "Borrowing rate";
 wallet_bank_loan_pledge_rate_title = "Pledge Rate";
 wallet_bank_loan_pledge_rate_descript_title = "Pledge rate = Number of loans/Number of deposit";
 wallet_bank_loan_pay_account_title = "Pledge account";
 wallet_bank_loan_pay_account_content = "Bank Balance";
-wallet_bank_loan_describe_title = "Product Introduce";
-wallet_bank_loan_question_title = "FAQs";
+wallet_bank_loan_describe_title = "Introduce";
+wallet_bank_loan_question_title = "FAQ";
 wallet_bank_loan_legal_button_conent = "I have read and agree Pledge & Loan Service Agreement";
 wallet_bank_loan_legal_agreement_match_contnet = "Pledge & Loan Service Agreement";
 // 错误
