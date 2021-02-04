@@ -409,7 +409,7 @@ extension WalletManager {
 extension WalletManager {
     /// 解锁钱包
     /// - Parameter completion: 返回结果
-    static func unlockWallet(completion: @escaping (Result<[String], Error>) -> Void) {
+    static func unlockWallet(controller: UIViewController? = nil, completion: @escaping (Result<[String], Error>) -> Void) {
         if WalletManager.shared.walletBiometricLock == true {
             KeychainManager.getPasswordWithBiometric { (result) in
                 switch result {
@@ -433,14 +433,18 @@ extension WalletManager {
                     completion(.failure(error))
                 }
             }
-            var rootViewController = UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.rootViewController
-            if let tabBarController = rootViewController as? UITabBarController {
-                rootViewController = tabBarController.selectedViewController
+            if let tempCon = controller {
+                tempCon.present(alert, animated: true, completion: nil)
+            } else {
+                var rootViewController = UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.rootViewController
+                if let tabBarController = rootViewController as? UITabBarController {
+                    rootViewController = tabBarController.selectedViewController
+                }
+                if let navigationController = rootViewController as? UINavigationController {
+                    rootViewController = navigationController.viewControllers.first
+                }
+                rootViewController?.present(alert, animated: true, completion: nil)
             }
-            if let navigationController = rootViewController as? UINavigationController {
-                rootViewController = navigationController.viewControllers.first
-            }
-            rootViewController?.present(alert, animated: true, completion: nil)
         }
     }
 }

@@ -23,7 +23,7 @@ class ScanBankRepaymentModel: NSObject {
     }
 }
 extension ScanBankRepaymentModel {
-    func sendWithdrawTransaction(model: WCRawTransaction, mnemonic: [String]) {
+    func sendWithdrawTransaction(model: WCRawTransaction, mnemonic: [String], submitTransaction: Bool) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
         queue.async {
@@ -44,11 +44,14 @@ extension ScanBankRepaymentModel {
                                                                                  sequenceNumber: self.sequenceNumber ?? 0,
                                                                                  module: module1,
                                                                                  amount: amount)
-//                self.makeViolasTransaction(signature: signature, type: "SendViolasBankRepaymentTransaction")
-                DispatchQueue.main.async(execute: {
-                    let data = setKVOData(type: "SendViolasBankRepaymentTransaction", data: signature)
-                    self.setValue(data, forKey: "dataDic")
-                })
+                if submitTransaction == true {
+                    self.makeViolasTransaction(signature: signature, type: "SendViolasBankRepaymentTransaction")
+                } else {
+                    DispatchQueue.main.async(execute: {
+                        let data = setKVOData(type: "SendViolasBankRepaymentTransaction", data: signature)
+                        self.setValue(data, forKey: "dataDic")
+                    })
+                }
             } catch {
                 print(error.localizedDescription)
                 DispatchQueue.main.async(execute: {
@@ -106,7 +109,7 @@ extension ScanBankRepaymentModel {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(LibraTransferMainModel.self)
+                    let json = try response.map(ViolasAccountMainModel.self)
                     if json.error == nil {
                         DispatchQueue.main.async(execute: {
                             if let sema = semaphore {

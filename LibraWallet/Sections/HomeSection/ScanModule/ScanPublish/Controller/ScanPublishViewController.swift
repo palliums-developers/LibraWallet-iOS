@@ -118,7 +118,7 @@ extension ScanPublishViewController: ScanSendTransactionViewDelegate {
     func confirmLogin(password: String) {
         NSLog("Password:\(password)")
         if let raw = self.model {
-            WalletManager.unlockWallet { [weak self] (result) in
+            WalletManager.unlockWallet(controller: self) { [weak self] (result) in
                 switch result {
                 case let .success(mnemonic):
                     self?.detailView.toastView?.show(tag: 99)

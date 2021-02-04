@@ -145,11 +145,11 @@ extension ScanSendTransactionViewController: ScanSendTransactionViewDelegate {
     func confirmLogin(password: String) {
         NSLog("Password:\(password)")
         if let raw = self.model {
-            WalletManager.unlockWallet { [weak self] (result) in
+            WalletManager.unlockWallet(controller: self) { [weak self] (result) in
                 switch result {
                 case let .success(mnemonic):
                     self?.detailView.toastView?.show(tag: 99)
-                    self?.dataModel.sendViolasTransaction(model: raw, mnemonic: mnemonic, module: "LBR")
+                    self?.dataModel.sendViolasTransaction(model: raw, mnemonic: mnemonic, module: "XUS")
                 case let .failure(error):
                     guard error.localizedDescription != "Cancel" else {
                         self?.detailView.toastView?.hide(tag: 99)
@@ -159,11 +159,11 @@ extension ScanSendTransactionViewController: ScanSendTransactionViewDelegate {
                 }
             }
         } else if let libra = self.libraModel {
-            WalletManager.unlockWallet { [weak self] (result) in
+            WalletManager.unlockWallet(controller: self) { [weak self] (result) in
                 switch result {
                 case let .success(mnemonic):
                     self?.detailView.toastView?.show(tag: 99)
-                    self?.dataModel.sendLibraTransaction(model: libra, mnemonic: mnemonic, module: "LBR")
+                    self?.dataModel.sendLibraTransaction(model: libra, mnemonic: mnemonic, module: "XUS")
                 case let .failure(error):
                     guard error.localizedDescription != "Cancel" else {
                         self?.detailView.toastView?.hide(tag: 99)
@@ -173,7 +173,7 @@ extension ScanSendTransactionViewController: ScanSendTransactionViewDelegate {
                 }
             }
         } else if let btc = self.btcModel {
-            WalletManager.unlockWallet { [weak self] (result) in
+            WalletManager.unlockWallet(controller: self) { [weak self] (result) in
                 switch result {
                 case let .success(mnemonic):
                     self?.detailView.toastView?.show(tag: 99)

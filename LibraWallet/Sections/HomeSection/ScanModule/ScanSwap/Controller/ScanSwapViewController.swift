@@ -95,10 +95,10 @@ extension ScanSwapViewController {
             if type == "SendViolasTransaction" {
                 self?.detailView.toastView?.hide(tag: 99)
                 var content = localLanguage(keyString: "wallet_market_exchange_submit_exchange_successful")
-                if self?.model?.payload?.code == "a11ceb0b010006010002030207040902050b0d071817082f10000000010001020101000205060c030303030002090009010845786368616e67650d6164645f6c6971756964697479000000000000000000000000000000010201010001070b000a010a020a030a04380002" {
+                if self?.model?.payload?.code == ViolasManager.getLocalMoveCode(bundle: "MarketContracts", contract: "add_liquidity") {
                     // 添加流动性
                     content = localLanguage(keyString: "wallet_assets_pool_add_liquidity_successful")
-                } else if self?.model?.payload?.code == "a11ceb0b010006010002030207040902050b0c07171a083110000000010001020101000204060c0303030002090009010845786368616e67651072656d6f76655f6c6971756964697479000000000000000000000000000000010201010001060b000a010a020a03380002" {
+                } else if self?.model?.payload?.code == ViolasManager.getLocalMoveCode(bundle: "MarketContracts", contract:  "remove_liquidity") {
                     // 移除流动性
                     content = localLanguage(keyString: "wallet_assets_pool_remove_liquidity_successful")
 
@@ -129,19 +129,19 @@ extension ScanSwapViewController: ScanSendTransactionViewDelegate {
     func confirmLogin(password: String) {
         NSLog("Password:\(password)")
         if let raw = self.model {
-            WalletManager.unlockWallet { [weak self] (result) in
+            WalletManager.unlockWallet(controller: self) { [weak self] (result) in
                 switch result {
                 case let .success(mnemonic):
                     self?.detailView.toastView?.show(tag: 99)
-                    if raw.payload?.code == "a11ceb0b010006010002030207040902050b0d071817082f10000000010001020101000205060c030303030002090009010845786368616e67650d6164645f6c6971756964697479000000000000000000000000000000010201010001070b000a010a020a030a04380002" {
+                    if raw.payload?.code == ViolasManager.getLocalMoveCode(bundle: "MarketContracts", contract: "add_liquidity") {
                         // 添加流动性
-                        self?.dataModel.sendAddLiquidityViolasTransaction(model: raw, mnemonic: mnemonic, feeModule: "LBR")
-                    } else if raw.payload?.code == "a11ceb0b010006010002030207040902050b0c07171a083110000000010001020101000204060c0303030002090009010845786368616e67651072656d6f76655f6c6971756964697479000000000000000000000000000000010201010001060b000a010a020a03380002" {
+                        self?.dataModel.sendAddLiquidityViolasTransaction(model: raw, mnemonic: mnemonic, feeModule: "VLS")
+                    } else if raw.payload?.code == ViolasManager.getLocalMoveCode(bundle: "MarketContracts", contract:  "remove_liquidity") {
                         // 移除流动性
-                        self?.dataModel.sendRemoveLiquidityViolasTransaction(model: raw, mnemonic: mnemonic, feeModule: "LBR")
+                        self?.dataModel.sendRemoveLiquidityViolasTransaction(model: raw, mnemonic: mnemonic, feeModule: "VLS")
                     } else {
                         // 交换
-                        self?.dataModel.sendSwapViolasTransaction(model: raw, mnemonic: mnemonic, module: "LBR")
+                        self?.dataModel.sendSwapViolasTransaction(model: raw, mnemonic: mnemonic, module: "VLS")
                     }
                 case let .failure(error):
                     guard error.localizedDescription != "Cancel" else {

@@ -593,7 +593,7 @@ wallet_bank_loan_detail_repayment_button_title = "Repayment";
 wallet_bank_repayment_navigationbar_title = "Repayment";
 // 内容
 wallet_bank_repayment_button_title = "Repayment";
-wallet_bank_repayment_title = "I want to repayment";
+wallet_bank_repayment_title = "To repayment";
 wallet_bank_repayment_textfield_placeholder_a = "least";
 wallet_bank_repayment_textfield_placeholder_b = "Every";
 wallet_bank_repayment_textfield_placeholder_c = "increase";

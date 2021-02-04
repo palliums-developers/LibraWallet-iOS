@@ -9,21 +9,6 @@
 import UIKit
 import Moya
 
-struct LibraTransferErrorModel: Codable {
-    var code: Int?
-    var data: DiemErrorStatusCode?
-    var message: String?
-}
-struct LibraTransferMainModel: Codable {
-    var diem_chain_id: Int?
-    var diem_ledger_version: UInt64?
-    var diem_ledger_timestampusec: UInt64?
-    var id: String?
-    var jsonrpc: String?
-    var result: String?
-    var error: LibraTransferErrorModel?
-}
-
 class LibraTransferModel: NSObject {
     @objc dynamic var dataDic: NSMutableDictionary = [:]
     private var requests: [Cancellable] = []
@@ -99,7 +84,7 @@ class LibraTransferModel: NSObject {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(LibraTransferMainModel.self)
+                    let json = try response.map(DiemAccountMainModel.self)
                     if json.result == nil {
                        DispatchQueue.main.async(execute: {
                            let data = setKVOData(type: "SendLibraTransaction")

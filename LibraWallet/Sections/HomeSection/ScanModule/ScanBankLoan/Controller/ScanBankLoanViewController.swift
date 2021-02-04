@@ -60,6 +60,7 @@ class ScanBankLoanViewController: UIViewController {
     var reject: (() -> Void)?
     var confirm: ((String) -> Void)?
     var needReject: Bool? = true
+    var submitTransaction: Bool = true
 }
 extension ScanBankLoanViewController {
     func initKVO() {
@@ -94,13 +95,17 @@ extension ScanBankLoanViewController {
             }
             if type == "SendViolasBankLoanTransaction" {
                 self?.detailView.toastView?.hide(tag: 99)
-                guard let tempData = dataDic.value(forKey: "data") as? String else {
-                    return
-                }
                 self?.view.makeToast(localLanguage(keyString: "wallet_bank_deposit_submit_successful"), duration: toastDuration, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
                     self?.needReject = false
                     if let confirmAction = self?.confirm {
-                        confirmAction(tempData)
+                        if self?.submitTransaction == true {
+                            confirmAction("success")
+                        } else {
+                            guard let tempData = dataDic.value(forKey: "data") as? String else {
+                                return
+                            }
+                            confirmAction(tempData)
+                        }
                     }
                     self?.dismiss(animated: true, completion: nil)
                 })
@@ -121,11 +126,11 @@ extension ScanBankLoanViewController: ScanSendTransactionViewDelegate {
     func confirmLogin(password: String) {
         NSLog("Password:\(password)")
         if let raw = self.model {
-            WalletManager.unlockWallet { [weak self] (result) in
+            WalletManager.unlockWallet(controller: self) { [weak self] (result) in
                 switch result {
                 case let .success(mnemonic):
                     self?.detailView.toastView?.show(tag: 99)
-                    self?.dataModel.sendWithdrawTransaction(model: raw, mnemonic: mnemonic)
+                    self?.dataModel.sendWithdrawTransaction(model: raw, mnemonic: mnemonic, submitTransaction: self?.submitTransaction ?? true)
                 case let .failure(error):
                     guard error.localizedDescription != "Cancel" else {
                         self?.detailView.toastView?.hide(tag: 99)

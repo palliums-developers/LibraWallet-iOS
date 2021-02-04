@@ -299,7 +299,7 @@ class ScanSwapView: UIView {
     }
     var model: WCRawTransaction? {
         didSet {
-            if model?.payload?.code == "a11ceb0b010006010002030207040902050b0d071817082f10000000010001020101000205060c030303030002090009010845786368616e67650d6164645f6c6971756964697479000000000000000000000000000000010201010001070b000a010a020a030a04380002" {
+            if model?.payload?.code == ViolasManager.getLocalMoveCode(bundle: "MarketContracts", contract: "add_liquidity") {
                 // 添加流动性
                 inputAmountTitleLabel.text = localLanguage(keyString: "wallet_market_assets_pool_input_amount_title")
                 outputAmountTitleLabel.text = localLanguage(keyString: "wallet_market_assets_pool_input_amount_title")
@@ -339,7 +339,7 @@ class ScanSwapView: UIView {
                                                                raiseOnDivideByZero: false)
                 let rate = outputAmount.dividing(by: inputAmount, withBehavior: numberConfig).stringValue
                 swapRateLabel.text = "1:\(rate)"
-            } else if model?.payload?.code == "a11ceb0b010006010002030207040902050b0c07171a083110000000010001020101000204060c0303030002090009010845786368616e67651072656d6f76655f6c6971756964697479000000000000000000000000000000010201010001060b000a010a020a03380002" {
+            } else if model?.payload?.code == ViolasManager.getLocalMoveCode(bundle: "MarketContracts", contract:  "remove_liquidity") {
                 // 移除流动性
                 inputAmountTitleLabel.text = localLanguage(keyString: "wallet_market_assets_pool_output_amount_title")
                 outputAmountTitleLabel.text = localLanguage(keyString: "wallet_market_assets_pool_output_amount_title")

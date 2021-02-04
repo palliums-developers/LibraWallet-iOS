@@ -107,27 +107,36 @@ class WalletConnectManager: NSObject {
         }        
     }
     private func walletInfo(state: Bool) -> Session.WalletInfo {
-        do {
-            let tokens = try WalletManager.getLocalEnableTokens()
-            var address = [String]()
-            for item in tokens {
-                address.append(item.tokenAddress)
-            }
-            let walletInfo = Session.WalletInfo(approved: state,
-                                                accounts: address,
-                                                chainId: 4,
-                                                peerId: UUID().uuidString,
-                                                peerMeta: walletMeta)
-            return walletInfo
-        } catch {
-            print(error.localizedDescription)
-            let walletInfo = Session.WalletInfo(approved: state,
-                                                accounts: [""],
-                                                chainId: 4,
-                                                peerId: UUID().uuidString,
-                                                peerMeta: walletMeta)
-            return walletInfo
-        }
+//        do {
+//            let tokens = try WalletManager.getLocalEnableTokens()
+//            var address = [String]()
+//            for item in tokens {
+//                address.append(item.tokenAddress)
+//            }
+//            let walletInfo = Session.WalletInfo(approved: state,
+//                                                accounts: address,
+//                                                chainId: 4,
+//                                                peerId: UUID().uuidString,
+//                                                peerMeta: walletMeta)
+//            return walletInfo
+//        } catch {
+//            print(error.localizedDescription)
+//            let walletInfo = Session.WalletInfo(approved: state,
+//                                                accounts: [""],
+//                                                chainId: 4,
+//                                                peerId: UUID().uuidString,
+//                                                peerMeta: walletMeta)
+//            return walletInfo
+//        }
+        let address = [WalletManager.shared.violasAddress ?? "",
+                       WalletManager.shared.btcAddress ?? "",
+                       WalletManager.shared.libraAddress ?? ""]
+        let walletInfo = Session.WalletInfo(approved: state,
+                                            accounts: address,
+                                            chainId: 4,
+                                            peerId: UUID().uuidString,
+                                            peerMeta: walletMeta)
+        return walletInfo
     }
     @objc func connectTimeInvalid() {
         if let timeInvalid = WalletConnectManager.shared.connectInvalid {
@@ -260,70 +269,9 @@ class SendTransactionHandler: RequestHandler {
             let model = try request.parameter(of: WCRawTransaction.self, at: 0)
             DispatchQueue.main.async {
                 if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-                    if model.payload?.code == ViolasUtils.getMoveCode(name: "add_currency_to_account") {
-                        let vc = ScanPublishViewController()
-                        vc.model = model
-                        vc.reject = {
-                            WalletConnectManager.shared.walletConnectServer.send(.reject(request))
-                        }
-                        vc.confirm = { (signature) in
-                            do {
-                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))//
-                            } catch {
-                                print(error.localizedDescription)
-                            }
-                            print(signature)
-                        }
-                        appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
-                    } else if model.payload?.code == ViolasManager.getCodeData(move: ViolasManager.getLocalMoveCode(bundle: "MarketContracts", contract: "add_liquidity"), address: "00000000000000000000000000000001").toHexString() {
-                        // 添加流动性
-                        let vc = ScanSwapViewController()
-                        vc.model = model
-                        vc.reject = {
-                            WalletConnectManager.shared.walletConnectServer.send(.reject(request))
-                        }
-                        vc.confirm = { (signature) in
-                            do {
-                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))//
-                            } catch {
-                                print(error.localizedDescription)
-                            }
-                            print(signature)
-                        }
-                        appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
-                    } else if model.payload?.code == ViolasManager.getCodeData(move: ViolasManager.getLocalMoveCode(bundle: "MarketContracts", contract: "remove_liquidity"), address: "00000000000000000000000000000001").toHexString() {
-                        // 移除流动性
-                        let vc = ScanSwapViewController()
-                        vc.model = model
-                        vc.reject = {
-                            WalletConnectManager.shared.walletConnectServer.send(.reject(request))
-                        }
-                        vc.confirm = { (signature) in
-                            do {
-                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))//
-                            } catch {
-                                print(error.localizedDescription)
-                            }
-                            print(signature)
-                        }
-                        appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
-                    } else if model.payload?.code == ViolasManager.getCodeData(move: ViolasManager.getLocalMoveCode(bundle: "MarketContracts", contract: "swap"), address: "00000000000000000000000000000001").toHexString() {
-                        // 交换
-                        let vc = ScanSwapViewController()
-                        vc.model = model
-                        vc.reject = {
-                            WalletConnectManager.shared.walletConnectServer.send(.reject(request))
-                        }
-                        vc.confirm = { (signature) in
-                            do {
-                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))//
-                            } catch {
-                                print(error.localizedDescription)
-                            }
-                            print(signature)
-                        }
-                        appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
-                    } else {
+                    switch model.payload?.code {
+                    case ViolasUtils.getMoveCode(name: "peer_to_peer_with_metadata"):
+                        print("Wallet Connect 普通交易")
                         let vc = ScanSendTransactionViewController()
                         vc.model = model
                         vc.reject = {
@@ -331,13 +279,146 @@ class SendTransactionHandler: RequestHandler {
                         }
                         vc.confirm = { (signature) in
                             do {
-                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))//
+                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
                             } catch {
                                 print(error.localizedDescription)
                             }
                             print(signature)
                         }
                         appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
+                    case ViolasUtils.getMoveCode(name: "add_currency_to_account"):
+                        print("Wallet Connect 添加币种")
+                        let vc = ScanPublishViewController()
+                        vc.model = model
+                        vc.reject = {
+                            WalletConnectManager.shared.walletConnectServer.send(.reject(request))
+                        }
+                        vc.confirm = { (signature) in
+                            do {
+                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
+                            } catch {
+                                print(error.localizedDescription)
+                            }
+                            print(signature)
+                        }
+                        appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
+                    case ViolasManager.getLocalMoveCode(bundle: "MarketContracts", contract: "add_liquidity"):
+                        print("Wallet Connect 市场添加流动性")
+                        let vc = ScanSwapViewController()
+                        vc.model = model
+                        vc.reject = {
+                            WalletConnectManager.shared.walletConnectServer.send(.reject(request))
+                        }
+                        vc.confirm = { (signature) in
+                            do {
+                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
+                            } catch {
+                                print(error.localizedDescription)
+                            }
+                            print(signature)
+                        }
+                        appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
+                    case ViolasManager.getLocalMoveCode(bundle: "MarketContracts", contract:  "remove_liquidity"):
+                        print("Wallet Connect 市场移除流动性")
+                        let vc = ScanSwapViewController()
+                        vc.model = model
+                        vc.reject = {
+                            WalletConnectManager.shared.walletConnectServer.send(.reject(request))
+                        }
+                        vc.confirm = { (signature) in
+                            do {
+                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
+                            } catch {
+                                print(error.localizedDescription)
+                            }
+                            print(signature)
+                        }
+                        appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
+                    case ViolasManager.getLocalMoveCode(bundle: "MarketContracts", contract: "swap"):
+                        print("Wallet Connect 市场兑换")
+                        let vc = ScanSwapViewController()
+                        vc.model = model
+                        vc.reject = {
+                            WalletConnectManager.shared.walletConnectServer.send(.reject(request))
+                        }
+                        vc.confirm = { (signature) in
+                            do {
+                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
+                            } catch {
+                                print(error.localizedDescription)
+                            }
+                            print(signature)
+                        }
+                        appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
+                    case ViolasManager.getLocalMoveCode(bundle: "BankContracts", contract: "lock"):
+                        print("Wallet Connect 数字银行存款")
+                        let vc = ScanBankDepositViewController()
+                        vc.submitTransaction = true
+                        vc.model = model
+                        vc.reject = {
+                            WalletConnectManager.shared.walletConnectServer.send(.reject(request))
+                        }
+                        vc.confirm = { (signature) in
+                            do {
+                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
+                            } catch {
+                                print(error.localizedDescription)
+                            }
+                            print(signature)
+                        }
+                        appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
+                    case ViolasManager.getLocalMoveCode(bundle: "BankContracts", contract: "borrow"):
+                        print("Wallet Connect 数字银行借款")
+                        let vc = ScanBankLoanViewController()
+                        vc.submitTransaction = true
+                        vc.model = model
+                        vc.reject = {
+                            WalletConnectManager.shared.walletConnectServer.send(.reject(request))
+                        }
+                        vc.confirm = { (signature) in
+                            do {
+                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
+                            } catch {
+                                print(error.localizedDescription)
+                            }
+                            print(signature)
+                        }
+                        appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
+                    case ViolasManager.getLocalMoveCode(bundle: "BankContracts", contract: "repay_borrow"):
+                        print("Wallet Connect 数字银行还款")
+                        let vc = ScanBankRepaymentViewController()
+                        vc.submitTransaction = true
+                        vc.model = model
+                        vc.reject = {
+                            WalletConnectManager.shared.walletConnectServer.send(.reject(request))
+                        }
+                        vc.confirm = { (signature) in
+                            do {
+                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
+                            } catch {
+                                print(error.localizedDescription)
+                            }
+                            print(signature)
+                        }
+                        appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
+                    case ViolasManager.getLocalMoveCode(bundle: "BankContracts", contract: "redeem"):
+                        print("Wallet Connect 数字银行取款")
+                        let vc = ScanBankWithdrawViewController()
+                        vc.submitTransaction = true
+                        vc.model = model
+                        vc.reject = {
+                            WalletConnectManager.shared.walletConnectServer.send(.reject(request))
+                        }
+                        vc.confirm = { (signature) in
+                            do {
+                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
+                            } catch {
+                                print(error.localizedDescription)
+                            }
+                        }
+                        appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
+                    default:
+                        WalletConnectManager.shared.walletConnectServer.send(.invalid(request))
                     }
                 }
             }
@@ -426,7 +507,7 @@ class SignTransactionHandler: RequestHandler {
                     }
                     vc.confirm = { (signature) in
                         do {
-                            WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))//
+                            WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
                         } catch {
                             print(error.localizedDescription)
                         }
@@ -450,9 +531,11 @@ class SignRawTransactionHandler: RequestHandler {
             let model = try request.parameter(of: WCRawTransaction.self, at: 0)
             DispatchQueue.main.async {
                 if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-                    if model.payload?.code == ViolasManager.getLocalMoveCode(bundle: "BankContracts", contract: "lock") {
-                        // 存款
+                    switch model.payload?.code {
+                    case ViolasManager.getLocalMoveCode(bundle: "BankContracts", contract: "lock"):
+                        print("Wallet Connect存款")
                         let vc = ScanBankDepositViewController()
+                        vc.submitTransaction = false
                         vc.model = model
                         vc.reject = {
                             WalletConnectManager.shared.walletConnectServer.send(.reject(request))
@@ -466,9 +549,10 @@ class SignRawTransactionHandler: RequestHandler {
                             print(signature)
                         }
                         appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
-                    } else if model.payload?.code == ViolasManager.getLocalMoveCode(bundle: "BankContracts", contract: "borrow") {
-                        // 借款
+                    case ViolasManager.getLocalMoveCode(bundle: "BankContracts", contract: "borrow"):
+                        print("Wallet Connect借款")
                         let vc = ScanBankLoanViewController()
+                        vc.submitTransaction = false
                         vc.model = model
                         vc.reject = {
                             WalletConnectManager.shared.walletConnectServer.send(.reject(request))
@@ -482,9 +566,10 @@ class SignRawTransactionHandler: RequestHandler {
                             print(signature)
                         }
                         appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
-                    } else if model.payload?.code == ViolasManager.getLocalMoveCode(bundle: "BankContracts", contract: "repay_borrow") {
-                        // 还款
+                    case ViolasManager.getLocalMoveCode(bundle: "BankContracts", contract: "repay_borrow"):
+                        print("Wallet Connect还款")
                         let vc = ScanBankRepaymentViewController()
+                        vc.submitTransaction = false
                         vc.model = model
                         vc.reject = {
                             WalletConnectManager.shared.walletConnectServer.send(.reject(request))
@@ -498,9 +583,10 @@ class SignRawTransactionHandler: RequestHandler {
                             print(signature)
                         }
                         appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
-                    } else if model.payload?.code == ViolasManager.getLocalMoveCode(bundle: "BankContracts", contract: "redeem") {
-                        // 取款
+                    case ViolasManager.getLocalMoveCode(bundle: "BankContracts", contract: "redeem"):
+                        print("Wallet Connect取款")
                         let vc = ScanBankWithdrawViewController()
+                        vc.submitTransaction = false
                         vc.model = model
                         vc.reject = {
                             WalletConnectManager.shared.walletConnectServer.send(.reject(request))
@@ -513,6 +599,8 @@ class SignRawTransactionHandler: RequestHandler {
                             }
                         }
                         appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
+                    default:
+                        WalletConnectManager.shared.walletConnectServer.send(.invalid(request))
                     }
                 }
             }

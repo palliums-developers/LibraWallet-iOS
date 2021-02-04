@@ -109,7 +109,7 @@ extension YieldFarmingModel {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(LibraTransferMainModel.self)
+                    let json = try response.map(ViolasAccountMainModel.self)
                     if json.error == nil {
                        DispatchQueue.main.async(execute: {
                            let data = setKVOData(type: type)

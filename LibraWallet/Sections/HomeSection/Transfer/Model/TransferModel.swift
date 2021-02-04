@@ -89,7 +89,7 @@ extension TransferModel {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(LibraTransferMainModel.self)
+                    let json = try response.map(DiemAccountMainModel.self)
                     if json.result == nil {
                         DispatchQueue.main.async(execute: {
                             let data = setKVOData(type: "SendLibraTransaction")
@@ -207,7 +207,7 @@ extension TransferModel {
             switch  result {
             case let .success(response):
                 do {
-                    let json = try response.map(LibraTransferMainModel.self)
+                    let json = try response.map(ViolasAccountMainModel.self)
                     if json.result == nil {
                         DispatchQueue.main.async(execute: {
                             let data = setKVOData(type: "SendViolasTransaction")
