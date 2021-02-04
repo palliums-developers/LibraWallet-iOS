@@ -141,7 +141,7 @@ class DepositTableViewHeaderView: UITableViewHeaderFooterView {
         textField.font = UIFont.init(name: "DIN Alternate Bold", size: 20)
         textField.attributedPlaceholder = NSAttributedString(string: "0.00",
                                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C2C2C2"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20)])
-        textField.keyboardType = .numberPad
+        textField.keyboardType = .decimalPad
         textField.tintColor = DefaultGreenColor
         textField.tag = 10
         return textField
