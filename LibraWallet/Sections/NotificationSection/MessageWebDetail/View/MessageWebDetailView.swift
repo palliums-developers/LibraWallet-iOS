@@ -88,7 +88,7 @@ class MessageWebDetailView: UIView {
                                 }
                             </script>
                             <div>
-                            \(tempModel.detail ?? "")
+                            \(tempModel.content ?? "")
                             </div>
                             </body>
                             </html>

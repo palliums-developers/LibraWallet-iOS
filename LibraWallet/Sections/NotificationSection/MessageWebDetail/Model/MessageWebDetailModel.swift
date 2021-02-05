@@ -13,13 +13,13 @@ struct MessageWebDetailModelDataModel: Codable {
     /// 标题
     var title: String?
     /// 内容
-    var detail: String?
+    var content: String?
     /// 日期
     var date: Int?
     /// 作者
     var author: String?
     /// 消息ID
-    var id: Int?
+    var id: String?
 }
 struct MessageWebDetailModelMainModel: Codable {
     var code: Int?
@@ -36,8 +36,8 @@ class MessageWebDetailModel: NSObject {
         requests.removeAll()
         print("MessageWebDetailModel销毁了")
     }
-    func getWalletMessageDetail(address: String, id: String, completion: @escaping (Result<MessageWebDetailModelDataModel, LibraWalletError>) -> Void) {
-        let request = notificationModuleProvide.request(.systemMessageDetail(address, "123")) { (result) in
+    func getWalletMessageDetail(address: String, token: String, id: String, completion: @escaping (Result<MessageWebDetailModelDataModel, LibraWalletError>) -> Void) {
+        let request = notificationModuleProvide.request(.systemMessageDetail(address, token, id)) { (result) in
             switch  result {
             case let .success(response):
                 do {

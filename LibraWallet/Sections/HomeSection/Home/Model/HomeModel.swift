@@ -10,6 +10,15 @@ import UIKit
 import Moya
 import Localize_Swift
 
+struct unreadMessagesCountDataModel: Codable {
+    var message: Int?
+    var notice: Int?
+}
+struct unreadMessagesCountMainModel: Codable {
+    var code: Int?
+    var message: String?
+    var data: unreadMessagesCountDataModel?
+}
 struct isNewWalletDataModel: Codable {
     var is_new: Int?
 }
@@ -716,6 +725,39 @@ extension HomeModel {
                 completion(.failure(LibraWalletError.WalletRequest(reason: .networkInvalid)))
             }
             group.leave()
+        }
+        self.requests.append(request)
+    }
+}
+// MARK: 获取消息数
+extension HomeModel {
+    func getUnreadMessagesCount(address: String, token: String, completion: @escaping (Result<unreadMessagesCountDataModel, LibraWalletError>) -> Void) {
+        let request = notificationModuleProvide.request(.unreadMessagesCount(address, token)) { (result) in
+            switch  result {
+            case let .success(response):
+                do {
+                    let json = try response.map(unreadMessagesCountMainModel.self)
+                    if json.code == 2000 {
+                        completion(.success(json.data ?? unreadMessagesCountDataModel.init(message: 0, notice: 0)))
+                    } else {
+                        print("RegisterFCMToken_状态异常")
+                        if let message = json.message, message.isEmpty == false {
+                            completion(.failure(LibraWalletError.error(message)))
+                        } else {
+                            completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid)))
+                        }
+                    }
+                } catch {
+                    print("RegisterFCMToken_解析异常\(error.localizedDescription)")
+                    completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError)))
+                }
+            case let .failure(error):
+                guard error.errorCode != -999 else {
+                    print("RegisterFCMToken_网络请求已取消")
+                    return
+                }
+                completion(.failure(LibraWalletError.WalletRequest(reason: .networkInvalid)))
+            }
         }
         self.requests.append(request)
     }

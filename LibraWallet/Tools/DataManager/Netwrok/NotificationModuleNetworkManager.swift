@@ -15,23 +15,29 @@ let notificationModuleProvide = MoyaProvider<NotificationModuleRequest>()
 enum NotificationModuleRequest {
     /// 注册设备（钱包地址，FCM Token，设备类型，语言）
     case registerNotification(String, String, String, String)
-    /// 钱包通知（钱包地址、offset、limit）
-    case walletMessages(String, Int, Int)
+    /// 钱包通知（钱包地址、FCM Token、offset、limit）
+    case walletMessages(String, String, Int, Int)
     /// 获取钱包通知交易详情（钱包地址、Version）
     case getTransactionMessageDetail(String, String)
-    /// 钱包通知（钱包地址、offset、limit）
-    case systemMessages(String, Int, Int)
-    /// 获取系统消息详情（钱包地址、消息ID）
-    case systemMessageDetail(String, String)
+    /// 钱包通知（钱包地址、FCM Token、offset、limit）
+    case systemMessages(String, String, Int, Int)
+    /// 获取系统消息详情（钱包地址、FCM Token、消息ID）
+    case systemMessageDetail(String, String, String)
+    /// 一键已读（钱包地址、FCM Token）
+    case setTotalRead(String, String)
+    /// 获取未读消息数（钱包地址、FCM Token）
+    case unreadMessagesCount(String, String)
 }
 extension NotificationModuleRequest: TargetType {
     var baseURL: URL {
         switch self {
         case .registerNotification(_, _, _, _),
-             .walletMessages(_, _, _),
+             .walletMessages(_, _, _, _),
              .getTransactionMessageDetail(_, _),
-             .systemMessages(_, _, _),
-             .systemMessageDetail(_, _):
+             .systemMessages(_, _, _, _),
+             .systemMessageDetail(_, _, _),
+             .setTotalRead(_, _),
+             .unreadMessagesCount(_, _):
             if PUBLISH_VERSION == true {
                 return URL(string:"https://api.violas.io")!
             } else {
@@ -43,14 +49,18 @@ extension NotificationModuleRequest: TargetType {
         switch self {
         case .registerNotification(_, _, _, _):
             return "/1.0/violas/device/info"
-        case .walletMessages(_, _, _):
-            return "/1.0/violas/messages"
+        case .walletMessages(_, _, _, _):
+            return "/1.0/violas/message/transfers"
         case .getTransactionMessageDetail(_, _):
             return "/1.0/violas/message/content"
-        case .systemMessages(_, _, _):
-            return "/1.0/violas/notifications"
-        case .systemMessageDetail(_, _):
-            return "/1.0/violas/notifications/test"
+        case .systemMessages(_, _, _, _):
+            return "/1.0/violas/message/notices"
+        case .systemMessageDetail(_, _, _):
+            return "/1.0/violas/message/notice"
+        case .setTotalRead(_, _):
+            return "/1.0/violas/messages/readall"
+        case .unreadMessagesCount(_, _):
+            return "/1.0/violas/messages/unread/count"
         //        case .poolProfitList(_, _, _):
         //            return "/1.0/violas/incentive/orders/pool"
         //        case .bankProfitList(_, _, _):
@@ -61,11 +71,14 @@ extension NotificationModuleRequest: TargetType {
         switch self {
         case .registerNotification(_, _, _, _):
             return .post
-        case .walletMessages(_, _, _),
+        case .walletMessages(_, _, _, _),
              .getTransactionMessageDetail(_, _),
-             .systemMessages(_, _, _),
-             .systemMessageDetail(_, _):
+             .systemMessages(_, _, _, _),
+             .systemMessageDetail(_, _, _),
+             .unreadMessagesCount(_, _):
             return .get
+        case .setTotalRead(_, _):
+            return .put
         }
     }
     public var validate: Bool {
@@ -82,11 +95,12 @@ extension NotificationModuleRequest: TargetType {
         case .registerNotification(let address, let FCMToken, let device, let language):
             return .requestParameters(parameters: ["address": address,
                                                    "token": FCMToken,
-                                                   "device_type": device,
+                                                   "platform": device,
                                                    "language": language],
                                       encoding: JSONEncoding.default)
-        case .walletMessages(let address, let page, let limit):
+        case .walletMessages(let address, let token, let page, let limit):
             return .requestParameters(parameters: ["address": address,
+                                                   "token": token,
                                                    "offset": page,
                                                    "limit": limit],
                                       encoding: URLEncoding.queryString)
@@ -94,14 +108,24 @@ extension NotificationModuleRequest: TargetType {
             return .requestParameters(parameters: ["address": address,
                                                    "version": version],
                                       encoding: URLEncoding.queryString)
-        case .systemMessages(let address, let page, let limit):
+        case .systemMessages(let address, let token, let page, let limit):
             return .requestParameters(parameters: ["address": address,
+                                                   "token": token,
                                                    "offset": page,
                                                    "limit": limit],
                                       encoding: URLEncoding.queryString)
-        case .systemMessageDetail(let address, let id):
+        case .systemMessageDetail(let address, let token, let id):
             return .requestParameters(parameters: ["address": address,
-                                                   "id": id],
+                                                   "token": token,
+                                                   "msg_id": id],
+                                      encoding: URLEncoding.queryString)
+        case .setTotalRead(let address, let token):
+            return .requestParameters(parameters: ["address": address,
+                                                   "token": token],
+                                      encoding: JSONEncoding.default)
+        case .unreadMessagesCount(let address, let token):
+            return .requestParameters(parameters: ["address": address,
+                                                   "token": token],
                                       encoding: URLEncoding.queryString)
         }
     }

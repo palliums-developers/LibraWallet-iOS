@@ -733,6 +733,9 @@ wallet_notification_navigation_title = "消息中心";
 wallet_notification_wallet_messages_title = "转账通知";
 wallet_notification_system_messages_title = "系统通知";
 wallet_notification_empty_default_title = "暂无消息";
+// 提示
+wallet_notification_clean_unread_success = "设置成功";
+wallet_notification_clean_unread_failed = "设置失败";
 
 /************* 系统通知详情 *******************/
 // 标题

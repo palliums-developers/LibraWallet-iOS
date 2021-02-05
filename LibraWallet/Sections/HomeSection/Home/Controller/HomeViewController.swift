@@ -93,12 +93,24 @@ class HomeViewController: UIViewController {
         button.addTarget(self, action: #selector(scanToTransfer), for: .touchUpInside)
         return button
     }()
-    /// 二维码扫描按钮
+    /// 消息按钮
     lazy var messageButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setImage(UIImage.init(named: "home_notification"), for: UIControl.State.normal)
         button.addTarget(self, action: #selector(checkNotificationCenter), for: .touchUpInside)
         return button
+    }()
+    lazy var messagesUnreadCountLabel: UILabel = {
+        let label = UILabel.init(frame: CGRect.init(x: 10, y: -1, width: 17, height: 8))
+        label.textAlignment = NSTextAlignment.center
+        label.textColor = UIColor.white
+        label.backgroundColor = UIColor.red
+        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 7), weight: UIFont.Weight.medium)
+        label.text = ""
+        label.layer.cornerRadius = 3
+        label.layer.masksToBounds = true
+        label.alpha = 0
+        return label
     }()
     deinit {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
@@ -111,6 +123,7 @@ class HomeViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(registerFCMToken(notification:)), name: NSNotification.Name("FCMToken"), object: nil)
     }
     var refreshing: Bool = false
+    var fcmToken: String?
 }
 //MARK: - 导航栏添加按钮
 extension HomeViewController {
@@ -129,6 +142,7 @@ extension HomeViewController {
         rightBarButtonItem.width = 15
         
         let notiView = UIBarButtonItem(customView: messageButton)
+        messageButton.addSubview(messagesUnreadCountLabel)
 //         返回按钮设置成功
         self.navigationItem.rightBarButtonItems = [rightBarButtonItem, scanView, notiView]
 //        self.navigationItem.rightBarButtonItems = [rightBarButtonItem, scanView]
@@ -255,6 +269,7 @@ extension HomeViewController {
     @objc func checkNotificationCenter() {
         let vc = NotificationCenterViewController()
         //        vc.wallet = self.wallet
+        vc.fcmToken = self.fcmToken
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
@@ -326,6 +341,26 @@ extension HomeViewController {
             }
         }
     }
+    func getUnreadMessagesCount() {
+        self.dataModel.getUnreadMessagesCount(address: WalletManager.shared.violasAddress ?? "", token: self.fcmToken ?? "") { [weak self] (result) in
+            switch result {
+            case let .success(model):
+                let totalCount = (model.message ?? 0) + (model.notice ?? 0)
+                if totalCount > 0 {
+                    self?.messagesUnreadCountLabel.alpha = 1
+                    if totalCount > 99 {
+                        self?.messagesUnreadCountLabel.text = "99+"
+                    } else {
+                        self?.messagesUnreadCountLabel.text = "\(totalCount)+"
+                    }
+                } else {
+                    self?.messagesUnreadCountLabel.alpha = 0
+                }
+            case let .failure(error):
+                print(error.localizedDescription)
+            }
+        }
+    }
 }
 //MARK: - 语言切换方法
 extension HomeViewController {
@@ -346,6 +381,7 @@ extension HomeViewController {
         guard let token = notification.userInfo?["token"] as? String else {
             return
         }
+        self.fcmToken = token
         self.dataModel.registerFCMToken(address: address, token: token) { (result) in
             switch result {
             case .success(_):
@@ -354,6 +390,8 @@ extension HomeViewController {
                 print(error.localizedDescription)
             }
         }
+        // 获取未读消息数
+        getUnreadMessagesCount()
     }
 }
 

@@ -27,7 +27,7 @@ struct WalletMessagesDataModel: Codable {
     /// 交易ID
     var version: String?
     /// 消息ID
-    var id: Int?
+    var id: String?
 }
 struct WalletMessagesMainModel: Codable {
     var code: Int?
@@ -43,9 +43,9 @@ class WalletMessagesModel: NSObject {
         requests.removeAll()
         print("WalletMessagesModel销毁了")
     }
-    func getWalletMessages(address: String, limit: Int, count: Int, refresh: Bool, completion: @escaping (Result<[WalletMessagesDataModel], LibraWalletError>) -> Void) {
+    func getWalletMessages(address: String, token: String, limit: Int, count: Int, refresh: Bool, completion: @escaping (Result<[WalletMessagesDataModel], LibraWalletError>) -> Void) {
         let type = refresh == true ? "GetWalletMessagesOrigin":"GetWalletMessagesMore"
-        let request = notificationModuleProvide.request(.walletMessages(address, limit, count)) { (result) in
+        let request = notificationModuleProvide.request(.walletMessages(address, token, limit, count)) { (result) in
             switch  result {
             case let .success(response):
                 do {

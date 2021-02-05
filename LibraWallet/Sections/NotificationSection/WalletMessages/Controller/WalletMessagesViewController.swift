@@ -73,6 +73,7 @@ class WalletMessagesViewController: BaseViewController {
     var dataOffset: Int = 0
     /// 防止多次点击
     var firstIn: Bool = true
+    var fcmToken: String?
 }
 // MARK: - 网络请求
 extension WalletMessagesViewController {
@@ -86,7 +87,7 @@ extension WalletMessagesViewController {
         transactionRequest(refresh: false)
     }
     func transactionRequest(refresh: Bool) {
-        self.dataModel.getWalletMessages(address: WalletManager.shared.violasAddress ?? "", limit: dataOffset, count: 10, refresh: refresh) { [weak self] (result) in
+        self.dataModel.getWalletMessages(address: WalletManager.shared.violasAddress ?? "", token: self.fcmToken ?? "", limit: dataOffset, count: 10, refresh: refresh) { [weak self] (result) in
             switch result {
             case let .success(models):
                 if refresh == true {

@@ -46,7 +46,10 @@ class MessageWebDetailViewController: BaseViewController {
     var successLoadClosure: (()->Void)?
     func requetData() {
         self.view.makeToastActivity(.center)
-        self.dataModel.getWalletMessageDetail(address: WalletManager.shared.violasAddress ?? "", id: "") { [weak self] (result) in
+        guard let tempMessageID = messageID, messageID?.isEmpty == false else {
+            return
+        }
+        self.dataModel.getWalletMessageDetail(address: WalletManager.shared.violasAddress ?? "", token: self.fcmToken ?? "", id: tempMessageID) { [weak self] (result) in
             switch result {
             case let .success(model):
 //                self?.detailView.hideToastActivity()
@@ -58,6 +61,8 @@ class MessageWebDetailViewController: BaseViewController {
             self?.endLoading()
         }
     }
+    var fcmToken: String?
+    var messageID: String?
 }
 // MARK: - 网络请求数据处理
 extension MessageWebDetailViewController {

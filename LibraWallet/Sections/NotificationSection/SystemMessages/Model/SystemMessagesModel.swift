@@ -14,18 +14,16 @@ struct SystemMessagesDataModel: Codable {
     var title: String?
     /// 内容
     var body: String?
-    /// URL
-    var content: String?
     /// 当前限额
-    var date: String?
+    var date: Int?
     /// 消息类型
-    var type: Int?
+//    var type: Int?
     /// 服务
     var service: String?
     /// 是否已读（自行添加）
-    var is_read: Bool?
+    var readed: Int?
     /// 消息ID
-    var id: Int?
+    var id: String?
 }
 struct SystemMessagesMainModel: Codable {
     var code: Int?
@@ -42,9 +40,9 @@ class SystemMessagesModel: NSObject {
         requests.removeAll()
         print("SystemMessagesModel销毁了")
     }
-    func getSystemMessages(address: String, limit: Int, count: Int, refresh: Bool, completion: @escaping (Result<[SystemMessagesDataModel], LibraWalletError>) -> Void) {
+    func getSystemMessages(address: String, token: String, limit: Int, count: Int, refresh: Bool, completion: @escaping (Result<[SystemMessagesDataModel], LibraWalletError>) -> Void) {
         let type = refresh == true ? "GetSystemMessagesOrigin":"GetSystemMessagesMore"
-        let request = notificationModuleProvide.request(.systemMessages(address, limit, count)) { (result) in
+        let request = notificationModuleProvide.request(.systemMessages(address, token, limit, count)) { (result) in
             switch  result {
             case let .success(response):
                 do {

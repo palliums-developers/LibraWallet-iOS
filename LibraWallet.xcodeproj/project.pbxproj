@@ -299,6 +299,7 @@
 		36B466B2247656BE00CFF438 /* ScanSignTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B466B1247656BE00CFF438 /* ScanSignTransactionView.swift */; };
 		36B466B4247656D100CFF438 /* ScanSignTransactionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B466B3247656D100CFF438 /* ScanSignTransactionModel.swift */; };
 		36B466B6247656E400CFF438 /* ScanSendTransactionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B466B5247656E400CFF438 /* ScanSendTransactionModel.swift */; };
+		36B8FA7725CCF78500403F0F /* NotificationCenterModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B8FA7625CCF78500403F0F /* NotificationCenterModel.swift */; };
 		36DA3FCE23B5E5C6001D7733 /* UIButton + imageTitleLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36DA3FCD23B5E5C6001D7733 /* UIButton + imageTitleLocation.swift */; };
 		36E35F90258CA97500A3904A /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E35F8F258CA97500A3904A /* HomeViewModel.swift */; };
 		36E8A87925A6EC8F008F9A1F /* AssetsPoolTokenSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E8A87825A6EC8F008F9A1F /* AssetsPoolTokenSelectView.swift */; };
@@ -811,6 +812,7 @@
 		36B466B1247656BE00CFF438 /* ScanSignTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanSignTransactionView.swift; sourceTree = "<group>"; };
 		36B466B3247656D100CFF438 /* ScanSignTransactionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanSignTransactionModel.swift; sourceTree = "<group>"; };
 		36B466B5247656E400CFF438 /* ScanSendTransactionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanSendTransactionModel.swift; sourceTree = "<group>"; };
+		36B8FA7625CCF78500403F0F /* NotificationCenterModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCenterModel.swift; sourceTree = "<group>"; };
 		36DA3FCD23B5E5C6001D7733 /* UIButton + imageTitleLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton + imageTitleLocation.swift"; sourceTree = "<group>"; };
 		36E35F8F258CA97500A3904A /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		36E8A87825A6EC8F008F9A1F /* AssetsPoolTokenSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsPoolTokenSelectView.swift; sourceTree = "<group>"; };
@@ -2742,6 +2744,7 @@
 		366C440125A86225004B9B66 /* NotificationCenter */ = {
 			isa = PBXGroup;
 			children = (
+				36B8FA7525CCF50200403F0F /* Controller */,
 				366C440525A86287004B9B66 /* Model */,
 				366C440425A86281004B9B66 /* View */,
 			);
@@ -2781,7 +2784,7 @@
 		366C440525A86287004B9B66 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				366C440925ABEA73004B9B66 /* NotificationCenterViewController.swift */,
+				36B8FA7625CCF78500403F0F /* NotificationCenterModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -3323,6 +3326,14 @@
 			isa = PBXGroup;
 			children = (
 				36B466A92476565D00CFF438 /* ScanSendRawTransactionViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		36B8FA7525CCF50200403F0F /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				366C440925ABEA73004B9B66 /* NotificationCenterViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -5446,6 +5457,7 @@
 				36DA3FCE23B5E5C6001D7733 /* UIButton + imageTitleLocation.swift in Sources */,
 				366C443E25AC2B61004B9B66 /* WalletMessagesTableViewManager.swift in Sources */,
 				361BDACE24F8E7BD00C4C54E /* LoanDetailClearingListTableViewCell.swift in Sources */,
+				36B8FA7725CCF78500403F0F /* NotificationCenterModel.swift in Sources */,
 				9D9B4A1723604A7200354EF0 /* CustomActionViewProtocol.swift in Sources */,
 				361BDA1324F89E7A00C4C54E /* ViolasContractEvent.swift in Sources */,
 				366AFE5B256E5CAE0007AAFC /* InvitationRewardViewController.swift in Sources */,
