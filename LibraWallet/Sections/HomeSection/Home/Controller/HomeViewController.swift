@@ -18,17 +18,16 @@ class HomeViewController: UIViewController {
         self.addNavigationBar()
         // 加载子View
         self.view.addSubview(detailView)
-        // 添加语言变换通知
-        NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(deleteWallet), name: NSNotification.Name("PalliumsWalletDelete"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(registerFCMToken(notification:)), name: NSNotification.Name("FCMToken"), object: nil)
+        // 添加通知
+        addNotifications()
         // 检查是否第一次打开app
         checkIsFisrtOpenApp()
         // 添加服务协议
         checkConfirmLegal()
-        
-        self.requestData()
-        self.requestWaletNewState()
+        // 请求数据
+        requestData()
+        // 请求是否是新钱包
+        requestWaletNewState()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -75,7 +74,6 @@ class HomeViewController: UIViewController {
         view.importOrCreateView.delegate = self
         return view
     }()
-    
     /// 全部资产价值按钮
     lazy var totalAssetsButton: UIButton = {
         let button = UIButton(type: .custom)
@@ -106,8 +104,12 @@ class HomeViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
         print("HomeViewController销毁了")
     }
-    /// 数据监听KVO
-    var observer: NSKeyValueObservation?
+    func addNotifications() {
+        // 添加语言变换通知
+        NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(deleteWallet), name: NSNotification.Name("PalliumsWalletDelete"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(registerFCMToken(notification:)), name: NSNotification.Name("FCMToken"), object: nil)
+    }
     var refreshing: Bool = false
 }
 //MARK: - 导航栏添加按钮

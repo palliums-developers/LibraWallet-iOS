@@ -363,11 +363,11 @@ extension HomeModel {
                 })
                 quene.async(group: group, qos: .default, flags: [], execute: {
                     group.enter()
-                    guard token.tokenActiveState == true else {
-                        print("Violas未激活不需要更新价格")
-                        group.leave()
-                        return
-                    }
+//                    guard token.tokenActiveState == true else {
+//                        print("Violas未激活不需要更新价格")
+//                        group.leave()
+//                        return
+//                    }
                     // 更新Violas价格
                     self.getViolasPriceTemp(address: violasAddress, group: group) { (result) in
                         switch result {
@@ -441,11 +441,11 @@ extension HomeModel {
                 })
                 quene.async(group: group, qos: .default, flags: [], execute: {
                     group.enter()
-                    guard token.tokenActiveState == true else {
-                        print("Diem未激活不需要更新价格")
-                        group.leave()
-                        return
-                    }
+//                    guard token.tokenActiveState == true else {
+//                        print("Diem未激活不需要更新价格")
+//                        group.leave()
+//                        return
+//                    }
                     // 更新Diem价格
                     self.getDiemPriceTemp(address: diemAddress, group: group) { (result) in
                         switch result {
@@ -597,7 +597,8 @@ extension HomeModel {
                         completion(.success(json.result?.balances ?? [DiemBalanceDataModel]()))
                     }
                     // 刷新本地数据
-                    self?.updateLocalTokenBalance(tokens: tokens, type: .Libra, tokenBalances: json.result?.balances ?? [DiemBalanceDataModel.init(amount: 0, currency: "LBR")])
+                    self?.updateLocalTokenBalance(tokens: tokens, type: .Libra, tokenBalances: json.result?.balances ?? [DiemBalanceDataModel.init(amount: 0, currency: "XUS")])
+                    self?.updateLocalTokenActiveState(tokens: tokens, type: .Libra)
                 } catch {
                     print("UpdateDiemBalance_解析异常\(error.localizedDescription)")
                     completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError)))
@@ -672,6 +673,7 @@ extension HomeModel {
                     }
                     // 刷新本地数据
                     self?.updateLocalTokenBalance(tokens: tokens, type: .Violas, tokenBalances: json.result?.balances ?? [ViolasBalanceDataModel.init(amount: 0, currency: "XUS")])
+                    self?.updateLocalTokenActiveState(tokens: tokens, type: .Violas)
                 } catch {
                     print("UpdateViolasBalance_解析异常\(error.localizedDescription)")
                     completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError)))
