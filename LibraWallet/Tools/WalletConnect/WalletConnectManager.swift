@@ -630,7 +630,7 @@ class GetAccountHandler: RequestHandler {
                                                  coinType: wallets.tokenType.description.lowercased(),
                                                  name: wallets.tokenName,
                                                  address: wallets.tokenAddress,
-                                                 chainId: 2))
+                                                 chainId: 4))
             }
             WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: tempWallets, id: request.id!))//
         } catch {
