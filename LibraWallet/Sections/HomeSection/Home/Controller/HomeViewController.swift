@@ -373,6 +373,7 @@ extension HomeViewController {
         self.detailView.headerView.assetsModel = "0"
         self.tableViewManager.dataModel?.removeAll()
         self.detailView.tableView.reloadData()
+        self.detailView.hideActiveButtonAnimation()
     }
     @objc func registerFCMToken(notification: NSNotification) {
         guard let address = WalletManager.shared.violasAddress else {
@@ -453,6 +454,7 @@ extension HomeViewController: HomeWithoutWalletViewDelegate {
         vc.successCreateClosure = {
             self.detailView.importOrCreateView.removeFromSuperview()
             self.requestData()
+            self.requestWaletNewState()
         }
         let navi = BaseNavigationViewController.init(rootViewController: vc)
         self.present(navi, animated: true, completion: nil)
@@ -462,6 +464,7 @@ extension HomeViewController: HomeWithoutWalletViewDelegate {
         vc.successImportClosure = {
             self.detailView.importOrCreateView.removeFromSuperview()
             self.requestData()
+            self.requestWaletNewState()
         }
         let navi = BaseNavigationViewController.init(rootViewController: vc)
         self.present(navi, animated: true, completion: nil)
