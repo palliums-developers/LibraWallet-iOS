@@ -452,7 +452,7 @@ extension ViolasManager {
             let argument0 = ViolasTransactionArgument.init(code: .Address(centerAddress))
             let argument1 = ViolasTransactionArgument.init(code: .U64(inputAmount))
             // metadata
-            let data = "{\"flag\":\"violas\",\"type\":\"\(mappingType)\",\"times\": 1000, \"to_address\":\"\(receiveAddress)\",\"out_amount\":\"\(outputAmount)\",\"state\":\"start\"}".data(using: .utf8)!
+            let data = "{\"flag\":\"violas\",\"type\":\"\(mappingType)\",\"times\": 0, \"to_address\":\"\(receiveAddress)\",\"out_amount\":\"\(outputAmount)\",\"state\":\"start\"}".data(using: .utf8)!
             let argument2 = ViolasTransactionArgument.init(code: .U8Vector(data))
             // metadata_signature
             let argument3 = ViolasTransactionArgument.init(code: .U8Vector(Data()))

@@ -56,8 +56,12 @@ extension TokenMappingViewModel {
     }
     func handleRequest(inputAmount: NSDecimalNumber, outputAmount: NSDecimalNumber, model: TokenMappingListDataModel, mnemonic: [String], outputModuleActiveState: Bool) {
         if model.from_coin?.coin_type?.lowercased() == "violas" {
+            var receiveAddress = WalletManager.shared.btcAddress
+            if model.to_coin?.coin_type != "btc" {
+                receiveAddress = WalletManager.shared.libraAddress
+            }
             self.dataModel.sendViolasMappingTransaction(sendAddress: WalletManager.shared.violasAddress ?? "",
-                                                        receiveAddress: WalletManager.shared.libraAddress ?? "",
+                                                        receiveAddress: receiveAddress ?? "",
                                                         module: model.from_coin?.assert?.module ?? "",
                                                         moduleOutput: model.to_coin?.assert?.module ?? "",
                                                         amountIn: inputAmount.multiplying(by: NSDecimalNumber.init(value: 1000000)).uint64Value,
@@ -68,8 +72,12 @@ extension TokenMappingViewModel {
                                                         centerAddress: model.receiver_address ?? "",
                                                         outputModuleActiveState: outputModuleActiveState)
         } else if model.from_coin?.coin_type?.lowercased() == "libra" {
+            var receiveAddress = WalletManager.shared.btcAddress
+            if model.to_coin?.coin_type != "btc" {
+                receiveAddress = WalletManager.shared.violasAddress
+            }
             self.dataModel.sendLibraMappingTransaction(sendAddress: WalletManager.shared.libraAddress ?? "",
-                                                       receiveAddress: WalletManager.shared.violasAddress ?? "",
+                                                       receiveAddress: receiveAddress ?? "",
                                                        module: model.from_coin?.assert?.module ?? "",
                                                        moduleOutput: model.to_coin?.assert?.module ?? "",
                                                        amountIn: inputAmount.multiplying(by: NSDecimalNumber.init(value: 1000000)).uint64Value,
