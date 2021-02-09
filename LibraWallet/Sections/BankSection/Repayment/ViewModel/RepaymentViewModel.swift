@@ -45,6 +45,7 @@ class RepaymentViewModel: NSObject {
     }()
     /// 数据监听KVO
     var observer: NSKeyValueObservation?
+    var isRepaymentTotal: Bool = false
 }
 extension RepaymentViewModel: RepaymentViewDelegate {
     func confirmRepayment() {
@@ -54,6 +55,7 @@ extension RepaymentViewModel: RepaymentViewDelegate {
                 switch result {
                 case let .success(mnemonic):
                     self?.view?.toastView?.show(tag: 99)
+//                    amount: self?.isRepaymentTotal == false ? UInt64(amount):0,
                     self?.dataModel.sendRepaymentTransaction(sendAddress: WalletManager.shared.violasAddress!,
                                                              amount: UInt64(amount),
                                                              fee: 10,
@@ -115,6 +117,7 @@ extension RepaymentViewModel: RepaymentTableViewHeaderViewDelegate {
                                       scale: 6,
                                       unit: 1000000)
         header.repaymentAmountTextField.text = amount.stringValue
+        self.isRepaymentTotal = true
     }
 }
 // MARK: - TextField逻辑
@@ -148,12 +151,18 @@ extension RepaymentViewModel: UITextFieldDelegate {
         let amount = NSDecimalNumber.init(string: content).multiplying(by: NSDecimalNumber.init(value: 1000000)).uint64Value
         let repaymentAmount = NSDecimalNumber.init(value: self.tableViewManager.model?.balance ?? 0)
         if amount <= repaymentAmount.uint64Value {
+            if amount == repaymentAmount.uint64Value {
+                self.isRepaymentTotal = true
+            } else {
+                self.isRepaymentTotal = false
+            }
             return true
         } else {
             let amount = getDecimalNumber(amount: repaymentAmount,
                                           scale: 6,
                                           unit: 1000000)
             textField.text = amount.stringValue
+            self.isRepaymentTotal = true
             return false
         }
     }
