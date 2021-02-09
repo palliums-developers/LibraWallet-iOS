@@ -13,7 +13,7 @@ protocol MappingTransactionsTableViewManagerDelegate: NSObjectProtocol {
 class MappingTransactionsTableViewManager: NSObject {
     weak var delegate: MappingTransactionsTableViewManagerDelegate?
     /// 数据
-    var dataModels: [MappingTransactionsMainDataModel]?
+    var dataModels: [MappingTransactionsDataModel]?
     deinit {
         print("MappingTransactionsTableViewManager销毁了")
     }

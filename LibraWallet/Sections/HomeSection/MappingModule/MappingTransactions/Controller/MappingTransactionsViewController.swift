@@ -104,7 +104,7 @@ extension MappingTransactionsViewController {
     }
     func transactionRequest(refresh: Bool) {
         let requestState = refresh == true ? 0:1
-        let address = "\(WalletManager.shared.violasAddress ?? ""),\(WalletManager.shared.libraAddress ?? ""),\(WalletManager.shared.btcAddress ?? "")"
+        let address = "\(WalletManager.shared.violasAddress ?? "")_violas,\(WalletManager.shared.libraAddress ?? "")_libra,\(WalletManager.shared.btcAddress ?? "")_btc"
         dataModel.getMappingTransactions(walletAddress: address, page: dataOffset, pageSize: 10, requestStatus: requestState)
     }
 }
@@ -146,24 +146,22 @@ extension MappingTransactionsViewController {
             }
             let type = dataDic.value(forKey: "type") as! String
             if type == "MappingTransactionsOrigin" {
-                guard let tempData = dataDic.value(forKey: "data") as? [MappingTransactionsMainDataModel] else {
+                guard let tempData = dataDic.value(forKey: "data") as? [MappingTransactionsDataModel] else {
                     return
                 }
                 self?.tableViewManager.dataModels = tempData
                 self?.detailView.tableView.reloadData()
             } else if type == "MappingTransactionsMore" {
-                guard let tempData = dataDic.value(forKey: "data") as? [MappingTransactionsMainDataModel] else {
+                guard let tempData = dataDic.value(forKey: "data") as? [MappingTransactionsDataModel] else {
                     return
                 }
                 if let oldData = self?.tableViewManager.dataModels, oldData.isEmpty == false {
-                    var tempArray = oldData
                     var insertIndexPath = [IndexPath]()
                     for index in 0..<tempData.count {
                         let indexPath = IndexPath.init(row: oldData.count + index, section: 0)
                         insertIndexPath.append(indexPath)
                     }
-                    tempArray += tempData
-                    self?.tableViewManager.dataModels = tempArray
+                    self?.tableViewManager.dataModels = oldData + tempData
                     self?.detailView.tableView.beginUpdates()
                     self?.detailView.tableView.insertRows(at: insertIndexPath, with: UITableView.RowAnimation.bottom)
                     self?.detailView.tableView.endUpdates()

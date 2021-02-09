@@ -73,7 +73,8 @@ class MappingTransactionsTableViewCell: UITableViewCell {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "000000")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
+//        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 12)
         label.text = "---"
         return label
     }()
@@ -127,37 +128,37 @@ class MappingTransactionsTableViewCell: UITableViewCell {
         return label
     }()
     //MARK: - 设置数据
-    var model: MappingTransactionsMainDataModel? {
+    var model: MappingTransactionsDataModel? {
         didSet {
             //计算剩余
             guard let tempModel = model else {
                 return
             }
             var toAmountUnit = 1000000
-            if tempModel.amount_from?.chain?.lowercased() == "btc" {
+            if tempModel.out_token?.lowercased() == "btc" {
                 toAmountUnit = 100000000
             }
             var fromAmountUnit = 1000000
-            if tempModel.amount_to?.chain?.lowercased() == "btc" {
+            if tempModel.in_token?.lowercased() == "btc" {
                 fromAmountUnit = 100000000
             }
-            inputAmountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: model?.amount_from?.amount ?? 0),
-                                                           scale: 6,
-                                                           unit: fromAmountUnit) + (model?.amount_from?.show_name ?? "")
-            outputAmountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: model?.amount_to?.amount ?? 0),
-                                                            scale: 6,
-                                                            unit: toAmountUnit) + (model?.amount_to?.show_name ?? "")
-            dateLabel.text = timestampToDateString(timestamp: Int(model?.confirmed_time ?? 0),
+            inputAmountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: model?.in_amount ?? 0),
+                                                           scale: fromAmountUnit == 1000000 ? 6:8,
+                                                           unit: fromAmountUnit) + (model?.in_show_name ?? "")
+            outputAmountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: model?.out_amount ?? 0),
+                                                            scale: toAmountUnit == 1000000 ? 6:8,
+                                                            unit: toAmountUnit) + (model?.out_show_name ?? "")
+            dateLabel.text = timestampToDateString(timestamp: Int(model?.expiration_time ?? 0),
                                                                dateFormat: "HH:mm MM/dd")
-            if model?.status == 4001 {
+            if model?.state == "end" {
                 // 已完成
                 stateLabel.textColor = UIColor.init(hex: "13B788")
                 stateLabel.text = localLanguage(keyString: "wallet_mapping_transactions_state_success_title")
-            } else if model?.status == 4002 {
+            } else if model?.state == "start" {
                 // 兑换中
                 stateLabel.textColor = UIColor.init(hex: "FB8F0B")
                 stateLabel.text = localLanguage(keyString: "wallet_mapping_transactions_state_processing_title")
-            } else if model?.status == 4004 {
+            } else if model?.state == "cancel" {
                 // 已取消
                 stateLabel.textColor = UIColor.init(hex: "E54040")
                 stateLabel.text = localLanguage(keyString: "wallet_mapping_transactions_state_canceled_title")
