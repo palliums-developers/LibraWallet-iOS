@@ -87,7 +87,7 @@ extension MappingModuleRequest:TargetType {
             return .requestParameters(parameters: ["address": walletAddress],
                                       encoding: URLEncoding.queryString)
         case .mappingTransactions(let walletAddress, let offset, let limit):
-            return .requestParameters(parameters: ["address": walletAddress,
+            return .requestParameters(parameters: ["addresses": walletAddress,
                                                    "limit": limit,
                                                    "offset":offset],
                                       encoding: URLEncoding.queryString)
