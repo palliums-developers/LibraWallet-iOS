@@ -31,7 +31,7 @@ extension LibraModuleRequest: TargetType {
         switch self {
         case .accountInfo(_),
              .sendTransaction(_):
-            return URL(string:"https://client.testnet.diem.org")!
+            return URL(string:"https://client.testnet.diem.com")!
         case .accountTransactions(_, _, _, _, _),
              .currencyList,
              .price(_),

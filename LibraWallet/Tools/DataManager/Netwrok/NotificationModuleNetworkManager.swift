@@ -94,7 +94,7 @@ extension NotificationModuleRequest: TargetType {
         switch self {
         case .registerNotification(let address, let FCMToken, let device, let language):
             return .requestParameters(parameters: ["address": address,
-                                                   "token": FCMToken,
+                                                   "fcm_token": FCMToken,
                                                    "platform": device,
                                                    "language": language],
                                       encoding: JSONEncoding.default)
