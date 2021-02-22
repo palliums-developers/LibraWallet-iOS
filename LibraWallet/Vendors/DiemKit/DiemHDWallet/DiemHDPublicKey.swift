@@ -67,7 +67,7 @@ struct DiemHDPublicKey {
         }
         let payload = tempAddressData.dropFirst(16) + randomData
         let address: String = DiemBech32.encode(payload: Data.init(payload),
-                                                prefix: "lbr",
+                                                prefix: "dm",
                                                 version: version,
                                                 separator: "1")
         return address

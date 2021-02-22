@@ -148,18 +148,19 @@ extension DiemManager {
             let (_, address) = try DiemManager.splitAddress(address: receiveAddress)
             // 拼接交易
             let argument0 = DiemTransactionArgument.init(code: .Address(address))
-            let argument1 = DiemTransactionArgument.init(code: .U64("\(amount)"))
+            let argument1 = DiemTransactionArgument.init(code: .U64(amount))
+            var argument2 = DiemTransactionArgument(code: .U8Vector(Data()))
             // metadata
             if toSubAddress.isEmpty == true && fromSubAddress.isEmpty == true {
                 // NC To NC
             } else {
                 // NC to C && C To C
+                let metadataV0 = DiemGeneralMetadataV0.init(to_subaddress: toSubAddress,
+                                                             from_subaddress: fromSubAddress,
+                                                             referenced_event: referencedEvent)
+                let metadata = DiemMetadata.init(code: DiemMetadataTypes.GeneralMetadata(DiemGeneralMetadata.init(code: .GeneralMetadataVersion0(metadataV0))))
+                argument2 = DiemTransactionArgument.init(code: .U8Vector(metadata.serialize()))
             }
-            let metadataV0 = DiemGeneralMetadataV0.init(to_subaddress: toSubAddress,
-                                                         from_subaddress: fromSubAddress,
-                                                         referenced_event: referencedEvent)
-            let metadata = DiemMetadata.init(code: DiemMetadataTypes.GeneralMetadata(DiemGeneralMetadata.init(code: .GeneralMetadataVersion0(metadataV0))))
-            let argument2 = DiemTransactionArgument.init(code: .U8Vector(metadata.serialize()))
             // metadata_signature
             let argument3 = DiemTransactionArgument.init(code: .U8Vector(Data()))
             let script = DiemTransactionScriptPayload.init(code: Data.init(hex: DiemUtils.getMoveCode(name: "peer_to_peer_with_metadata")),
@@ -182,33 +183,32 @@ extension DiemManager {
             throw error
         }
     }
-    //    public static func getMultiTransactionHex(sendAddress: String, receiveAddress: String, amount: Double, fee: Double, sequenceNumber: Int, wallet: LibraMultiHDWallet, module: String) throws -> String {
-    //        do {
-    //            let (authenticatorKey, address) = try LibraManager.splitAddress(address: receiveAddress)
-    //            // 拼接交易
-    //            let argument1 = LibraTransactionArgument.init(code: .Address,
-    //                                                          value: address)
-    //            let argument2 = LibraTransactionArgument.init(code: .U64,
-    //                                                          value: "\(Int(amount * 1000000))")
-    //            let argument3 = LibraTransactionArgument.init(code: .U8Vector,
-    //                                                          value: authenticatorKey)
-    //            let script = LibraTransactionScript.init(code: Data.init(hex: libraScriptCode),
-    //                                                     typeTags: [LibraTypeTag.init(structData: LibraStructTag.init(type: .libraDefault))],
-    //                                                     argruments: [argument1, argument3, argument2])
-    //            let rawTransaction = LibraRawTransaction.init(senderAddres: sendAddress,
-    //                                                          sequenceNumber: sequenceNumber,
-    //                                                          maxGasAmount: 1000000,
-    //                                                          gasUnitPrice: 0,
-    //                                                          expirationTime: Int(UInt64(Date().timeIntervalSince1970) + 3600),
-    //                                                          payLoad: script.serialize(),
-    //                                                          module: module)
-    //            // 签名交易
-    //            let multiSignature = wallet.privateKey.signMultiTransaction(transaction: rawTransaction, publicKey: wallet.publicKey)
-    //            return multiSignature.toHexString()
-    //        } catch {
-    //            throw error
-    //        }
-    //    }
+    public static func getMultiTransactionHex(sendAddress: String, receiveAddress: String, amount: UInt64, fee: UInt64, sequenceNumber: UInt64, wallet: DiemMultiHDWallet, module: String) throws -> String {
+        do {
+            // 拼接交易
+            let argument0 = DiemTransactionArgument.init(code: .Address(receiveAddress))
+            let argument1 = DiemTransactionArgument.init(code: .U64(amount))
+            let argument2 = DiemTransactionArgument.init(code: .U8Vector(Data()))
+            let argument3 = DiemTransactionArgument.init(code: .U8Vector(Data()))
+            let script = DiemTransactionScriptPayload.init(code: Data.init(hex: DiemUtils.getMoveCode(name: "peer_to_peer_with_metadata")),
+                                                           typeTags: [DiemTypeTag.init(typeTag: .Struct(DiemStructTag.init(type: .Normal(module))))],
+                                                           argruments: [argument0, argument1, argument2, argument3])
+            let transactionPayload = DiemTransactionPayload.init(payload: .script(script))
+            let rawTransaction = DiemRawTransaction.init(senderAddres: sendAddress,
+                                                         sequenceNumber: sequenceNumber,
+                                                         maxGasAmount: 1000000,
+                                                         gasUnitPrice: fee,
+                                                         expirationTime: UInt64(Date().timeIntervalSince1970 + 600),
+                                                         payload: transactionPayload,
+                                                         module: module,
+                                                         chainID: 2)
+            // 签名交易
+            let multiSignature = try wallet.privateKey.signMultiTransaction(transaction: rawTransaction, publicKey: wallet.publicKey)
+            return multiSignature.toHexString()
+        } catch {
+            throw error
+        }
+    }
     /// 注册稳定币交易Hex
     /// - Parameters:
     ///   - mnemonic: 助记词
@@ -263,7 +263,7 @@ extension DiemManager {
             let wallet = try DiemManager.getWallet(mnemonic: mnemonic)
             // 拼接交易
             let argument0 = DiemTransactionArgument.init(code: .Address(centerAddress))
-            let argument1 = DiemTransactionArgument.init(code: .U64("\(inputAmount)"))
+            let argument1 = DiemTransactionArgument.init(code: .U64(inputAmount))
             // metadata
             let data = "{\"flag\":\"libra\",\"type\":\"\(mappingType)\",\"times\": 1000, \"to_address\":\"\(receiveAddress)\",\"out_amount\":\"\(outputAmount)\",\"state\":\"start\"}".data(using: .utf8)!
             let argument2 = DiemTransactionArgument.init(code: .U8Vector(data))
@@ -308,7 +308,7 @@ extension DiemManager {
                         let argument = DiemTransactionArgument.init(code: .U8Vector(Data.init(hex: item.value ?? "")))
                         tempArguments.append(argument)
                     } else if item.type?.lowercased() == "u64" {
-                        let argument = DiemTransactionArgument.init(code: .U64(item.value ?? ""))
+                        let argument = DiemTransactionArgument.init(code: .U64(NSDecimalNumber.init(string: item.value).uint64Value))
                         tempArguments.append(argument)
                     }
                 }

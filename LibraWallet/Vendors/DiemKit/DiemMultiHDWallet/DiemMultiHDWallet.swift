@@ -25,9 +25,9 @@ struct DiemMultiHDWallet {
     ///   - privateKeys: 私钥数组
     ///   - threshold: 最少签名数
     init(privateKeys: [DiemMultiPrivateKeyModel], threshold: Int, multiPublicKey: DiemMultiPublicKey? = nil) {
-//        let tempPrivateKeyData = privateKeys.map {
-//            Data.init(Array<UInt8>(hex: $0))
-//        }
+        //        let tempPrivateKeyData = privateKeys.map {
+        //            Data.init(Array<UInt8>(hex: $0))
+        //        }
         self.privateKey = DiemMultiPrivateKey.init(privateKeys: privateKeys, threshold: threshold)
         if let tempMultiPublicKey = multiPublicKey {
             self.publicKey = tempMultiPublicKey
@@ -48,12 +48,12 @@ struct DiemMultiHDWallet {
             let tempInfo = Data() + Array("DIEM WALLET: derived key$".utf8) + depthData.bytes
             do {
                 let privateKey = try HKDF.init(password: model.seed,
-                                         salt:Array("DIEM WALLET: master key salt$".utf8),
-                                         info: tempInfo.bytes,
-                                         keyLength: 32,
-                                         variant: .sha3_256).calculate()
+                                               salt:Array("DIEM WALLET: main key salt$".utf8),
+                                               info: tempInfo.bytes,
+                                               keyLength: 32,
+                                               variant: .sha3_256).calculate()
                 let privateModel = DiemMultiPrivateKeyModel.init(raw: Data.init(bytes: privateKey, count: privateKey.count),
-                                                             sequence: model.sequence)
+                                                                 sequence: model.sequence)
                 privateKeys.append(privateModel)
             } catch {
                 throw error

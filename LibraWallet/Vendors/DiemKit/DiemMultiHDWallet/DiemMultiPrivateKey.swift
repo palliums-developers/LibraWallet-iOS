@@ -42,56 +42,58 @@ struct DiemMultiPrivateKey {
         for model in self.raw {
             let data = Ed25519.calcPublicKey(secretKey: model.raw.bytes)
             let publickKey = DiemMultiPublicKeyModel.init(raw: Data.init(bytes: data, count: data.count),
-                                                      sequence: model.sequence)
+                                                          sequence: model.sequence)
             tempPublicKeys.append(publickKey)
         }
         return DiemMultiPublicKey.init(data: tempPublicKeys, threshold: threshold)
     }
-    /// 签名交易
-    /// - Parameter transaction: 交易数据
+    /// 签名多签交易
+    /// - Parameters:
+    ///   - transaction: 交易数据
+    ///   - publicKey: 所有公钥
+    /// - Throws: 报错
     /// - Returns: 返回序列化结果
-    func signMultiTransaction(transaction: DiemRawTransaction, publicKey: DiemMultiPublicKey) -> Data {
+    func signMultiTransaction(transaction: DiemRawTransaction, publicKey: DiemMultiPublicKey) throws -> Data {
         // 交易第一部分-原始数据
         let transactionRaw = transaction.serialize()
-        
         // 交易第二部分-交易类型
         let signType = Data.init(Array<UInt8>(hex: "01"))
-        
-        // 交易第三部分-公钥
-        var publicKeyData = Data()
-        // 追加MultiPublicKey
-        let multiPublickKey = publicKey.toMultiPublicKey()
-
-        publicKeyData += DiemUtils.uleb128Format(length: multiPublickKey.bytes.count)
-        publicKeyData += multiPublickKey
-        
+        // 交易第三部分-公钥（n*公钥+最少签名数）
+        let publicKeyData = publicKey.toMultiPublicKey()
         // 交易第四部分-签名
-        // 4.1待签数据追加盐
+        // 4.1待签数据加盐
         var sha3Data = Data.init(Array<UInt8>(hex: (DiemSignSalt.sha3(SHA3.Variant.sha256))))
         // 4.2追加待签数据
-        sha3Data += transactionRaw
+        sha3Data.append(transactionRaw)
         // 4.3签名数据
         var signData = Data()
-        // 4.4追加签名
-        var bitmap = "00000000000000000000000000000001"
+        // 4.4初始化Bitmap
+        var bitmap = "00000000000000000000000000000000"
+        // 4.5追加签名+计算Bitmap
         for i in 0..<self.threshold {
-            let sign = Ed25519.sign(message: sha3Data.sha3(.sha256).bytes, secretKey: self.raw[i].raw.bytes)
-            signData += sign
+            let sign = Ed25519.sign(message: sha3Data.bytes, secretKey: self.raw[i].raw.bytes)
+            signData.append(sign, count: sign.count)
             bitmap = setBitmap(bitmap: bitmap, index: self.raw[i].sequence)
         }
-        let convert = DiemUtils.binary2dec(num: bitmap)
-        signData += BigUInt(convert).serialize()
-        print("bitmap = \(BigUInt(convert).serialize().toHexString())")
-        let result = transactionRaw + signType + publicKeyData + DiemUtils.uleb128Format(length: signData.count) + signData//uleb128Format(length: signData.count) + signData
+        let bitmapNumber = DiemUtils.binary2dec(num: bitmap)
+        let bitmapData = BigUInt(bitmapNumber).serialize()
+        // 4.6签名追加Bitmap
+        signData.append(bitmapData)
+        // 最后整合数据
+        var result = transactionRaw
+        // 签名类型（1个字节）
+        result.append(signType)
+        // 公钥+最少签名数长度（2个字节）
+        result.append(DiemUtils.uleb128Format(length: publicKeyData.count))
+        // 公钥+最少签名数据
+        result.append(publicKeyData)
+        // 签名+Bitmap长度（2个字节）
+        result.append(DiemUtils.uleb128Format(length: signData.count))
+        // 签名+Bitmap数据
+        result.append(signData)
         return result
     }
-    func setBitmap(bitmap: String, index: Int) -> String {
-//        var tempBitmap = bitmap
-//        let bucket = index / 8
-//        // It's always invoked with index < 32, thus there is no need to check range.
-//        let bucket_pos = index - (bucket * 8)
-//        tempBitmap[bucket] |= 128 >> bucket_pos
-//        return tempBitmap
+    private func setBitmap(bitmap: String, index: Int) -> String {
         var tempBitmap = bitmap
         let range = tempBitmap.index(tempBitmap.startIndex, offsetBy: index)...tempBitmap.index(tempBitmap.startIndex, offsetBy: index)
         tempBitmap.replaceSubrange(range, with: "1")
