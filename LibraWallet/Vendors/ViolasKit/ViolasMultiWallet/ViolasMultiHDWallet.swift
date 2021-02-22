@@ -48,7 +48,7 @@ struct ViolasMultiHDWallet {
             let tempInfo = Data() + Array("DIEM WALLET: derived key$".utf8) + depthData.bytes
             do {
                 let privateKey = try HKDF.init(password: model.seed,
-                                         salt:Array("DIEM WALLET: master key salt$".utf8),
+                                         salt:Array("DIEM WALLET: main key salt$".utf8),
                                          info: tempInfo.bytes,
                                          keyLength: 32,
                                          variant: .sha3_256).calculate()
