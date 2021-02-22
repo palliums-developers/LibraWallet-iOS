@@ -72,7 +72,7 @@ class LibraSDKTests: XCTestCase {
     func testLibraKit() {
         //LibraTransactionArgument
         // u64
-        let amount = DiemTransactionArgument.init(code: .U64("9213671392124193148")).serialize().toHexString().uppercased()
+        let amount = DiemTransactionArgument.init(code: .U64(9213671392124193148)).serialize().toHexString().uppercased()
         XCTAssertEqual(amount, "017CC9BDA45089DD7F")
         // Address
         let address = DiemTransactionArgument.init(code: .Address("bafc671e8a38c05706f83b5159bbd8a4")).serialize().toHexString()
@@ -127,7 +127,7 @@ class LibraSDKTests: XCTestCase {
         // LibraTransactionPayload_Script
         let transactionScript = DiemTransactionScriptPayload.init(code: ("move".data(using: .utf8)!),
                                                                    typeTags: [DiemTypeTag](),//
-                                                                   argruments: [DiemTransactionArgument.init(code: .U64("14627357397735030511"))])
+                                                                   argruments: [DiemTransactionArgument.init(code: .U64(14627357397735030511))])
         let transactionScriptPayload = DiemTransactionPayload.init(payload: .script(transactionScript))
         let scriptRaw = DiemRawTransaction.init(senderAddres: "3a24a61e05d129cace9e0efc8bc9e338",
                                                  sequenceNumber: 32,
@@ -325,6 +325,43 @@ class LibraSDKTests: XCTestCase {
         }
         
     }
+    func testLibraKitSingle() {
+        let mnemonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "begin", "host"]
+//        let mnemonic = ["grant", "security", "cluster", "pill", "visit", "wave", "skull", "chase", "vibrant", "embrace", "bronze", "tip"]
+//        let mnemonic = ["net", "dice", "divide", "amount", "stamp", "flock", "brave", "nuclear", "fox", "aim", "father", "apology"]
+
+
+        do {
+            let seed = try DiemMnemonic.seed(mnemonic: mnemonic)
+            let wallet = try DiemHDWallet.init(seed: seed)
+            
+            let signature = try DiemManager.getNormalTransactionHex(sendAddress: wallet.publicKey.toAddress(),
+                                                                    receiveAddress: "6c1dd50f35f120061babc2814cf9378b",
+                                                                    amount: 1000000,
+                                                                    fee: 1,
+                                                                    mnemonic: mnemonic,
+                                                                    sequenceNumber: 1,
+                                                                    module: "XUS",
+                                                                    toSubAddress: "",
+                                                                    fromSubAddress: "",
+                                                                    referencedEvent: "")
+            print(signature)
+            print("Success")
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    func testLibraSingleTTT() {
+//        var sha3Data = Data.init(Array<UInt8>(hex: (DiemSignSalt.sha3(SHA3.Variant.sha256))))
+        let tempPrifix: Array<UInt8> = [15,19,82,119,2,122,140,210,18,111,242,229,12,251,75,124,244,220,177,20,89,178,210,253,180,76,30,216,204,80,56,44,12]
+        var sha3Data = Data.init(bytes: tempPrifix, count: tempPrifix.count)
+        sha3Data.append("Hello, World".data(using: .utf8)!)
+
+        let privateKey: Array<UInt8> = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+        let data = Ed25519.sign(message: sha3Data.bytes, secretKey: privateKey)
+        print(data)
+        print("Success")
+    }
     func testLibraKitMulti() {
         let mnemonic1 = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "begin", "host"]
         let mnemonic2 = ["grant", "security", "cluster", "pill", "visit", "wave", "skull", "chase", "vibrant", "embrace", "bronze", "tip"]
@@ -336,26 +373,27 @@ class LibraSDKTests: XCTestCase {
             let seedModel1 = DiemSeedAndDepth.init(seed: seed1, depth: 0, sequence: 0)
             let seedModel2 = DiemSeedAndDepth.init(seed: seed2, depth: 0, sequence: 1)
             let seedModel3 = DiemSeedAndDepth.init(seed: seed3, depth: 0, sequence: 2)
-            let multiPublicKey = DiemMultiPublicKey.init(data: [DiemMultiPublicKeyModel.init(raw: Data.init(Array<UInt8>(hex: "2bd7d9fe82120842daa860606060661b222824c65af7bfb2843eeb7792a3b967")), sequence: 0),
-                                                                DiemMultiPublicKeyModel.init(raw: Data.init(Array<UInt8>(hex: "50b715879a727bbc561786b0dc9e6afcd5d8a443da6eb632952e692b83e8e7cb")), sequence: 1),
-                                                                DiemMultiPublicKeyModel.init(raw: Data.init(Array<UInt8>(hex: "e7e1b22eeb0a9ce0c49e3bf6cf23ebbb4d93d24c2064c46f6ceb9daa6ca2e217")), sequence: 2)],
+            let multiPublicKey = DiemMultiPublicKey.init(data: [DiemMultiPublicKeyModel.init(raw: Data.init(Array<UInt8>(hex: "e12136fd95251348cd993b91e8fbf36bcebe9422842f3c505ca2893f5612ae53")), sequence: 0),
+                                                                DiemMultiPublicKeyModel.init(raw: Data.init(Array<UInt8>(hex: "ee2586aaaeaaa39ae4eb601999e5c2aade701ac4262f79ac98d9413cce67b0db")), sequence: 1),
+                                                                DiemMultiPublicKeyModel.init(raw: Data.init(Array<UInt8>(hex: "d0b27e06a1bf428c380bd10b7469d8b4f251e763724b2543c730abcaea18c8b0")), sequence: 2)],
                                                           threshold: 2)
-            let wallet = try DiemMultiHDWallet.init(models: [seedModel1, seedModel3], threshold: 2, multiPublicKey: multiPublicKey)
+            let wallet = try DiemMultiHDWallet.init(models: [seedModel1, seedModel2], threshold: 2, multiPublicKey: multiPublicKey)
             //            let wallet = try LibraMultiHDWallet.init(models: [seedModel1, seedModel2, seedModel3], threshold: 2)
             print("Legacy = \(wallet.publicKey.toLegacy())")
-            //bafc671e8a38c05706f83b5159bbd8a4
+            //0d6a04436002d61228a3b58d3f0ecc71
             print("Authentionkey = \(wallet.publicKey.toActive())")
-            //bf2128295b7a57e6e42390d56293760cbafc671e8a38c05706f83b5159bbd8a4
+            //df8c99ad74f921563f3f7242b4a3e4570d6a04436002d61228a3b58d3f0ecc71
             print("PublicKey = \(wallet.publicKey.toMultiPublicKey().toHexString())")
-            //2bd7d9fe82120842daa860606060661b222824c65af7bfb2843eeb7792a3b96750b715879a727bbc561786b0dc9e6afcd5d8a443da6eb632952e692b83e8e7cbe7e1b22eeb0a9ce0c49e3bf6cf23ebbb4d93d24c2064c46f6ceb9daa6ca2e21702
-            
-            //            let sign = try LibraManager.getMultiTransactionHex(sendAddress: multiPublicKey.toLegacy(),
-            //                                                               receiveAddress: "331321aefcce2ee794430d07d7a953a0",
-            //                                                               amount: 0.5,
-            //                                                               fee: 0,
-            //                                                               sequenceNumber: 8,
-            //                                                               wallet: wallet)
-            //            print(sign)
+            //e12136fd95251348cd993b91e8fbf36bcebe9422842f3c505ca2893f5612ae53ee2586aaaeaaa39ae4eb601999e5c2aade701ac4262f79ac98d9413cce67b0dbd0b27e06a1bf428c380bd10b7469d8b4f251e763724b2543c730abcaea18c8b002
+            let sign = try DiemManager.getMultiTransactionHex(sendAddress: multiPublicKey.toLegacy(),
+                                                              receiveAddress: "6c1dd50f35f120061babc2814cf9378b",
+                                                              amount: 1000000,
+                                                              fee: 1,
+                                                              sequenceNumber: 6,
+                                                              wallet: wallet,
+                                                              module: "XUS")
+            print(sign)
+            print("Success")
         } catch {
             print(error.localizedDescription)
         }
@@ -726,7 +764,7 @@ class LibraSDKTests: XCTestCase {
         print(tempMetadata.toHexString())
         XCTAssertEqual(tempMetadata.toHexString(), "020001166f666620636861696e207265666572656e6365206964")
         let amountData = DiemUtils.getLengthData(length: NSDecimalNumber.init(value: amount).uint64Value, appendBytesCount: 8)
-        let sigMessage = tempMetadata + Data.init(Array<UInt8>(hex: address)) + amountData + "@@$$LIBRA_ATTEST$$@@".data(using: .utf8)!
+        let sigMessage = tempMetadata + Data.init(Array<UInt8>(hex: address)) + amountData + "@@$$DIEM_ATTEST$$@@".data(using: .utf8)!
         print(sigMessage.toHexString())
         XCTAssertEqual(sigMessage.toHexString(), "020001166f666620636861696e207265666572656e6365206964f72589b71ff4f8d139674a3f7369c69be803000000000000404024244c494252415f41545445535424244040")
     }
