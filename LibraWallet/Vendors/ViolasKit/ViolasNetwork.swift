@@ -13,9 +13,10 @@ enum ViolasNetworkState {
     case testnet
     case devnet
     case testing
+    case premainnet
 }
 extension ViolasNetworkState {
-    public var value: Int {
+    public var chainId: Int {
         switch self {
         case .mainnet:
             return 1
@@ -25,9 +26,36 @@ extension ViolasNetworkState {
             return 3
         case .testing:
             return 4
+        case .premainnet:
+            return 5
         }
     }
-}
-struct ViolasNetwork {
-    
+    public var chainURL: String {
+        switch self {
+        case .mainnet:
+            return "https://ac.testnet.violas.io"
+        case .testnet:
+            return "https://ab.testnet.violas.io"
+        case .devnet:
+            return "https://ab.testnet.violas.io"
+        case .testing:
+            return "https://ab.testnet.violas.io"
+        case .premainnet:
+            return "https://ac.testnet.violas.io"
+        }
+    }
+    public var addressPrefix: String {
+        switch self {
+        case .mainnet:
+            return "dm"
+        case .testnet:
+            return "tdm"
+        case .devnet:
+            return "ddm"
+        case .testing:
+            return "tdm"
+        case .premainnet:
+            return "pdm"
+        }
+    }
 }

@@ -17,10 +17,16 @@ struct DiemMultiPublicKey {
     let raw: [DiemMultiPublicKeyModel]
     /// 需要多少把解锁
     let threshold: Int
+    /// 钱包网络
+    let network: DiemNetworkState
     
-    public init (data: [DiemMultiPublicKeyModel], threshold: Int) {
+    public init (data: [DiemMultiPublicKeyModel], threshold: Int, network: DiemNetworkState) {
+        
         self.raw = data
+        
         self.threshold = threshold
+        
+        self.network = network
     }
     func toMultiPublicKey() -> Data {
         var publicKeyData = Data()
@@ -57,7 +63,7 @@ struct DiemMultiPublicKey {
     ///   - version: 版本（默认为1）
     /// - Returns: 返回地址
     func toQRAddress(rootAccount: Bool = false, version: UInt8 = 1) -> String {
-        let tempData = toMultiPublicKey() + Data.init(hex: "00")
+        let tempData = toMultiPublicKey() + Data.init(hex: "01")
         let tempAddressData = tempData.bytes.sha3(SHA3.Variant.sha256)
         var randomData = Data()
         if rootAccount == false {
@@ -72,7 +78,7 @@ struct DiemMultiPublicKey {
         }
         let payload = tempAddressData.dropFirst(16) + randomData
         let address: String = DiemBech32.encode(payload: Data.init(payload),
-                                                prefix: "dm",
+                                                prefix: self.network.addressPrefix,
                                                 version: version,
                                                 separator: "1")
         return address

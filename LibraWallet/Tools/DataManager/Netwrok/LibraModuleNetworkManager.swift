@@ -31,16 +31,12 @@ extension LibraModuleRequest: TargetType {
         switch self {
         case .accountInfo(_),
              .sendTransaction(_):
-            return URL(string:"https://client.testnet.diem.com")!
+            return URL(string:DIEM_PUBLISH_NET.chainURL)!
         case .accountTransactions(_, _, _, _, _),
              .currencyList,
              .price(_),
              .activeAccount(_, _):
-            if PUBLISH_VERSION == true {
-                return URL(string:"https://api.violas.io")!
-            } else {
-                return URL(string:"https://api4.violas.io")!
-            }
+            return URL(string:VIOLAS_PUBLISH_NET.serviceURL)!
         }
     }
     var path: String {
@@ -118,6 +114,7 @@ extension LibraModuleRequest: TargetType {
                 "versionName": appversion,
                 "platform": "ios",
                 "bundleId":bundleID!,
-                "language":Localize.currentLanguage()]
+                "language":Localize.currentLanguage(),
+                "chainId":"2"]
     }
 }

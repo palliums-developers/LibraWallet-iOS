@@ -10,12 +10,17 @@ import UIKit
 import CryptoSwift
 
 struct ViolasHDPublicKey {
-  /// 公钥
+    /// 公钥
     let raw: Data
+    /// 钱包网络
+    let network: ViolasNetworkState
     /// 初始化公钥对象
     /// - Parameter data: 公钥
-    public init (data: Data) {
+    public init (data: Data, network: ViolasNetworkState) {
+        
         self.raw = data
+        
+        self.network = network
     }
     /// 获取传统地址（32位长度）
     /// - Returns: 地址
@@ -59,7 +64,7 @@ struct ViolasHDPublicKey {
         }
         let payload = tempAddressData.dropFirst(16) + randomData
         let address: String = ViolasBech32.encode(payload: Data.init(payload),
-                                                 prefix: "lbr",
+                                                 prefix: self.network.addressPrefix,
                                                  version: version,
                                                  separator: "1")
         return address

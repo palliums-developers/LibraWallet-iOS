@@ -20,11 +20,16 @@ struct ViolasMultiHDWallet {
     let privateKey: ViolasMultiPrivateKey
     /// 最少签名数
     let threshold: Int
+    /// 钱包网络
+    let network: ViolasNetworkState
+    
     /// 通过私钥初始化
     /// - Parameters:
     ///   - privateKeys: 私钥数组
     ///   - threshold: 最少签名数
-    init(privateKeys: [ViolasMultiPrivateKeyModel], threshold: Int, multiPublicKey: ViolasMultiPublicKey? = nil) {
+    ///   - multiPublicKey: 公钥
+    ///   - network: 钱包网络
+    init(privateKeys: [ViolasMultiPrivateKeyModel], threshold: Int, multiPublicKey: ViolasMultiPublicKey? = nil, network: ViolasNetworkState) {
 //        let tempPrivateKeyData = privateKeys.map {
 //            Data.init(Array<UInt8>(hex: $0))
 //        }
@@ -32,16 +37,21 @@ struct ViolasMultiHDWallet {
         if let tempMultiPublicKey = multiPublicKey {
             self.publicKey = tempMultiPublicKey
         } else {
-            self.publicKey = self.privateKey.extendedPublicKey()
+            self.publicKey = self.privateKey.extendedPublicKey(network: network)
         }
         self.threshold = threshold
+        
+        self.network = network
     }
+    
     /// 通过助记词种子初始化
     /// - Parameters:
     ///   - models: 助记词Seed数组
     ///   - threshold: 最少签名数
+    ///   - multiPublicKey: 公钥
+    ///   - network: 钱包网络
     /// - Throws: 初始化失败
-    init(models: [ViolasSeedAndDepth], threshold: Int, multiPublicKey: ViolasMultiPublicKey? = nil) throws {
+    init(models: [ViolasSeedAndDepth], threshold: Int, multiPublicKey: ViolasMultiPublicKey? = nil, network: ViolasNetworkState) throws {
         var privateKeys = [ViolasMultiPrivateKeyModel]()
         for model in models {
             let depthData = ViolasUtils.getLengthData(length: model.depth, appendBytesCount: 8)
@@ -63,8 +73,10 @@ struct ViolasMultiHDWallet {
         if let tempMultiPublicKey = multiPublicKey {
             self.publicKey = tempMultiPublicKey
         } else {
-            self.publicKey = self.privateKey.extendedPublicKey()
+            self.publicKey = self.privateKey.extendedPublicKey(network: network)
         }
         self.threshold = threshold
+        
+        self.network = network
     }
 }

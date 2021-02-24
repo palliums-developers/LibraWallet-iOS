@@ -37,7 +37,7 @@ struct DiemMultiPrivateKey {
     }
     /// 获取公钥
     /// - Returns: 多签公钥
-    public func extendedPublicKey() -> DiemMultiPublicKey {
+    public func extendedPublicKey(network: DiemNetworkState) -> DiemMultiPublicKey {
         var tempPublicKeys = [DiemMultiPublicKeyModel]()
         for model in self.raw {
             let data = Ed25519.calcPublicKey(secretKey: model.raw.bytes)
@@ -45,7 +45,7 @@ struct DiemMultiPrivateKey {
                                                           sequence: model.sequence)
             tempPublicKeys.append(publickKey)
         }
-        return DiemMultiPublicKey.init(data: tempPublicKeys, threshold: threshold)
+        return DiemMultiPublicKey.init(data: tempPublicKeys, threshold: threshold, network: network)
     }
     /// 签名多签交易
     /// - Parameters:
@@ -79,7 +79,7 @@ struct DiemMultiPrivateKey {
         let bitmapData = BigUInt(bitmapNumber).serialize()
         // 4.6签名追加Bitmap
         signData.append(bitmapData)
-        // 最后整合数据
+        // 最后整合数据（transactionRaw + 类型 +（公钥+threshold）长度 +（公钥+threshold）+（签名）长度 +（签名+Bitmap））
         var result = transactionRaw
         // 签名类型（1个字节）
         result.append(signType)

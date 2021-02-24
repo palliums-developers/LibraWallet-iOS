@@ -12,10 +12,16 @@ import CryptoSwift
 struct DiemHDPublicKey {
     /// 公钥
     let raw: Data
+    /// 钱包网络
+    let network: DiemNetworkState
+    
     /// 初始化公钥对象
     /// - Parameter data: 公钥
-    public init (data: Data) {
+    public init (data: Data, network: DiemNetworkState) {
+        
         self.raw = data
+        
+        self.network = network
     }
     func toAddress() -> String {
         let tempData = self.raw + Data.init(hex: "00")
@@ -67,7 +73,7 @@ struct DiemHDPublicKey {
         }
         let payload = tempAddressData.dropFirst(16) + randomData
         let address: String = DiemBech32.encode(payload: Data.init(payload),
-                                                prefix: "dm",
+                                                prefix: self.network.addressPrefix,
                                                 version: version,
                                                 separator: "1")
         return address

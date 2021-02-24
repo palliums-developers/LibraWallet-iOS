@@ -410,7 +410,8 @@ class AddAssetModel: NSObject {
                 let signature = try DiemManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
                                                                                sequenceNumber: sequenceNumber,
                                                                                fee: 0,
-                                                                               module: module)
+                                                                               module: module,
+                                                                               feeModule: module)
                 makeLibraTransaction(signature: signature)
             } else if type == .Violas  {
                 let signature = try ViolasManager.getPublishTokenTransactionHex(mnemonic: mnemonic,

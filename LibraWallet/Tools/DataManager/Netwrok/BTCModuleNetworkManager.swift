@@ -50,11 +50,7 @@ extension BTCModuleRequest: TargetType {
             return URL(string:"https://tbtc1.trezor.io/api")!
             
         case .price:
-            if PUBLISH_VERSION == true {
-                return URL(string:"https://api.violas.io")!
-            } else {
-                return URL(string:"https://api4.violas.io")!
-            }
+            return URL(string:VIOLAS_PUBLISH_NET.serviceURL)!
         }
     }
     var path: String {
@@ -142,6 +138,7 @@ extension BTCModuleRequest: TargetType {
                 "versionName": appversion,
                 "platform": "ios",
                 "bundleId":bundleID!,
-                "language":Localize.currentLanguage()]
+                "language":Localize.currentLanguage(),
+                "chainId":"2"]
     }
 }

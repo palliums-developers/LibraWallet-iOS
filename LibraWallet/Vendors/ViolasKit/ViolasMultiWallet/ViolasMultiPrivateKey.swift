@@ -38,7 +38,7 @@ struct ViolasMultiPrivateKey {
     }
     /// 获取公钥
     /// - Returns: 多签公钥
-    public func extendedPublicKey() -> ViolasMultiPublicKey {
+    public func extendedPublicKey(network: ViolasNetworkState) -> ViolasMultiPublicKey {
         var tempPublicKeys = [ViolasMultiPublicKeyModel]()
         for model in self.raw {
             let data = Ed25519.calcPublicKey(secretKey: model.raw.bytes)
@@ -46,7 +46,7 @@ struct ViolasMultiPrivateKey {
                                                       sequence: model.sequence)
             tempPublicKeys.append(publickKey)
         }
-        return ViolasMultiPublicKey.init(data: tempPublicKeys, threshold: threshold)
+        return ViolasMultiPublicKey.init(data: tempPublicKeys, threshold: threshold, network: network)
     }
     /// 签名多签交易
     /// - Parameters:

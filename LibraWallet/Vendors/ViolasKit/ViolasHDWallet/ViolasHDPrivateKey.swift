@@ -16,10 +16,10 @@ struct ViolasHDPrivateKey {
     public init (privateKey: [UInt8]) {
         self.raw = Data.init(bytes: privateKey, count: privateKey.count)
     }
-    public func extendedPublicKey() -> ViolasHDPublicKey {
+    public func extendedPublicKey(network: ViolasNetworkState) -> ViolasHDPublicKey {
         let publicKey = Ed25519.calcPublicKey(secretKey: raw.bytes)
         let publicKeyData = Data.init(bytes: publicKey, count: publicKey.count)
-        return ViolasHDPublicKey.init(data: publicKeyData)
+        return ViolasHDPublicKey.init(data: publicKeyData, network: network)
     }
     func signTransaction(transaction: ViolasRawTransaction, wallet: ViolasHDWallet) throws -> Data {
         // 交易第一部分-待签名交易

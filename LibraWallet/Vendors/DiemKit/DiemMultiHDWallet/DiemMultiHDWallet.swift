@@ -20,28 +20,38 @@ struct DiemMultiHDWallet {
     let privateKey: DiemMultiPrivateKey
     /// 最少签名数
     let threshold: Int
+    /// 钱包网络
+    let network: DiemNetworkState
+    
     /// 通过私钥初始化
     /// - Parameters:
     ///   - privateKeys: 私钥数组
     ///   - threshold: 最少签名数
-    init(privateKeys: [DiemMultiPrivateKeyModel], threshold: Int, multiPublicKey: DiemMultiPublicKey? = nil) {
-        //        let tempPrivateKeyData = privateKeys.map {
-        //            Data.init(Array<UInt8>(hex: $0))
-        //        }
+    ///   - multiPublicKey: 公钥
+    ///   - network: 钱包网络
+    init(privateKeys: [DiemMultiPrivateKeyModel], threshold: Int, multiPublicKey: DiemMultiPublicKey? = nil, network: DiemNetworkState) {
+
         self.privateKey = DiemMultiPrivateKey.init(privateKeys: privateKeys, threshold: threshold)
+        
         if let tempMultiPublicKey = multiPublicKey {
             self.publicKey = tempMultiPublicKey
         } else {
-            self.publicKey = self.privateKey.extendedPublicKey()
+            self.publicKey = self.privateKey.extendedPublicKey(network: network)
         }
+        
         self.threshold = threshold
+        
+        self.network = network
     }
+    
     /// 通过助记词种子初始化
     /// - Parameters:
     ///   - models: 助记词Seed数组
     ///   - threshold: 最少签名数
+    ///   - multiPublicKey: 公钥
+    ///   - network: 钱包网络
     /// - Throws: 初始化失败
-    init(models: [DiemSeedAndDepth], threshold: Int, multiPublicKey: DiemMultiPublicKey? = nil) throws {
+    init(models: [DiemSeedAndDepth], threshold: Int, multiPublicKey: DiemMultiPublicKey? = nil, network: DiemNetworkState) throws {
         var privateKeys = [DiemMultiPrivateKeyModel]()
         for model in models {
             let depthData = DiemUtils.getLengthData(length: model.depth, appendBytesCount: 8)
@@ -63,8 +73,10 @@ struct DiemMultiHDWallet {
         if let tempMultiPublicKey = multiPublicKey {
             self.publicKey = tempMultiPublicKey
         } else {
-            self.publicKey = self.privateKey.extendedPublicKey()
+            self.publicKey = self.privateKey.extendedPublicKey(network: network)
         }
         self.threshold = threshold
+        
+        self.network = network
     }
 }

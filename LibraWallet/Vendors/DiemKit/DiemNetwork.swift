@@ -7,14 +7,16 @@
 //
 
 import UIKit
+
 enum DiemNetworkState {
     case mainnet
     case testnet
     case devnet
     case testing
+    case premainnet
 }
 extension DiemNetworkState {
-    public var value: Int {
+    public var chainId: Int {
         switch self {
         case .mainnet:
             return 1
@@ -24,9 +26,36 @@ extension DiemNetworkState {
             return 3
         case .testing:
             return 4
+        case .premainnet:
+            return 5
         }
     }
-}
-struct DiemNetwork {
-    
+    public var chainURL: String {
+        switch self {
+        case .mainnet:
+            return "https://client.testnet.diem.com"
+        case .testnet:
+            return "https://client.testnet.diem.com"
+        case .devnet:
+            return "https://client.testnet.diem.com"
+        case .testing:
+            return "https://client.testnet.diem.com"
+        case .premainnet:
+            return "https://client.testnet.diem.com"
+        }
+    }
+    public var addressPrefix: String {
+        switch self {
+        case .mainnet:
+            return "dm"
+        case .testnet:
+            return "tdm"
+        case .devnet:
+            return "ddm"
+        case .testing:
+            return "tdm"
+        case .premainnet:
+            return "pdm"
+        }
+    }
 }

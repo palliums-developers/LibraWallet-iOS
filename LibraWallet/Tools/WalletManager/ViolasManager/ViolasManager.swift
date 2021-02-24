@@ -30,7 +30,7 @@ struct ViolasManager {
     public static func getWallet(mnemonic: [String]) throws -> ViolasHDWallet {
         do {
             let seed = try ViolasMnemonic.seed(mnemonic: mnemonic)
-            let wallet = try ViolasHDWallet.init(seed: seed, depth: 0)
+            let wallet = try ViolasHDWallet.init(seed: seed, depth: 0, network: VIOLAS_PUBLISH_NET)
             return wallet
         } catch {
             throw error
@@ -62,14 +62,8 @@ struct ViolasManager {
             guard prifix.isEmpty == false else {
                 throw LibraWalletError.WalletScan(reason: .handleInvalid)
             }
-            if PUBLISH_VERSION == true {
-                guard prifix.lowercased() == "pdm" else {
-                    throw LibraWalletError.WalletScan(reason: .handleInvalid)
-                }
-            } else {
-                guard prifix.lowercased() == "tdm" else {
-                    throw LibraWalletError.WalletScan(reason: .handleInvalid)
-                }
+            guard prifix.lowercased() == VIOLAS_PUBLISH_NET.addressPrefix else {
+                throw LibraWalletError.WalletScan(reason: .handleInvalid)
             }
             let address = result.prefix(16).toHexString()
             let subAddress = result.suffix(8).toHexString()
@@ -100,7 +94,7 @@ struct ViolasManager {
         }
         let payload = Data(Array<UInt8>(hex: address)) + randomData
         let address: String = ViolasBech32.encode(payload: Data.init(payload),
-                                                  prefix: PUBLISH_VERSION == true ? "pdm":"tdm",
+                                                  prefix: VIOLAS_PUBLISH_NET.addressPrefix,
                                                   version: version,
                                                   separator: "1")
         return address
@@ -218,7 +212,7 @@ extension ViolasManager {
                                                            expirationTime: NSDecimalNumber.init(value: Date().timeIntervalSince1970 + 600).uint64Value,
                                                            payload: transactionPayload,
                                                            module: "VLS",
-                                                           chainID: 4)
+                                                           chainID: wallet.network.chainId)
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
             return signature.toHexString()
@@ -250,7 +244,7 @@ extension ViolasManager {
                                                            expirationTime: NSDecimalNumber.init(value: Date().timeIntervalSince1970 + 600).uint64Value,
                                                            payload: transactionPayload,
                                                            module: "VLS",
-                                                           chainID: 4)
+                                                           chainID: wallet.network.chainId)
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
             return signature.toHexString()
@@ -299,7 +293,7 @@ extension ViolasManager {
                                                            expirationTime: NSDecimalNumber.init(value: Date().timeIntervalSince1970 + 600).uint64Value,
                                                            payload: transactionPayload,
                                                            module: "VLS",
-                                                           chainID: 4)
+                                                           chainID: wallet.network.chainId)
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
             return signature.toHexString()
@@ -344,7 +338,7 @@ extension ViolasManager {
                                                            expirationTime: NSDecimalNumber.init(value: Date().timeIntervalSince1970 + 600).uint64Value,
                                                            payload: transactionPayload,
                                                            module: "VLS",
-                                                           chainID: 4)
+                                                           chainID: wallet.network.chainId)
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
             return signature.toHexString()
@@ -386,7 +380,7 @@ extension ViolasManager {
                                                            expirationTime: NSDecimalNumber.init(value: Date().timeIntervalSince1970 + 600).uint64Value,
                                                            payload: transactionPayload,
                                                            module: "VLS",
-                                                           chainID: 4)
+                                                           chainID: wallet.network.chainId)
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
             return signature.toHexString()
@@ -418,7 +412,7 @@ extension ViolasManager {
                                                            expirationTime: NSDecimalNumber.init(value: Date().timeIntervalSince1970 + 600).uint64Value,
                                                            payload: transactionPayload,
                                                            module: "VLS",
-                                                           chainID: 4)
+                                                           chainID: wallet.network.chainId)
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
             return signature.toHexString()
@@ -467,7 +461,7 @@ extension ViolasManager {
                                                            expirationTime: NSDecimalNumber.init(value: Date().timeIntervalSince1970 + 600).uint64Value,
                                                            payload: transactionPayload,
                                                            module: "VLS",
-                                                           chainID: 4)
+                                                           chainID: wallet.network.chainId)
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
             return signature.toHexString()
@@ -508,7 +502,7 @@ extension ViolasManager {
                                                            expirationTime: NSDecimalNumber.init(value: Date().timeIntervalSince1970 + 600).uint64Value,
                                                            payload: transactionPayload,
                                                            module: "VLS",
-                                                           chainID: 4)
+                                                           chainID: wallet.network.chainId)
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
             return signature.toHexString()
@@ -546,7 +540,7 @@ extension ViolasManager {
                                                            expirationTime: NSDecimalNumber.init(value: Date().timeIntervalSince1970 + 600).uint64Value,
                                                            payload: transactionPayload,
                                                            module: "VLS",
-                                                           chainID: 4)
+                                                           chainID: wallet.network.chainId)
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
             return signature.toHexString()
@@ -584,7 +578,7 @@ extension ViolasManager {
                                                            expirationTime: NSDecimalNumber.init(value: Date().timeIntervalSince1970 + 600).uint64Value,
                                                            payload: transactionPayload,
                                                            module: "VLS",
-                                                           chainID: 4)
+                                                           chainID: wallet.network.chainId)
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
             return signature.toHexString()
@@ -622,7 +616,7 @@ extension ViolasManager {
                                                            expirationTime: NSDecimalNumber.init(value: Date().timeIntervalSince1970 + 600).uint64Value,
                                                            payload: transactionPayload,
                                                            module: "VLS",
-                                                           chainID: 4)
+                                                           chainID: wallet.network.chainId)
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
             return signature.toHexString()
@@ -654,7 +648,7 @@ extension ViolasManager {
                                                            expirationTime: NSDecimalNumber.init(value: Date().timeIntervalSince1970 + 600).uint64Value,
                                                            payload: transactionPayload,
                                                            module: "VLS",
-                                                           chainID: 4)
+                                                           chainID: wallet.network.chainId)
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
             return signature.toHexString()
@@ -697,7 +691,7 @@ extension ViolasManager {
                                                            expirationTime: model.expirationTime ?? UInt64(Date().timeIntervalSince1970 + 600),
                                                            payload: transactionPayload,
                                                            module: "VLS",
-                                                           chainID: 4)
+                                                           chainID: wallet.network.chainId)
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
             return signature.toHexString()

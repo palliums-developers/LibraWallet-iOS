@@ -17,10 +17,16 @@ struct ViolasMultiPublicKey {
     let raw: [ViolasMultiPublicKeyModel]
     /// 需要多少把解锁
     let threshold: Int
+    /// 钱包网络
+    let network: ViolasNetworkState
     
-    public init (data: [ViolasMultiPublicKeyModel], threshold: Int) {
+    public init (data: [ViolasMultiPublicKeyModel], threshold: Int, network: ViolasNetworkState) {
+        
         self.raw = data
+        
         self.threshold = threshold
+        
+        self.network = network
     }
     func toMultiPublicKey() -> Data {
         var publicKeyData = Data()

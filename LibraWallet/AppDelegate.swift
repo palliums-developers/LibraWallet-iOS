@@ -68,7 +68,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let deviceTokenString = deviceToken.map { String(format: "%02x", $0) }.joined()
-//        if PUBLISH_VERSION == true {
+//        if PUBLISH_NET == true {
             Messaging.messaging().setAPNSToken(deviceToken, type: MessagingAPNSTokenType.prod)
 //        }
 

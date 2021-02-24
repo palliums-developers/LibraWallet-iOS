@@ -35,30 +35,15 @@ extension ViolasModuleRequest: TargetType {
         switch self {
         case .accountInfo(_),
              .sendTransaction(_):
-            if PUBLISH_VERSION == true {
-                //对外
-                return URL(string:"https://ac.testnet.violas.io")!
-            } else {
-                //对内
-                return URL(string:"https://ab.testnet.violas.io")!
-            }
+            return URL(string:VIOLAS_PUBLISH_NET.chainURL)!
         case .price(_),
              .activeAccount(_, _):
-            if PUBLISH_VERSION == true {
-                return URL(string:"https://api.violas.io")!
-            } else {
-                return URL(string:"https://api4.violas.io")!
-            }
+            return URL(string:VIOLAS_PUBLISH_NET.serviceURL)!
         case .accountBalance(_, _),
              .accountSequenceNumber(_),
              .accountTransactions(_, _, _, _, _),
              .currencyList:
-            if PUBLISH_VERSION == true {
-                return URL(string:"https://api.violas.io")!
-            } else {
-                return URL(string:"https://api4.violas.io")!
-            }
-
+            return URL(string:VIOLAS_PUBLISH_NET.serviceURL)!
         }
     }
     var path: String {
@@ -157,6 +142,7 @@ extension ViolasModuleRequest: TargetType {
                 "versionName": appversion,
                 "platform": "ios",
                 "bundleId":bundleID!,
-                "language":Localize.currentLanguage()]
+                "language":Localize.currentLanguage(),
+                "chainId":"2"]
     }
 }

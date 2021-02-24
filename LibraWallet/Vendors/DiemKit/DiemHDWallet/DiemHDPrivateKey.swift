@@ -12,15 +12,16 @@ import CryptoSwift
 struct DiemHDPrivateKey {
     /// 私钥
     let raw: Data
+    
     /// 初始化私钥对象
     /// - Parameter privateKey: 私钥
     public init (privateKey: [UInt8]) {
         self.raw = Data.init(bytes: privateKey, count: privateKey.count)
     }
-    public func extendedPublicKey() -> DiemHDPublicKey {
+    public func extendedPublicKey(network: DiemNetworkState) -> DiemHDPublicKey {
         let publicKey = Ed25519.calcPublicKey(secretKey: raw.bytes)
         let publicKeyData = Data.init(bytes: publicKey, count: publicKey.count)
-        return DiemHDPublicKey.init(data: publicKeyData)
+        return DiemHDPublicKey.init(data: publicKeyData, network: network)
     }
     func signTransaction(transaction: DiemRawTransaction, wallet: DiemHDWallet) throws -> Data {
         // 交易第一部分-待签名交易
@@ -50,5 +51,9 @@ struct DiemHDPrivateKey {
         // 最后拼接数据
         let result = transactionRaw + signType + publicKeyData + signData
         return result
+    }
+    func signData(data: Data) -> Data {
+        let sign = Ed25519.sign(message: data.bytes, secretKey: raw.bytes)
+        return Data.init(bytes: sign, count: sign.count)
     }
 }

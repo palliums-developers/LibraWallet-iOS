@@ -737,7 +737,8 @@ extension ExchangeModel {
                     let signature = try DiemManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
                                                                                    sequenceNumber: self.sequenceNumber ?? 0,
                                                                                    fee: 0,
-                                                                                   module: moduleOutput)
+                                                                                   module: moduleOutput,
+                                                                                   feeModule: moduleOutput)
                     self.makeLibraTransaction(signature: signature, type: "SendPublishOutputModuleLibraTransaction", semaphore: semaphore)
                 } catch {
                     print(error.localizedDescription)
@@ -978,7 +979,8 @@ extension ExchangeModel {
                         let signature = try DiemManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
                                                                                        sequenceNumber: self.sequenceNumber ?? 0,
                                                                                        fee: 0,
-                                                                                       module: moduleOutput)
+                                                                                       module: moduleOutput,
+                                                                                       feeModule: moduleOutput)
                         self.makeLibraTransaction(signature: signature, type: "SendPublishOutputModuleLibraTransaction", semaphore: semaphore)
                     } catch {
                         print(error.localizedDescription)

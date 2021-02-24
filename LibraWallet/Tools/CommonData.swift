@@ -261,6 +261,23 @@ let officialAddress = "https://violas.io"
 let officialEmail = "violas.team@violas.io"
 /************* 弹出提示隐藏时间 *******************/
 let toastDuration = 0.5
-/************* 测试正式环境切换 *******************/
-#warning("开发、正式版切换按钮")
-let PUBLISH_VERSION = false
+/************* Violas运行环境切换 *******************/
+extension ViolasNetworkState {
+    public var serviceURL: String {
+        switch self {
+        case .mainnet:
+            return "https://api.violas.io"
+        case .testnet:
+            return "https://api4.violas.io"
+        case .devnet:
+            return "https://api4.violas.io"
+        case .testing:
+            return "https://api4.violas.io"
+        case .premainnet:
+            return "https://api.violas.io"
+        }
+    }
+}
+let VIOLAS_PUBLISH_NET = ViolasNetworkState.testnet
+/************* Diem运行环境切换 *******************/
+let DIEM_PUBLISH_NET = DiemNetworkState.testnet

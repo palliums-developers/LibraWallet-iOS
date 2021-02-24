@@ -42,7 +42,7 @@ struct ViolasSocketManager {
     static var shared = ViolasSocketManager()
     private var manager: SocketManager?
 //    private let requestURL = "http://18.220.66.235:38181"
-    private let requestURL = PUBLISH_VERSION == true ? "https://dex.violas.io":"http://18.220.66.235:38181"
+    private let requestURL = VIOLAS_PUBLISH_NET == .premainnet ? "https://dex.violas.io":"http://18.220.66.235:38181"
     /// 请求超时时间
     private var timeout = 30
     /// 设置Socket任务状态

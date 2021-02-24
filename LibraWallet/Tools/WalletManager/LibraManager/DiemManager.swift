@@ -30,7 +30,7 @@ struct DiemManager {
     public static func getWallet(mnemonic: [String]) throws -> DiemHDWallet {
         do {
             let seed = try DiemMnemonic.seed(mnemonic: mnemonic)
-            let wallet = try DiemHDWallet.init(seed: seed, depth: 0)
+            let wallet = try DiemHDWallet.init(seed: seed, depth: 0, network: DIEM_PUBLISH_NET)
             return wallet
         } catch {
             throw error
@@ -78,6 +78,9 @@ struct DiemManager {
             guard prifix.isEmpty == false else {
                 throw LibraWalletError.WalletScan(reason: .handleInvalid)
             }
+            guard prifix.lowercased() == DIEM_PUBLISH_NET.addressPrefix else {
+                throw LibraWalletError.WalletScan(reason: .handleInvalid)
+            }
             let address = result.prefix(16).toHexString()
             let subAddress = result.suffix(8).toHexString()
             guard isValidDiemAddress(address: address) == true else {
@@ -107,7 +110,7 @@ struct DiemManager {
         }
         let payload = Data(Array<UInt8>(hex: address)) + randomData
         let address: String = DiemBech32.encode(payload: Data.init(payload),
-                                                prefix: "dm",
+                                                prefix: DIEM_PUBLISH_NET.addressPrefix,
                                                 version: version,
                                                 separator: "1")
         return address
@@ -174,7 +177,7 @@ extension DiemManager {
                                                          expirationTime: UInt64(Date().timeIntervalSince1970 + 600),
                                                          payload: transactionPayload,
                                                          module: module,
-                                                         chainID: 2)
+                                                         chainID: wallet.network.chainId)
             
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
@@ -183,7 +186,23 @@ extension DiemManager {
             throw error
         }
     }
-    public static func getMultiTransactionHex(sendAddress: String, receiveAddress: String, amount: UInt64, fee: UInt64, sequenceNumber: UInt64, wallet: DiemMultiHDWallet, module: String) throws -> String {
+
+}
+// MARK: - Diem多签
+extension DiemManager {
+    /// Diem多签
+    /// - Parameters:
+    ///   - sendAddress: 发送地址
+    ///   - receiveAddress: 接收地址
+    ///   - amount: 接收地址
+    ///   - fee: 手续费
+    ///   - sequenceNumber: 序列码
+    ///   - wallet: 多签钱包
+    ///   - module: 转账币种
+    ///   - feeModule: 手续费币种
+    /// - Throws: 报错
+    /// - Returns: 交易签名
+    public static func getMultiTransactionHex(sendAddress: String, receiveAddress: String, amount: UInt64, fee: UInt64, sequenceNumber: UInt64, wallet: DiemMultiHDWallet, module: String, feeModule: String) throws -> String {
         do {
             // 拼接交易
             let argument0 = DiemTransactionArgument.init(code: .Address(receiveAddress))
@@ -200,8 +219,8 @@ extension DiemManager {
                                                          gasUnitPrice: fee,
                                                          expirationTime: UInt64(Date().timeIntervalSince1970 + 600),
                                                          payload: transactionPayload,
-                                                         module: module,
-                                                         chainID: 2)
+                                                         module: feeModule,
+                                                         chainID: wallet.network.chainId)
             // 签名交易
             let multiSignature = try wallet.privateKey.signMultiTransaction(transaction: rawTransaction, publicKey: wallet.publicKey)
             return multiSignature.toHexString()
@@ -209,11 +228,10 @@ extension DiemManager {
             throw error
         }
     }
-
 }
 // MARK: - Diem换私钥
 extension DiemManager {
-    public static func getRotateAuthenticationKeyTransactionHex(mnemonic: [String], sequenceNumber: UInt64, fee: UInt64, module: String, authKey: String) throws -> String {
+    public static func getRotateAuthenticationKeyTransactionHex(mnemonic: [String], sequenceNumber: UInt64, fee: UInt64, module: String, authKey: String, feeModule: String) throws -> String {
         do {
             let wallet = try DiemManager.getWallet(mnemonic: mnemonic)
             // 拼接交易
@@ -228,15 +246,14 @@ extension DiemManager {
                                                          gasUnitPrice: fee,
                                                          expirationTime: UInt64(Date().timeIntervalSince1970 + 600),
                                                          payload: transactionPayload,
-                                                         module: "XUS",
-                                                         chainID: 2)
+                                                         module: feeModule,
+                                                         chainID: wallet.network.chainId)
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
             return signature.toHexString()
         } catch {
             throw error
         }
     }
-    
 }
 // MARK: - Diem注册币
 extension DiemManager {
@@ -248,22 +265,22 @@ extension DiemManager {
     ///   - module: 消耗Module
     /// - Throws: 异常
     /// - Returns: 签名
-    public static func getPublishTokenTransactionHex(mnemonic: [String], sequenceNumber: UInt64, fee: UInt64, module: String) throws -> String {
+    public static func getPublishTokenTransactionHex(mnemonic: [String], sequenceNumber: UInt64, fee: UInt64, module: String, feeModule: String) throws -> String {
         do {
             let wallet = try DiemManager.getWallet(mnemonic: mnemonic)
             // 拼接交易
             let script = DiemTransactionScriptPayload.init(code: Data.init(hex: DiemUtils.getMoveCode(name: "add_currency_to_account")),
-                                                            typeTags: [DiemTypeTag.init(typeTag: .Struct(DiemStructTag.init(type: .Normal(module))))],
-                                                            argruments: [])
+                                                           typeTags: [DiemTypeTag.init(typeTag: .Struct(DiemStructTag.init(type: .Normal(module))))],
+                                                           argruments: [])
             let transactionPayload = DiemTransactionPayload.init(payload: .script(script))
             let rawTransaction = DiemRawTransaction.init(senderAddres: wallet.publicKey.toLegacy(),
-                                                          sequenceNumber: sequenceNumber,
-                                                          maxGasAmount: 400000,
-                                                          gasUnitPrice: fee,
-                                                          expirationTime:  (UInt64(Date().timeIntervalSince1970) + 600),
-                                                          payload: transactionPayload,
-                                                          module: "XUS",
-                                                          chainID: 2)
+                                                         sequenceNumber: sequenceNumber,
+                                                         maxGasAmount: 400000,
+                                                         gasUnitPrice: fee,
+                                                         expirationTime:  (UInt64(Date().timeIntervalSince1970) + 600),
+                                                         payload: transactionPayload,
+                                                         module: feeModule,
+                                                         chainID: wallet.network.chainId)
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
             return signature.toHexString()

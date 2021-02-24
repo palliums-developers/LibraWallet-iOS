@@ -9,7 +9,7 @@
 import Foundation
 import CryptoSwift
 
-public final class DiemHDWallet {
+public struct DiemHDWallet {
     /// 助记词生成种子
     let seed: [UInt8]
     /// 公钥
@@ -18,27 +18,35 @@ public final class DiemHDWallet {
     let privateKey: DiemHDPrivateKey
     /// 深度
     let depth: UInt64
+    /// 钱包网络
+    let network: DiemNetworkState
+    
     /// 通过种子私钥创建钱包
     /// - Parameters:
     ///   - seed: 种子
     ///   - privateKey: 私钥Data
     ///   - depth: 深度
-    private init (seed: [UInt8], privateKey: [UInt8], depth: UInt64) {
+    ///   - network: 钱包网络
+    private init (seed: [UInt8], privateKey: [UInt8], depth: UInt64, network: DiemNetworkState) {
+        
         self.seed = seed
         
         self.depth = depth
         
         self.privateKey = DiemHDPrivateKey.init(privateKey: privateKey)
         
-        self.publicKey = self.privateKey.extendedPublicKey()
+        self.publicKey = self.privateKey.extendedPublicKey(network: network)
         
+        self.network = network
     }
+    
     /// 通过种子创建钱包
     /// - Parameters:
     ///   - seed: 种子
     ///   - depth: 深度
+    ///   - network: 钱包网络
     /// - Throws: 创建失败
-    public convenience init(seed: [UInt8], depth: UInt64 = 0) throws {
+    init(seed: [UInt8], depth: UInt64 = 0, network: DiemNetworkState) throws {
         
         let depthData = DiemUtils.getLengthData(length: depth, appendBytesCount: 8)
         
@@ -49,18 +57,46 @@ public final class DiemHDWallet {
                                            info: tempInfo.bytes,
                                            keyLength: 32,
                                            variant: .sha3_256).calculate()
-            self.init(seed: seed, privateKey: privateKey, depth: depth)
+            self.init(seed: seed, privateKey: privateKey, depth: depth, network: network)
         } catch {
             throw error
         }
     }
-    func getMasterKey() throws -> Data {
+    public func getMasterKey() throws -> Data {
         do {
             let masterKey = try HMAC.init(key: "DIEM WALLET: main key salt$", variant: .sha3_256).authenticate(seed)
             return Data.init(bytes: masterKey, count: masterKey.count)
-
+            
         } catch {
             throw error
         }
+    }
+    func buildTransaction(transaction: DiemRawTransaction) -> Data {
+        // 交易第一部分-待签名交易
+        let transactionRaw = transaction.serialize()
+        // 交易第二部分-交易类型（00普通，01多签）
+        let signType = Data.init(Array<UInt8>(hex: "00"))
+        // 交易第三部分-公钥
+        var publicKeyData = Data()
+        // 2.1追加publicKey长度
+        publicKeyData += DiemUtils.uleb128Format(length: self.publicKey.raw.count)
+        // 2.2追加publicKey
+        publicKeyData += self.publicKey.raw
+        // 交易第四部分-签名数据
+        // 4.1待签数据追加盐
+        var sha3Data = Data.init(Array<UInt8>(hex: (DiemSignSalt.sha3(SHA3.Variant.sha256))))
+        // 4.2待签数据追加
+        sha3Data.append(transactionRaw.bytes, count: transactionRaw.bytes.count)
+        // 4.3签名数据
+        let sign = self.privateKey.signData(data: sha3Data)
+        
+        var signData = Data()
+        // 4.4追加签名长度
+        signData += DiemUtils.uleb128Format(length: sign.count)
+        // 4.5追加签名
+        signData += sign
+        // 最后拼接数据
+        let result = transactionRaw + signType + publicKeyData + signData
+        return result
     }
 }

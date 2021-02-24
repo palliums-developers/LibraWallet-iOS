@@ -19,7 +19,7 @@ extension MainRequest:TargetType {
         switch self {
 //        case .walletMessages(_, _, _),
 //             .systemMessages(_, _, _):
-//            if PUBLISH_VERSION == true {
+//            if PUBLISH_NET == true {
 //                return URL(string:"https://api.violas.io")!
 //            } else {
 //                return URL(string:"https://api4.violas.io")!
