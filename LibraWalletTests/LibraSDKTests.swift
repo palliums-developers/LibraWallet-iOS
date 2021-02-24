@@ -326,21 +326,22 @@ class LibraSDKTests: XCTestCase {
         
     }
     func testLibraKitSingle() {
-        let mnemonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "begin", "host"]
+//        let mnemonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "begin", "host"]
 //        let mnemonic = ["grant", "security", "cluster", "pill", "visit", "wave", "skull", "chase", "vibrant", "embrace", "bronze", "tip"]
-//        let mnemonic = ["net", "dice", "divide", "amount", "stamp", "flock", "brave", "nuclear", "fox", "aim", "father", "apology"]
-
+        let mnemonic = ["net", "dice", "divide", "amount", "stamp", "flock", "brave", "nuclear", "fox", "aim", "father", "apology"]
+//        let mnemonic = ["trouble", "menu", "nephew", "group", "alert", "recipe", "hotel", "fatigue", "wet", "shadow", "say", "fold", "huge", "olive", "solution", "enjoy", "garden", "appear", "vague", "joy", "great", "keep", "cactus", "melt"]
 
         do {
             let seed = try DiemMnemonic.seed(mnemonic: mnemonic)
             let wallet = try DiemHDWallet.init(seed: seed)
-            
-            let signature = try DiemManager.getNormalTransactionHex(sendAddress: wallet.publicKey.toAddress(),
+            let tempAddress = (wallet.publicKey.raw + Data.init(hex: "00")).bytes.sha3(SHA3.Variant.sha256).toHexString()
+            print(tempAddress)
+            let signature = try DiemManager.getNormalTransactionHex(sendAddress: "643eb4651234bde53a7d865f61ed96f8",
                                                                     receiveAddress: "6c1dd50f35f120061babc2814cf9378b",
                                                                     amount: 1000000,
                                                                     fee: 1,
                                                                     mnemonic: mnemonic,
-                                                                    sequenceNumber: 1,
+                                                                    sequenceNumber: 4,
                                                                     module: "XUS",
                                                                     toSubAddress: "",
                                                                     fromSubAddress: "",
@@ -561,7 +562,7 @@ class LibraSDKTests: XCTestCase {
             print(walletAddress, active)
             // 拼接交易
             let argument0 = DiemTransactionArgument.init(code: .Address("2da8e2146b015a5986138312baafbc61"))
-            let argument1 = DiemTransactionArgument.init(code: .U64("\(9000_000_000)"))
+            let argument1 = DiemTransactionArgument.init(code: .U64(9000_000_000))
 //            // metadata
 //            let argument2 = LibraTransactionArgument.init(code: .U8Vector("10".data(using: .utf8)!))
 //            // metadata_signature
@@ -776,7 +777,7 @@ class LibraSDKTests: XCTestCase {
             let walletAddress = wallet.publicKey.toLegacy()
             // 拼接交易
             let argument0 = DiemTransactionArgument.init(code: .Address("46147770d00885b622e2ccfd56e0583f"))
-            let argument1 = DiemTransactionArgument.init(code: .U64("\(11000000)"))
+            let argument1 = DiemTransactionArgument.init(code: .U64(11000000))
             
             let fromSubAddress = ""
             let toSubAddress = "b990f3550ab6da64"
@@ -802,6 +803,38 @@ class LibraSDKTests: XCTestCase {
                                                           module: "Coin1",
                                                           chainID: 2)
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            print(signature.toHexString())
+        } catch {
+            
+        }
+    }
+    func testDiemRotateAuthenticationKeyTransaction() {
+//        let mnemonic1 = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "begin", "host"]
+        let mnemonic2 = ["grant", "security", "cluster", "pill", "visit", "wave", "skull", "chase", "vibrant", "embrace", "bronze", "tip"]
+        let mnemonic3 = ["net", "dice", "divide", "amount", "stamp", "flock", "brave", "nuclear", "fox", "aim", "father", "apology"]
+        do {
+            let seed = try DiemMnemonic.seed(mnemonic: mnemonic2)
+            let wallet = try DiemHDWallet.init(seed: seed, depth: 0)
+            let seed3 = try DiemMnemonic.seed(mnemonic: mnemonic3)
+            let wallet3 = try DiemHDWallet.init(seed: seed3, depth: 0)
+            let walletAddress = wallet.publicKey.toLegacy()
+            // 拼接交易
+            let tempAuth = wallet.publicKey.toActive() + wallet.publicKey.toLegacy()
+            
+            let argument0 = DiemTransactionArgument.init(code: .U8Vector(Data.init(Array<UInt8>(hex: tempAuth))))
+            let script = DiemTransactionScriptPayload.init(code: Data.init(hex: DiemUtils.getMoveCode(name: "rotate_authentication_key")),
+                                                           typeTags: [DiemTypeTag](),
+                                                           argruments: [argument0])
+            let transactionPayload = DiemTransactionPayload.init(payload: .script(script))
+            let rawTransaction = DiemRawTransaction.init(senderAddres: walletAddress,
+                                                         sequenceNumber: 2,
+                                                         maxGasAmount: 1000000,
+                                                         gasUnitPrice: 10,
+                                                         expirationTime: UInt64(Date().timeIntervalSince1970 + 600),
+                                                         payload: transactionPayload,
+                                                         module: "XUS",
+                                                         chainID: 2)
+            let signature = try wallet3.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet3)
             print(signature.toHexString())
         } catch {
             

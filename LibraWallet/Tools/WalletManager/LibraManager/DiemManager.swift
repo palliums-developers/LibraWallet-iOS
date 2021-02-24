@@ -156,25 +156,25 @@ extension DiemManager {
             } else {
                 // NC to C && C To C
                 let metadataV0 = DiemGeneralMetadataV0.init(to_subaddress: toSubAddress,
-                                                             from_subaddress: fromSubAddress,
-                                                             referenced_event: referencedEvent)
+                                                            from_subaddress: fromSubAddress,
+                                                            referenced_event: referencedEvent)
                 let metadata = DiemMetadata.init(code: DiemMetadataTypes.GeneralMetadata(DiemGeneralMetadata.init(code: .GeneralMetadataVersion0(metadataV0))))
                 argument2 = DiemTransactionArgument.init(code: .U8Vector(metadata.serialize()))
             }
             // metadata_signature
             let argument3 = DiemTransactionArgument.init(code: .U8Vector(Data()))
             let script = DiemTransactionScriptPayload.init(code: Data.init(hex: DiemUtils.getMoveCode(name: "peer_to_peer_with_metadata")),
-                                                            typeTags: [DiemTypeTag.init(typeTag: .Struct(DiemStructTag.init(type: .Normal(module))))],
-                                                            argruments: [argument0, argument1, argument2, argument3])
+                                                           typeTags: [DiemTypeTag.init(typeTag: .Struct(DiemStructTag.init(type: .Normal(module))))],
+                                                           argruments: [argument0, argument1, argument2, argument3])
             let transactionPayload = DiemTransactionPayload.init(payload: .script(script))
             let rawTransaction = DiemRawTransaction.init(senderAddres: sendAddress,
-                                                          sequenceNumber: UInt64(sequenceNumber),
-                                                          maxGasAmount: 1000000,
-                                                          gasUnitPrice: fee,
-                                                          expirationTime: UInt64(Date().timeIntervalSince1970 + 600),
-                                                          payload: transactionPayload,
-                                                          module: module,
-                                                          chainID: 2)
+                                                         sequenceNumber: UInt64(sequenceNumber),
+                                                         maxGasAmount: 1000000,
+                                                         gasUnitPrice: fee,
+                                                         expirationTime: UInt64(Date().timeIntervalSince1970 + 600),
+                                                         payload: transactionPayload,
+                                                         module: module,
+                                                         chainID: 2)
             
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
@@ -209,6 +209,37 @@ extension DiemManager {
             throw error
         }
     }
+
+}
+// MARK: - Diem换私钥
+extension DiemManager {
+    public static func getRotateAuthenticationKeyTransactionHex(mnemonic: [String], sequenceNumber: UInt64, fee: UInt64, module: String, authKey: String) throws -> String {
+        do {
+            let wallet = try DiemManager.getWallet(mnemonic: mnemonic)
+            // 拼接交易
+            let argument0 = DiemTransactionArgument.init(code: .U8Vector(Data.init(Array<UInt8>(hex: authKey))))
+            let script = DiemTransactionScriptPayload.init(code: Data.init(hex: DiemUtils.getMoveCode(name: "rotate_authentication_key")),
+                                                           typeTags: [DiemTypeTag](),
+                                                           argruments: [argument0])
+            let transactionPayload = DiemTransactionPayload.init(payload: .script(script))
+            let rawTransaction = DiemRawTransaction.init(senderAddres: wallet.publicKey.toLegacy(),
+                                                         sequenceNumber: sequenceNumber,
+                                                         maxGasAmount: 1000000,
+                                                         gasUnitPrice: fee,
+                                                         expirationTime: UInt64(Date().timeIntervalSince1970 + 600),
+                                                         payload: transactionPayload,
+                                                         module: "XUS",
+                                                         chainID: 2)
+            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            return signature.toHexString()
+        } catch {
+            throw error
+        }
+    }
+    
+}
+// MARK: - Diem注册币
+extension DiemManager {
     /// 注册稳定币交易Hex
     /// - Parameters:
     ///   - mnemonic: 助记词
@@ -231,7 +262,7 @@ extension DiemManager {
                                                           gasUnitPrice: fee,
                                                           expirationTime:  (UInt64(Date().timeIntervalSince1970) + 600),
                                                           payload: transactionPayload,
-                                                          module: "LBR",
+                                                          module: "XUS",
                                                           chainID: 2)
             // 签名交易
             let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
