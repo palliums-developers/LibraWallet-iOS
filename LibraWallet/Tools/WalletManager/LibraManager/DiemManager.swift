@@ -180,7 +180,7 @@ extension DiemManager {
                                                          chainID: wallet.network.chainId)
             
             // 签名交易
-            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            let signature = wallet.buildTransaction(transaction: rawTransaction)
             return signature.toHexString()
         } catch {
             throw error
@@ -222,7 +222,7 @@ extension DiemManager {
                                                          module: feeModule,
                                                          chainID: wallet.network.chainId)
             // 签名交易
-            let multiSignature = try wallet.privateKey.signMultiTransaction(transaction: rawTransaction, publicKey: wallet.publicKey)
+            let multiSignature = wallet.buildTransaction(transaction: rawTransaction)//try wallet.privateKey.signMultiTransaction(transaction: rawTransaction, publicKey: wallet.publicKey)
             return multiSignature.toHexString()
         } catch {
             throw error
@@ -248,7 +248,7 @@ extension DiemManager {
                                                          payload: transactionPayload,
                                                          module: feeModule,
                                                          chainID: wallet.network.chainId)
-            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            let signature = wallet.buildTransaction(transaction: rawTransaction)
             return signature.toHexString()
         } catch {
             throw error
@@ -282,7 +282,7 @@ extension DiemManager {
                                                          module: feeModule,
                                                          chainID: wallet.network.chainId)
             // 签名交易
-            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            let signature = wallet.buildTransaction(transaction: rawTransaction)
             return signature.toHexString()
         } catch {
             throw error
@@ -331,7 +331,7 @@ extension DiemManager {
                                                           module: feeModule,
                                                           chainID: 2)
             // 签名交易
-            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            let signature = wallet.buildTransaction(transaction: rawTransaction)
             return signature.toHexString()
         } catch {
             throw error
@@ -379,7 +379,7 @@ extension DiemManager {
                                                            module: module,
                                                            chainID: model.chainId ?? 2)
             // 签名交易
-            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            let signature = wallet.buildTransaction(transaction: rawTransaction)
             return signature.toHexString()
         } catch {
             throw error

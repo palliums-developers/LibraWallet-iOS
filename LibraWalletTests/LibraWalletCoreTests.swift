@@ -35,7 +35,7 @@ class LibraWalletCoreTests: XCTestCase {
             let seed = try DiemMnemonic.seed(mnemonic: mnemonic)
             
             let testWallet = try DiemHDWallet.init(seed: seed, depth: 0, network: .testnet)
-            let walletAddress = testWallet.publicKey.toAddress()
+            let walletAddress = testWallet.publicKey.toLegacy()         
 //            try KeychainManager.KeyManager.savePayPasswordToKeychain(walletAddress: walletAddress, password: "123456")
 //            let paymentPassword = try KeychainManager.KeyManager.getPayPasswordFromKeychain(walletAddress: walletAddress)
 //            XCTAssertEqual(paymentPassword, "123456")

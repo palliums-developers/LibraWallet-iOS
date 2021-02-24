@@ -322,7 +322,7 @@ extension WalletManager {
                                    tokenAddress: wallet.publicKey.toLegacy(),
                                    tokenType: .Libra,
                                    tokenIndex: 0,
-                                   tokenAuthenticationKey: wallet.publicKey.toActive(),
+                                   tokenAuthenticationKey: wallet.publicKey.toAuthKeyPrefix(),
                                    tokenActiveState: false,
                                    tokenIcon: "libra_icon",
                                    tokenContract: "00000000000000000000000000000001",

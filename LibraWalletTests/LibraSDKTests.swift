@@ -52,7 +52,7 @@ class LibraSDKTests: XCTestCase {
         do {
             let seed = try DiemMnemonic.seed(mnemonic: mnemonic)
             let testWallet = try DiemHDWallet.init(seed: seed, depth: 0, network: .testnet)
-            let walletAddress = testWallet.publicKey.toAddress()
+            let walletAddress = testWallet.publicKey.toLegacy()         
             XCTAssertEqual(walletAddress, "6c1dd50f35f120061babc2814cf9378b")
         } catch {
             print(error.localizedDescription)
@@ -62,7 +62,7 @@ class LibraSDKTests: XCTestCase {
         let mnemonic = ["trouble", "menu", "nephew", "group", "alert", "recipe", "hotel", "fatigue", "wet", "shadow", "say", "fold", "huge", "olive", "solution", "enjoy", "garden", "appear", "vague", "joy", "great", "keep", "cactus", "melt"]
         do {
             let seed = try ViolasMnemonic.seed(mnemonic: mnemonic)
-            let testWallet = try ViolasHDWallet.init(seed: seed, depth: 0)
+            let testWallet = try ViolasHDWallet.init(seed: seed, depth: 0, network: .testnet)
             let walletAddress = testWallet.publicKey.toLegacy()
             XCTAssertEqual(walletAddress, "6c1dd50f35f120061babc2814cf9378b")
         } catch {
@@ -175,7 +175,7 @@ class LibraSDKTests: XCTestCase {
             let seed = try DiemMnemonic.seed(mnemonic: mnemonic)
             
             let testWallet = try DiemHDWallet.init(seed: seed, depth: 0, network: .testnet)
-            let walletAddress = testWallet.publicKey.toAddress()            
+            let walletAddress = testWallet.publicKey.toLegacy()
             
             //            let menmonicString = try KeychainManager.KeyManager.getMnemonicStringFromKeychain(walletAddress: walletAddress)
             //            let mnemonicArray = menmonicString.split(separator: " ").compactMap { (item) -> String in
@@ -219,22 +219,22 @@ class LibraSDKTests: XCTestCase {
         //        print(tempData)
     }
     func testMultiAddress() {
-        let wallet = DiemMultiHDWallet.init(privateKeys: [DiemMultiPrivateKeyModel.init(raw: Data.init(Array<UInt8>(hex: "f3cdd2183629867d6cfa24fb11c58ad515d5a4af014e96c00bb6ba13d3e5f80e")),
-                                                                                         sequence: 1),
-                                                          DiemMultiPrivateKeyModel.init(raw: Data.init(Array<UInt8>(hex: "c973d737cb40bcaf63a45a9736d7d7735e78148a06be185327304d6825e666ea")),
+        let wallet = DiemMultiHDWallet.init(privateKeys: [DiemMultiPrivateKeyModel.init(privateKey: DiemHDPrivateKey.init(privateKey: Array<UInt8>(hex: "f3cdd2183629867d6cfa24fb11c58ad515d5a4af014e96c00bb6ba13d3e5f80e")),
+                                                                                        sequence: 1),
+                                                          DiemMultiPrivateKeyModel.init(privateKey: DiemHDPrivateKey.init(privateKey: Array<UInt8>(hex: "c973d737cb40bcaf63a45a9736d7d7735e78148a06be185327304d6825e666ea")),
                                                                                         sequence: 2)],
                                             threshold: 1,
                                             network: .testnet)
         XCTAssertEqual(wallet.publicKey.toLegacy(), "cd35f1a78093554f5dc9c61301f204e4")
     }
     func testLibraKitSSO() {
-//        let mnemonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
+        //        let mnemonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
         //b90148b7d177538c2f91c9a13d695506 f41799563e5381b693d0885b56ebf19b
         let mnemonic = ["wrist", "post", "hover", "mixed", "like", "update", "salute", "access", "venture", "grant", "another", "team"]
         //2e797751e6ae643d129a854f8c739b72 783a439b523f2545d3a71622c9e74b38
         do {
             let seed = try ViolasMnemonic.seed(mnemonic: mnemonic)
-            let wallet = try ViolasHDWallet.init(seed: seed, depth: 0)
+            let wallet = try ViolasHDWallet.init(seed: seed, depth: 0, network: .testnet)
             let walletAddress = wallet.publicKey.toLegacy()
             let active = wallet.publicKey.toActive()
             print(walletAddress, active)
@@ -342,7 +342,7 @@ class LibraSDKTests: XCTestCase {
                                                                     amount: 1000000,
                                                                     fee: 1,
                                                                     mnemonic: mnemonic,
-                                                                    sequenceNumber: 4,
+                                                                    sequenceNumber: 5,
                                                                     module: "XUS",
                                                                     toSubAddress: "",
                                                                     fromSubAddress: "",
@@ -380,11 +380,11 @@ class LibraSDKTests: XCTestCase {
                                                                 DiemMultiPublicKeyModel.init(raw: Data.init(Array<UInt8>(hex: "d0b27e06a1bf428c380bd10b7469d8b4f251e763724b2543c730abcaea18c8b0")), sequence: 2)],
                                                           threshold: 2,
                                                           network: .testnet)
-            let wallet = try DiemMultiHDWallet.init(models: [seedModel1, seedModel2], threshold: 2, multiPublicKey: multiPublicKey, network: .testnet)
+            let wallet = try DiemMultiHDWallet.init(models: [seedModel1, seedModel3], threshold: 2, multiPublicKey: multiPublicKey, network: .testnet)
             //            let wallet = try LibraMultiHDWallet.init(models: [seedModel1, seedModel2, seedModel3], threshold: 2)
             print("Legacy = \(wallet.publicKey.toLegacy())")
             //0d6a04436002d61228a3b58d3f0ecc71
-            print("Authentionkey = \(wallet.publicKey.toActive())")
+            print("Authentionkey = \(wallet.publicKey.toAuthKey())")
             //df8c99ad74f921563f3f7242b4a3e4570d6a04436002d61228a3b58d3f0ecc71
             print("PublicKey = \(wallet.publicKey.toMultiPublicKey().toHexString())")
             //e12136fd95251348cd993b91e8fbf36bcebe9422842f3c505ca2893f5612ae53ee2586aaaeaaa39ae4eb601999e5c2aade701ac4262f79ac98d9413cce67b0dbd0b27e06a1bf428c380bd10b7469d8b4f251e763724b2543c730abcaea18c8b002
@@ -392,9 +392,10 @@ class LibraSDKTests: XCTestCase {
                                                               receiveAddress: "6c1dd50f35f120061babc2814cf9378b",
                                                               amount: 1000000,
                                                               fee: 1,
-                                                              sequenceNumber: 6,
+                                                              sequenceNumber: 9,
                                                               wallet: wallet,
-                                                              module: "XUS")
+                                                              module: "XUS",
+                                                              feeModule: "XUS")
             print(sign)
             print("Success")
         } catch {
@@ -447,7 +448,7 @@ class LibraSDKTests: XCTestCase {
 
         do {
             let seed = try ViolasMnemonic.seed(mnemonic: mnemonic)
-            let wallet = try ViolasHDWallet.init(seed: seed, depth: 0)
+            let wallet = try ViolasHDWallet.init(seed: seed, depth: 0, network: .testnet)
             let walletAddress = wallet.publicKey.toLegacy()
             let active = wallet.publicKey.toActive()
             print(walletAddress, active)
@@ -481,7 +482,7 @@ class LibraSDKTests: XCTestCase {
 
         do {
             let seed = try ViolasMnemonic.seed(mnemonic: mnemonic)
-            let wallet = try ViolasHDWallet.init(seed: seed, depth: 0)
+            let wallet = try ViolasHDWallet.init(seed: seed, depth: 0, network: .testnet)
             let walletAddress = wallet.publicKey.toLegacy()
             let active = wallet.publicKey.toActive()
             print(walletAddress, active)
@@ -519,7 +520,7 @@ class LibraSDKTests: XCTestCase {
 
         do {
             let seed = try ViolasMnemonic.seed(mnemonic: mnemonic)
-            let wallet = try ViolasHDWallet.init(seed: seed, depth: 0)
+            let wallet = try ViolasHDWallet.init(seed: seed, depth: 0, network: .testnet)
             let walletAddress = wallet.publicKey.toLegacy()
             let active = wallet.publicKey.toActive()
             print(walletAddress, active)
@@ -560,7 +561,7 @@ class LibraSDKTests: XCTestCase {
             let seed = try DiemMnemonic.seed(mnemonic: mnemonic)
             let wallet = try DiemHDWallet.init(seed: seed, depth: 0, network: .testnet)
             let walletAddress = wallet.publicKey.toLegacy()
-            let active = wallet.publicKey.toActive()
+            let active = wallet.publicKey.toAuthKey()
             print(walletAddress, active)
             // 拼接交易
             let argument0 = DiemTransactionArgument.init(code: .Address("2da8e2146b015a5986138312baafbc61"))
@@ -585,7 +586,7 @@ class LibraSDKTests: XCTestCase {
                                                           payload: transactionPayload,
                                                           module: "Coin1",
                                                           chainID: 2)
-            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            let signature = wallet.buildTransaction(transaction: rawTransaction)
             print(signature.toHexString())
         } catch {
             print(error.localizedDescription)
@@ -598,7 +599,7 @@ class LibraSDKTests: XCTestCase {
         //b90148b7d177538c2f91c9a13d695506 f41799563e5381b693d0885b56ebf19b
         do {
             let seed = try ViolasMnemonic.seed(mnemonic: mnemonic)
-            let wallet = try ViolasHDWallet.init(seed: seed, depth: 0)
+            let wallet = try ViolasHDWallet.init(seed: seed, depth: 0, network: .testnet)
             var result = Data()
             result += "10".data(using: .utf8)!
             
@@ -629,7 +630,7 @@ class LibraSDKTests: XCTestCase {
 
         do {
             let seed = try ViolasMnemonic.seed(mnemonic: mnemonic)
-            let wallet = try ViolasHDWallet.init(seed: seed, depth: 0)
+            let wallet = try ViolasHDWallet.init(seed: seed, depth: 0, network: .testnet)
             let walletAddress = wallet.publicKey.toLegacy()
             let active = wallet.publicKey.toActive()
             print(walletAddress, active)
@@ -677,7 +678,7 @@ class LibraSDKTests: XCTestCase {
         let mnemonic = ["wrist", "post", "hover", "mixed", "like", "update", "salute", "access", "venture", "grant", "another", "team"]
         do {
             let seed = try ViolasMnemonic.seed(mnemonic: mnemonic)
-            let wallet = try ViolasHDWallet.init(seed: seed, depth: 0)
+            let wallet = try ViolasHDWallet.init(seed: seed, depth: 0, network: .testnet)
             print(wallet.publicKey.toQRAddress())
             print(wallet.publicKey.toQRAddress(rootAccount: true))
             let (prifix, hahah) = try ViolasBech32.decode(wallet.publicKey.toQRAddress(),
@@ -804,7 +805,7 @@ class LibraSDKTests: XCTestCase {
                                                           payload: transactionPayload,
                                                           module: "Coin1",
                                                           chainID: 2)
-            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            let signature = wallet.buildTransaction(transaction: rawTransaction)
             print(signature.toHexString())
         } catch {
             
@@ -821,9 +822,8 @@ class LibraSDKTests: XCTestCase {
             let wallet3 = try DiemHDWallet.init(seed: seed3, depth: 0, network: .testnet)
             let walletAddress = wallet.publicKey.toLegacy()
             // 拼接交易
-            let tempAuth = wallet.publicKey.toActive() + wallet.publicKey.toLegacy()
             
-            let argument0 = DiemTransactionArgument.init(code: .U8Vector(Data.init(Array<UInt8>(hex: tempAuth))))
+            let argument0 = DiemTransactionArgument.init(code: .U8Vector(Data.init(Array<UInt8>(hex: wallet.publicKey.toAuthKey()))))
             let script = DiemTransactionScriptPayload.init(code: Data.init(hex: DiemUtils.getMoveCode(name: "rotate_authentication_key")),
                                                            typeTags: [DiemTypeTag](),
                                                            argruments: [argument0])
@@ -836,7 +836,7 @@ class LibraSDKTests: XCTestCase {
                                                          payload: transactionPayload,
                                                          module: "XUS",
                                                          chainID: 2)
-            let signature = try wallet3.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet3)
+            let signature = wallet3.buildTransaction(transaction: rawTransaction)
             print(signature.toHexString())
         } catch {
             

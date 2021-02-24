@@ -7,8 +7,9 @@
 //
 import CryptoSwift
 import BigInt
+
 struct DiemMultiPrivateKeyModel {
-    var raw: Data
+    var privateKey: DiemHDPrivateKey
     var sequence: Int
 }
 struct DiemMultiPrivateKey {
@@ -30,73 +31,42 @@ struct DiemMultiPrivateKey {
         var privateKeyData = Data()
         privateKeyData += DiemUtils.uleb128Format(length: self.raw.count)
         privateKeyData += self.raw.reduce(Data(), {
-            $0 + DiemUtils.uleb128Format(length: $1.raw.count) + $1.raw
+            $0 + DiemUtils.uleb128Format(length: $1.privateKey.raw.count) + $1.privateKey.raw
         })
         privateKeyData += BigUInt(self.threshold).serialize()
         return privateKeyData.toHexString()
     }
+    
     /// 获取公钥
+    /// - Parameter network: 钱包网络类型
     /// - Returns: 多签公钥
     public func extendedPublicKey(network: DiemNetworkState) -> DiemMultiPublicKey {
         var tempPublicKeys = [DiemMultiPublicKeyModel]()
         for model in self.raw {
-            let data = Ed25519.calcPublicKey(secretKey: model.raw.bytes)
+            let data = Ed25519.calcPublicKey(secretKey: model.privateKey.raw.bytes)
             let publickKey = DiemMultiPublicKeyModel.init(raw: Data.init(bytes: data, count: data.count),
                                                           sequence: model.sequence)
             tempPublicKeys.append(publickKey)
         }
         return DiemMultiPublicKey.init(data: tempPublicKeys, threshold: threshold, network: network)
     }
-    /// 签名多签交易
-    /// - Parameters:
-    ///   - transaction: 交易数据
-    ///   - publicKey: 所有公钥
-    /// - Throws: 报错
-    /// - Returns: 返回序列化结果
-    func signMultiTransaction(transaction: DiemRawTransaction, publicKey: DiemMultiPublicKey) throws -> Data {
-        // 交易第一部分-原始数据
-        let transactionRaw = transaction.serialize()
-        // 交易第二部分-交易类型
-        let signType = Data.init(Array<UInt8>(hex: "01"))
-        // 交易第三部分-公钥（n*公钥+最少签名数）
-        let publicKeyData = publicKey.toMultiPublicKey()
-        // 交易第四部分-签名
-        // 4.1待签数据加盐
-        var sha3Data = Data.init(Array<UInt8>(hex: (DiemSignSalt.sha3(SHA3.Variant.sha256))))
-        // 4.2追加待签数据
-        sha3Data.append(transactionRaw)
-        // 4.3签名数据
-        var signData = Data()
-        // 4.4初始化Bitmap
-        var bitmap = "00000000000000000000000000000000"
-        // 4.5追加签名+计算Bitmap
-        for i in 0..<self.threshold {
-            let sign = Ed25519.sign(message: sha3Data.bytes, secretKey: self.raw[i].raw.bytes)
-            signData.append(sign, count: sign.count)
-            bitmap = setBitmap(bitmap: bitmap, index: self.raw[i].sequence)
-        }
-        let bitmapNumber = DiemUtils.binary2dec(num: bitmap)
-        let bitmapData = BigUInt(bitmapNumber).serialize()
-        // 4.6签名追加Bitmap
-        signData.append(bitmapData)
-        // 最后整合数据（transactionRaw + 类型 +（公钥+threshold）长度 +（公钥+threshold）+（签名）长度 +（签名+Bitmap））
-        var result = transactionRaw
-        // 签名类型（1个字节）
-        result.append(signType)
-        // 公钥+最少签名数长度（2个字节）
-        result.append(DiemUtils.uleb128Format(length: publicKeyData.count))
-        // 公钥+最少签名数据
-        result.append(publicKeyData)
-        // 签名+Bitmap长度（2个字节）
-        result.append(DiemUtils.uleb128Format(length: signData.count))
-        // 签名+Bitmap数据
-        result.append(signData)
-        return result
-    }
     private func setBitmap(bitmap: String, index: Int) -> String {
         var tempBitmap = bitmap
         let range = tempBitmap.index(tempBitmap.startIndex, offsetBy: index)...tempBitmap.index(tempBitmap.startIndex, offsetBy: index)
         tempBitmap.replaceSubrange(range, with: "1")
         return tempBitmap
+    }
+    func signData(data: Data) -> (Data) {
+        var signData = Data()
+        var bitmap = "00000000000000000000000000000000"
+        for i in 0..<self.threshold {
+            let sign = self.raw[i].privateKey.signData(data: data)
+            signData.append(sign)
+            bitmap = setBitmap(bitmap: bitmap, index: self.raw[i].sequence)
+        }
+        let bitmapNumber = DiemUtils.binary2dec(num: bitmap)
+        let bitmapData = BigUInt(bitmapNumber).serialize()
+        signData.append(bitmapData)
+        return signData
     }
 }

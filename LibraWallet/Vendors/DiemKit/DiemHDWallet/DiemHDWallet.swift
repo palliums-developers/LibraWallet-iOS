@@ -71,17 +71,20 @@ public struct DiemHDWallet {
             throw error
         }
     }
+    
+    /// 组装交易
+    /// - Parameter transaction: 交易
+    /// - Returns: 上链数据
     func buildTransaction(transaction: DiemRawTransaction) -> Data {
         // 交易第一部分-待签名交易
         let transactionRaw = transaction.serialize()
         // 交易第二部分-交易类型（00普通，01多签）
         let signType = Data.init(Array<UInt8>(hex: "00"))
         // 交易第三部分-公钥
-        var publicKeyData = Data()
-        // 2.1追加publicKey长度
-        publicKeyData += DiemUtils.uleb128Format(length: self.publicKey.raw.count)
-        // 2.2追加publicKey
-        publicKeyData += self.publicKey.raw
+        // 3.1追加publicKey长度
+        var publicKeyData = DiemUtils.uleb128Format(length: self.publicKey.raw.count)
+        // 3.2追加publicKey
+        publicKeyData.append(self.publicKey.raw)
         // 交易第四部分-签名数据
         // 4.1待签数据追加盐
         var sha3Data = Data.init(Array<UInt8>(hex: (DiemSignSalt.sha3(SHA3.Variant.sha256))))
@@ -89,14 +92,19 @@ public struct DiemHDWallet {
         sha3Data.append(transactionRaw.bytes, count: transactionRaw.bytes.count)
         // 4.3签名数据
         let sign = self.privateKey.signData(data: sha3Data)
-        
-        var signData = Data()
         // 4.4追加签名长度
-        signData += DiemUtils.uleb128Format(length: sign.count)
+        var signData = DiemUtils.uleb128Format(length: sign.count)
         // 4.5追加签名
-        signData += sign
+        signData.append(sign)
         // 最后拼接数据
-        let result = transactionRaw + signType + publicKeyData + signData
+        // 交易原始数据
+        var result = transactionRaw
+        // 交易类型
+        result.append(signType)
+        // 公钥
+        result.append(publicKeyData)
+        // 签名
+        result.append(signData)
         return result
     }
 }

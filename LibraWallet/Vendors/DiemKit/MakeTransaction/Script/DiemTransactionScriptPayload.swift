@@ -12,9 +12,9 @@ struct DiemTransactionScriptPayload {
     fileprivate let code: Data
     
     fileprivate let typeTags: [DiemTypeTag]
-        
+    
     fileprivate let argruments: [DiemTransactionArgument]
-
+    
     init(code: Data, typeTags: [DiemTypeTag], argruments: [DiemTransactionArgument]) {
         self.code = code
         
