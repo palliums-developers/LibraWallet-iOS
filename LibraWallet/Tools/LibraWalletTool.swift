@@ -51,13 +51,16 @@ extension UIView {
         self.layer.mask = maskLayer
     }
 }
-func colorGradualChange(size: CGSize) -> CAGradientLayer {
+func colorGradualChange(size: CGSize, cornerRadius: CGFloat = 0) -> CAGradientLayer {
     let gradientLayer = CAGradientLayer.init()
     gradientLayer.frame = CGRect.init(x: 0, y: 0, width: size.width, height: size.height)
     gradientLayer.startPoint = CGPoint.init(x: 0, y: 0)
     gradientLayer.endPoint = CGPoint.init(x: 1, y: 0)
     gradientLayer.locations = [0,1.0]
     gradientLayer.colors = [UIColor.init(hex: "9339F3").cgColor, UIColor.init(hex: "7038FD").cgColor]
+    if cornerRadius > 0 {
+        gradientLayer.cornerRadius = cornerRadius
+    }
     return gradientLayer
 }
 func checkMnenoicInvalid(mnemonicArray: [String]) -> Bool {

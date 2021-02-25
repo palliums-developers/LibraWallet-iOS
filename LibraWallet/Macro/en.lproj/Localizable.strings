@@ -29,9 +29,9 @@ wallet_private_and_use_legal_cancel_button_title = "Disagree";
 wallet_private_and_use_legal_confirm_button_title = "Agree";
 wallet_private_and_use_legal_content = "Thank you select Violas SSO APP\nWe respect your privacy. We might collect some your information to better serve you while you use our service. Please read carefully the Service Agreement and Privacy Policy to understand why we need collect, use, store and share these information before you use the service. Please feel free to provide your feedback to us.";
 // 备份提醒弹出页面
-wallet_alert_backup_warning_title = "Safety Warning";
-wallet_alert_backup_warning_detail_title = "You have not yet backup the mnemonic words of your identity wallet. Please backup them as soon as possible.\nThe mnemonic words can be used to recover funds in your identity wallet in case you have removed this App or forget the password or have lost or demaged your phone";
-wallet_alert_backup_warning_button_title = "Backup Now";
+wallet_alert_backup_warning_title = "Tips";
+wallet_alert_backup_warning_detail_title = "Please backup your Mnemonics in roder to recove your wallet and prevent lost of fund!";
+wallet_alert_backup_warning_button_title = "Backup";
 
 /************* 扫描二维码 *******************/
 // 错误

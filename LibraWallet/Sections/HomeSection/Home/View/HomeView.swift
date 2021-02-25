@@ -11,6 +11,7 @@ import Localize_Swift
 
 protocol HomeViewDelegate: NSObjectProtocol {
     func getFreeCoin()
+    func backupMenmonic()
 }
 class HomeView: UIView {
     weak var delegate: HomeViewDelegate?
@@ -116,10 +117,16 @@ class HomeView: UIView {
         let view = HomeWithoutWalletView.init()
         return view
     }()
+    lazy var backupWarningView: BackupWarningAlert = {
+        let view = BackupWarningAlert.init()
+        view.delegate = self
+        return view
+    }()
     var toastView: ToastView? {
         let toast = ToastView.init()
         return toast
     }
+    
     @objc func setText(){
         walletTitleLabel.text = localLanguage(keyString: "wallet_home_title")
     }
@@ -139,6 +146,7 @@ class HomeView: UIView {
         }
     }
     private var isButtonHiding: Bool = false
+    private var isBackupWarningShow: Bool = false
     @objc func buttonClick(button: UIButton) {
         self.delegate?.getFreeCoin()
     }
@@ -175,5 +183,44 @@ class HomeView: UIView {
         }
         self.layoutIfNeeded()
         isButtonHiding = false
+    }
+    func showBackupWarningAlert() {
+        guard isBackupWarningShow == false else {
+            return
+        }
+        self.addSubview(backupWarningView)
+        backupWarningView.snp.makeConstraints { (make) in
+            make.left.right.equalTo(self)
+            make.bottom.equalTo(self.snp.bottom)
+            make.height.equalTo(107)
+        }
+        self.layoutIfNeeded()
+    }
+    func hideBackupWarningAlert() {
+        guard isBackupWarningShow == false else {
+            return
+        }
+        self.backupWarningView.alpha = 0
+        self.backupWarningView.removeFromSuperview()
+        self.layoutIfNeeded()
+    }
+//    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+//        super.hitTest(point, with: event);
+//
+//        let convertedPoint = backupWarningView.convert(point, from: tableView)
+//
+//        // 注意点：hitTest方法内部会调用pointInside方法，询问触摸点是否在这个控件上
+//        // 根据point,找到适合响应事件的这个View
+//        let hitTestView = backupWarningView.hitTest(convertedPoint, with: event)
+//        if hitTestView != nil {
+//            return hitTestView
+//        } else {
+//            return tableView
+//        }
+//    }
+}
+extension HomeView: BackupWarningAlertDelegate {
+    func backupMenmonic() {
+        self.delegate?.backupMenmonic()
     }
 }

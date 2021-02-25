@@ -30,7 +30,7 @@ wallet_private_and_use_legal_confirm_button_title = "同意";
 wallet_private_and_use_legal_content = "感谢您选择了SSO APP\n我们极度重视您的用户隐私。您在使用我们的服务时，我们可能会收集和使用您的相关信息。在使用我们的产品前，请务必审慎阅读《隐私政策》和《服务协议》内的所有内容，来了解我们如何收集、使用、储存和分享这些信息，以及我们为您提供的访问、更新、控制和保护这些信息的方式。";
 // 备份提醒弹出页面
 wallet_alert_backup_warning_title = "安全提醒";
-wallet_alert_backup_warning_detail_title = "您的助记词未备份，请务必备份助记词\n助记词可用于恢复钱包资产，防止忘记密码、应用删除、手机丢失等情况导致资产损失";
+wallet_alert_backup_warning_detail_title = "您的助记词未备份，请务必备份助记词，助记词可用于恢复钱包资产，防止忘记密码、应用删除、手机丢失等情况导致资产损失";
 wallet_alert_backup_warning_button_title = "立即备份";
 
 /************* 扫描二维码 *******************/

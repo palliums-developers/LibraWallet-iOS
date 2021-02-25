@@ -28,6 +28,7 @@ class HomeViewController: UIViewController {
         requestData()
         // 请求是否是新钱包
         requestWaletNewState()
+
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -36,6 +37,8 @@ class HomeViewController: UIViewController {
         self.navigationController?.navigationBar.isTranslucent = true
         self.navigationController?.navigationBar.barStyle = .black
         self.detailView.activeButton.alpha = WalletManager.shared.isNewWallet == true ? 1:0
+        // 展示未备份警告
+        isBackupMnemonic()
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -142,9 +145,10 @@ extension HomeViewController {
         rightBarButtonItem.width = 15
         
         let notiView = UIBarButtonItem(customView: messageButton)
+        let spaceItem = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        spaceItem.width = 15
         messageButton.addSubview(messagesUnreadCountLabel)
-//         返回按钮设置成功
-        self.navigationItem.rightBarButtonItems = [rightBarButtonItem, scanView, notiView]
+        self.navigationItem.rightBarButtonItems = [rightBarButtonItem, scanView, spaceItem, notiView]
 //        self.navigationItem.rightBarButtonItems = [rightBarButtonItem, scanView]
 
     }
@@ -285,6 +289,24 @@ extension HomeViewController: HomeViewDelegate {
         }
         self.navigationController?.present(navi, animated: true, completion: nil)
     }
+    func backupMenmonic() {
+        WalletManager.unlockWallet { [weak self] (result) in
+            switch result {
+            case let .success(mnemonic):
+                let vc = BackupWarningViewController()
+                vc.FirstInApp = false
+                vc.tempWallet = mnemonic
+                vc.hidesBottomBarWhenPushed = true
+                self?.navigationController?.pushViewController(vc, animated: true)
+            case let .failure(error):
+                guard error.localizedDescription != "Cancel" else {
+                    self?.detailView.hideToastActivity()
+                    return
+                }
+                self?.detailView.makeToast(error.localizedDescription, position: .center)
+            }
+        }
+    }
 }
 //MARK: - APP初次进入处理
 extension HomeViewController {
@@ -314,6 +336,16 @@ extension HomeViewController {
         alert.show(tag: 199)
         //        let alert = WelcomeAlert.init()
         //        alert.show()
+    }
+    func isBackupMnemonic() {
+        guard getIdentityWalletState() == true else {
+            return
+        }
+        guard WalletManager.shared.walletBackupState == false else {
+            self.detailView.hideBackupWarningAlert()
+            return
+        }
+        self.detailView.showBackupWarningAlert()
     }
     
 }
