@@ -31,7 +31,7 @@ class TransactionDetailModel: NSObject {
     func getViolasTransactionsData(transaction: ViolasDataModel) -> [TransactionDetailDataModel] {
         var tempArray = [TransactionDetailDataModel]()
         let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: (transaction.amount ?? 0)),
-                                            scale: 4,
+                                            scale: 6,
                                             unit: 1000000)
         tempArray.append(TransactionDetailDataModel.init(type: "CellAmount",
                                                          title: localLanguage(keyString: "wallet_transaction_detail_amount_title"),

@@ -145,7 +145,7 @@ extension NotificationCenterViewController: WalletMessagesTableViewManagerDelega
             }
         }
         vc.tokenAddress = WalletManager.shared.violasAddress
-        vc.violasVersion = model.version
+        vc.violasVersion = model.id
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }

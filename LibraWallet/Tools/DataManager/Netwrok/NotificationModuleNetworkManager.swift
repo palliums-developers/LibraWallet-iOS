@@ -48,7 +48,7 @@ extension NotificationModuleRequest: TargetType {
         case .walletMessages(_, _, _, _):
             return "/1.0/violas/message/transfers"
         case .getTransactionMessageDetail(_, _):
-            return "/1.0/violas/message/content"
+            return "/1.0/violas/message/transfer"
         case .systemMessages(_, _, _, _):
             return "/1.0/violas/message/notices"
         case .systemMessageDetail(_, _, _):
@@ -102,7 +102,7 @@ extension NotificationModuleRequest: TargetType {
                                       encoding: URLEncoding.queryString)
         case .getTransactionMessageDetail(let address, let version):
             return .requestParameters(parameters: ["address": address,
-                                                   "version": version],
+                                                   "msg_id": version],
                                       encoding: URLEncoding.queryString)
         case .systemMessages(let address, let token, let page, let limit):
             return .requestParameters(parameters: ["address": address,
