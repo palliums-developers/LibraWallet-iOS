@@ -281,3 +281,4 @@ extension ViolasNetworkState {
 let VIOLAS_PUBLISH_NET = ViolasNetworkState.testnet
 /************* Diem运行环境切换 *******************/
 let DIEM_PUBLISH_NET = DiemNetworkState.testnet
+/************* BTC运行环境切换 *******************/

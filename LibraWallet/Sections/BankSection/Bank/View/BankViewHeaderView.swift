@@ -66,7 +66,7 @@ class BankViewHeaderView: UIView {
         yesterdayBenefitButton.snp.makeConstraints { (make) in
             make.centerY.equalTo(benefitIndicatorImageView).priority(250)
             make.right.equalTo(self.snp.right).offset(-30).priority(250)
-            let width = 6 + 10 + 4 + libraWalletTool.ga_widthForComment(content: (localLanguage(keyString: "wallet_bank_yesterday_earnings_button_title") + " 0.00$"), fontSize: 10, height: 16) + 4
+            let width = 6 + 10 + 4 + libraWalletTool.ga_widthForComment(content: (localLanguage(keyString: "wallet_bank_yesterday_earnings_button_title") + " 0.00 $"), fontSize: 10, height: 16) + 4
             make.size.equalTo(CGSize.init(width: width, height: 16)).priority(250)
         }
     }
@@ -128,7 +128,7 @@ class BankViewHeaderView: UIView {
     lazy var yesterdayBenefitButton: UIButton = {
         let button = UIButton.init()
         button.setImage(UIImage.init(named: "bank_yesterday_benefit_indicator"), for: UIControl.State.normal)
-        button.setTitle((localLanguage(keyString: "wallet_bank_yesterday_earnings_button_title") + " 0.00$"), for: UIControl.State.normal)
+        button.setTitle((localLanguage(keyString: "wallet_bank_yesterday_earnings_button_title") + " 0.00 $"), for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 10, weight: UIFont.Weight.regular)
         button.setTitleColor(UIColor.init(hex: "FB8F0B"), for: UIControl.State.normal)
 //        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
@@ -142,7 +142,7 @@ class BankViewHeaderView: UIView {
             assetLabel.text = "≈$\(model?.amount ?? 0.00)"
             loanLimitAmountLabel.text = "≈\(model?.borrow_limit ?? 0.00)/\(model?.borrow ?? 0.00)"
             benefitLabel.text = "≈\(model?.total ?? 0.00)"
-            yesterdayBenefitButton.setTitle((localLanguage(keyString: "wallet_bank_yesterday_earnings_button_title") + "\(model?.yesterday ?? 0.00)$"), for: UIControl.State.normal)
+            yesterdayBenefitButton.setTitle((localLanguage(keyString: "wallet_bank_yesterday_earnings_button_title") + " \(model?.yesterday ?? 0.00) $"), for: UIControl.State.normal)
             yesterdayBenefitButton.imagePosition(at: .left, space: 4, imageViewSize: CGSize.init(width: 10, height: 6))
         }
     }
@@ -155,7 +155,7 @@ class BankViewHeaderView: UIView {
                 assetLabel.text = "≈$******"
                 loanLimitAmountLabel.text = "≈******"
                 benefitLabel.text = "≈******"
-                yesterdayBenefitButton.setTitle((localLanguage(keyString: "wallet_bank_yesterday_earnings_button_title") + "***$"), for: UIControl.State.normal)
+                yesterdayBenefitButton.setTitle((localLanguage(keyString: "wallet_bank_yesterday_earnings_button_title") + " *** $"), for: UIControl.State.normal)
                 yesterdayBenefitButton.imagePosition(at: .left, space: 4, imageViewSize: CGSize.init(width: 10, height: 6))
             } else {
                 guard let tempModel = model else {
@@ -164,7 +164,7 @@ class BankViewHeaderView: UIView {
                 assetLabel.text = "≈$\(tempModel.amount ?? 0.00)"
                 loanLimitAmountLabel.text = "≈\(tempModel.borrow_limit ?? 0.00)/\(tempModel.borrow ?? 0.00)"
                 benefitLabel.text = "≈\(tempModel.total ?? 0.00)"
-                yesterdayBenefitButton.setTitle((localLanguage(keyString: "wallet_bank_yesterday_earnings_button_title") + "\(tempModel.yesterday ?? 0.00)$"), for: UIControl.State.normal)
+                yesterdayBenefitButton.setTitle((localLanguage(keyString: "wallet_bank_yesterday_earnings_button_title") + " \(tempModel.yesterday ?? 0.00) $"), for: UIControl.State.normal)
                 yesterdayBenefitButton.imagePosition(at: .left, space: 4, imageViewSize: CGSize.init(width: 10, height: 6))
 
             }
@@ -177,11 +177,11 @@ extension BankViewHeaderView {
     @objc func setText() {
         loanLimitAmountTitleLabel.text = localLanguage(keyString: "wallet_bank_loan_amount_limit_title")
         benefitTitleLabel.text = localLanguage(keyString: "wallet_bank_total_benefit_title")
-        yesterdayBenefitButton.setTitle((localLanguage(keyString: "wallet_bank_yesterday_earnings_button_title") + "\(model?.yesterday ?? 0.00)$"), for: UIControl.State.normal)
+        yesterdayBenefitButton.setTitle((localLanguage(keyString: "wallet_bank_yesterday_earnings_button_title") + " \(model?.yesterday ?? 0.00) $"), for: UIControl.State.normal)
         yesterdayBenefitButton.snp.remakeConstraints { (make) in
             make.centerY.equalTo(benefitIndicatorImageView)
             make.right.equalTo(self.snp.right).offset(-30)
-            let width = 6 + 10 + 4 + libraWalletTool.ga_widthForComment(content: (localLanguage(keyString: "wallet_bank_yesterday_earnings_button_title") + "\(model?.yesterday ?? 0.00)$"), fontSize: 10, height: 16) + 4
+            let width = 6 + 10 + 4 + libraWalletTool.ga_widthForComment(content: (localLanguage(keyString: "wallet_bank_yesterday_earnings_button_title") + " \(model?.yesterday ?? 0.00) $"), fontSize: 10, height: 16) + 4
             make.size.equalTo(CGSize.init(width: width, height: 16))
         }
     }

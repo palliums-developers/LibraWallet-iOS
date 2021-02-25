@@ -74,7 +74,7 @@ class BankViewController: UIViewController {
     lazy var totalAssetsButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setTitle(localLanguage(keyString: "wallet_bank_total_deposit_title"), for: UIControl.State.normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.regular)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 11, weight: UIFont.Weight.regular)
         button.setTitleColor(UIColor.white, for: UIControl.State.normal)
         button.setImage(UIImage.init(named: "eyes_open_white"), for: UIControl.State.normal)
         // 调整位置

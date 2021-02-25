@@ -508,9 +508,9 @@ wallet_market_transaction_content_order_fee_title = "Fees: ";
 
 /************* 数字银行首页 *******************/
 // 内容
-wallet_bank_total_deposit_title = "Total Deposit($)";
-wallet_bank_loan_amount_limit_title = "Market liquidity($)";
-wallet_bank_total_benefit_title = "Cumulative interest($)";
+wallet_bank_total_deposit_title = "Total Deposit ($)";
+wallet_bank_loan_amount_limit_title = "Market liquidity ($)";
+wallet_bank_total_benefit_title = "Cumulative interest ($)";
 wallet_bank_yesterday_earnings_button_title = "24 hours interest";
 wallet_bank_deposit_market_title = "Deposit Pool";
 wallet_bank_loan_market_title = "Borrowing Pool";

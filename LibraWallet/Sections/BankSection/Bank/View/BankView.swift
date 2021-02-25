@@ -54,7 +54,8 @@ class BankView: UIView {
         }
         yieldFramingRuleButton.snp.makeConstraints { (make) in
             make.centerY.equalTo(segmentView)
-            make.right.equalTo(segmentView.snp.right).offset(-3)
+            make.right.equalTo(segmentView.snp.right).offset(-12)
+            make.size.equalTo(CGSize.init(width: 102, height: 26))
         }
         segmentView.corner(byRoundingCorners: [UIRectCorner.topLeft, UIRectCorner.topRight], radii: 8)
         listContainerView.snp.makeConstraints { (make) in
@@ -107,9 +108,11 @@ class BankView: UIView {
         let button = UIButton.init()
         button.setBackgroundImage(UIImage.init(named: "yield_framing_rule_background"), for: .normal)
         button.setTitle(localLanguage(keyString: "wallet_bank_yield_framing_rules_button_title"), for: UIControl.State.normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.semibold)
+        button.setImage(UIImage.init(named: "yield_farming_rule_detail"), for: UIControl.State.normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.medium)
         button.setTitleColor(UIColor.init(hex: "7540FD"), for: UIControl.State.normal)
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
+        button.imagePosition(at: .right, space: 2, imageViewSize: CGSize.init(width: 15, height: 12))
         button.tag = 20
         return button
     }()
