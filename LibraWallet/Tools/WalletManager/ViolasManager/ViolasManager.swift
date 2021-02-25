@@ -214,7 +214,8 @@ extension ViolasManager {
                                                            module: "VLS",
                                                            chainID: wallet.network.chainId)
             // 签名交易
-            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+//            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            let signature = wallet.buildTransaction(transaction: rawTransaction)
             return signature.toHexString()
         } catch {
             throw error
@@ -246,8 +247,50 @@ extension ViolasManager {
                                                            module: "VLS",
                                                            chainID: wallet.network.chainId)
             // 签名交易
-            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            let signature = wallet.buildTransaction(transaction: rawTransaction)
             return signature.toHexString()
+        } catch {
+            throw error
+        }
+    }
+    
+}
+// MARK: - Violas多签
+extension ViolasManager {
+    /// Violas多签
+    /// - Parameters:
+    ///   - sendAddress: 发送地址
+    ///   - receiveAddress: 接收地址
+    ///   - amount: 接收地址
+    ///   - fee: 手续费
+    ///   - sequenceNumber: 序列码
+    ///   - wallet: 多签钱包
+    ///   - module: 转账币种
+    ///   - feeModule: 手续费币种
+    /// - Throws: 报错
+    /// - Returns: 交易签名
+    public static func getMultiTransactionHex(sendAddress: String, receiveAddress: String, amount: UInt64, fee: UInt64, sequenceNumber: UInt64, wallet: ViolasMultiHDWallet, module: String, feeModule: String) throws -> String {
+        do {
+            // 拼接交易
+            let argument0 = ViolasTransactionArgument.init(code: .Address(receiveAddress))
+            let argument1 = ViolasTransactionArgument.init(code: .U64(amount))
+            let argument2 = ViolasTransactionArgument.init(code: .U8Vector(Data()))
+            let argument3 = ViolasTransactionArgument.init(code: .U8Vector(Data()))
+            let script = ViolasTransactionScriptPayload.init(code: Data.init(hex: ViolasUtils.getMoveCode(name: "peer_to_peer_with_metadata")),
+                                                           typeTags: [ViolasTypeTag.init(typeTag: .Struct(ViolasStructTag.init(type: .Normal(module))))],
+                                                           argruments: [argument0, argument1, argument2, argument3])
+            let transactionPayload = ViolasTransactionPayload.init(payload: .script(script))
+            let rawTransaction = ViolasRawTransaction.init(senderAddres: sendAddress,
+                                                         sequenceNumber: sequenceNumber,
+                                                         maxGasAmount: 1000000,
+                                                         gasUnitPrice: fee,
+                                                         expirationTime: UInt64(Date().timeIntervalSince1970 + 600),
+                                                         payload: transactionPayload,
+                                                         module: feeModule,
+                                                         chainID: wallet.network.chainId)
+            // 签名交易
+            let multiSignature = wallet.buildTransaction(transaction: rawTransaction)//try wallet.privateKey.signMultiTransaction(transaction: rawTransaction, publicKey: wallet.publicKey)
+            return multiSignature.toHexString()
         } catch {
             throw error
         }
@@ -295,7 +338,8 @@ extension ViolasManager {
                                                            module: "VLS",
                                                            chainID: wallet.network.chainId)
             // 签名交易
-            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+//            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            let signature = wallet.buildTransaction(transaction: rawTransaction)
             return signature.toHexString()
         } catch {
             throw error
@@ -340,7 +384,7 @@ extension ViolasManager {
                                                            module: "VLS",
                                                            chainID: wallet.network.chainId)
             // 签名交易
-            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            let signature = wallet.buildTransaction(transaction: rawTransaction)
             return signature.toHexString()
         } catch {
             throw error
@@ -382,7 +426,7 @@ extension ViolasManager {
                                                            module: "VLS",
                                                            chainID: wallet.network.chainId)
             // 签名交易
-            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            let signature = wallet.buildTransaction(transaction: rawTransaction)
             return signature.toHexString()
         } catch {
             throw error
@@ -414,7 +458,7 @@ extension ViolasManager {
                                                            module: "VLS",
                                                            chainID: wallet.network.chainId)
             // 签名交易
-            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            let signature = wallet.buildTransaction(transaction: rawTransaction)
             return signature.toHexString()
         } catch {
             throw error
@@ -463,7 +507,7 @@ extension ViolasManager {
                                                            module: "VLS",
                                                            chainID: wallet.network.chainId)
             // 签名交易
-            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            let signature = wallet.buildTransaction(transaction: rawTransaction)
             return signature.toHexString()
         } catch {
             throw error
@@ -504,7 +548,7 @@ extension ViolasManager {
                                                            module: "VLS",
                                                            chainID: wallet.network.chainId)
             // 签名交易
-            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            let signature = wallet.buildTransaction(transaction: rawTransaction)
             return signature.toHexString()
         } catch {
             throw error
@@ -542,7 +586,7 @@ extension ViolasManager {
                                                            module: "VLS",
                                                            chainID: wallet.network.chainId)
             // 签名交易
-            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            let signature = wallet.buildTransaction(transaction: rawTransaction)
             return signature.toHexString()
         } catch {
             throw error
@@ -580,7 +624,7 @@ extension ViolasManager {
                                                            module: "VLS",
                                                            chainID: wallet.network.chainId)
             // 签名交易
-            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            let signature = wallet.buildTransaction(transaction: rawTransaction)
             return signature.toHexString()
         } catch {
             throw error
@@ -618,7 +662,7 @@ extension ViolasManager {
                                                            module: "VLS",
                                                            chainID: wallet.network.chainId)
             // 签名交易
-            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            let signature = wallet.buildTransaction(transaction: rawTransaction)
             return signature.toHexString()
         } catch {
             throw error
@@ -650,7 +694,7 @@ extension ViolasManager {
                                                            module: "VLS",
                                                            chainID: wallet.network.chainId)
             // 签名交易
-            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            let signature = wallet.buildTransaction(transaction: rawTransaction)
             return signature.toHexString()
         } catch {
             throw error
@@ -693,7 +737,7 @@ extension ViolasManager {
                                                            module: "VLS",
                                                            chainID: wallet.network.chainId)
             // 签名交易
-            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            let signature = wallet.buildTransaction(transaction: rawTransaction)
             return signature.toHexString()
         } catch {
             throw error

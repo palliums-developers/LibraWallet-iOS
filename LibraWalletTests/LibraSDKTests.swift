@@ -236,7 +236,7 @@ class LibraSDKTests: XCTestCase {
             let seed = try ViolasMnemonic.seed(mnemonic: mnemonic)
             let wallet = try ViolasHDWallet.init(seed: seed, depth: 0, network: .testnet)
             let walletAddress = wallet.publicKey.toLegacy()
-            let active = wallet.publicKey.toActive()
+            let active = wallet.publicKey.toAuthKeyPrefix()
             print(walletAddress, active)
             //注册Module
             // 拼接交易
@@ -319,7 +319,7 @@ class LibraSDKTests: XCTestCase {
                                                            payload: transactionPayload,
                                                            module: "Coin1",
                                                            chainID: 4)
-            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            let signature = wallet.buildTransaction(transaction: rawTransaction)
             print(signature.toHexString())
         } catch {
             print(error.localizedDescription)
@@ -450,7 +450,7 @@ class LibraSDKTests: XCTestCase {
             let seed = try ViolasMnemonic.seed(mnemonic: mnemonic)
             let wallet = try ViolasHDWallet.init(seed: seed, depth: 0, network: .testnet)
             let walletAddress = wallet.publicKey.toLegacy()
-            let active = wallet.publicKey.toActive()
+            let active = wallet.publicKey.toAuthKeyPrefix()
             print(walletAddress, active)
             let script = ViolasTransactionScriptPayload.init(code: Data.init(hex: ViolasUtils.getMoveCode(name: "add_currency_to_account")),
                                                              typeTags: [ViolasTypeTag.init(typeTag: ViolasTypeTags.Struct(ViolasStructTag.init(type: ViolasStructTagType.Normal("Coin1"))))],
@@ -465,7 +465,7 @@ class LibraSDKTests: XCTestCase {
                                                            payload: transactionPayload,
                                                            module: "Coin1",
                                                            chainID: 2)
-            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            let signature = wallet.buildTransaction(transaction: rawTransaction)
             print(signature.toHexString())
         } catch {
             print(error.localizedDescription)
@@ -484,7 +484,7 @@ class LibraSDKTests: XCTestCase {
             let seed = try ViolasMnemonic.seed(mnemonic: mnemonic)
             let wallet = try ViolasHDWallet.init(seed: seed, depth: 0, network: .testnet)
             let walletAddress = wallet.publicKey.toLegacy()
-            let active = wallet.publicKey.toActive()
+            let active = wallet.publicKey.toAuthKeyPrefix()
             print(walletAddress, active)
             let argument0 = ViolasTransactionArgument.init(code: .Address("3bfb3f8051721b8140631d862a637b2d"))
             
@@ -505,7 +505,7 @@ class LibraSDKTests: XCTestCase {
                                                            payload: transactionPayload,
                                                            module: "XUS",
                                                            chainID: 2)
-            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            let signature = wallet.buildTransaction(transaction: rawTransaction)
             print(signature.toHexString())
         } catch {
             print(error.localizedDescription)
@@ -522,7 +522,7 @@ class LibraSDKTests: XCTestCase {
             let seed = try ViolasMnemonic.seed(mnemonic: mnemonic)
             let wallet = try ViolasHDWallet.init(seed: seed, depth: 0, network: .testnet)
             let walletAddress = wallet.publicKey.toLegacy()
-            let active = wallet.publicKey.toActive()
+            let active = wallet.publicKey.toAuthKeyPrefix()
             print(walletAddress, active)
             let argument0 = ViolasTransactionArgument.init(code: .Address("3bfb3f8051721b8140631d862a637b2d"))
             
@@ -544,7 +544,7 @@ class LibraSDKTests: XCTestCase {
                                                            payload: transactionPayload,
                                                            module: "XUS",
                                                            chainID: 2)
-            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            let signature = wallet.buildTransaction(transaction: rawTransaction)
             print(signature.toHexString())
         } catch {
             print(error.localizedDescription)
@@ -632,7 +632,7 @@ class LibraSDKTests: XCTestCase {
             let seed = try ViolasMnemonic.seed(mnemonic: mnemonic)
             let wallet = try ViolasHDWallet.init(seed: seed, depth: 0, network: .testnet)
             let walletAddress = wallet.publicKey.toLegacy()
-            let active = wallet.publicKey.toActive()
+            let active = wallet.publicKey.toAuthKeyPrefix()
             print(walletAddress, active)
             let argument0 = ViolasTransactionArgument.init(code: .U8Vector("www.google.com".data(using: .utf8)!))
             let argument1 = ViolasTransactionArgument.init(code: .U8Vector(wallet.publicKey.raw))
@@ -649,7 +649,7 @@ class LibraSDKTests: XCTestCase {
                                                            payload: transactionPayload,
                                                            module: "Coin1",
                                                            chainID: 2)
-            let signature = try wallet.privateKey.signTransaction(transaction: rawTransaction, wallet: wallet)
+            let signature = wallet.buildTransaction(transaction: rawTransaction)
             print(signature.toHexString())
         } catch {
             print(error.localizedDescription)

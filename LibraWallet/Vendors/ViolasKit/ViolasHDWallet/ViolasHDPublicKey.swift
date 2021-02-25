@@ -32,15 +32,24 @@ struct ViolasHDPublicKey {
         let subStr: String = String(address)
         return subStr
     }
+    
     /// 获取激活地址
     /// - Returns: 地址
-    func toActive() -> String {
+    func toAuthKeyPrefix() -> String {
         let tempData = raw + Data.init(hex: "00")
         let tempAddress = tempData.bytes.sha3(SHA3.Variant.sha256).toHexString()
         let index = tempAddress.index(tempAddress.startIndex, offsetBy: 32)
         let address = tempAddress.prefix(upTo: index)
         let subStr: String = String(address)
         return subStr
+    }
+    
+    /// 获取授权Key
+    /// - Returns: 授权Key
+    func toAuthKey() -> String {
+        let tempData = raw + Data.init(hex: "00")
+        let address = tempData.bytes.sha3(SHA3.Variant.sha256).toHexString()
+        return address
     }
     
     /// 获取二维码地址
