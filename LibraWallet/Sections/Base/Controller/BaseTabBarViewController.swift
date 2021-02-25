@@ -16,6 +16,10 @@ class BaseTabBarViewController: UITabBarController {
         // 修复iOS 13 tabBar切换后会变蓝色（默认tintColor的值为nil，这表示它将会运用父视图层次的颜色来进行着色。如果父视图中没有设置tintColor，那么默认系统就会使用蓝色。）
         if #available(iOS 13.0, *) {
             self.tabBar.tintColor = UIColor.init(hex: "4421AB")
+            let appearance = UITabBarAppearance()
+            appearance.stackedLayoutAppearance.selected.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "4421AB")]
+            appearance.stackedLayoutAppearance.normal.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "5C5C5C")]
+            tabBar.standardAppearance = appearance
         } else {
             // Fallback on earlier versions
         }
@@ -50,8 +54,11 @@ class BaseTabBarViewController: UITabBarController {
         childViewController.tabBarItem.title = title
         childViewController.tabBarItem.image = UIImage(named: imageName)?.withRenderingMode(UIImage.RenderingMode.alwaysOriginal)
         childViewController.tabBarItem.selectedImage = UIImage(named: selectedImageName)?.withRenderingMode(UIImage.RenderingMode.alwaysOriginal)
-        childViewController.tabBarItem.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.init(hex: "3D3949"),NSAttributedString.Key.font:UIFont.systemFont(ofSize: 11)], for: UIControl.State.normal)
-        childViewController.tabBarItem.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.init(hex: "4421AB"),NSAttributedString.Key.font:UIFont.systemFont(ofSize: 11)], for:UIControl.State.selected)
+        //UIColor.init(hex: "5C5C5C")
+        childViewController.tabBarItem.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.red,
+                                                               NSAttributedString.Key.font: UIFont.systemFont(ofSize: 11)], for: UIControl.State.normal)
+        childViewController.tabBarItem.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.init(hex: "4421AB"),
+                                                               NSAttributedString.Key.font: UIFont.systemFont(ofSize: 11)], for: UIControl.State.selected)
         
         // 设置导航控制器
         let childNaviagation = BaseNavigationViewController(rootViewController: childViewController)
