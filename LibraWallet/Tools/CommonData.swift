@@ -58,6 +58,17 @@ let mainWidth = UIScreen.main.bounds.width
 let mainHeight = UIScreen.main.bounds.height
 /// 缩放比例
 let ratio = 1
+func ratio(number: Int) -> Int {
+    let numberConfig = NSDecimalNumberHandler.init(roundingMode: .plain,
+                                                   scale: 0,
+                                                   raiseOnExactness: false,
+                                                   raiseOnOverflow: false,
+                                                   raiseOnUnderflow: false,
+                                                   raiseOnDivideByZero: false)
+    let rate = NSDecimalNumber.init(string: "\(mainWidth)").dividing(by: NSDecimalNumber.init(value: 375))
+    let result = rate.multiplying(by: NSDecimalNumber.init(value: number), withBehavior: numberConfig).intValue
+    return result
+}
 /***************************************/
 /// 获取必要信息
 private let infoDictionary = Bundle.main.infoDictionary

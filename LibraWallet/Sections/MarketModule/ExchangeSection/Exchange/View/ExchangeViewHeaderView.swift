@@ -76,7 +76,7 @@ class ExchangeViewHeaderView: UIView {
             make.top.equalTo(self).offset(40)
             make.left.equalTo(self).offset(30)
             make.right.equalTo(self.snp.right).offset(-30)
-            make.height.equalTo(80)
+            make.height.equalTo(ratio(number: 80))
         }
         inputTitleLabel.snp.makeConstraints { (make) in
             make.top.equalTo(inputTokenBackgroundView).offset(16)
@@ -112,7 +112,7 @@ class ExchangeViewHeaderView: UIView {
             make.top.equalTo(inputTokenBackgroundView.snp.bottom).offset(33)
             make.left.equalTo(self).offset(30)
             make.right.equalTo(self.snp.right).offset(-30)
-            make.height.equalTo(80)
+            make.height.equalTo(ratio(number: 80))
         }
         outputTitleLabel.snp.makeConstraints { (make) in
             make.top.equalTo(outputTokenBackgroundView).offset(16)

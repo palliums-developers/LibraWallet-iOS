@@ -85,7 +85,7 @@ class AssetsPoolViewHeaderView: UIView {
             make.top.equalTo(self).offset(40)
             make.left.equalTo(self).offset(30)
             make.right.equalTo(self.snp.right).offset(-30)
-            make.height.equalTo(80)
+            make.height.equalTo(ratio(number: 80))
         }
         inputTitleLabel.snp.makeConstraints { (make) in
             make.top.equalTo(inputTokenBackgroundView).offset(16)
@@ -121,7 +121,7 @@ class AssetsPoolViewHeaderView: UIView {
             make.top.equalTo(inputTokenBackgroundView.snp.bottom).offset(33).priority(250)
             make.left.equalTo(self).offset(30).priority(500)
             make.right.equalTo(self.snp.right).offset(-30).priority(500)
-            make.height.equalTo(80).priority(250)
+            make.height.equalTo(ratio(number: 80)).priority(250)
         }
         outputTitleLabel.snp.makeConstraints { (make) in
             make.top.equalTo(outputTokenBackgroundView).offset(16)
@@ -751,7 +751,7 @@ extension AssetsPoolViewHeaderView: DropperDelegate {
                 make.top.equalTo(inputTokenBackgroundView.snp.bottom).offset(33)
                 make.left.equalTo(self).offset(30)
                 make.right.equalTo(self.snp.right).offset(-30)
-                make.height.equalTo(80)
+                make.height.equalTo(ratio(number: 80))
             }
             outputTokenAssetsImageView.alpha = 1
             outputTokenAssetsLabel.alpha = 1
@@ -769,7 +769,7 @@ extension AssetsPoolViewHeaderView: DropperDelegate {
                 make.top.equalTo(inputTokenBackgroundView.snp.bottom).offset(33)
                 make.left.equalTo(self).offset(30)
                 make.right.equalTo(self.snp.right).offset(-30)
-                make.height.equalTo(95)
+                make.height.equalTo(ratio(number: 95))
             }
             outputTokenAssetsImageView.alpha = 0
             outputTokenAssetsLabel.alpha = 0

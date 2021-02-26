@@ -52,4 +52,7 @@ class LibraWalletTests: XCTestCase {
         let result4 = ViolasManager.handleMaxGasUnitPrice(maxGasAmount: 1000)
         XCTAssertEqual(result4, 1)
     }
+    func testRatio() {
+        print(ratio(number: 220))
+    }
 }
