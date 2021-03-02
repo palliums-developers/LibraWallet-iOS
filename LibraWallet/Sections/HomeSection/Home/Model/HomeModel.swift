@@ -19,6 +19,14 @@ struct unreadMessagesCountMainModel: Codable {
     var message: String?
     var data: unreadMessagesCountDataModel?
 }
+struct registerTokenDataModel: Codable {
+    var token: String?
+}
+struct registerTokenMainModel: Codable {
+    var code: Int?
+    var message: String?
+    var data: registerTokenDataModel?
+}
 struct isNewWalletDataModel: Codable {
     var is_new: Int?
 }
@@ -172,79 +180,6 @@ extension HomeModel {
             case let .failure(error):
                 guard error.errorCode != -999 else {
                     print("ActiveViolasAccount_网络请求已取消")
-                    return
-                }
-                completion(.failure(LibraWalletError.WalletRequest(reason: .networkInvalid)))
-            }
-        }
-        self.requests.append(request)
-    }
-}
-// MARK: 查询是否是新钱包
-extension HomeModel {
-    func isNewWallet(address: String, completion: @escaping (Result<Bool, LibraWalletError>) -> Void) {
-        let request = ActiveModuleProvide.request(.isNewWallet(address)) { (result) in
-            switch  result {
-            case let .success(response):
-                do {
-                    let json = try response.map(isNewWalletMainModel.self)
-                    if json.code == 2000 {
-                        let state = json.data?.is_new == 0 ? true:false
-                        do {
-                            WalletManager.shared.changeWalletIsNewState(state: state)
-                            try WalletManager.updateIsNewWallet()
-                        } catch {
-                            print(error.localizedDescription)
-                        }
-                        completion(.success(state))
-                    } else {
-                        print("IsNewWallet_状态异常")
-                        if let message = json.message, message.isEmpty == false {
-                            completion(.failure(LibraWalletError.error(message)))
-                        } else {
-                            completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid)))
-                        }
-                    }
-                } catch {
-                    print("IsNewWallet_解析异常\(error.localizedDescription)")
-                    completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError)))
-                }
-            case let .failure(error):
-                guard error.errorCode != -999 else {
-                    print("IsNewWallet_网络请求已取消")
-                    return
-                }
-                completion(.failure(LibraWalletError.WalletRequest(reason: .networkInvalid)))
-            }
-        }
-        self.requests.append(request)
-    }
-}
-// MARK: 注册FCM Token
-extension HomeModel {
-    func registerFCMToken(address: String, token: String, completion: @escaping (Result<Bool, LibraWalletError>) -> Void) {
-        let request = notificationModuleProvide.request(.registerNotification(address, token, "apple", Localize.currentLanguage())) { (result) in
-            switch  result {
-            case let .success(response):
-                do {
-                    let json = try response.map(isNewWalletMainModel.self)
-                    if json.code == 2000 {
-                        completion(.success(true))
-                    } else {
-                        print("RegisterFCMToken_状态异常")
-                        if let message = json.message, message.isEmpty == false {
-                            completion(.failure(LibraWalletError.error(message)))
-                        } else {
-                            completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid)))
-                        }
-                    }
-                } catch {
-                    print("RegisterFCMToken_解析异常\(error.localizedDescription)")
-                    completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError)))
-                }
-            case let .failure(error):
-                guard error.errorCode != -999 else {
-                    print("RegisterFCMToken_网络请求已取消")
                     return
                 }
                 completion(.failure(LibraWalletError.WalletRequest(reason: .networkInvalid)))
@@ -725,6 +660,83 @@ extension HomeModel {
                 completion(.failure(LibraWalletError.WalletRequest(reason: .networkInvalid)))
             }
             group.leave()
+        }
+        self.requests.append(request)
+    }
+}
+// MARK: 查询是否是新钱包
+extension HomeModel {
+    func isNewWallet(address: String, completion: @escaping (Result<Bool, LibraWalletError>) -> Void) {
+        let request = ActiveModuleProvide.request(.isNewWallet(address)) { (result) in
+            switch  result {
+            case let .success(response):
+                do {
+                    let json = try response.map(isNewWalletMainModel.self)
+                    if json.code == 2000 {
+                        let state = json.data?.is_new == 0 ? true:false
+                        do {
+                            WalletManager.shared.changeWalletIsNewState(state: state)
+                            try WalletManager.updateIsNewWallet()
+                        } catch {
+                            print(error.localizedDescription)
+                        }
+                        completion(.success(state))
+                    } else {
+                        print("IsNewWallet_状态异常")
+                        if let message = json.message, message.isEmpty == false {
+                            completion(.failure(LibraWalletError.error(message)))
+                        } else {
+                            completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid)))
+                        }
+                    }
+                } catch {
+                    print("IsNewWallet_解析异常\(error.localizedDescription)")
+                    completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError)))
+                }
+            case let .failure(error):
+                guard error.errorCode != -999 else {
+                    print("IsNewWallet_网络请求已取消")
+                    return
+                }
+                completion(.failure(LibraWalletError.WalletRequest(reason: .networkInvalid)))
+            }
+        }
+        self.requests.append(request)
+    }
+}
+// MARK: 注册FCM Token
+extension HomeModel {
+    func registerFCMToken(address: String, token: String, completion: @escaping (Result<String, LibraWalletError>) -> Void) {
+        let request = notificationModuleProvide.request(.registerNotification(address, token)) { (result) in
+            switch  result {
+            case let .success(response):
+                do {
+                    let json = try response.map(registerTokenMainModel.self)
+                    if json.code == 2000 {
+                        if let token = json.data?.token, token.isEmpty == false {
+                            completion(.success(token))
+                        } else {
+                            completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError)))
+                        }
+                    } else {
+                        print("RegisterFCMToken_状态异常")
+                        if let message = json.message, message.isEmpty == false {
+                            completion(.failure(LibraWalletError.error(message)))
+                        } else {
+                            completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid)))
+                        }
+                    }
+                } catch {
+                    print("RegisterFCMToken_解析异常\(error.localizedDescription)")
+                    completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError)))
+                }
+            case let .failure(error):
+                guard error.errorCode != -999 else {
+                    print("RegisterFCMToken_网络请求已取消")
+                    return
+                }
+                completion(.failure(LibraWalletError.WalletRequest(reason: .networkInvalid)))
+            }
         }
         self.requests.append(request)
     }

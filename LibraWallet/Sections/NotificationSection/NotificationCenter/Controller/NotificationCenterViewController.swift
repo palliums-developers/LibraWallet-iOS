@@ -25,6 +25,19 @@ class NotificationCenterViewController: BaseViewController {
             make.top.left.right.bottom.equalTo(self.view.safeAreaLayoutGuide)
         }
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if refreshSegmentIndex != 999 {
+            self.detailView.segmentView.reloadItem(at: refreshSegmentIndex)
+            self.refreshSegmentIndex = 999
+        }
+    }
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if let action = self.successReadClosure {
+            action(self.unreadMessageDataModel!)
+        }
+    }
     deinit {
         print("NotificationCenterViewController销毁了")
     }
@@ -35,29 +48,22 @@ class NotificationCenterViewController: BaseViewController {
     }()
     /// DetailView
     lazy var detailView: NotificationCenterView = {
-        let view = NotificationCenterView.init()
+        let view = NotificationCenterView.init(controllers: [walletMessageController, systemMessageController], dotStates: self.dotStates ?? [false, false])
         view.segmentView.delegate = self
-        view.controllers = [walletMessageController, systemMessageController]
         return view
     }()
     /// 钱包消息页面
     lazy var walletMessageController: WalletMessagesViewController = {
         let con = WalletMessagesViewController()
         con.tableViewManager.delegate = self
-        con.fcmToken = self.fcmToken
         return con
     }()
     /// 系统消息页面
     lazy var systemMessageController: SystemMessagesViewController = {
         let con = SystemMessagesViewController()
         con.tableViewManager.delegate = self
-        con.fcmToken = self.fcmToken
         return con
     }()
-    /// 数据监听KVO
-    var observer: NSKeyValueObservation?
-    var startRefresh: Bool = false
-    var fcmToken: String?
     /// 二维码扫描按钮
     lazy var messageButton: UIButton = {
         let button = UIButton(type: .custom)
@@ -67,7 +73,7 @@ class NotificationCenterViewController: BaseViewController {
     }()
     @objc func checkNotificationCenter() {
         self.detailView.makeToastActivity(.center)
-        self.dataModel.setTotalRead(address: WalletManager.shared.violasAddress ?? "", token: self.fcmToken ?? "") { [weak self] (result) in
+        self.dataModel.setTotalRead(address: WalletManager.shared.violasAddress ?? "", token: getRequestToken()) { [weak self] (result) in
             self?.detailView.hideToastActivity()
             switch result {
             case .success(_):
@@ -80,6 +86,25 @@ class NotificationCenterViewController: BaseViewController {
             }
         }
     }
+    var unreadMessageDataModel: unreadMessagesCountDataModel? {
+        didSet {
+            var dotStates = [Bool]()
+            if let walletMessagesCount = unreadMessageDataModel?.message, walletMessagesCount > 0 {
+                dotStates.append(true)
+            } else {
+                dotStates.append(false)
+            }
+            if let systemMessagesCount = unreadMessageDataModel?.notice, systemMessagesCount > 0 {
+                dotStates.append(true)
+            } else {
+                dotStates.append(false)
+            }
+            self.dotStates = dotStates
+        }
+    }
+    private var dotStates: [Bool]?
+    private var refreshSegmentIndex: Int = 999
+    var successReadClosure: ((unreadMessagesCountDataModel)->Void)?
 }
 extension NotificationCenterViewController {
     func handleError(requestType: String, error: LibraWalletError) {
@@ -133,16 +158,17 @@ extension NotificationCenterViewController: WalletMessagesTableViewManagerDelega
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: WalletMessagesDataModel) {
         let vc = TransactionDetailViewController()
         //            vc.requestURL = address
-        vc.successLoadClosure = {
+        vc.successLoadClosure = { [weak self] in
             if model.readed == 0 {
-                self.walletMessageController.tableViewManager.dataModels?.remove(at: indexPath.row)
+                self?.walletMessageController.tableViewManager.dataModels?.remove(at: indexPath.row)
                 var tempModel = model
                 tempModel.readed = 1
-                self.walletMessageController.tableViewManager.dataModels?.insert(tempModel, at: indexPath.row)
-                self.walletMessageController.detailView.tableView.beginUpdates()
-                self.walletMessageController.detailView.tableView.reloadRows(at: [indexPath], with: .none)
-                self.walletMessageController.detailView.tableView.endUpdates()
+                self?.walletMessageController.tableViewManager.dataModels?.insert(tempModel, at: indexPath.row)
+                self?.walletMessageController.detailView.tableView.beginUpdates()
+                self?.walletMessageController.detailView.tableView.reloadRows(at: [indexPath], with: .none)
+                self?.walletMessageController.detailView.tableView.endUpdates()
             }
+            self?.clearDotState()
         }
         vc.tokenAddress = WalletManager.shared.violasAddress
         vc.violasVersion = model.id
@@ -152,20 +178,46 @@ extension NotificationCenterViewController: WalletMessagesTableViewManagerDelega
 extension NotificationCenterViewController: SystemMessagesTableViewManagerDelegate {
     func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: SystemMessagesDataModel) {
         let vc = MessageWebDetailViewController.init()
-        vc.fcmToken = self.fcmToken
         vc.messageID = model.id
-        vc.successLoadClosure = {
+        vc.successLoadClosure = { [weak self] in
             if model.readed == 0 {
-                self.systemMessageController.tableViewManager.dataModels?.remove(at: indexPath.row)
+                self?.systemMessageController.tableViewManager.dataModels?.remove(at: indexPath.row)
                 var tempModel = model
-//                tempModel.readed = true
-                self.systemMessageController.tableViewManager.dataModels?.insert(tempModel, at: indexPath.row)
-                self.systemMessageController.detailView.tableView.beginUpdates()
-                self.systemMessageController.detailView.tableView.reloadRows(at: [indexPath], with: .none)
-                self.systemMessageController.detailView.tableView.endUpdates()
+                tempModel.readed = 1
+                self?.systemMessageController.tableViewManager.dataModels?.insert(tempModel, at: indexPath.row)
+                self?.systemMessageController.detailView.tableView.beginUpdates()
+                self?.systemMessageController.detailView.tableView.reloadRows(at: [indexPath], with: .none)
+                self?.systemMessageController.detailView.tableView.endUpdates()
+            }
+            self?.clearDotState()
+        }
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+}
+extension NotificationCenterViewController {
+    func clearDotState() {
+        if self.detailView.segmentView.selectedIndex == 0 {
+            let lastUnread = self.walletMessageController.tableViewManager.dataModels?.filter({
+                $0.readed == 0
+            })
+            self.unreadMessageDataModel?.message = lastUnread?.count
+            if lastUnread?.isEmpty == true {
+                self.detailView.dotStates?.removeFirst()
+                self.detailView.dotStates?.insert(false, at: 0)
+                self.detailView.segmentedDataSource.dotStates = self.detailView.dotStates!
+                self.refreshSegmentIndex = 0
+            }
+        } else {
+            let lastUnread = self.systemMessageController.tableViewManager.dataModels?.filter({
+                $0.readed == 0
+            })
+            self.unreadMessageDataModel?.notice = lastUnread?.count
+            if lastUnread?.isEmpty == true {
+                self.detailView.dotStates?.removeLast()
+                self.detailView.dotStates?.append(false)
+                self.detailView.segmentedDataSource.dotStates = self.detailView.dotStates!
+                self.refreshSegmentIndex = 1
             }
         }
-//        vc.url = model.content
-        self.navigationController?.pushViewController(vc, animated: true)
     }
 }

@@ -197,7 +197,7 @@ class HomeView: UIView {
         self.layoutIfNeeded()
     }
     func hideBackupWarningAlert() {
-        guard isBackupWarningShow == false else {
+        guard isBackupWarningShow == true else {
             return
         }
         self.backupWarningView.alpha = 0

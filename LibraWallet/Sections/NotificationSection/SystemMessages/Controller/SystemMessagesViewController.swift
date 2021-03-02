@@ -75,7 +75,6 @@ class SystemMessagesViewController: BaseViewController {
     var dataOffset: Int = 0
     /// 防止多次点击
     var firstIn: Bool = true
-    var fcmToken: String?
 }
 // MARK: - 网络请求
 extension SystemMessagesViewController {
@@ -92,7 +91,7 @@ extension SystemMessagesViewController {
         if refresh == true {
             self.delegate?.refreshAccount()
         }
-        self.dataModel.getSystemMessages(address: WalletManager.shared.violasAddress ?? "", token: self.fcmToken ?? "", limit: dataOffset, count: 10, refresh: refresh) { [weak self] (result) in
+        self.dataModel.getSystemMessages(address: WalletManager.shared.violasAddress ?? "", token: getRequestToken(), limit: dataOffset, count: 10, refresh: refresh) { [weak self] (result) in
             switch result {
             case let .success(models):
                 if refresh == true {

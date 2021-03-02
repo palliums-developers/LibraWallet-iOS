@@ -13,8 +13,8 @@ import Localize_Swift
 let notificationModuleProvide = MoyaProvider<NotificationModuleRequest>()
 //let mainProvide = MoyaProvider<mainRequest>(stubClosure: MoyaProvider.immediatelyStub)
 enum NotificationModuleRequest {
-    /// 注册设备（钱包地址，FCM Token，设备类型，语言）
-    case registerNotification(String, String, String, String)
+    /// 注册设备（钱包地址，FCM Token）
+    case registerNotification(String, String)
     /// 钱包通知（钱包地址、FCM Token、offset、limit）
     case walletMessages(String, String, Int, Int)
     /// 获取钱包通知交易详情（钱包地址、Version）
@@ -31,7 +31,7 @@ enum NotificationModuleRequest {
 extension NotificationModuleRequest: TargetType {
     var baseURL: URL {
         switch self {
-        case .registerNotification(_, _, _, _),
+        case .registerNotification(_, _),
              .walletMessages(_, _, _, _),
              .getTransactionMessageDetail(_, _),
              .systemMessages(_, _, _, _),
@@ -43,7 +43,7 @@ extension NotificationModuleRequest: TargetType {
     }
     var path: String {
         switch self {
-        case .registerNotification(_, _, _, _):
+        case .registerNotification(_, _):
             return "/1.0/violas/device/info"
         case .walletMessages(_, _, _, _):
             return "/1.0/violas/message/transfers"
@@ -65,7 +65,7 @@ extension NotificationModuleRequest: TargetType {
     }
     var method: Moya.Method {
         switch self {
-        case .registerNotification(_, _, _, _):
+        case .registerNotification(_, _):
             return .post
         case .walletMessages(_, _, _, _),
              .getTransactionMessageDetail(_, _),
@@ -88,11 +88,11 @@ extension NotificationModuleRequest: TargetType {
     }
     var task: Task {
         switch self {
-        case .registerNotification(let address, let FCMToken, let device, let language):
+        case .registerNotification(let address, let FCMToken):
             return .requestParameters(parameters: ["address": address,
                                                    "fcm_token": FCMToken,
-                                                   "platform": device,
-                                                   "language": language],
+                                                   "platform": "apple",
+                                                   "language": Localize.currentLanguage()],
                                       encoding: JSONEncoding.default)
         case .walletMessages(let address, let token, let page, let limit):
             return .requestParameters(parameters: ["address": address,

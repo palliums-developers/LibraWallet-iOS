@@ -18,7 +18,7 @@ class MessageWebDetailView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
-        print("YieldFarmingRulesWebView销毁了")
+        print("MessageWebDetailView销毁了")
     }
     // MARK: - 布局
     override func layoutSubviews() {

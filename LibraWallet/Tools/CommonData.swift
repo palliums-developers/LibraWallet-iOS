@@ -190,19 +190,26 @@ func setWelcomeState(show: Bool) {
 func getWelcomeState() -> Bool {
     return UserDefaults.standard.bool(forKey: "Welcome")
 }
-///************* 获取身份钱包 *******************/
+/************* 获取身份钱包 *******************/
 func setIdentityWalletState(show: Bool) {
     UserDefaults.standard.set(show, forKey: "IdentityWallet")
 }
 func getIdentityWalletState() -> Bool {
     return UserDefaults.standard.bool(forKey: "IdentityWallet")
 }
-///************* 设置同意用户协议 *******************/
+/************* 设置同意用户协议 *******************/
 func setConfirmPrivateAndUseLegalState(show: Bool) {
     UserDefaults.standard.set(show, forKey: "PrivateAndUseLegal")
 }
 func getConfirmPrivateAndUseLegalState() -> Bool {
     return UserDefaults.standard.bool(forKey: "PrivateAndUseLegal")
+}
+///************* 设置请求Token *******************/
+func setRequestToken(token: String) {
+    UserDefaults.standard.set(token, forKey: "RequestToken")
+}
+func getRequestToken() -> String {
+    return UserDefaults.standard.string(forKey: "RequestToken") ?? ""
 }
 /***************************************/
 func helpCenterURL() -> String {
@@ -289,7 +296,7 @@ extension ViolasNetworkState {
         }
     }
 }
-let VIOLAS_PUBLISH_NET = ViolasNetworkState.testnet
+let VIOLAS_PUBLISH_NET = ViolasNetworkState.testing
 /************* Diem运行环境切换 *******************/
 let DIEM_PUBLISH_NET = DiemNetworkState.testnet
 /************* BTC运行环境切换 *******************/

@@ -126,7 +126,24 @@ class HomeViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(registerFCMToken(notification:)), name: NSNotification.Name("FCMToken"), object: nil)
     }
     var refreshing: Bool = false
-    var fcmToken: String?
+    var unreadMessageDataModel: unreadMessagesCountDataModel? {
+        didSet {
+            guard let model = unreadMessageDataModel else {
+                return
+            }
+            let totalCount = (model.message ?? 0) + (model.notice ?? 0)
+            if totalCount > 0 {
+                self.messagesUnreadCountLabel.alpha = 1
+                if totalCount > 99 {
+                    self.messagesUnreadCountLabel.text = "99+"
+                } else {
+                    self.messagesUnreadCountLabel.text = "\(totalCount)+"
+                }
+            } else {
+                self.messagesUnreadCountLabel.alpha = 0
+            }
+        }
+    }
 }
 //MARK: - 导航栏添加按钮
 extension HomeViewController {
@@ -273,8 +290,11 @@ extension HomeViewController {
     @objc func checkNotificationCenter() {
         let vc = NotificationCenterViewController()
         //        vc.wallet = self.wallet
-        vc.fcmToken = self.fcmToken
         vc.hidesBottomBarWhenPushed = true
+        vc.unreadMessageDataModel = self.unreadMessageDataModel
+        vc.successReadClosure = { [weak self] model in
+            self?.unreadMessageDataModel = model
+        }
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }
@@ -373,26 +393,6 @@ extension HomeViewController {
             }
         }
     }
-    func getUnreadMessagesCount() {
-        self.dataModel.getUnreadMessagesCount(address: WalletManager.shared.violasAddress ?? "", token: self.fcmToken ?? "") { [weak self] (result) in
-            switch result {
-            case let .success(model):
-                let totalCount = (model.message ?? 0) + (model.notice ?? 0)
-                if totalCount > 0 {
-                    self?.messagesUnreadCountLabel.alpha = 1
-                    if totalCount > 99 {
-                        self?.messagesUnreadCountLabel.text = "99+"
-                    } else {
-                        self?.messagesUnreadCountLabel.text = "\(totalCount)+"
-                    }
-                } else {
-                    self?.messagesUnreadCountLabel.alpha = 0
-                }
-            case let .failure(error):
-                print(error.localizedDescription)
-            }
-        }
-    }
 }
 //MARK: - 语言切换方法
 extension HomeViewController {
@@ -407,6 +407,9 @@ extension HomeViewController {
         self.detailView.tableView.reloadData()
         self.detailView.hideActiveButtonAnimation()
     }
+}
+//MARK: - 注册消息通知
+extension HomeViewController {
     @objc func registerFCMToken(notification: NSNotification) {
         guard let address = WalletManager.shared.violasAddress else {
             return
@@ -414,17 +417,28 @@ extension HomeViewController {
         guard let token = notification.userInfo?["token"] as? String else {
             return
         }
-        self.fcmToken = token
-        self.dataModel.registerFCMToken(address: address, token: token) { (result) in
+        self.dataModel.registerFCMToken(address: address, token: token) { [weak self] (result) in
             switch result {
-            case .success(_):
-                print("")
+            case let .success(token):
+                print("Register Token: \(token)")
+                // 设置请求Token
+                setRequestToken(token: token)
+                // 获取未读消息数
+                self?.getUnreadMessagesCount(token: token)
             case let .failure(error):
                 print(error.localizedDescription)
             }
         }
-        // 获取未读消息数
-        getUnreadMessagesCount()
+    }
+    func getUnreadMessagesCount(token: String) {
+        self.dataModel.getUnreadMessagesCount(address: WalletManager.shared.violasAddress ?? "", token: token) { [weak self] (result) in
+            switch result {
+            case let .success(model):
+                self?.unreadMessageDataModel = model
+            case let .failure(error):
+                print(error.localizedDescription)
+            }
+        }
     }
 }
 

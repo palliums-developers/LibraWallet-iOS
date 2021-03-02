@@ -29,6 +29,12 @@ class MessageWebDetailViewController: BaseViewController {
             make.left.right.equalTo(self.view)
         }
     }
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if let action = self.successLoadClosure {
+            action()
+        }
+    }
     deinit {
         print("MessageWebDetailViewController销毁了")
     }
@@ -49,10 +55,9 @@ class MessageWebDetailViewController: BaseViewController {
         guard let tempMessageID = messageID, messageID?.isEmpty == false else {
             return
         }
-        self.dataModel.getWalletMessageDetail(address: WalletManager.shared.violasAddress ?? "", token: self.fcmToken ?? "", id: tempMessageID) { [weak self] (result) in
+        self.dataModel.getWalletMessageDetail(address: WalletManager.shared.violasAddress ?? "", token: getRequestToken(), id: tempMessageID) { [weak self] (result) in
             switch result {
             case let .success(model):
-//                self?.detailView.hideToastActivity()
                 self?.detailView.model = model
             case let .failure(error):
                 self?.detailView.hideToastActivity()
@@ -61,7 +66,6 @@ class MessageWebDetailViewController: BaseViewController {
             self?.endLoading()
         }
     }
-    var fcmToken: String?
     var messageID: String?
 }
 // MARK: - 网络请求数据处理
@@ -99,9 +103,6 @@ extension MessageWebDetailViewController :WKNavigationDelegate{
     // 页面加载完成之后调用
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         self.view.hideToastActivity()
-        if let action = self.successLoadClosure {
-            action()
-        }
     }
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         print(error)

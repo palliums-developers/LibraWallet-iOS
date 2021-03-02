@@ -20,7 +20,7 @@ struct SystemMessagesDataModel: Codable {
 //    var type: Int?
     /// 服务
     var service: String?
-    /// 是否已读（自行添加）
+    /// 是否已读
     var readed: Int?
     /// 消息ID
     var id: String?

@@ -15,6 +15,13 @@ class NotificationCenterView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.init(hex: "F7F7F9")
+    }
+    convenience init(controllers: [UIViewController], dotStates: [Bool]) {
+        self.init(frame: CGRect.zero)
+        
+        self.controllers = controllers
+        self.dotStates = dotStates
+        
         addSubview(segmentView)
         addSubview(spaceLabel)
         addSubview(listContainerView)
@@ -70,8 +77,8 @@ class NotificationCenterView: UIView {
         indicator.indicatorColor = UIColor.init(hex: "333333")
         return indicator
     }()
-    private lazy var segmentedDataSource : JXSegmentedTitleDataSource = {
-        let data = JXSegmentedTitleDataSource.init()
+    lazy var segmentedDataSource : JXSegmentedDotDataSource = {
+        let data = JXSegmentedDotDataSource.init()
         //配置数据源相关配置属性
         data.titles = [localLanguage(keyString: "wallet_notification_wallet_messages_title"),
                        localLanguage(keyString: "wallet_notification_system_messages_title")]
@@ -82,11 +89,15 @@ class NotificationCenterView: UIView {
         data.titleSelectedFont = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
         data.itemWidth = mainWidth / 2
         data.itemSpacing = 0
+        data.dotStates = dotStates ?? [false, false]
+        data.dotSize = CGSize.init(width: 6, height: 6)
+        data.dotOffset = CGPoint.init(x: 4, y: 1)
         //reloadData(selectedIndex:)方法一定要调用，方法内部会刷新数据源数组
         data.reloadData(selectedIndex: 0)
         return data
     }()
     var controllers: [UIViewController]?
+    var dotStates: [Bool]?
     lazy var yieldFramingRuleButton: UIButton = {
         let button = UIButton.init()
         button.setBackgroundImage(UIImage.init(named: "yield_framing_rule_background"), for: .normal)
@@ -107,14 +118,5 @@ extension NotificationCenterView: JXSegmentedListContainerViewDataSource {
     }
     func listContainerView(_ listContainerView: JXSegmentedListContainerView, initListAt index: Int) -> JXSegmentedListContainerViewListDelegate {
         return controllers?[index] as! JXSegmentedListContainerViewListDelegate
-    }
-}
-// MARK: - 语言切换方法
-extension NotificationCenterView {
-    // 语言切换
-    @objc func setText() {
-        self.segmentedDataSource.titles = [localLanguage(keyString: "wallet_bank_deposit_market_title"),
-                                           localLanguage(keyString: "wallet_bank_loan_market_title")]
-        self.segmentView.reloadData()
     }
 }
