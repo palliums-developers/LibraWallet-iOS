@@ -148,6 +148,6 @@ extension MarketModuleRequest: TargetType {
                 "platform": "ios",
                 "bundleId":bundleID!,
                 "language":Localize.currentLanguage(),
-                "chainId":"2"]
+                "chainId":"\(DIEM_PUBLISH_NET.chainId)"]
     }
 }
