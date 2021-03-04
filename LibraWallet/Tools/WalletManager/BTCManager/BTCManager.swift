@@ -110,6 +110,7 @@ class BTCManager: NSObject {
         data += getLengthData(length: amount, appendBytesCount: 8).bytes.reversed()
         // times(retry swap violas btc token number of times)
         data += Data.init(Array<UInt8>(hex: "0000"))
+        data += Data.init(Array<UInt8>(hex: "0\(DIEM_PUBLISH_NET.chainId)"))
         print(data.hex)
         return data
     }
