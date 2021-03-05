@@ -128,28 +128,28 @@ struct ViolasManager {
     }
 }
 extension ViolasManager {
-    public static func getCodeData(move: String, address: String) -> Data {
-        // 生成待替换数据
-        let replaceData = Data.init(Array<UInt8>(hex: address))
-        // 原始数据
-        var code = Data.init(Array<UInt8>(hex: move))
-        // 计算位置
-        let location = ViolasManager().getViolasTokenContractLocation(code: move, contract: "7257c2417e4d1038e1817c8f283ace2e")
-        // 设置替换区间
-        let range = code.index(after: location)..<( code.endIndex - (code.endIndex - (location + 1) - 16))
-        // 替换指定区间数据
-        code.replaceSubrange(range, with: replaceData)
-        return code
-    }
-    /// 计算位置
-    /// - Parameter contract: 合约地址
-    func getViolasTokenContractLocation(code: String, contract: String) -> Int {
-        //位置-1所得正好
-        let code = Data.init(Array<UInt8>(hex: code))
-        let range: Range = code.toHexString().range(of: contract)!
-        let location: Int = code.toHexString().distance(from: code.toHexString().startIndex, to: range.lowerBound)
-        return (location / 2) - 1
-    }
+//    public static func getCodeData(move: String, address: String) -> Data {
+//        // 生成待替换数据
+//        let replaceData = Data.init(Array<UInt8>(hex: address))
+//        // 原始数据
+//        var code = Data.init(Array<UInt8>(hex: move))
+//        // 计算位置
+//        let location = ViolasManager().getViolasTokenContractLocation(code: move, contract: "7257c2417e4d1038e1817c8f283ace2e")
+//        // 设置替换区间
+//        let range = code.index(after: location)..<( code.endIndex - (code.endIndex - (location + 1) - 16))
+//        // 替换指定区间数据
+//        code.replaceSubrange(range, with: replaceData)
+//        return code
+//    }
+//    /// 计算位置
+//    /// - Parameter contract: 合约地址
+//    func getViolasTokenContractLocation(code: String, contract: String) -> Int {
+//        //位置-1所得正好
+//        let code = Data.init(Array<UInt8>(hex: code))
+//        let range: Range = code.toHexString().range(of: contract)!
+//        let location: Int = code.toHexString().distance(from: code.toHexString().startIndex, to: range.lowerBound)
+//        return (location / 2) - 1
+//    }
     /// 获取合约
     /// - Parameter name: 合约名字
     /// - Returns: 合约Hex
@@ -177,7 +177,7 @@ extension ViolasManager {
         }
     }
 }
-//MARK: - 基础交易
+// MARK: - 基础交易
 extension ViolasManager {
     /// 获取Violas交易Hex
     /// - Parameters:
@@ -289,14 +289,14 @@ extension ViolasManager {
                                                          module: feeModule,
                                                          chainID: wallet.network.chainId)
             // 签名交易
-            let multiSignature = wallet.buildTransaction(transaction: rawTransaction)//try wallet.privateKey.signMultiTransaction(transaction: rawTransaction, publicKey: wallet.publicKey)
+            let multiSignature = wallet.buildTransaction(transaction: rawTransaction)
             return multiSignature.toHexString()
         } catch {
             throw error
         }
     }
 }
-//MARK: - 交易所
+// MARK: - 交易所
 extension ViolasManager {
     /// 交易所兑换交易Hex
     /// - Parameters:
@@ -701,7 +701,7 @@ extension ViolasManager {
         }
     }
 }
-//MARK: - WalletConnect
+// MARK: - WalletConnect
 extension ViolasManager {
     public static func getWalletConnectTransactionHex(mnemonic: [String], sequenceNumber: UInt64, fee: UInt64, model: WCRawTransaction, module: String) throws -> String {
         do {

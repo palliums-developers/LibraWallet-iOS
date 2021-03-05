@@ -388,7 +388,7 @@ class LibraSDKTests: XCTestCase {
             //df8c99ad74f921563f3f7242b4a3e4570d6a04436002d61228a3b58d3f0ecc71
             print("PublicKey = \(wallet.publicKey.toMultiPublicKey().toHexString())")
             //e12136fd95251348cd993b91e8fbf36bcebe9422842f3c505ca2893f5612ae53ee2586aaaeaaa39ae4eb601999e5c2aade701ac4262f79ac98d9413cce67b0dbd0b27e06a1bf428c380bd10b7469d8b4f251e763724b2543c730abcaea18c8b002
-            let sign = try DiemManager.getMultiTransactionHex(sendAddress: multiPublicKey.toLegacy(),
+            let sign = DiemManager.getMultiTransactionHex(sendAddress: multiPublicKey.toLegacy(),
                                                               receiveAddress: "6c1dd50f35f120061babc2814cf9378b",
                                                               amount: 1000000,
                                                               fee: 1,
@@ -841,5 +841,12 @@ class LibraSDKTests: XCTestCase {
         } catch {
             
         }
+    }
+    func testAuthKey() {
+        let privateKey = Data.init(Array<UInt8>(hex: "b4ed5891b9853b4a87ab19cdca87090d9d98b57c44588f193046da4e13b4302b"))
+        let key = ViolasHDPrivateKey.init(privateKey: privateKey.bytes)
+        print(key.extendedPublicKey(network: .premainnet).toAuthKey())
+        //ac992b6f0c025f712683e0533bfda6c8
+        //b307e9866f89bbc005aa3d9a780254ca
     }
 }

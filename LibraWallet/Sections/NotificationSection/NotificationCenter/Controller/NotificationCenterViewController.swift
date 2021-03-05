@@ -73,7 +73,7 @@ class NotificationCenterViewController: BaseViewController {
     }()
     @objc func checkNotificationCenter() {
         self.detailView.makeToastActivity(.center)
-        self.dataModel.setTotalRead(address: WalletManager.shared.violasAddress ?? "", token: getRequestToken()) { [weak self] (result) in
+        self.dataModel.setTotalRead(address: Wallet.shared.violasAddress ?? "", token: getRequestToken()) { [weak self] (result) in
             self?.detailView.hideToastActivity()
             switch result {
             case .success(_):
@@ -170,7 +170,7 @@ extension NotificationCenterViewController: WalletMessagesTableViewManagerDelega
             }
             self?.clearDotState()
         }
-        vc.tokenAddress = WalletManager.shared.violasAddress
+        vc.tokenAddress = Wallet.shared.violasAddress
         vc.violasVersion = model.id
         self.navigationController?.pushViewController(vc, animated: true)
     }

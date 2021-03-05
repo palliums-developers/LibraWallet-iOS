@@ -82,14 +82,14 @@ class AssetsPoolTransactionsViewController: BaseViewController {
     @objc func refreshData() {
         dataOffset = 0
         detailView.tableView.mj_footer?.resetNoMoreData()
-        self.dataModel.getAssetsPoolTransactions(address: WalletManager.shared.violasAddress ?? "",
+        self.dataModel.getAssetsPoolTransactions(address: Wallet.shared.violasAddress ?? "",
                                                  page: dataOffset,
                                                  pageSize: 10,
                                                  requestStatus: 0)
     }
     @objc func getMoreData() {
         dataOffset += 10
-        self.dataModel.getAssetsPoolTransactions(address: WalletManager.shared.violasAddress ?? "",
+        self.dataModel.getAssetsPoolTransactions(address: Wallet.shared.violasAddress ?? "",
                                                  page: dataOffset,
                                                  pageSize: 10,
                                                  requestStatus: 1)

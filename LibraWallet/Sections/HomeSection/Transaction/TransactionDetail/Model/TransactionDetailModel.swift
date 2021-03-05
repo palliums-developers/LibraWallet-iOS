@@ -161,7 +161,7 @@ extension TransactionDetailModel {
                     print(try response.mapString())
                     if json.code == 2000 {
                         if let data = json.data {
-                            let tempData = self.dealViolasTransactions(models: [data], walletAddress: WalletManager.shared.violasAddress ?? "")
+                            let tempData = self.dealViolasTransactions(models: [data], walletAddress: Wallet.shared.violasAddress ?? "")
                             completion(.success(tempData.first!))
                         } else {
                             completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError)))

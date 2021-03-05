@@ -38,7 +38,7 @@ class InvitationRewardView: UIView {
         return webView
     }()
     lazy var webRequest: URLRequest = {
-        var request = URLRequest.init(url: URL(string: invitationRewardURL + "?address=\(WalletManager.shared.violasAddress ?? "")&language=\(Localize.currentLanguage())")!)
+        var request = URLRequest.init(url: URL(string: invitationRewardURL + "?address=\(Wallet.shared.violasAddress ?? "")&language=\(Localize.currentLanguage())")!)
         request.cachePolicy = .reloadIgnoringCacheData
         return request
     }()

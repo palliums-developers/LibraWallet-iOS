@@ -64,7 +64,7 @@ extension EnrollPhoneViewController: EnrollPhoneViewDelegate {
             self.detailView.invitedAddressTextField.resignFirstResponder()
             self.detailView.secureCodeTextField.becomeFirstResponder()
             self.detailView.toastView.show(tag: 99)
-            self.dataModel.getSecureCode(address: WalletManager.shared.violasAddress ?? "",
+            self.dataModel.getSecureCode(address: Wallet.shared.violasAddress ?? "",
                                          phoneArea: phoneArea,
                                          phoneNumber: phoneNumber)
             print(phoneArea, phoneNumber)
@@ -89,7 +89,7 @@ extension EnrollPhoneViewController: EnrollPhoneViewDelegate {
             self.detailView.secureCodeTextField.resignFirstResponder()
             self.detailView.invitedAddressTextField.resignFirstResponder()
             self.detailView.toastView.show(tag: 99)
-            self.dataModel.sendVerifyPhone(address: WalletManager.shared.violasAddress ?? "",
+            self.dataModel.sendVerifyPhone(address: Wallet.shared.violasAddress ?? "",
                                            phoneArea: phoneArea,
                                            phoneNumber: phoneNumber,
                                            secureCode: secureCode,

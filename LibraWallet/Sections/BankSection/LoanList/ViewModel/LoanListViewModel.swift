@@ -198,7 +198,7 @@ extension LoanListViewModel: LoanListViewDelegate {
 // MARK: - 网络请求
 extension LoanListViewModel {
     func transactionRequest(refresh: Bool) {
-        self.dataModel.getLoanList(address: WalletManager.shared.violasAddress!, currency: requestOrderCurrency, status: requestOrderStatus, page: self.dataOffset, limit: 10, refresh: refresh) { [weak self] (result) in
+        self.dataModel.getLoanList(address: Wallet.shared.violasAddress!, currency: requestOrderCurrency, status: requestOrderStatus, page: self.dataOffset, limit: 10, refresh: refresh) { [weak self] (result) in
             switch result {
             case let .success(models):
                 if refresh == true {

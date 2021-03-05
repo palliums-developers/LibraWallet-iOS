@@ -170,7 +170,7 @@ extension DepositListViewModel: DepositListViewDelegate {
 // MARK: - 网络请求
 extension DepositListViewModel {
     func transactionRequest(refresh: Bool) {
-        self.dataModel.getDepositList(address: WalletManager.shared.violasAddress!, currency: requestOrderCurrency, status: requestOrderStatus, page: self.dataOffset, limit: 10, refresh: refresh) { [weak self] (result) in
+        self.dataModel.getDepositList(address: Wallet.shared.violasAddress!, currency: requestOrderCurrency, status: requestOrderStatus, page: self.dataOffset, limit: 10, refresh: refresh) { [weak self] (result) in
             switch result {
             case let .success(models):
                 if refresh == true {

@@ -128,9 +128,9 @@ class WalletConnectManager: NSObject {
 //                                                peerMeta: walletMeta)
 //            return walletInfo
 //        }
-        let address = [WalletManager.shared.violasAddress ?? "",
-                       WalletManager.shared.btcAddress ?? "",
-                       WalletManager.shared.libraAddress ?? ""]
+        let address = [Wallet.shared.violasAddress ?? "",
+                       Wallet.shared.btcAddress ?? "",
+                       Wallet.shared.libraAddress ?? ""]
         let walletInfo = Session.WalletInfo(approved: state,
                                             accounts: address,
                                             chainId: 4,

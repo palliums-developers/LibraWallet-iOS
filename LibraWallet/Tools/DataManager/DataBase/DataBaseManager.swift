@@ -114,7 +114,7 @@ extension DataBaseManager {
             }
         }
     }
-    func insertWallet(model: WalletManager) throws {
+    func insertWallet(model: Wallet) throws {
         guard let tempDB = self.db else {
             throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
         }
@@ -140,7 +140,7 @@ extension DataBaseManager {
             throw error
         }
     }
-    func isExistWalletInTable(wallet: WalletManager) throws -> Bool {
+    func isExistWalletInTable(wallet: Wallet) throws -> Bool {
         guard let tempDB = self.db else {
             throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
         }
@@ -190,19 +190,19 @@ extension DataBaseManager {
                 // 是否是新钱包
                 let isNewWallet = wallet[Expression<Bool>("wallet_new_state")]
                 
-                WalletManager.shared.initWallet(walletID: walletID,
-                                                walletName: walletName,
-                                                walletCreateTime: walletCreateTime,
-                                                walletBiometricLock: walletBiometricLock,
-                                                walletCreateType: walletCreateType,
-                                                walletBackupState: walletBackupState,
-                                                walletSubscription: walletSubscription,
-                                                walletMnemonicHash: walletMnemonicHash,
-                                                walletUseState: walletUseState,
-                                                btcAddress: walletBTCAddress,
-                                                violasAddress: walletViolasAddress,
-                                                libraAddress: walletLibraAddress,
-                                                isNewWallet: isNewWallet)
+                Wallet.shared.initWallet(walletID: walletID,
+                                         walletName: walletName,
+                                         walletCreateTime: walletCreateTime,
+                                         walletBiometricLock: walletBiometricLock,
+                                         walletCreateType: walletCreateType,
+                                         walletBackupState: walletBackupState,
+                                         walletSubscription: walletSubscription,
+                                         walletMnemonicHash: walletMnemonicHash,
+                                         walletUseState: walletUseState,
+                                         btcAddress: walletBTCAddress,
+                                         violasAddress: walletViolasAddress,
+                                         libraAddress: walletLibraAddress,
+                                         isNewWallet: isNewWallet)
                 return
             }
             // 未获取到默认钱包
@@ -212,7 +212,7 @@ extension DataBaseManager {
             throw error
         }
     }
-    func deleteWalletFromTable(model: WalletManager) throws {
+    func deleteWalletFromTable(model: Wallet) throws {
         guard let tempDB = self.db else {
             throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
         }
@@ -248,7 +248,7 @@ extension DataBaseManager {
             throw error
         }
     }
-    func updateWalletBackupState(wallet: WalletManager) throws {
+    func updateWalletBackupState(wallet: Wallet) throws {
         guard let tempDB = self.db else {
             throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
         }
@@ -272,7 +272,7 @@ extension DataBaseManager {
             throw error
         }
     }
-    func updateIsNewWalletState(wallet: WalletManager) throws {
+    func updateIsNewWalletState(wallet: Wallet) throws {
         guard let tempDB = self.db else {
             throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
         }
@@ -350,7 +350,7 @@ extension DataBaseManager {
                 let address = wallet[Expression<String>("address")]
                 // 地址类型（0=Libra、1=Violas、2=BTC）
                 let addressType = wallet[Expression<String>("address_type")]
-
+                
                 let model = AddressModel.init(addressID: addressID,
                                               address: address,
                                               addressName: addressName,
@@ -583,6 +583,8 @@ extension DataBaseManager {
                                         tokenPrice: tokenPrice)
                 models.append(wallet)
             }
+            // 初始化钱包币种
+            Wallet.shared.initWalletTokens(tokens: models)
             return models
         } catch {
             print(error.localizedDescription)

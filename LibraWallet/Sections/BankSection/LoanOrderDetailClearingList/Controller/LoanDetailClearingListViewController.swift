@@ -82,7 +82,7 @@ class LoanDetailClearingListViewController: BaseViewController {
     var updateAction: ((LoanOrderDetailMainDataModel)->())?
     func transactionRequest(refresh: Bool) {
         let requestState = refresh == true ? 0:1
-        self.dataModel.getLoanOrderDetailClearingList(address: WalletManager.shared.violasAddress ?? "",
+        self.dataModel.getLoanOrderDetailClearingList(address: Wallet.shared.violasAddress ?? "",
                                                       orderID: itemID ?? "",
                                                       page: dataOffset,
                                                       limit: 10,

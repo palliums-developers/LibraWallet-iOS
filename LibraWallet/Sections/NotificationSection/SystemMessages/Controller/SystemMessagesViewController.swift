@@ -91,7 +91,7 @@ extension SystemMessagesViewController {
         if refresh == true {
             self.delegate?.refreshAccount()
         }
-        self.dataModel.getSystemMessages(address: WalletManager.shared.violasAddress ?? "", token: getRequestToken(), limit: dataOffset, count: 10, refresh: refresh) { [weak self] (result) in
+        self.dataModel.getSystemMessages(address: Wallet.shared.violasAddress ?? "", token: getRequestToken(), limit: dataOffset, count: 10, refresh: refresh) { [weak self] (result) in
             switch result {
             case let .success(models):
                 if refresh == true {

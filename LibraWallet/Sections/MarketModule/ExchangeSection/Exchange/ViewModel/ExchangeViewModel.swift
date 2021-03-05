@@ -56,7 +56,7 @@ extension ExchangeViewModel {
             print("ViolasToViolasSwap")
             self.view?.headerView.viewState = .ViolasToViolasSwap
             self.view?.toastView.show(tag: 99)
-            self.dataModel.sendSwapViolasTransaction(sendAddress: WalletManager.shared.violasAddress ?? "",
+            self.dataModel.sendSwapViolasTransaction(sendAddress: Wallet.shared.violasAddress ?? "",
                                                      amountIn: inputAmount.uint64Value,
                                                      AmountOutMin: outputAmount.multiplying(by: NSDecimalNumber.init(value: 0.99)).uint64Value,
                                                      path: (self.view?.headerView.exchangeModel?.path)!,
@@ -253,7 +253,7 @@ extension ExchangeViewModel: ExchangeViewHeaderViewDelegate {
         self.requestSupportTokens()
     }
     func requestSupportTokens() {
-        self.dataModel.getMarketTokens(btcAddress: WalletManager.shared.btcAddress ?? "", violasAddress: WalletManager.shared.violasAddress ?? "", libraAddress: WalletManager.shared.libraAddress ?? "") { [weak self] (result) in
+        self.dataModel.getMarketTokens(btcAddress: Wallet.shared.btcAddress ?? "", violasAddress: Wallet.shared.violasAddress ?? "", libraAddress: Wallet.shared.libraAddress ?? "") { [weak self] (result) in
             self?.view?.hideToastActivity()
             self?.view?.toastView.hide(tag: 99)
             switch result {

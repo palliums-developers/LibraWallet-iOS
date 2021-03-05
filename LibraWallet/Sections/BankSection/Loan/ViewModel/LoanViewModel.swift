@@ -67,7 +67,7 @@ extension LoanViewModel: LoanViewDelegate {
                     switch result {
                     case let .success(mnemonic):
                         self?.view?.toastView?.show(tag: 99)
-                        self?.dataModel.sendLoanTransaction(sendAddress: WalletManager.shared.violasAddress!,
+                        self?.dataModel.sendLoanTransaction(sendAddress: Wallet.shared.violasAddress!,
                                                             amount: UInt64(amount),
                                                             fee: 10,
                                                             mnemonic: mnemonic,
@@ -124,7 +124,7 @@ extension LoanViewModel: LoanViewDelegate {
                 switch result {
                 case let .success(mnemonic):
                     self?.view?.toastView?.show(tag: 99)
-                    self?.dataModel.sendLoanTransaction(sendAddress: WalletManager.shared.violasAddress!,
+                    self?.dataModel.sendLoanTransaction(sendAddress: Wallet.shared.violasAddress!,
                                                         amount: amount,
                                                         fee: 10,
                                                         mnemonic: mnemonic,

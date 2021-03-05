@@ -81,23 +81,14 @@ class HomeModel: NSObject {
     @objc dynamic var dataDic: NSMutableDictionary = [:]
     private var activeCount: Int = 0
     private var activeDiemCount: Int = 0
-    func updateLocalTokenBalance(tokens: [Token], type: WalletType, tokenBalances: [DiemBalanceDataModel]) {
-        // 刷新本地缓存数据
-        let tempTokens = tokens.filter {
-            $0.tokenType == type
+    func updateLocalTokenActiveState(tokens: [Token], type: WalletType) {
+        for token in tokens {
+            do {
+                try WalletManager.updateTokenActiveState(tokenID: token.tokenID)
+            } catch {
+                print(error)
+            }
         }
-        WalletManager.updateLibraTokensBalance(tokens: tempTokens, tokenBalances: tokenBalances)
-    }
-    func updateLocalTokenBalance(tokens: [Token], type: WalletType, tokenBalances: [ViolasBalanceDataModel]) {
-        // 刷新本地缓存数据
-        let tempTokens = tokens.filter {
-            $0.tokenType == type
-        }
-        WalletManager.updateViolasTokensBalance(tokens: tempTokens, tokenBalances: tokenBalances)
-    }
-    func updateLocalBTCBalance(tokenID: Int64, balance: Int64) {
-        // 刷新本地缓存数据
-        WalletManager.updateBitcoinBalance(tokenID: tokenID, balance: balance)
     }
     deinit {
         requests.forEach { cancellable in
@@ -108,15 +99,6 @@ class HomeModel: NSObject {
     }
 }
 extension HomeModel {
-    func updateLocalTokenActiveState(tokens: [Token], type: WalletType) {
-        for token in tokens {
-            do {
-                try WalletManager.updateTokenActiveState(tokenID: token.tokenID)
-            } catch {
-                print(error)
-            }
-        }
-    }
     func activeViolasAccountTemp(tokenID: Int64, address: String, authKey: String, tokens: [Token], completion: @escaping (Result<[ViolasBalanceDataModel], LibraWalletError>) -> Void) {
         let request = violasModuleProvide.request(.activeAccount(authKey, address)) { [weak self] (result) in
             switch  result {
@@ -124,7 +106,7 @@ extension HomeModel {
                 do {
                     let json = try response.map(ActiveAccountMainModel.self)
                     if json.code == 2000 {
-                        self?.getViolasBalanceTemp(tokenID: tokenID, address: address, authKey: authKey, tokens: tokens) { (result) in
+                        self?.getViolasBalance(tokenID: tokenID, address: address, authKey: authKey, tokens: tokens) { (result) in
                             switch  result {
                             case let .success(models):
                                 // 更新本地数据库
@@ -159,7 +141,7 @@ extension HomeModel {
                 do {
                     let json = try response.map(ActiveAccountMainModel.self)
                     if json.code == 2000 {
-                        self?.getDiemBalanceTemp(tokenID: tokenID, address: address, authKey: authKey, tokens: tokens) { (result) in
+                        self?.getDiemBalance(tokenID: tokenID, address: address, authKey: authKey, tokens: tokens) { (result) in
                             switch  result {
                             case let .success(models):
                                 // 更新本地数据库
@@ -213,7 +195,6 @@ extension HomeModel {
         var violasAddress = ""
         var diemAddress = ""
         var btcAddress = ""
-        var tempTokens = tokens
         for i in 0..<tokens.count {
             print(i)
             let token = tokens[i]
@@ -222,18 +203,15 @@ extension HomeModel {
                 btcAddress = token.tokenAddress
                 quene.async(group: group, qos: .default, flags: [], execute: {
                     // 更新BTC数量
-                    self.getBTCBalanceTemp(tokenID: token.tokenID, address: btcAddress) { (result) in
+                    self.getBTCBalance(address: btcAddress) { (result) in
                         switch result {
                         case let .success(model):
-                            if NSDecimalNumber.init(string: model.balance).int64Value != tempTokens[i].tokenBalance {
-                                tempTokens[i].changeTokenBalance(banlance: NSDecimalNumber.init(string: model.balance ?? "0").int64Value)
-                                let tempIndexPath = IndexPath.init(row: i, section: 0)
-                                DispatchQueue.main.async(execute: {
-                                    if tempIndexPath.isEmpty == false {
-                                        completion(.success(TokenDataModel.init(tokens: tempTokens, indexPath: [tempIndexPath], totalPrice: "0")))
-                                    }
-                                })
-                            }
+                            let tempIndexPath = WalletManager.updateBitcoinBalance(balance: NSDecimalNumber.init(string: model.balance).int64Value)
+                            DispatchQueue.main.async(execute: {
+                                if tempIndexPath.isEmpty == false {
+                                    completion(.success(TokenDataModel.init(tokens: Wallet.shared.tokens!, indexPath: tempIndexPath, totalPrice: "0")))
+                                }
+                            })
                         case let .failure(error):
                             print(error.localizedDescription)
                             DispatchQueue.main.async(execute: {
@@ -245,19 +223,15 @@ extension HomeModel {
                 quene.async(group: group, qos: .default, flags: [], execute: {
                     group.enter()
                     // 更新BTC价格
-                    self.getBTCPriceTemp(address:btcAddress, group: group) { (result) in
+                    self.getBTCPrice(address:btcAddress, group: group) { (result) in
                         switch result {
-                        case let .success(model):
-                            if model.first?.rate ?? 0 != NSDecimalNumber.init(string: tempTokens[i].tokenPrice).doubleValue {
-                                tempTokens[i].changeTokenPrice(price: NSDecimalNumber.init(value: model.first?.rate ?? 0).stringValue)
-                                WalletManager.updateTokenPrice(token: tempTokens[i], price: NSDecimalNumber.init(value: model.first?.rate ?? 0).stringValue)
-                                let tempIndexPath = IndexPath.init(row: i, section: 0)
-                                DispatchQueue.main.async(execute: {
-                                    if tempIndexPath.isEmpty == false {
-                                        completion(.success(TokenDataModel.init(tokens: tempTokens, indexPath: [tempIndexPath], totalPrice: "0")))
-                                    }
-                                })
-                            }
+                        case let .success(models):
+                            let tempIndexPath = WalletManager.updateTokenPrice(walletType: .BTC, priceModel: models)
+                            DispatchQueue.main.async(execute: {
+                                if tempIndexPath.isEmpty == false {
+                                    completion(.success(TokenDataModel.init(tokens: Wallet.shared.tokens!, indexPath: tempIndexPath, totalPrice: "0")))
+                                }
+                            })
                         case let .failure(error):
                             print(error.localizedDescription)
                             DispatchQueue.main.async(execute: {
@@ -272,29 +246,13 @@ extension HomeModel {
                 violasAddress = token.tokenAddress
                 quene.async(group: group, qos: .default, flags: [], execute: {
                     // 更新Violas数量
-                    self.getViolasBalanceTemp(tokenID: token.tokenID, address: violasAddress, authKey: token.tokenAuthenticationKey, tokens: tokens) { (result) in
+                    self.getViolasBalance(tokenID: token.tokenID, address: violasAddress, authKey: token.tokenAuthenticationKey, tokens: tokens) { (result) in
                         switch result {
                         case let .success(models):
-                            var tempIndexPath = [IndexPath]()
-                            for j in 0..<tokens.count {
-                                guard tokens[j].tokenType == .Violas else {
-                                    continue
-                                }
-                                for currency in models {
-                                    if currency.currency == tempTokens[j].tokenModule {
-                                        if currency.amount != tempTokens[j].tokenBalance {
-                                            tempTokens[j].changeTokenBalance(banlance: currency.amount ?? 0)
-                                            tempIndexPath.append(IndexPath.init(item: j, section: 0))
-                                        }
-                                    }
-                                    if tempTokens[j].tokenActiveState == false {
-                                        tempTokens[j].changeTokenActiveState(state: true)
-                                    }
-                                }
-                            }
+                            let tempIndexPath = WalletManager.updateViolasTokensBalance(tokenBalances: models)
                             DispatchQueue.main.async(execute: {
                                 if tempIndexPath.isEmpty == false {
-                                    completion(.success(TokenDataModel.init(tokens: tempTokens, indexPath: tempIndexPath, totalPrice: "0")))
+                                    completion(.success(TokenDataModel.init(tokens: Wallet.shared.tokens!, indexPath: tempIndexPath, totalPrice: "0")))
                                 }
                             })
                         case let .failure(error):
@@ -313,27 +271,13 @@ extension HomeModel {
 //                        return
 //                    }
                     // 更新Violas价格
-                    self.getViolasPriceTemp(address: violasAddress, group: group) { (result) in
+                    self.getViolasPrice(address: violasAddress, group: group) { (result) in
                         switch result {
                         case let .success(models):
-                            var tempIndexPath = [IndexPath]()
-                            for j in 0..<tokens.count {
-                                guard tokens[j].tokenType == .Violas else {
-                                    continue
-                                }
-                                for currency in models {
-                                    if currency.name == tempTokens[j].tokenModule {
-                                        if currency.rate != NSDecimalNumber.init(string: tempTokens[j].tokenPrice).doubleValue {
-                                            tempTokens[j].changeTokenPrice(price: NSDecimalNumber.init(value: currency.rate ?? 0).stringValue)
-                                            WalletManager.updateTokenPrice(token: tempTokens[j], price: NSDecimalNumber.init(value: currency.rate ?? 0).stringValue)
-                                            tempIndexPath.append(IndexPath.init(item: j, section: 0))
-                                        }
-                                    }
-                                }
-                            }
+                            let tempIndexPath = WalletManager.updateTokenPrice(walletType: .Violas, priceModel: models)
                             DispatchQueue.main.async(execute: {
                                 if tempIndexPath.isEmpty == false {
-                                    completion(.success(TokenDataModel.init(tokens: tempTokens, indexPath: tempIndexPath, totalPrice: "0")))
+                                    completion(.success(TokenDataModel.init(tokens: Wallet.shared.tokens!, indexPath: tempIndexPath, totalPrice: "0")))
                                 }
                             })
                         case let .failure(error):
@@ -350,29 +294,13 @@ extension HomeModel {
                 diemAddress = token.tokenAddress
                 quene.async(group: group, qos: .default, flags: [], execute: {
                     // 更新Libra数量
-                    self.getDiemBalanceTemp(tokenID: token.tokenID, address: diemAddress, authKey: token.tokenAuthenticationKey, tokens: tokens) { (result) in
+                    self.getDiemBalance(tokenID: token.tokenID, address: diemAddress, authKey: token.tokenAuthenticationKey, tokens: tokens) { (result) in
                         switch result {
                         case let .success(models):
-                            var tempIndexPath = [IndexPath]()
-                            for j in 0..<tokens.count {
-                                guard tokens[j].tokenType == .Libra else {
-                                    continue
-                                }
-                                for currency in models {
-                                    if currency.currency == tempTokens[j].tokenModule {
-                                        if currency.amount != tempTokens[j].tokenBalance {
-                                            tempTokens[j].changeTokenBalance(banlance: currency.amount ?? 0)
-                                            tempIndexPath.append(IndexPath.init(item: j, section: 0))
-                                        }
-                                    }
-                                    if tempTokens[j].tokenActiveState == false {
-                                        tempTokens[j].changeTokenActiveState(state: true)
-                                    }
-                                }
-                            }
+                            let tempIndexPath = WalletManager.updateDiemTokensBalance(tokenBalances: models)
                             DispatchQueue.main.async(execute: {
                                 if tempIndexPath.isEmpty == false {
-                                    completion(.success(TokenDataModel.init(tokens: tempTokens, indexPath: tempIndexPath, totalPrice: "0")))
+                                    completion(.success(TokenDataModel.init(tokens: Wallet.shared.tokens!, indexPath: tempIndexPath, totalPrice: "0")))
                                 }
                             })
                         case let .failure(error):
@@ -391,27 +319,13 @@ extension HomeModel {
 //                        return
 //                    }
                     // 更新Diem价格
-                    self.getDiemPriceTemp(address: diemAddress, group: group) { (result) in
+                    self.getDiemPrice(address: diemAddress, group: group) { (result) in
                         switch result {
                         case let .success(models):
-                            var tempIndexPath = [IndexPath]()
-                            for j in 0..<tokens.count {
-                                guard tokens[j].tokenType == .Libra else {
-                                    continue
-                                }
-                                for currency in models {
-                                    if currency.name == tempTokens[j].tokenModule {
-                                        if currency.rate != NSDecimalNumber.init(string: tempTokens[j].tokenPrice).doubleValue {
-                                            tempTokens[j].changeTokenPrice(price: NSDecimalNumber.init(value: currency.rate ?? 0).stringValue)
-                                            WalletManager.updateTokenPrice(token: tempTokens[j], price: NSDecimalNumber.init(value: currency.rate ?? 0).stringValue)
-                                            tempIndexPath.append(IndexPath.init(item: j, section: 0))
-                                        }
-                                    }
-                                }
-                            }
+                            let tempIndexPath = WalletManager.updateTokenPrice(walletType: .Libra, priceModel: models)
                             DispatchQueue.main.async(execute: {
                                 if tempIndexPath.isEmpty == false {
-                                    completion(.success(TokenDataModel.init(tokens: tempTokens, indexPath: tempIndexPath, totalPrice: "0")))
+                                    completion(.success(TokenDataModel.init(tokens: Wallet.shared.tokens!, indexPath: tempIndexPath, totalPrice: "0")))
                                 }
                             })
                         case let .failure(error):
@@ -432,7 +346,7 @@ extension HomeModel {
         group.notify(queue: quene) {
             print("回到该队列中执行")
             var totalPrice = 0.0
-            for model in tempTokens {
+            for model in Wallet.shared.tokens! {
                 var unit = 1000000
                 if model.tokenType == .BTC {
                     unit = 100000000
@@ -459,15 +373,13 @@ extension HomeModel {
 }
 // MARK: 更新BTC数量、价格
 extension HomeModel {
-    private func getBTCBalanceTemp(tokenID: Int64, address: String, completion: @escaping (Result<TrezorBTCBalanceMainModel, LibraWalletError>) -> Void) {
-        let request = BTCModuleProvide.request(.TrezorBTCBalance(address)) {[weak self](result) in
+    private func getBTCBalance(address: String, completion: @escaping (Result<TrezorBTCBalanceMainModel, LibraWalletError>) -> Void) {
+        let request = BTCModuleProvide.request(.TrezorBTCBalance(address)) { (result) in
             switch  result {
             case let .success(response):
                 do {
                     let json = try response.map(TrezorBTCBalanceMainModel.self)
                     completion(.success(json))
-                    // 刷新本地数据
-                    self?.updateLocalBTCBalance(tokenID: tokenID, balance: NSDecimalNumber.init(string: json.balance ?? "").int64Value)
                 } catch {
                     print("UpdateBTCBalance_解析异常\(error.localizedDescription)")
                     completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError)))
@@ -482,7 +394,7 @@ extension HomeModel {
         }
         self.requests.append(request)
     }
-    private func getBTCPriceTemp(address: String, group: DispatchGroup, completion: @escaping (Result<[ModelPriceDataModel], LibraWalletError>) -> Void) {
+    private func getBTCPrice(address: String, group: DispatchGroup, completion: @escaping (Result<[ModelPriceDataModel], LibraWalletError>) -> Void) {
         let request = BTCModuleProvide.request(.price) { (result) in
             switch  result {
             case let .success(response):
@@ -516,7 +428,7 @@ extension HomeModel {
 }
 // MARK: 更新Diem数量、价格
 extension HomeModel {
-    private func getDiemBalanceTemp(tokenID: Int64, address: String, authKey: String, tokens: [Token], completion: @escaping (Result<[DiemBalanceDataModel], LibraWalletError>) -> Void) {
+    private func getDiemBalance(tokenID: Int64, address: String, authKey: String, tokens: [Token], completion: @escaping (Result<[DiemBalanceDataModel], LibraWalletError>) -> Void) {
         let request = libraModuleProvide.request(.accountInfo(address)) { [weak self] (result) in
             switch  result {
             case let .success(response):
@@ -540,9 +452,6 @@ extension HomeModel {
                     } else {
                         completion(.success(json.result?.balances ?? [DiemBalanceDataModel]()))
                     }
-                    // 刷新本地数据
-                    self?.updateLocalTokenBalance(tokens: tokens, type: .Libra, tokenBalances: json.result?.balances ?? [DiemBalanceDataModel.init(amount: 0, currency: "XUS")])
-                    self?.updateLocalTokenActiveState(tokens: tokens, type: .Libra)
                 } catch {
                     print("UpdateDiemBalance_解析异常\(error.localizedDescription)")
                     completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError)))
@@ -557,7 +466,7 @@ extension HomeModel {
         }
         self.requests.append(request)
     }
-    private func getDiemPriceTemp(address: String, group: DispatchGroup, completion: @escaping (Result<[ModelPriceDataModel], LibraWalletError>) -> Void) {
+    private func getDiemPrice(address: String, group: DispatchGroup, completion: @escaping (Result<[ModelPriceDataModel], LibraWalletError>) -> Void) {
         let request = libraModuleProvide.request(.price(address)) { (result) in
             switch  result {
             case let .success(response):
@@ -591,7 +500,7 @@ extension HomeModel {
 }
 // MARK: 更新Violas数量、价格
 extension HomeModel {
-    private func getViolasBalanceTemp(tokenID: Int64, address: String, authKey: String, tokens: [Token], completion: @escaping (Result<[ViolasBalanceDataModel], LibraWalletError>) -> Void) {
+    private func getViolasBalance(tokenID: Int64, address: String, authKey: String, tokens: [Token], completion: @escaping (Result<[ViolasBalanceDataModel], LibraWalletError>) -> Void) {
         let request = violasModuleProvide.request(.accountInfo(address)) { [weak self] (result) in
             switch  result {
             case let .success(response):
@@ -615,9 +524,6 @@ extension HomeModel {
                     } else {
                         completion(.success(json.result?.balances ?? [ViolasBalanceDataModel]()))
                     }
-                    // 刷新本地数据
-                    self?.updateLocalTokenBalance(tokens: tokens, type: .Violas, tokenBalances: json.result?.balances ?? [ViolasBalanceDataModel.init(amount: 0, currency: "XUS")])
-                    self?.updateLocalTokenActiveState(tokens: tokens, type: .Violas)
                 } catch {
                     print("UpdateViolasBalance_解析异常\(error.localizedDescription)")
                     completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError)))
@@ -632,7 +538,7 @@ extension HomeModel {
         }
         self.requests.append(request)
     }
-    private func getViolasPriceTemp(address: String, group: DispatchGroup, completion: @escaping (Result<[ModelPriceDataModel], LibraWalletError>) -> Void) {
+    private func getViolasPrice(address: String, group: DispatchGroup, completion: @escaping (Result<[ModelPriceDataModel], LibraWalletError>) -> Void) {
         let request = violasModuleProvide.request(.price(address)) { (result) in
             switch  result {
             case let .success(response):
@@ -675,7 +581,7 @@ extension HomeModel {
                     if json.code == 2000 {
                         let state = json.data?.is_new == 0 ? true:false
                         do {
-                            WalletManager.shared.changeWalletIsNewState(state: state)
+                            Wallet.shared.changeWalletIsNewState(state: state)
                             try WalletManager.updateIsNewWallet()
                         } catch {
                             print(error.localizedDescription)

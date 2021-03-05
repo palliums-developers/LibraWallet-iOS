@@ -98,13 +98,13 @@ class AddAssetModel: NSObject {
             self.getViolasTokens(group: group)
         })
         quene.async(group: group, qos: .default, flags: [], execute: {
-            self.getViolasAccountInfo(address: WalletManager.shared.violasAddress ?? "", group: group)
+            self.getViolasAccountInfo(address: Wallet.shared.violasAddress ?? "", group: group)
         })
         quene.async(group: group, qos: .default, flags: [], execute: {
             self.getLibraTokens(group: group)
         })
         quene.async(group: group, qos: .default, flags: [], execute: {
-            self.getLibraAccountInfo(address: WalletManager.shared.libraAddress ?? "", group: group)
+            self.getLibraAccountInfo(address: Wallet.shared.libraAddress ?? "", group: group)
         })
         group.notify(queue: quene) {
             print("回到该队列中执行")

@@ -36,8 +36,8 @@ extension WalletType {
         }
     }
 }
-struct WalletManager {
-    static var shared = WalletManager()
+struct Wallet {
+    static var shared = Wallet()
     
     private let semaphore = DispatchSemaphore.init(value: 1)
     /// 钱包ID
@@ -66,9 +66,10 @@ struct WalletManager {
     private(set) var libraAddress: String?
     /// 是否是新钱包
     private(set) var isNewWallet: Bool?
+    /// 钱包持有币种
+    private(set) var tokens: [Token]?
 }
-
-extension WalletManager {
+extension Wallet {
     mutating func initWallet(walletID: Int64, walletName: String, walletCreateTime: Double, walletBiometricLock: Bool, walletCreateType: Int, walletBackupState: Bool, walletSubscription: Bool, walletMnemonicHash: String, walletUseState: Bool, btcAddress: String, violasAddress: String, libraAddress: String, isNewWallet: Bool) {
         self.semaphore.wait()
         
@@ -104,7 +105,7 @@ extension WalletManager {
         self.walletSubscription = state
         self.semaphore.signal()
     }
-    mutating func changeDefaultWallet(wallet: WalletManager) {
+    mutating func changeDefaultWallet(wallet: Wallet) {
         self.semaphore.wait()
         
         self.walletID = wallet.walletID
@@ -145,6 +146,32 @@ extension WalletManager {
     mutating func changeWalletIsNewState(state: Bool) {
         self.semaphore.wait()
         self.isNewWallet = state
+        self.semaphore.signal()
+    }
+    mutating func initWalletTokens(tokens: [Token]) {
+        self.semaphore.wait()
+        self.tokens = tokens
+        self.semaphore.signal()
+    }
+    mutating func updateWalletTokenBalance(banlance: Int64, index: Int) {
+        self.semaphore.wait()
+        if let tempTokens = self.tokens, tempTokens.isEmpty == false, tempTokens.count > index {
+            self.tokens![index].changeTokenBalance(banlance: banlance)
+        }
+        self.semaphore.signal()
+    }
+    mutating func updateWalletTokenPrice(price: String, index: Int) {
+        self.semaphore.wait()
+        if let tempTokens = self.tokens, tempTokens.isEmpty == false, tempTokens.count > index {
+            self.tokens![index].changeTokenPrice(price: price)
+        }
+        self.semaphore.signal()
+    }
+    mutating func updateWalletTokenActiveState(state: Bool, index: Int) {
+        self.semaphore.wait()
+        if let tempTokens = self.tokens, tempTokens.isEmpty == false, tempTokens.count > index {
+            self.tokens![index].changeTokenActiveState(state: state)
+        }
         self.semaphore.signal()
     }
 }
@@ -231,6 +258,11 @@ extension Token {
         self.semaphore.signal()
     }
 }
+import Moya
+
+struct WalletManager {
+    
+}
 // MARK: 创建Palliums钱包
 extension WalletManager {
     static func createWallet(password: String, mnemonic: [String], isImport: Bool) throws {
@@ -271,19 +303,19 @@ extension WalletManager {
     }
     private static func createWallet(mnemonic: [String], btcAddress: String, violasAddress: String, libraAddress: String, isImport: Bool) throws {
         do {
-            let wallet = WalletManager.init(walletID: 999,
-                                            walletName: "PalliumsWallet",
-                                            walletCreateTime: NSDate().timeIntervalSince1970,
-                                            walletBiometricLock: false,
-                                            walletCreateType: 0,
-                                            walletBackupState: isImport,
-                                            walletSubscription: false,
-                                            walletMnemonicHash: mnemonic.joined(separator: " ").md5(),
-                                            walletUseState: true,
-                                            btcAddress: btcAddress,
-                                            violasAddress: violasAddress,
-                                            libraAddress: libraAddress,
-                                            isNewWallet: true)
+            let wallet = Wallet.init(walletID: 999,
+                                     walletName: "PalliumsWallet",
+                                     walletCreateTime: NSDate().timeIntervalSince1970,
+                                     walletBiometricLock: false,
+                                     walletCreateType: 0,
+                                     walletBackupState: isImport,
+                                     walletSubscription: false,
+                                     walletMnemonicHash: mnemonic.joined(separator: " ").md5(),
+                                     walletUseState: true,
+                                     btcAddress: btcAddress,
+                                     violasAddress: violasAddress,
+                                     libraAddress: libraAddress,
+                                     isNewWallet: true)
             try DataBaseManager.DBManager.insertWallet(model: wallet)
         } catch {
             throw error
@@ -410,7 +442,7 @@ extension WalletManager {
     /// 解锁钱包
     /// - Parameter completion: 返回结果
     static func unlockWallet(controller: UIViewController? = nil, completion: @escaping (Result<[String], Error>) -> Void) {
-        if WalletManager.shared.walletBiometricLock == true {
+        if Wallet.shared.walletBiometricLock == true {
             KeychainManager.getPasswordWithBiometric { (result) in
                 switch result {
                 case let .success(password):
@@ -496,7 +528,7 @@ extension WalletManager {
                 try WalletManager.deleteMnemonicFromKeychain()
             }
             // 清空钱包单例
-            WalletManager.shared.deleteWallet()
+            Wallet.shared.deleteWallet()
             if createOrImport == false {
                 // 发送钱包已删除广播
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "PalliumsWalletDelete"), object: nil)
@@ -522,9 +554,9 @@ extension WalletManager {
                         // 移除钥匙串
                         try KeychainManager.removeBiometric()
                         // 移除数据库生物识别状态
-                        try DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: WalletManager.shared.walletID!, state: state)
+                        try DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: Wallet.shared.walletID!, state: state)
                         // 移除钱包单里状态
-                        WalletManager.shared.changeWalletBiometricLock(state: state)
+                        Wallet.shared.changeWalletBiometricLock(state: state)
                         completion(.success(""))
                     } catch {
                         completion(.failure(error))
@@ -583,8 +615,8 @@ extension WalletManager {
                         switch result {
                         case .success(_):
                             do {
-                                try DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: WalletManager.shared.walletID!, state: state)
-                                WalletManager.shared.changeWalletBiometricLock(state: state)
+                                try DataBaseManager.DBManager.updateWalletBiometricLockState(walletID: Wallet.shared.walletID!, state: state)
+                                Wallet.shared.changeWalletBiometricLock(state: state)
                                 completion(.success(""))
                             } catch {
                                 completion(.failure(error))
@@ -612,9 +644,9 @@ extension WalletManager {
 extension WalletManager {
     static func updateWalletBackupState() throws {
         do {
-            try DataBaseManager.DBManager.updateWalletBackupState(wallet: WalletManager.shared)
+            try DataBaseManager.DBManager.updateWalletBackupState(wallet: Wallet.shared)
             print("钱包更新备份状态-\(true)")
-            WalletManager.shared.changeWalletBackupState(state: true)
+            Wallet.shared.changeWalletBackupState(state: true)
         } catch {
             throw error
         }
@@ -633,46 +665,114 @@ extension WalletManager {
 }
 // MARK: 更新钱包余额
 extension WalletManager {
-    static func updateLibraTokensBalance(tokens: [Token], tokenBalances: [DiemBalanceDataModel]) {
-        // 刷新本地缓存数据
-        for model in tokenBalances {
-            for token in tokens {
-                if model.currency == token.tokenModule {
-                    do {
-                        try DataBaseManager.DBManager.updateTokenBalance(tokenID: token.tokenID, balance: model.amount ?? 0)
-                        print("刷新Libra Token数据状态: \(true)")
-                    } catch {
-                        print("刷新Libra Token数据状态: \(false)")
+    static func updateDiemTokensBalance(tokenBalances: [DiemBalanceDataModel]) -> [IndexPath] {
+        var indexPaths = [IndexPath]()
+        if let tempTokens = Wallet.shared.tokens, tempTokens.isEmpty == false {
+            for i in 0..<tempTokens.count {
+                guard tempTokens[i].tokenType == .Libra else {
+                    continue
+                }
+                for model in tokenBalances {
+                    if tempTokens[i].tokenModule == model.currency {
+                        if tempTokens[i].tokenBalance != model.amount {
+                            Wallet.shared.updateWalletTokenBalance(banlance: model.amount ?? 0, index: i)
+                            // 刷新本地缓存数据
+                            do {
+                                try DataBaseManager.DBManager.updateTokenBalance(tokenID: tempTokens[i].tokenID, balance: model.amount ?? 0)
+                                print("数据库 刷新 Diem 链 \(tempTokens[i].tokenModule) 余额: \(tempTokens[i].tokenBalance) -> \(model.amount ?? 0) 成功")
+                            } catch {
+                                print("数据库 刷新 Diem 链 \(tempTokens[i].tokenModule) 余额: \(tempTokens[i].tokenBalance) -> \(model.amount ?? 0) 失败")
+                            }
+                            indexPaths.append(IndexPath.init(row: i, section: 0))
+                        } else {
+                            print("Diem 链 \(tempTokens[i].tokenModule) 余额: 无变化")
+                        }
+                        if tempTokens[i].tokenActiveState == false {
+                            print("\(tempTokens[i].tokenModule) 未激活")
+                            do {
+                                try WalletManager.updateTokenActiveState(tokenID: tempTokens[i].tokenID)
+                                print("数据库 刷新 Diem 链 \(tempTokens[i].tokenModule) 激活状态: \(tempTokens[i].tokenActiveState) -> \(true) 成功")
+                            } catch {
+                                print("数据库 刷新 Diem 链 \(tempTokens[i].tokenModule) 激活状态: \(tempTokens[i].tokenActiveState) -> \(true) 失败，错误：\n\(error)")
+                                print(error)
+                            }
+                        } else {
+                            print("\(tempTokens[i].tokenModule) 已激活")
+                        }
+                        break
                     }
-                    break
                 }
             }
+        } else {
+            print("当前钱包未开启任何币种")
         }
+        return indexPaths
     }
-    static func updateViolasTokensBalance(tokens: [Token], tokenBalances: [ViolasBalanceDataModel]) {
-        // 刷新本地缓存数据
-        for model in tokenBalances {
-            for token in tokens {
-                if model.currency == token.tokenModule {
-                    do {
-                        try DataBaseManager.DBManager.updateTokenBalance(tokenID: token.tokenID, balance: model.amount ?? 0)
-                        print("刷新Violas Token数据状态: \(true)")
-                    } catch {
-                        print("刷新Violas Token数据状态: \(false)")
+    static func updateViolasTokensBalance(tokenBalances: [ViolasBalanceDataModel]) -> [IndexPath] {
+        var indexPaths = [IndexPath]()
+        if let tempTokens = Wallet.shared.tokens, tempTokens.isEmpty == false {
+            for i in 0..<tempTokens.count {
+                guard Wallet.shared.tokens?[i].tokenType == .Violas else {
+                    continue
+                }
+                for model in tokenBalances {
+                    if tempTokens[i].tokenModule == model.currency {
+                        if tempTokens[i].tokenBalance != model.amount {
+                            Wallet.shared.updateWalletTokenBalance(banlance: model.amount ?? 0, index: i)
+                            do {
+                                try DataBaseManager.DBManager.updateTokenBalance(tokenID: tempTokens[i].tokenID, balance: model.amount ?? 0)
+                                print("数据库 刷新 Violas 链 \(tempTokens[i].tokenModule) 余额: \(tempTokens[i].tokenBalance) -> \(model.amount ?? 0) 成功")
+                            } catch {
+                                print("数据库 刷新 Violas 链 \(tempTokens[i].tokenModule) 余额: \(tempTokens[i].tokenBalance) -> \(model.amount ?? 0) 失败")
+                            }
+                            indexPaths.append(IndexPath.init(row: i, section: 0))
+                        } else {
+                            print("Violas 链 \(tempTokens[i].tokenModule) 余额: 无变化")
+                        }
+                        if tempTokens[i].tokenActiveState == false {
+                            print("\(tempTokens[i].tokenModule) 未激活")
+                            do {
+                                try WalletManager.updateTokenActiveState(tokenID: tempTokens[i].tokenID)
+                                print("数据库 刷新 Violas 链 \(tempTokens[i].tokenModule) 激活状态: \(tempTokens[i].tokenActiveState) -> \(true) 成功")
+                            } catch {
+                                print("数据库 刷新 Violas 链 \(tempTokens[i].tokenModule) 激活状态: \(tempTokens[i].tokenActiveState) -> \(true) 失败，错误：\n\(error)")
+                            }
+                        } else {
+                            print("\(tempTokens[i].tokenModule) 已激活")
+                        }
+                        break
                     }
-                    break
                 }
             }
+        } else {
+            print("当前钱包未开启任何币种")
         }
+        return indexPaths
     }
-    static func updateBitcoinBalance(tokenID: Int64, balance: Int64) {
-        // 刷新本地缓存数据
-        do {
-            try DataBaseManager.DBManager.updateTokenBalance(tokenID: tokenID, balance: balance)
-            print("刷新Bitcoin Token数据状态: \(true)")
-        } catch {
-            print("刷新Bitcoin Token数据状态: \(false)")
+    static func updateBitcoinBalance(balance: Int64) -> [IndexPath] {
+        var indexPaths = [IndexPath]()
+        if let tempTokens = Wallet.shared.tokens, tempTokens.isEmpty == false {
+            for i in 0..<tempTokens.count {
+                guard tempTokens[i].tokenType == .BTC else {
+                    continue
+                }
+                if tempTokens[i].tokenBalance != balance {
+                    Wallet.shared.updateWalletTokenBalance(banlance: balance, index: i)
+                    do {
+                        try DataBaseManager.DBManager.updateTokenBalance(tokenID: tempTokens[i].tokenID, balance: balance)
+                        print("数据库 刷新 Bitcoin 链 余额: \(balance) 成功")
+                    } catch {
+                        print("数据库 刷新 Bitcoin 链 余额: \(balance) 失败")
+                    }
+                    indexPaths.append(IndexPath.init(row: i, section: 0))
+                } else {
+                    print("Bitcoin 链 \(tempTokens[i].tokenModule) 余额: 无变化")
+                }
+            }
+        } else {
+            print("当前钱包未开启任何币种")
         }
+        return indexPaths
     }
 }
 // MARK: 更新钱包币种价格
@@ -685,6 +785,48 @@ extension WalletManager {
         } catch {
             print("刷新\(token.tokenName) Token Price数据状态: \(false)")
         }
+    }
+    static func updateTokenPrice(walletType: WalletType, priceModel: [ModelPriceDataModel]) -> [IndexPath] {
+        var indexPaths = [IndexPath]()
+        if let tempTokens = Wallet.shared.tokens, tempTokens.isEmpty == false {
+            for i in 0..<tempTokens.count {
+                guard tempTokens[i].tokenType == walletType else {
+                    continue
+                }
+                for model in priceModel {
+                    if tempTokens[i].tokenModule == model.name {
+                        if NSDecimalNumber.init(string: tempTokens[i].tokenPrice).doubleValue != model.rate {
+                            Wallet.shared.updateWalletTokenPrice(price: NSDecimalNumber.init(value: model.rate ?? 0).stringValue, index: i)
+                            // 刷新本地缓存数据
+                            do {
+                                try DataBaseManager.DBManager.updateTokenPrice(tokenID: tempTokens[i].tokenID, price: NSDecimalNumber.init(value: model.rate ?? 0).stringValue)
+                                print("数据库 刷新 \(walletType.description) 链 \(tempTokens[i].tokenModule) 价格: \(tempTokens[i].tokenPrice) -> \(model.rate ?? 0) 成功")
+                            } catch {
+                                print("数据库 刷新 \(walletType.description) 链 \(tempTokens[i].tokenModule) 价格: \(tempTokens[i].tokenPrice) -> \(model.rate ?? 0) 失败")
+                            }
+                            indexPaths.append(IndexPath.init(row: i, section: 0))
+                        } else {
+                            print("Violas 链 \(tempTokens[i].tokenModule) 价格: 无变化")
+                        }
+                        if tempTokens[i].tokenActiveState == false {
+                            print("\(tempTokens[i].tokenModule) 未激活")
+                            do {
+                                try WalletManager.updateTokenActiveState(tokenID: tempTokens[i].tokenID)
+                                print("数据库 刷新 \(walletType.description) 链 \(tempTokens[i].tokenModule) 激活状态: \(tempTokens[i].tokenActiveState) -> \(true) 成功")
+                            } catch {
+                                print("数据库 刷新 \(walletType.description) 链 \(tempTokens[i].tokenModule) 激活状态: \(tempTokens[i].tokenActiveState) -> \(true) 失败，错误：\n\(error)")
+                            }
+                        } else {
+                            print("\(tempTokens[i].tokenModule) 已激活")
+                        }
+                        break
+                    }
+                }
+            }
+        } else {
+            print("当前钱包未开启任何币种")
+        }
+        return indexPaths
     }
 }
 // MARK: 加载默认钱包
@@ -749,9 +891,9 @@ extension WalletManager {
 extension WalletManager {
     static func updateIsNewWallet() throws {
         do {
-            try DataBaseManager.DBManager.updateIsNewWalletState(wallet: WalletManager.shared)
+            try DataBaseManager.DBManager.updateIsNewWalletState(wallet: Wallet.shared)
             print("钱包更新备份状态-\(true)")
-            WalletManager.shared.changeWalletIsNewState(state: true)
+            Wallet.shared.changeWalletIsNewState(state: true)
         } catch {
             throw error
         }

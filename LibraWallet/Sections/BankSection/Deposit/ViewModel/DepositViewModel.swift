@@ -145,7 +145,7 @@ extension DepositViewModel: DepositViewDelegate {
                 switch result {
                 case let .success(mnemonic):
                     self?.view?.toastView?.show(tag: 99)
-                    self?.dataModel.sendDepositTransaction(sendAddress: WalletManager.shared.violasAddress!,
+                    self?.dataModel.sendDepositTransaction(sendAddress: Wallet.shared.violasAddress!,
                                                           amount: amount,
                                                           fee: 10,
                                                           mnemonic: mnemonic,

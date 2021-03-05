@@ -103,7 +103,7 @@ class LoanOrdersViewController: BaseViewController {
         return button
     }()
     func transactionRequest(refresh: Bool) {
-        self.dataModel.getLoanTransactions(address: WalletManager.shared.violasAddress!, page: self.dataOffset, limit: 10, refresh: refresh) { [weak self] (result) in
+        self.dataModel.getLoanTransactions(address: Wallet.shared.violasAddress!, page: self.dataOffset, limit: 10, refresh: refresh) { [weak self] (result) in
             switch result {
             case let .success(models):
                 if refresh == true {

@@ -56,7 +56,7 @@ extension RepaymentViewModel: RepaymentViewDelegate {
                 case let .success(mnemonic):
                     self?.view?.toastView?.show(tag: 99)
 //                    amount: self?.isRepaymentTotal == false ? UInt64(amount):0,
-                    self?.dataModel.sendRepaymentTransaction(sendAddress: WalletManager.shared.violasAddress!,
+                    self?.dataModel.sendRepaymentTransaction(sendAddress: Wallet.shared.violasAddress!,
                                                              amount: UInt64(amount),
                                                              fee: 10,
                                                              mnemonic: mnemonic,

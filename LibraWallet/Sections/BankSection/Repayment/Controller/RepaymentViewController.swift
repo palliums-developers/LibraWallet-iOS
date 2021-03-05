@@ -18,7 +18,7 @@ class RepaymentViewController: BaseViewController {
         self.viewModel.initKVO()
         self.detailView.toastView?.show(tag: 99)
         self.viewModel.dataModel.getLoanItemDetailModel(itemID: self.itemID ?? "",
-                                                        address: WalletManager.shared.violasAddress!)
+                                                        address: Wallet.shared.violasAddress!)
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()

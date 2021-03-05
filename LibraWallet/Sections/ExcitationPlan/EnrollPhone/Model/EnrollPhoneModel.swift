@@ -72,7 +72,7 @@ extension EnrollPhoneModel {
                     let json = try response.map(SecureCodeMainModel.self)
                     if json.code == 2000 {
                         do {
-                            WalletManager.shared.changeWalletIsNewState(state: false)
+                            Wallet.shared.changeWalletIsNewState(state: false)
                             try WalletManager.updateIsNewWallet()
                         } catch {
                             print(error.localizedDescription)

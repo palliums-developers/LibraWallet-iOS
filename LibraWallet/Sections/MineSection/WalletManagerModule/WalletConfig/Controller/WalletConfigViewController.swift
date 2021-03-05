@@ -67,7 +67,7 @@ extension WalletConfigViewController: WalletConfigTableViewManagerDelegate {
             WalletManager.unlockWallet { [weak self] (result) in
                 switch result {
                 case let .success(mnemonic):
-                    if WalletManager.shared.walletBackupState == true {
+                    if Wallet.shared.walletBackupState == true {
                         let vc = BackupMnemonicController()
                         vc.JustShow = true
                         vc.tempWallet = mnemonic

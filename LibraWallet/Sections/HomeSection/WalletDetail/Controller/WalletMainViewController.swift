@@ -20,11 +20,7 @@ class WalletMainViewController: BaseViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         headerView.snp.makeConstraints { (make) in
-            if #available(iOS 11.0, *) {
-                make.top.equalTo(self.view.safeAreaLayoutGuide)
-            } else {
-                make.top.equalTo(self.view)
-            }
+            make.top.equalTo(self.view.safeAreaLayoutGuide)
             make.left.right.equalTo(self.view)
             make.height.equalTo(162)
         }
@@ -39,11 +35,7 @@ class WalletMainViewController: BaseViewController {
             make.top.equalTo(segmentView.snp.bottom)
         }
         footerView.snp.makeConstraints { (make) in
-            if #available(iOS 11.0, *) {
-                make.bottom.equalTo(self.view.safeAreaLayoutGuide)
-            } else {
-                make.bottom.equalTo(self.view)
-            }
+            make.bottom.equalTo(self.view.safeAreaLayoutGuide)
             make.left.right.equalTo(self.view)
             make.height.equalTo(5+35+7)
         }
@@ -101,6 +93,19 @@ class WalletMainViewController: BaseViewController {
         con.wallet = self.wallet
         con.requestType = ""
         con.initKVO()
+        con.actionClosure = { [weak self] in
+            guard let token = self?.wallet else {
+                return
+            }
+            self?.dataModel.updateBalance(token: token, completion: { (result) in
+                switch result {
+                case let .success(model):
+                    self?.wallet = model
+                case let .failure(error):
+                    print(error.localizedDescription)
+                }
+            })
+        }
         return con
     }()
     lazy var transferTransactions: WalletTransactionsViewController = {
@@ -108,6 +113,19 @@ class WalletMainViewController: BaseViewController {
         con.wallet = self.wallet
         con.requestType = "0"
         con.initKVO()
+        con.actionClosure = { [weak self] in
+            guard let token = self?.wallet else {
+                return
+            }
+            self?.dataModel.updateBalance(token: token, completion: { (result) in
+                switch result {
+                case let .success(model):
+                    self?.wallet = model
+                case let .failure(error):
+                    print(error.localizedDescription)
+                }
+            })
+        }
         return con
     }()
     lazy var receiveTransactions: WalletTransactionsViewController = {
@@ -115,6 +133,19 @@ class WalletMainViewController: BaseViewController {
         con.wallet = self.wallet
         con.requestType = "1"
         con.initKVO()
+        con.actionClosure = { [weak self] in
+            guard let token = self?.wallet else {
+                return
+            }
+            self?.dataModel.updateBalance(token: token, completion: { (result) in
+                switch result {
+                case let .success(model):
+                    self?.wallet = model
+                case let .failure(error):
+                    print(error.localizedDescription)
+                }
+            })
+        }
         return con
     }()
     /// 数据监听KVO
@@ -162,7 +193,6 @@ extension WalletMainViewController: WalletMainViewFooterViewDelegate {
             vc.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController(vc, animated: true)
         }
-        
     }
     func walletReceive() {
         let vc = WalletReceiveViewController()

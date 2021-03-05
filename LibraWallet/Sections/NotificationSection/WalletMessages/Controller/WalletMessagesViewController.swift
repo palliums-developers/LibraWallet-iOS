@@ -86,7 +86,7 @@ extension WalletMessagesViewController {
         transactionRequest(refresh: false)
     }
     func transactionRequest(refresh: Bool) {
-        self.dataModel.getWalletMessages(address: WalletManager.shared.violasAddress ?? "", token: getRequestToken(), limit: dataOffset, count: 10, refresh: refresh) { [weak self] (result) in
+        self.dataModel.getWalletMessages(address: Wallet.shared.violasAddress ?? "", token: getRequestToken(), limit: dataOffset, count: 10, refresh: refresh) { [weak self] (result) in
             switch result {
             case let .success(models):
                 if refresh == true {

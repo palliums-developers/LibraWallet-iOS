@@ -92,7 +92,7 @@ class WalletConfigTableViewCell: UITableViewCell {
         let button = UISwitch.init()
         button.onTintColor = DefaultGreenColor
         button.addTarget(self, action: #selector(valueChange(button:)), for: UIControl.Event.valueChanged)
-        button.setOn(WalletManager.shared.walletBiometricLock ?? false, animated: true)
+        button.setOn(Wallet.shared.walletBiometricLock ?? false, animated: true)
         return button
     }()
     lazy var spaceLabel: UILabel = {

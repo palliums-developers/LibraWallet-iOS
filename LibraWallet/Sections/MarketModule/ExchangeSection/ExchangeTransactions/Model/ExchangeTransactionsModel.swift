@@ -105,7 +105,7 @@ class ExchangeTransactionsModel: NSObject {
 //        })
         quene.async(group: group, qos: .default, flags: [], execute: {
             group.enter()
-            self.getExchangeTransactions(address: WalletManager.shared.violasAddress ?? "",
+            self.getExchangeTransactions(address: Wallet.shared.violasAddress ?? "",
                                          page: page,
                                          pageSize: pageSize,
                                          requestStatus: requestStatus,

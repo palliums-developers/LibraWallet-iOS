@@ -84,7 +84,7 @@ class TransactionDetailViewController: BaseViewController {
                 return
             }
             self.detailView.makeToastActivity(.center)
-            self.dataModel.getMessageTransactionDetail(address: WalletManager.shared.violasAddress ?? "", version: version) { [weak self] (result) in
+            self.dataModel.getMessageTransactionDetail(address: Wallet.shared.violasAddress ?? "", version: version) { [weak self] (result) in
                 self?.detailView.hideToastActivity()
                 switch result {
                 case let .success(model):

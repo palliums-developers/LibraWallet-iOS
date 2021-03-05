@@ -56,11 +56,11 @@ extension TokenMappingViewModel {
     }
     func handleRequest(inputAmount: NSDecimalNumber, outputAmount: NSDecimalNumber, model: TokenMappingListDataModel, mnemonic: [String], outputModuleActiveState: Bool) {
         if model.from_coin?.coin_type?.lowercased() == "violas" {
-            var receiveAddress = WalletManager.shared.btcAddress
+            var receiveAddress = Wallet.shared.btcAddress
             if model.to_coin?.coin_type != "btc" {
-                receiveAddress = WalletManager.shared.libraAddress
+                receiveAddress = Wallet.shared.libraAddress
             }
-            self.dataModel.sendViolasMappingTransaction(sendAddress: WalletManager.shared.violasAddress ?? "",
+            self.dataModel.sendViolasMappingTransaction(sendAddress: Wallet.shared.violasAddress ?? "",
                                                         receiveAddress: receiveAddress ?? "",
                                                         module: model.from_coin?.assert?.module ?? "",
                                                         moduleOutput: model.to_coin?.assert?.module ?? "",
@@ -72,11 +72,11 @@ extension TokenMappingViewModel {
                                                         centerAddress: model.receiver_address ?? "",
                                                         outputModuleActiveState: outputModuleActiveState)
         } else if model.from_coin?.coin_type?.lowercased() == "libra" {
-            var receiveAddress = WalletManager.shared.btcAddress
+            var receiveAddress = Wallet.shared.btcAddress
             if model.to_coin?.coin_type != "btc" {
-                receiveAddress = WalletManager.shared.violasAddress
+                receiveAddress = Wallet.shared.violasAddress
             }
-            self.dataModel.sendLibraMappingTransaction(sendAddress: WalletManager.shared.libraAddress ?? "",
+            self.dataModel.sendLibraMappingTransaction(sendAddress: Wallet.shared.libraAddress ?? "",
                                                        receiveAddress: receiveAddress ?? "",
                                                        module: model.from_coin?.assert?.module ?? "",
                                                        moduleOutput: model.to_coin?.assert?.module ?? "",
@@ -90,7 +90,7 @@ extension TokenMappingViewModel {
         } else if model.from_coin?.coin_type?.lowercased() == "btc" {
             let wallet = try! BTCManager().getWallet(mnemonic: mnemonic)
             let chainType = model.to_coin?.coin_type?.lowercased() == "libra" ? "libra":"violas"
-            let receiveAddress = model.to_coin?.coin_type?.lowercased() == "libra" ? (WalletManager.shared.libraAddress ?? ""):(WalletManager.shared.violasAddress ?? "")
+            let receiveAddress = model.to_coin?.coin_type?.lowercased() == "libra" ? (Wallet.shared.libraAddress ?? ""):(Wallet.shared.violasAddress ?? "")
             self.dataModel.sendBTCMappingTransaction(wallet: wallet,
                                                      amountIn: inputAmount.multiplying(by: NSDecimalNumber.init(value: 100000000)).uint64Value,
                                                      amountOut: outputAmount.multiplying(by: NSDecimalNumber.init(value: 1000000)).uint64Value,
@@ -109,9 +109,9 @@ extension TokenMappingViewModel {
 extension TokenMappingViewModel: TokenMappingHeaderViewDelegate {
     func chooseToken() {
         self.view?.toastView?.show(tag: 99)
-        self.dataModel.getMappingTokenList(btcAddress: WalletManager.shared.btcAddress ?? "",
-                                           violasAddress: WalletManager.shared.violasAddress ?? "",
-                                           libraAddress: WalletManager.shared.libraAddress ?? "")
+        self.dataModel.getMappingTokenList(btcAddress: Wallet.shared.btcAddress ?? "",
+                                           violasAddress: Wallet.shared.violasAddress ?? "",
+                                           libraAddress: Wallet.shared.libraAddress ?? "")
     }
     
     func confirmTransfer() {

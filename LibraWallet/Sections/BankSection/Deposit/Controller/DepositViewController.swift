@@ -17,7 +17,7 @@ class DepositViewController: BaseViewController {
         self.view.addSubview(detailView)
         self.viewModel.initKVO()
         self.detailView.toastView?.show(tag: 99)
-        self.viewModel.dataModel.getDepositItemDetailModel(itemID: self.itemID ?? "", address: WalletManager.shared.violasAddress ?? "")
+        self.viewModel.dataModel.getDepositItemDetailModel(itemID: self.itemID ?? "", address: Wallet.shared.violasAddress ?? "")
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()

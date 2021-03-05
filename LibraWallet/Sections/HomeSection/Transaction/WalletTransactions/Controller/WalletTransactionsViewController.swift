@@ -131,6 +131,8 @@ class WalletTransactionsViewController: BaseViewController {
             break
         }
     }
+    typealias successClosure = () -> Void
+    var actionClosure: successClosure?
 }
 extension WalletTransactionsViewController {
     func initKVO() {
@@ -199,6 +201,12 @@ extension WalletTransactionsViewController {
                 guard let tempData = dataDic.value(forKey: "data") as? [TrezorBTCTransactionDataModel] else {
                     return
                 }
+                if self?.tableViewManager.btcTransactions != nil && self?.tableViewManager.btcTransactions?.first?.txid != tempData.first?.txid {
+                    // 回调更新
+                    if let action = self?.actionClosure {
+                        action()
+                    }
+                }
                 self?.tableViewManager.btcTransactions = tempData
                 self?.detailView.tableView.reloadData()
             } else if type == "BTCTransactionHistoryMore" {
@@ -226,6 +234,12 @@ extension WalletTransactionsViewController {
                 guard let tempData = dataDic.value(forKey: "data") as? [ViolasDataModel] else {
                     return
                 }
+                if self?.tableViewManager.violasTransactions != nil && self?.tableViewManager.violasTransactions?.first?.version != tempData.first?.version {
+                    // 回调更新
+                    if let action = self?.actionClosure {
+                        action()
+                    }
+                }
                 self?.tableViewManager.violasTransactions = tempData
                 self?.detailView.tableView.reloadData()
             } else if type == "ViolasTransactionsMore" {
@@ -252,6 +266,12 @@ extension WalletTransactionsViewController {
             } else if type == "LibraTransactionHistoryOrigin" {
                 guard let tempData = dataDic.value(forKey: "data") as? [LibraDataModel] else {
                    return
+                }
+                if self?.tableViewManager.libraTransactions != nil && self?.tableViewManager.libraTransactions?.first?.version != tempData.first?.version {
+                    // 回调更新
+                    if let action = self?.actionClosure {
+                        action()
+                    }
                 }
                 self?.tableViewManager.libraTransactions = tempData
                 self?.detailView.tableView.reloadData()

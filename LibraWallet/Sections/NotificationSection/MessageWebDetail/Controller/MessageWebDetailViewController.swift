@@ -55,7 +55,7 @@ class MessageWebDetailViewController: BaseViewController {
         guard let tempMessageID = messageID, messageID?.isEmpty == false else {
             return
         }
-        self.dataModel.getWalletMessageDetail(address: WalletManager.shared.violasAddress ?? "", token: getRequestToken(), id: tempMessageID) { [weak self] (result) in
+        self.dataModel.getWalletMessageDetail(address: Wallet.shared.violasAddress ?? "", token: getRequestToken(), id: tempMessageID) { [weak self] (result) in
             switch result {
             case let .success(model):
                 self?.detailView.model = model

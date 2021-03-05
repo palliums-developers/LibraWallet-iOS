@@ -104,7 +104,7 @@ extension MappingTransactionsViewController {
     }
     func transactionRequest(refresh: Bool) {
         let requestState = refresh == true ? 0:1
-        let address = "\(WalletManager.shared.violasAddress ?? "")_violas,\(WalletManager.shared.libraAddress ?? "")_libra,\(WalletManager.shared.btcAddress ?? "")_btc"
+        let address = "\(Wallet.shared.violasAddress ?? "")_violas,\(Wallet.shared.libraAddress ?? "")_libra,\(Wallet.shared.btcAddress ?? "")_btc"
         dataModel.getMappingTransactions(walletAddress: address, page: dataOffset, pageSize: 10, requestStatus: requestState)
     }
 }

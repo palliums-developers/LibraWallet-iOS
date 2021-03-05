@@ -62,7 +62,7 @@ extension AssetsPoolViewController: AssetsPoolViewHeaderViewDelegate {
             switch result {
             case let .success(mnemonic):
                 self?.detailView.toastView?.show(tag: 99)
-                self?.dataModel.sendAddLiquidityViolasTransaction(sendAddress: WalletManager.shared.violasAddress ?? "",
+                self?.dataModel.sendAddLiquidityViolasTransaction(sendAddress: Wallet.shared.violasAddress ?? "",
                                                                   amounta_desired: amountIn,
                                                                   amountb_desired: amountOut,
                                                                   amounta_min: UInt64(Double(amountIn) * 0.995),
@@ -87,7 +87,7 @@ extension AssetsPoolViewController: AssetsPoolViewHeaderViewDelegate {
             switch result {
             case let .success(mnemonic):
                 self?.detailView.toastView?.show(tag: 99)
-                self?.dataModel.sendRemoveLiquidityViolasTransaction(sendAddress: WalletManager.shared.violasAddress ?? "",
+                self?.dataModel.sendRemoveLiquidityViolasTransaction(sendAddress: Wallet.shared.violasAddress ?? "",
                                                                      liquidity: token,
                                                                      amounta_min: amountIn,
                                                                      amountb_min: amountOut,
@@ -110,18 +110,18 @@ extension AssetsPoolViewController: AssetsPoolViewHeaderViewDelegate {
         if self.detailView.headerView.changeTypeButton.titleLabel?.text == localLanguage(keyString: localLanguage(keyString: "wallet_assets_pool_transfer_in_title")) {
             // 转入
             self.detailView.toastView?.show(tag: 99)
-            self.dataModel.getMarketTokens(address: WalletManager.shared.violasAddress ?? "")
+            self.dataModel.getMarketTokens(address: Wallet.shared.violasAddress ?? "")
         } else {
             // 转出
             self.detailView.makeToastActivity(.center)
-            self.dataModel.getMarketMineTokens(address: WalletManager.shared.violasAddress ?? "")
+            self.dataModel.getMarketMineTokens(address: Wallet.shared.violasAddress ?? "")
         }
     }
     func selectOutoutToken() {
         if self.detailView.headerView.changeTypeButton.titleLabel?.text == localLanguage(keyString: localLanguage(keyString: "wallet_assets_pool_transfer_in_title")) {
             // 转入
             self.detailView.toastView?.show(tag: 99)
-            self.dataModel.getMarketTokens(address: WalletManager.shared.violasAddress ?? "")
+            self.dataModel.getMarketTokens(address: Wallet.shared.violasAddress ?? "")
         }
     }
     func swapInputOutputToken() {

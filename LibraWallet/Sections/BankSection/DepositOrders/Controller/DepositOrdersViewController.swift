@@ -129,7 +129,7 @@ extension DepositOrdersViewController {
     }
     func transactionRequest(refresh: Bool) {
         let requestState = refresh == true ? 0:1
-        self.dataModel.getDepositTransactions(address: WalletManager.shared.violasAddress!, page: self.dataOffset, limit: 10, requestStatus: requestState)
+        self.dataModel.getDepositTransactions(address: Wallet.shared.violasAddress!, page: self.dataOffset, limit: 10, requestStatus: requestState)
     }
 }
 
@@ -144,7 +144,7 @@ extension DepositOrdersViewController: DepositOrdersTableViewCellDelegate {
     func withdraw(indexPath: IndexPath, model: DepositOrdersMainDataModel) {
         print(indexPath.row)
         self.detailView.toastView?.show(tag: 99)
-        self.dataModel.getDepositItemWithdrawDetail(address: WalletManager.shared.violasAddress!,
+        self.dataModel.getDepositItemWithdrawDetail(address: Wallet.shared.violasAddress!,
                                                     itemID: model.id ?? "")
         self.withdrawClosure = { [weak self] withdrawModel in
             self?.withdrawAlert.model = withdrawModel
@@ -153,7 +153,7 @@ extension DepositOrdersViewController: DepositOrdersTableViewCellDelegate {
                     switch result {
                     case let .success(mnemonic):
                         self?.detailView.toastView?.show(tag: 99)
-                        self?.dataModel.sendWithdrawTransaction(sendAddress: WalletManager.shared.violasAddress!,
+                        self?.dataModel.sendWithdrawTransaction(sendAddress: Wallet.shared.violasAddress!,
                                                             amount: amount,
                                                             fee: 10,
                                                             mnemonic: mnemonic,

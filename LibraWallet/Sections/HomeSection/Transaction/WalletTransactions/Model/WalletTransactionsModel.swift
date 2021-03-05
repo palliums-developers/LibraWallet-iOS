@@ -205,7 +205,6 @@ class WalletTransactionsModel: NSObject {
                 case let .success(response):
                     do {
                         let json = try response.map(TrezorBTCTransactionMainModel.self)
-                        print(json)
                         guard let models = json.transactions, models.isEmpty == false else {
                             let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: type)
                             self?.setValue(data, forKey: "dataDic")
@@ -246,7 +245,6 @@ class WalletTransactionsModel: NSObject {
             case let .success(response):
                 do {
                     let json = try response.map(ViolasResponseModel.self)
-                    print(try response.mapString())
                     if json.code == 2000 {
                         guard json.data?.isEmpty == false else {
                             if requestStatus == 0 {

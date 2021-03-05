@@ -77,7 +77,7 @@ class YieldFarmingViewController: BaseViewController {
                     switch result {
                     case let .success(mnemonic):
                         self?.detailView.toastView.show(tag: 99)
-                        self?.dataModel.sendMarketExtractProfit(sendAddress: WalletManager.shared.violasAddress ?? "",
+                        self?.dataModel.sendMarketExtractProfit(sendAddress: Wallet.shared.violasAddress ?? "",
                                                                 mnemonic: mnemonic)
                         self?.withdrawMarketClosure = { result in
                             if result == true {
@@ -100,7 +100,7 @@ class YieldFarmingViewController: BaseViewController {
                     switch result {
                     case let .success(mnemonic):
                         self?.detailView.toastView.show(tag: 99)
-                        self?.dataModel.sendBankExtractProfit(sendAddress: WalletManager.shared.violasAddress ?? "",
+                        self?.dataModel.sendBankExtractProfit(sendAddress: Wallet.shared.violasAddress ?? "",
                                                               mnemonic: mnemonic)
                         self?.withdrawBankClosure = { result in
                             if result == true {

@@ -23,7 +23,7 @@ struct DiemManager {
             throw error
         }
     }
-    /// 获取Libra钱包对象
+    /// 获取Diem钱包对象
     /// - Parameter mnemonic: 助记词
     /// - Throws: 异常
     /// - Returns: 钱包对象
@@ -50,22 +50,6 @@ struct DiemManager {
             return true
         } else {
             return false
-        }
-    }
-    /// 分割地址
-    /// - Parameter address: 原始地址
-    /// - Throws: 分割错误
-    /// - Returns: （授权KEY， 地址）
-    public static func splitAddress(address: String) throws -> (String, String) {
-        guard isValidDiemAddress(address: address) else {
-            throw LibraWalletError.error("Invalid Address")
-        }
-        if address.count == 64 {
-            let authenticatorKey = address.prefix(address.count / 2)
-            let shortAddress = address.suffix(address.count / 2)
-            return ("\(authenticatorKey)", "\(shortAddress)")
-        } else {
-            return ("", address)
         }
     }
     /// 检查有效地址
@@ -133,6 +117,7 @@ struct DiemManager {
         }
     }
 }
+// MARK: - Diem单签
 extension DiemManager {
     /// Diem交易Hex
     /// - Parameters:
@@ -148,9 +133,8 @@ extension DiemManager {
     public static func getNormalTransactionHex(sendAddress: String, receiveAddress: String, amount: UInt64, fee: UInt64, mnemonic: [String], sequenceNumber: UInt64, module: String, toSubAddress: String, fromSubAddress: String, referencedEvent: String) throws -> String {
         do {
             let wallet = try DiemManager.getWallet(mnemonic: mnemonic)
-            let (_, address) = try DiemManager.splitAddress(address: receiveAddress)
             // 拼接交易
-            let argument0 = DiemTransactionArgument.init(code: .Address(address))
+            let argument0 = DiemTransactionArgument.init(code: .Address(receiveAddress))
             let argument1 = DiemTransactionArgument.init(code: .U64(amount))
             var argument2 = DiemTransactionArgument(code: .U8Vector(Data()))
             // metadata
@@ -202,31 +186,27 @@ extension DiemManager {
     ///   - feeModule: 手续费币种
     /// - Throws: 报错
     /// - Returns: 交易签名
-    public static func getMultiTransactionHex(sendAddress: String, receiveAddress: String, amount: UInt64, fee: UInt64, sequenceNumber: UInt64, wallet: DiemMultiHDWallet, module: String, feeModule: String) throws -> String {
-        do {
-            // 拼接交易
-            let argument0 = DiemTransactionArgument.init(code: .Address(receiveAddress))
-            let argument1 = DiemTransactionArgument.init(code: .U64(amount))
-            let argument2 = DiemTransactionArgument.init(code: .U8Vector(Data()))
-            let argument3 = DiemTransactionArgument.init(code: .U8Vector(Data()))
-            let script = DiemTransactionScriptPayload.init(code: Data.init(hex: DiemUtils.getMoveCode(name: "peer_to_peer_with_metadata")),
-                                                           typeTags: [DiemTypeTag.init(typeTag: .Struct(DiemStructTag.init(type: .Normal(module))))],
-                                                           argruments: [argument0, argument1, argument2, argument3])
-            let transactionPayload = DiemTransactionPayload.init(payload: .script(script))
-            let rawTransaction = DiemRawTransaction.init(senderAddres: sendAddress,
-                                                         sequenceNumber: sequenceNumber,
-                                                         maxGasAmount: 1000000,
-                                                         gasUnitPrice: fee,
-                                                         expirationTime: UInt64(Date().timeIntervalSince1970 + 600),
-                                                         payload: transactionPayload,
-                                                         module: feeModule,
-                                                         chainID: wallet.network.chainId)
-            // 签名交易
-            let multiSignature = wallet.buildTransaction(transaction: rawTransaction)//try wallet.privateKey.signMultiTransaction(transaction: rawTransaction, publicKey: wallet.publicKey)
-            return multiSignature.toHexString()
-        } catch {
-            throw error
-        }
+    public static func getMultiTransactionHex(sendAddress: String, receiveAddress: String, amount: UInt64, fee: UInt64, sequenceNumber: UInt64, wallet: DiemMultiHDWallet, module: String, feeModule: String) -> String {
+        // 拼接交易
+        let argument0 = DiemTransactionArgument.init(code: .Address(receiveAddress))
+        let argument1 = DiemTransactionArgument.init(code: .U64(amount))
+        let argument2 = DiemTransactionArgument.init(code: .U8Vector(Data()))
+        let argument3 = DiemTransactionArgument.init(code: .U8Vector(Data()))
+        let script = DiemTransactionScriptPayload.init(code: Data.init(hex: DiemUtils.getMoveCode(name: "peer_to_peer_with_metadata")),
+                                                       typeTags: [DiemTypeTag.init(typeTag: .Struct(DiemStructTag.init(type: .Normal(module))))],
+                                                       argruments: [argument0, argument1, argument2, argument3])
+        let transactionPayload = DiemTransactionPayload.init(payload: .script(script))
+        let rawTransaction = DiemRawTransaction.init(senderAddres: sendAddress,
+                                                     sequenceNumber: sequenceNumber,
+                                                     maxGasAmount: 1000000,
+                                                     gasUnitPrice: fee,
+                                                     expirationTime: UInt64(Date().timeIntervalSince1970 + 600),
+                                                     payload: transactionPayload,
+                                                     module: feeModule,
+                                                     chainID: wallet.network.chainId)
+        // 签名交易
+        let multiSignature = wallet.buildTransaction(transaction: rawTransaction)
+        return multiSignature.toHexString()
     }
 }
 // MARK: - Diem换私钥
@@ -291,7 +271,7 @@ extension DiemManager {
 }
 // MARK: - Diem映射Violas、BTC
 extension DiemManager {
-    /// Libra映射Violas、BTC
+    /// Diem映射Violas、BTC
     /// - Parameters:
     ///   - sendAddress: 发送地址
     ///   - mnemonic: 助记词

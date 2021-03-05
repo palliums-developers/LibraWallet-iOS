@@ -36,7 +36,7 @@ class HomeViewController: UIViewController {
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationController?.navigationBar.isTranslucent = true
         self.navigationController?.navigationBar.barStyle = .black
-        self.detailView.activeButton.alpha = WalletManager.shared.isNewWallet == true ? 1:0
+        self.detailView.activeButton.alpha = Wallet.shared.isNewWallet == true ? 1:0
         // 展示未备份警告
         isBackupMnemonic()
     }
@@ -361,7 +361,7 @@ extension HomeViewController {
         guard getIdentityWalletState() == true else {
             return
         }
-        guard WalletManager.shared.walletBackupState == false else {
+        guard Wallet.shared.walletBackupState == false else {
             self.detailView.hideBackupWarningAlert()
             return
         }
@@ -382,7 +382,7 @@ extension HomeViewController {
         self.requestData()
     }
     func requestWaletNewState() {
-        self.dataModel.isNewWallet(address: WalletManager.shared.violasAddress ?? "") { [weak self] (result) in
+        self.dataModel.isNewWallet(address: Wallet.shared.violasAddress ?? "") { [weak self] (result) in
             switch result {
             case let .success(state):
                 if state == true {
@@ -411,7 +411,7 @@ extension HomeViewController {
 //MARK: - 注册消息通知
 extension HomeViewController {
     @objc func registerFCMToken(notification: NSNotification) {
-        guard let address = WalletManager.shared.violasAddress else {
+        guard let address = Wallet.shared.violasAddress else {
             return
         }
         guard let token = notification.userInfo?["token"] as? String else {
@@ -431,7 +431,7 @@ extension HomeViewController {
         }
     }
     func getUnreadMessagesCount(token: String) {
-        self.dataModel.getUnreadMessagesCount(address: WalletManager.shared.violasAddress ?? "", token: token) { [weak self] (result) in
+        self.dataModel.getUnreadMessagesCount(address: Wallet.shared.violasAddress ?? "", token: token) { [weak self] (result) in
             switch result {
             case let .success(model):
                 self?.unreadMessageDataModel = model
@@ -481,10 +481,20 @@ extension HomeViewController: HomeHeaderViewDelegate {
     }
     
     func mapping() {
-        let vc = TokenMappingViewController()
-        //        vc.wallet = self.wallet
-        vc.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(vc, animated: true)
+//        let vc = TokenMappingViewController()
+//        //        vc.wallet = self.wallet
+//        vc.hidesBottomBarWhenPushed = true
+//        self.navigationController?.pushViewController(vc, animated: true)
+//        Wallet.shared.updateWalletTokens(tokens: self.tableViewManager.dataModel!)
+//        WalletManager.getViolasBalance(address: Wallet.shared.violasAddress!, tokens: self.tableViewManager.dataModel!) { [weak self] (result) in
+//            switch result {
+//            case let .success(data):
+//                print(data)
+//            case let .failure(error):
+//                print(error.localizedDescription)
+//                self?.handleError(requestType: "", error: error)
+//            }
+//        }
     }
     func yieldFarmingRules() {
         let vc = YieldFarmingViewController()

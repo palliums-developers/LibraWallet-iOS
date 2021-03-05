@@ -46,7 +46,7 @@ class MarketMineViewController: BaseViewController {
     var observer: NSKeyValueObservation?
     func requestData() {
         self.detailView.makeToastActivity(.center)
-        self.dataModel.getMarketMineTokens(address: WalletManager.shared.violasAddress ?? "")
+        self.dataModel.getMarketMineTokens(address: Wallet.shared.violasAddress ?? "")
     }
 }
 extension MarketMineViewController {
