@@ -261,8 +261,13 @@ public enum LibraWalletError: Error {
         case mappingFounctionInvalid
         /// 映射稳定币为空
         case mappingCoinDataEmpty
+        /// ETH地址为空
+        case ethAddressEmpty
+        /// ETH无效
+        case ethAddressInvalid
     }
     case WalletMapping(reason: MappingError)
+    
     public enum DataBaseError {
         /// 数据打开失败
         case openDataBaseError
@@ -705,6 +710,10 @@ extension LibraWalletError.MappingError {
             return localLanguage(keyString: "wallet_mapping_info_alert_content")
         case .mappingCoinDataEmpty:
             return localLanguage(keyString: "wallet_mapping_info_data_empty_alert_content")
+        case .ethAddressEmpty:
+            return localLanguage(keyString: "wallet_mapping_eth_address_empty")
+        case .ethAddressInvalid:
+            return localLanguage(keyString: "wallet_mapping_eth_address_invalid")
         }
     }
 }

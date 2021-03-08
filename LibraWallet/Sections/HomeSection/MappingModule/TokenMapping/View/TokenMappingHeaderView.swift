@@ -23,6 +23,9 @@ class TokenMappingHeaderView: UIView {
         
         whiteBackgroundView.addSubview(mappingIndicatorImageView)
         whiteBackgroundView.addSubview(outputAmountTextField)
+        
+        whiteBackgroundView.addSubview(outputAddressTextField)
+        
         whiteBackgroundView.addSubview(mappingSpaceImageView)
         
         whiteBackgroundView.addSubview(mappingRateTitleLabel)
@@ -45,7 +48,7 @@ class TokenMappingHeaderView: UIView {
             make.top.equalTo(self).offset(0)
             make.left.equalTo(self).offset(15)
             make.right.equalTo(self.snp.right).offset(-15)
-            make.height.equalTo(436)
+            make.height.equalTo(436).priority(250)
         }
         balanceIndicatorImageView.snp.makeConstraints { (make) in
             make.top.equalTo(whiteBackgroundView).offset(30)
@@ -73,8 +76,14 @@ class TokenMappingHeaderView: UIView {
             make.right.equalTo(whiteBackgroundView.snp.right).offset(-15)
             make.height.equalTo(48)
         }
+        outputAddressTextField.snp.makeConstraints { (make) in
+            make.top.equalTo(outputAmountTextField.snp.bottom).offset(16)
+            make.left.equalTo(whiteBackgroundView).offset(15)
+            make.right.equalTo(whiteBackgroundView.snp.right).offset(-15)
+            make.height.equalTo(0).priority(250)
+        }
         mappingSpaceImageView.snp.makeConstraints { (make) in
-            make.top.equalTo(outputAmountTextField.snp.bottom).offset(30)
+            make.top.equalTo(outputAmountTextField.snp.bottom).offset(30).priority(250)
             make.left.equalTo(whiteBackgroundView).offset(30)
             make.right.equalTo(whiteBackgroundView.snp.right).offset(-30)
             make.height.equalTo(2)
@@ -199,6 +208,25 @@ class TokenMappingHeaderView: UIView {
         label.text = "---"
         return label
     }()
+    lazy var outputAddressTextField: WYDTextField = {
+        let textField = WYDTextField.init()
+        textField.textAlignment = NSTextAlignment.left
+        textField.textColor = UIColor.init(hex: "333333")
+        textField.font = UIFont.init(name: "DIN Alternate Bold", size: 14)
+        textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_mapping_input_amount_textfield_placeholder"),
+                                                             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "BABABA"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)])
+        textField.keyboardType = .decimalPad
+        textField.tintColor = DefaultGreenColor
+        textField.layer.borderColor = UIColor.init(hex: "D8D7DA").cgColor
+        textField.layer.borderWidth = 1
+        textField.layer.cornerRadius = 8
+        let holderView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: 16, height: 48))
+        textField.leftView = holderView
+        textField.leftViewMode = .always
+        textField.tag = 30
+        textField.alpha = 0
+        return textField
+    }()
     lazy var mappingSpaceImageView: UIImageView = {
         let imageView = UIImageView.init()
         imageView.image = UIImage.init(named: "mapping_space")
@@ -267,6 +295,37 @@ class TokenMappingHeaderView: UIView {
         didSet {
             guard let model = inputModel else {
                 return
+            }
+            if model.to_coin?.coin_type == "eth" {
+                UIView.animate(withDuration: 0.3) {
+                    self.whiteBackgroundView.snp.remakeConstraints { (make) in
+                        make.height.equalTo(470)
+                    }
+                    self.outputAddressTextField.alpha = 1
+                    self.outputAddressTextField.snp.remakeConstraints { (make) in
+                        make.height.equalTo(48)
+                    }
+                    self.mappingSpaceImageView.snp.remakeConstraints { (make) in
+                        make.top.equalTo(self.outputAddressTextField.snp.bottom).offset(30)
+                    }
+                    self.layoutIfNeeded()
+                }
+            } else {
+                if oldValue?.to_coin?.coin_type == "eth" {
+                    UIView.animate(withDuration: 0.3) {
+                        self.whiteBackgroundView.snp.remakeConstraints { (make) in
+                            make.height.equalTo(436)
+                        }
+                        self.outputAddressTextField.alpha = 0
+                        self.outputAddressTextField.snp.remakeConstraints { (make) in
+                            make.height.equalTo(0)
+                        }
+                        self.mappingSpaceImageView.snp.remakeConstraints { (make) in
+                            make.top.equalTo(self.outputAmountTextField.snp.bottom).offset(30)
+                        }
+                        self.layoutIfNeeded()
+                    }
+                }
             }
             var unit = 1000000
             if model.from_coin?.coin_type == "btc" {

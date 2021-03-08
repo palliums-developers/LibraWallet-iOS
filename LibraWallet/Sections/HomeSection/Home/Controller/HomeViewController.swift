@@ -481,20 +481,10 @@ extension HomeViewController: HomeHeaderViewDelegate {
     }
     
     func mapping() {
-//        let vc = TokenMappingViewController()
-//        //        vc.wallet = self.wallet
-//        vc.hidesBottomBarWhenPushed = true
-//        self.navigationController?.pushViewController(vc, animated: true)
-//        Wallet.shared.updateWalletTokens(tokens: self.tableViewManager.dataModel!)
-//        WalletManager.getViolasBalance(address: Wallet.shared.violasAddress!, tokens: self.tableViewManager.dataModel!) { [weak self] (result) in
-//            switch result {
-//            case let .success(data):
-//                print(data)
-//            case let .failure(error):
-//                print(error.localizedDescription)
-//                self?.handleError(requestType: "", error: error)
-//            }
-//        }
+        let vc = TokenMappingViewController()
+        //        vc.wallet = self.wallet
+        vc.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     func yieldFarmingRules() {
         let vc = YieldFarmingViewController()

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import BigInt
 
 func screenSnapshot() -> UIImage? {
     
@@ -125,6 +126,34 @@ fileprivate func isContainNumber(content: String) -> Bool {
         return false
     }
 }
+func isValidETHAddress(address: String) -> Bool {
+    if address.isEmpty == true || address.hasPrefix("0x") == false {
+        return false
+    } else {
+        let index = address.index(address.startIndex, offsetBy: 2)
+        let content = address.suffix(from: index)
+        guard content.count == 40 else {
+            return false
+        }
+        let number = BigInt.init(Data.init(Array<UInt8>(hex: String(content))))
+        guard NSDecimalNumber.init(string: number.description).intValue > 0 else {
+            return false
+        }
+        return true
+    }
+}
+//    return WalletUtils.isValidAddress(input);
+//public static boolean isValidAddress(String input) {
+//        String cleanInput = Numeric.cleanHexPrefix(input);
+//
+//        try {
+//            Numeric.toBigIntNoPrefix(cleanInput);
+//        } catch (NumberFormatException e) {
+//            return false;
+//        }
+//
+//        return cleanInput.length() == ADDRESS_LENGTH_IN_HEX;
+//    }
 func getDecimalNumberAmount(amount: NSDecimalNumber, scale: Int16, unit: Int) -> String {
 //    NSRoundPlain:四舍五入
 //    NSRoundDown:只舍不入

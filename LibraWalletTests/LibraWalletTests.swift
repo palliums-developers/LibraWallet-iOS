@@ -55,4 +55,11 @@ class LibraWalletTests: XCTestCase {
     func testRatio() {
         print(ratio(number: 220))
     }
+    func testETHAddress() {
+        XCTAssertEqual(isValidETHAddress(address: "0x00fe1b8a035b5c5e42249627ea62f75e5a071cb3"), true)
+        XCTAssertEqual(isValidETHAddress(address: "00fe1b8a035b5c5e42249627ea62f75e5a071cb3"), false)
+        XCTAssertEqual(isValidETHAddress(address: "0x00fe1b8a035b5c5e42249627ea62f75e]a071cb3"), false)
+        XCTAssertEqual(isValidETHAddress(address: "0x00fe1b8a035b5c5e42249627ea62f75e5a071cp3"), false)
+
+    }
 }

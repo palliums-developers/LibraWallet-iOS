@@ -312,6 +312,10 @@ wallet_mapping_info_alert_content = "Get Mapping Info Failed, Please Try Later";
 wallet_mapping_info_alert_confirm_button_title = "Sure";
 // 获取反向映射信息
 wallet_mapping_info_data_empty_alert_content = "Don’t have any mapping coins yet, please try again after mapping";
+// ETH地址为空
+wallet_mapping_eth_address_empty = "ETH Address Empty";
+// ETH地址无效
+wallet_mapping_eth_address_invalid = "ETH Address Invalid";
 
 /************* 映射交易列表 *******************/
 // 内容

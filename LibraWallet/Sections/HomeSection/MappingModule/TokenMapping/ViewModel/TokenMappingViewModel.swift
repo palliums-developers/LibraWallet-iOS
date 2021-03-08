@@ -35,7 +35,7 @@ class TokenMappingViewModel: NSObject {
     var tokens: [Token]?
 }
 extension TokenMappingViewModel {
-    func handleUnlockWallet(inputAmount: NSDecimalNumber, outputAmount: NSDecimalNumber, model: TokenMappingListDataModel, outputModuleActiveState: Bool) {
+    func handleUnlockWallet(inputAmount: NSDecimalNumber, outputAmount: NSDecimalNumber, model: TokenMappingListDataModel, outputModuleActiveState: Bool, ethReceiveAddress: String) {
         WalletManager.unlockWallet { [weak self] (result) in
             switch result {
             case let .success(mnemonic):
@@ -44,7 +44,8 @@ extension TokenMappingViewModel {
                                     outputAmount: outputAmount,
                                     model: model,
                                     mnemonic: mnemonic,
-                                    outputModuleActiveState: outputModuleActiveState)
+                                    outputModuleActiveState: outputModuleActiveState,
+                                    ethReceiveAddress: ethReceiveAddress)
             case let .failure(error):
                 guard error.localizedDescription != "Cancel" else {
                     self?.view?.toastView?.hide(tag: 99)
@@ -54,11 +55,13 @@ extension TokenMappingViewModel {
             }
         }
     }
-    func handleRequest(inputAmount: NSDecimalNumber, outputAmount: NSDecimalNumber, model: TokenMappingListDataModel, mnemonic: [String], outputModuleActiveState: Bool) {
+    func handleRequest(inputAmount: NSDecimalNumber, outputAmount: NSDecimalNumber, model: TokenMappingListDataModel, mnemonic: [String], outputModuleActiveState: Bool, ethReceiveAddress: String) {
         if model.from_coin?.coin_type?.lowercased() == "violas" {
             var receiveAddress = Wallet.shared.btcAddress
-            if model.to_coin?.coin_type != "btc" {
+            if model.to_coin?.coin_type == "libra" {
                 receiveAddress = Wallet.shared.libraAddress
+            } else if model.to_coin?.coin_type == "eth" {
+                receiveAddress = ethReceiveAddress
             }
             self.dataModel.sendViolasMappingTransaction(sendAddress: Wallet.shared.violasAddress ?? "",
                                                         receiveAddress: receiveAddress ?? "",
@@ -154,12 +157,25 @@ extension TokenMappingViewModel: TokenMappingHeaderViewDelegate {
             self.view?.makeToast(LibraWalletError.WalletMarket(reason: .payAmountMaxLimit).localizedDescription, position: .center)
             return
         }
+        var ethReceiveAddress = ""
+        if model.to_coin?.coin_type == "eth" {
+            guard let ethAddress = self.view?.headerView.outputAddressTextField.text, ethAddress.isEmpty == false else {
+                self.view?.makeToast(LibraWalletError.WalletMapping(reason: .ethAddressEmpty).localizedDescription, position: .center)
+                return
+            }
+            guard isValidETHAddress(address: ethAddress) == true else {
+                self.view?.makeToast(LibraWalletError.WalletMapping(reason: .ethAddressInvalid).localizedDescription, position: .center)
+                return
+            }
+            ethReceiveAddress = ethAddress
+        }
         if let tokenBActiveState = model.to_coin?.assert?.active_state, tokenBActiveState == true {
             // 已激活
             self.handleUnlockWallet(inputAmount: inputAmount,
                                     outputAmount: outputAmount,
                                     model: model,
-                                    outputModuleActiveState: true)
+                                    outputModuleActiveState: true,
+                                    ethReceiveAddress: ethReceiveAddress)
         } else {
             // 未激活
             let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_alert_delete_address_title"), message: localLanguage(keyString: "wallet_mapping_output_token_unactived"), preferredStyle: .alert)
@@ -167,7 +183,8 @@ extension TokenMappingViewModel: TokenMappingHeaderViewDelegate {
                 self?.handleUnlockWallet(inputAmount: inputAmount,
                                         outputAmount: outputAmount,
                                         model: model,
-                                        outputModuleActiveState: false)
+                                        outputModuleActiveState: false,
+                                        ethReceiveAddress: ethReceiveAddress)
             })
             alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_alert_delete_address_cancel_button_title"), style: .cancel){ clickHandler in
                 NSLog("点击了取消")
@@ -227,7 +244,6 @@ extension TokenMappingViewModel {
                 self?.view?.toastView?.hide(tag: 99)
                 if let tempData = dataDic.value(forKey: "data") as? [TokenMappingListDataModel] {
                     let alert = MappingTokensAlert.init(data: tempData) { (model) in
-                        print(model)
                         self?.view?.headerView.inputModel = model
                     }
                     if self?.view?.headerView.coinSelectButton.titleLabel?.text != localLanguage(keyString: "wallet_transfer_token_default_title") {
