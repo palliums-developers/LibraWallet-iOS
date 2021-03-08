@@ -37,7 +37,7 @@ class TransactionDetailModel: NSObject {
                                                          title: localLanguage(keyString: "wallet_transaction_detail_amount_title"),
                                                          value: amount.stringValue + " " + (transaction.currency ?? "")))
         let gas = getDecimalNumber(amount: NSDecimalNumber.init(value: (transaction.gas ?? 0)),
-                                   scale: 4,
+                                   scale: 6,
                                    unit: 1000000)
         tempArray.append(TransactionDetailDataModel.init(type: "CellNormal",
                                                          title: localLanguage(keyString: "wallet_transaction_detail_gas_title"),
@@ -56,13 +56,13 @@ class TransactionDetailModel: NSObject {
     func getLibraTransactionsData(transaction: LibraDataModel) -> [TransactionDetailDataModel] {
         var tempArray = [TransactionDetailDataModel]()
         let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: (transaction.amount ?? 0)),
-                                            scale: 4,
+                                            scale: 6,
                                             unit: 1000000)
         tempArray.append(TransactionDetailDataModel.init(type: "CellAmount",
                                                          title: localLanguage(keyString: "wallet_transaction_detail_amount_title"),
                                                          value: amount.stringValue + " " + (transaction.currency ?? "")))
         let gas = getDecimalNumber(amount: NSDecimalNumber.init(value: (transaction.gas ?? 0)),
-                                   scale: 4,
+                                   scale: 6,
                                    unit: 1000000)
         tempArray.append(TransactionDetailDataModel.init(type: "CellNormal",
                                                          title: localLanguage(keyString: "wallet_transaction_detail_gas_title"),
@@ -81,13 +81,13 @@ class TransactionDetailModel: NSObject {
     func getBTCTransactionsData(transaction: TrezorBTCTransactionDataModel, requestAddress: String) -> [TransactionDetailDataModel] {
         var tempArray = [TransactionDetailDataModel]()
         let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: (transaction.transaction_value ?? 0)),
-                                      scale: 4,
+                                      scale: 8,
                                       unit: 100000000)
         tempArray.append(TransactionDetailDataModel.init(type: "CellAmount",
                                                          title: localLanguage(keyString: "wallet_transaction_detail_amount_title"),
                                                          value: amount.stringValue + " " + "BTC"))
         let gas = getDecimalNumber(amount: NSDecimalNumber.init(string: (transaction.fees ?? "0")),
-                                   scale: 4,
+                                   scale: 8,
                                    unit: 100000000)
         tempArray.append(TransactionDetailDataModel.init(type: "CellNormal",
                                                          title: localLanguage(keyString: "wallet_transaction_detail_gas_title"),
