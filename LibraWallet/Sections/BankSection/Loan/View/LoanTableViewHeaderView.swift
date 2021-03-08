@@ -185,10 +185,10 @@ class LoanTableViewHeaderView: UITableViewHeaderFooterView {
                 return
             }
             let amountLimit = getDecimalNumber(amount: NSDecimalNumber.init(value: model.quota_limit ?? 0),
-                                               scale: 4,
+                                               scale: 6,
                                                unit: 1000000)
             let amountLimitLeast = getDecimalNumber(amount: NSDecimalNumber.init(value: model.quota_limit ?? 0).subtracting(NSDecimalNumber.init(value: model.quota_used ?? 0)),
-                                                    scale: 4,
+                                                    scale: 6,
                                                     unit: 1000000)
             loanAmountLabel.text = amountLimitLeast.stringValue + "/" + amountLimit.stringValue + " " + (model.token_show_name ?? "")
             if let iconName = model.logo, iconName.isEmpty == false {

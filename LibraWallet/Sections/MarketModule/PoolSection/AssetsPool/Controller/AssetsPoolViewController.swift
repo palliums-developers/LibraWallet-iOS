@@ -284,11 +284,11 @@ extension AssetsPoolViewController {
                 self?.detailView.headerView.autoCalculateMode = true
                 if self?.detailView.headerView.viewState == .AssetsPoolTransferInBaseOnInputARequestRate {
                     self?.detailView.headerView.outputAmountTextField.text = getDecimalNumber(amount: NSDecimalNumber.init(value: tempData),
-                                                                                              scale: 4,
+                                                                                              scale: 6,
                                                                                               unit: 1000000).stringValue
                 } else {
                     self?.detailView.headerView.inputAmountTextField.text = getDecimalNumber(amount: NSDecimalNumber.init(value: tempData),
-                                                                                             scale: 4,
+                                                                                             scale: 6,
                                                                                              unit: 1000000).stringValue
                 }
                 self?.detailView.headerView.viewState = .Normal

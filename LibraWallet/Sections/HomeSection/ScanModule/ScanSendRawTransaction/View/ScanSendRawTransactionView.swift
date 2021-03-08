@@ -223,7 +223,7 @@ class ScanSendRawTransactionView: UIView {
     var model: WCDataModel? {
         didSet {
             let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model?.amount ?? 0),
-                                          scale: 4,
+                                          scale: 6,
                                           unit: 1000000)
             transactionAmountLabel.text = amount.stringValue
             transactionReceiveAddressLabel.text = model?.receive

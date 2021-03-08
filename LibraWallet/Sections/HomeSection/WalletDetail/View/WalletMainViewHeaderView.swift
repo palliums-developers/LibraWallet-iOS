@@ -142,7 +142,7 @@ class WalletMainViewHeaderView: UIView {
                 self.walletIndicatorImageView.image = UIImage.init(named: "wallet_icon_default")
             }
             self.amountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model?.tokenBalance ?? 0)),
-                                                                                          scale: 4,
+                                                                                          scale: unit == 1000000 ? 6:8,
                                                                                           unit: unit)
             let rate = NSDecimalNumber.init(string: model?.tokenPrice ?? "0.0")
             let amount = NSDecimalNumber.init(string: amountLabel.text ?? "0.0")

@@ -176,7 +176,7 @@ class RepaymentTableViewHeaderView: UITableViewHeaderFooterView {
                 return
             }
             let amountLeast = getDecimalNumber(amount: NSDecimalNumber.init(value: tempModel.balance ?? 0),
-                                               scale: 4,
+                                               scale: 6,
                                                unit: 1000000)
             loanTokenAmountLabel.text = amountLeast.stringValue + " " + (tempModel.token_show_name ?? "")
             if let iconName = tempModel.logo, iconName.isEmpty == false {

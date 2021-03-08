@@ -353,7 +353,7 @@ extension HomeModel {
                 }
                 let rate = NSDecimalNumber.init(string: model.tokenPrice)
                 let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model.tokenBalance),
-                                              scale: 4,
+                                              scale: unit == 1000000 ? 6:8,
                                               unit: unit)
                 let value = rate.multiplying(by: amount)
                 totalPrice += value.doubleValue

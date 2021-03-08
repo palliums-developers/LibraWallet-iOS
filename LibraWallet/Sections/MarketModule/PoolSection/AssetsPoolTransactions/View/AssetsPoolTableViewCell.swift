@@ -137,7 +137,7 @@ class AssetsPoolTableViewCell: UITableViewCell {
         didSet {
             tokenLabel.text = localLanguage(keyString: "wallet_assets_pool_transaction_token_title") +
                 getDecimalNumberAmount(amount: NSDecimalNumber.init(value: model?.token ?? 0),
-                                       scale: 4,
+                                       scale: 6,
                                        unit: 1000000)
             inputAmountLabel.text = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: model?.amounta ?? 0),
                                                            scale: 6,

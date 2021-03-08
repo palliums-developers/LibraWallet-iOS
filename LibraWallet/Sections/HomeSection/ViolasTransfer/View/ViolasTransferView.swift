@@ -319,12 +319,12 @@ class ViolasTransferView: UIView {
             let feeString = self.transferFeeLabel.text
             let fee = NSDecimalNumber.init(string: "\(feeString?.split(separator: " ").first ?? "0")").multiplying(by: NSDecimalNumber.init(value: 1000000))
             // 金额大于我的金额
-                var unit = 1000000
+            var unit = 1000000
             if wallet?.tokenType == .BTC {
                 unit = 100000000
             }
             let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
-                                                           scale: 4,
+                                                           scale: unit == 1000000 ? 6:8,
                                                            raiseOnExactness: false,
                                                            raiseOnOverflow: false,
                                                            raiseOnUnderflow: false,

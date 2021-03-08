@@ -225,10 +225,10 @@ class DepositTableViewHeaderView: UITableViewHeaderFooterView {
                 return
             }
             let amountLimit = getDecimalNumber(amount: NSDecimalNumber.init(value: model.quota_limit ?? 0),
-                                               scale: 4,
+                                               scale: 6,
                                                unit: 1000000)
             let amountLimitLeast = getDecimalNumber(amount: NSDecimalNumber.init(value: model.quota_limit ?? 0).subtracting(NSDecimalNumber.init(value: model.quota_used ?? 0)),
-                                                    scale: 4,
+                                                    scale: 6,
                                                     unit: 1000000)
             depositLimitAmountLabel.text = amountLimitLeast.stringValue + "/" + amountLimit.stringValue + " " + (model.token_show_name ?? "")
             if let iconName = model.logo, iconName.isEmpty == false {
@@ -242,7 +242,7 @@ class DepositTableViewHeaderView: UITableViewHeaderFooterView {
                 depositTokenIndicatorImageView.image = UIImage.init(named: "wallet_icon_default")
             }
             let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model.token_balance ?? 0),
-                                          scale: 4,
+                                          scale: 6,
                                           unit: 1000000)
             depositTokenSelectButton.setTitle(model.token_show_name, for: UIControl.State.normal)
             depositTokenSelectButton.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 12, height: 12))

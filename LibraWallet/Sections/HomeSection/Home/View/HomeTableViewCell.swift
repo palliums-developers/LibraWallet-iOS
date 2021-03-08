@@ -130,7 +130,7 @@ class HomeTableViewCell: UITableViewCell {
                 unit = 100000000
             }
             coinAmountLabel.text = hideValue == false ? getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model?.tokenBalance ?? 0)),
-                                                                               scale: 4,
+                                                                               scale: 6,
                                                                                unit: unit):"****"
             if let iconName = model?.tokenIcon, iconName.isEmpty == false {
                 if iconName.hasPrefix("http") {
@@ -145,7 +145,7 @@ class HomeTableViewCell: UITableViewCell {
             let rate = NSDecimalNumber.init(string: model?.tokenPrice ?? "0.0")
             let amount = NSDecimalNumber.init(string: coinAmountLabel.text ?? "0")
             let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
-                                                           scale: 4,
+                                                           scale: 6,
                                                            raiseOnExactness: false,
                                                            raiseOnOverflow: false,
                                                            raiseOnUnderflow: false,
