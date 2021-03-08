@@ -53,7 +53,7 @@ class ScanSignTransactionViewController: BaseViewController {
     /// 数据监听KVO
     var observer: NSKeyValueObservation?
     var reject: (() -> Void)?
-    var confirm: ((String) -> Void)?
+    var confirm: ((Result<String, NSError>) -> Void)?
     var needReject: Bool? = true
 }
 extension ScanSignTransactionViewController: ScanSignTransactionViewDelegate {
@@ -82,7 +82,10 @@ extension ScanSignTransactionViewController: ScanSignTransactionViewDelegate {
                 }
             }
         } else {
-            #warning("报错待处理")
+            if let confirmAction = self.confirm {
+                let error = NSError.init(domain: "Parameter invalid", code: -32602, userInfo: nil)
+                confirmAction(.failure(error))
+            }
         }
         self.needReject = false
     }
@@ -124,7 +127,7 @@ extension ScanSignTransactionViewController {
                     self?.view.makeToast(localLanguage(keyString: "wallet_scan_login_alert_success_title"), duration: toastDuration, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
                         self?.needReject = false
                         if let confirmAction = self?.confirm {
-                            confirmAction(tempData)
+                            confirmAction(.success(tempData))
                         }
                         self?.dismiss(animated: true, completion: nil)
                     })

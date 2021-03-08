@@ -58,7 +58,7 @@ class ScanSwapViewController: UIViewController {
         }
     }
     var reject: (() -> Void)?
-    var confirm: ((String) -> Void)?
+    var confirm: ((Result<String, NSError>) -> Void)?
     var needReject: Bool? = true
 }
 extension ScanSwapViewController {
@@ -108,7 +108,7 @@ extension ScanSwapViewController {
                 self?.view.makeToast(content, duration: toastDuration, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
                     self?.needReject = false
                     if let confirmAction = self?.confirm {
-                        confirmAction("success")
+                        confirmAction(.success("success"))
                     }
                     self?.dismiss(animated: true, completion: nil)
                 })
@@ -152,7 +152,10 @@ extension ScanSwapViewController: ScanSendTransactionViewDelegate {
                 }
             }
         } else {
-            #warning("报错待处理")
+            if let confirmAction = self.confirm {
+                let error = NSError.init(domain: "Parameter invalid", code: -32602, userInfo: nil)
+                confirmAction(.failure(error))
+            }
         }
         self.needReject = false
     }

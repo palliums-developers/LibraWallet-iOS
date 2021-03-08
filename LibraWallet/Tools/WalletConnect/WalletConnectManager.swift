@@ -243,13 +243,22 @@ class SendRawTransactionHandler: RequestHandler {
                     vc.reject = {
                         WalletConnectManager.shared.walletConnectServer.send(.reject(request))
                     }
-                    vc.confirm = { (signature) in
-                        do {
-                            WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))//
-                        } catch {
-                            print(error.localizedDescription)
+                    vc.confirm = { (result) in
+                        switch result {
+                        case let .success(signature):
+                            do {
+                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))//
+                            } catch {
+                                print(error.localizedDescription)
+                            }
+                            print(signature)
+                        case let .failure(error):
+                            do {
+                                WalletConnectManager.shared.walletConnectServer.send(try Response.init(url: request.url, errorCode: error.code, message: error.domain, id: request.id!))
+                            } catch {
+                                print(error.localizedDescription)
+                            }
                         }
-                        print(signature)
                     }
                     appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
                 }
@@ -277,13 +286,22 @@ class SendTransactionHandler: RequestHandler {
                         vc.reject = {
                             WalletConnectManager.shared.walletConnectServer.send(.reject(request))
                         }
-                        vc.confirm = { (signature) in
-                            do {
-                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
-                            } catch {
-                                print(error.localizedDescription)
+                        vc.confirm = { (result) in
+                            switch result {
+                            case let .success(signature):
+                                do {
+                                    WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
+                                print(signature)
+                            case let .failure(error):
+                                do {
+                                    WalletConnectManager.shared.walletConnectServer.send(try Response.init(url: request.url, errorCode: error.code, message: error.domain, id: request.id!))
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
                             }
-                            print(signature)
                         }
                         appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
                     case ViolasUtils.getMoveCode(name: "add_currency_to_account"):
@@ -293,13 +311,22 @@ class SendTransactionHandler: RequestHandler {
                         vc.reject = {
                             WalletConnectManager.shared.walletConnectServer.send(.reject(request))
                         }
-                        vc.confirm = { (signature) in
-                            do {
-                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
-                            } catch {
-                                print(error.localizedDescription)
+                        vc.confirm = { (result) in
+                            switch result {
+                            case let .success(signature):
+                                do {
+                                    WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
+                                print(signature)
+                            case let .failure(error):
+                                do {
+                                    WalletConnectManager.shared.walletConnectServer.send(try Response.init(url: request.url, errorCode: error.code, message: error.domain, id: request.id!))
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
                             }
-                            print(signature)
                         }
                         appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
                     case ViolasManager.getLocalMoveCode(bundle: "MarketContracts", contract: "add_liquidity"):
@@ -309,13 +336,22 @@ class SendTransactionHandler: RequestHandler {
                         vc.reject = {
                             WalletConnectManager.shared.walletConnectServer.send(.reject(request))
                         }
-                        vc.confirm = { (signature) in
-                            do {
-                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
-                            } catch {
-                                print(error.localizedDescription)
+                        vc.confirm = { (result) in
+                            switch result {
+                            case let .success(signature):
+                                do {
+                                    WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
+                                print(signature)
+                            case let .failure(error):
+                                do {
+                                    WalletConnectManager.shared.walletConnectServer.send(try Response.init(url: request.url, errorCode: error.code, message: error.domain, id: request.id!))
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
                             }
-                            print(signature)
                         }
                         appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
                     case ViolasManager.getLocalMoveCode(bundle: "MarketContracts", contract:  "remove_liquidity"):
@@ -325,13 +361,22 @@ class SendTransactionHandler: RequestHandler {
                         vc.reject = {
                             WalletConnectManager.shared.walletConnectServer.send(.reject(request))
                         }
-                        vc.confirm = { (signature) in
-                            do {
-                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
-                            } catch {
-                                print(error.localizedDescription)
+                        vc.confirm = { (result) in
+                            switch result {
+                            case let .success(signature):
+                                do {
+                                    WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
+                                print(signature)
+                            case let .failure(error):
+                                do {
+                                    WalletConnectManager.shared.walletConnectServer.send(try Response.init(url: request.url, errorCode: error.code, message: error.domain, id: request.id!))
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
                             }
-                            print(signature)
                         }
                         appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
                     case ViolasManager.getLocalMoveCode(bundle: "MarketContracts", contract: "swap"):
@@ -341,13 +386,22 @@ class SendTransactionHandler: RequestHandler {
                         vc.reject = {
                             WalletConnectManager.shared.walletConnectServer.send(.reject(request))
                         }
-                        vc.confirm = { (signature) in
-                            do {
-                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
-                            } catch {
-                                print(error.localizedDescription)
+                        vc.confirm = { (result) in
+                            switch result {
+                            case let .success(signature):
+                                do {
+                                    WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
+                                print(signature)
+                            case let .failure(error):
+                                do {
+                                    WalletConnectManager.shared.walletConnectServer.send(try Response.init(url: request.url, errorCode: error.code, message: error.domain, id: request.id!))
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
                             }
-                            print(signature)
                         }
                         appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
                     case ViolasManager.getLocalMoveCode(bundle: "BankContracts", contract: "lock"):
@@ -358,13 +412,22 @@ class SendTransactionHandler: RequestHandler {
                         vc.reject = {
                             WalletConnectManager.shared.walletConnectServer.send(.reject(request))
                         }
-                        vc.confirm = { (signature) in
-                            do {
-                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
-                            } catch {
-                                print(error.localizedDescription)
+                        vc.confirm = { (result) in
+                            switch result {
+                            case let .success(signature):
+                                do {
+                                    WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
+                                print(signature)
+                            case let .failure(error):
+                                do {
+                                    WalletConnectManager.shared.walletConnectServer.send(try Response.init(url: request.url, errorCode: error.code, message: error.domain, id: request.id!))
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
                             }
-                            print(signature)
                         }
                         appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
                     case ViolasManager.getLocalMoveCode(bundle: "BankContracts", contract: "borrow"):
@@ -375,13 +438,22 @@ class SendTransactionHandler: RequestHandler {
                         vc.reject = {
                             WalletConnectManager.shared.walletConnectServer.send(.reject(request))
                         }
-                        vc.confirm = { (signature) in
-                            do {
-                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
-                            } catch {
-                                print(error.localizedDescription)
+                        vc.confirm = { (result) in
+                            switch result {
+                            case let .success(signature):
+                                do {
+                                    WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
+                                print(signature)
+                            case let .failure(error):
+                                do {
+                                    WalletConnectManager.shared.walletConnectServer.send(try Response.init(url: request.url, errorCode: error.code, message: error.domain, id: request.id!))
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
                             }
-                            print(signature)
                         }
                         appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
                     case ViolasManager.getLocalMoveCode(bundle: "BankContracts", contract: "repay_borrow"):
@@ -392,13 +464,22 @@ class SendTransactionHandler: RequestHandler {
                         vc.reject = {
                             WalletConnectManager.shared.walletConnectServer.send(.reject(request))
                         }
-                        vc.confirm = { (signature) in
-                            do {
-                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
-                            } catch {
-                                print(error.localizedDescription)
+                        vc.confirm = { (result) in
+                            switch result {
+                            case let .success(signature):
+                                do {
+                                    WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
+                                print(signature)
+                            case let .failure(error):
+                                do {
+                                    WalletConnectManager.shared.walletConnectServer.send(try Response.init(url: request.url, errorCode: error.code, message: error.domain, id: request.id!))
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
                             }
-                            print(signature)
                         }
                         appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
                     case ViolasManager.getLocalMoveCode(bundle: "BankContracts", contract: "redeem"):
@@ -409,11 +490,21 @@ class SendTransactionHandler: RequestHandler {
                         vc.reject = {
                             WalletConnectManager.shared.walletConnectServer.send(.reject(request))
                         }
-                        vc.confirm = { (signature) in
-                            do {
-                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
-                            } catch {
-                                print(error.localizedDescription)
+                        vc.confirm = { (result) in
+                            switch result {
+                            case let .success(signature):
+                                do {
+                                    WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
+                                print(signature)
+                            case let .failure(error):
+                                do {
+                                    WalletConnectManager.shared.walletConnectServer.send(try Response.init(url: request.url, errorCode: error.code, message: error.domain, id: request.id!))
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
                             }
                         }
                         appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
@@ -443,13 +534,22 @@ class SendBTCTransactionHandler: RequestHandler {
                     vc.reject = {
                         WalletConnectManager.shared.walletConnectServer.send(.reject(request))
                     }
-                    vc.confirm = { (signature) in
-                        do {
-                            WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))//
-                        } catch {
-                            print(error.localizedDescription)
+                    vc.confirm = { (result) in
+                        switch result {
+                        case let .success(signature):
+                            do {
+                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
+                            } catch {
+                                print(error.localizedDescription)
+                            }
+                            print(signature)
+                        case let .failure(error):
+                            do {
+                                WalletConnectManager.shared.walletConnectServer.send(try Response.init(url: request.url, errorCode: error.code, message: error.domain, id: request.id!))
+                            } catch {
+                                print(error.localizedDescription)
+                            }
                         }
-                        print(signature)
                     }
                     appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
                 }
@@ -474,13 +574,22 @@ class SendLibraTransactionHandler: RequestHandler {
                     vc.reject = {
                         WalletConnectManager.shared.walletConnectServer.send(.reject(request))
                     }
-                    vc.confirm = { (signature) in
-                        do {
-                            WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))//
-                        } catch {
-                            print(error.localizedDescription)
+                    vc.confirm = { (result) in
+                        switch result {
+                        case let .success(signature):
+                            do {
+                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
+                            } catch {
+                                print(error.localizedDescription)
+                            }
+                            print(signature)
+                        case let .failure(error):
+                            do {
+                                WalletConnectManager.shared.walletConnectServer.send(try Response.init(url: request.url, errorCode: error.code, message: error.domain, id: request.id!))
+                            } catch {
+                                print(error.localizedDescription)
+                            }
                         }
-                        print(signature)
                     }
                     appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
                 }
@@ -505,13 +614,22 @@ class SignTransactionHandler: RequestHandler {
                     vc.reject = {
                         WalletConnectManager.shared.walletConnectServer.send(.reject(request))
                     }
-                    vc.confirm = { (signature) in
-                        do {
-                            WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
-                        } catch {
-                            print(error.localizedDescription)
+                    vc.confirm = { (result) in
+                        switch result {
+                        case let .success(signature):
+                            do {
+                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
+                            } catch {
+                                print(error.localizedDescription)
+                            }
+                            print(signature)
+                        case let .failure(error):
+                            do {
+                                WalletConnectManager.shared.walletConnectServer.send(try Response.init(url: request.url, errorCode: error.code, message: error.domain, id: request.id!))
+                            } catch {
+                                print(error.localizedDescription)
+                            }
                         }
-                        print(signature)
                     }
                     appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
                 }
@@ -540,13 +658,22 @@ class SignRawTransactionHandler: RequestHandler {
                         vc.reject = {
                             WalletConnectManager.shared.walletConnectServer.send(.reject(request))
                         }
-                        vc.confirm = { (signature) in
-                            do {
-                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))//
-                            } catch {
-                                print(error.localizedDescription)
+                        vc.confirm = { (result) in
+                            switch result {
+                            case let .success(signature):
+                                do {
+                                    WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
+                                print(signature)
+                            case let .failure(error):
+                                do {
+                                    WalletConnectManager.shared.walletConnectServer.send(try Response.init(url: request.url, errorCode: error.code, message: error.domain, id: request.id!))
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
                             }
-                            print(signature)
                         }
                         appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
                     case ViolasManager.getLocalMoveCode(bundle: "BankContracts", contract: "borrow"):
@@ -557,13 +684,22 @@ class SignRawTransactionHandler: RequestHandler {
                         vc.reject = {
                             WalletConnectManager.shared.walletConnectServer.send(.reject(request))
                         }
-                        vc.confirm = { (signature) in
-                            do {
-                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))//
-                            } catch {
-                                print(error.localizedDescription)
+                        vc.confirm = { (result) in
+                            switch result {
+                            case let .success(signature):
+                                do {
+                                    WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
+                                print(signature)
+                            case let .failure(error):
+                                do {
+                                    WalletConnectManager.shared.walletConnectServer.send(try Response.init(url: request.url, errorCode: error.code, message: error.domain, id: request.id!))
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
                             }
-                            print(signature)
                         }
                         appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
                     case ViolasManager.getLocalMoveCode(bundle: "BankContracts", contract: "repay_borrow"):
@@ -574,13 +710,22 @@ class SignRawTransactionHandler: RequestHandler {
                         vc.reject = {
                             WalletConnectManager.shared.walletConnectServer.send(.reject(request))
                         }
-                        vc.confirm = { (signature) in
-                            do {
-                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))//
-                            } catch {
-                                print(error.localizedDescription)
+                        vc.confirm = { (result) in
+                            switch result {
+                            case let .success(signature):
+                                do {
+                                    WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
+                                print(signature)
+                            case let .failure(error):
+                                do {
+                                    WalletConnectManager.shared.walletConnectServer.send(try Response.init(url: request.url, errorCode: error.code, message: error.domain, id: request.id!))
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
                             }
-                            print(signature)
                         }
                         appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
                     case ViolasManager.getLocalMoveCode(bundle: "BankContracts", contract: "redeem"):
@@ -591,11 +736,21 @@ class SignRawTransactionHandler: RequestHandler {
                         vc.reject = {
                             WalletConnectManager.shared.walletConnectServer.send(.reject(request))
                         }
-                        vc.confirm = { (signature) in
-                            do {
-                                WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))//
-                            } catch {
-                                print(error.localizedDescription)
+                        vc.confirm = { (result) in
+                            switch result {
+                            case let .success(signature):
+                                do {
+                                    WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
+                                print(signature)
+                            case let .failure(error):
+                                do {
+                                    WalletConnectManager.shared.walletConnectServer.send(try Response.init(url: request.url, errorCode: error.code, message: error.domain, id: request.id!))
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
                             }
                         }
                         appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)

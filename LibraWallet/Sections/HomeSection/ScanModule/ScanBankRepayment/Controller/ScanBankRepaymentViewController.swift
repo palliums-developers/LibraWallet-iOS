@@ -58,7 +58,7 @@ class ScanBankRepaymentViewController: UIViewController {
         }
     }
     var reject: (() -> Void)?
-    var confirm: ((String) -> Void)?
+    var confirm: ((Result<String, NSError>) -> Void)?
     var needReject: Bool? = true
     var submitTransaction: Bool = true
 }
@@ -99,12 +99,12 @@ extension ScanBankRepaymentViewController {
                     self?.needReject = false
                     if let confirmAction = self?.confirm {
                         if self?.submitTransaction == true {
-                            confirmAction("success")
+                            confirmAction(.success("success"))
                         } else {
                             guard let tempData = dataDic.value(forKey: "data") as? String else {
                                 return
                             }
-                            confirmAction(tempData)
+                            confirmAction(.success(tempData))
                         }
                     }
                     self?.dismiss(animated: true, completion: nil)
@@ -142,7 +142,10 @@ extension ScanBankRepaymentViewController: ScanSendTransactionViewDelegate {
                 }
             }
         } else {
-            #warning("报错待处理")
+            if let confirmAction = self.confirm {
+                let error = NSError.init(domain: "Parameter invalid", code: -32602, userInfo: nil)
+                confirmAction(.failure(error))
+            }
         }
         self.needReject = false
     }

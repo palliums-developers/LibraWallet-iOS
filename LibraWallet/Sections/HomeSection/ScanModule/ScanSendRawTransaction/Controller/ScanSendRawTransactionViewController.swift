@@ -58,7 +58,7 @@ class ScanSendRawTransactionViewController: BaseViewController {
         }
     }
     var reject: (() -> Void)?
-    var confirm: ((String) -> Void)?
+    var confirm: ((Result<String, NSError>) -> Void)?
     var needReject: Bool? = true
 }
 extension ScanSendRawTransactionViewController {
@@ -97,7 +97,7 @@ extension ScanSendRawTransactionViewController {
                 self?.view.makeToast(localLanguage(keyString: "wallet_transfer_success_alert"), duration: toastDuration, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
                     self?.needReject = false
                     if let confirmAction = self?.confirm {
-                        confirmAction("success")
+                        confirmAction(.success("success"))
                     }
                     self?.dismiss(animated: true, completion: nil)
                 })
@@ -121,7 +121,10 @@ extension ScanSendRawTransactionViewController: ScanSendRawTransactionViewDelega
             self.detailView.toastView?.show(tag: 99)
             self.dataModel.sendTransaction(tx: tx)
         } else {
-            #warning("报错待处理")
+            if let confirmAction = self.confirm {
+                let error = NSError.init(domain: "Parameter invalid", code: -32602, userInfo: nil)
+                confirmAction(.failure(error))
+            }
         }
         self.needReject = false
     }
