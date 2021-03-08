@@ -43,7 +43,7 @@ class MappingTokenListAlert: UIView {
         whiteBackgroundView.snp.makeConstraints { (make) in
             make.left.right.equalTo(self)
             make.height.equalTo(319)
-            make.bottom.equalTo(self).offset(319).priority(250)
+            make.bottom.equalTo(self.safeAreaLayoutGuide.snp.bottom).offset(319).priority(250)
         }
         searchBar.snp.makeConstraints { (make) in
             make.top.equalTo(whiteBackgroundView).offset(18)
@@ -53,7 +53,7 @@ class MappingTokenListAlert: UIView {
         }
         tableView.snp.makeConstraints { (make) in
             make.top.equalTo(searchBar.snp.bottom).offset(10)
-            make.left.right.bottom.equalTo(whiteBackgroundView)
+            make.left.right.equalTo(whiteBackgroundView)
             make.bottom.equalTo(whiteBackgroundView).offset(-34)
         }
     }

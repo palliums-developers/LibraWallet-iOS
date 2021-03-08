@@ -53,7 +53,7 @@ class MappingTokensAlert: UIView {
         }
         tableView.snp.makeConstraints { (make) in
             make.top.equalTo(searchBar.snp.bottom).offset(10)
-            make.left.right.bottom.equalTo(whiteBackgroundView)
+            make.left.right.equalTo(whiteBackgroundView)
             make.bottom.equalTo(whiteBackgroundView).offset(-34)
         }
     }
