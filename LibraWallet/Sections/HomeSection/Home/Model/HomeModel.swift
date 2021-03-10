@@ -612,8 +612,8 @@ extension HomeModel {
 }
 // MARK: 注册FCM Token
 extension HomeModel {
-    func registerFCMToken(address: String, token: String, completion: @escaping (Result<String, LibraWalletError>) -> Void) {
-        let request = notificationModuleProvide.request(.registerNotification(address, token)) { (result) in
+    func registerFCMToken(address: String, fcmToken: String, token: String, completion: @escaping (Result<String, LibraWalletError>) -> Void) {
+        let request = notificationModuleProvide.request(.registerNotification(address, fcmToken, token)) { (result) in
             switch  result {
             case let .success(response):
                 do {

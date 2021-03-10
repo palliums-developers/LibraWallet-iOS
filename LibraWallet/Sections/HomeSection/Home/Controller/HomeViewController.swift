@@ -28,7 +28,6 @@ class HomeViewController: UIViewController {
         requestData()
         // 请求是否是新钱包
         requestWaletNewState()
-
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -414,10 +413,10 @@ extension HomeViewController {
         guard let address = Wallet.shared.violasAddress else {
             return
         }
-        guard let token = notification.userInfo?["token"] as? String else {
+        guard let fcmToken = notification.userInfo?["token"] as? String else {
             return
         }
-        self.dataModel.registerFCMToken(address: address, token: token) { [weak self] (result) in
+        self.dataModel.registerFCMToken(address: address, fcmToken: fcmToken, token: getRequestToken()) { [weak self] (result) in
             switch result {
             case let .success(token):
                 print("Register Token: \(token)")
