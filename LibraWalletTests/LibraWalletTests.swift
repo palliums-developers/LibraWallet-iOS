@@ -34,7 +34,7 @@ class LibraWalletTests: XCTestCase {
         let result = ViolasManager.handleMaxGasAmount(balances: [ViolasBalanceDataModel.init(amount: 10000, currency: "VLS")])
         XCTAssertEqual(result, 10000)
         let result2 = ViolasManager.handleMaxGasAmount(balances: [ViolasBalanceDataModel.init(amount: 1000_000_000, currency: "VLS")])
-        XCTAssertEqual(result2, 4000000)
+        XCTAssertEqual(result2, 2000000)
         let result3 = ViolasManager.handleMaxGasAmount(balances: [ViolasBalanceDataModel.init(amount: 10500, currency: "VLS")])
         XCTAssertEqual(result3, 10500)
         let result4 = ViolasManager.handleMaxGasAmount(balances: [ViolasBalanceDataModel.init(amount: 450, currency: "VLS")])

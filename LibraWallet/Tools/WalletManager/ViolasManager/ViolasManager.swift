@@ -99,25 +99,25 @@ struct ViolasManager {
                                                   separator: "1")
         return address
     }
-    //600 < Amount > 4_000_000
+    //600 < Amount ≤ 2_000_000
     static func handleMaxGasAmount(balances: [ViolasBalanceDataModel]) -> UInt64 {
         let model = balances.filter {
             $0.currency == "VLS"
         }
         guard model.isEmpty == false else {
-            return 600
+            return 601
         }
-        if let balance = model.first?.amount, balance >= 600 {
-            if balance <= 4_000_000 {
+        if let balance = model.first?.amount, balance > 600 {
+            if balance <= 2_000_000 {
                 return NSDecimalNumber.init(value: balance).uint64Value
             } else {
-                return 4_000_000
+                return 2_000_000
             }
         } else {
-            return 600
+            return 601
         }
     }
-    // 0 < Price > 10000
+    // 0 ≤ Price ≤ 10000
     static func handleMaxGasUnitPrice(maxGasAmount: UInt64) -> UInt64 {
         #warning("正式链处理方法待定")
         // 计算方法未知，暂定1
