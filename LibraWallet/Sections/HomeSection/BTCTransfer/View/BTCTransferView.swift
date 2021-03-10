@@ -311,7 +311,6 @@ class BTCTransferView: UIView {
                               position: .center)
                return
             }
-            #warning("待处理")
             // 金额大于我的金额
             guard (amount + fee) <= (Double(wallet?.tokenBalance ?? 0) / 100000000.0) else {
                self.makeToast(LibraWalletError.WalletTransfer(reason: .amountOverload).localizedDescription,

@@ -18,8 +18,7 @@ class AddAssetViewController: BaseViewController {
         self.view.addSubview(self.detailView)
         // 加载数据
         self.initKVO()
-        #warning("测试")
-        self.addNavigationRightBar()
+//        self.addNavigationRightBar()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)

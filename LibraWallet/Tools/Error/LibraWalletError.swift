@@ -732,7 +732,6 @@ extension LibraWalletError.DataBaseError {
         switch self {
         /// 暂未映射
         case .openDataBaseError:
-            #warning("待翻译")
             return localLanguage(keyString: "DataBase Invalid")
         case .defaultWalletNotExist:
             return localLanguage(keyString: "DataBase not exist default wallet")

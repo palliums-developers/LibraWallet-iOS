@@ -270,7 +270,7 @@ extension ViolasManager {
     /// - Throws: 报错
     /// - Returns: 交易签名
     public static func getMultiTransactionHex(sendAddress: String, receiveAddress: String, amount: UInt64, fee: UInt64, sequenceNumber: UInt64, wallet: ViolasMultiHDWallet, module: String, feeModule: String) throws -> String {
-        do {
+//        do {
             // 拼接交易
             let argument0 = ViolasTransactionArgument.init(code: .Address(receiveAddress))
             let argument1 = ViolasTransactionArgument.init(code: .U64(amount))
@@ -291,9 +291,9 @@ extension ViolasManager {
             // 签名交易
             let multiSignature = wallet.buildTransaction(transaction: rawTransaction)
             return multiSignature.toHexString()
-        } catch {
-            throw error
-        }
+//        } catch {
+//            throw error
+//        }
     }
 }
 // MARK: - 交易所
