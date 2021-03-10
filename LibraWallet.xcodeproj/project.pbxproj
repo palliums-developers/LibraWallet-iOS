@@ -147,7 +147,6 @@
 		363D90F024CAAC6700F6374C /* DiemContractEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363D90EF24CAAC6700F6374C /* DiemContractEvent.swift */; };
 		363D90F224CAB7C300F6374C /* DiemContracts.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 363D90F124CAB7C300F6374C /* DiemContracts.bundle */; };
 		363D90F424CAE79600F6374C /* DiemTransactionPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363D90F324CAE79600F6374C /* DiemTransactionPayload.swift */; };
-		3642EB7123CC654500C7B04A /* Serialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3642EB7023CC654500C7B04A /* Serialization.swift */; };
 		3646E4FB24D3E99600B8C20B /* ExchangeTransactionDetailFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3646E4FA24D3E99600B8C20B /* ExchangeTransactionDetailFooterView.swift */; };
 		3646E4FD24D3EFEE00B8C20B /* AssetsPoolTransactionDetailHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3646E4FC24D3EFEE00B8C20B /* AssetsPoolTransactionDetailHeaderView.swift */; };
 		3646E4FF24D3EFFB00B8C20B /* AssetsPoolTransactionDetailFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3646E4FE24D3EFFB00B8C20B /* AssetsPoolTransactionDetailFooterView.swift */; };
@@ -661,7 +660,6 @@
 		363D90EF24CAAC6700F6374C /* DiemContractEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemContractEvent.swift; sourceTree = "<group>"; };
 		363D90F124CAB7C300F6374C /* DiemContracts.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = DiemContracts.bundle; sourceTree = "<group>"; };
 		363D90F324CAE79600F6374C /* DiemTransactionPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemTransactionPayload.swift; sourceTree = "<group>"; };
-		3642EB7023CC654500C7B04A /* Serialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Serialization.swift; sourceTree = "<group>"; };
 		3646E4FA24D3E99600B8C20B /* ExchangeTransactionDetailFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeTransactionDetailFooterView.swift; sourceTree = "<group>"; };
 		3646E4FC24D3EFEE00B8C20B /* AssetsPoolTransactionDetailHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsPoolTransactionDetailHeaderView.swift; sourceTree = "<group>"; };
 		3646E4FE24D3EFFB00B8C20B /* AssetsPoolTransactionDetailFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsPoolTransactionDetailFooterView.swift; sourceTree = "<group>"; };
@@ -3593,7 +3591,6 @@
 		9D3954FC235D4ABB0068019F /* BTCManager */ = {
 			isa = PBXGroup;
 			children = (
-				3642EB7023CC654500C7B04A /* Serialization.swift */,
 				9D3954FD235D4C0F0068019F /* BTCManager.swift */,
 			);
 			path = BTCManager;
@@ -5589,7 +5586,6 @@
 				361051422563ABD7008407F5 /* BankModuleNetworkManager.swift in Sources */,
 				3646E50724D90A7800B8C20B /* ExchangeViewModel.swift in Sources */,
 				9D9B49E8236031F700354EF0 /* SettingTableViewCell.swift in Sources */,
-				3642EB7123CC654500C7B04A /* Serialization.swift in Sources */,
 				36F8270B24BEAA7E0007ACC3 /* Dropper.swift in Sources */,
 				3617836B24449B53003C6588 /* ViolasTransactionModulePayload.swift in Sources */,
 				36E8A88125A6F221008F9A1F /* AssetsPoolTokenShowView.swift in Sources */,
@@ -5871,6 +5867,15 @@
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = ND49YBN8B3;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"$(inherited)",
+					"PB_FIELD_32BIT=1",
+					"PB_NO_PACKED_STRUCTS=1",
+					"PB_ENABLE_MALLOC=1",
+					"FIREBASE_ANALYTICS_SUPPRESS_WARNING=1",
+				);
 				INFOPLIST_FILE = LibraWallet/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -5898,6 +5903,15 @@
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = ND49YBN8B3;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"$(inherited)",
+					"PB_FIELD_32BIT=1",
+					"PB_NO_PACKED_STRUCTS=1",
+					"PB_ENABLE_MALLOC=1",
+					"FIREBASE_ANALYTICS_SUPPRESS_WARNING=1",
+				);
 				INFOPLIST_FILE = LibraWallet/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (

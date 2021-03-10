@@ -216,6 +216,10 @@ public enum LibraWalletError: Error {
     case WalletScan(reason: ScanError)
     
     public enum ExchangeMarketError {
+        /// 交易所维护中
+        case marketOffline
+        /// 交易所暂无流动性
+        case marketWithoutLiquidity
         /// 未开启不能调换
         case swpUnpublishTokenError
         /// 待兑换金额无效
@@ -658,6 +662,12 @@ extension LibraWalletError.ScanError {
 extension LibraWalletError.ExchangeMarketError {
     var localizedDescription: String {
         switch self {
+        // 交易所维护中
+        case .marketOffline:
+            return localLanguage(keyString: "wallet_market_offline")
+        // 交易所无流动性
+        case .marketWithoutLiquidity:
+            return localLanguage(keyString: "wallet_market_exchange_without_liquidity")
         // 未开启不能调换
         case .swpUnpublishTokenError:
             return localLanguage(keyString: "wallet_market_swap_unpublisheda_error")

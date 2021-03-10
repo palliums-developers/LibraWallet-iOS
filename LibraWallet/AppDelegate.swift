@@ -94,12 +94,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     }
     func extractUserInfo(userInfo: [AnyHashable : Any]) -> (service: String, content: String) {
         var info = (service: "", content: "")
-//        guard let aps = userInfo["aps"] as? [String: Any] else { return info }
-//        guard let userinfo = aps["alert_data"] as? [String: Any] else { return info }
-//        let service = userinfo["service"] as? String ?? ""
-//        let id = userinfo["id"] as? String ?? ""
-//        info = (service: service, id: id)
-//        guard let aps = userInfo["aps"] as? [String: Any] else { return info }
         guard let content = userInfo["alert_data"] as? String else {
             return info
         }

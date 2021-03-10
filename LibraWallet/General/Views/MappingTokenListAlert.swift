@@ -334,13 +334,13 @@ class TokenListCell: UITableViewCell {
                 let url = URL(string: iconName)
                 transactionTypeImageView.kf.setImage(with: url, placeholder: UIImage.init(named: "wallet_icon_default"))
             }
-            var unit = 1000000
+//            var unit = 1000000
 //            if model?.chainType == 2 {
 //                unit = 100000000
 //            }
             amountLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + getDecimalNumberAmount(amount: NSDecimalNumber.init(value: model?.amount ?? 0),
                                                                                                                   scale: 6,
-                                                                                                                  unit: unit)
+                                                                                                                  unit: 1000000)
         }
     }
     var showSelectState: Bool? {

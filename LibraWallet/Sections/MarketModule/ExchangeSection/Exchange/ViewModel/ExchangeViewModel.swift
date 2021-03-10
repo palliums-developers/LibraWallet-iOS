@@ -142,7 +142,6 @@ extension ExchangeViewModel {
 //                                           chainType: "violas")
 //        }
     }
-    #warning("以后启用")
     func handleConfirmCondition() throws -> (NSDecimalNumber, NSDecimalNumber, MarketSupportTokensDataModel, MarketSupportTokensDataModel) {
         // ModelA不为空
         guard let tempInputTokenA = self.view?.headerView.transferInInputTokenA else {
@@ -259,8 +258,7 @@ extension ExchangeViewModel: ExchangeViewHeaderViewDelegate {
             switch result {
             case let .success(models):
                 guard models.isEmpty == false else {
-                    #warning("待翻译")
-                    self?.view?.makeToast("交易所维护中，请稍后", position: .center)
+                    self?.view?.makeToast(LibraWalletError.WalletMarket(reason: .marketOffline).localizedDescription, position: .center)
                     return
                 }
                 var tempData = models
@@ -368,8 +366,7 @@ extension ExchangeViewModel {
                 switch error {
                 case .WalletRequest(reason: .dataEmpty):
                     self?.stopAutoRefreshExchangeRate()
-                    #warning("待翻译")
-                    self?.view?.makeToast("交易所暂无流动性", position: .center)
+                    self?.view?.makeToast(LibraWalletError.WalletMarket(reason: .marketWithoutLiquidity).localizedDescription, position: .center)
                 default:
                     print(error.localizedDescription)
                 }
@@ -477,7 +474,6 @@ extension ExchangeViewModel {
                 self?.view?.hideToastActivity()
                 return
             }
-            #warning("已修改完成，可拷贝执行")
             if let error = dataDic.value(forKey: "error") as? LibraWalletError {
                 // 隐藏请求指示
                 self?.view?.hideToastActivity()

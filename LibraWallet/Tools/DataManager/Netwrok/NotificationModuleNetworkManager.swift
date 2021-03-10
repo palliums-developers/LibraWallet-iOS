@@ -131,6 +131,6 @@ extension NotificationModuleRequest: TargetType {
                 "platform": "ios",
                 "bundleId":bundleID!,
                 "language":Localize.currentLanguage(),
-                "chainId":"\(DIEM_PUBLISH_NET.chainId)"]
+                "chainId":"\(VIOLAS_PUBLISH_NET.chainId)"]
     }
 }

@@ -10,6 +10,7 @@ import UIKit
 import BitcoinKit
 import Moya
 import BigInt
+
 struct txsData: Codable {
     var txid: String?
     var output_no: Int?
@@ -96,28 +97,30 @@ class BTCManager: NSObject {
         var data = Data()
         data += "violas".data(using: .utf8)!
         // Version(版本)
-        data += UInt16(0x0003).bigEndian
+        var version = UInt16(0x0004).bigEndian
+        let versionBytes = withUnsafeBytes(of: &version) { Array($0) }
+        data.append(Data.init(bytes: versionBytes, count: versionBytes.count))
         // Type(类型)
         data += Data.init(Array<UInt8>(hex: type))
         // payee_address(收款人地址)
         data += Data.init(Array<UInt8>(hex: (address)))
         // Sequence(时间戳)
-//        data += UInt64(20200110006).bigEndian
-        data += UInt64(Date().timeIntervalSince1970).bigEndian
+        var timestamp = UInt64(Date().timeIntervalSince1970).bigEndian
+        let timestampBytes = withUnsafeBytes(of: &timestamp) { Array($0) }
+        data.append(Data.init(bytes: timestampBytes, count: timestampBytes.count))
         // module_address
         data += Data.init(Array<UInt8>(hex: (tokenContract)))
         // out_amount(swap violas btc token amount microamount(1000000))
         data += getLengthData(length: amount, appendBytesCount: 8).bytes.reversed()
         // times(retry swap violas btc token number of times)
         data += Data.init(Array<UInt8>(hex: "0000"))
-        data += Data.init(Array<UInt8>(hex: "0\(DIEM_PUBLISH_NET.chainId)"))
-        print(data.hex)
+        data += Data.init(Array<UInt8>(hex: "0\(VIOLAS_PUBLISH_NET.chainId)"))
         return data
     }
     func getData(script: Data) -> Data {
         var scriptData: Data = Data()
-        scriptData += OpCode.OP_RETURN
-        scriptData += OpCode.OP_PUSHDATA1
+        scriptData += [OpCode.OP_RETURN.value]
+        scriptData += [OpCode.OP_PUSHDATA1.value]
         scriptData += getLengthData(length: UInt64(script.count), appendBytesCount: 1)
         scriptData += script
         return scriptData

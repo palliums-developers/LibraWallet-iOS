@@ -270,9 +270,9 @@ extension AddAssetViewController {
             self?.detailView.toastView?.hide(tag: 99)
         })
         self.detailView.makeToastActivity(.center)
-        let wallet = tokens?.filter({
-            $0.tokenType == .Violas
-        })
+//        let wallet = tokens?.filter({
+//            $0.tokenType == .Violas
+//        })
         self.dataModel.getSupportToken(localTokens: self.tokens!)
     }
 }

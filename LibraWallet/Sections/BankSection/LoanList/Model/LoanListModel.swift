@@ -76,7 +76,7 @@ class LoanListModel: NSObject {
 extension LoanListModel {
     func getLoanMarket(requestStatus: Int, completion: @escaping (Result<[BankDepositMarketDataModel], LibraWalletError>) -> Void) {
         let type = requestStatus == 0 ? "GetBankLoanMarketOrigin":"GetBankLoanMarketMore"
-        let request = bankModuleProvide.request(.loanMarket) {[weak self](result) in
+        let request = bankModuleProvide.request(.loanMarket) { (result) in
             switch  result {
             case let .success(response):
                 do {

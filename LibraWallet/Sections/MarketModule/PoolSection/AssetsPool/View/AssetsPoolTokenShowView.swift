@@ -391,18 +391,18 @@ class AssetsPoolTokenShowView: UIView {
     }
     var liquidityInfoModel: AssetsPoolsInfoDataModel? {
         didSet {
-            guard let model = liquidityInfoModel else {
-                return
-            }
-            let coinAAmount = NSDecimalNumber.init(value: model.coina?.value ?? 0)
-            let coinBAmount = NSDecimalNumber.init(value: model.coinb?.value ?? 0)
-            let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
-                                                           scale: 6,
-                                                           raiseOnExactness: false,
-                                                           raiseOnOverflow: false,
-                                                           raiseOnUnderflow: false,
-                                                           raiseOnDivideByZero: false)
-            let rate = coinBAmount.dividing(by: coinAAmount, withBehavior: numberConfig)
+//            guard let model = liquidityInfoModel else {
+//                return
+//            }
+//            let coinAAmount = NSDecimalNumber.init(value: model.coina?.value ?? 0)
+//            let coinBAmount = NSDecimalNumber.init(value: model.coinb?.value ?? 0)
+//            let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
+//                                                           scale: 6,
+//                                                           raiseOnExactness: false,
+//                                                           raiseOnOverflow: false,
+//                                                           raiseOnUnderflow: false,
+//                                                           raiseOnDivideByZero: false)
+//            let rate = coinBAmount.dividing(by: coinAAmount, withBehavior: numberConfig)
         }
     }
     /// 资金池转入ModelB

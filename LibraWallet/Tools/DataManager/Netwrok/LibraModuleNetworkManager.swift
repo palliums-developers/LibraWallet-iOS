@@ -110,11 +110,16 @@ extension LibraModuleRequest: TargetType {
         }
     }
     var headers: [String : String]? {
-        return ["Content-Type":"application/json",
-                "versionName": appversion,
-                "platform": "ios",
-                "bundleId":bundleID!,
-                "language":Localize.currentLanguage(),
-                "chainId":"\(DIEM_PUBLISH_NET.chainId)"]
+        switch self {
+        case .sendTransaction(_), .accountInfo(_):
+            return ["Content-Type":"application/json"]
+        default:
+            return ["Content-Type":"application/json",
+                    "versionName": appversion,
+                    "platform": "ios",
+                    "bundleId":bundleID!,
+                    "language":Localize.currentLanguage(),
+                    "chainId":"\(VIOLAS_PUBLISH_NET.chainId)"]
+        }
     }
 }

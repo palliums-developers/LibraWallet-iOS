@@ -406,6 +406,8 @@ wallet_market_exchange_input_token_button_title = "Select a token";
 wallet_market_exchange_output_token_button_title = "Select a token";
 wallet_market_exchange_token_title = "Balance: ";
 // 错误
+wallet_market_offline = "The market is under maintenance, please wait";
+wallet_market_exchange_without_liquidity = "The market has no liquidity";
 wallet_market_swap_unpublisheda_error = "Stable currency to be exchanged has not been opened and cannot be exchanged";
 wallet_market_exchange_amount_error = "Exchange amount invalid";
 wallet_market_exchange_amount_max_limit_error = "The amount of stablecoins you need to exchange is too large and does not support exchange. Please reduce the amount of exchange and exchange";

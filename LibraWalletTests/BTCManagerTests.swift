@@ -74,7 +74,7 @@ class BTCManagerTests: XCTestCase {
         //998befae8fbe932299e61cab53084be05ca01d7d9a886f5ad20cc218bcaa7c20
         let privateKeyData = Data.init(Array<UInt8>(hex: "998befae8fbe932299e61cab53084be05ca01d7d9a886f5ad20cc218bcaa7c20"))
 
-        let privateKeyNumber = BigUInt.init(Data.init(Array<UInt8>(hex: "998befae8fbe932299e61cab53084be05ca01d7d9a886f5ad20cc218bcaa7c20")))
+//        let privateKeyNumber = BigUInt.init(Data.init(Array<UInt8>(hex: "998befae8fbe932299e61cab53084be05ca01d7d9a886f5ad20cc218bcaa7c20")))
         let privateKey = PrivateKey.init(data: privateKeyData, network: .mainnetBTC, isPublicKeyCompressed: true)
         let address = privateKey.publicKey().toBitcoinAddress()
         print(address)
@@ -94,12 +94,21 @@ class BTCManagerTests: XCTestCase {
 
     }
     func testBTCToVBTC() {
-//        let script = BTCManager().getScript(address: "f086b6a2348ac502c708ac41d06fe824c91806cabcd5b2b5fa25ae1c50bed3c6", tokenContract: "cd0476e85ecc5fa71b61d84b9cf2f7fd524689a4f870c46d6a5d901b5ac1fdb2")
-//        let data = BTCManager().getData(script: script)
-//        print(data.toHexString())
-//        XCTAssertEqual("6a4c5276696f6c617300003000f086b6a2348ac502c708ac41d06fe824c91806cabcd5b2b5fa25ae1c50bed3c600000004b4054431cd0476e85ecc5fa71b61d84b9cf2f7fd524689a4f870c46d6a5d901b5ac1fdb2", data.toHexString())
-//        data += Data.init(Array<UInt8>(hex: ("f086b6a2348ac502c708ac41d06fe824c91806cabcd5b2b5fa25ae1c50bed3c6")))
-//        data += UInt64(20200113201).bigEndian
-//        data += Data.init(Array<UInt8>(hex: ("cd0476e85ecc5fa71b61d84b9cf2f7fd524689a4f870c46d6a5d901b5ac1fdb2")))
+        let script = BTCManager().getBTCScript(address: "1", type: "vls", tokenContract: "123", amount: 1000)
+        print(script.toHexString())
+        print(BTCManager().getData(script: script).toHexString())
+    }
+    private func getLengthData(length: UInt64, appendBytesCount: Int) -> Data {
+        var newData = Data()
+        let lengthData = BigUInt(length).serialize()
+        // 补全长度
+        for _ in 0..<(appendBytesCount - lengthData.count) {
+            newData.append(Data.init(hex: "00"))
+        }
+        // 追加原始数据
+        newData.append(lengthData)
+        // 倒序输出
+        let reversedAmount = newData.bytes.reversed()
+        return Data() + reversedAmount
     }
 }

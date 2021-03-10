@@ -471,8 +471,8 @@ class AssetsPoolViewHeaderView: UIView {
                 // 筛选Index排序
                 var leastModuleA = tempInputTokenA
                 var otherModuleB = tempInputTokenB
-                var tempAmountA = amountA
-                var tempAmountB = amountB
+                let tempAmountA = amountA
+                let tempAmountB = amountB
                 if (tempInputTokenA.index ?? 0) > (tempInputTokenB.index ?? 0) {
                     leastModuleA = tempInputTokenB
                     otherModuleB = tempInputTokenA

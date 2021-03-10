@@ -108,10 +108,10 @@ class ViolasSDKTests: XCTestCase {
         let mnemonic3 = ["net", "dice", "divide", "amount", "stamp", "flock", "brave", "nuclear", "fox", "aim", "father", "apology"]
         do {
             let seed1 = try ViolasMnemonic.seed(mnemonic: mnemonic1)
-            let seed2 = try ViolasMnemonic.seed(mnemonic: mnemonic2)
+//            let seed2 = try ViolasMnemonic.seed(mnemonic: mnemonic2)
             let seed3 = try ViolasMnemonic.seed(mnemonic: mnemonic3)
             let seedModel1 = ViolasSeedAndDepth.init(seed: seed1, depth: 0, sequence: 0)
-            let seedModel2 = ViolasSeedAndDepth.init(seed: seed2, depth: 0, sequence: 1)
+//            let seedModel2 = ViolasSeedAndDepth.init(seed: seed2, depth: 0, sequence: 1)
             let seedModel3 = ViolasSeedAndDepth.init(seed: seed3, depth: 0, sequence: 2)
             let multiPublicKey = ViolasMultiPublicKey.init(data: [ViolasMultiPublicKeyModel.init(raw: Data.init(Array<UInt8>(hex: "e12136fd95251348cd993b91e8fbf36bcebe9422842f3c505ca2893f5612ae53")), sequence: 0),
                                                                 ViolasMultiPublicKeyModel.init(raw: Data.init(Array<UInt8>(hex: "ee2586aaaeaaa39ae4eb601999e5c2aade701ac4262f79ac98d9413cce67b0db")), sequence: 1),

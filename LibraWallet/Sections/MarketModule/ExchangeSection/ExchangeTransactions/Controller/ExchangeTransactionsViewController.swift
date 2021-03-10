@@ -128,7 +128,6 @@ extension ExchangeTransactionsViewController {
                 self?.detailView.hideToastActivity()
                 return
             }
-            #warning("已修改完成，可拷贝执行")
             if let error = dataDic.value(forKey: "error") as? LibraWalletError {
                 self?.detailView.hideToastActivity()
                 if self?.detailView.tableView.mj_footer?.isRefreshing == true {

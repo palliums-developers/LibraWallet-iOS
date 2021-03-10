@@ -406,6 +406,8 @@ wallet_market_exchange_input_token_button_title = "选择通证";
 wallet_market_exchange_output_token_button_title = "选择通证";
 wallet_market_exchange_token_title = "当前资产：";
 // 错误
+wallet_market_offline = "交易所维护中，请稍后";
+wallet_market_exchange_without_liquidity = "交易所暂无流动性";
 wallet_market_swap_unpublisheda_error = "未开启不能调换";
 wallet_market_exchange_amount_error = "待兑换金额无效";
 wallet_market_exchange_amount_max_limit_error = "您需要兑换的稳定币数量过大，不支持交换，请减少兑换数量后交换";

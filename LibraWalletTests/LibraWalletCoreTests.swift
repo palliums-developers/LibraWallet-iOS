@@ -30,13 +30,14 @@ class LibraWalletCoreTests: XCTestCase {
         }
     }
     func testKeychainManager() {
-        let mnemonic = ["legal","winner","thank","year","wave","sausage","worth","useful","legal","winner","thank","year","wave","sausage","worth","useful","legal","will"]
-        do {
-            let seed = try DiemMnemonic.seed(mnemonic: mnemonic)
-            
-            let testWallet = try DiemHDWallet.init(seed: seed, depth: 0, network: .testnet)
-            let walletAddress = testWallet.publicKey.toLegacy()         
-//            try KeychainManager.KeyManager.savePayPasswordToKeychain(walletAddress: walletAddress, password: "123456")
+//        let mnemonic = ["legal","winner","thank","year","wave","sausage","worth","useful","legal","winner","thank","year","wave","sausage","worth","useful","legal","will"]
+//        do {
+//            let seed = try DiemMnemonic.seed(mnemonic: mnemonic)
+//
+//            let testWallet = try DiemHDWallet.init(seed: seed, depth: 0, network: .testnet)
+//            let walletAddress = testWallet.publicKey.toLegacy()
+//            try KeychainManager.savePayPasswordToKeychain(walletAddress: walletAddress, password: "123456")
+//            try WalletManager.getMnemonicFromKeychain(password: <#T##String#>)
 //            let paymentPassword = try KeychainManager.KeyManager.getPayPasswordFromKeychain(walletAddress: walletAddress)
 //            XCTAssertEqual(paymentPassword, "123456")
             
@@ -57,9 +58,9 @@ class LibraWalletCoreTests: XCTestCase {
 //
 //            try KeychainManager.KeyManager.deleteMnemonicStringFromKeychain(walletAddress: walletAddress)
 
-        } catch {
-            print(error.localizedDescription)
-        }
+//        } catch {
+//            print(error.localizedDescription)
+//        }
     }
 
     func testCrypte() {
@@ -104,12 +105,12 @@ class LibraWalletCoreTests: XCTestCase {
 //        let model = AddressModel.init(addressID: 0, address: "test", addressName: "test", addressType: "Libra")
 //        _ = DataBaseManager.DBManager.insertTransferAddress(model: model)
         
-        let data = try? DataBaseManager.DBManager.getTransferAddress(type: "Libra")
-        print(data)
+//        let data = try? DataBaseManager.DBManager.getTransferAddress(type: "Libra")
+//        print(data)
 //        let updateResult = try? DataBaseManager.DBManager.updateTransferAddressName(model: data.firstObject as! AddressModel, name: "haha")
 //        print(updateResult)
-        let data2 = try? DataBaseManager.DBManager.getTransferAddress(type: "Libra")
-        print(data2)        
+//        let data2 = try? DataBaseManager.DBManager.getTransferAddress(type: "Libra")
+//        print(data2)        
     }
     func testMnemonicCount() {
         let mnemonic = try? DiemMnemonic.generate(strength: .veryHigh, language: .english)
@@ -125,7 +126,7 @@ class LibraWalletCoreTests: XCTestCase {
     }
     func testMarketTransaction() {
         //        let signature = try librama
-        let mnemonic1 = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
+//        let mnemonic1 = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
 //        let signature = try! ViolasManager.getMarketAddLiquidityTransactionHex(sendAddress: "fa279f2615270daed6061313a48360f7",
 //                                                                               fee: 0,
 //                                                                               mnemonic: mnemonic1,
@@ -160,7 +161,7 @@ class LibraWalletCoreTests: XCTestCase {
 //        print(signature)
     }
     func testMarketMappingTransaction() {
-        let mnemonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
+//        let mnemonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
 //        let signature = try! ViolasManager.getViolasToLibraMappingTransactionHex(sendAddress: "fa279f2615270daed6061313a48360f7",
 //                                                                                 module: "VLSUSD",
 //                                                                                 amountIn: 15,
@@ -190,7 +191,7 @@ class LibraWalletCoreTests: XCTestCase {
     func testBank() {
 //        let mnemonic1 = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
         
-        let mnemonic = ["wrist", "post", "hover", "mixed", "like", "update", "salute", "access", "venture", "grant", "another", "team"]
+//        let mnemonic = ["wrist", "post", "hover", "mixed", "like", "update", "salute", "access", "venture", "grant", "another", "team"]
         
 //        let signature = try! ViolasManager.getBankFeaturesTransactionHex(sendAddress: "f41799563e5381b693d0885b56ebf19b",
 //                                                                         mnemonic: mnemonic,

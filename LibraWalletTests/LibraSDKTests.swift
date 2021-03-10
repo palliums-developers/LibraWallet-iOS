@@ -168,26 +168,6 @@ class LibraSDKTests: XCTestCase {
             print(error)
         }
     }
-    func testKeychainReinstallGetPasswordAndMnemonic() {
-        let mnemonic = ["legal","winner","thank","year","wave","sausage","worth","useful","legal","winner","thank","year","wave","sausage","worth","useful","legal","will"]
-//        let mnemonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "host", "begin"]
-        do {
-            let seed = try DiemMnemonic.seed(mnemonic: mnemonic)
-            
-            let testWallet = try DiemHDWallet.init(seed: seed, depth: 0, network: .testnet)
-            let walletAddress = testWallet.publicKey.toLegacy()
-            
-            //            let menmonicString = try KeychainManager.KeyManager.getMnemonicStringFromKeychain(walletAddress: walletAddress)
-            //            let mnemonicArray = menmonicString.split(separator: " ").compactMap { (item) -> String in
-            //                return "\(item)"
-            //            }
-            //            XCTAssertEqual(mnemonic, mnemonicArray)
-            
-        } catch {
-            print(error.localizedDescription)
-        }
-        
-    }
     func testULEB128() {
         //        XCTAssertEqual(LibraUtils.uleb128Format(length: 128).toHexString(), "8001")
         XCTAssertEqual(DiemUtils.uleb128Format(length: 16384).toHexString(), "808001")
@@ -366,14 +346,14 @@ class LibraSDKTests: XCTestCase {
     }
     func testLibraKitMulti() {
         let mnemonic1 = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "begin", "host"]
-        let mnemonic2 = ["grant", "security", "cluster", "pill", "visit", "wave", "skull", "chase", "vibrant", "embrace", "bronze", "tip"]
+//        let mnemonic2 = ["grant", "security", "cluster", "pill", "visit", "wave", "skull", "chase", "vibrant", "embrace", "bronze", "tip"]
         let mnemonic3 = ["net", "dice", "divide", "amount", "stamp", "flock", "brave", "nuclear", "fox", "aim", "father", "apology"]
         do {
             let seed1 = try DiemMnemonic.seed(mnemonic: mnemonic1)
-            let seed2 = try DiemMnemonic.seed(mnemonic: mnemonic2)
+//            let seed2 = try DiemMnemonic.seed(mnemonic: mnemonic2)
             let seed3 = try DiemMnemonic.seed(mnemonic: mnemonic3)
             let seedModel1 = DiemSeedAndDepth.init(seed: seed1, depth: 0, sequence: 0)
-            let seedModel2 = DiemSeedAndDepth.init(seed: seed2, depth: 0, sequence: 1)
+//            let seedModel2 = DiemSeedAndDepth.init(seed: seed2, depth: 0, sequence: 1)
             let seedModel3 = DiemSeedAndDepth.init(seed: seed3, depth: 0, sequence: 2)
             let multiPublicKey = DiemMultiPublicKey.init(data: [DiemMultiPublicKeyModel.init(raw: Data.init(Array<UInt8>(hex: "e12136fd95251348cd993b91e8fbf36bcebe9422842f3c505ca2893f5612ae53")), sequence: 0),
                                                                 DiemMultiPublicKeyModel.init(raw: Data.init(Array<UInt8>(hex: "ee2586aaaeaaa39ae4eb601999e5c2aade701ac4262f79ac98d9413cce67b0db")), sequence: 1),
@@ -848,5 +828,13 @@ class LibraSDKTests: XCTestCase {
         print(key.extendedPublicKey(network: .premainnet).toAuthKey())
         //ac992b6f0c025f712683e0533bfda6c8
         //b307e9866f89bbc005aa3d9a780254ca
+    }
+    func testU128() {
+        let vug = BigInt.init("11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111", radix: 2)//BigNumber.init(Data.init(Array<UInt8>(hex: "ffffffffffffffffffffffffffffffffffffffff")))
+        print(vug?.serialize() ?? "")
+        //18446744073709551615
+        //18446744073709551615
+        //340282366920938463463374607431768211455
+        //340282366920938463463374607431768211455
     }
 }
