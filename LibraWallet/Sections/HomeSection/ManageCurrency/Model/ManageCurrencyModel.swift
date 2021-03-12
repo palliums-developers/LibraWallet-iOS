@@ -542,16 +542,14 @@ extension ManageCurrencyModel {
                     }
                 } catch {
                     print("解析异常\(error.localizedDescription)")
-                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "UpdateDiemBalance")
-                    self?.setValue(data, forKey: "dataDic")
+                    completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError)))
                 }
             case let .failure(error):
                 guard error.errorCode != -999 else {
                     print("网络请求已取消")
                     return
                 }
-                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "UpdateDiemBalance")
-                self?.setValue(data, forKey: "dataDic")
+                completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.networkInvalid)))
             }
         }
         self.requests.append(request)
