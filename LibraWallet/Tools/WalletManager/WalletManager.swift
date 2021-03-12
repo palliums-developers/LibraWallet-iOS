@@ -330,7 +330,7 @@ extension WalletManager {
                                    tokenAddress: wallet.publicKey.toLegacy(),
                                    tokenType: .Violas,
                                    tokenIndex: 0,
-                                   tokenAuthenticationKey: wallet.publicKey.toAuthKeyPrefix(),
+                                   tokenAuthenticationKey: wallet.publicKey.toAuthKey(),
                                    tokenActiveState: false,
                                    tokenIcon: "violas_icon",
                                    tokenContract: "00000000000000000000000000000001",
@@ -354,7 +354,7 @@ extension WalletManager {
                                    tokenAddress: wallet.publicKey.toLegacy(),
                                    tokenType: .Libra,
                                    tokenIndex: 0,
-                                   tokenAuthenticationKey: wallet.publicKey.toAuthKeyPrefix(),
+                                   tokenAuthenticationKey: wallet.publicKey.toAuthKey(),
                                    tokenActiveState: false,
                                    tokenIcon: "libra_icon",
                                    tokenContract: "00000000000000000000000000000001",
@@ -487,7 +487,7 @@ extension WalletManager {
             let isExist = try DataBaseManager.DBManager.isExistViolasToken(tokenAddress: token.tokenAddress, tokenModule: token.tokenModule, tokenType: token.tokenType)
             if isExist == true {
                 // 已存在改状态
-                print("Token 数据库中已存在,改状态: \(token.tokenEnable)")
+                print("\(token.tokenModule) 数据库中已存在,改状态: \(token.tokenEnable)")
                 do {
                     try DataBaseManager.DBManager.updateViolasTokenState(tokenAddress: token.tokenAddress, tokenModule: token.tokenModule, tokenType: token.tokenType, state: token.tokenEnable)
                 } catch {
@@ -495,7 +495,7 @@ extension WalletManager {
                 }
             } else {
                 // 不存在插入
-                print("Token数据库中不存在,插入")
+                print("\(token.tokenModule) 数据库中不存在,插入")
                 do {
                     try DataBaseManager.DBManager.insertToken(token: token)
                 } catch {

@@ -338,11 +338,11 @@
 		9D5B4E5E236976D500F4D99C /* HomeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B4E5D236976D500F4D99C /* HomeTableViewCell.swift */; };
 		9D5B4E602369788500F4D99C /* HomeTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B4E5F2369788500F4D99C /* HomeTableViewManager.swift */; };
 		9D5B4E65236ABB8700F4D99C /* TransferFeeSliderCustom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B4E64236ABB8700F4D99C /* TransferFeeSliderCustom.swift */; };
-		9D5B4E6E236BCBC200F4D99C /* AddAssetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B4E6D236BCBC200F4D99C /* AddAssetView.swift */; };
-		9D5B4E70236BCBDB00F4D99C /* AddAssetModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B4E6F236BCBDB00F4D99C /* AddAssetModel.swift */; };
-		9D5B4E72236BCBEE00F4D99C /* AddAssetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B4E71236BCBEE00F4D99C /* AddAssetViewController.swift */; };
-		9D5B4E76236BCC1700F4D99C /* AddAssetTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B4E75236BCC1700F4D99C /* AddAssetTableViewManager.swift */; };
-		9D5B4E78236BCE1700F4D99C /* AddAssetViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B4E77236BCE1700F4D99C /* AddAssetViewTableViewCell.swift */; };
+		9D5B4E6E236BCBC200F4D99C /* ManageCurrencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B4E6D236BCBC200F4D99C /* ManageCurrencyView.swift */; };
+		9D5B4E70236BCBDB00F4D99C /* ManageCurrencyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B4E6F236BCBDB00F4D99C /* ManageCurrencyModel.swift */; };
+		9D5B4E72236BCBEE00F4D99C /* ManageCurrencyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B4E71236BCBEE00F4D99C /* ManageCurrencyViewController.swift */; };
+		9D5B4E76236BCC1700F4D99C /* ManageCurrencyTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B4E75236BCC1700F4D99C /* ManageCurrencyTableViewManager.swift */; };
+		9D5B4E78236BCE1700F4D99C /* ManageCurrencyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B4E77236BCE1700F4D99C /* ManageCurrencyTableViewCell.swift */; };
 		9D5C7C6723AA243A0090385C /* DiemCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5C7C6623AA24390090385C /* DiemCommon.swift */; };
 		9D5D13C523692D3800A2C6AF /* HomeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5D13C423692D3800A2C6AF /* HomeHeaderView.swift */; };
 		9D62646C2355A0E300A79B3D /* PasswordCrypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D62646B2355A0E300A79B3D /* PasswordCrypto.swift */; };
@@ -855,11 +855,11 @@
 		9D5B4E5D236976D500F4D99C /* HomeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewCell.swift; sourceTree = "<group>"; };
 		9D5B4E5F2369788500F4D99C /* HomeTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewManager.swift; sourceTree = "<group>"; };
 		9D5B4E64236ABB8700F4D99C /* TransferFeeSliderCustom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransferFeeSliderCustom.swift; sourceTree = "<group>"; };
-		9D5B4E6D236BCBC200F4D99C /* AddAssetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAssetView.swift; sourceTree = "<group>"; };
-		9D5B4E6F236BCBDB00F4D99C /* AddAssetModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAssetModel.swift; sourceTree = "<group>"; };
-		9D5B4E71236BCBEE00F4D99C /* AddAssetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAssetViewController.swift; sourceTree = "<group>"; };
-		9D5B4E75236BCC1700F4D99C /* AddAssetTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAssetTableViewManager.swift; sourceTree = "<group>"; };
-		9D5B4E77236BCE1700F4D99C /* AddAssetViewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAssetViewTableViewCell.swift; sourceTree = "<group>"; };
+		9D5B4E6D236BCBC200F4D99C /* ManageCurrencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageCurrencyView.swift; sourceTree = "<group>"; };
+		9D5B4E6F236BCBDB00F4D99C /* ManageCurrencyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageCurrencyModel.swift; sourceTree = "<group>"; };
+		9D5B4E71236BCBEE00F4D99C /* ManageCurrencyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageCurrencyViewController.swift; sourceTree = "<group>"; };
+		9D5B4E75236BCC1700F4D99C /* ManageCurrencyTableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageCurrencyTableViewManager.swift; sourceTree = "<group>"; };
+		9D5B4E77236BCE1700F4D99C /* ManageCurrencyTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageCurrencyTableViewCell.swift; sourceTree = "<group>"; };
 		9D5C7C6623AA24390090385C /* DiemCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemCommon.swift; sourceTree = "<group>"; };
 		9D5D13C423692D3800A2C6AF /* HomeHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeHeaderView.swift; sourceTree = "<group>"; };
 		9D62646B2355A0E300A79B3D /* PasswordCrypto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordCrypto.swift; sourceTree = "<group>"; };
@@ -3596,7 +3596,7 @@
 			path = BTCManager;
 			sourceTree = "<group>";
 		};
-		9D5B4E66236BCB4000F4D99C /* AddAsset */ = {
+		9D5B4E66236BCB4000F4D99C /* ManageCurrency */ = {
 			isa = PBXGroup;
 			children = (
 				9D5B4E69236BCB8200F4D99C /* Controller */,
@@ -3604,14 +3604,14 @@
 				9D5B4E68236BCB7B00F4D99C /* Model */,
 				9D5B4E67236BCB7600F4D99C /* View */,
 			);
-			path = AddAsset;
+			path = ManageCurrency;
 			sourceTree = "<group>";
 		};
 		9D5B4E67236BCB7600F4D99C /* View */ = {
 			isa = PBXGroup;
 			children = (
-				9D5B4E6D236BCBC200F4D99C /* AddAssetView.swift */,
-				9D5B4E77236BCE1700F4D99C /* AddAssetViewTableViewCell.swift */,
+				9D5B4E6D236BCBC200F4D99C /* ManageCurrencyView.swift */,
+				9D5B4E77236BCE1700F4D99C /* ManageCurrencyTableViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -3619,7 +3619,7 @@
 		9D5B4E68236BCB7B00F4D99C /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				9D5B4E6F236BCBDB00F4D99C /* AddAssetModel.swift */,
+				9D5B4E6F236BCBDB00F4D99C /* ManageCurrencyModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -3627,7 +3627,7 @@
 		9D5B4E69236BCB8200F4D99C /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				9D5B4E71236BCBEE00F4D99C /* AddAssetViewController.swift */,
+				9D5B4E71236BCBEE00F4D99C /* ManageCurrencyViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -3635,7 +3635,7 @@
 		9D5B4E6B236BCB9700F4D99C /* TableViewManager */ = {
 			isa = PBXGroup;
 			children = (
-				9D5B4E75236BCC1700F4D99C /* AddAssetTableViewManager.swift */,
+				9D5B4E75236BCC1700F4D99C /* ManageCurrencyTableViewManager.swift */,
 			);
 			path = TableViewManager;
 			sourceTree = "<group>";
@@ -4581,7 +4581,7 @@
 				9DC488702322246E005FF254 /* LibraTransfer */,
 				9D68D2FA237D25CA005B7593 /* ViolasTransfer */,
 				9D68D2EC237CF019005B7593 /* BTCTransfer */,
-				9D5B4E66236BCB4000F4D99C /* AddAsset */,
+				9D5B4E66236BCB4000F4D99C /* ManageCurrency */,
 				3622F20E24E539B100CFB754 /* Receive */,
 				3622F1FE24E3FBB300CFB754 /* Transfer */,
 				364BB570242CD27700B9BE17 /* MappingModule */,
@@ -5355,7 +5355,7 @@
 				366AFF1725778B470007AAFC /* ProfitPoolModel.swift in Sources */,
 				9DC902472328FDB90097FD85 /* DataBaseManager.swift in Sources */,
 				361BDAFB24F8E7BE00C4C54E /* DepositMarketTableViewManager.swift in Sources */,
-				9D5B4E70236BCBDB00F4D99C /* AddAssetModel.swift in Sources */,
+				9D5B4E70236BCBDB00F4D99C /* ManageCurrencyModel.swift in Sources */,
 				9D5B4E5E236976D500F4D99C /* HomeTableViewCell.swift in Sources */,
 				362B041225F86F8600AECD98 /* GSCaptchaButton.swift in Sources */,
 				3666E514257A0C2F007DC62F /* YieldFarmingViewController.swift in Sources */,
@@ -5396,7 +5396,7 @@
 				361BDAF424F8E7BE00C4C54E /* LoanOrderDetailModel.swift in Sources */,
 				36828CDE24B74C270085A165 /* ExchangeView.swift in Sources */,
 				36178363244465EB003C6588 /* ViolasMultiPublicKey.swift in Sources */,
-				9D5B4E78236BCE1700F4D99C /* AddAssetViewTableViewCell.swift in Sources */,
+				9D5B4E78236BCE1700F4D99C /* ManageCurrencyTableViewCell.swift in Sources */,
 				9DC901F2232788C30097FD85 /* DiemAccessPath.swift in Sources */,
 				9DBC267823408D55009650EA /* ed25519_ge.swift in Sources */,
 				36677A79250A1908009152B3 /* DropperCellConfig.swift in Sources */,
@@ -5549,7 +5549,7 @@
 				9DC06A2F2371788100BCE1FE /* CheckBackupViewModel.swift in Sources */,
 				361BDAFE24F8E7BE00C4C54E /* DepositOrdersTableViewCell.swift in Sources */,
 				361BDAD124F8E7BD00C4C54E /* BankViewController.swift in Sources */,
-				9D5B4E76236BCC1700F4D99C /* AddAssetTableViewManager.swift in Sources */,
+				9D5B4E76236BCC1700F4D99C /* ManageCurrencyTableViewManager.swift in Sources */,
 				9DB515BB23A32E4C0069A909 /* ViolasRawTransaction.swift in Sources */,
 				36F826F724BD9F390007ACC3 /* AssetsPoolTransactionsView.swift in Sources */,
 				36F826F924BD9F460007ACC3 /* AssetsPoolTransactionsModel.swift in Sources */,
@@ -5578,7 +5578,7 @@
 				361BDAD724F8E7BD00C4C54E /* LoanDetailLoanListTableViewCell.swift in Sources */,
 				361BDABF24F8E7BD00C4C54E /* DepositModel.swift in Sources */,
 				9DA0265023700A6C0084905B /* BackupMnemonicViewModel.swift in Sources */,
-				9D5B4E72236BCBEE00F4D99C /* AddAssetViewController.swift in Sources */,
+				9D5B4E72236BCBEE00F4D99C /* ManageCurrencyViewController.swift in Sources */,
 				361BDAFC24F8E7BE00C4C54E /* DepositOrdersViewController.swift in Sources */,
 				9DC06A6E2373FEB900BCE1FE /* ViolasManager.swift in Sources */,
 				361051422563ABD7008407F5 /* BankModuleNetworkManager.swift in Sources */,
@@ -5638,7 +5638,7 @@
 				36677A90250F6539009152B3 /* ScanBankWithdrawView.swift in Sources */,
 				36B466B6247656E400CFF438 /* ScanSendTransactionModel.swift in Sources */,
 				9D9B49AB235DA76100354EF0 /* AddressManagerTableViewManager.swift in Sources */,
-				9D5B4E6E236BCBC200F4D99C /* AddAssetView.swift in Sources */,
+				9D5B4E6E236BCBC200F4D99C /* ManageCurrencyView.swift in Sources */,
 				3650F0B12488986A0086F578 /* WalletMainTableViewManager.swift in Sources */,
 				367914A3250F7455008C7237 /* ScanBankRepaymentModel.swift in Sources */,
 				361BDABE24F8E7BD00C4C54E /* DepositViewController.swift in Sources */,

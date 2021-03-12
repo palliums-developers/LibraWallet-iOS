@@ -390,7 +390,7 @@ wallet_add_asset_alert_title = "Tips";
 wallet_add_asset_alert_content = "Require to have VLS in order to enable";
 wallet_add_asset_alert_cancel_button_title = "Cancel";
 wallet_add_asset_alert_confirm_button_title = "Confirm";
-wallet_add_asset_alert_success_title = "Open Successful";
+wallet_add_asset_alert_success_title = "Successful Active";
 
 /************* 交易所兑换 *******************/
 // 标题
@@ -761,6 +761,8 @@ wallet_type_in_password_confirm_button_title = "Confirm";
 // 提示
 wallet_service_legal_loaded_error_title = "Load Failed";
 wallet_service_legal_loaded_error_cancel_button_title = "Confirm";
+wallet_unactivated_alert_content_prifix = "Your ";
+wallet_unactivated_alert_content = " wallet has not been activated, please try to add assets after activation";
 
 /************* App错误（通用） *******************/
 // 请求遇到错误

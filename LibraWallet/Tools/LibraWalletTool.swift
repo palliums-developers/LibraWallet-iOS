@@ -293,8 +293,8 @@ extension libraWalletTool {
     }
     static func currencyUnactivatedAlert(confirm: @escaping ()->Void, cancel: @escaping ()->Void) -> UIAlertController {
         let alert = UIAlertController.init(title: localLanguage(keyString: "wallet_add_asset_alert_title"),
-                                               message: localLanguage(keyString: "wallet_add_asset_alert_content"),
-                                               preferredStyle: .alert)
+                                           message: localLanguage(keyString: "wallet_add_asset_alert_content"),
+                                           preferredStyle: .alert)
         let cancelAction = UIAlertAction.init(title:localLanguage(keyString: "wallet_add_asset_alert_cancel_button_title"), style: .default) { okAction in
             cancel()
         }
@@ -302,6 +302,16 @@ extension libraWalletTool {
             confirm()
         }
         alert.addAction(cancelAction)
+        alert.addAction(confirmAction)
+        return alert
+    }
+    static func walletUnactivatedAlert(walletType: WalletType, confirm: @escaping ()->Void) -> UIAlertController {
+        let alert = UIAlertController.init(title: localLanguage(keyString: "wallet_add_asset_alert_title"),
+                                           message: localLanguage(keyString: "wallet_unactivated_alert_content_prifix") + walletType.description.lowercased() + localLanguage(keyString: "wallet_unactivated_alert_content"),
+                                           preferredStyle: .alert)
+        let confirmAction = UIAlertAction.init(title:localLanguage(keyString: "wallet_add_asset_alert_confirm_button_title"), style: .default) { okAction in
+            confirm()
+        }
         alert.addAction(confirmAction)
         return alert
     }

@@ -38,6 +38,10 @@ class HomeViewController: UIViewController {
         self.detailView.activeButton.alpha = Wallet.shared.isNewWallet == true ? 1:0
         // 展示未备份警告
         isBackupMnemonic()
+        if isNeedRefresh == true {
+            self.detailView.tableView.mj_header?.beginRefreshing()
+            self.isNeedRefresh = false
+        }
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -143,6 +147,7 @@ class HomeViewController: UIViewController {
             }
         }
     }
+    var isNeedRefresh: Bool = false
 }
 //MARK: - 导航栏添加按钮
 extension HomeViewController {
@@ -448,14 +453,14 @@ extension HomeViewController: HomeHeaderViewDelegate {
         self.present(vc, animated: true, completion: nil)
     }
     func addAssets() {
-        let vc = AddAssetViewController()
+        let vc = ManageCurrencyViewController()
         vc.hidesBottomBarWhenPushed = true
         vc.tokens = self.tableViewManager.dataModel
         vc.needUpdateClosure = { result in
-            //            self.refreshData()
-            self.detailView.makeToastActivity(.center)
-            self.requestData()
-            print("刷新首页数据")
+            self.isNeedRefresh = true
+//            self.detailView.makeToastActivity(.center)
+//            self.requestData()
+//            print("刷新首页数据")
         }
         self.navigationController?.pushViewController(vc, animated: true)
     }

@@ -1,5 +1,5 @@
 //
-//  AddAssetTableViewManager.swift
+//  ManageCurrencyTableViewManager.swift
 //  LibraWallet
 //
 //  Created by palliums on 2019/11/1.
@@ -7,19 +7,19 @@
 //
 
 import UIKit
-protocol AddAssetTableViewManagerDelegate: NSObjectProtocol {
-    func switchButtonChange(model: AssetsModel, state: Bool, indexPath: IndexPath)
-//    func tableViewDidSelectRowAtIndexPath(indexPath: IndexPath, model: ViolasTokenModel)
+
+protocol ManageCurrencyTableViewManagerDelegate: NSObjectProtocol {
+    func switchButtonChange(model: AssetsModel, state: Bool, failed: @escaping (() -> Void))
 }
-class AddAssetTableViewManager: NSObject {
-    weak var delegate: AddAssetTableViewManagerDelegate?
-    var dataModel: [AssetsModel]?
-    var headerData: Token?
+class ManageCurrencyTableViewManager: NSObject {
+    weak var delegate: ManageCurrencyTableViewManagerDelegate?
+    /// 数据Model
+    var dataModels: [AssetsModel]?
     deinit {
-        print("AddAssetTableViewManager销毁了")
+        print("ManageCurrencyTableViewManager销毁了")
     }
 }
-extension AddAssetTableViewManager: UITableViewDelegate {
+extension ManageCurrencyTableViewManager: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
     }
@@ -47,37 +47,35 @@ extension AddAssetTableViewManager: UITableViewDelegate {
         return 10
     }
 }
-extension AddAssetTableViewManager: UITableViewDataSource {
+extension ManageCurrencyTableViewManager: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
     func numberOfSections(in tableView: UITableView) -> Int {
-        return dataModel?.count ?? 0
+        return dataModels?.count ?? 0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let identifier = "CellNormal"
-        if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? AddAssetViewTableViewCell {
-            if let data = dataModel, data.isEmpty == false {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? ManageCurrencyTableViewCell {
+            if let data = dataModels, data.isEmpty == false {
                 cell.token = data[indexPath.section]
             }
             cell.selectionStyle = .none
             cell.delegate = self
-            cell.indexPath = indexPath
             return cell
         } else {
-            let cell = AddAssetViewTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
-            if let data = dataModel, data.isEmpty == false {
+            let cell = ManageCurrencyTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
+            if let data = dataModels, data.isEmpty == false {
                 cell.token = data[indexPath.section]
             }
             cell.selectionStyle = .none
             cell.delegate = self
-            cell.indexPath = indexPath
             return cell
         }
     }
 }
-extension AddAssetTableViewManager: AddAssetViewTableViewCellDelegate {
-    func switchButtonChange(model: AssetsModel, state: Bool, indexPath: IndexPath) {
-        self.delegate?.switchButtonChange(model: model, state: state, indexPath: indexPath)
+extension ManageCurrencyTableViewManager: ManageCurrencyTableViewCellDelegate {
+    func switchButtonChange(model: AssetsModel, state: Bool, failed: @escaping (() -> Void)) {
+        self.delegate?.switchButtonChange(model: model, state: state, failed: failed)
     }
 }

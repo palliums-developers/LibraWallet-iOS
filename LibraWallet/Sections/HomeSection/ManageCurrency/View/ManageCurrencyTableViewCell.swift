@@ -1,5 +1,5 @@
 //
-//  AddAssetViewTableViewCell.swift
+//  ManageCurrencyTableViewCell.swift
 //  LibraWallet
 //
 //  Created by palliums on 2019/11/1.
@@ -8,11 +8,12 @@
 
 import UIKit
 import Kingfisher
-protocol AddAssetViewTableViewCellDelegate: NSObjectProtocol {
-    func switchButtonChange(model: AssetsModel, state: Bool, indexPath: IndexPath)
+
+protocol ManageCurrencyTableViewCellDelegate: NSObjectProtocol {
+    func switchButtonChange(model: AssetsModel, state: Bool, failed: @escaping (()->Void))
 }
-class AddAssetViewTableViewCell: UITableViewCell {
-    weak var delegate: AddAssetViewTableViewCellDelegate?
+class ManageCurrencyTableViewCell: UITableViewCell {
+    weak var delegate: ManageCurrencyTableViewCellDelegate?
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(contentBackgroundView)
@@ -25,7 +26,7 @@ class AddAssetViewTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
-        print("AddAssetViewTableViewCell销毁了")
+        print("ManageCurrencyTableViewCell销毁了")
     }
     //pragma MARK: 布局
     override func layoutSubviews() {
@@ -51,10 +52,9 @@ class AddAssetViewTableViewCell: UITableViewCell {
         switchButton.snp.makeConstraints { (make) in
             make.centerY.equalTo(contentBackgroundView)
             make.right.equalTo(contentBackgroundView).offset(-15)
-//            make.size.equalTo(CGSize.init(width: 38, height: 19))
         }
     }
-    //MARK: - 懒加载对象
+    // MARK: - 懒加载对象
     private lazy var contentBackgroundView: UIView = {
         let view = UIView.init()
         view.layer.cornerRadius = 3
@@ -67,15 +67,15 @@ class AddAssetViewTableViewCell: UITableViewCell {
         view.layer.borderColor = UIColor.init(hex: "333333").cgColor
         view.layer.borderWidth = 0.25
         view.layer.masksToBounds = true
-       return view
-   }()
+        return view
+    }()
     private lazy var iconImageView : UIImageView = {
         let imageView = UIImageView.init()
         imageView.layer.cornerRadius = 13
         imageView.layer.masksToBounds = true
-       return imageView
-   }()
-    lazy var nameLabel: UILabel = {
+        return imageView
+    }()
+    private lazy var nameLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.init(hex: "0E0051")
@@ -95,19 +95,20 @@ class AddAssetViewTableViewCell: UITableViewCell {
         guard let tempModel = self.token else {
             return
         }
-        guard let tempIndexPath = self.indexPath else {
-            return
-        }
-        self.delegate?.switchButtonChange(model: tempModel, state: button.isOn, indexPath: tempIndexPath)
+        self.delegate?.switchButtonChange(model: tempModel, state: button.isOn, failed: {
+            button.setOn(!button.isOn, animated: true)
+        })
     }
-    //MARK: - 设置数据
+    // MARK: - 设置数据
     var token: AssetsModel? {
         didSet {
-            nameLabel.text = token?.show_name
-//            detailLabel.text = token?.description
-            if let iconName = token?.icon, iconName.isEmpty == false {
+            guard let model = token else {
+                return
+            }
+            nameLabel.text = model.show_name
+            if let iconName = model.icon, iconName.isEmpty == false {
                 if iconName.hasPrefix("http") {
-                    let url = URL(string: token?.icon ?? "")
+                    let url = URL(string: model.icon ?? "")
                     iconImageView.kf.setImage(with: url, placeholder: UIImage.init(named: "wallet_icon_default"))
                 } else {
                     iconImageView.image = UIImage.init(named: iconName)
@@ -116,8 +117,7 @@ class AddAssetViewTableViewCell: UITableViewCell {
                 iconImageView.image = UIImage.init(named: "wallet_icon_default")
             }
             
-            switchButton.setOn(token?.enable ?? false, animated: false)
+            switchButton.setOn(model.enable, animated: false)
         }
     }
-    var indexPath: IndexPath?
 }

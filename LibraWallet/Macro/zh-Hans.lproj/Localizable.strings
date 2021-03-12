@@ -761,6 +761,8 @@ wallet_type_in_password_confirm_button_title = "确定";
 // 提示
 wallet_service_legal_loaded_error_title = "加载失败";
 wallet_service_legal_loaded_error_cancel_button_title = "确定";
+wallet_unactivated_alert_content_prifix = "您的";
+wallet_unactivated_alert_content = "钱包尚未激活，请激活后尝试添加资产";
 
 /************* App错误（通用） *******************/
 // 请求遇到错误
