@@ -530,7 +530,7 @@ extension ManageCurrencyModel {
         self.requests.append(request)
     }
     private func getDiemAccountInfo(address: String, completion: @escaping (Result<DiemAccountInfoDataModel, LibraWalletError>) -> Void) {
-        let request = libraModuleProvide.request(.accountInfo(address)) {[weak self](result) in
+        let request = libraModuleProvide.request(.accountInfo(address)) { (result) in
             switch  result {
             case let .success(response):
                 do {
