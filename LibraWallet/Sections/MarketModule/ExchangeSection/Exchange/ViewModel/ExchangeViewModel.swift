@@ -22,6 +22,8 @@ protocol ExchangeViewModelInterface  {
     var tokenModelA: MarketSupportTokensDataModel? { get }
     var tokenModelB: MarketSupportTokensDataModel? { get }
     var swapInfoModel: ExchangeInfoModel? { get }
+    
+    func swapInputOutputToken()
 }
 class ExchangeViewModel: NSObject, ExchangeViewModelInterface {
     weak var delegate: ExchangeViewModelDelegate?
@@ -57,6 +59,12 @@ class ExchangeViewModel: NSObject, ExchangeViewModelInterface {
     var swapInfoModel: ExchangeInfoModel? {
         return self.exchangeModel
     }
+    func swapInputOutputToken() {
+        #warning("报错待处理")
+        let tempToken = self.tempTokenA
+        self.tempTokenA = self.tempTokenB
+        self.tempTokenB = tempToken
+    }
     private var tempTokenA: MarketSupportTokensDataModel? {
         didSet {
             self.delegate?.reloadSelectTokenViewA()
@@ -81,6 +89,7 @@ class ExchangeViewModel: NSObject, ExchangeViewModelInterface {
     }
     private var inputAmountString: String?
     private var outputAmountString: String?
+    
 }
 // MARK: - 逻辑处理
 extension ExchangeViewModel {

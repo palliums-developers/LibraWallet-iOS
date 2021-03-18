@@ -71,6 +71,7 @@ extension ExchangeViewController: ExchangeViewHeaderViewDelegate {
     
     func swapInputOutputToken() {
         print("swapInputOutputToken")
+//        self.viewModel.swapInputOutputToken()
     }
     
     func exchangeConfirm() {
