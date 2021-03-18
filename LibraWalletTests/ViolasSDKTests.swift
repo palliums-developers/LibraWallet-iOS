@@ -102,23 +102,57 @@ class ViolasSDKTests: XCTestCase {
         let rawTransactioinScriptCheckData: Array<UInt8> = [58, 36, 166, 30, 5, 209, 41, 202, 206, 158, 14, 252, 139, 201, 227, 56, 32, 0, 0, 0, 0, 0, 0, 0, 1, 4, 109, 111, 118, 101, 0, 1, 1, 239, 190, 173, 222, 13, 208, 254, 202, 16, 39, 0, 0, 0, 0, 0, 0, 32, 78, 0, 0, 0, 0, 0, 0, 3, 88, 85, 83, 128, 81, 1, 0, 0, 0, 0, 0, 4]
         XCTAssertEqual(scriptRaw.serialize().toHexString().lowercased(), Data.init(rawTransactioinScriptCheckData).toHexString())
     }
+    func testViolasKitSingle() {
+        let mnemonic = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "begin", "host"]
+        //5be7a2fd7d12353121d4702fcfa4ab42-
+        //token = ba006842b6bfbef4fef8eb2db37dc9bc
+        
+//        let mnemonic = ["grant", "security", "cluster", "pill", "visit", "wave", "skull", "chase", "vibrant", "embrace", "bronze", "tip"]
+        //643eb4651234bde53a7d865f61ed96f8
+        //token = ba006842b6bfbef4fef8eb2db37dc9bc
+        
+//        let mnemonic = ["net", "dice", "divide", "amount", "stamp", "flock", "brave", "nuclear", "fox", "aim", "father", "apology"]
+        //1783c560a50bff9cf8b4a55f67fac776
+        //token = ba006842b6bfbef4fef8eb2db37dc9bc
+//        let mnemonic = ["trouble", "menu", "nephew", "group", "alert", "recipe", "hotel", "fatigue", "wet", "shadow", "say", "fold", "huge", "olive", "solution", "enjoy", "garden", "appear", "vague", "joy", "great", "keep", "cactus", "melt"]
+
+        do {
+            let seed = try ViolasMnemonic.seed(mnemonic: mnemonic)
+            let wallet = try ViolasHDWallet.init(seed: seed, network: .testing)
+            print(wallet.publicKey.toLegacy())
+//            let signature = try DiemManager.getNormalTransactionHex(sendAddress: "643eb4651234bde53a7d865f61ed96f8",
+//                                                                    receiveAddress: "6c1dd50f35f120061babc2814cf9378b",
+//                                                                    amount: 1000000,
+//                                                                    fee: 1,
+//                                                                    mnemonic: mnemonic,
+//                                                                    sequenceNumber: 5,
+//                                                                    module: "XUS",
+//                                                                    toSubAddress: "",
+//                                                                    fromSubAddress: "",
+//                                                                    referencedEvent: "")
+//            print(signature)
+            print("Success")
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
     func testViolasKitMulti() {
         let mnemonic1 = ["display", "paddle", "crush", "crowd", "often", "friend", "topple", "agent", "entry", "use", "begin", "host"]
-//        let mnemonic2 = ["grant", "security", "cluster", "pill", "visit", "wave", "skull", "chase", "vibrant", "embrace", "bronze", "tip"]
+        let mnemonic2 = ["grant", "security", "cluster", "pill", "visit", "wave", "skull", "chase", "vibrant", "embrace", "bronze", "tip"]
         let mnemonic3 = ["net", "dice", "divide", "amount", "stamp", "flock", "brave", "nuclear", "fox", "aim", "father", "apology"]
         do {
             let seed1 = try ViolasMnemonic.seed(mnemonic: mnemonic1)
-//            let seed2 = try ViolasMnemonic.seed(mnemonic: mnemonic2)
+            let seed2 = try ViolasMnemonic.seed(mnemonic: mnemonic2)
             let seed3 = try ViolasMnemonic.seed(mnemonic: mnemonic3)
             let seedModel1 = ViolasSeedAndDepth.init(seed: seed1, depth: 0, sequence: 0)
-//            let seedModel2 = ViolasSeedAndDepth.init(seed: seed2, depth: 0, sequence: 1)
+            let seedModel2 = ViolasSeedAndDepth.init(seed: seed2, depth: 0, sequence: 1)
             let seedModel3 = ViolasSeedAndDepth.init(seed: seed3, depth: 0, sequence: 2)
             let multiPublicKey = ViolasMultiPublicKey.init(data: [ViolasMultiPublicKeyModel.init(raw: Data.init(Array<UInt8>(hex: "e12136fd95251348cd993b91e8fbf36bcebe9422842f3c505ca2893f5612ae53")), sequence: 0),
                                                                 ViolasMultiPublicKeyModel.init(raw: Data.init(Array<UInt8>(hex: "ee2586aaaeaaa39ae4eb601999e5c2aade701ac4262f79ac98d9413cce67b0db")), sequence: 1),
                                                                 ViolasMultiPublicKeyModel.init(raw: Data.init(Array<UInt8>(hex: "d0b27e06a1bf428c380bd10b7469d8b4f251e763724b2543c730abcaea18c8b0")), sequence: 2)],
                                                           threshold: 2,
                                                           network: .testing)
-            let wallet = try ViolasMultiHDWallet.init(models: [seedModel1, seedModel3], threshold: 2, multiPublicKey: multiPublicKey, network: .testing)
+            let wallet = try ViolasMultiHDWallet.init(models: [seedModel1, seedModel2, seedModel3], threshold: 2, multiPublicKey: multiPublicKey, network: .testing)
             //            let wallet = try LibraMultiHDWallet.init(models: [seedModel1, seedModel2, seedModel3], threshold: 2)
             print("Legacy = \(wallet.publicKey.toLegacy())")
             //0d6a04436002d61228a3b58d3f0ecc71
@@ -132,8 +166,8 @@ class ViolasSDKTests: XCTestCase {
                                                                 fee: 1,
                                                                 sequenceNumber: 1,
                                                                 wallet: wallet,
-                                                                module: "XUS",
-                                                                feeModule: "XUS")
+                                                                module: "VLS",
+                                                                feeModule: "VLS")
             print(sign)
             print("Success")
         } catch {

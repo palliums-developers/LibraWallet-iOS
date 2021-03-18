@@ -246,7 +246,10 @@ extension HomeModel {
                 violasAddress = token.tokenAddress
                 quene.async(group: group, qos: .default, flags: [], execute: {
                     // 更新Violas数量
-                    self.getViolasBalance(tokenID: token.tokenID, address: violasAddress, authKey: token.tokenAuthenticationKey, tokens: tokens) { (result) in
+                    let index = token.tokenAuthenticationKey.index(token.tokenAuthenticationKey.startIndex, offsetBy: 32)
+                    let authKeyPrifix = token.tokenAuthenticationKey.prefix(upTo: index)
+                    let subStr: String = String(authKeyPrifix)
+                    self.getViolasBalance(tokenID: token.tokenID, address: violasAddress, authKey: subStr, tokens: tokens) { (result) in
                         switch result {
                         case let .success(models):
                             let tempIndexPath = WalletManager.updateViolasTokensBalance(tokenBalances: models)
@@ -293,8 +296,11 @@ extension HomeModel {
                 print("查询到Diem 地址")
                 diemAddress = token.tokenAddress
                 quene.async(group: group, qos: .default, flags: [], execute: {
+                    let index = token.tokenAuthenticationKey.index(token.tokenAuthenticationKey.startIndex, offsetBy: 32)
+                    let authKeyPrifix = token.tokenAuthenticationKey.prefix(upTo: index)
+                    let subStr: String = String(authKeyPrifix)
                     // 更新Libra数量
-                    self.getDiemBalance(tokenID: token.tokenID, address: diemAddress, authKey: token.tokenAuthenticationKey, tokens: tokens) { (result) in
+                    self.getDiemBalance(tokenID: token.tokenID, address: diemAddress, authKey: subStr, tokens: tokens) { (result) in
                         switch result {
                         case let .success(models):
                             let tempIndexPath = WalletManager.updateDiemTokensBalance(tokenBalances: models)
