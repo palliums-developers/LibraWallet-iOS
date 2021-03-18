@@ -18,12 +18,7 @@ class ExchangeViewController: UIViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         detailView.snp.makeConstraints { (make) in
-            if #available(iOS 11.0, *) {
-                make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
-            } else {
-                make.top.bottom.equalTo(self.view)
-            }
-            make.left.right.equalTo(self.view)
+            make.top.left.right.bottom.equalTo(self.view.safeAreaLayoutGuide)
         }
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -40,12 +35,52 @@ class ExchangeViewController: UIViewController {
     /// 子View
     lazy var detailView : ExchangeView = {
         let view = ExchangeView.init()
+        view.headerView.delegate = self
         return view
     }()
     /// ViewModel
     lazy var viewModel: ExchangeViewModel = {
         let viewModel = ExchangeViewModel.init()
-        viewModel.view = self.detailView
+        viewModel.delegate = self
         return viewModel
     }()
+}
+extension ExchangeViewController: ExchangeViewModelDelegate {
+    func reloadSelectTokenViewA() {
+        self.detailView.headerView.tokenSelectViewA.swapTokenModel = self.viewModel.tokenModelA
+        self.detailView.toastView.hide(tag: 99)
+    }
+    func reloadSelectTokenViewB() {
+        self.detailView.headerView.tokenSelectViewB.swapTokenModel = self.viewModel.tokenModelB
+        self.detailView.toastView.hide(tag: 99)
+    }
+    func reloadView() {
+        self.detailView.headerView.exchangeModel = self.viewModel.swapInfoModel
+    }
+}
+extension ExchangeViewController: ExchangeViewHeaderViewDelegate {
+    func selectInputToken() {
+        self.detailView.toastView.show(tag: 99)
+        self.viewModel.requestSupportTokens(tag: 10)
+    }
+    
+    func selectOutoutToken() {
+        self.detailView.toastView.show(tag: 99)
+        self.viewModel.requestSupportTokens(tag: 20)
+    }
+    
+    func swapInputOutputToken() {
+        print("swapInputOutputToken")
+    }
+    
+    func exchangeConfirm() {
+        self.viewModel.exchangeConfirm()
+    }
+    func filterBestOutput(amount: Int64) {
+        self.viewModel.fliterBestOutputAmount(inputAmount: amount)
+    }
+    
+    func filterBestIntput(amount: Int64) {
+        self.viewModel.fliterBestInputAmount(outputAmount: amount)
+    }
 }
