@@ -575,13 +575,23 @@ extension ExchangeModel {
 }
 //MARK: - 发送Violas兑换Violas交易
 extension ExchangeModel {
-    func sendSwapViolasTransaction(sendAddress: String, amountIn: UInt64, AmountOutMin: UInt64, path: [UInt8], fee: UInt64, mnemonic: [String], moduleA: String, moduleB: String, feeModule: String, outputModuleActiveState: Bool) {
+    func sendSwapViolasTransaction(sendAddress: String, amountIn: UInt64, AmountOutMin: UInt64, path: [UInt8], fee: UInt64, mnemonic: [String], moduleA: String, moduleB: String, feeModule: String, outputModuleActiveState: Bool, completion: @escaping (Result<Bool, LibraWalletError>) -> Void) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
         if outputModuleActiveState == false {
             queue.async {
                 semaphore.wait()
-                self.getViolasSequenceNumber(sendAddress: sendAddress, semaphore: semaphore)
+                self.getViolasSequenceNumber(sendAddress: sendAddress) { [weak self] (result) in
+                    switch result {
+                    case let .success(sequence):
+                        self?.sequenceNumber = sequence
+                        semaphore.signal()
+                    case let .failure(error):
+                        DispatchQueue.main.async(execute: {
+                            completion(.failure(error))
+                        })
+                    }
+                }
             }
             queue.async {
                 semaphore.wait()
@@ -591,19 +601,39 @@ extension ExchangeModel {
                                                                                     maxGasUnitPrice: ViolasManager.handleMaxGasUnitPrice(maxGasAmount: self.maxGasAmount),
                                                                                     sequenceNumber: self.sequenceNumber ?? 0,
                                                                                     inputModule: moduleB)
-                    self.makeViolasTransaction(signature: signature, type: "SendPublishOutputModuleViolasTransaction", semaphore: semaphore)
+                    self.makeViolasTransaction(signature: signature, type: "SendPublishOutputModuleViolasTransaction", semaphore: semaphore) { (result) in
+                        switch result {
+                        case .success(_):
+                            print("激活兑换币种成功")
+                            semaphore.signal()
+                        case let .failure(error):
+                            print(error)
+                            DispatchQueue.main.async(execute: {
+                                completion(.failure(error))
+                            })
+                        }
+                    }
                 } catch {
                     print(error.localizedDescription)
                     DispatchQueue.main.async(execute: {
-                        let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "SendPublishOutputModuleViolasTransaction")
-                        self.setValue(data, forKey: "dataDic")
+                        completion(.failure(LibraWalletError.error(error.localizedDescription)))
                     })
                 }
             }
         }
         queue.async {
             semaphore.wait()
-            self.getViolasSequenceNumber(sendAddress: sendAddress, semaphore: semaphore)
+            self.getViolasSequenceNumber(sendAddress: sendAddress) { [weak self] (result) in
+                switch result {
+                case let .success(sequence):
+                    self?.sequenceNumber = sequence
+                    semaphore.signal()
+                case let .failure(error):
+                    DispatchQueue.main.async(execute: {
+                        completion(.failure(error))
+                    })
+                }
+            }
         }
         queue.async {
             semaphore.wait()
@@ -619,103 +649,84 @@ extension ExchangeModel {
                                                                               path: path,
                                                                               inputModule: moduleA,
                                                                               outputModule: moduleB)
-                self.makeViolasTransaction(signature: signature, type: "SendViolasTransaction")
+                self.makeViolasTransaction(signature: signature, type: "SendViolasTransaction") { (result) in
+                    switch result {
+                    case .success(_):
+                        DispatchQueue.main.async(execute: {
+                            completion(.success(true))
+                        })
+                    case let .failure(error):
+                        DispatchQueue.main.async(execute: {
+                            completion(.failure(error))
+                        })
+                    }
+                }
             } catch {
                 print(error.localizedDescription)
                 DispatchQueue.main.async(execute: {
-                    let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "SendViolasTransaction")
-                    self.setValue(data, forKey: "dataDic")
+                    completion(.failure(LibraWalletError.error(error.localizedDescription)))
                 })
             }
             semaphore.signal()
         }
     }
-    private func getViolasSequenceNumber(sendAddress: String, semaphore: DispatchSemaphore) {
+    private func getViolasSequenceNumber(sendAddress: String, completion: @escaping (Result<UInt64, LibraWalletError>) -> Void) {
         let request = violasModuleProvide.request(.accountInfo(sendAddress)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
                     let json = try response.map(ViolasAccountMainModel.self)
                     if json.error == nil {
-                        self?.sequenceNumber = json.result?.sequence_number ?? 0
                         self?.maxGasAmount = ViolasManager.handleMaxGasAmount(balances: json.result?.balances ?? [ViolasBalanceDataModel.init(amount: 0, currency: "VLS")])
-                        semaphore.signal()
+                        completion(.success(json.result?.sequence_number ?? 0))
                     } else {
                         print("GetViolasSequenceNumber_状态异常")
-                        DispatchQueue.main.async(execute: {
-                            if let message = json.error?.message, message.isEmpty == false {
-                                let data = setKVOData(error: LibraWalletError.error(message), type: "GetViolasSequenceNumber")
-                                self?.setValue(data, forKey: "dataDic")
-                            } else {
-                                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "SendLibraTransaction")
-                                self?.setValue(data, forKey: "dataDic")
-                            }
-                        })
+                        if let message = json.error?.message, message.isEmpty == false {
+                            completion(.failure(LibraWalletError.error(message)))
+                        } else {
+                            completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid)))
+                        }
                     }
                 } catch {
                     print("GetViolasSequenceNumber_解析异常\(error.localizedDescription)")
-                    DispatchQueue.main.async(execute: {
-                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetViolasSequenceNumber")
-                        self?.setValue(data, forKey: "dataDic")
-                    })
+                    completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError)))
                 }
             case let .failure(error):
                 guard error.errorCode != -999 else {
                     print("GetViolasSequenceNumber_网络请求已取消")
                     return
                 }
-                DispatchQueue.main.async(execute: {
-                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "GetViolasSequenceNumber")
-                    self?.setValue(data, forKey: "dataDic")
-                })
+                completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.networkInvalid)))
             }
         }
         self.requests.append(request)
     }
-    private func makeViolasTransaction(signature: String, type: String, semaphore: DispatchSemaphore? = nil) {
-        let request = violasModuleProvide.request(.sendTransaction(signature)) {[weak self](result) in
+    private func makeViolasTransaction(signature: String, type: String, semaphore: DispatchSemaphore? = nil, completion: @escaping (Result<Bool, LibraWalletError>) -> Void) {
+        let request = violasModuleProvide.request(.sendTransaction(signature)) { (result) in
             switch  result {
             case let .success(response):
                 do {
                     let json = try response.map(ViolasAccountMainModel.self)
-                    if json.result == nil {
-                        DispatchQueue.main.async(execute: {
-                            if let sema = semaphore {
-                                sema.signal()
-                            } else {
-                                let data = setKVOData(type: type)
-                                self?.setValue(data, forKey: "dataDic")
-                            }
-                        })
+                    if json.error == nil {
+                        completion(.success(true))
                     } else {
                         print("\(type)_状态异常")
-                        DispatchQueue.main.async(execute: {
-                            if let message = json.error?.message, message.isEmpty == false {
-                                let data = setKVOData(error: LibraWalletError.error(message), type: type)
-                                self?.setValue(data, forKey: "dataDic")
-                            } else {
-                                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: type)
-                                self?.setValue(data, forKey: "dataDic")
-                            }
-                        })
+                        if let message = json.error?.message, message.isEmpty == false {
+                            completion(.failure(LibraWalletError.error(message)))
+                        } else {
+                            completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid)))
+                        }
                     }
                 } catch {
                     print("\(type)_解析异常\(error.localizedDescription)")
-                    DispatchQueue.main.async(execute: {
-                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: type)
-                        self?.setValue(data, forKey: "dataDic")
-                    })
+                    completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError)))
                 }
             case let .failure(error):
                 guard error.errorCode != -999 else {
                     print("\(type)_网络请求已取消")
                     return
                 }
-                DispatchQueue.main.async(execute: {
-                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: type)
-                    self?.setValue(data, forKey: "dataDic")
-                })
-                
+                completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.networkInvalid)))
             }
         }
         self.requests.append(request)
@@ -723,445 +734,445 @@ extension ExchangeModel {
 }
 //MARK: - 发送Violas兑换Libra交易
 extension ExchangeModel {
-    func sendSwapViolasToLibraTransaction(sendAddress: String, amountIn: UInt64, AmountOut: UInt64, fee: UInt64, mnemonic: [String], moduleInput: String, moduleOutput: String, feeModule: String, receiveAddress: String, outputModuleActiveState: Bool) {
-        let semaphore = DispatchSemaphore.init(value: 1)
-        let queue = DispatchQueue.init(label: "SendQueue")
-        if outputModuleActiveState == false {
-            queue.async {
-                semaphore.wait()
-                self.getLibraSequenceNumber(sendAddress: receiveAddress, semaphore: semaphore)
-            }
-            queue.async {
-                semaphore.wait()
-                do {
-                    let signature = try DiemManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
-                                                                                   sequenceNumber: self.sequenceNumber ?? 0,
-                                                                                   fee: 0,
-                                                                                   module: moduleOutput,
-                                                                                   feeModule: moduleOutput)
-                    self.makeLibraTransaction(signature: signature, type: "SendPublishOutputModuleLibraTransaction", semaphore: semaphore)
-                } catch {
-                    print(error.localizedDescription)
-                    DispatchQueue.main.async(execute: {
-                        let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "SendPublishOutputModuleLibraTransaction")
-                        self.setValue(data, forKey: "dataDic")
-                    })
-                }
-            }
-        }
-        queue.async {
-            semaphore.wait()
-            self.getMappingTokenList(semaphore: semaphore, outputModuleName: moduleOutput, inputModule: "violas")
-        }
-        queue.async {
-            semaphore.wait()
-            self.getViolasSequenceNumber(sendAddress: sendAddress, semaphore: semaphore)
-        }
-        queue.async {
-            semaphore.wait()
-            do {
-                let signature = try ViolasManager.getViolasMappingTransactionHex(sendAddress: sendAddress,
-                                                                                 mnemonic: mnemonic,
-                                                                                 feeModule: feeModule,
-                                                                                 maxGasAmount: self.maxGasAmount,
-                                                                                 maxGasUnitPrice: ViolasManager.handleMaxGasUnitPrice(maxGasAmount: self.maxGasAmount),
-                                                                                 sequenceNumber: self.sequenceNumber ?? 0,
-                                                                                 inputModule: moduleInput,
-                                                                                 inputAmount: amountIn,
-                                                                                 outputAmount: AmountOut,
-                                                                                 centerAddress: self.supportSwapData?.receiver_address ?? "",
-                                                                                 receiveAddress: receiveAddress,
-                                                                                 mappingType: self.supportSwapData?.lable ?? "")
-                self.makeViolasTransaction(signature: signature, type: "SendViolasToLibraMappingTransaction")
-            } catch {
-                print(error.localizedDescription)
-                DispatchQueue.main.async(execute: {
-                    let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "SendViolasToLibraMappingTransaction")
-                    self.setValue(data, forKey: "dataDic")
-                })
-            }
-            semaphore.signal()
-        }
-    }
+//    func sendSwapViolasToLibraTransaction(sendAddress: String, amountIn: UInt64, AmountOut: UInt64, fee: UInt64, mnemonic: [String], moduleInput: String, moduleOutput: String, feeModule: String, receiveAddress: String, outputModuleActiveState: Bool) {
+//        let semaphore = DispatchSemaphore.init(value: 1)
+//        let queue = DispatchQueue.init(label: "SendQueue")
+//        if outputModuleActiveState == false {
+//            queue.async {
+//                semaphore.wait()
+//                self.getLibraSequenceNumber(sendAddress: receiveAddress, semaphore: semaphore)
+//            }
+//            queue.async {
+//                semaphore.wait()
+//                do {
+//                    let signature = try DiemManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
+//                                                                                   sequenceNumber: self.sequenceNumber ?? 0,
+//                                                                                   fee: 0,
+//                                                                                   module: moduleOutput,
+//                                                                                   feeModule: moduleOutput)
+//                    self.makeLibraTransaction(signature: signature, type: "SendPublishOutputModuleLibraTransaction", semaphore: semaphore)
+//                } catch {
+//                    print(error.localizedDescription)
+//                    DispatchQueue.main.async(execute: {
+//                        let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "SendPublishOutputModuleLibraTransaction")
+//                        self.setValue(data, forKey: "dataDic")
+//                    })
+//                }
+//            }
+//        }
+//        queue.async {
+//            semaphore.wait()
+//            self.getMappingTokenList(semaphore: semaphore, outputModuleName: moduleOutput, inputModule: "violas")
+//        }
+//        queue.async {
+//            semaphore.wait()
+//            self.getViolasSequenceNumber(sendAddress: sendAddress, semaphore: semaphore)
+//        }
+//        queue.async {
+//            semaphore.wait()
+//            do {
+//                let signature = try ViolasManager.getViolasMappingTransactionHex(sendAddress: sendAddress,
+//                                                                                 mnemonic: mnemonic,
+//                                                                                 feeModule: feeModule,
+//                                                                                 maxGasAmount: self.maxGasAmount,
+//                                                                                 maxGasUnitPrice: ViolasManager.handleMaxGasUnitPrice(maxGasAmount: self.maxGasAmount),
+//                                                                                 sequenceNumber: self.sequenceNumber ?? 0,
+//                                                                                 inputModule: moduleInput,
+//                                                                                 inputAmount: amountIn,
+//                                                                                 outputAmount: AmountOut,
+//                                                                                 centerAddress: self.supportSwapData?.receiver_address ?? "",
+//                                                                                 receiveAddress: receiveAddress,
+//                                                                                 mappingType: self.supportSwapData?.lable ?? "")
+//                self.makeViolasTransaction(signature: signature, type: "SendViolasToLibraMappingTransaction")
+//            } catch {
+//                print(error.localizedDescription)
+//                DispatchQueue.main.async(execute: {
+//                    let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "SendViolasToLibraMappingTransaction")
+//                    self.setValue(data, forKey: "dataDic")
+//                })
+//            }
+//            semaphore.signal()
+//        }
+//    }
 }
 //MARK: - 发送Violas兑换BTC交易
 extension ExchangeModel {
-    func sendSwapViolasToBTCTransaction(sendAddress: String, amountIn: UInt64, AmountOut: UInt64, fee: UInt64, mnemonic: [String], moduleInput: String, feeModule: String,  receiveAddress: String, outputModuleActiveState: Bool) {
-        let semaphore = DispatchSemaphore.init(value: 1)
-        let queue = DispatchQueue.init(label: "SendQueue")
-        queue.async {
-            semaphore.wait()
-            self.getViolasSequenceNumber(sendAddress: sendAddress, semaphore: semaphore)
-        }
-        queue.async {
-            semaphore.wait()
-            do {
-                let signature = try ViolasManager.getViolasMappingTransactionHex(sendAddress: sendAddress,
-                                                                                 mnemonic: mnemonic,
-                                                                                 feeModule: feeModule,
-                                                                                 maxGasAmount: self.maxGasAmount,
-                                                                                 maxGasUnitPrice: ViolasManager.handleMaxGasUnitPrice(maxGasAmount: self.maxGasAmount),
-                                                                                 sequenceNumber: self.sequenceNumber ?? 0,
-                                                                                 inputModule: moduleInput,
-                                                                                 inputAmount: amountIn,
-                                                                                 outputAmount: AmountOut,
-                                                                                 centerAddress: self.supportSwapData?.receiver_address ?? "",
-                                                                                 receiveAddress: receiveAddress,
-                                                                                 mappingType: self.supportSwapData?.lable ?? "")
-                self.makeViolasTransaction(signature: signature, type: "SendViolasToLibraMappingTransaction")
-            } catch {
-                print(error.localizedDescription)
-                DispatchQueue.main.async(execute: {
-                    let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "SendViolasToLibraMappingTransaction")
-                    self.setValue(data, forKey: "dataDic")
-                })
-            }
-            semaphore.signal()
-        }
-    }
+//    func sendSwapViolasToBTCTransaction(sendAddress: String, amountIn: UInt64, AmountOut: UInt64, fee: UInt64, mnemonic: [String], moduleInput: String, feeModule: String,  receiveAddress: String, outputModuleActiveState: Bool) {
+//        let semaphore = DispatchSemaphore.init(value: 1)
+//        let queue = DispatchQueue.init(label: "SendQueue")
+//        queue.async {
+//            semaphore.wait()
+//            self.getViolasSequenceNumber(sendAddress: sendAddress, semaphore: semaphore)
+//        }
+//        queue.async {
+//            semaphore.wait()
+//            do {
+//                let signature = try ViolasManager.getViolasMappingTransactionHex(sendAddress: sendAddress,
+//                                                                                 mnemonic: mnemonic,
+//                                                                                 feeModule: feeModule,
+//                                                                                 maxGasAmount: self.maxGasAmount,
+//                                                                                 maxGasUnitPrice: ViolasManager.handleMaxGasUnitPrice(maxGasAmount: self.maxGasAmount),
+//                                                                                 sequenceNumber: self.sequenceNumber ?? 0,
+//                                                                                 inputModule: moduleInput,
+//                                                                                 inputAmount: amountIn,
+//                                                                                 outputAmount: AmountOut,
+//                                                                                 centerAddress: self.supportSwapData?.receiver_address ?? "",
+//                                                                                 receiveAddress: receiveAddress,
+//                                                                                 mappingType: self.supportSwapData?.lable ?? "")
+//                self.makeViolasTransaction(signature: signature, type: "SendViolasToLibraMappingTransaction")
+//            } catch {
+//                print(error.localizedDescription)
+//                DispatchQueue.main.async(execute: {
+//                    let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "SendViolasToLibraMappingTransaction")
+//                    self.setValue(data, forKey: "dataDic")
+//                })
+//            }
+//            semaphore.signal()
+//        }
+//    }
 }
 //MARK: - 发送Libra兑换Violas交易
 extension ExchangeModel {
-    func sendLibraToViolasMappingTransaction(sendAddress: String, amountIn: UInt64, amountOut: UInt64, fee: UInt64, mnemonic: [String], moduleInput: String, moduleOutput: String, violasReceiveAddress: String, feeModule: String, outputModuleActiveState: Bool) {
-        let semaphore = DispatchSemaphore.init(value: 1)
-        let queue = DispatchQueue.init(label: "SendQueue")
-        if outputModuleActiveState == false {
-            queue.async {
-                semaphore.wait()
-                self.getViolasSequenceNumber(sendAddress: violasReceiveAddress, semaphore: semaphore)
-            }
-            queue.async {
-                semaphore.wait()
-                do {
-                    let signature = try ViolasManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
-                                                                                    maxGasAmount: self.maxGasAmount,
-                                                                                    maxGasUnitPrice: ViolasManager.handleMaxGasUnitPrice(maxGasAmount: self.maxGasAmount),
-                                                                                    sequenceNumber: self.sequenceNumber ?? 0,
-                                                                                    inputModule: moduleOutput)
-                    self.makeViolasTransaction(signature: signature, type: "SendPublishOutputModuleViolasTransaction", semaphore: semaphore)
-                } catch {
-                    print(error.localizedDescription)
-                    DispatchQueue.main.async(execute: {
-                        let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "SendPublishOutputModuleViolasTransaction")
-                        self.setValue(data, forKey: "dataDic")
-                    })
-                }
-            }
-        }
-        queue.async {
-            semaphore.wait()
-            self.getMappingTokenList(semaphore: semaphore, outputModuleName: moduleOutput, inputModule: "libra")
-        }
-        queue.async {
-            semaphore.wait()
-            self.getLibraSequenceNumber(sendAddress: sendAddress, semaphore: semaphore)
-        }
-        queue.async {
-            semaphore.wait()
-            do {
-                let signature = try DiemManager.getLibraMappingTransactionHex(sendAddress: sendAddress,
-                                                                               mnemonic: mnemonic,
-                                                                               feeModule: feeModule,
-                                                                               fee: fee,
-                                                                               sequenceNumber: self.sequenceNumber ?? 0,
-                                                                               inputModule: moduleInput,
-                                                                               inputAmount: amountIn,
-                                                                               outputAmount: amountOut,
-                                                                               centerAddress: self.supportSwapData?.receiver_address ?? "",
-                                                                               receiveAddress: violasReceiveAddress,
-                                                                               mappingType: self.supportSwapData?.lable ?? "")
-                self.makeLibraTransaction(signature: signature, type: "SendLibraToViolasTransaction")
-            } catch {
-                print(error.localizedDescription)
-                DispatchQueue.main.async(execute: {
-                    let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "SendLibraTransaction")
-                    self.setValue(data, forKey: "dataDic")
-                })
-            }
-            semaphore.signal()
-        }
-    }
-    private func getLibraSequenceNumber(sendAddress: String, semaphore: DispatchSemaphore) {
-        let request = libraModuleProvide.request(.accountInfo(sendAddress)) {[weak self](result) in
-            switch  result {
-            case let .success(response):
-                do {
-                    let json = try response.map(DiemAccountMainModel.self)
-                    self?.sequenceNumber = json.result?.sequence_number
-                    semaphore.signal()
-                } catch {
-                    print("GetLibraSequenceNumber_解析异常\(error.localizedDescription)")
-                    DispatchQueue.main.async(execute: {
-                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetLibraSequenceNumber")
-                        self?.setValue(data, forKey: "dataDic")
-                    })
-                }
-            case let .failure(error):
-                guard error.errorCode != -999 else {
-                    print("GetLibraSequenceNumber_网络请求已取消")
-                    return
-                }
-                DispatchQueue.main.async(execute: {
-                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "GetLibraSequenceNumber")
-                    self?.setValue(data, forKey: "dataDic")
-                })
-            }
-        }
-        self.requests.append(request)
-    }
-    private func makeLibraTransaction(signature: String, type: String, semaphore: DispatchSemaphore? = nil) {
-        let request = libraModuleProvide.request(.sendTransaction(signature)) {[weak self](result) in
-            switch  result {
-            case let .success(response):
-                do {
-                    let json = try response.map(DiemAccountMainModel.self)
-                    if json.result == nil {
-                        DispatchQueue.main.async(execute: {
-                            if let sema = semaphore {
-                                sema.signal()
-                            } else {
-                                let data = setKVOData(type: type)
-                                self?.setValue(data, forKey: "dataDic")
-                            }
-                        })
-                    } else {
-                        print("\(type)_状态异常")
-                        DispatchQueue.main.async(execute: {
-                            if let message = json.error?.message, message.isEmpty == false {
-                                let data = setKVOData(error: LibraWalletError.error(message), type: type)
-                                self?.setValue(data, forKey: "dataDic")
-                            } else {
-                                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: type)
-                                self?.setValue(data, forKey: "dataDic")
-                            }
-                        })
-                    }
-                } catch {
-                    print("\(type)_解析异常\(error.localizedDescription)")
-                    DispatchQueue.main.async(execute: {
-                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: type)
-                        self?.setValue(data, forKey: "dataDic")
-                    })
-                }
-            case let .failure(error):
-                guard error.errorCode != -999 else {
-                    print("\(type)_网络请求已取消")
-                    return
-                }
-                DispatchQueue.main.async(execute: {
-                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: type)
-                    self?.setValue(data, forKey: "dataDic")
-                })
-            }
-        }
-        self.requests.append(request)
-    }
+//    func sendLibraToViolasMappingTransaction(sendAddress: String, amountIn: UInt64, amountOut: UInt64, fee: UInt64, mnemonic: [String], moduleInput: String, moduleOutput: String, violasReceiveAddress: String, feeModule: String, outputModuleActiveState: Bool) {
+//        let semaphore = DispatchSemaphore.init(value: 1)
+//        let queue = DispatchQueue.init(label: "SendQueue")
+//        if outputModuleActiveState == false {
+//            queue.async {
+//                semaphore.wait()
+//                self.getViolasSequenceNumber(sendAddress: violasReceiveAddress, semaphore: semaphore)
+//            }
+//            queue.async {
+//                semaphore.wait()
+//                do {
+//                    let signature = try ViolasManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
+//                                                                                    maxGasAmount: self.maxGasAmount,
+//                                                                                    maxGasUnitPrice: ViolasManager.handleMaxGasUnitPrice(maxGasAmount: self.maxGasAmount),
+//                                                                                    sequenceNumber: self.sequenceNumber ?? 0,
+//                                                                                    inputModule: moduleOutput)
+//                    self.makeViolasTransaction(signature: signature, type: "SendPublishOutputModuleViolasTransaction", semaphore: semaphore)
+//                } catch {
+//                    print(error.localizedDescription)
+//                    DispatchQueue.main.async(execute: {
+//                        let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "SendPublishOutputModuleViolasTransaction")
+//                        self.setValue(data, forKey: "dataDic")
+//                    })
+//                }
+//            }
+//        }
+//        queue.async {
+//            semaphore.wait()
+//            self.getMappingTokenList(semaphore: semaphore, outputModuleName: moduleOutput, inputModule: "libra")
+//        }
+//        queue.async {
+//            semaphore.wait()
+//            self.getLibraSequenceNumber(sendAddress: sendAddress, semaphore: semaphore)
+//        }
+//        queue.async {
+//            semaphore.wait()
+//            do {
+//                let signature = try DiemManager.getLibraMappingTransactionHex(sendAddress: sendAddress,
+//                                                                               mnemonic: mnemonic,
+//                                                                               feeModule: feeModule,
+//                                                                               fee: fee,
+//                                                                               sequenceNumber: self.sequenceNumber ?? 0,
+//                                                                               inputModule: moduleInput,
+//                                                                               inputAmount: amountIn,
+//                                                                               outputAmount: amountOut,
+//                                                                               centerAddress: self.supportSwapData?.receiver_address ?? "",
+//                                                                               receiveAddress: violasReceiveAddress,
+//                                                                               mappingType: self.supportSwapData?.lable ?? "")
+//                self.makeLibraTransaction(signature: signature, type: "SendLibraToViolasTransaction")
+//            } catch {
+//                print(error.localizedDescription)
+//                DispatchQueue.main.async(execute: {
+//                    let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "SendLibraTransaction")
+//                    self.setValue(data, forKey: "dataDic")
+//                })
+//            }
+//            semaphore.signal()
+//        }
+//    }
+//    private func getLibraSequenceNumber(sendAddress: String, semaphore: DispatchSemaphore) {
+//        let request = libraModuleProvide.request(.accountInfo(sendAddress)) {[weak self](result) in
+//            switch  result {
+//            case let .success(response):
+//                do {
+//                    let json = try response.map(DiemAccountMainModel.self)
+//                    self?.sequenceNumber = json.result?.sequence_number
+//                    semaphore.signal()
+//                } catch {
+//                    print("GetLibraSequenceNumber_解析异常\(error.localizedDescription)")
+//                    DispatchQueue.main.async(execute: {
+//                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetLibraSequenceNumber")
+//                        self?.setValue(data, forKey: "dataDic")
+//                    })
+//                }
+//            case let .failure(error):
+//                guard error.errorCode != -999 else {
+//                    print("GetLibraSequenceNumber_网络请求已取消")
+//                    return
+//                }
+//                DispatchQueue.main.async(execute: {
+//                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "GetLibraSequenceNumber")
+//                    self?.setValue(data, forKey: "dataDic")
+//                })
+//            }
+//        }
+//        self.requests.append(request)
+//    }
+//    private func makeLibraTransaction(signature: String, type: String, semaphore: DispatchSemaphore? = nil) {
+//        let request = libraModuleProvide.request(.sendTransaction(signature)) {[weak self](result) in
+//            switch  result {
+//            case let .success(response):
+//                do {
+//                    let json = try response.map(DiemAccountMainModel.self)
+//                    if json.result == nil {
+//                        DispatchQueue.main.async(execute: {
+//                            if let sema = semaphore {
+//                                sema.signal()
+//                            } else {
+//                                let data = setKVOData(type: type)
+//                                self?.setValue(data, forKey: "dataDic")
+//                            }
+//                        })
+//                    } else {
+//                        print("\(type)_状态异常")
+//                        DispatchQueue.main.async(execute: {
+//                            if let message = json.error?.message, message.isEmpty == false {
+//                                let data = setKVOData(error: LibraWalletError.error(message), type: type)
+//                                self?.setValue(data, forKey: "dataDic")
+//                            } else {
+//                                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: type)
+//                                self?.setValue(data, forKey: "dataDic")
+//                            }
+//                        })
+//                    }
+//                } catch {
+//                    print("\(type)_解析异常\(error.localizedDescription)")
+//                    DispatchQueue.main.async(execute: {
+//                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: type)
+//                        self?.setValue(data, forKey: "dataDic")
+//                    })
+//                }
+//            case let .failure(error):
+//                guard error.errorCode != -999 else {
+//                    print("\(type)_网络请求已取消")
+//                    return
+//                }
+//                DispatchQueue.main.async(execute: {
+//                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: type)
+//                    self?.setValue(data, forKey: "dataDic")
+//                })
+//            }
+//        }
+//        self.requests.append(request)
+//    }
 }
 
 //MARK: - BTC跨链映射
 extension ExchangeModel {
-    func makeTransaction(wallet: HDWallet, amountIn: UInt64, amountOut: UInt64, fee: Double, mnemonic: [String], moduleOutput: String, mappingReceiveAddress: String, outputModuleActiveState: Bool, chainType: String) {
-        let semaphore = DispatchSemaphore.init(value: 1)
-        let queue = DispatchQueue.init(label: "SendQueue")
-        if outputModuleActiveState == false {
-            queue.async {
-                semaphore.wait()
-                if chainType == "libra" {
-                    self.getLibraSequenceNumber(sendAddress: mappingReceiveAddress, semaphore: semaphore)
-                } else {
-                    self.getViolasSequenceNumber(sendAddress: mappingReceiveAddress, semaphore: semaphore)
-                }
-            }
-            queue.async {
-                semaphore.wait()
-                if chainType == "libra" {
-                    do {
-                        let signature = try DiemManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
-                                                                                       sequenceNumber: self.sequenceNumber ?? 0,
-                                                                                       fee: 0,
-                                                                                       module: moduleOutput,
-                                                                                       feeModule: moduleOutput)
-                        self.makeLibraTransaction(signature: signature, type: "SendPublishOutputModuleLibraTransaction", semaphore: semaphore)
-                    } catch {
-                        print(error.localizedDescription)
-                        DispatchQueue.main.async(execute: {
-                            let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "SendPublishOutputModuleLibraTransaction")
-                            self.setValue(data, forKey: "dataDic")
-                        })
-                    }
-                } else {
-                    do {
-                        let signature = try ViolasManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
-                                                                                        maxGasAmount: self.maxGasAmount,
-                                                                                        maxGasUnitPrice: ViolasManager.handleMaxGasUnitPrice(maxGasAmount: self.maxGasAmount),
-                                                                                        sequenceNumber: self.sequenceNumber ?? 0,
-                                                                                        inputModule: moduleOutput)
-                        self.makeViolasTransaction(signature: signature, type: "SendPublishOutputModuleViolasTransaction", semaphore: semaphore)
-                    } catch {
-                        print(error.localizedDescription)
-                        DispatchQueue.main.async(execute: {
-                            let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "SendPublishOutputModuleViolasTransaction")
-                            self.setValue(data, forKey: "dataDic")
-                        })
-                    }
-                }
-
-            }
-        }
-        queue.async {
-            semaphore.wait()
-            self.getMappingTokenList(semaphore: semaphore, outputModuleName: moduleOutput, inputModule: "btc")
-        }
-        queue.async {
-            self.getUnspentUTXO(address: wallet.addresses.first!.description, semaphore: semaphore)
-        }
-        queue.async {
-            semaphore.wait()
-            self.selectUTXOWithScriptSignature(utxos: self.utxos!,
-                                               wallet: wallet,
-                                               amountIn: amountIn,
-                                               amountOut: amountOut,
-                                               fee: fee,
-                                               toAddress: self.supportSwapData?.receiver_address ?? "",
-                                               mappingReceiveAddress: mappingReceiveAddress,
-                                               mappingContract: self.supportSwapData?.to_coin?.assets?.address ?? "",
-                                               type: self.supportSwapData?.lable ?? "")
-            semaphore.signal()
-        }
-    }
-    private func getUnspentUTXO(address: String, semaphore: DispatchSemaphore) {
-        semaphore.wait()
-        let request = BTCModuleProvide.request(.TrezorBTCUnspentUTXO(address)) {[weak self](result) in
-            switch  result {
-            case let .success(response):
-                do {
-                    let json = try response.map([TrezorBTCUTXOMainModel].self)
-                    //                    guard json.isEmpty == false else {
-                    //                        DispatchQueue.main.async(execute: {
-                    //                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: "GetUnspentUTXO")
-                    //                            self?.setValue(data, forKey: "dataDic")
-                    //                        })
-                    //                        return
-                    //                    }
-                    self?.utxos = json
-                    semaphore.signal()
-                } catch {
-                    print("GetUnspentUTXO_解析异常\(error.localizedDescription)")
-                    DispatchQueue.main.async(execute: {
-                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetUnspentUTXO")
-                        self?.setValue(data, forKey: "dataDic")
-                    })
-                }
-            case let .failure(error):
-                guard error.errorCode != -999 else {
-                    print("GetUnspentUTXO_网络请求已取消")
-                    return
-                }
-                DispatchQueue.main.async(execute: {
-                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "GetUnspentUTXO")
-                    self?.setValue(data, forKey: "dataDic")
-                })
-                
-            }
-        }
-        self.requests.append(request)
-    }
-    private func selectUTXOWithScriptSignature(utxos: [TrezorBTCUTXOMainModel], wallet: HDWallet, amountIn: UInt64, amountOut: UInt64, fee: Double, toAddress: String, mappingReceiveAddress: String, mappingContract: String, type: String) {
-//        let amountt: UInt64 = UInt64(amountIn * 100000000)
-        let feee: UInt64 = UInt64(fee * 100000000)
-        
-        // 个人公钥
-        let lockingScript = Script.buildPublicKeyHashOut(pubKeyHash: wallet.pubKeys.first!.pubkeyHash)
-        //
-        let inputs = utxos.map { item in
-            UnspentTransaction.init(output: TransactionOutput.init(value: NSDecimalNumber.init(string: item.value ?? "0").uint64Value, lockingScript: lockingScript),
-                                    outpoint: TransactionOutPoint.init(hash: Data(Data(hex: item.txid!)!.reversed()), index: item.vout!))
-        }
-        let select = UnspentTransactionSelector.select(from: inputs, targetValue: amountIn + feee, feePerByte: 30)
-        
-        let allUTXOAmount = select.reduce(0) {
-            $0 + $1.output.value
-        }
-        let change = allUTXOAmount - feee - amountIn
-        
-        let plan = TransactionPlan.init(unspentTransactions: select, amount: amountIn, fee: feee, change: UInt64(change))
-        
-        let toAddressResult = try! BitcoinAddress(legacy: toAddress)
-        
-        let transaction = customBuild(from: plan, toAddress: toAddressResult, changeAddress: wallet.addresses.first!)
-        // 添加脚本
-        let script = BTCManager().getBTCScript(address: mappingReceiveAddress, type: type, tokenContract: mappingContract, amount: amountOut)
-        let data = BTCManager().getData(script: script)
-        let opReturn = TransactionOutput.init(value: 0, lockingScript: data)
-        
-        var tempOutputs = transaction.outputs
-        tempOutputs.append(opReturn)
-        let transactionResult = Transaction.init(version: transaction.version, inputs: transaction.inputs, outputs: tempOutputs, lockTime: transaction.lockTime)
-        
-        let signature = TransactionSigner.init(unspentTransactions: plan.unspentTransactions, transaction: transactionResult, sighashHelper: BTCSignatureHashHelper(hashType: .ALL))
-        let result = try? signature.sign(with: wallet.privKeys)
-        print(result!.serialized().toHexString())
-        
-        self.sendBTCTransaction(signature: result!.serialized().toHexString())
-    }
-    private func customBuild(from plan: TransactionPlan, toAddress: Address, changeAddress: Address) -> Transaction {
-        let toLockScript: Data = Script(address: toAddress)!.data
-        var outputs: [TransactionOutput] = [
-            TransactionOutput(value: plan.amount, lockingScript: toLockScript)
-        ]
-        if plan.change > 0 {
-            let changeLockScript: Data = Script(address: changeAddress)!.data
-            outputs.insert(TransactionOutput(value: plan.change, lockingScript: changeLockScript), at: 0)
-        }
-        
-        let unsignedInputs: [TransactionInput] = plan.unspentTransactions.map {
-            TransactionInput(
-                previousOutput: $0.outpoint,
-                signatureScript: Data(),
-                sequence: UInt32.max
-            )
-        }
-        
-        return Transaction(version: 2, inputs: unsignedInputs, outputs: outputs, lockTime: 0)
-    }
-    private func sendBTCTransaction(signature: String) {
-        let request = BTCModuleProvide.request(.TrezorBTCPushTransaction(signature)) {[weak self](result) in
-            switch  result {
-            case let .success(response):
-                do {
-                    let json = try response.map(TrezorBTCSendTransactionMainModel.self)
-                    guard json.result?.isEmpty == false else {
-                        DispatchQueue.main.async(execute: {
-                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "SendBTCTransaction")
-                            self?.setValue(data, forKey: "dataDic")
-                        })
-                        return
-                    }
-                    DispatchQueue.main.async(execute: {
-                        let data = setKVOData(type: "SendBTCTransaction")
-                        self?.setValue(data, forKey: "dataDic")
-                    })
-                    // 刷新本地数据
-                } catch {
-                    print("SendBTCTransaction_解析异常\(error.localizedDescription)")
-                    DispatchQueue.main.async(execute: {
-                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "SendBTCTransaction")
-                        self?.setValue(data, forKey: "dataDic")
-                    })
-                    
-                }
-            case let .failure(error):
-                guard error.errorCode != -999 else {
-                    print("SendBTCTransaction_网络请求已取消")
-                    return
-                }
-                DispatchQueue.main.async(execute: {
-                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "SendBTCTransaction")
-                    self?.setValue(data, forKey: "dataDic")
-                })
-                
-            }
-        }
-        self.requests.append(request)
-    }
+//    func makeTransaction(wallet: HDWallet, amountIn: UInt64, amountOut: UInt64, fee: Double, mnemonic: [String], moduleOutput: String, mappingReceiveAddress: String, outputModuleActiveState: Bool, chainType: String) {
+//        let semaphore = DispatchSemaphore.init(value: 1)
+//        let queue = DispatchQueue.init(label: "SendQueue")
+//        if outputModuleActiveState == false {
+//            queue.async {
+//                semaphore.wait()
+//                if chainType == "libra" {
+//                    self.getLibraSequenceNumber(sendAddress: mappingReceiveAddress, semaphore: semaphore)
+//                } else {
+//                    self.getViolasSequenceNumber(sendAddress: mappingReceiveAddress, semaphore: semaphore)
+//                }
+//            }
+//            queue.async {
+//                semaphore.wait()
+//                if chainType == "libra" {
+//                    do {
+//                        let signature = try DiemManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
+//                                                                                       sequenceNumber: self.sequenceNumber ?? 0,
+//                                                                                       fee: 0,
+//                                                                                       module: moduleOutput,
+//                                                                                       feeModule: moduleOutput)
+//                        self.makeLibraTransaction(signature: signature, type: "SendPublishOutputModuleLibraTransaction", semaphore: semaphore)
+//                    } catch {
+//                        print(error.localizedDescription)
+//                        DispatchQueue.main.async(execute: {
+//                            let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "SendPublishOutputModuleLibraTransaction")
+//                            self.setValue(data, forKey: "dataDic")
+//                        })
+//                    }
+//                } else {
+//                    do {
+//                        let signature = try ViolasManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
+//                                                                                        maxGasAmount: self.maxGasAmount,
+//                                                                                        maxGasUnitPrice: ViolasManager.handleMaxGasUnitPrice(maxGasAmount: self.maxGasAmount),
+//                                                                                        sequenceNumber: self.sequenceNumber ?? 0,
+//                                                                                        inputModule: moduleOutput)
+//                        self.makeViolasTransaction(signature: signature, type: "SendPublishOutputModuleViolasTransaction", semaphore: semaphore)
+//                    } catch {
+//                        print(error.localizedDescription)
+//                        DispatchQueue.main.async(execute: {
+//                            let data = setKVOData(error: LibraWalletError.error(error.localizedDescription), type: "SendPublishOutputModuleViolasTransaction")
+//                            self.setValue(data, forKey: "dataDic")
+//                        })
+//                    }
+//                }
+//
+//            }
+//        }
+//        queue.async {
+//            semaphore.wait()
+//            self.getMappingTokenList(semaphore: semaphore, outputModuleName: moduleOutput, inputModule: "btc")
+//        }
+//        queue.async {
+//            self.getUnspentUTXO(address: wallet.addresses.first!.description, semaphore: semaphore)
+//        }
+//        queue.async {
+//            semaphore.wait()
+//            self.selectUTXOWithScriptSignature(utxos: self.utxos!,
+//                                               wallet: wallet,
+//                                               amountIn: amountIn,
+//                                               amountOut: amountOut,
+//                                               fee: fee,
+//                                               toAddress: self.supportSwapData?.receiver_address ?? "",
+//                                               mappingReceiveAddress: mappingReceiveAddress,
+//                                               mappingContract: self.supportSwapData?.to_coin?.assets?.address ?? "",
+//                                               type: self.supportSwapData?.lable ?? "")
+//            semaphore.signal()
+//        }
+//    }
+//    private func getUnspentUTXO(address: String, semaphore: DispatchSemaphore) {
+//        semaphore.wait()
+//        let request = BTCModuleProvide.request(.TrezorBTCUnspentUTXO(address)) {[weak self](result) in
+//            switch  result {
+//            case let .success(response):
+//                do {
+//                    let json = try response.map([TrezorBTCUTXOMainModel].self)
+//                    //                    guard json.isEmpty == false else {
+//                    //                        DispatchQueue.main.async(execute: {
+//                    //                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: "GetUnspentUTXO")
+//                    //                            self?.setValue(data, forKey: "dataDic")
+//                    //                        })
+//                    //                        return
+//                    //                    }
+//                    self?.utxos = json
+//                    semaphore.signal()
+//                } catch {
+//                    print("GetUnspentUTXO_解析异常\(error.localizedDescription)")
+//                    DispatchQueue.main.async(execute: {
+//                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetUnspentUTXO")
+//                        self?.setValue(data, forKey: "dataDic")
+//                    })
+//                }
+//            case let .failure(error):
+//                guard error.errorCode != -999 else {
+//                    print("GetUnspentUTXO_网络请求已取消")
+//                    return
+//                }
+//                DispatchQueue.main.async(execute: {
+//                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "GetUnspentUTXO")
+//                    self?.setValue(data, forKey: "dataDic")
+//                })
+//
+//            }
+//        }
+//        self.requests.append(request)
+//    }
+//    private func selectUTXOWithScriptSignature(utxos: [TrezorBTCUTXOMainModel], wallet: HDWallet, amountIn: UInt64, amountOut: UInt64, fee: Double, toAddress: String, mappingReceiveAddress: String, mappingContract: String, type: String) {
+////        let amountt: UInt64 = UInt64(amountIn * 100000000)
+//        let feee: UInt64 = UInt64(fee * 100000000)
+//
+//        // 个人公钥
+//        let lockingScript = Script.buildPublicKeyHashOut(pubKeyHash: wallet.pubKeys.first!.pubkeyHash)
+//        //
+//        let inputs = utxos.map { item in
+//            UnspentTransaction.init(output: TransactionOutput.init(value: NSDecimalNumber.init(string: item.value ?? "0").uint64Value, lockingScript: lockingScript),
+//                                    outpoint: TransactionOutPoint.init(hash: Data(Data(hex: item.txid!)!.reversed()), index: item.vout!))
+//        }
+//        let select = UnspentTransactionSelector.select(from: inputs, targetValue: amountIn + feee, feePerByte: 30)
+//
+//        let allUTXOAmount = select.reduce(0) {
+//            $0 + $1.output.value
+//        }
+//        let change = allUTXOAmount - feee - amountIn
+//
+//        let plan = TransactionPlan.init(unspentTransactions: select, amount: amountIn, fee: feee, change: UInt64(change))
+//
+//        let toAddressResult = try! BitcoinAddress(legacy: toAddress)
+//
+//        let transaction = customBuild(from: plan, toAddress: toAddressResult, changeAddress: wallet.addresses.first!)
+//        // 添加脚本
+//        let script = BTCManager().getBTCScript(address: mappingReceiveAddress, type: type, tokenContract: mappingContract, amount: amountOut)
+//        let data = BTCManager().getData(script: script)
+//        let opReturn = TransactionOutput.init(value: 0, lockingScript: data)
+//
+//        var tempOutputs = transaction.outputs
+//        tempOutputs.append(opReturn)
+//        let transactionResult = Transaction.init(version: transaction.version, inputs: transaction.inputs, outputs: tempOutputs, lockTime: transaction.lockTime)
+//
+//        let signature = TransactionSigner.init(unspentTransactions: plan.unspentTransactions, transaction: transactionResult, sighashHelper: BTCSignatureHashHelper(hashType: .ALL))
+//        let result = try? signature.sign(with: wallet.privKeys)
+//        print(result!.serialized().toHexString())
+//
+//        self.sendBTCTransaction(signature: result!.serialized().toHexString())
+//    }
+//    private func customBuild(from plan: TransactionPlan, toAddress: Address, changeAddress: Address) -> Transaction {
+//        let toLockScript: Data = Script(address: toAddress)!.data
+//        var outputs: [TransactionOutput] = [
+//            TransactionOutput(value: plan.amount, lockingScript: toLockScript)
+//        ]
+//        if plan.change > 0 {
+//            let changeLockScript: Data = Script(address: changeAddress)!.data
+//            outputs.insert(TransactionOutput(value: plan.change, lockingScript: changeLockScript), at: 0)
+//        }
+//
+//        let unsignedInputs: [TransactionInput] = plan.unspentTransactions.map {
+//            TransactionInput(
+//                previousOutput: $0.outpoint,
+//                signatureScript: Data(),
+//                sequence: UInt32.max
+//            )
+//        }
+//
+//        return Transaction(version: 2, inputs: unsignedInputs, outputs: outputs, lockTime: 0)
+//    }
+//    private func sendBTCTransaction(signature: String) {
+//        let request = BTCModuleProvide.request(.TrezorBTCPushTransaction(signature)) {[weak self](result) in
+//            switch  result {
+//            case let .success(response):
+//                do {
+//                    let json = try response.map(TrezorBTCSendTransactionMainModel.self)
+//                    guard json.result?.isEmpty == false else {
+//                        DispatchQueue.main.async(execute: {
+//                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "SendBTCTransaction")
+//                            self?.setValue(data, forKey: "dataDic")
+//                        })
+//                        return
+//                    }
+//                    DispatchQueue.main.async(execute: {
+//                        let data = setKVOData(type: "SendBTCTransaction")
+//                        self?.setValue(data, forKey: "dataDic")
+//                    })
+//                    // 刷新本地数据
+//                } catch {
+//                    print("SendBTCTransaction_解析异常\(error.localizedDescription)")
+//                    DispatchQueue.main.async(execute: {
+//                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "SendBTCTransaction")
+//                        self?.setValue(data, forKey: "dataDic")
+//                    })
+//
+//                }
+//            case let .failure(error):
+//                guard error.errorCode != -999 else {
+//                    print("SendBTCTransaction_网络请求已取消")
+//                    return
+//                }
+//                DispatchQueue.main.async(execute: {
+//                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "SendBTCTransaction")
+//                    self?.setValue(data, forKey: "dataDic")
+//                })
+//
+//            }
+//        }
+//        self.requests.append(request)
+//    }
 }
