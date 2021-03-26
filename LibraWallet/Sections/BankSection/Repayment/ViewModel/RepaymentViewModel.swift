@@ -50,12 +50,12 @@ class RepaymentViewModel: NSObject {
 extension RepaymentViewModel: RepaymentViewDelegate {
     func confirmRepayment() {
         do {
-            let (amount, _) = try handleConfirmCondition()
+            var (amount, _) = try handleConfirmCondition()
             WalletManager.unlockWallet { [weak self] (result) in
                 switch result {
                 case let .success(mnemonic):
                     self?.view?.toastView?.show(tag: 99)
-//                    amount: self?.isRepaymentTotal == false ? UInt64(amount):0,
+                    amount = self?.isRepaymentTotal == false ? UInt64(amount):0
                     self?.dataModel.sendRepaymentTransaction(sendAddress: Wallet.shared.violasAddress!,
                                                              amount: UInt64(amount),
                                                              fee: 10,
