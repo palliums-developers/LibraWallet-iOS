@@ -27,25 +27,14 @@ class ExchangeView: UIView {
             make.top.left.right.bottom.equalTo(self.safeAreaLayoutGuide)
         }
     }
-    // MARK: - 懒加载对象
+    /// View上半部分
     lazy var headerView: ExchangeViewHeaderView = {
         let header = ExchangeViewHeaderView.init()
         return header
     }()
+    /// Toast
     lazy var toastView: ToastView = {
         let toast = ToastView.init()
         return toast
     }()
-    func deleteRowInTableView(indexPaths: [IndexPath]) {
-        
-    }
-    func insertRowInTableView(indexPaths: [IndexPath]) {
-        
-    }
-    func reloadRowInTableView(indexPaths: [IndexPath]) {
-        
-    }
-    func dealErrorToast(error: LibraWalletError) {
-        
-    }
 }

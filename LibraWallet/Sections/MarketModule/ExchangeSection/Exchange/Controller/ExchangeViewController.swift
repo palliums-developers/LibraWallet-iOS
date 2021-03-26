@@ -46,14 +46,13 @@ class ExchangeViewController: UIViewController {
         return viewModel
     }()
 }
+// MARK: - ViewModel逻辑
 extension ExchangeViewController: ExchangeViewModelDelegate {
     func reloadSelectTokenViewA() {
         self.detailView.headerView.tokenSelectViewA.swapTokenModel = self.viewModel.tokenModelA
-        self.detailView.toastView.hide(tag: 99)
     }
     func reloadSelectTokenViewB() {
         self.detailView.headerView.tokenSelectViewB.swapTokenModel = self.viewModel.tokenModelB
-        self.detailView.toastView.hide(tag: 99)
     }
     func reloadView() {
         self.detailView.headerView.exchangeModel = self.viewModel.swapInfoModel
@@ -61,18 +60,16 @@ extension ExchangeViewController: ExchangeViewModelDelegate {
     func showToast(tag: Int) {
         self.detailView.toastView.show(tag: tag)
     }
-    
     func hideToast(tag: Int) {
         self.detailView.toastView.hide(tag: tag)
     }
-    
     func requestError(errorMessage: String) {
         self.detailView.makeToast(errorMessage, position: .center)
     }
 }
+// MARK: - ViewDelegate逻辑
 extension ExchangeViewController: ExchangeViewHeaderViewDelegate {
     func selectInputToken() {
-        self.detailView.toastView.show(tag: 99)
         self.viewModel.requestSupportTokens(tag: 10) { [weak self] (result) in
             switch result {
             case .success(_):
@@ -83,7 +80,6 @@ extension ExchangeViewController: ExchangeViewHeaderViewDelegate {
         }
     }
     func selectOutoutToken() {
-        self.detailView.toastView.show(tag: 99)
         self.viewModel.requestSupportTokens(tag: 20) { [weak self] (result) in
             switch result {
             case .success(_):
@@ -98,26 +94,18 @@ extension ExchangeViewController: ExchangeViewHeaderViewDelegate {
         self.viewModel.swapInputOutputToken()
     }
     func exchangeConfirm() {
-        self.detailView.toastView.show(tag: 99)
         self.viewModel.exchangeConfirm() { [weak self] (result) in
-            self?.detailView.toastView.hide(tag: 99)
             switch result {
             case .success(_):
                 self?.detailView.headerView.tokenSelectViewA.inputAmountTextField.text = ""
                 self?.detailView.headerView.clearTokenViewAmount()
-                self?.filterBestOutput(content: "")
-                self?.filterBestIntput(content: "")
+                self?.viewModel.fliterBestOutputAmount(content: "")
+                self?.viewModel.fliterBestInputAmount(content: "")
                 self?.detailView.makeToast(localLanguage(keyString: "wallet_market_exchange_submit_exchange_successful"), position: .center)
             case let .failure(error):
                 self?.detailView.makeToast(error.localizedDescription, position: .center)
             }
         }
-    }
-    func filterBestOutput(content: String) {
-        self.viewModel.fliterBestOutputAmount(content: content)
-    }
-    func filterBestIntput(content: String) {
-        self.viewModel.fliterBestInputAmount(content: content)
     }
 }
 // MARK: - TextField逻辑
@@ -131,11 +119,15 @@ extension ExchangeViewController: UITextFieldDelegate {
             if textLength == 0 {
                 self.detailView.headerView.tokenSelectViewA.inputAmountTextField.text = ""
                 self.detailView.headerView.tokenSelectViewB.inputAmountTextField.text = ""
+                self.detailView.headerView.exchangeRateLabel.text = localLanguage(keyString: "wallet_market_exchange_rate_title") + "---"
+                self.detailView.headerView.feeLabel.text = localLanguage(keyString: "wallet_market_exchange_fee_title") + "---"
             }
         } else {
             if textLength == 0 {
                 self.detailView.headerView.tokenSelectViewA.inputAmountTextField.text = ""
                 self.detailView.headerView.tokenSelectViewB.inputAmountTextField.text = ""
+                self.detailView.headerView.exchangeRateLabel.text = localLanguage(keyString: "wallet_market_exchange_rate_title") + "---"
+                self.detailView.headerView.feeLabel.text = localLanguage(keyString: "wallet_market_exchange_fee_title") + "---"
             }
         }
         if content.contains(".") {
@@ -189,25 +181,7 @@ extension ExchangeViewController: UITextFieldDelegate {
                 return false
             }
         } else {
-            self.viewModel.fliterBestInputAmount(content: textField.text ?? "0.0")
-            if (self.viewModel.swapInfoModel?.input ?? 0) < (self.viewModel.tokenModelA?.amount ?? 0) {
-                return true
-            } else {
-                let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: self.viewModel.swapInfoModel?.output ?? 0),
-                                              scale: 6,
-                                              unit: 1000000)
-                textField.text = amount.stringValue
-                return false
-            }
-//            if amount <= self.viewModel.tokenModelB?.amount ?? 0 {
-//                return true
-//            } else {
-//                let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: self.viewModel.tokenModelB?.amount ?? 0),
-//                                              scale: 6,
-//                                              unit: 1000000)
-//                textField.text = amount.stringValue
-//                return false
-//            }
+            return true
         }
     }
 }

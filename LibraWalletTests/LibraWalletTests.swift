@@ -62,4 +62,14 @@ class LibraWalletTests: XCTestCase {
         XCTAssertEqual(isValidETHAddress(address: "0x00fe1b8a035b5c5e42249627ea62f75e5a071cp3"), false)
 
     }
+    func testMarketCalculate() {
+        let paths = [PoolLiquidityDataModel.init(coina: PoolLiquidityCoinADataModel.init(index: 0, name: "vBTC", value: 4274276),
+                                                 coinb: PoolLiquidityCoinBDataModel.init(index: 1, name: "vUSDT", value: 17911084),
+                                                 liquidity_total_supply: 8646794)]
+        let model = ExchangeModel()
+        let result = model.fliterBestInput(outputAAmount: 99999999999000000, outputCoinA: 1, paths: [paths])
+//        let result = model.fliterBestOutput(inputAAmount: 99999999999000000, inputCoinA: 0, paths: [paths])
+        print(result.input)
+        print("success")
+    }
 }

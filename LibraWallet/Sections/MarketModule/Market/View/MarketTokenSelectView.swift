@@ -99,7 +99,8 @@ class MarketTokenSelectView: UIView {
         textField.tintColor = DefaultGreenColor
         textField.font = UIFont.init(name: "DIN Alternate Bold", size: 20)
         textField.attributedPlaceholder = NSAttributedString(string: "0.00",
-                                                             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C2C2C2"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20)])
+                                                             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C2C2C2"),
+                                                                          NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20)])
         textField.keyboardType = .decimalPad
         return textField
     }()
@@ -144,27 +145,6 @@ class MarketTokenSelectView: UIView {
             }
         }
     }
-    /// 资金池转入Model
-//    var tokenModel: MarketSupportTokensDataModel? {
-//        didSet {
-//            guard let model = tokenModel else {
-//                return
-//            }
-//            tokenButton.setTitle(model.show_name, for: UIControl.State.normal)
-//            // 调整位置
-//            tokenButton.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 9, height: 5.5))
-//            tokenButton.snp.remakeConstraints { (make) in
-//                make.right.equalTo(tokenBackgroundView.snp.right).offset(-11)
-//                make.bottom.equalTo(tokenBackgroundView.snp.bottom).offset(-11)
-//                let width = libraWalletTool.ga_widthForComment(content: model.show_name ?? "---", fontSize: 12, height: 22) + 8 + 19
-//                make.size.equalTo(CGSize.init(width: width, height: 22))
-//            }
-//            let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: model.amount ?? 0),
-//                                          scale: 6,
-//                                          unit: 1000000)
-//            balanceAmountLabel.text = localLanguage(keyString: "wallet_market_assets_pool_add_liquidity_token_title") + amount.stringValue
-//        }
-//    }
     var swapTokenModel: MarketSupportTokensDataModel? {
         didSet {
             guard let model = swapTokenModel else {

@@ -25,7 +25,7 @@ struct PoolLiquidityCoinBDataModel: Codable {
 struct PoolLiquidityCoinADataModel: Codable {
     var index: UInt8?
     var name: String?
-    var value: Int64?
+    var value: UInt64?
 }
 struct PoolLiquidityDataModel: Codable {
     var coina: PoolLiquidityCoinADataModel?
@@ -103,61 +103,10 @@ struct MarketSupportTokensMainModel: Codable {
 class ExchangeModel: NSObject {
     private var requests: [Cancellable] = []
     @objc dynamic var dataDic: NSMutableDictionary = [:]
-    private var sequenceNumber: UInt64?
     private var maxGasAmount: UInt64 = 600
-    private var marketTokens: [MarketSupportTokensDataModel]?
-    private var accountViolasTokens: [ViolasBalanceDataModel]?
     private var accountBTCAmount: String?
     private var supportSwapData: MarketSupportMappingTokensDataModel?
     var utxos: [TrezorBTCUTXOMainModel]?
-//    var totalLiquidity: [PoolLiquidityDataModel]?
-    func getExchangeTransactions(address: String, page: Int, pageSize: Int, requestStatus: Int) {
-        let type = requestStatus == 0 ? "ExchangeTransactionsOrigin":"ExchangeTransactionsMore"
-        let request = marketModuleProvide.request(.exchangeTransactions(address, page, pageSize)) {[weak self](result) in
-            switch  result {
-            case let .success(response):
-                do {
-                    let json = try response.map(ExchangeTransactionsMainModel.self)
-                    if json.code == 2000 {
-                        guard json.data?.isEmpty == false else {
-                            if requestStatus == 0 {
-                                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .dataEmpty), type: type)
-                                self?.setValue(data, forKey: "dataDic")
-                            } else {
-                                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .noMoreData), type: type)
-                                self?.setValue(data, forKey: "dataDic")
-                            }
-                            return
-                        }
-                        let data = setKVOData(type: type, data: json.data)
-                        self?.setValue(data, forKey: "dataDic")
-                    } else {
-                        print("\(type)_状态异常")
-                        if let message = json.message, message.isEmpty == false {
-                            let data = setKVOData(error: LibraWalletError.error(message), type: type)
-                            self?.setValue(data, forKey: "dataDic")
-                        } else {
-                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: type)
-                            self?.setValue(data, forKey: "dataDic")
-                        }
-                    }
-                } catch {
-                    print("解析异常\(error.localizedDescription)")
-                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: type)
-                    self?.setValue(data, forKey: "dataDic")
-                }
-            case let .failure(error):
-                guard error.errorCode != -999 else {
-                    print("网络请求已取消")
-                    return
-                }
-                print(error.localizedDescription)
-                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.networkInvalid), type: type)
-                self?.setValue(data, forKey: "dataDic")
-            }
-        }
-        self.requests.append(request)
-    }
     deinit {
         requests.forEach { cancellable in
             cancellable.cancel()
@@ -176,40 +125,54 @@ extension ExchangeModel {
         let group = DispatchGroup.init()
         let quene = DispatchQueue.init(label: "SupportTokenQuene")
         let semaphore = DispatchSemaphore.init(value: 1)
+        var marketTokens = [MarketSupportTokensDataModel]()
+        var accountTokens = [ViolasBalanceDataModel]()
         quene.async(group: group, qos: .default, flags: [], execute: {
             group.enter()
             semaphore.wait()
-            self.getMarketSupportTokens(group: group, sema: semaphore, completion: completion)
-            print("首先请求")
+            self.getMarketSupportTokens() { (result) in
+                switch result {
+                case let .success(models):
+                    marketTokens = models
+                    group.leave()
+                    semaphore.signal()
+                case let .failure(error):
+                    completion(.failure(error))
+                }
+            }
         })
         if violasAddress.isEmpty == false {
             quene.async(group: group, qos: .default, flags: [], execute: {
                 group.enter()
                 semaphore.wait()
-                print("随后请求1")
-                self.getViolasBalance(address: violasAddress, group: group)
+                self.getViolasBalance(address: violasAddress) { (result) in
+                    switch result {
+                    case let .success(models):
+                        accountTokens = models
+                    case let .failure(error):
+                        print(error.localizedDescription)
+                        completion(.failure(error))
+                    }
+                    group.leave()
+                }
                 semaphore.signal()
             })
         }
         group.notify(queue: quene) {
-            print("回到该队列中执行")
-            print("\(Thread.current)")
-            let result = self.handleMarketTokenState()
+            let result = self.handleMarketTokenState(marketTokens: marketTokens, accountTokens: accountTokens)
             DispatchQueue.main.async(execute: {
                 completion(.success(result))
             })
         }
     }
-    private func getMarketSupportTokens(group: DispatchGroup, sema: DispatchSemaphore, completion: @escaping (Result<[MarketSupportTokensDataModel], LibraWalletError>) -> Void) {
-        let request = marketModuleProvide.request(.marketSupportTokens) {[weak self](result) in
+    private func getMarketSupportTokens(completion: @escaping (Result<[MarketSupportTokensDataModel], LibraWalletError>) -> Void) {
+        let request = marketModuleProvide.request(.marketSupportTokens) { (result) in
             switch  result {
             case let .success(response):
                 do {
                     let json = try response.map(MarketSupportTokensMainModel.self)
                     if json.code == 2000 {
-                        self?.marketTokens = json.data
-                        group.leave()
-                        sema.signal()
+                        completion(.success(json.data ?? [MarketSupportTokensDataModel]()))
                     } else {
                         print("GetMarketSupportTokens_状态异常")
                         if let message = json.message, message.isEmpty == false {
@@ -232,71 +195,43 @@ extension ExchangeModel {
         }
         self.requests.append(request)
     }
-    func getBTCBalance(address: String, group: DispatchGroup) {
-        let request = BTCModuleProvide.request(.TrezorBTCBalance(address)) {[weak self](result) in
-            switch  result {
-            case let .success(response):
-                do {
-                    let json = try response.map(TrezorBTCBalanceMainModel.self)
-                    self?.accountBTCAmount = json.balance
-                    group.leave()
-                } catch {
-                    print("UpdateBTCBalance_解析异常\(error.localizedDescription)")
-                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "UpdateBTCBalance")
-                    self?.setValue(data, forKey: "dataDic")
-                }
-            case let .failure(error):
-                guard error.errorCode != -999 else {
-                    print("UpdateBTCBalance_网络请求已取消")
-                    return
-                }
-                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "UpdateBTCBalance")
-                self?.setValue(data, forKey: "dataDic")
-            }
-        }
-        self.requests.append(request)
-    }
-    private func getViolasBalance(address: String, group: DispatchGroup) {
-        let request = violasModuleProvide.request(.accountInfo(address)) {[weak self](result) in
+    private func getViolasBalance(address: String, completion: @escaping (Result<[ViolasBalanceDataModel], LibraWalletError>) -> Void) {
+        let request = violasModuleProvide.request(.accountInfo(address)) { (result) in
             switch  result {
             case let .success(response):
                 do {
                     let json = try response.map(ViolasAccountMainModel.self)
                     if json.result == nil {
-                        self?.accountViolasTokens = [ViolasBalanceDataModel.init(amount: 0, currency: "VLS")]
-                        group.leave()
+                        completion(.failure(LibraWalletError.WalletRequest(reason: .walletUnActive)))
                     } else {
-                        self?.accountViolasTokens = json.result?.balances
-                        group.leave()
+                        completion(.success(json.result?.balances ?? [ViolasBalanceDataModel]()))
                     }
                 } catch {
                     print("GetViolasBalance_解析异常\(error.localizedDescription)")
-//                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "UpdateViolasBalance")
-//                    self?.setValue(data, forKey: "dataDic")
+                    completion(.failure(LibraWalletError.WalletRequest(reason: .parseJsonError)))
                 }
             case let .failure(error):
                 guard error.errorCode != -999 else {
                     print("GetViolasBalance_网络请求已取消")
                     return
                 }
-//                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "UpdateViolasBalance")
-//                self?.setValue(data, forKey: "dataDic")
+                completion(.failure(LibraWalletError.WalletRequest(reason: .networkInvalid)))
             }
         }
         self.requests.append(request)
     }
-    private func handleMarketTokenState() -> [MarketSupportTokensDataModel] {
+    private func handleMarketTokenState(marketTokens: [MarketSupportTokensDataModel], accountTokens: [ViolasBalanceDataModel]) -> [MarketSupportTokensDataModel] {
         var tempTokens = [MarketSupportTokensDataModel]()
-        guard let tempViolasModels = self.marketTokens, tempViolasModels.isEmpty == false else {
+        guard marketTokens.isEmpty == false else {
             return tempTokens
         }
-        for var token in tempViolasModels {
+        for var token in marketTokens {
             token.activeState = false
             token.amount = 0
-            for activeToken in (self.accountViolasTokens ?? [ViolasBalanceDataModel]()) {
+            for activeToken in accountTokens {
                 if token.module == activeToken.currency {
                     token.activeState = true
-                    token.amount = activeToken.amount
+                    token.amount = activeToken.amount ?? 0
                     continue
                 }
             }
@@ -305,55 +240,7 @@ extension ExchangeModel {
         return tempTokens
     }
 }
-// MARK: - 获取跨链映射支持币
-extension ExchangeModel {
-    private func getMappingTokenList(semaphore: DispatchSemaphore, outputModuleName: String, inputModule: String) {
-        let request = marketModuleProvide.request(.marketSupportMappingTokens) {[weak self](result) in
-            switch  result {
-            case let .success(response):
-                do {
-                    let json = try response.map(MarketSupportMappingTokensMainModel.self)
-                    if json.code == 2000 {
-                        //                        let data = setKVOData(type: "GetMappingTokenList", data: json.data)
-                        //                        self?.setValue(data, forKey: "dataDic")
-                        let tempModule = json.data?.filter({
-                            $0.to_coin?.assets?.module == outputModuleName && $0.input_coin_type == inputModule
-                        })
-                        guard tempModule?.isEmpty == false else {
-                            let data = setKVOData(error: LibraWalletError.error("Market Not Support"), type: "GetMappingTokenList")
-                            self?.setValue(data, forKey: "dataDic")
-                            return
-                        }
-                        self?.supportSwapData = tempModule?.first
-                        semaphore.signal()
-                    } else {
-                        print("GetMappingTokenList_状态异常")
-                        if let message = json.message, message.isEmpty == false {
-                            let data = setKVOData(error: LibraWalletError.error(message), type: "GetMappingTokenList")
-                            self?.setValue(data, forKey: "dataDic")
-                        } else {
-                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "GetMappingTokenList")
-                            self?.setValue(data, forKey: "dataDic")
-                        }
-                    }
-                } catch {
-                    print("GetMappingTokenList_解析异常\(error.localizedDescription)")
-                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetMappingTokenList")
-                    self?.setValue(data, forKey: "dataDic")
-                }
-            case let .failure(error):
-                guard error.errorCode != -999 else {
-                    print("网络请求已取消")
-                    return
-                }
-                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "GetMappingTokenList")
-                self?.setValue(data, forKey: "dataDic")
-            }
-        }
-        self.requests.append(request)
-    }
-}
-//MARK: - 获取资金池流动性
+// MARK: - 获取流动性
 extension ExchangeModel {
     func getPoolTotalLiquidity(inputCoinA: MarketSupportTokensDataModel, inputCoinB: MarketSupportTokensDataModel, completion: @escaping (Result<[[PoolLiquidityDataModel]], LibraWalletError>) -> Void) {
         let request = marketModuleProvide.request(.poolTotalLiquidity) {[weak self](result) in
@@ -378,7 +265,6 @@ extension ExchangeModel {
                 } catch {
                     print("GetPoolTotalLiquidity_解析异常\(error.localizedDescription)")
                     completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError)))
-
                 }
             case let .failure(error):
                 guard error.errorCode != -999 else {
@@ -386,7 +272,6 @@ extension ExchangeModel {
                     return
                 }
                 completion(.failure(LibraWalletError.WalletRequest(reason: .networkInvalid)))
-
             }
         }
         self.requests.append(request)
@@ -424,8 +309,6 @@ extension ExchangeModel {
         }
         let date2 = Date().timeIntervalSince1970
         print("time\(Int((date2 - date1) * 1000))ms")
-//        let data = setKVOData(type: "GetPoolTotalLiquidity")
-//        self.setValue(data, forKey: "dataDic")
         completion(.success(shortPath))
     }
     func fliterPath(inputCoinA: UInt8, outputCoinB: UInt8, data: [PoolLiquidityDataModel], originData: [PoolLiquidityDataModel]) {
@@ -488,26 +371,26 @@ extension ExchangeModel {
             var fee: Int64 = 0
             for item in path {
                 if item.coina?.index == nextIndex {
-                    let amountInWithFee = NSDecimalNumber.init(value: output).multiplying(by: NSDecimalNumber.init(value: 997))
+                    let amountInWithFee = NSDecimalNumber.init(value: output).multiplying(by: NSDecimalNumber.init(value: 9997))
                     let numerator = amountInWithFee.multiplying(by: NSDecimalNumber.init(value: item.coinb?.value ?? 0))
-                    let denominator = (NSDecimalNumber.init(value: item.coina?.value ?? 0).multiplying(by: NSDecimalNumber.init(value: 1000))).adding(amountInWithFee)
+                    let denominator = (NSDecimalNumber.init(value: item.coina?.value ?? 0).multiplying(by: NSDecimalNumber.init(value: 10000))).adding(amountInWithFee)
                     output = numerator.dividing(by: denominator, withBehavior: numberConfig).int64Value
                     // fee
                     nextIndex = (item.coinb?.index)!
-                    let amountInWithoutFee = NSDecimalNumber.init(value: outputWithoutFee).multiplying(by: NSDecimalNumber.init(value: 1000))
+                    let amountInWithoutFee = NSDecimalNumber.init(value: outputWithoutFee).multiplying(by: NSDecimalNumber.init(value: 10000))
                     let numeratorWithoutFee = amountInWithoutFee.multiplying(by: NSDecimalNumber.init(value: item.coinb?.value ?? 0))
-                    let denominatorWithoutFee = (NSDecimalNumber.init(value: item.coina?.value ?? 0).multiplying(by: NSDecimalNumber.init(value: 1000))).adding(amountInWithoutFee)
+                    let denominatorWithoutFee = (NSDecimalNumber.init(value: item.coina?.value ?? 0).multiplying(by: NSDecimalNumber.init(value: 10000))).adding(amountInWithoutFee)
                     outputWithoutFee = numeratorWithoutFee.dividing(by: denominatorWithoutFee, withBehavior: numberConfig).int64Value
                 } else {
-                    let amountInWithFee = NSDecimalNumber.init(value: output).multiplying(by: NSDecimalNumber.init(value: 997))
+                    let amountInWithFee = NSDecimalNumber.init(value: output).multiplying(by: NSDecimalNumber.init(value: 9997))
                     let numerator = amountInWithFee.multiplying(by: NSDecimalNumber.init(value: item.coina?.value ?? 0))
-                    let denominator = NSDecimalNumber.init(value: item.coinb?.value ?? 0).multiplying(by: NSDecimalNumber.init(value: 1000)).adding(amountInWithFee)
+                    let denominator = NSDecimalNumber.init(value: item.coinb?.value ?? 0).multiplying(by: NSDecimalNumber.init(value: 10000)).adding(amountInWithFee)
                     output = numerator.dividing(by: denominator, withBehavior: numberConfig).int64Value
                     nextIndex = (item.coina?.index)!
                     // fee
-                    let amountInWithoutFee = NSDecimalNumber.init(value: outputWithoutFee).multiplying(by: NSDecimalNumber.init(value: 1000))
+                    let amountInWithoutFee = NSDecimalNumber.init(value: outputWithoutFee).multiplying(by: NSDecimalNumber.init(value: 10000))
                     let numeratorWithoutFee = amountInWithoutFee.multiplying(by: NSDecimalNumber.init(value: item.coina?.value ?? 0))
-                    let denominatorWithoutFee = (NSDecimalNumber.init(value: item.coinb?.value ?? 0).multiplying(by: NSDecimalNumber.init(value: 1000))).adding(amountInWithoutFee)
+                    let denominatorWithoutFee = (NSDecimalNumber.init(value: item.coinb?.value ?? 0).multiplying(by: NSDecimalNumber.init(value: 10000))).adding(amountInWithoutFee)
                     outputWithoutFee = numeratorWithoutFee.dividing(by: denominatorWithoutFee, withBehavior: numberConfig).int64Value
                 }
                 pathArray.append(nextIndex)
@@ -520,8 +403,6 @@ extension ExchangeModel {
         let tempaaa = tempArray.sorted { (item1, item2) in
             item1.output > item2.output
         }
-//        let data = setKVOData(type: "GetExchangeInfo", data: tempaaa.first)
-//        self.setValue(data, forKey: "dataDic")
         return tempaaa.first!
     }
     func fliterBestInput(outputAAmount: Int64, outputCoinA: UInt8, paths: [[PoolLiquidityDataModel]]) -> ExchangeInfoModel {
@@ -540,22 +421,22 @@ extension ExchangeModel {
             var pathArray: [UInt8] = [outputCoinA]
             for item in path.reversed() {
                 if item.coina?.index == nextIndex {
-                    let a = (NSDecimalNumber.init(value: item.coinb?.value ?? 0).multiplying(by: NSDecimalNumber.init(value: 1000))).multiplying(by: NSDecimalNumber.init(value: output))
-                    let b = (NSDecimalNumber.init(value: item.coina?.value ?? 0).subtracting(NSDecimalNumber.init(value: output))).multiplying(by: NSDecimalNumber.init(value: 997))
+                    let a = (NSDecimalNumber.init(value: item.coinb?.value ?? 0).multiplying(by: NSDecimalNumber.init(value: 10000))).multiplying(by: NSDecimalNumber.init(value: output))
+                    let b = (NSDecimalNumber.init(value: item.coina?.value ?? 0).subtracting(NSDecimalNumber.init(value: output))).multiplying(by: NSDecimalNumber.init(value: 9997))
                     output = (a.dividing(by: b, withBehavior: numberConfig)).int64Value
                     // fee
                     nextIndex = (item.coinb?.index)!
-                    let aWithoutFee = (NSDecimalNumber.init(value: item.coinb?.value ?? 0).multiplying(by: NSDecimalNumber.init(value: 1000))).multiplying(by: NSDecimalNumber.init(value: output))
-                    let bWithoutFee = (NSDecimalNumber.init(value: item.coina?.value ?? 0).subtracting(NSDecimalNumber.init(value: output))).multiplying(by: NSDecimalNumber.init(value: 1000))
+                    let aWithoutFee = (NSDecimalNumber.init(value: item.coinb?.value ?? 0).multiplying(by: NSDecimalNumber.init(value: 10000))).multiplying(by: NSDecimalNumber.init(value: output))
+                    let bWithoutFee = (NSDecimalNumber.init(value: item.coina?.value ?? 0).subtracting(NSDecimalNumber.init(value: output))).multiplying(by: NSDecimalNumber.init(value: 10000))
                     outputWithoutFee = (aWithoutFee.dividing(by: bWithoutFee, withBehavior: numberConfig)).adding(NSDecimalNumber.init(value: 1)).int64Value
                 } else {
-                    let a = (NSDecimalNumber.init(value: item.coina?.value ?? 0).multiplying(by: NSDecimalNumber.init(value: 1000))).multiplying(by: NSDecimalNumber.init(value: output))
-                    let b = (NSDecimalNumber.init(value: item.coinb?.value ?? 0).subtracting(NSDecimalNumber.init(value: output))).multiplying(by: NSDecimalNumber.init(value: 997))
-                    output = (a.dividing(by: b, withBehavior: numberConfig)).int64Value
+                    let a = (NSDecimalNumber.init(value: item.coina?.value ?? 0).multiplying(by: NSDecimalNumber.init(value: 10000))).multiplying(by: NSDecimalNumber.init(value: output))
+                    let b = (NSDecimalNumber.init(value: item.coinb?.value ?? 0).subtracting(NSDecimalNumber.init(value: output))).multiplying(by: NSDecimalNumber.init(value: 9997))
+                    output = (a.dividing(by: b, withBehavior: numberConfig)).adding(NSDecimalNumber.init(value: 1)).int64Value
                     // fee
                     nextIndex = (item.coina?.index)!
-                    let aWithoutFee = (NSDecimalNumber.init(value: item.coina?.value ?? 0).multiplying(by: NSDecimalNumber.init(value: 1000))).multiplying(by: NSDecimalNumber.init(value: output))
-                    let bWithoutFee = (NSDecimalNumber.init(value: item.coinb?.value ?? 0).subtracting(NSDecimalNumber.init(value: output))).multiplying(by: NSDecimalNumber.init(value: 1000))
+                    let aWithoutFee = (NSDecimalNumber.init(value: item.coina?.value ?? 0).multiplying(by: NSDecimalNumber.init(value: 10000))).multiplying(by: NSDecimalNumber.init(value: output))
+                    let bWithoutFee = (NSDecimalNumber.init(value: item.coinb?.value ?? 0).subtracting(NSDecimalNumber.init(value: output))).multiplying(by: NSDecimalNumber.init(value: 10000))
                     outputWithoutFee = (aWithoutFee.dividing(by: bWithoutFee, withBehavior: numberConfig)).int64Value
                 }
                 pathArray.insert(nextIndex, at: 0)
@@ -568,23 +449,22 @@ extension ExchangeModel {
         let tempaaa = tempArray.sorted { (item1, item2) in
             item1.output > item2.output
         }
-//        let data = setKVOData(type: "GetExchangeInfo", data: tempaaa.first)
-//        self.setValue(data, forKey: "dataDic")
         return tempaaa.first!
     }
 }
-//MARK: - 发送Violas兑换Violas交易
+// MARK: - 发送Violas兑换Violas交易
 extension ExchangeModel {
     func sendSwapViolasTransaction(sendAddress: String, amountIn: UInt64, AmountOutMin: UInt64, path: [UInt8], fee: UInt64, mnemonic: [String], moduleA: String, moduleB: String, feeModule: String, outputModuleActiveState: Bool, completion: @escaping (Result<Bool, LibraWalletError>) -> Void) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
+        var sequenceNumber: UInt64?
         if outputModuleActiveState == false {
             queue.async {
                 semaphore.wait()
-                self.getViolasSequenceNumber(sendAddress: sendAddress) { [weak self] (result) in
+                self.getViolasSequenceNumber(sendAddress: sendAddress) { (result) in
                     switch result {
                     case let .success(sequence):
-                        self?.sequenceNumber = sequence
+                        sequenceNumber = sequence
                         semaphore.signal()
                     case let .failure(error):
                         DispatchQueue.main.async(execute: {
@@ -599,7 +479,7 @@ extension ExchangeModel {
                     let signature = try ViolasManager.getPublishTokenTransactionHex(mnemonic: mnemonic,
                                                                                     maxGasAmount: self.maxGasAmount,
                                                                                     maxGasUnitPrice: ViolasManager.handleMaxGasUnitPrice(maxGasAmount: self.maxGasAmount),
-                                                                                    sequenceNumber: self.sequenceNumber ?? 0,
+                                                                                    sequenceNumber: sequenceNumber!,
                                                                                     inputModule: moduleB)
                     self.makeViolasTransaction(signature: signature, type: "SendPublishOutputModuleViolasTransaction", semaphore: semaphore) { (result) in
                         switch result {
@@ -623,10 +503,10 @@ extension ExchangeModel {
         }
         queue.async {
             semaphore.wait()
-            self.getViolasSequenceNumber(sendAddress: sendAddress) { [weak self] (result) in
+            self.getViolasSequenceNumber(sendAddress: sendAddress) { (result) in
                 switch result {
                 case let .success(sequence):
-                    self?.sequenceNumber = sequence
+                    sequenceNumber = sequence
                     semaphore.signal()
                 case let .failure(error):
                     DispatchQueue.main.async(execute: {
@@ -643,7 +523,7 @@ extension ExchangeModel {
                                                                               feeModule: feeModule,
                                                                               maxGasAmount: self.maxGasAmount,
                                                                               maxGasUnitPrice: ViolasManager.handleMaxGasUnitPrice(maxGasAmount: self.maxGasAmount),
-                                                                              sequenceNumber: self.sequenceNumber ?? 0,
+                                                                              sequenceNumber: sequenceNumber!,
                                                                               inputAmount: amountIn,
                                                                               outputAmountMin: AmountOutMin,
                                                                               path: path,
@@ -733,7 +613,7 @@ extension ExchangeModel {
     }
 }
 //MARK: - 发送Violas兑换Libra交易
-extension ExchangeModel {
+//extension ExchangeModel {
 //    func sendSwapViolasToLibraTransaction(sendAddress: String, amountIn: UInt64, AmountOut: UInt64, fee: UInt64, mnemonic: [String], moduleInput: String, moduleOutput: String, feeModule: String, receiveAddress: String, outputModuleActiveState: Bool) {
 //        let semaphore = DispatchSemaphore.init(value: 1)
 //        let queue = DispatchQueue.init(label: "SendQueue")
@@ -794,9 +674,9 @@ extension ExchangeModel {
 //            semaphore.signal()
 //        }
 //    }
-}
+//}
 //MARK: - 发送Violas兑换BTC交易
-extension ExchangeModel {
+//extension ExchangeModel {
 //    func sendSwapViolasToBTCTransaction(sendAddress: String, amountIn: UInt64, AmountOut: UInt64, fee: UInt64, mnemonic: [String], moduleInput: String, feeModule: String,  receiveAddress: String, outputModuleActiveState: Bool) {
 //        let semaphore = DispatchSemaphore.init(value: 1)
 //        let queue = DispatchQueue.init(label: "SendQueue")
@@ -830,9 +710,9 @@ extension ExchangeModel {
 //            semaphore.signal()
 //        }
 //    }
-}
+//}
 //MARK: - 发送Libra兑换Violas交易
-extension ExchangeModel {
+//extension ExchangeModel {
 //    func sendLibraToViolasMappingTransaction(sendAddress: String, amountIn: UInt64, amountOut: UInt64, fee: UInt64, mnemonic: [String], moduleInput: String, moduleOutput: String, violasReceiveAddress: String, feeModule: String, outputModuleActiveState: Bool) {
 //        let semaphore = DispatchSemaphore.init(value: 1)
 //        let queue = DispatchQueue.init(label: "SendQueue")
@@ -967,10 +847,10 @@ extension ExchangeModel {
 //        }
 //        self.requests.append(request)
 //    }
-}
+//}
 
 //MARK: - BTC跨链映射
-extension ExchangeModel {
+//extension ExchangeModel {
 //    func makeTransaction(wallet: HDWallet, amountIn: UInt64, amountOut: UInt64, fee: Double, mnemonic: [String], moduleOutput: String, mappingReceiveAddress: String, outputModuleActiveState: Bool, chainType: String) {
 //        let semaphore = DispatchSemaphore.init(value: 1)
 //        let queue = DispatchQueue.init(label: "SendQueue")
@@ -1175,4 +1055,53 @@ extension ExchangeModel {
 //        }
 //        self.requests.append(request)
 //    }
-}
+//}
+// MARK: - 获取跨链映射支持币
+//extension ExchangeModel {
+//    private func getMappingTokenList(semaphore: DispatchSemaphore, outputModuleName: String, inputModule: String) {
+//        let request = marketModuleProvide.request(.marketSupportMappingTokens) {[weak self](result) in
+//            switch  result {
+//            case let .success(response):
+//                do {
+//                    let json = try response.map(MarketSupportMappingTokensMainModel.self)
+//                    if json.code == 2000 {
+//                        //                        let data = setKVOData(type: "GetMappingTokenList", data: json.data)
+//                        //                        self?.setValue(data, forKey: "dataDic")
+//                        let tempModule = json.data?.filter({
+//                            $0.to_coin?.assets?.module == outputModuleName && $0.input_coin_type == inputModule
+//                        })
+//                        guard tempModule?.isEmpty == false else {
+//                            let data = setKVOData(error: LibraWalletError.error("Market Not Support"), type: "GetMappingTokenList")
+//                            self?.setValue(data, forKey: "dataDic")
+//                            return
+//                        }
+//                        self?.supportSwapData = tempModule?.first
+//                        semaphore.signal()
+//                    } else {
+//                        print("GetMappingTokenList_状态异常")
+//                        if let message = json.message, message.isEmpty == false {
+//                            let data = setKVOData(error: LibraWalletError.error(message), type: "GetMappingTokenList")
+//                            self?.setValue(data, forKey: "dataDic")
+//                        } else {
+//                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "GetMappingTokenList")
+//                            self?.setValue(data, forKey: "dataDic")
+//                        }
+//                    }
+//                } catch {
+//                    print("GetMappingTokenList_解析异常\(error.localizedDescription)")
+//                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetMappingTokenList")
+//                    self?.setValue(data, forKey: "dataDic")
+//                }
+//            case let .failure(error):
+//                guard error.errorCode != -999 else {
+//                    print("网络请求已取消")
+//                    return
+//                }
+//                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "GetMappingTokenList")
+//                self?.setValue(data, forKey: "dataDic")
+//            }
+//        }
+//        self.requests.append(request)
+//    }
+//}
+//MARK: - 获取资金池流动性

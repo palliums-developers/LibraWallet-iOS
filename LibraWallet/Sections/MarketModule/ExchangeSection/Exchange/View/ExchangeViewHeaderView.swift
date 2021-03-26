@@ -8,34 +8,15 @@
 
 import UIKit
 import Localize_Swift
+
 protocol ExchangeViewHeaderViewDelegate: NSObjectProtocol {
     func selectInputToken()
     func selectOutoutToken()
     func swapInputOutputToken()
     func exchangeConfirm()
-    func filterBestOutput(content: String)
-    func filterBestIntput(content: String)
 }
-
 class ExchangeViewHeaderView: UIView {
     weak var delegate: ExchangeViewHeaderViewDelegate?
-//    enum ExchangeViewState {
-//        case Normal
-//        case ExchangeSelectAToken
-//        case ExchangeSelectBToken
-//        case ExchangeSwap
-//        case LibraToViolasSwap
-//        case LibraToBTCSwap
-//        case LibraToLibraSwap
-//        case ViolasToLibraSwap
-//        case ViolasToBTCSwap
-//        case ViolasToViolasSwap
-//        case BTCToLibraSwap
-//        case BTCToViolasSwap
-//        case handleBestOutputAmount
-//        case handleBestInputAmount
-//    }
-//    var viewState: ExchangeViewState = .Normal
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.white
@@ -175,7 +156,7 @@ class ExchangeViewHeaderView: UIView {
                                                                                    scale: 6,
                                                                                    unit: 1000000).stringValue
                 let inputAmount = NSDecimalNumber.init(string: self.tokenSelectViewA.inputAmountTextField.text ?? "0").multiplying(by: NSDecimalNumber.init(value: 1000000))
-                let outputAmount = NSDecimalNumber.init(value: model.output )
+                let outputAmount = NSDecimalNumber.init(value: model.output)
                 let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
                                                                scale: 6,
                                                                raiseOnExactness: false,
@@ -187,11 +168,17 @@ class ExchangeViewHeaderView: UIView {
                 let fee = NSDecimalNumber.init(value: model.fee).dividing(by: NSDecimalNumber.init(value: model.input), withBehavior: numberConfig).multiplying(by: NSDecimalNumber.init(value: 100))
                 feeLabel.text = localLanguage(keyString: "wallet_market_exchange_fee_title") + fee.stringValue + "%"
             } else {
+                guard model.input > 0 else {
+                    self.tokenSelectViewA.inputAmountTextField.text = ""
+                    exchangeRateLabel.text = localLanguage(keyString: "wallet_market_exchange_rate_title") + "---"
+                    feeLabel.text = localLanguage(keyString: "wallet_market_exchange_fee_title") + "---"
+                    return
+                }
                 self.tokenSelectViewA.inputAmountTextField.text = getDecimalNumber(amount: NSDecimalNumber.init(value: model.input),
                                                                                    scale: 6,
                                                                                    unit: 1000000).stringValue
                 let inputAmount = NSDecimalNumber.init(string: self.tokenSelectViewB.inputAmountTextField.text ?? "0").multiplying(by: NSDecimalNumber.init(value: 1000000))
-                let outputAmount = NSDecimalNumber.init(value: model.input )
+                let outputAmount = NSDecimalNumber.init(value: model.input)
                 let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
                                                                scale: 6,
                                                                raiseOnExactness: false,
@@ -252,12 +239,8 @@ extension ExchangeViewHeaderView {
 extension ExchangeViewHeaderView: MarketTokenSelectViewViewDelegate {
     func selectToken(view: UIView) {
         if view.tag == 10 {
-            self.tokenSelectViewA.inputAmountTextField.resignFirstResponder()
-            self.tokenSelectViewB.inputAmountTextField.resignFirstResponder()
             self.delegate?.selectInputToken()
         } else if view.tag == 20 {
-            self.tokenSelectViewA.inputAmountTextField.resignFirstResponder()
-            self.tokenSelectViewB.inputAmountTextField.resignFirstResponder()
             self.delegate?.selectOutoutToken()
         }
     }
