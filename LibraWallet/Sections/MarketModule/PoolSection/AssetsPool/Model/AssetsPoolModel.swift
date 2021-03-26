@@ -473,7 +473,7 @@ extension AssetsPoolModel {
             for activeToken in self.accountTokens! {
                 if token.module == activeToken.currency {
                     token.activeState = true
-                    token.amount = activeToken.amount
+                    token.amount = activeToken.amount ?? 0
                     continue
                 }
             }

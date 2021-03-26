@@ -290,6 +290,7 @@
 		36957508259B120000D8A45E /* DiemAccountMainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36957507259B120000D8A45E /* DiemAccountMainModel.swift */; };
 		3695750D259B124400D8A45E /* ViolasAccountMainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3695750C259B124400D8A45E /* ViolasAccountMainModel.swift */; };
 		3695758D259C60F000D8A45E /* BankStatusSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3695758C259C60F000D8A45E /* BankStatusSelectView.swift */; };
+		36A6804325FF44F10091AC7D /* MarketTokenSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36A6804225FF44F10091AC7D /* MarketTokenSelectView.swift */; };
 		36AA10F925008A1E00BEF941 /* BankContracts.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 36AA10F825008A1E00BEF941 /* BankContracts.bundle */; };
 		36B43A7223BDE967008E2EEA /* LBXScanError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B43A7123BDE967008E2EEA /* LBXScanError.swift */; };
 		36B466A62476563800CFF438 /* ScanSignTransactionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B466A52476563800CFF438 /* ScanSignTransactionViewController.swift */; };
@@ -803,6 +804,7 @@
 		36957507259B120000D8A45E /* DiemAccountMainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemAccountMainModel.swift; sourceTree = "<group>"; };
 		3695750C259B124400D8A45E /* ViolasAccountMainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasAccountMainModel.swift; sourceTree = "<group>"; };
 		3695758C259C60F000D8A45E /* BankStatusSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankStatusSelectView.swift; sourceTree = "<group>"; };
+		36A6804225FF44F10091AC7D /* MarketTokenSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketTokenSelectView.swift; sourceTree = "<group>"; };
 		36AA10F825008A1E00BEF941 /* BankContracts.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = BankContracts.bundle; sourceTree = "<group>"; };
 		36B43A7123BDE967008E2EEA /* LBXScanError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LBXScanError.swift; sourceTree = "<group>"; };
 		36B466A52476563800CFF438 /* ScanSignTransactionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanSignTransactionViewController.swift; sourceTree = "<group>"; };
@@ -2989,8 +2991,8 @@
 		36828CD924B74BFA0085A165 /* Exchange */ = {
 			isa = PBXGroup;
 			children = (
-				3646E50524D90A6600B8C20B /* ViewModel */,
 				36828CDC24B74C0C0085A165 /* Controller */,
+				3646E50524D90A6600B8C20B /* ViewModel */,
 				36828CDB24B74C060085A165 /* Model */,
 				36828CDA24B74C010085A165 /* View */,
 			);
@@ -4543,6 +4545,7 @@
 			isa = PBXGroup;
 			children = (
 				9DC06A402372A9CC00BCE1FE /* MarketView.swift */,
+				36A6804225FF44F10091AC7D /* MarketTokenSelectView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -5565,6 +5568,7 @@
 				361BDADD24F8E7BD00C4C54E /* LoanMarketTableViewCell.swift in Sources */,
 				362B041125F86F8600AECD98 /* WYDLabel.swift in Sources */,
 				366AFEF2257782DB0007AAFC /* ProfitMainView.swift in Sources */,
+				36A6804325FF44F10091AC7D /* MarketTokenSelectView.swift in Sources */,
 				36836D3124B301250031AC6E /* ExchangeTransactionDetailView.swift in Sources */,
 				9DB515C323A32F660069A909 /* ViolasTransactionScriptPayload.swift in Sources */,
 				362B040025F86F5D00AECD98 /* SystemMessagesTableViewManager.swift in Sources */,

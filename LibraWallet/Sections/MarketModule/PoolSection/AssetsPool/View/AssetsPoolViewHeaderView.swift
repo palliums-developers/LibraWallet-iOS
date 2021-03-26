@@ -632,7 +632,6 @@ class AssetsPoolViewHeaderView: UIView {
     /// 资金池转入ModelB
     var transferInInputTokenB: MarketSupportTokensDataModel? {
         didSet {
-            
             guard let model = transferInInputTokenB else {
                 return
             }
