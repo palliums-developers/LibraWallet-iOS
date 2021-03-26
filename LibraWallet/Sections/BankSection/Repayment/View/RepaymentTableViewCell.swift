@@ -9,7 +9,6 @@
 import UIKit
 
 class RepaymentTableViewCell: UITableViewCell {
-    //    weak var delegate: AddAssetViewTableViewCellDelegate?
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.backgroundColor = UIColor.init(hex: "F7F7F9")
@@ -24,7 +23,7 @@ class RepaymentTableViewCell: UITableViewCell {
     deinit {
         print("RepaymentTableViewCell销毁了")
     }
-    //pragma MARK: 布局
+    // MARK: - 布局
     override func layoutSubviews() {
         super.layoutSubviews()
         whiteBackgroundView.snp.makeConstraints { (make) in
