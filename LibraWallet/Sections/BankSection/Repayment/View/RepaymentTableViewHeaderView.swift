@@ -7,6 +7,7 @@
 //
 
 import UIKit
+
 protocol RepaymentTableViewHeaderViewDelegate: NSObjectProtocol {
     func selectTotalBalance(header: RepaymentTableViewHeaderView, model: RepaymentMainDataModel)
 }

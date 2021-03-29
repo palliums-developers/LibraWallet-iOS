@@ -25,7 +25,7 @@ class RepaymentView: UIView {
     deinit {
         print("RepaymentView销毁了")
     }
-    //MARK: - 布局
+    // MARK: - 布局
     override func layoutSubviews() {
         super.layoutSubviews()
         tableView.snp.makeConstraints { (make) in
@@ -45,7 +45,7 @@ class RepaymentView: UIView {
             make.height.equalTo(40)
         }
     }
-    //MARK: - 懒加载对象
+    // MARK: - 懒加载对象
     lazy var tableView: UITableView = {
         let tableView = UITableView.init(frame: CGRect.zero, style: UITableView.Style.plain)
         tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
@@ -85,20 +85,8 @@ class RepaymentView: UIView {
     @objc func buttonClick(button: UIButton) {
         self.delegate?.confirmRepayment()
     }
-    var toastView: ToastView? {
+    lazy var toastView: ToastView = {
         let toast = ToastView.init()
         return toast
-    }
-    func deleteRowInTableView(indexPaths: [IndexPath]) {
-        
-    }
-    func insertRowInTableView(indexPaths: [IndexPath]) {
-        
-    }
-    func reloadRowInTableView(indexPaths: [IndexPath]) {
-        
-    }
-    func dealErrorToast(error: LibraWalletError) {
-        
-    }
+    }()
 }

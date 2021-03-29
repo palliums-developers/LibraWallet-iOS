@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Toast_Swift
 
 class RepaymentViewController: BaseViewController {
     override func viewDidLoad() {
@@ -15,10 +16,7 @@ class RepaymentViewController: BaseViewController {
         self.view.backgroundColor = UIColor.init(hex: "F7F7F9")
         // 加载子View
         self.view.addSubview(detailView)
-        self.viewModel.initKVO()
-        self.detailView.toastView?.show(tag: 99)
-        self.viewModel.dataModel.getLoanItemDetailModel(itemID: self.itemID ?? "",
-                                                        address: Wallet.shared.violasAddress!)
+        self.requestData()
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -27,26 +25,23 @@ class RepaymentViewController: BaseViewController {
             make.bottom.equalTo(self.view)
         }
     }
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.navigationController?.navigationBar.barStyle = .default
-    }
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        self.navigationController?.navigationBar.barStyle = .default
-    }
     deinit {
         print("RepaymentViewController销毁了")
+    }
+    func requestData() {
+        self.viewModel.loadOrderDetail(itemID: self.itemID!, address: Wallet.shared.violasAddress!)
     }
     /// 子View
     lazy var detailView : RepaymentView = {
         let view = RepaymentView.init()
+        view.delegate = self
+        view.tableView.delegate = self.viewModel.tableViewManager
+        view.tableView.dataSource = self.viewModel.tableViewManager
         return view
     }()
     /// viewModel
     lazy var viewModel: RepaymentViewModel = {
         let viewModel = RepaymentViewModel.init()
-        viewModel.view = self.detailView
         viewModel.delegate = self
         return viewModel
     }()
@@ -54,10 +49,31 @@ class RepaymentViewController: BaseViewController {
     var updateAction: ((ControllerAction)->())?
 }
 extension RepaymentViewController: RepaymentViewModelDelegate {
-    func successRepayment() {
-        if let action = self.updateAction {
-            action(.update)
-        }
-        self.navigationController?.popViewController(animated: true)
+    func reloadDetailView() {
+        self.viewModel.tableViewManager.model = self.viewModel.repaymentInfoModel
+        self.viewModel.tableViewManager.dataModels = self.viewModel.repaymentListmodel
+        self.detailView.tableView.reloadData()
     }
+    func showToast(tag: Int) {
+        self.detailView.toastView.show(tag: tag)
+    }
+    func hideToast(tag: Int) {
+        self.detailView.toastView.hide(tag: tag)
+    }
+    func requestError(errorMessage: String) {
+        self.detailView.makeToast(errorMessage, position: .center)
+    }
+    func successRepayment() {
+        self.detailView.makeToast(localLanguage(keyString: "wallet_bank_repayment_submit_successful"), duration: toastDuration, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { [weak self] (bool) in
+            if let action = self?.updateAction {
+                action(.update)
+            }
+            self?.navigationController?.popViewController(animated: true)
+        })
+    }
+}
+extension RepaymentViewController: RepaymentViewDelegate {
+    func confirmRepayment() {
+        self.viewModel.confirmRepayment()
+    }    
 }

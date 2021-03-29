@@ -11,8 +11,18 @@ import Toast_Swift
 
 protocol RepaymentViewModelDelegate: NSObjectProtocol {
     func successRepayment()
+    func reloadDetailView()
+    func showToast(tag: Int)
+    func hideToast(tag: Int)
+    func requestError(errorMessage: String)
 }
-class RepaymentViewModel: NSObject {
+protocol RepaymentViewModelInterface  {
+    /// 还款信息Model
+    var repaymentInfoModel: RepaymentMainDataModel? { get }
+    /// 还款信息处理后Model
+    var repaymentListmodel: [DepositLocalDataModel]? { get }
+}
+class RepaymentViewModel: NSObject, RepaymentViewModelInterface {
     
     weak var delegate: RepaymentViewModelDelegate?
     override init() {
@@ -21,16 +31,6 @@ class RepaymentViewModel: NSObject {
     }
     deinit {
         print("RepaymentViewModel销毁了")
-    }
-    var view: RepaymentView? {
-        didSet {
-//            view?.headerView.delegate = self
-//            view?.headerView.inputAmountTextField.delegate = self
-//            view?.headerView.outputAmountTextField.delegate = self
-            view?.delegate = self
-            view?.tableView.delegate = tableViewManager
-            view?.tableView.dataSource = tableViewManager
-        }
     }
     /// 网络请求、数据模型
     lazy var dataModel: RepaymentModel = {
@@ -43,45 +43,72 @@ class RepaymentViewModel: NSObject {
         manager.delegate = self
         return manager
     }()
-    /// 数据监听KVO
-    var observer: NSKeyValueObservation?
     var isRepaymentTotal: Bool = false
+    var repaymentListmodel: [DepositLocalDataModel]? {
+        return self.dataModel.getLocalModel(model: self.repaymentModel)
+    }
+    
+    var repaymentInfoModel: RepaymentMainDataModel? {
+        return self.repaymentModel
+    }
+    private var repaymentModel: RepaymentMainDataModel? {
+        didSet {
+            self.delegate?.reloadDetailView()
+        }
+    }
+    private var textFieldText: String?
+}
+extension RepaymentViewModel {
+    func loadOrderDetail(itemID: String, address: String) {
+        self.delegate?.showToast(tag: 99)
+        self.dataModel.getLoanItemDetailModel(itemID: itemID, address: address) { (result) in
+            self.delegate?.hideToast(tag: 99)
+            switch result {
+            case let .success(model):
+                self.repaymentModel = model
+            case let .failure(error):
+                self.delegate?.requestError(errorMessage: error.localizedDescription)
+            }
+        }
+    }
 }
 extension RepaymentViewModel: RepaymentViewDelegate {
     func confirmRepayment() {
         do {
-            var (amount, _) = try handleConfirmCondition()
+            let (amount, _) = try handleConfirmCondition()
             WalletManager.unlockWallet { [weak self] (result) in
                 switch result {
                 case let .success(mnemonic):
-                    self?.view?.toastView?.show(tag: 99)
-                    amount = self?.isRepaymentTotal == false ? UInt64(amount):0
+                    self?.delegate?.showToast(tag: 99)
                     self?.dataModel.sendRepaymentTransaction(sendAddress: Wallet.shared.violasAddress!,
-                                                             amount: UInt64(amount),
+                                                             amount: (self?.isRepaymentTotal == false ? UInt64(amount):0),
                                                              fee: 10,
                                                              mnemonic: mnemonic,
                                                              module: self?.tableViewManager.model?.token_module ?? "",
                                                              feeModule: self?.tableViewManager.model?.token_module ?? "",
-                                                             productID: self?.tableViewManager.model?.product_id ?? "")
+                                                             productID: self?.tableViewManager.model?.product_id ?? "") { [weak self] (result) in
+                        self?.delegate?.hideToast(tag: 99)
+                        switch result {
+                        case .success(_):
+                            self?.delegate?.successRepayment()
+                        case let .failure(error):
+                            self?.delegate?.requestError(errorMessage: error.localizedDescription)
+                        }
+                    }
                 case let .failure(error):
                     guard error.localizedDescription != "Cancel" else {
                         return
                     }
-                    self?.view?.makeToast(error.localizedDescription, position: .center)
+                    self?.delegate?.requestError(errorMessage: error.localizedDescription)
                 }
             }
-            print(amount)
         } catch {
-            self.view?.makeToast(error.localizedDescription, position: .center)
+            self.delegate?.requestError(errorMessage: error.localizedDescription)
         }
     }
     func handleConfirmCondition() throws -> (UInt64, Bool) {
-        // 获取TableViewHeader
-        guard let header = self.view?.tableView.headerView(forSection: 0) as? RepaymentTableViewHeaderView else {
-            throw LibraWalletError.WalletBankRepayment(reason: .dataInvalid)
-        }
         // 获取输入还贷金额
-        guard let amountString = header.repaymentAmountTextField.text, amountString.isEmpty == false else {
+        guard let amountString = self.textFieldText, amountString.isEmpty == false else {
             throw LibraWalletError.WalletBankRepayment(reason: .amountEmpty)
         }
         // 检查金额是否为纯数字
@@ -94,14 +121,14 @@ extension RepaymentViewModel: RepaymentViewDelegate {
             throw LibraWalletError.WalletBankRepayment(reason: .amountTooLittle)
         }
         // 检查是否高于贷款金额
-        guard amount.uint64Value <= (header.model?.balance ?? 0) else {
+        guard amount.uint64Value <= (self.repaymentModel?.balance ?? 0) else {
             throw LibraWalletError.WalletBankRepayment(reason: .amountTooLarge)
         }
         // 检查是否超过余额
-        guard amount.uint64Value < NSDecimalNumber.init(value: header.model?.token_balance ?? 0).uint64Value else {
+        guard amount.uint64Value < NSDecimalNumber.init(value: self.repaymentModel?.token_balance ?? 0).uint64Value else {
             throw LibraWalletError.WalletBankRepayment(reason: .balanceInsufficient)
         }
-        return (amount.uint64Value, header.model?.token_active_state ?? false)
+        return (amount.uint64Value, self.repaymentModel?.token_active_state ?? false)
     }
 }
 // MARK: - TableViewHeader代理
@@ -117,6 +144,7 @@ extension RepaymentViewModel: RepaymentTableViewHeaderViewDelegate {
                                       scale: 6,
                                       unit: 1000000)
         header.repaymentAmountTextField.text = amount.stringValue
+        self.textFieldText = amount.stringValue
         self.isRepaymentTotal = true
     }
 }
@@ -166,73 +194,7 @@ extension RepaymentViewModel: UITextFieldDelegate {
             return false
         }
     }
-}
-// MARK: - 网络请求
-extension RepaymentViewModel {
-    func initKVO() {
-        self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
-            guard let dataDic = change.newValue, dataDic.count != 0 else {
-                self?.view?.toastView?.hide(tag: 99)
-                self?.view?.toastView?.hide(tag: 299)
-                self?.view?.hideToastActivity()
-                return
-            }
-            if let error = dataDic.value(forKey: "error") as? LibraWalletError {
-                // 隐藏请求指示
-                self?.view?.hideToastActivity()
-                self?.view?.toastView?.hide(tag: 99)
-                if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
-                    // 网络无法访问
-                    print(error.localizedDescription)
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionExpired).localizedDescription {
-                    // 版本太久
-                    print(error.localizedDescription)
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
-                    // 解析失败
-                    print(error.localizedDescription)
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
-                    print(error.localizedDescription)
-                    // 数据状态异常
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
-                    print(error.localizedDescription)
-                    // 下拉刷新请求数据为空
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
-                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .noMoreData).localizedDescription {
-                    // 上拉请求更多数据为空
-                    print(error.localizedDescription)
-                } else {
-                    self?.view?.makeToast(error.localizedDescription,
-                                          position: .center)
-                }
-//                self?.view?.headerView.viewState = .Normal
-                return
-            }
-            let type = dataDic.value(forKey: "type") as! String
-            if type == "GetLoanRepaymentDetail" {
-                guard let tempData = dataDic.value(forKey: "data") as? RepaymentMainDataModel else {
-                    return
-                }
-                self?.tableViewManager.model = tempData
-                self?.tableViewManager.dataModels = self?.dataModel.getLocalModel(model: tempData)
-                self?.view?.tableView.reloadData()
-                self?.view?.toastView?.hide(tag: 99)
-                self?.view?.hideToastActivity()
-            } else if type == "SendViolasBankRepaymentTransaction" {
-                self?.view?.hideToastActivity()
-                self?.view?.toastView?.hide(tag: 99)
-                self?.view?.makeToast(localLanguage(keyString: "wallet_bank_repayment_submit_successful"), duration: toastDuration, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
-                    self?.delegate?.successRepayment()
-                })
-            }
-        })
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        self.textFieldText = textField.text
     }
 }

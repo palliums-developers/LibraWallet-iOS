@@ -73,7 +73,7 @@ class RepaymentTableViewCell: UITableViewCell {
         label.backgroundColor = DefaultSpaceColor
         return label
     }()
-    //MARK: - 设置数据
+    // MARK: - 设置数据
     var indexPath: IndexPath?
     var hideSpcaeLineState: Bool? {
         didSet {
