@@ -8,6 +8,7 @@
 
 import UIKit
 import Moya
+
 struct AssetsPoolsInfoDataModel: Codable {
     var coina: PoolLiquidityCoinADataModel?
     var coinb: PoolLiquidityCoinBDataModel?
@@ -79,8 +80,6 @@ class AssetsPoolModel: NSObject {
     @objc dynamic var dataDic: NSMutableDictionary = [:]
     private var sequenceNumber: UInt64?
     private var maxGasAmount: UInt64 = 600
-    private var marketTokens: [MarketSupportTokensDataModel]?
-    private var accountTokens: [ViolasBalanceDataModel]?
     var tokenModel: AssetsPoolsInfoDataModel?
     deinit {
         requests.forEach { cancellable in
@@ -245,45 +244,37 @@ extension AssetsPoolModel {
 }
 
 extension AssetsPoolModel {
-    func getMarketMineTokens(address: String) {
-        let request = marketModuleProvide.request(.marketMineTokens(address)) {[weak self](result) in
-            switch  result {
+    func getMarketMineTokens(address: String, completion: @escaping (Result<MarketMineMainDataModel, LibraWalletError>) -> Void) {
+        let request = marketModuleProvide.request(.marketMineTokens(address)) { (result) in
+            switch result {
             case let .success(response):
                 do {
                     let json = try response.map(MarketMineMainModel.self)
                     if json.code == 2000 {
-                        guard let models = json.data?.balance, models.isEmpty == false else {
-                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: "GetMarketMineTokens")
-                            self?.setValue(data, forKey: "dataDic")
-                            print("GetMarketMineTokens_状态异常")
-                            return
+                        if let data = json.data {
+                            completion(.success(data))
+                        } else {
+                            completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError)))
                         }
-                        let data = setKVOData(type: "GetMarketMineTokens", data: json.data)
-                        self?.setValue(data, forKey: "dataDic")
                     } else {
                         print("GetMarketMineTokens_状态异常")
                         if let message = json.message, message.isEmpty == false {
-                            let data = setKVOData(error: LibraWalletError.error(message), type: "GetMarketMineTokens")
-                            self?.setValue(data, forKey: "dataDic")
+                            completion(.failure(LibraWalletError.error(message)))
                         } else {
-                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "GetMarketMineTokens")
-                            self?.setValue(data, forKey: "dataDic")
+                            completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid)))
                         }
                     }
                 } catch {
                     print("GetMarketMineTokens_解析异常\(error.localizedDescription)")
-                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetMarketMineTokens")
-                    self?.setValue(data, forKey: "dataDic")
+                    completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError)))
                 }
             case let .failure(error):
                 guard error.errorCode != -999 else {
                     print("网络请求已取消")
                     return
                 }
-                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "GetMarketMineTokens")
-                self?.setValue(data, forKey: "dataDic")
+                completion(.failure(LibraWalletError.WalletRequest(reason: .networkInvalid)))
             }
-            
         }
         self.requests.append(request)
     }
@@ -378,99 +369,110 @@ extension AssetsPoolModel {
     }
 }
 extension AssetsPoolModel {
-    func getMarketTokens(address: String) {
+    func getMarketTokens(address: String, completion: @escaping (Result<[MarketSupportTokensDataModel], LibraWalletError>) -> Void) {
+        let group = DispatchGroup.init()
         let quene = DispatchQueue.init(label: "MarketSupportTokenQuene")
         let semaphore = DispatchSemaphore.init(value: 1)
-        quene.async {
+        var marketTokens = [MarketSupportTokensDataModel]()
+        var accountTokens = [ViolasBalanceDataModel]()
+        quene.async(group: group, qos: .default, flags: [], execute: {
+            group.enter()
             semaphore.wait()
-            self.getMarketSupportTokens(semaphore: semaphore)
-        }
-        quene.async {
+            self.getMarketSupportTokens() { (result) in
+                switch result {
+                case let .success(models):
+                    marketTokens = models
+                    group.leave()
+                    semaphore.signal()
+                case let .failure(error):
+                    completion(.failure(error))
+                }
+            }
+        })
+        quene.async(group: group, qos: .default, flags: [], execute: {
+            group.enter()
             semaphore.wait()
-            self.getViolasBalance(address: address, semaphore: semaphore)
-        }
-        quene.async {
-            semaphore.wait()
-            self.handleMarketTokenState(semaphore: semaphore)
+            self.getViolasBalance(address: address) { (result) in
+                switch result {
+                case let .success(models):
+                    accountTokens = models
+                case let .failure(error):
+                    print(error.localizedDescription)
+                    completion(.failure(error))
+                }
+                group.leave()
+            }
+            semaphore.signal()
+        })
+        group.notify(queue: quene) {
+            let result = self.handleMarketTokenState(marketTokens: marketTokens, accountTokens: accountTokens)
+            DispatchQueue.main.async(execute: {
+                completion(.success(result))
+            })
         }
     }
     
-    private func getMarketSupportTokens(semaphore: DispatchSemaphore) {
-        let request = marketModuleProvide.request(.marketSupportTokens) {[weak self](result) in
+    private func getMarketSupportTokens(completion: @escaping (Result<[MarketSupportTokensDataModel], LibraWalletError>) -> Void) {
+        let request = marketModuleProvide.request(.marketSupportTokens) { (result) in
             switch  result {
             case let .success(response):
                 do {
                     let json = try response.map(MarketSupportTokensMainModel.self)
                     if json.code == 2000 {
-                        guard let violasTokens = json.data, violasTokens.isEmpty == false else {
-                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .dataEmpty), type: "GetMarketSupportTokens")
-                            self?.setValue(data, forKey: "dataDic")
-                            return
-                        }
-                        self?.marketTokens = violasTokens
-                        semaphore.signal()
+                        completion(.success(json.data ?? [MarketSupportTokensDataModel]()))
                     } else {
                         print("GetMarketSupportTokens_状态异常")
                         if let message = json.message, message.isEmpty == false {
-                            let data = setKVOData(error: LibraWalletError.error(message), type: "GetMarketSupportTokens")
-                            self?.setValue(data, forKey: "dataDic")
+                            completion(.failure(LibraWalletError.error(message)))
                         } else {
-                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: "GetMarketSupportTokens")
-                            self?.setValue(data, forKey: "dataDic")
+                            completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid)))
                         }
                     }
                 } catch {
                     print("GetMarketSupportTokens_解析异常\(error.localizedDescription)")
-                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "GetMarketSupportTokens")
-                    self?.setValue(data, forKey: "dataDic")
+                    completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError)))
                 }
             case let .failure(error):
                 guard error.errorCode != -999 else {
                     print("网络请求已取消")
                     return
                 }
-                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "GetLibraTokens")
-                self?.setValue(data, forKey: "dataDic")
+                completion(.failure(LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.networkInvalid)))
             }
         }
         self.requests.append(request)
     }
-    private func getViolasBalance(address: String, semaphore: DispatchSemaphore) {
-        let request = violasModuleProvide.request(.accountInfo(address)) {[weak self](result) in
+    private func getViolasBalance(address: String, completion: @escaping (Result<[ViolasBalanceDataModel], LibraWalletError>) -> Void) {
+        let request = violasModuleProvide.request(.accountInfo(address)) { (result) in
             switch  result {
             case let .success(response):
                 do {
                     let json = try response.map(ViolasAccountMainModel.self)
                     if json.result == nil {
-                        let data = setKVOData(type: "UpdateViolasBalance", data: [ViolasBalanceDataModel.init(amount: 0, currency: "LBR")])
-                        self?.setValue(data, forKey: "dataDic")
-                        print("激活失败")
+                        completion(.failure(LibraWalletError.WalletRequest(reason: .walletUnActive)))
                     } else {
-                        self?.accountTokens = json.result?.balances
-                        semaphore.signal()
+                        completion(.success(json.result?.balances ?? [ViolasBalanceDataModel]()))
                     }
                 } catch {
-                    print("UpdateViolasBalance_解析异常\(error.localizedDescription)")
-                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: "UpdateViolasBalance")
-                    self?.setValue(data, forKey: "dataDic")
+                    print("GetViolasBalance_解析异常\(error.localizedDescription)")
+                    completion(.failure(LibraWalletError.WalletRequest(reason: .parseJsonError)))
                 }
             case let .failure(error):
                 guard error.errorCode != -999 else {
-                    print("UpdateViolasBalance_网络请求已取消")
+                    print("GetViolasBalance_网络请求已取消")
                     return
                 }
-                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .networkInvalid), type: "UpdateViolasBalance")
-                self?.setValue(data, forKey: "dataDic")
+                completion(.failure(LibraWalletError.WalletRequest(reason: .networkInvalid)))
             }
         }
         self.requests.append(request)
     }
-    private func handleMarketTokenState(semaphore: DispatchSemaphore) {
+    private func handleMarketTokenState(marketTokens: [MarketSupportTokensDataModel], accountTokens: [ViolasBalanceDataModel]) -> [MarketSupportTokensDataModel] {
         var tempTokens = [MarketSupportTokensDataModel]()
-        for var token in self.marketTokens! {
+        for var token in marketTokens {
             token.activeState = false
             token.amount = 0
-            for activeToken in self.accountTokens! {
+            for activeToken in accountTokens {
                 if token.module == activeToken.currency {
                     token.activeState = true
                     token.amount = activeToken.amount ?? 0
@@ -479,13 +481,7 @@ extension AssetsPoolModel {
             }
             tempTokens.append(token)
         }
-        DispatchQueue.main.async(execute: {
-            let data = setKVOData(type: "SupportViolasTokens", data: tempTokens)
-            self.setValue(data, forKey: "dataDic")
-        })
-
-        semaphore.signal()
-
+        return tempTokens
     }
 }
 extension AssetsPoolModel {

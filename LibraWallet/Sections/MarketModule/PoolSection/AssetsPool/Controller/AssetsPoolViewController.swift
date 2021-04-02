@@ -20,11 +20,7 @@ class AssetsPoolViewController: UIViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         detailView.snp.makeConstraints { (make) in
-            if #available(iOS 11.0, *) {
-                make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
-            } else {
-                make.top.bottom.equalTo(self.view)
-            }
+            make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
             make.left.right.equalTo(self.view)
         }
     }
@@ -35,6 +31,7 @@ class AssetsPoolViewController: UIViewController {
     }()
     lazy var viewModel: AssetsPoolViewModel = {
         let model = AssetsPoolViewModel.init()
+        model.delegate = self
         return model
     }()
     /// 子View
@@ -110,18 +107,21 @@ extension AssetsPoolViewController: AssetsPoolViewHeaderViewDelegate {
         if self.detailView.headerView.changeTypeButton.titleLabel?.text == localLanguage(keyString: localLanguage(keyString: "wallet_assets_pool_transfer_in_title")) {
             // 转入
             self.detailView.toastView?.show(tag: 99)
-            self.dataModel.getMarketTokens(address: Wallet.shared.violasAddress ?? "")
+//            self.dataModel.getMarketTokens(address: Wallet.shared.violasAddress ?? "")
+            self.viewModel.requestMarketTokens(tag: 10)
         } else {
             // 转出
             self.detailView.makeToastActivity(.center)
-            self.dataModel.getMarketMineTokens(address: Wallet.shared.violasAddress ?? "")
+//            self.dataModel.getMarketMineTokens(address: Wallet.shared.violasAddress ?? "")
+            self.viewModel.requestMineLiquidity()
         }
     }
     func selectOutoutToken() {
         if self.detailView.headerView.changeTypeButton.titleLabel?.text == localLanguage(keyString: localLanguage(keyString: "wallet_assets_pool_transfer_in_title")) {
             // 转入
             self.detailView.toastView?.show(tag: 99)
-            self.dataModel.getMarketTokens(address: Wallet.shared.violasAddress ?? "")
+//            self.dataModel.getMarketTokens(address: Wallet.shared.violasAddress ?? "")
+            self.viewModel.requestMarketTokens(tag: 20)
         }
     }
     func swapInputOutputToken() {
@@ -310,4 +310,57 @@ extension AssetsPoolViewController: DropperDelegate {
         self.dataModel.getPoolLiquidity(coinA: self.currentTokens?[path.row].coin_a?.module ?? "",
                                         coinB: self.currentTokens?[path.row].coin_b?.module ?? "")
     }
+}
+extension AssetsPoolViewController: AssetsPoolViewModelDelegate {
+    func reloadSelectTokenViewA() {
+        self.detailView.toastView?.hide(tag: 99)
+        self.detailView.headerView.transferInInputTokenA = self.viewModel.tokenModelA
+    }
+    
+    func reloadSelectTokenViewB() {
+        self.detailView.toastView?.hide(tag: 99)
+        self.detailView.headerView.transferInInputTokenB = self.viewModel.tokenModelB
+    }
+    
+    func reloadLiquidityView() {
+        self.detailView.hideToastActivity()
+        var tempDropperData = [String]()
+        guard let model = self.viewModel.liquidityModel, model.isEmpty == false else {
+            
+            self.detailView.makeToast(LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription, position: .center)
+            return
+        }
+        for item in self.viewModel.liquidityModel! {
+            let tokenNameString = (item.coin_a?.show_name ?? "---") + "/" + (item.coin_b?.show_name ?? "---")
+            tempDropperData.append(tokenNameString)
+        }
+        self.currentTokens = self.viewModel.liquidityModel!
+        let realHeight = CGFloat((self.viewModel.liquidityModel?.count ?? 34) * 34)
+        let height = realHeight > 34*6 ? 34*6:realHeight
+        let dropper = Dropper.init(width: 120, height: height)
+        dropper.items = tempDropperData
+        dropper.cornerRadius = 8
+        dropper.theme = .black(UIColor.init(hex: "F1EEFB"))
+        dropper.cellTextFont = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
+        dropper.cellColor = UIColor.init(hex: "333333")
+        dropper.spacing = 12
+        dropper.delegate = self
+        if self.detailView.headerView.inputTokenButton.titleLabel?.text != localLanguage(keyString: "wallet_market_exchange_input_token_button_title") {
+            let index = tempDropperData.firstIndex(of: self.detailView.headerView.inputTokenButton.titleLabel?.text ?? "")
+            dropper.defaultSelectRow = index
+        }
+        dropper.show(Dropper.Alignment.center, button: (self.detailView.headerView.inputTokenButton))
+    }
+    
+    func showToast(tag: Int) {
+        self.detailView.toastView?.show(tag: tag)
+    }
+    
+    func hideToast(tag: Int) {
+        self.detailView.toastView?.hide(tag: tag)
+    }
+    
+    func requestError(errorMessage: String) {
+        print("")
+    }    
 }
