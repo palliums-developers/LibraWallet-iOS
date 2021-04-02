@@ -290,6 +290,10 @@
 		36957508259B120000D8A45E /* DiemAccountMainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36957507259B120000D8A45E /* DiemAccountMainModel.swift */; };
 		3695750D259B124400D8A45E /* ViolasAccountMainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3695750C259B124400D8A45E /* ViolasAccountMainModel.swift */; };
 		3695758D259C60F000D8A45E /* BankStatusSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3695758C259C60F000D8A45E /* BankStatusSelectView.swift */; };
+		36A362E42616B98400E90377 /* DiemRefundMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36A362E32616B98400E90377 /* DiemRefundMetadata.swift */; };
+		36A362EC2616B9C500E90377 /* DiemRefundMetadataV0.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36A362EB2616B9C500E90377 /* DiemRefundMetadataV0.swift */; };
+		36A362F12616CACB00E90377 /* DiemCoinTradeMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36A362F02616CACB00E90377 /* DiemCoinTradeMetadata.swift */; };
+		36A362F62616CC6100E90377 /* DiemCoinTradeMetadataV0.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36A362F52616CC6100E90377 /* DiemCoinTradeMetadataV0.swift */; };
 		36A6804325FF44F10091AC7D /* MarketTokenSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36A6804225FF44F10091AC7D /* MarketTokenSelectView.swift */; };
 		36AA10F925008A1E00BEF941 /* BankContracts.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 36AA10F825008A1E00BEF941 /* BankContracts.bundle */; };
 		36B43A7223BDE967008E2EEA /* LBXScanError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B43A7123BDE967008E2EEA /* LBXScanError.swift */; };
@@ -804,6 +808,10 @@
 		36957507259B120000D8A45E /* DiemAccountMainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemAccountMainModel.swift; sourceTree = "<group>"; };
 		3695750C259B124400D8A45E /* ViolasAccountMainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasAccountMainModel.swift; sourceTree = "<group>"; };
 		3695758C259C60F000D8A45E /* BankStatusSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankStatusSelectView.swift; sourceTree = "<group>"; };
+		36A362E32616B98400E90377 /* DiemRefundMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemRefundMetadata.swift; sourceTree = "<group>"; };
+		36A362EB2616B9C500E90377 /* DiemRefundMetadataV0.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemRefundMetadataV0.swift; sourceTree = "<group>"; };
+		36A362F02616CACB00E90377 /* DiemCoinTradeMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemCoinTradeMetadata.swift; sourceTree = "<group>"; };
+		36A362F52616CC6100E90377 /* DiemCoinTradeMetadataV0.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiemCoinTradeMetadataV0.swift; sourceTree = "<group>"; };
 		36A6804225FF44F10091AC7D /* MarketTokenSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketTokenSelectView.swift; sourceTree = "<group>"; };
 		36AA10F825008A1E00BEF941 /* BankContracts.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = BankContracts.bundle; sourceTree = "<group>"; };
 		36B43A7123BDE967008E2EEA /* LBXScanError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LBXScanError.swift; sourceTree = "<group>"; };
@@ -3175,6 +3183,8 @@
 				36842174257F52A5000B87D6 /* DiemGeneralMetadata */,
 				36842175257F52B6000B87D6 /* DiemTravelRuleMetadata */,
 				36842176257F52CB000B87D6 /* DiemUnstructuredBytesMetadata */,
+				36A362E12616B93C00E90377 /* DiemRefundMetadata */,
+				36A362E22616B94D00E90377 /* DiemCoinTradeMetadata */,
 			);
 			path = Metadata;
 			sourceTree = "<group>";
@@ -3236,6 +3246,24 @@
 				368F7BD424FCFC4700CCF3FB /* BankLegalViewController.swift */,
 			);
 			path = Controller;
+			sourceTree = "<group>";
+		};
+		36A362E12616B93C00E90377 /* DiemRefundMetadata */ = {
+			isa = PBXGroup;
+			children = (
+				36A362E32616B98400E90377 /* DiemRefundMetadata.swift */,
+				36A362EB2616B9C500E90377 /* DiemRefundMetadataV0.swift */,
+			);
+			path = DiemRefundMetadata;
+			sourceTree = "<group>";
+		};
+		36A362E22616B94D00E90377 /* DiemCoinTradeMetadata */ = {
+			isa = PBXGroup;
+			children = (
+				36A362F02616CACB00E90377 /* DiemCoinTradeMetadata.swift */,
+				36A362F52616CC6100E90377 /* DiemCoinTradeMetadataV0.swift */,
+			);
+			path = DiemCoinTradeMetadata;
 			sourceTree = "<group>";
 		};
 		36B46699247654B900CFF438 /* ScanSendRawTransaction */ = {
@@ -5214,6 +5242,7 @@
 				36F42EB3243C80F700DBBF8F /* DiemMultiPublicKey.swift in Sources */,
 				3623AB5F23ED70E2004A01BF /* TokenMappingModel.swift in Sources */,
 				362B040425F86F5D00AECD98 /* NotificationCenterViewController.swift in Sources */,
+				36A362F62616CC6100E90377 /* DiemCoinTradeMetadataV0.swift in Sources */,
 				9DBC267923408D55009650EA /* ed25519_sign.swift in Sources */,
 				361051B52563D67F008407F5 /* LibraModuleNetworkManager.swift in Sources */,
 				366AFF482578CD510007AAFC /* ProfitPoolTableViewCell.swift in Sources */,
@@ -5290,6 +5319,7 @@
 				3682E5C824AC36FB007CA2CA /* AssetsPoolViewController.swift in Sources */,
 				3622F20324E3FFF400CFB754 /* TransferViewController.swift in Sources */,
 				366AFF3E25778FBA0007AAFC /* ProfitInvitationTabViewHeaderView.swift in Sources */,
+				36A362E42616B98400E90377 /* DiemRefundMetadata.swift in Sources */,
 				361BDB0324F8E7BE00C4C54E /* DepositListViewController.swift in Sources */,
 				361BDABD24F8E7BD00C4C54E /* DepositViewModel.swift in Sources */,
 				9DC06A3F2372A9B100BCE1FE /* MarketViewController.swift in Sources */,
@@ -5361,6 +5391,7 @@
 				9D5B4E70236BCBDB00F4D99C /* ManageCurrencyModel.swift in Sources */,
 				9D5B4E5E236976D500F4D99C /* HomeTableViewCell.swift in Sources */,
 				362B041225F86F8600AECD98 /* GSCaptchaButton.swift in Sources */,
+				36A362F12616CACB00E90377 /* DiemCoinTradeMetadata.swift in Sources */,
 				3666E514257A0C2F007DC62F /* YieldFarmingViewController.swift in Sources */,
 				361BDAE424F8E7BE00C4C54E /* LoanDetailDepositListTableViewCell.swift in Sources */,
 				36677A7725077BBB009152B3 /* DepositOrdersViewModel.swift in Sources */,
@@ -5546,6 +5577,7 @@
 				9DC488032320D6A1005FF254 /* DiemMnemonic.swift in Sources */,
 				9DC488052320DBCB005FF254 /* DiemHDPublicKey.swift in Sources */,
 				9DBC267723408D55009650EA /* ed25519_utility.swift in Sources */,
+				36A362EC2616B9C500E90377 /* DiemRefundMetadataV0.swift in Sources */,
 				366AFF3625778F460007AAFC /* ProfitInvitationTableViewManager.swift in Sources */,
 				36828CD024B736630085A165 /* MarketMineViewController.swift in Sources */,
 				361BDAB824F8E7BD00C4C54E /* LoanDescribeTableViewCell.swift in Sources */,

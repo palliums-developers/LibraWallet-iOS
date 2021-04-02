@@ -8,29 +8,20 @@
 
 import UIKit
 
-enum DiemUnstructuredBytesMetadataTypes {
-    case metadata(Data)
-}
-extension DiemUnstructuredBytesMetadataTypes {
-    public var raw: Data {
-        switch self {
-        case .metadata:
-            return Data.init(Array<UInt8>(hex: "00"))
-        }
-    }
-}
 struct DiemUnstructuredBytesMetadata {
-    fileprivate let code: DiemUnstructuredBytesMetadataTypes
+    fileprivate let code: Data
         
-    init(code: DiemUnstructuredBytesMetadataTypes) {
+    init(code: Data) {
         self.code = code
     }
     func serialize() -> Data {
         var result = Data()
-        result += self.code.raw
-        switch self.code {
-        case .metadata(let value):
-            result += value
+        if self.code.isEmpty == true {
+            result += Data.init(Array<UInt8>(hex: "01"))
+            result += DiemUtils.uleb128Format(length: self.code.count)
+            result += self.code
+        } else {
+            result += Data.init(Array<UInt8>(hex: "00"))
         }
         return result
     }

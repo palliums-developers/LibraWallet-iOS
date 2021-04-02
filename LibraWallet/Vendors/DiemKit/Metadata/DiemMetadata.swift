@@ -13,6 +13,8 @@ enum DiemMetadataTypes {
     case GeneralMetadata(DiemGeneralMetadata)
     case TravelRuleMetadata(DiemTravelRuleMetadata)
     case UnstructuredBytesMetadata(DiemUnstructuredBytesMetadata)
+    case RefundMetadata(DiemRefundMetadata)
+    case CoinTradeMetadata(DiemCoinTradeMetadata)
 }
 extension DiemMetadataTypes {
     public var raw: Data {
@@ -24,7 +26,11 @@ extension DiemMetadataTypes {
         case .TravelRuleMetadata:
             return Data.init(Array<UInt8>(hex: "02"))
         case .UnstructuredBytesMetadata:
-            return Data.init(Array<UInt8>(hex: "02"))
+            return Data.init(Array<UInt8>(hex: "03"))
+        case .RefundMetadata:
+            return Data.init(Array<UInt8>(hex: "04"))
+        case .CoinTradeMetadata:
+            return Data.init(Array<UInt8>(hex: "05"))
         }
     }
 }
@@ -46,6 +52,10 @@ struct DiemMetadata {
         case .TravelRuleMetadata(let value):
             result += value.serialize()
         case .UnstructuredBytesMetadata(let value):
+            result += value.serialize()
+        case .RefundMetadata(let value):
+            result += value.serialize()
+        case .CoinTradeMetadata(let value):
             result += value.serialize()
         }
         return result

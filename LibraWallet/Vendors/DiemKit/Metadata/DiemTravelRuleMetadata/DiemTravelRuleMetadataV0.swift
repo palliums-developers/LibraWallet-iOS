@@ -17,13 +17,14 @@ struct DiemTravelRuleMetadataV0 {
     }
     func serialize() -> Data {
         var result = Data()
-        result += Data.init(Array<UInt8>(hex: "01"))
-        let tempData = self.off_chain_reference_id.data(using: .utf8)!
-        // 追加code长度
-        result += DiemUtils.uleb128Format(length: tempData.count)
-        // 追加code数据
-        result += tempData
-        
+        if self.off_chain_reference_id.isEmpty == false {
+            result += Data.init(Array<UInt8>(hex: "01"))
+            let tempData = self.off_chain_reference_id.data(using: .utf8)!
+            result += DiemUtils.uleb128Format(length: tempData.count)
+            result += tempData
+        } else {
+            result += Data.init(Array<UInt8>(hex: "00"))
+        }
         return result
     }
 }

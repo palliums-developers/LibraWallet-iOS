@@ -728,8 +728,8 @@ class LibraSDKTests: XCTestCase {
         let toSubAddress = "111111153010a111"
         let referencedEvent = "324"
         let metadataV0 = DiemGeneralMetadataV0.init(to_subaddress: fromSubAddress,
-                                                     from_subaddress: toSubAddress,
-                                                     referenced_event: referencedEvent)
+                                                    from_subaddress: toSubAddress,
+                                                    referenced_event: referencedEvent)
         let metadata = DiemMetadata.init(code: DiemMetadataTypes.GeneralMetadata(DiemGeneralMetadata.init(code: .GeneralMetadataVersion0(metadataV0))))
         let tempMetadata = metadata.serialize().toHexString()
         print(tempMetadata)
@@ -750,7 +750,29 @@ class LibraSDKTests: XCTestCase {
         let amountData = DiemUtils.getLengthData(length: NSDecimalNumber.init(value: amount).uint64Value, appendBytesCount: 8)
         let sigMessage = tempMetadata + Data.init(Array<UInt8>(hex: address)) + amountData + "@@$$DIEM_ATTEST$$@@".data(using: .utf8)!
         print(sigMessage.toHexString())
-        XCTAssertEqual(sigMessage.toHexString(), "020001166f666620636861696e207265666572656e6365206964f72589b71ff4f8d139674a3f7369c69be803000000000000404024244c494252415f41545445535424244040")
+        XCTAssertEqual(sigMessage.toHexString(), "020001166f666620636861696e207265666572656e6365206964f72589b71ff4f8d139674a3f7369c69be803000000000000404024244449454d5f41545445535424244040")
+    }
+    func testUnstructuredBytesMetadata() {        
+        let unstruct = DiemUnstructuredBytesMetadata.init(code: "abcd".data(using: .utf8)!)
+        let metadata = DiemMetadata.init(code: DiemMetadataTypes.UnstructuredBytesMetadata(unstruct))
+        
+        print(metadata.serialize().toHexString())
+        XCTAssertEqual(metadata.serialize().toHexString(), "03010461626364")
+    }
+    func testRefundMetadata() {
+        let refund = DiemRefundMetadata.init(code: .RefundMetadataV0(DiemRefundMetadataV0.init(transaction_version: 12343,
+                                                                                               reason: .UserInitiatedFullRefund)))
+        let metadata = DiemMetadata.init(code: DiemMetadataTypes.RefundMetadata(refund))
+        
+        print(metadata.serialize().toHexString())
+        XCTAssertEqual(metadata.serialize().toHexString(), "0400373000000000000003")
+    }
+    func testCoinTradeMetadata() {
+        let coinTrade = DiemCoinTradeMetadata.init(code: DiemCoinTradeMetadataTypes.CoinTradeMetadataV0(DiemCoinTradeMetadataV0.init(trade_ids: ["abc", "efg"])))
+        let metadata = DiemMetadata.init(code: DiemMetadataTypes.CoinTradeMetadata(coinTrade))
+        
+        print(metadata.serialize().toHexString())
+        XCTAssertEqual(metadata.serialize().toHexString(), "0500020361626303656667")
     }
     func testLibraNCToCTransaction() {
         let mnemonic = ["wrist", "post", "hover", "mixed", "like", "update", "salute", "access", "venture", "grant", "another", "team"]
