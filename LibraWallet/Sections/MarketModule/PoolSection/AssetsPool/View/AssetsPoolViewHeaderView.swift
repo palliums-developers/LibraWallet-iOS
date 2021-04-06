@@ -13,9 +13,7 @@ protocol AssetsPoolViewHeaderViewDelegate: NSObjectProtocol {
     func removeLiquidityConfirm(token: Double, amountIn: Double, amountOut: Double, inputModelName: String, outputModelName: String)
     func selectInputToken()
     func selectOutoutToken()
-    //    func swapInputOutputToken()
     func changeTrasferInOut()
-    func dealTransferOutAmount(amount: Double, coinAModule: String, coinBModule: String)
     
     func getPoolLiquidity(inputModuleName: String, outputModuleName: String)
 }

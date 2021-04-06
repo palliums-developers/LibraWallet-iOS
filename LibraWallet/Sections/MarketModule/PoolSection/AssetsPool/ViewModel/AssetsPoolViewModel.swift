@@ -11,18 +11,23 @@ import UIKit
 protocol AssetsPoolViewModelDelegate: NSObjectProtocol {
     func reloadSelectTokenViewA()
     func reloadSelectTokenViewB()
-    func reloadLiquidityView()
+    func reloadMineLiquidityView()
+    func reloadLiquidityRateView()
     func showToast(tag: Int)
     func hideToast(tag: Int)
     func requestError(errorMessage: String)
+    func successAddLiquidity()
+    func successRemoveLiquidity()
 }
 protocol AssetsPoolViewModelInterface  {
     /// 付出Token
     var tokenModelA: MarketSupportTokensDataModel? { get }
     /// 付出Token
     var tokenModelB: MarketSupportTokensDataModel? { get }
+    /// 我的通证
+    var mineLiquidityModel: [MarketMineMainTokensDataModel]? { get }
     /// 流动性Model
-    var liquidityModel: [MarketMineMainTokensDataModel]? { get }
+    var modelABLiquidityInfo: AssetsPoolsInfoDataModel? { get }
 }
 class AssetsPoolViewModel: NSObject, AssetsPoolViewModelInterface {
     weak var delegate: AssetsPoolViewModelDelegate?
@@ -35,10 +40,13 @@ class AssetsPoolViewModel: NSObject, AssetsPoolViewModelInterface {
         return self.modelB
     }
     
-    var liquidityModel: [MarketMineMainTokensDataModel]? {
-        return self.liquidity
+    var mineLiquidityModel: [MarketMineMainTokensDataModel]? {
+        return self.mineLiquidity
     }
     
+    var modelABLiquidityInfo: AssetsPoolsInfoDataModel? {
+        return self.modelABLiquidity
+    }
     /// 网络请求、数据模型
     lazy var dataModel: AssetsPoolModel = {
         let model = AssetsPoolModel.init()
@@ -55,9 +63,14 @@ class AssetsPoolViewModel: NSObject, AssetsPoolViewModelInterface {
             self.delegate?.reloadSelectTokenViewB()
         }
     }
-    private var liquidity: [MarketMineMainTokensDataModel]? {
+    private var mineLiquidity: [MarketMineMainTokensDataModel]? {
         didSet {
-            self.delegate?.reloadLiquidityView()
+            self.delegate?.reloadMineLiquidityView()
+        }
+    }
+    private var modelABLiquidity: AssetsPoolsInfoDataModel? {
+        didSet {
+            self.delegate?.reloadLiquidityRateView()
         }
     }
 }
@@ -67,9 +80,9 @@ extension AssetsPoolViewModel {
             switch result {
             case let .success(model):
                 print("\(model)")
-                self?.liquidity = model.balance
+                self?.mineLiquidity = model.balance
             case let .failure(error):
-                print(error.localizedDescription)
+                self?.delegate?.requestError(errorMessage: error.localizedDescription)
             }
         }
     }
@@ -96,7 +109,61 @@ extension AssetsPoolViewModel {
                 alert.show(tag: 199)
                 alert.showAnimation()
             case let .failure(error):
-                print(error.localizedDescription)
+                self?.delegate?.requestError(errorMessage: error.localizedDescription)
+            }
+        }
+    }
+    func getPoolLiquidity(coinA: String, coinB: String) {
+        self.dataModel.getPoolLiquidity(coinA: coinA, coinB: coinB) { (result) in
+            switch result {
+            case let .success(model):
+                self.modelABLiquidity = model
+            case let .failure(error):
+                self.delegate?.requestError(errorMessage: error.localizedDescription)
+            }
+        }
+    }
+    func confirmAddLiquidity(amountIn: UInt64, amountOut: UInt64, inputModelName: String, outputModelName: String) {
+        WalletManager.unlockWallet { [weak self] (result) in
+            switch result {
+            case let .success(mnemonic):
+                self?.delegate?.showToast(tag: 99)
+                self?.dataModel.sendAddLiquidityViolasTransaction(sendAddress: Wallet.shared.violasAddress ?? "", amounta_desired: amountIn, amountb_desired: amountOut, amounta_min: UInt64(Double(amountIn) * 0.995), amountb_min: UInt64(Double(amountOut) * 0.995), fee: 0, mnemonic: mnemonic, moduleA: inputModelName, moduleB: outputModelName, feeModule: inputModelName) { [weak self] (result) in
+                    self?.delegate?.hideToast(tag: 99)
+                    switch result {
+                    case .success(_):
+                        self?.delegate?.successAddLiquidity()
+                    case let .failure(error):
+                        self?.delegate?.requestError(errorMessage: error.localizedDescription)
+                    }
+                }
+            case let .failure(error):
+                guard error.localizedDescription != "Cancel" else {
+                    return
+                }
+                self?.delegate?.requestError(errorMessage: error.localizedDescription)
+            }
+        }
+    }
+    func confirmRemoveLiquidity(liquidityAmount: Double, amountIn: Double, amountOut: Double, inputModelName: String, outputModelName: String) {
+        WalletManager.unlockWallet { [weak self] (result) in
+            switch result {
+            case let .success(mnemonic):
+                self?.delegate?.showToast(tag: 99)
+                self?.dataModel.sendRemoveLiquidityViolasTransaction(sendAddress: Wallet.shared.violasAddress ?? "", liquidity: liquidityAmount, amounta_min: amountIn, amountb_min: amountOut, fee: 0, mnemonic: mnemonic, moduleA: inputModelName, moduleB: outputModelName, feeModule: inputModelName) { [weak self] (result) in
+                    self?.delegate?.hideToast(tag: 99)
+                    switch result {
+                    case .success(_):
+                        self?.delegate?.successRemoveLiquidity()
+                    case let .failure(error):
+                        self?.delegate?.requestError(errorMessage: error.localizedDescription)
+                    }
+                }
+            case let .failure(error):
+                guard error.localizedDescription != "Cancel" else {
+                    return
+                }
+                self?.delegate?.requestError(errorMessage: error.localizedDescription)
             }
         }
     }
