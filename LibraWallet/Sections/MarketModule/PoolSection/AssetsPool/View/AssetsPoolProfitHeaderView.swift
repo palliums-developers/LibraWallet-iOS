@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Localize_Swift
 
 protocol AssetsPoolProfitHeaderViewDelegate: NSObjectProtocol {
     func showYieldFarmingRules()
@@ -24,11 +25,14 @@ class AssetsPoolProfitHeaderView: UIView {
         backgroundImageView.addSubview(detailImageView)
         isUserInteractionEnabled = true
         addGestureRecognizer(tap)
+        // 添加语言变换通知
+        NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
         print("AssetsPoolProfitHeaderView销毁了")
     }
     // MARK: - 布局
@@ -87,5 +91,11 @@ class AssetsPoolProfitHeaderView: UIView {
         if gesture.state == .ended {
             self.delegate?.showYieldFarmingRules()
         }
+    }
+    /// 语言切换
+    @objc func setText() {
+        titleLabel.text = localLanguage(keyString: "wallet_market_assets_pool_yield_farming_title")
+        describeLabel.text = localLanguage(keyString: "wallet_market_assets_pool_yield_farming_describe") + "---"
+
     }
 }
