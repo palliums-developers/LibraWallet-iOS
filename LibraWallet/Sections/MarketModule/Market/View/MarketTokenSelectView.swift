@@ -168,3 +168,26 @@ class MarketTokenSelectView: UIView {
         }
     }
 }
+extension MarketTokenSelectView {
+    func initialView() {
+        // 重置标题
+        titleLabel.text = localLanguage(keyString: "wallet_market_assets_pool_input_amount_title")
+        // 重置按钮
+        tokenButton.setTitle(localLanguage(keyString: "wallet_market_exchange_input_token_button_title"), for: UIControl.State.normal)
+        tokenButton.snp.remakeConstraints { (make) in
+            make.right.equalTo(tokenBackgroundView.snp.right).offset(-11)
+            make.bottom.equalTo(tokenBackgroundView.snp.bottom).offset(-11)
+            let width = libraWalletTool.ga_widthForComment(content: localLanguage(keyString: "wallet_market_exchange_input_token_button_title"), fontSize: 12, height: 22) + 8 + 19
+            make.size.equalTo(CGSize.init(width: width, height: 22))
+        }
+        tokenButton.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 9, height: 5.5))
+        // 重置余额
+        balanceAmountLabel.text = localLanguage(keyString: "wallet_market_assets_pool_add_liquidity_token_title") + "---"
+        // 重置金额输入框
+        inputAmountTextField.text = ""
+        // 重置Model
+        swapTokenModel = nil
+        // 重置Model
+        liquidityTokenModel = nil
+    }
+}

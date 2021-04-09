@@ -26,9 +26,9 @@ struct AssetsPoolTransferInInfoMainModel: Codable {
 }
 struct AssetsPoolTransferOutInfoDataModel: Codable {
     /// 输入数量
-    var coin_a_value: Int64?
+    var coin_a_value: UInt64?
     /// 兑换数量
-    var coin_b_value: Int64?
+    var coin_b_value: UInt64?
     /// 输入币名
     var coin_a_name: String?
     /// 兑换币名
@@ -144,7 +144,7 @@ extension AssetsPoolModel {
             semaphore.signal()
         }
     }
-    func sendRemoveLiquidityViolasTransaction(sendAddress: String, liquidity: Double, amounta_min: Double, amountb_min: Double, fee: UInt64, mnemonic: [String], moduleA: String, moduleB: String, feeModule: String, completion: @escaping (Result<Bool, LibraWalletError>) -> Void) {
+    func sendRemoveLiquidityViolasTransaction(sendAddress: String, liquidity: UInt64, amounta_min: UInt64, amountb_min: UInt64, fee: UInt64, mnemonic: [String], moduleA: String, moduleB: String, feeModule: String, completion: @escaping (Result<Bool, LibraWalletError>) -> Void) {
         let semaphore = DispatchSemaphore.init(value: 1)
         let queue = DispatchQueue.init(label: "SendQueue")
         var sequenceNumber: UInt64?
@@ -171,9 +171,9 @@ extension AssetsPoolModel {
                                                                                          maxGasAmount: self.maxGasAmount,
                                                                                          maxGasUnitPrice: ViolasManager.handleMaxGasUnitPrice(maxGasAmount: self.maxGasAmount),
                                                                                          sequenceNumber: sequenceNumber ?? 0,
-                                                                                         liquidity: (NSDecimalNumber.init(value: liquidity).multiplying(by: NSDecimalNumber.init(value: 1000000))).uint64Value,
-                                                                                         minAmountA: (NSDecimalNumber.init(value: amounta_min).multiplying(by: NSDecimalNumber.init(value: 1000000))).uint64Value,
-                                                                                         minAmountB: (NSDecimalNumber.init(value: amountb_min).multiplying(by: NSDecimalNumber.init(value: 1000000))).uint64Value,
+                                                                                         liquidity: liquidity,
+                                                                                         minAmountA: amounta_min,
+                                                                                         minAmountB: amountb_min,
                                                                                          inputModuleA: moduleA,
                                                                                          inputModuleB: moduleB)
                 self.makeViolasTransaction(signature: signature) { (result) in

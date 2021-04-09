@@ -37,7 +37,7 @@ class AssetsPoolView: UIView {
             make.bottom.equalTo(self)
         }
     }
-    //MARK: - 懒加载对象
+    // MARK: - 懒加载对象
     lazy var headerView : AssetsPoolViewHeaderView = {
         let header = AssetsPoolViewHeaderView.init()
         return header

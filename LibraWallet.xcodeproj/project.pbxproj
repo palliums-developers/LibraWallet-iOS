@@ -176,6 +176,7 @@
 		3646E50D24DBF5B300B8C20B /* ScanSwapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3646E50C24DBF5B300B8C20B /* ScanSwapViewController.swift */; };
 		3646E50F24DBF5C600B8C20B /* ScanSwapModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3646E50E24DBF5C600B8C20B /* ScanSwapModel.swift */; };
 		3646E51124DBF5D400B8C20B /* ScanSwapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3646E51024DBF5D400B8C20B /* ScanSwapView.swift */; };
+		3648A367261EE11E000DC33F /* MarketRemoveLiquidityTokenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3648A366261EE11E000DC33F /* MarketRemoveLiquidityTokenView.swift */; };
 		3650F0A624888FAE0086F578 /* WalletMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3650F0A524888FAE0086F578 /* WalletMainViewController.swift */; };
 		3650F0A824888FC40086F578 /* WalletMainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3650F0A724888FC40086F578 /* WalletMainModel.swift */; };
 		3650F0AA24888FD40086F578 /* WalletMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3650F0A924888FD40086F578 /* WalletMainView.swift */; };
@@ -304,8 +305,6 @@
 		36B466B6247656E400CFF438 /* ScanSendTransactionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B466B5247656E400CFF438 /* ScanSendTransactionModel.swift */; };
 		36C1906225E3970A00EFA4D1 /* ViolasSDKTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36C1906125E3970A00EFA4D1 /* ViolasSDKTests.swift */; };
 		36DA3FCE23B5E5C6001D7733 /* UIButton + imageTitleLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36DA3FCD23B5E5C6001D7733 /* UIButton + imageTitleLocation.swift */; };
-		36E8A87925A6EC8F008F9A1F /* AssetsPoolTokenSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E8A87825A6EC8F008F9A1F /* AssetsPoolTokenSelectView.swift */; };
-		36E8A88125A6F221008F9A1F /* AssetsPoolTokenShowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E8A88025A6F221008F9A1F /* AssetsPoolTokenShowView.swift */; };
 		36E95D8B242A084B0004B86D /* ScanLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E95D86242A084B0004B86D /* ScanLoginViewController.swift */; };
 		36E95D8C242A084B0004B86D /* ScanLoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E95D88242A084B0004B86D /* ScanLoginModel.swift */; };
 		36E95D8D242A084B0004B86D /* ScanLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E95D8A242A084B0004B86D /* ScanLoginView.swift */; };
@@ -690,6 +689,7 @@
 		3646E50C24DBF5B300B8C20B /* ScanSwapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanSwapViewController.swift; sourceTree = "<group>"; };
 		3646E50E24DBF5C600B8C20B /* ScanSwapModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanSwapModel.swift; sourceTree = "<group>"; };
 		3646E51024DBF5D400B8C20B /* ScanSwapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanSwapView.swift; sourceTree = "<group>"; };
+		3648A366261EE11E000DC33F /* MarketRemoveLiquidityTokenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketRemoveLiquidityTokenView.swift; sourceTree = "<group>"; };
 		3650F0A524888FAE0086F578 /* WalletMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletMainViewController.swift; sourceTree = "<group>"; };
 		3650F0A724888FC40086F578 /* WalletMainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletMainModel.swift; sourceTree = "<group>"; };
 		3650F0A924888FD40086F578 /* WalletMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletMainView.swift; sourceTree = "<group>"; };
@@ -818,8 +818,6 @@
 		36B466B5247656E400CFF438 /* ScanSendTransactionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanSendTransactionModel.swift; sourceTree = "<group>"; };
 		36C1906125E3970A00EFA4D1 /* ViolasSDKTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolasSDKTests.swift; sourceTree = "<group>"; };
 		36DA3FCD23B5E5C6001D7733 /* UIButton + imageTitleLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton + imageTitleLocation.swift"; sourceTree = "<group>"; };
-		36E8A87825A6EC8F008F9A1F /* AssetsPoolTokenSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsPoolTokenSelectView.swift; sourceTree = "<group>"; };
-		36E8A88025A6F221008F9A1F /* AssetsPoolTokenShowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsPoolTokenShowView.swift; sourceTree = "<group>"; };
 		36E95D86242A084B0004B86D /* ScanLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanLoginViewController.swift; sourceTree = "<group>"; };
 		36E95D88242A084B0004B86D /* ScanLoginModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanLoginModel.swift; sourceTree = "<group>"; };
 		36E95D8A242A084B0004B86D /* ScanLoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanLoginView.swift; sourceTree = "<group>"; };
@@ -2268,6 +2266,13 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		3648A397261F0559000DC33F /* CustomDropper */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = CustomDropper;
+			sourceTree = "<group>";
+		};
 		364BB570242CD27700B9BE17 /* MappingModule */ = {
 			isa = PBXGroup;
 			children = (
@@ -3066,8 +3071,6 @@
 				3682E5C524AC36DC007CA2CA /* AssetsPoolView.swift */,
 				36842147257E1E30000B87D6 /* AssetsPoolProfitHeaderView.swift */,
 				3682E5CB24AC3753007CA2CA /* AssetsPoolViewHeaderView.swift */,
-				36E8A87825A6EC8F008F9A1F /* AssetsPoolTokenSelectView.swift */,
-				36E8A88025A6F221008F9A1F /* AssetsPoolTokenShowView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -4546,6 +4549,7 @@
 			children = (
 				9DC06A402372A9CC00BCE1FE /* MarketView.swift */,
 				36A6804225FF44F10091AC7D /* MarketTokenSelectView.swift */,
+				3648A366261EE11E000DC33F /* MarketRemoveLiquidityTokenView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -4640,6 +4644,7 @@
 		9DC4885B23220E30005FF254 /* Vendors */ = {
 			isa = PBXGroup;
 			children = (
+				3648A397261F0559000DC33F /* CustomDropper */,
 				362B040E25F86F8600AECD98 /* CountDownButton */,
 				362B040A25F86F8600AECD98 /* WYDDropper */,
 				362B040C25F86F8600AECD98 /* WYDLabel */,
@@ -5357,6 +5362,7 @@
 				366AFF0825778B160007AAFC /* ProfitBankModel.swift in Sources */,
 				366AFF1725778B470007AAFC /* ProfitPoolModel.swift in Sources */,
 				9DC902472328FDB90097FD85 /* DataBaseManager.swift in Sources */,
+				3648A367261EE11E000DC33F /* MarketRemoveLiquidityTokenView.swift in Sources */,
 				361BDAFB24F8E7BE00C4C54E /* DepositMarketTableViewManager.swift in Sources */,
 				9D5B4E70236BCBDB00F4D99C /* ManageCurrencyModel.swift in Sources */,
 				9D5B4E5E236976D500F4D99C /* HomeTableViewCell.swift in Sources */,
@@ -5501,7 +5507,6 @@
 				361BDAB624F8E7BD00C4C54E /* LoanModel.swift in Sources */,
 				9D9B49C7235FFA7800354EF0 /* MineViewController.swift in Sources */,
 				36B466A62476563800CFF438 /* ScanSignTransactionViewController.swift in Sources */,
-				36E8A87925A6EC8F008F9A1F /* AssetsPoolTokenSelectView.swift in Sources */,
 				9D9B4A112360491C00354EF0 /* HelpCenterViewController.swift in Sources */,
 				36828CE224B74C530085A165 /* ExchangeViewController.swift in Sources */,
 				3650F0AC2488907A0086F578 /* WalletMainViewHeaderView.swift in Sources */,
@@ -5591,7 +5596,6 @@
 				9D9B49E8236031F700354EF0 /* SettingTableViewCell.swift in Sources */,
 				36F8270B24BEAA7E0007ACC3 /* Dropper.swift in Sources */,
 				3617836B24449B53003C6588 /* ViolasTransactionModulePayload.swift in Sources */,
-				36E8A88125A6F221008F9A1F /* AssetsPoolTokenShowView.swift in Sources */,
 				361BDAFA24F8E7BE00C4C54E /* DepositMarketView.swift in Sources */,
 				9DC4886C232222CF005FF254 /* LBXScanLineAnimation.swift in Sources */,
 				9DB515B423A32C130069A909 /* ViolasHDPublicKey.swift in Sources */,
