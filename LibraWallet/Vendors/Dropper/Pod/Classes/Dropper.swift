@@ -190,6 +190,7 @@ open class Dropper: UIView {
     public init(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat, button: UIButton) {
         super.init(frame: CGRect.zero)
         tableView.frame.size = CGSize.init(width: width, height: height)
+        self.addSubview(tableView)
         self.tag = 2038 // Year + Month + Day of Birthday. Used to distinguish the dropper from the rest of the views
         self.addGestureRecognizer(tap)
     }
@@ -251,19 +252,20 @@ open class Dropper: UIView {
                 self.frame.origin.y = button.frame.origin.y + button.frame.height + spacing
             }
         }
-        if (!self.isHidden) {
-            self.addSubview(tableView)
-//            if let buttonRoot = findButtonFromSubviews((button.superview?.subviews)!, button: button) {
-//                buttonRoot.superview?.addSubview(self)
-//            } else {
-                if let rootView = root {
-                    rootView.addSubview(self)
-                }
-//            }
-        } else {
-            self.tableView.isHidden = false
-            self.isHidden = false
-        }
+//        if (!self.isHidden) {
+//            self.addSubview(tableView)
+////            if let buttonRoot = findButtonFromSubviews((button.superview?.subviews)!, button: button) {
+////                buttonRoot.superview?.addSubview(self)
+////            } else {
+//                if let rootView = root {
+//                    rootView.addSubview(self)
+//                }
+////            }
+//        } else {
+//            self.tableView.isHidden = false
+//            self.isHidden = false
+//        }
+        self.show()
         status = .displayed
     }
     
@@ -287,23 +289,23 @@ open class Dropper: UIView {
     }
     
     /// Hides the dropdown from the view
-    open func hide() {
-        status = .hidden
-        self.isHidden = true
-        if shown == .hidden {
-            shown = .shown
-        }
-    }
+//    open func hide() {
+//        status = .hidden
+//        self.isHidden = true
+//        if shown == .hidden {
+//            shown = .shown
+//        }
+//    }
     
     /// Fades out and hides the dropdown from the view
     /// - Parameter time: Time taken to fade out the dropdown
-    open func hideWithAnimation(_ time: TimeInterval) {
-        UIView.animate(withDuration: time, delay: 0.0, options: .curveEaseOut, animations: {
-            self.tableView.alpha = 0.0
-        }, completion: { finished in
-            self.hide()
-        })
-    }
+//    open func hideWithAnimation(_ time: TimeInterval) {
+//        UIView.animate(withDuration: time, delay: 0.0, options: .curveEaseOut, animations: {
+//            self.tableView.alpha = 0.0
+//        }, completion: { finished in
+//            self.hide()
+//        })
+//    }
     
     /// Refresh the Tablemenu. For specifically calling .reloadData() on the TableView
     open func refresh() {
@@ -348,6 +350,7 @@ open class Dropper: UIView {
         tableView.bounces = false
         tableView.layer.borderColor = UIColor.lightGray.cgColor
         tableView.layer.borderWidth = 1
+        tableView.tag = self.tag + 1
         if (trimCorners) {
             tableView.layer.cornerRadius = 9.0
             tableView.clipsToBounds = true
@@ -365,26 +368,28 @@ open class Dropper: UIView {
         if gesture.state == .ended {
             
             //Resigning currently responder textField.
-            self.hideWithAnimation(defaultAnimationTime)
+//            self.hideWithAnimation(defaultAnimationTime)
+            self.hideAnimation()
         }
     }
     var cellConfig: DropperCellConfig?
-    open override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        let localPoint = self.convert(point, to: self)//[self convertPoint:point toView:view];
-        
-        if self.tableView.point(inside: localPoint, with: event) {
-            return self.tableView;
-        } else {
-            return super.hitTest(point, with: event)
-        }
-    }
+//    open override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+//        let localPoint = self.convert(point, to: self.tableView)
+//
+//        if self.tableView.point(inside: localPoint, with: event) {
+//            return self.tableView;
+//        } else {
+//            return super.hitTest(point, with: event)
+//        }
+//    }
 }
 
 extension Dropper: UITableViewDelegate, DropperExtentsions {
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         delegate?.DropperSelectedRow(indexPath, contents: items[indexPath.row])
         delegate?.DropperSelectedRow(indexPath, contents: items[indexPath.row], tag: self.tag)
-        self.hideWithAnimation(defaultAnimationTime)
+//        self.hideWithAnimation(defaultAnimationTime)
+        self.hideAnimation()
     }
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return self.rowHeight
@@ -465,4 +470,48 @@ extension Dropper: UITableViewDataSource {
         }
     }
     
+}
+extension Dropper {
+    func show() {
+        if let app = UIApplication.shared.delegate as? AppDelegate, let window = app.window {
+            self.frame = window.frame
+            window.addSubview(self)
+            self.showAnimation()
+        }
+    }
+    private func hide() {
+        if let app = UIApplication.shared.delegate as? AppDelegate, let window = app.window {
+            for views in window.subviews {
+                if views.tag == 2038 {
+                    views.viewWithTag(2038 + 1)?.removeFromSuperview()
+                    views.removeFromSuperview()
+                }
+            }
+        } else {
+            for views in self.subviews {
+                views.removeFromSuperview()
+            }
+        }
+    }
+}
+extension Dropper {
+    func showAnimation() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
+            UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: .curveEaseOut, animations: {
+                self.tableView.alpha = 1
+                self.layoutIfNeeded()
+            }, completion: nil)
+        }
+    }
+    func hideAnimation() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
+            UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: .curveEaseOut, animations: {
+                self.tableView.alpha = 0
+                self.layoutIfNeeded()
+            }, completion: { (status) in
+                self.hide()
+                print(status)
+            })
+        }
+    }
 }
