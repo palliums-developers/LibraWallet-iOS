@@ -70,7 +70,6 @@ internal class DropperCell: UITableViewCell {
                                                           multiplier: 1,
                                                           constant: -5)
             textItem.superview?.addConstraints([leftContraint, rightContraint, topContraint, bottomContraint])
-            
         }
         addBottomBorder()
     }

@@ -12,7 +12,6 @@ class AssetsPoolView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.white
-        //        addSubview(headerBackground)
         addSubview(profitView)
         addSubview(headerView)
     }
@@ -37,7 +36,7 @@ class AssetsPoolView: UIView {
             make.bottom.equalTo(self)
         }
     }
-    //MARK: - 懒加载对象
+    // MARK: - 懒加载对象
     lazy var headerView : AssetsPoolViewHeaderView = {
         let header = AssetsPoolViewHeaderView.init()
         return header
@@ -46,8 +45,8 @@ class AssetsPoolView: UIView {
         let view = AssetsPoolProfitHeaderView.init()
         return view
     }()
-    var toastView: ToastView? {
+    lazy var toastView: ToastView = {
         let toast = ToastView.init()
         return toast
-    }
+    }()
 }
