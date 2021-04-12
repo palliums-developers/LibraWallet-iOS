@@ -42,10 +42,6 @@ extension AssetsPoolViewController: AssetsPoolViewHeaderViewDelegate {
     func addLiquidityConfirm() {
         self.viewModel.confirmAddLiquidity()
     }
-    func getPoolLiquidity(inputModuleName: String, outputModuleName: String) {
-//        self.viewModel.getPoolLiquidity(coinA: inputModuleName,
-//                                        coinB: outputModuleName)
-    }
     func removeLiquidityConfirm() {
         self.viewModel.confirmRemoveLiquidity()
     }
@@ -65,18 +61,6 @@ extension AssetsPoolViewController: AssetsPoolViewHeaderViewDelegate {
             self.viewModel.requestMarketTokens(tag: 20)
         }
     }
-    func changeTrasferInOut() {
-        
-    }
-}
-extension AssetsPoolViewController: DropperDelegate {
-    func DropperSelectedRow(_ path: IndexPath, contents: String) {
-        self.detailView.headerView.tokenSelectViewA.liquidityTokenModel = self.currentTokens?[path.row]
-        self.viewModel.mineLiquidity = self.currentTokens?[0]
-
-        self.viewModel.getPoolLiquidity(coinA: self.currentTokens?[path.row].coin_a?.module ?? "",
-                                        coinB: self.currentTokens?[path.row].coin_b?.module ?? "")
-    }
 }
 extension AssetsPoolViewController: AssetsPoolViewModelDelegate {
     func refreshBestOutLiquidity() {
@@ -90,20 +74,20 @@ extension AssetsPoolViewController: AssetsPoolViewModelDelegate {
         self.detailView.toastView.hide(tag: 99)
         self.detailView.headerView.tokenSelectViewB.swapTokenModel = self.viewModel.tokenModelB
     }
-    func reloadMineLiquidityView() {
+    func showMineHoldLiquidityView() {
         self.detailView.hideToastActivity()
         var tempDropperData = [String]()
-        guard let model = self.viewModel.mineLiquiditysModel, model.isEmpty == false else {
+        guard let model = self.viewModel.mineHoldLiquiditysModel, model.isEmpty == false else {
             
             self.detailView.makeToast(LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription, position: .center)
             return
         }
-        for item in self.viewModel.mineLiquiditysModel! {
+        for item in self.viewModel.mineHoldLiquiditysModel! {
             let tokenNameString = (item.coin_a?.show_name ?? "---") + "/" + (item.coin_b?.show_name ?? "---")
             tempDropperData.append(tokenNameString)
         }
-        self.currentTokens = self.viewModel.mineLiquiditysModel!
-        let realHeight = CGFloat((self.viewModel.mineLiquiditysModel?.count ?? 34) * 34)
+        self.currentTokens = self.viewModel.mineHoldLiquiditysModel!
+        let realHeight = CGFloat((self.viewModel.mineHoldLiquiditysModel?.count ?? 34) * 34)
         let height = realHeight > 34*6 ? 34*6:realHeight
         let dropper = Dropper.init(width: 120, height: height, button: (self.detailView.headerView.tokenSelectViewA.tokenButton))
         dropper.items = tempDropperData
@@ -112,7 +96,7 @@ extension AssetsPoolViewController: AssetsPoolViewModelDelegate {
         dropper.cellTextFont = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
         dropper.cellColor = UIColor.init(hex: "333333")
         dropper.spacing = 12
-        dropper.delegate = self
+        dropper.delegate = self.viewModel
         if self.detailView.headerView.tokenSelectViewA.tokenButton.titleLabel?.text != localLanguage(keyString: "wallet_market_exchange_input_token_button_title") {
             let index = tempDropperData.firstIndex(of: self.detailView.headerView.tokenSelectViewA.tokenButton.titleLabel?.text ?? "")
             dropper.defaultSelectRow = index
@@ -150,6 +134,9 @@ extension AssetsPoolViewController: AssetsPoolViewModelDelegate {
     }
     func refreshBestOutput() {
         self.detailView.headerView.tokenSelectViewB.inputAmountTextField.text = self.viewModel.bestOutAmount
+    }
+    func refreshSelectLiquidityView() {
+        self.detailView.headerView.tokenSelectViewA.liquidityTokenModel = self.viewModel.mineLiquidityModel
     }
 }
 extension AssetsPoolViewController: UITextFieldDelegate {
@@ -195,7 +182,6 @@ extension AssetsPoolViewController: UITextFieldDelegate {
                 self.detailView.makeToast(localLanguage(keyString: "wallet_assets_pool_add_liquidity_unselect_second_deposit_token_content"), position: .center)
                 return false
             }
-            
         } else {
             // 转出
             guard self.detailView.headerView.tokenSelectViewA.tokenButton.titleLabel?.text != localLanguage(keyString: "wallet_market_exchange_input_token_button_title") else {
@@ -228,9 +214,6 @@ extension AssetsPoolViewController: UITextFieldDelegate {
             guard self.detailView.headerView.tokenSelectViewB.tokenButton.titleLabel?.text != localLanguage(keyString: "wallet_market_exchange_output_token_button_title") else {
                 return
             }
-//            guard self.detailView.headerView.autoCalculateMode == true else {
-//                return
-//            }
             if self.detailView.headerView.changeTypeButton.titleLabel?.text == localLanguage(keyString: localLanguage(keyString: "wallet_assets_pool_transfer_in_title")) {
                 // 转入
                 if let text = textField.text, text.isEmpty == true {
@@ -265,7 +248,6 @@ extension AssetsPoolViewController: UITextFieldDelegate {
                     return false
                 }
             }
-
         } else {
             if amount <= self.viewModel.tokenModelB?.amount ?? 0 {
                 return true

@@ -11,7 +11,7 @@ import UIKit
 protocol AssetsPoolViewModelDelegate: NSObjectProtocol {
     func reloadSelectTokenViewA()
     func reloadSelectTokenViewB()
-    func reloadMineLiquidityView()
+    func showMineHoldLiquidityView()
     func reloadLiquidityRateView()
     func showToast(tag: Int)
     func hideToast(tag: Int)
@@ -21,31 +21,33 @@ protocol AssetsPoolViewModelDelegate: NSObjectProtocol {
     func refreshBestInput()
     func refreshBestOutput()
     func refreshBestOutLiquidity()
+    func refreshSelectLiquidityView()
 }
 protocol AssetsPoolViewModelInterface  {
-    /// 付出Token
+    /// 资金池充入ModelA
     var tokenModelA: MarketSupportTokensDataModel? { get }
-    /// 付出Token
+    /// 资金池充入ModelB
     var tokenModelB: MarketSupportTokensDataModel? { get }
     /// 我的通证
     var mineLiquidityModel: MarketMineMainTokensDataModel? { get }
     /// 我的所有通证
-    var mineLiquiditysModel: [MarketMineMainTokensDataModel]? { get }
-    /// 流动性Model
+    var mineHoldLiquiditysModel: [MarketMineMainTokensDataModel]? { get }
+    /// 资金池中ModelA&ModelB相关信息
     var modelABLiquidityInfo: AssetsPoolsInfoDataModel? { get }
     /// 输入比例
     var bestInAmount: String? { get }
     /// 输出比例
     var bestOutAmount: String? { get }
-    /// 输出比例
+    /// 实时计算输出模型
     var bestOutLiquidity: AssetsPoolTransferOutInfoDataModel? { get }
 }
 class AssetsPoolViewModel: NSObject, AssetsPoolViewModelInterface {
     weak var delegate: AssetsPoolViewModelDelegate?
-
+    /// 资金池充入ModelA
     var tokenModelA: MarketSupportTokensDataModel? {
         return self.modelA
     }
+    /// 资金池充入ModelB
     var tokenModelB: MarketSupportTokensDataModel? {
         return self.modelB
     }
@@ -53,9 +55,11 @@ class AssetsPoolViewModel: NSObject, AssetsPoolViewModelInterface {
     var mineLiquidityModel: MarketMineMainTokensDataModel? {
         return self.mineLiquidity
     }
-    var mineLiquiditysModel: [MarketMineMainTokensDataModel]? {
+    /// 我的所有通证
+    var mineHoldLiquiditysModel: [MarketMineMainTokensDataModel]? {
         return self.mineLiquiditys
     }
+    /// 资金池中ModelA&ModelB相关信息
     var modelABLiquidityInfo: AssetsPoolsInfoDataModel? {
         return self.modelABLiquidity
     }
@@ -67,6 +71,7 @@ class AssetsPoolViewModel: NSObject, AssetsPoolViewModelInterface {
     var bestOutAmount: String? {
         return self.outputAmountString
     }
+    /// 实时计算输出模型
     var bestOutLiquidity: AssetsPoolTransferOutInfoDataModel? {
         return self.outLiquidity
     }
@@ -86,11 +91,14 @@ class AssetsPoolViewModel: NSObject, AssetsPoolViewModelInterface {
             }
         }
     }
-    var mineLiquidity: MarketMineMainTokensDataModel?
-    
+    private var mineLiquidity: MarketMineMainTokensDataModel? {
+        didSet {
+            self.delegate?.refreshSelectLiquidityView()
+        }
+    }
     private var mineLiquiditys: [MarketMineMainTokensDataModel]? {
         didSet {
-            self.delegate?.reloadMineLiquidityView()
+            self.delegate?.showMineHoldLiquidityView()
         }
     }
     private var modelABLiquidity: AssetsPoolsInfoDataModel? {
@@ -98,11 +106,8 @@ class AssetsPoolViewModel: NSObject, AssetsPoolViewModelInterface {
             self.delegate?.reloadLiquidityRateView()
         }
     }
-    /// 付出数量输入框内容
     private var inputAmountString: String?
-    /// 兑换数量输入框内容
     private var outputAmountString: String?
-    
     private var outLiquidity: AssetsPoolTransferOutInfoDataModel?
     /// 网络请求、数据模型
     lazy var dataModel: AssetsPoolModel = {
@@ -262,174 +267,15 @@ extension AssetsPoolViewModel {
     }
 
 }
-//extension AssetsPoolViewModel: UITextFieldDelegate {
-//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-//        guard let content = textField.text else {
-//            return true
-//        }
-//        let textLength = content.count + string.count - range.length
-//        if textField.tag == 10 {
-//            if textLength == 0 {
-//                tokenSelectViewA.inputAmountTextField.text = ""
-//            }
-//        } else {
-//            if textLength == 0 {
-//                outputAmountTextField.text = ""
-//            }
-//        }
-//        if content.contains(".") {
-//            let firstContent = content.split(separator: ".").first?.description ?? "0"
-//            if (textLength - firstContent.count) < 8 {
-//                return handleInputAmount(textField: textField, content: (content.isEmpty == true ? "0":content) + string)
-//            } else {
-//                return false
-//            }
-//        } else {
-//            if textLength <= ApplyTokenAmountLengthLimit {
-//                return handleInputAmount(textField: textField, content: (content.isEmpty == true ? "0":content) + string)
-//            } else {
-//                return false
-//            }
-//        }
-//    }
-//    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-//        if changeTypeButton.titleLabel?.text == localLanguage(keyString: localLanguage(keyString: "wallet_assets_pool_transfer_in_title")) {
-//            // 转入
-//            guard tokenSelectViewA.tokenButton.titleLabel?.text != localLanguage(keyString: "wallet_market_exchange_input_token_button_title") else {
-//                textField.resignFirstResponder()
-//                self.makeToast(localLanguage(keyString: "wallet_assets_pool_add_liquidity_unselect_first_deposit_token_content"),
-//                               position: .center)
-//                return false
-//            }
-//            guard outputTokenButton.titleLabel?.text != localLanguage(keyString: "wallet_market_exchange_output_token_button_title") else {
-//                textField.resignFirstResponder()
-//                self.makeToast(localLanguage(keyString: "wallet_assets_pool_add_liquidity_unselect_second_deposit_token_content"),
-//                               position: .center)
-//                return false
-//            }
-//
-//        } else {
-//            // 转出
-//            guard tokenSelectViewA.tokenButton.titleLabel?.text != localLanguage(keyString: "wallet_market_exchange_input_token_button_title") else {
-//                textField.resignFirstResponder()
-//                self.makeToast(localLanguage(keyString: "wallet_assets_pool_remove_liquidity_unselect_token"),
-//                               position: .center)
-//                return false
-//            }
-//        }
-//        return true
-//    }
-//    func textFieldDidChangeSelection(_ textField: UITextField) {
-//        if textField.tag == 10 {
-//            guard let model = liquidityInfoModel else {
-//                return
-//            }
-//            if self.changeTypeButton.titleLabel?.text == localLanguage(keyString: localLanguage(keyString: "wallet_assets_pool_transfer_in_title")) {
-//                // 资金池添加流动性
-//                guard let text = textField.text, text.isEmpty == false else {
-//                    self.tokenSelectViewA.inputAmountTextField.text = ""
-//                    self.outputAmountTextField.text = ""
-//                    return
-//                }
-//                self.viewState = .AssetsPoolTransferInBaseOnInputARequestRate
-//                let amount = NSDecimalNumber.init(string: text).multiplying(by: NSDecimalNumber.init(value: 1000000))
-//                let coinAValue = NSDecimalNumber.init(value: model.coina?.value ?? 0)
-//                let rate = amount.dividing(by: coinAValue)
-//                let amountB = getDecimalNumber(amount: NSDecimalNumber.init(value: model.coinb?.value ?? 0).multiplying(by: rate),
-//                                               scale: 6,
-//                                               unit: 1000000)
-//                outputAmountTextField.text = amountB.stringValue
-//                self.viewState = .Normal
-//            } else {
-//                // 资金池移除流动性
-//                guard let text = textField.text, text.isEmpty == false else {
-//                    self.outputCoinAAmountLabel.text = "---"
-//                    self.outputCoinBAmountLabel.text = "---"
-//                    return
-//                }
-//                self.viewState = .AssetsPoolTransferInBaseOnInputBRequestRate
-//                let totalToken = NSDecimalNumber.init(value: model.liquidity_total_supply ?? 0)
-//                let amount = NSDecimalNumber.init(string: text).multiplying(by: NSDecimalNumber.init(value: 1000000))
-//                let rate = amount.dividing(by: totalToken)
-//                let amountA = getDecimalNumber(amount: NSDecimalNumber.init(value: model.coina?.value ?? 0).multiplying(by: rate),
-//                                               scale: 6,
-//                                               unit: 1000000)
-//                outputCoinAAmountLabel.text = amountA.stringValue + (model.coina?.name ?? "---")
-//                let amountB = getDecimalNumber(amount: NSDecimalNumber.init(value: model.coinb?.value ?? 0).multiplying(by: rate),
-//                                               scale: 6,
-//                                               unit: 1000000)
-//                outputCoinBAmountLabel.text = amountB.stringValue + (model.coinb?.name ?? "---")
-//                self.viewState = .Normal
-//            }
-//        } else {
-//            guard outputTokenButton.titleLabel?.text != localLanguage(keyString: "wallet_market_exchange_output_token_button_title") else {
-//                return
-//            }
-//            guard autoCalculateMode == true else {
-//                return
-//            }
-//            guard let model = liquidityInfoModel else {
-//                return
-//            }
-//            if self.changeTypeButton.titleLabel?.text == localLanguage(keyString: localLanguage(keyString: "wallet_assets_pool_transfer_in_title")) {
-//                // 转入
-//                self.viewState = .AssetsPoolTransferInBaseOnInputBRequestRate
-//                guard let text = textField.text, text.isEmpty == false else {
-//                    self.tokenSelectViewA.inputAmountTextField.text = ""
-//                    self.outputAmountTextField.text = ""
-//                    return
-//                }
-//                self.viewState = .AssetsPoolTransferInBaseOnInputARequestRate
-//                let amount = NSDecimalNumber.init(string: text).multiplying(by: NSDecimalNumber.init(value: 1000000))
-//                let coinBValue = NSDecimalNumber.init(value: model.coinb?.value ?? 0)
-//                let rate = amount.dividing(by: coinBValue)
-//                let amountA = getDecimalNumber(amount: NSDecimalNumber.init(value: model.coina?.value ?? 0).multiplying(by: rate),
-//                                               scale: 6,
-//                                               unit: 1000000)
-//                tokenSelectViewA.inputAmountTextField.text = amountA.stringValue
-//                self.viewState = .Normal
-//            }
-//        }
-//    }
-//    func handleInputAmount(textField: UITextField, content: String) -> Bool {
-//        let amount = NSDecimalNumber.init(string: content).multiplying(by: NSDecimalNumber.init(value: 1000000)).int64Value
-//        if textField.tag == 10 {
-//            if self.changeTypeButton.titleLabel?.text == localLanguage(keyString: localLanguage(keyString: "wallet_assets_pool_transfer_in_title")) {
-//                if amount <= transferInInputTokenA?.amount ?? 0 {
-//                    return true
-//                } else {
-//                    let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: transferInInputTokenA?.amount ?? 0),
-//                                                  scale: 6,
-//                                                  unit: 1000000)
-//                    textField.text = amount.stringValue
-//                    return false
-//                }
-//            } else {
-//                if amount <= tokenModel?.token ?? 0 {
-//                    return true
-//                } else {
-//                    let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: tokenModel?.token ?? 0),
-//                                                  scale: 6,
-//                                                  unit: 1000000)
-//                    textField.text = amount.stringValue
-//                    return false
-//                }
-//            }
-//
-//        } else {
-//            if amount <= transferInInputTokenB?.amount ?? 0 {
-//                return true
-//            } else {
-//                let amount = getDecimalNumber(amount: NSDecimalNumber.init(value: transferInInputTokenB?.amount ?? 0),
-//                                              scale: 6,
-//                                              unit: 1000000)
-//                textField.text = amount.stringValue
-//                return false
-//            }
-//        }
-//    }
-//}
-
+// MARK: - 获取移除流动性通证
+extension AssetsPoolViewModel: DropperDelegate {
+    func DropperSelectedRow(_ path: IndexPath, contents: String) {
+        self.mineLiquidity = self.mineLiquiditys?[path.row]
+        if let moduleA = self.mineLiquidity?.coin_a?.module, moduleA.isEmpty == false, let moduleB = self.mineLiquidity?.coin_b?.module, moduleB.isEmpty == false {
+            self.getPoolLiquidity(coinA: moduleA, coinB: moduleB)
+        }
+    }
+}
 // MARK: - 获取资金池中个人流动性
 extension AssetsPoolViewModel {
     func requestMineLiquidity() {

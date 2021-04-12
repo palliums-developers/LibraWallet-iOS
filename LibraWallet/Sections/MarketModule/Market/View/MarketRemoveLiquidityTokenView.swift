@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Localize_Swift
 
 class MarketRemoveLiquidityTokenView: UIView {
 //    weak var delegate: MarketTokenSelectViewViewDelegate?
@@ -17,11 +18,14 @@ class MarketRemoveLiquidityTokenView: UIView {
         tokenBackgroundView.addSubview(titleLabel)
         tokenBackgroundView.addSubview(outputCoinAAmountLabel)
         tokenBackgroundView.addSubview(outputCoinBAmountLabel)
+        // 添加语言变换通知
+        NotificationCenter.default.addObserver(self, selector: #selector(setText), name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
         print("MarketRemoveLiquidityTokenView销毁了")
     }
     //MARK: - 布局
@@ -63,7 +67,7 @@ class MarketRemoveLiquidityTokenView: UIView {
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.init(hex: "333333")
         label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "wallet_market_assets_pool_input_amount_title")
+        label.text = localLanguage(keyString: "wallet_market_assets_pool_output_amount_title")
         return label
     }()
     lazy var outputCoinAAmountLabel: UILabel = {
@@ -106,5 +110,11 @@ extension MarketRemoveLiquidityTokenView {
         outputCoinAAmountLabel.text = "---"
         outputCoinBAmountLabel.text = "---"
         transferOutModel = nil
+    }
+}
+extension MarketRemoveLiquidityTokenView {
+    /// 语言切换
+    @objc func setText() {
+        titleLabel.text = localLanguage(keyString: "wallet_market_assets_pool_output_amount_title")
     }
 }

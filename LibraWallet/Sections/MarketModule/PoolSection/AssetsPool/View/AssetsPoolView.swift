@@ -12,7 +12,6 @@ class AssetsPoolView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.white
-        //        addSubview(headerBackground)
         addSubview(profitView)
         addSubview(headerView)
     }

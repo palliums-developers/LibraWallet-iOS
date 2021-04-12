@@ -8,12 +8,12 @@
 
 import UIKit
 import Localize_Swift
+
 protocol AssetsPoolViewHeaderViewDelegate: NSObjectProtocol {
     func addLiquidityConfirm()
     func removeLiquidityConfirm()
     func selectInputToken()
     func selectOutoutToken()
-    func changeTrasferInOut()
 }
 class AssetsPoolViewHeaderView: UIView {
     weak var delegate: AssetsPoolViewHeaderViewDelegate?
@@ -161,46 +161,14 @@ class AssetsPoolViewHeaderView: UIView {
         button.tag = 100
         return button
     }()
-    func stringToDouble(string: String?) -> Double {
-        guard let tempString = string, tempString.isEmpty == false else {
-            return 0.0
-        }
-        guard isPurnDouble(string: tempString) == true else {
-            return 0.0
-        }
-        return NSDecimalNumber.init(string: tempString).doubleValue
-    }
     @objc func buttonClick(button: UIButton) {
         if button.tag == 10 {
-            self.delegate?.changeTrasferInOut()
-            let dropper = Dropper.init(width: button.frame.size.width, height: 68, button: button)
-            dropper.items = [localLanguage(keyString: "wallet_assets_pool_transfer_in_title"),
-                             localLanguage(keyString: "wallet_assets_pool_transfer_out_title")]
-            dropper.cornerRadius = 8
-            dropper.theme = .black(UIColor.init(hex: "F1EEFB"))
-            dropper.cellTextFont = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
-            dropper.cellColor = UIColor.init(hex: "333333")
-            dropper.spacing = 12
-            dropper.delegate = self
-            dropper.isInvisableBackground = true
-            if self.changeTypeButton.titleLabel?.text == localLanguage(keyString: localLanguage(keyString: "wallet_assets_pool_transfer_in_title")) {
-                dropper.defaultSelectRow = 0
-            } else {
-                dropper.defaultSelectRow = 1
-            }
-            dropper.show(Dropper.Alignment.center, button: button)
-//            let alert = CustomDropper.init(datas: [localLanguage(keyString: "wallet_assets_pool_transfer_in_title"),
-//                                                   localLanguage(keyString: "wallet_assets_pool_transfer_out_title")],
-//                                           button: button) { (content, index) in
-//                print(content, index)
-//            }
-//            alert.show()
-        } else if button.tag == 30 {
+            self.changePoolType()
+        } else if button.tag == 100 {
             self.tokenSelectViewA.inputAmountTextField.resignFirstResponder()
             self.tokenSelectViewB.inputAmountTextField.resignFirstResponder()
-            self.delegate?.selectOutoutToken()
-        } else if button.tag == 100 {
             if self.changeTypeButton.titleLabel?.text == localLanguage(keyString: localLanguage(keyString: "wallet_assets_pool_transfer_in_title")) {
+                // 添加流动性
                 self.delegate?.addLiquidityConfirm()
             } else {
                 // 移除流动性
@@ -227,7 +195,91 @@ class AssetsPoolViewHeaderView: UIView {
         }
     }
     var addLiquidityMode: Bool = true
-    /// 语言切换
+}
+extension AssetsPoolViewHeaderView: DropperDelegate {
+    func changePoolType() {
+        let dropper = Dropper.init(width: self.changeTypeButton.frame.size.width, height: 68, button: self.changeTypeButton)
+        dropper.items = [localLanguage(keyString: "wallet_assets_pool_transfer_in_title"),
+                         localLanguage(keyString: "wallet_assets_pool_transfer_out_title")]
+        dropper.cornerRadius = 8
+        dropper.theme = .black(UIColor.init(hex: "F1EEFB"))
+        dropper.cellTextFont = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
+        dropper.cellColor = UIColor.init(hex: "333333")
+        dropper.spacing = 12
+        dropper.delegate = self
+        dropper.isInvisableBackground = true
+        if self.changeTypeButton.titleLabel?.text == localLanguage(keyString: localLanguage(keyString: "wallet_assets_pool_transfer_in_title")) {
+            dropper.defaultSelectRow = 0
+        } else {
+            dropper.defaultSelectRow = 1
+        }
+        dropper.show(Dropper.Alignment.center, button: self.changeTypeButton)
+    }
+    func DropperSelectedRow(_ path: IndexPath, contents: String) {
+        print(contents)
+        if contents == localLanguage(keyString: localLanguage(keyString: "wallet_assets_pool_transfer_in_title")) {
+            // 转入
+            self.initialAddLiquidityView()
+        } else {
+            // 转出
+            self.initialRemoveLiquidityView()
+        }
+        changeTypeButton.snp.remakeConstraints { (make) in
+            make.left.equalTo(tokenSelectViewA.snp.left).offset(5)
+            make.bottom.equalTo(tokenSelectViewA.snp.top).offset(-6)
+            let width = libraWalletTool.ga_widthForComment(content: changeTypeButton.titleLabel?.text ?? "", fontSize: 12, height: 20) + 8 + 19
+            make.size.equalTo(CGSize.init(width: width, height: 20))
+        }
+        // 调整位置
+        changeTypeButton.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 9, height: 5.5))
+    }
+    private func initialAddLiquidityView() {
+        self.addLiquidityMode = true
+        self.tokenSelectViewB.alpha = 1
+        self.tokenRemoveLiquidityView.alpha = 0
+        changeTypeButton.setTitle(localLanguage(keyString: "wallet_assets_pool_transfer_in_title"), for: UIControl.State.normal)
+        // 调整位置
+        exchangeRateLabel.snp.remakeConstraints { (make) in
+            make.top.equalTo(tokenSelectViewB.snp.bottom).offset(6)
+        }
+        confirmButton.snp.remakeConstraints { (make) in
+            make.top.equalTo(tokenSelectViewB.snp.bottom).offset(66)
+            make.size.equalTo(CGSize.init(width: 238, height: 40))
+            make.centerX.equalTo(self)
+        }
+        // 重置页面
+        self.tokenSelectViewA.initialView()
+        self.tokenSelectViewB.initialView()
+    }
+    private func initialRemoveLiquidityView() {
+        self.addLiquidityMode = false
+        self.tokenSelectViewB.alpha = 0
+        self.tokenRemoveLiquidityView.alpha = 1
+        changeTypeButton.setTitle(localLanguage(keyString: "wallet_assets_pool_transfer_out_title"), for: UIControl.State.normal)
+        exchangeRateLabel.snp.remakeConstraints { (make) in
+            make.top.equalTo(tokenSelectViewB.snp.bottom).offset(6 + 15)
+        }
+        confirmButton.snp.remakeConstraints { (make) in
+            make.top.equalTo(tokenSelectViewB.snp.bottom).offset(66 + 15)
+            make.size.equalTo(CGSize.init(width: 238, height: 40))
+            make.centerX.equalTo(self)
+        }
+        // 重置页面
+        self.tokenSelectViewA.initialView()
+        self.tokenRemoveLiquidityView.initialView()
+    }
+}
+extension AssetsPoolViewHeaderView: MarketTokenSelectViewViewDelegate {
+    func selectToken(view: UIView) {
+        if view.tag == 10 {
+            self.delegate?.selectInputToken()
+        } else if view.tag == 20 {
+            self.delegate?.selectOutoutToken()
+        }
+    }
+}
+// MARK: - 语言切换
+extension AssetsPoolViewHeaderView {
     @objc func setText() {
         //  刷新类型切换大小
         if addLiquidityMode == true {
@@ -294,71 +346,6 @@ class AssetsPoolViewHeaderView: UIView {
                                                            raiseOnDivideByZero: false)
             let rate = coinBAmount.dividing(by: coinAAmount, withBehavior: numberConfig)
             exchangeRateLabel.text = localLanguage(keyString: "wallet_market_assets_pool_exchange_rate_title") + "1:\(rate.stringValue)"
-        }
-
-    }
-}
-extension AssetsPoolViewHeaderView: DropperDelegate {
-    func DropperSelectedRow(_ path: IndexPath, contents: String) {
-        print(contents)
-        if contents == localLanguage(keyString: localLanguage(keyString: "wallet_assets_pool_transfer_in_title")) {
-            // 转入
-            self.initialAddLiquidityView()
-        } else {
-            // 转出
-            self.initialRemoveLiquidityView()
-        }
-        changeTypeButton.snp.remakeConstraints { (make) in
-            make.left.equalTo(tokenSelectViewA.snp.left).offset(5)
-            make.bottom.equalTo(tokenSelectViewA.snp.top).offset(-6)
-            let width = libraWalletTool.ga_widthForComment(content: changeTypeButton.titleLabel?.text ?? "", fontSize: 12, height: 20) + 8 + 19
-            make.size.equalTo(CGSize.init(width: width, height: 20))
-        }
-        // 调整位置
-        changeTypeButton.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 9, height: 5.5))
-    }
-    func initialAddLiquidityView() {
-        self.addLiquidityMode = true
-        self.tokenSelectViewB.alpha = 1
-        self.tokenRemoveLiquidityView.alpha = 0
-        changeTypeButton.setTitle(localLanguage(keyString: "wallet_assets_pool_transfer_in_title"), for: UIControl.State.normal)
-        // 调整位置
-        exchangeRateLabel.snp.remakeConstraints { (make) in
-            make.top.equalTo(tokenSelectViewB.snp.bottom).offset(6)
-        }
-        confirmButton.snp.remakeConstraints { (make) in
-            make.top.equalTo(tokenSelectViewB.snp.bottom).offset(66)
-            make.size.equalTo(CGSize.init(width: 238, height: 40))
-            make.centerX.equalTo(self)
-        }
-        // 重置页面
-        self.tokenSelectViewA.initialView()
-        self.tokenSelectViewB.initialView()
-    }
-    func initialRemoveLiquidityView() {
-        self.addLiquidityMode = false
-        self.tokenSelectViewB.alpha = 0
-        self.tokenRemoveLiquidityView.alpha = 1
-        changeTypeButton.setTitle(localLanguage(keyString: "wallet_assets_pool_transfer_out_title"), for: UIControl.State.normal)
-        exchangeRateLabel.snp.remakeConstraints { (make) in
-            make.top.equalTo(tokenSelectViewB.snp.bottom).offset(6 + 15)
-        }
-        confirmButton.snp.remakeConstraints { (make) in
-            make.top.equalTo(tokenSelectViewB.snp.bottom).offset(66 + 15)
-            make.size.equalTo(CGSize.init(width: 238, height: 40))
-            make.centerX.equalTo(self)
-        }
-        // 重置页面
-        self.tokenSelectViewA.initialView()
-        self.tokenRemoveLiquidityView.initialView()
-    }
-}
-extension AssetsPoolViewHeaderView: MarketTokenSelectViewViewDelegate {
-    func selectToken(view: UIView) {
-        if view.tag == 10 {
-            self.delegate?.selectInputToken()
-        } else if view.tag == 20 {
-            self.delegate?.selectOutoutToken()
         }
     }
 }

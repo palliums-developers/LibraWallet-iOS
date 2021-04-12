@@ -96,6 +96,5 @@ class AssetsPoolProfitHeaderView: UIView {
     @objc func setText() {
         titleLabel.text = localLanguage(keyString: "wallet_market_assets_pool_yield_farming_title")
         describeLabel.text = localLanguage(keyString: "wallet_market_assets_pool_yield_farming_describe") + "---"
-
     }
 }
