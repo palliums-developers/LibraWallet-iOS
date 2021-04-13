@@ -340,6 +340,8 @@ wallet_wallet_connect_bank_deposit_title = "网页 ViolasPay 存款";
 wallet_wallet_connect_bank_withdraw_title = "网页 ViolasPay 取款";
 wallet_wallet_connect_bank_loan_title = "网页 ViolasPay 借款";
 wallet_wallet_connect_bank_repayment_title = "网页 ViolasPay 还款";
+wallet_wallet_connect_bank_excitation_title = "网页 ViolasPay 提取数字银行激励";
+wallet_wallet_connect_market_excitation_title = "网页 ViolasPay 提取交易所激励";
 wallet_wallet_connect_transfer_receive_address_title = "转账地址";
 wallet_wallet_connect_transfer_amount_title = "金额";
 wallet_wallet_connect_publish_module_title = "注册币种";
@@ -353,6 +355,9 @@ wallet_wallet_connect_sign_button_title = "确认签名";
 wallet_wallet_connect_publish_confirm_button_title = "确认注册";
 wallet_scan_login_cancel_button_title = "取消";
 wallet_wallet_connect_logout_button_title = "退出网页钱包";
+wallet_wallet_connect_bank_withdraw_total_title = "全部提取";
+wallet_wallet_connect_bank_repayment_total_title = "全部还款";
+wallet_wallet_connect_bank_market_withdraw_excitation_button_title = "确认";
 // 提示
 wallet_connect_connect_time_invalid_title = "连接失败，请稍后重试";
 wallet_connect_disconnect_success_title = "退出成功";
@@ -731,6 +736,9 @@ wallet_profit_pool_type_repayment_title = "还款";
 wallet_profit_pool_type_profit_title = "一键提取";
 wallet_profit_pool_amount_title = "提取数量";
 wallet_profit_pool_date_title = "提取时间";
+wallet_profit_bank_market_withdraw_excitation_title = "我要提";
+wallet_profit_bank_withdraw_excitation_content = "资金池全部挖矿奖励";
+wallet_profit_market_withdraw_excitation_content = "数字银行全部挖矿奖励";
 
 /************* 消息通知中心 *******************/
 // 标题
@@ -763,6 +771,7 @@ wallet_service_legal_loaded_error_title = "加载失败";
 wallet_service_legal_loaded_error_cancel_button_title = "确定";
 wallet_unactivated_alert_content_prifix = "您的";
 wallet_unactivated_alert_content = "钱包尚未激活，请激活后尝试添加资产";
+wallet_transaction_submit_success_content = "交易提交成功";
 
 /************* App错误（通用） *******************/
 // 请求遇到错误

@@ -508,6 +508,58 @@ class SendTransactionHandler: RequestHandler {
                             }
                         }
                         appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
+                    case ViolasManager.getLocalMoveCode(bundle: "MarketContracts", contract: "withdraw_mine_reward"):
+                        print("Wallet Connect 交易所提取激励")
+                        let vc = ScanViolasExcitationViewController()
+                        vc.submitTransaction = true
+                        vc.model = model
+                        vc.reject = {
+                            WalletConnectManager.shared.walletConnectServer.send(.reject(request))
+                        }
+                        vc.confirm = { (result) in
+                            switch result {
+                            case let .success(signature):
+                                do {
+                                    WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
+                                print(signature)
+                            case let .failure(error):
+                                do {
+                                    WalletConnectManager.shared.walletConnectServer.send(try Response.init(url: request.url, errorCode: error.code, message: error.domain, id: request.id!))
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
+                            }
+                        }
+                        appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
+                    case ViolasManager.getLocalMoveCode(bundle: "BankContracts", contract: "claim_incentive"):
+                        print("Wallet Connect 数字银行提取激励")
+                        let vc = ScanViolasExcitationViewController()
+                        vc.submitTransaction = true
+                        vc.model = model
+                        vc.reject = {
+                            WalletConnectManager.shared.walletConnectServer.send(.reject(request))
+                        }
+                        vc.confirm = { (result) in
+                            switch result {
+                            case let .success(signature):
+                                do {
+                                    WalletConnectManager.shared.walletConnectServer.send(try Response(url: request.url, value: signature, id: request.id!))
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
+                                print(signature)
+                            case let .failure(error):
+                                do {
+                                    WalletConnectManager.shared.walletConnectServer.send(try Response.init(url: request.url, errorCode: error.code, message: error.domain, id: request.id!))
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
+                            }
+                        }
+                        appDelegate.window?.rootViewController?.present(vc, animated: true, completion: nil)
                     default:
                         WalletConnectManager.shared.walletConnectServer.send(.invalid(request))
                     }

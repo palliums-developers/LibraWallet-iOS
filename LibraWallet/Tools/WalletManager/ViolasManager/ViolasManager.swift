@@ -902,3 +902,39 @@ extension ViolasManager {
         return (model, resultLastData)
     }
 }
+//extension ViolasManager {
+//    public static func derializeViolasTransaction(tx: String) {
+//        let txData = Data.init(Array<UInt8>(hex: tx))
+//        let (sendAddressData, lastData0) = readData(data: txData, count: 16)
+//        print("sendAddress = \(sendAddressData.toHexString())")
+//        let (sequenceNumberData, lastData1) = readData(data: lastData0, count: 8)
+//        let tempSe = sequenceNumberData.bytes.reversed().map {
+//            $0
+//        }
+//        let sequenceNumber = BigUInt.init(Data.init(bytes: tempSe, count: 8))
+//        print("sequenceNumber = \(sequenceNumber)")
+//        let (payloadType, lastData2) = readData(data: lastData1, count: 1)
+//        print("payloadType = \(payloadType.toHexString())")
+//        let (codeLength, lastData3) = getCount(data: lastData2)
+//        print("codeLength = \(codeLength)")
+//        let (codeData, lastData4) = readData(data: lastData3, count: codeLength)
+//        print("codeData = \(codeData.toHexString())")
+////        let (typeTagCount , lastData5) = getCount(data: lastData4)
+////        print("typeTagCount = \(typeTagCount)")
+////        let (lastData6, module) = readTypeTags(data: lastData5, typeTagCount: typeTagCount)
+////        let (argumentCount, lastData7) = getCount(data: lastData6)
+////        print("argumentCount = \(argumentCount)")
+////        let (model, lastData8) = readArgument(data: lastData7, argumentCount: argumentCount)
+////        ViolasTransactionPayload.init(payload: ViolasTransactionPayloadType)
+////        print(lastData8.toHexString())
+//        print("success")
+////        let raw = ViolasRawTransaction.init(senderAddres: sendAddressData.toHexString(),
+////                                            sequenceNumber: NSDecimalNumber.init(string: sequenceNumber.description).uint64Value,
+////                                            maxGasAmount: <#T##UInt64#>,
+////                                            gasUnitPrice: <#T##UInt64#>,
+////                                            expirationTime: <#T##UInt64#>,
+////                                            payload: <#T##ViolasTransactionPayload#>,
+////                                            module: <#T##String#>,
+////                                            chainID: <#T##Int#>)
+//    }
+//}

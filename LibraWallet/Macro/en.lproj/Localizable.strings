@@ -340,6 +340,8 @@ wallet_wallet_connect_bank_deposit_title = "Web ViolasPay Deposit";
 wallet_wallet_connect_bank_withdraw_title = "Web ViolasPay Withdraw";
 wallet_wallet_connect_bank_loan_title = "Web ViolasPay Loan";
 wallet_wallet_connect_bank_repayment_title = "Web ViolasPay Repayment";
+wallet_wallet_connect_bank_excitation_title = "Web ViolasPay Withdraw Bank Excitation";
+wallet_wallet_connect_market_excitation_title = "Web ViolasPay Withdraw Market Excitation";
 wallet_wallet_connect_transfer_receive_address_title = "Receive Address";
 wallet_wallet_connect_transfer_amount_title = "Amount";
 wallet_wallet_connect_publish_module_title = "Token";
@@ -353,6 +355,9 @@ wallet_wallet_connect_sign_button_title = "Confirm Signature";
 wallet_wallet_connect_publish_confirm_button_title = "Confirm Publish";
 wallet_scan_login_cancel_button_title = "Cancel";
 wallet_wallet_connect_logout_button_title = "Logout Web ViolasPay";
+wallet_wallet_connect_bank_withdraw_total_title = "Total withdraw";
+wallet_wallet_connect_bank_repayment_total_title = "Total repayment";
+wallet_wallet_connect_bank_market_withdraw_excitation_button_title = "Confirm";
 // 提示
 wallet_connect_connect_time_invalid_title = "Connection failed, please try again later";
 wallet_connect_disconnect_success_title = "Logout Successful";
@@ -657,7 +662,7 @@ wallet_bank_deposit_submit_failed = "Transaction Submitted Failed";
 wallet_bank_loan_navigationbar_title = "Borrow";
 // 内容
 wallet_bank_loan_button_title = "Borrow";
-wallet_bank_loan_title = "To borrow";
+wallet_bank_loan_title = "To Loan";
 wallet_bank_loan_balance_title = "Lending Quota：";
 wallet_bank_loan_year_rate_title = "Borrowing rate";
 wallet_bank_loan_pledge_rate_title = "Pledge Rate";
@@ -731,6 +736,9 @@ wallet_profit_pool_type_repayment_title = "Repayment";
 wallet_profit_pool_type_profit_title = "Extract";
 wallet_profit_pool_amount_title = "Withdraw Amount";
 wallet_profit_pool_date_title = "Withdraw Date";
+wallet_profit_bank_market_withdraw_excitation_title = "Amount";
+wallet_profit_bank_withdraw_excitation_content = "Total";
+wallet_profit_market_withdraw_excitation_content = "Total";
 
 /************* 消息通知中心 *******************/
 // 标题
@@ -763,6 +771,7 @@ wallet_service_legal_loaded_error_title = "Load Failed";
 wallet_service_legal_loaded_error_cancel_button_title = "Confirm";
 wallet_unactivated_alert_content_prifix = "Your ";
 wallet_unactivated_alert_content = " wallet has not been activated, please try to add assets after activation";
+wallet_transaction_submit_success_content = "Transaction Submitted";
 
 /************* App错误（通用） *******************/
 // 请求遇到错误
