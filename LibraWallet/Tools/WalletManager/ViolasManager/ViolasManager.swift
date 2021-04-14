@@ -902,39 +902,149 @@ extension ViolasManager {
         return (model, resultLastData)
     }
 }
-//extension ViolasManager {
-//    public static func derializeViolasTransaction(tx: String) {
-//        let txData = Data.init(Array<UInt8>(hex: tx))
-//        let (sendAddressData, lastData0) = readData(data: txData, count: 16)
-//        print("sendAddress = \(sendAddressData.toHexString())")
-//        let (sequenceNumberData, lastData1) = readData(data: lastData0, count: 8)
-//        let tempSe = sequenceNumberData.bytes.reversed().map {
-//            $0
+extension ViolasManager {
+    public static func derializeViolasTransaction(tx: String) {
+        let txData = Data.init(Array<UInt8>(hex: tx))
+        let (sendAddressData, lastData0) = readData(data: txData, count: 16)
+        print("sendAddress = \(sendAddressData.toHexString())")
+        let (sequenceNumberData, lastData1) = readData(data: lastData0, count: 8)
+        let tempSe = sequenceNumberData.bytes.reversed().map {
+            $0
+        }
+        let sequenceNumber = BigUInt.init(Data.init(bytes: tempSe, count: 8))
+        print("sequenceNumber = \(sequenceNumber)")
+        let (payloadType, lastData2) = readData(data: lastData1, count: 1)
+        print("payloadType = \(payloadType.toHexString())")
+
+        let (codeLength, lastData3) = getCount(data: lastData2)
+        print("codeLength = \(codeLength)")
+        let (codeData, lastData4) = readData(data: lastData3, count: codeLength)
+        print("codeData = \(codeData.toHexString())")
+//        let (typeTagCount , lastData5) = getCount(data: lastData4)
+//        print("typeTagCount = \(typeTagCount)")
+//        let (lastData6, module) = readTypeTags(data: lastData5, typeTagCount: typeTagCount)
+//        let (argumentCount, lastData7) = getCount(data: lastData6)
+//        print("argumentCount = \(argumentCount)")
+//        let (model, lastData8) = readArgument(data: lastData7, argumentCount: argumentCount)
+//        ViolasTransactionPayload.init(payload: ViolasTransactionPayloadType)
+//        print(lastData8.toHexString())
+        print("success")
+//        let raw = ViolasRawTransaction.init(senderAddres: sendAddressData.toHexString(),
+//                                            sequenceNumber: NSDecimalNumber.init(string: sequenceNumber.description).uint64Value,
+//                                            maxGasAmount: <#T##UInt64#>,
+//                                            gasUnitPrice: <#T##UInt64#>,
+//                                            expirationTime: <#T##UInt64#>,
+//                                            payload: <#T##ViolasTransactionPayload#>,
+//                                            module: <#T##String#>,
+//                                            chainID: <#T##Int#>)
+    }
+//    func derializePayload(data: Data) -> (ViolasTransactionPayload, Data) {
+//        let (payloadType, lastData0) = ViolasManager.readData(data: data, count: 1)
+//        switch payloadType.toHexString() {
+//        case "00":
+//            let (writeSetType, lastData1) = ViolasManager.readData(data: lastData0, count: 1)
+//            if writeSetType.toHexString() == "00" {
+//                // direct
+//                let (accessPathCount, lastData11) = ViolasManager.getCount(data: lastData1)
+//                var paths = [ViolasAccessPath]()
+//                var lastData12 = lastData11
+//                for _ in 0..<accessPathCount {
+//                    let (address, lastData111) = ViolasManager.readData(data: lastData12, count: 16)
+//                    let (pathCount, lastData112) = ViolasManager.getCount(data: lastData111)
+//                    let (path, lastData113) = ViolasManager.readData(data: lastData112, count: pathCount)
+//                    let (writeOpType, lastData114) = ViolasManager.readData(data: lastData113, count: 1)
+//                    if writeOpType.toHexString() == "00" {
+//                        // Deletion
+//                        let accessPath =  ViolasAccessPath.init(address: address.toHexString(),
+//                                                                path: path.toHexString(),
+//                                                                writeOp: ViolasWriteOp.Deletion)
+//                        paths.append(accessPath)
+//                        lastData12 = lastData114
+//                    } else if writeOpType.toHexString() == "01" {
+//                        // Value
+//                        let (valueCount, lastData115) = ViolasManager.getCount(data: lastData114)
+//                        let (value, lastData116) = ViolasManager.readData(data: lastData115, count: valueCount)
+//                        let accessPath =  ViolasAccessPath.init(address: address.toHexString(),
+//                                                                path: path.toHexString(),
+//                                                                writeOp: ViolasWriteOp.Value(value))
+//                        paths.append(accessPath)
+//                        lastData12 = lastData116
+//                    } else {
+//                        print("报错")
+//                    }
+//                }
+//                let (eventCount, lastData13) = ViolasManager.getCount(data: lastData12)
+//                var contractEvents = [ViolasContractEvent]()
+//                for _ in 0..<eventCount {
+////                    let (key, lastData131) = ViolasManager.readData(data: lastData13, count: 24)
+////                    let (sequenceNumberData, lastData132) = ViolasManager.readData(data: lastData131, count: 8)
+////                    let tempSe = sequenceNumberData.bytes.reversed().map {
+////                        $0
+////                    }
+////                    let sequenceNumber = BigUInt.init(Data.init(bytes: tempSe, count: 8))
+////                    ViolasContractEvent.init(key: key.toHexString(),
+////                                             sequenceNumber: NSDecimalNumber.init(string: sequenceNumber.description).uint64Value,
+////                                             typeTag: ViolasTypeTag.init(typeTag: ViolasTypeTags.Address("")),
+////                                             eventData: <#T##String#>)
+//                }
+//
+//                let payload = ViolasTransactionPayload.init(payload: ViolasTransactionPayloadType.writeSet(ViolasTransactionWriteSetPayload.init(code: ViolasWriteSetPayloadCode.direct(ViolasWriteSet.init(accessPaths: paths), contractEvents))))
+//                return (payload, lastData13)
+//            } else if writeSetType.toHexString() == "01" {
+//                // script
+////                let payload = ViolasTransactionPayload.init(payload: ViolasTransactionPayloadType.writeSet(ViolasTransactionWriteSetPayload.init(code: ViolasWriteSetPayloadCode.script("", ViolasTransactionScriptPayload.init(code: code, typeTags: T##[ViolasTypeTag](), argruments: T##[ViolasTransactionArgument])))))
+//
+//            }
+//        case "01":
+//            let (codeCount, lastData01) = ViolasManager.getCount(data: lastData0)
+//            let (code, lastData02) = ViolasManager.readData(data: lastData01, count: codeCount)
+//            let (typeTagCount, lastData03) = ViolasManager.getCount(data: lastData02)
+//            for _ in 0..<typeTagCount {
+//                let (typeTagType, lastData04) = ViolasManager.readData(data: lastData03, count: 1)
+//                switch typeTagType.toHexString() {
+//                case "00":
+//                    let (bool, lastData040) = ViolasManager.readData(data: lastData04, count: 1)
+//                case "01":
+//                    let (u8, lastData040) = ViolasManager.readData(data: lastData04, count: 1)
+//                case "02":
+//                    let (u64, lastData040) = ViolasManager.readData(data: lastData04, count: 1)
+//                case "03":
+//                    let (u128, lastData040) = ViolasManager.readData(data: lastData04, count: 16)
+//                case "04":
+//                    #warning("待验证")
+//                    let (signer, lastData040) = ViolasManager.readData(data: lastData04, count: 16)
+//                case "05":
+//                    #warning("待验证")
+//                    let (vectorCount, lastData040) = ViolasManager.getCount(data: lastData04)
+//                    var vectors = []
+//                    for _ in 0..<vectorCount {
+//                        let (dataCount, lastData041) = ViolasManager.readData(data: lastData040, count: 1)
+//
+//                    }
+//                case "06":
+//                    #warning("待验证")
+//                    let data = Data.init(Array<UInt8>(hex: value))
+//                    result += DiemUtils.getLengthData(length: UInt64(data.bytes.count), appendBytesCount: 1)
+//                    result += data
+//                case "07":
+//                    result += Data.init(Array<UInt8>(hex: value.address))
+//                    //
+//                    result += DiemUtils.uleb128Format(length: value.module.data(using: String.Encoding.utf8)!.bytes.count)
+//                    result += value.module.data(using: String.Encoding.utf8)!
+//                    //
+//                    result += DiemUtils.uleb128Format(length: value.name.data(using: String.Encoding.utf8)!.bytes.count)
+//                    result += value.name.data(using: String.Encoding.utf8)!
+//                    // 追加argument数量
+//                    result += DiemUtils.uleb128Format(length: value.typeParams.count)
+//                }
+//            }
+//            ViolasTransactionPayloadType.script(ViolasTransactionScriptPayload.init(code: code,
+//                                                                                      typeTags: <#T##[ViolasTypeTag]#>,
+//                                                                                      argruments: <#T##[ViolasTransactionArgument]#>))
+//        case "02":
+//            ViolasTransactionPayloadType.module(ViolasTransactionModulePayload.init(code: Data()))
+//        default:
+//            print("不支持")
 //        }
-//        let sequenceNumber = BigUInt.init(Data.init(bytes: tempSe, count: 8))
-//        print("sequenceNumber = \(sequenceNumber)")
-//        let (payloadType, lastData2) = readData(data: lastData1, count: 1)
-//        print("payloadType = \(payloadType.toHexString())")
-//        let (codeLength, lastData3) = getCount(data: lastData2)
-//        print("codeLength = \(codeLength)")
-//        let (codeData, lastData4) = readData(data: lastData3, count: codeLength)
-//        print("codeData = \(codeData.toHexString())")
-////        let (typeTagCount , lastData5) = getCount(data: lastData4)
-////        print("typeTagCount = \(typeTagCount)")
-////        let (lastData6, module) = readTypeTags(data: lastData5, typeTagCount: typeTagCount)
-////        let (argumentCount, lastData7) = getCount(data: lastData6)
-////        print("argumentCount = \(argumentCount)")
-////        let (model, lastData8) = readArgument(data: lastData7, argumentCount: argumentCount)
-////        ViolasTransactionPayload.init(payload: ViolasTransactionPayloadType)
-////        print(lastData8.toHexString())
-//        print("success")
-////        let raw = ViolasRawTransaction.init(senderAddres: sendAddressData.toHexString(),
-////                                            sequenceNumber: NSDecimalNumber.init(string: sequenceNumber.description).uint64Value,
-////                                            maxGasAmount: <#T##UInt64#>,
-////                                            gasUnitPrice: <#T##UInt64#>,
-////                                            expirationTime: <#T##UInt64#>,
-////                                            payload: <#T##ViolasTransactionPayload#>,
-////                                            module: <#T##String#>,
-////                                            chainID: <#T##Int#>)
 //    }
-//}
+}
