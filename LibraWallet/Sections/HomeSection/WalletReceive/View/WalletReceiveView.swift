@@ -89,7 +89,7 @@ class WalletReceiveView: UIView {
     }()
     @objc func buttonClick(button: UIButton) {
         UIPasteboard.general.string = addressLabel.text
-        self.makeToast(localLanguage(keyString: "wallet_address_copy_success_title"),
+        self.makeToast(localLanguage(keyString: "wallet_copy_address_success_title"),
                        position: .center)
     }
     var token: Token? {
