@@ -159,7 +159,7 @@ class TransactionDetailView: UIView {
                 return
             }
             transactionDateLabel.text = timestampToDateString(timestamp: model.expiration_time ?? 0, dateFormat: "yyyy-MM-dd HH:mm:ss")
-            if violasTransaction?.status == "Executed" {
+            if model.status == "Executed" {
                 switch model.type {
                 case "ADD_CURRENCY_TO_ACCOUNT":
                     //ADD_CURRENCY_TO_ACCOUNT
@@ -329,168 +329,163 @@ class TransactionDetailView: UIView {
                 return
             }
             transactionDateLabel.text = timestampToDateString(timestamp: model.expiration_time ?? 0, dateFormat: "yyyy-MM-dd HH:mm:ss")
-            if libraTransaction?.status == "Executed" {
-                switch model.type {
-                case 0:
-                    //ADD_CURRENCY_TO_ACCOUNT
-                    print("0")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_publish_success_title")
-                case 1:
-                    //ADD_VALIDATOR
-                    print("1")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
-                case 2:
-                    //BURN
-                    print("2")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
-                case 3:
-                    //BURN_TXN_FEES
-                    print("3")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
-                case 4:
-                    //CANCEL_BURN
-                    print("4")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
-                case 5:
-                    //CREATE_CHILD_VASP_ACCOUNT
-                    print("5")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
-                case 6:
-                    //CREATE_DESIGNATED_DEALER
-                    print("6")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
-                case 7:
-                    //CREATE_PARENT_VASP_ACCOUNT
-                    print("7")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
-                case 8:
-                    //CREATE_VALIDATOR_ACCOUNT
-                    print("8")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
-                case 9:
-                    //EMPTY_SCRIPT
-                    print("9")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
-                case 10:
-                    //FREEZE_ACCOUNT
-                    print("10")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
-                case 11:
-                    // MINT_LBR
-                    print("11")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_mint_authority_success_title")
-                case 12:
-                    //MINT_LBR_TO_ADDRESS
-                    print("12")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_mint_authority_success_title")
-                case 13:
-                    //MINT
-                    print("13")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_mint_authority_success_title")
-                case 14:
-                    //MODIFY_PUBLISHING_OPTION
-                    print("14")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
-                case 15:
-                    //PEER_TO_PEER_WITH_METADATA
-                    print("15")
-                    if model.transaction_type == 0 {
-                        // 转账
-                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_transfer_success_title")
-                    } else {
-                        // 收款
-                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_receive_success_title")
+            if model.status == "Executed" {
+                if model.status == "Executed" {
+                    switch model.type {
+                    case "ADD_CURRENCY_TO_ACCOUNT":
+                        //ADD_CURRENCY_TO_ACCOUNT
+                        print("0")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_publish_success_title")
+                    case "ADD_VALIDATOR":
+                        //ADD_VALIDATOR
+                        print("1")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
+                    case "BURN":
+                        //BURN
+                        print("2")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
+                    case "BURN_TXN_FEES":
+                        //BURN_TXN_FEES
+                        print("3")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
+                    case "CANCEL_BURN":
+                        //CANCEL_BURN
+                        print("4")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
+                    case "CREATE_CHILD_VASP_ACCOUNT":
+                        //CREATE_CHILD_VASP_ACCOUNT
+                        print("5")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
+                    case "CREATE_DESIGNATED_DEALER":
+                        //CREATE_DESIGNATED_DEALER
+                        print("6")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
+                    case "CREATE_PARENT_VASP_ACCOUNT":
+                        //CREATE_PARENT_VASP_ACCOUNT
+                        print("7")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
+                    case "CREATE_VALIDATOR_ACCOUNT":
+                        //CREATE_VALIDATOR_ACCOUNT
+                        print("8")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
+                    case "EMPTY_SCRIPT":
+                        //EMPTY_SCRIPT
+                        print("9")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
+                    case "FREEZE_ACCOUNT":
+                        //FREEZE_ACCOUNT
+                        print("10")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
+                    case "MINT":
+                        //MINT
+                        print("13")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_mint_authority_success_title")
+                    case "MODIFY_PUBLISHING_OPTION":
+                        //MODIFY_PUBLISHING_OPTION
+                        print("14")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
+                    case "PEER_TO_PEER_WITH_METADATA":
+                        //PEER_TO_PEER_WITH_METADATA
+                        print("15")
+                        if model.transaction_type == 0 {
+                            // 转账
+                            transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_transfer_success_title")
+                        } else {
+                            // 收款
+                            transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_receive_success_title")
+                        }
+                    case "PREBURN":
+                        //PREBURN
+                        print("16")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
+                    case "PUBLISH_SHARED_ED25519_PUBLIC_KEY":
+                        //PUBLISH_SHARED_ED25519_PUBLIC_KEY
+                        print("17")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
+                    case "REGISTER_PREBURNER":
+                        //REGISTER_PREBURNER
+                        print("18")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
+                    case "REGISTER_VALIDATOR":
+                        //REGISTER_VALIDATOR
+                        print("19")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
+                    case "REMOVE_ASSOCIATION_PRIVILEGE":
+                        //REMOVE_ASSOCIATION_PRIVILEGE
+                        print("20")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
+                    case "REMOVE_VALIDATOR":
+                        //REMOVE_VALIDATOR
+                        print("21")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
+                    case "ROTATE_AUTHENTICATION_KEY":
+                        //ROTATE_AUTHENTICATION_KEY
+                        print("22")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
+                    case "ROTATE_AUTHENTICATION_KEY_WITH_NONCE":
+                        //ROTATE_AUTHENTICATION_KEY_WITH_NONCE
+                        print("23")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
+                    case "ROTATE_BASE_URL":
+                        //ROTATE_BASE_URL
+                        print("24")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
+                    case "ROTATE_COMPLIANCE_PUBLIC_KEY":
+                        //ROTATE_COMPLIANCE_PUBLIC_KEY
+                        print("25")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
+                    case "ROTATE_CONSENSUS_PUBKEY":
+                        //ROTATE_CONSENSUS_PUBKEY
+                        print("26")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
+                    case "ROTATE_SHARED_ED25519_PUBLIC_KEY":
+                        //ROTATE_SHARED_ED25519_PUBLIC_KEY
+                        print("27")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
+                    case "ROTATE_VALIDATOR_CONFIG":
+                        //ROTATE_VALIDATOR_CONFIG
+                        print("28")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
+                    case "TIERED_MINT":
+                        //TIERED_MINT
+                        print("29")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
+                    case "UNFREEZE_ACCOUNT":
+                        //UNFREEZE_ACCOUNT
+                        print("30")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
+                    case "UNMINT_LBR":
+                        //UNMINT_LBR
+                        print("31")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
+                    case "UPDATE_EXCHANGE_RATE":
+                        //UPDATE_EXCHANGE_RATE
+                        print("32")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
+                    case "UPDATE_LIBRA_VERSION":
+                        //UPDATE_LIBRA_VERSION
+                        print("33")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
+                    case "UPDATE_MINTING_ABILITY":
+                        //UPDATE_MINTING_ABILITY
+                        print("34")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
+                    case "CHANGE_SET":
+                        //CHANGE_SET
+                        print("97")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
+                    case "BLOCK_METADATA":
+                        //BLOCK_METADATA
+                        print("98")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
+                    case "UNKNOWN":
+                        //UNKNOWN
+                        print("100")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
+                    default:
+                        print("others")
+                        transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
                     }
-                case 16:
-                    //PREBURN
-                    print("16")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
-                case 17:
-                    //PUBLISH_SHARED_ED25519_PUBLIC_KEY
-                    print("17")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
-                case 18:
-                    //REGISTER_PREBURNER
-                    print("18")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
-                case 19:
-                    //REGISTER_VALIDATOR
-                    print("19")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
-                case 20:
-                    //REMOVE_ASSOCIATION_PRIVILEGE
-                    print("20")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
-                case 21:
-                    //REMOVE_VALIDATOR
-                    print("21")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
-                case 22:
-                    //ROTATE_AUTHENTICATION_KEY
-                    print("22")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
-                case 23:
-                    //ROTATE_AUTHENTICATION_KEY_WITH_NONCE
-                    print("23")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
-                case 24:
-                    //ROTATE_BASE_URL
-                    print("24")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
-                case 25:
-                    //ROTATE_COMPLIANCE_PUBLIC_KEY
-                    print("25")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
-                case 26:
-                    //ROTATE_CONSENSUS_PUBKEY
-                    print("26")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
-                case 27:
-                    //ROTATE_SHARED_ED25519_PUBLIC_KEY
-                    print("27")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
-                case 28:
-                    //ROTATE_VALIDATOR_CONFIG
-                    print("28")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
-                case 29:
-                    //TIERED_MINT
-                    print("29")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
-                case 30:
-                    //UNFREEZE_ACCOUNT
-                    print("30")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
-                case 31:
-                    //UNMINT_LBR
-                    print("31")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
-                case 32:
-                    //UPDATE_EXCHANGE_RATE
-                    print("32")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
-                case 33:
-                    //UPDATE_LIBRA_VERSION
-                    print("33")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
-                case 34:
-                    //UPDATE_MINTING_ABILITY
-                    print("34")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
-                case 97:
-                    //CHANGE_SET
-                    print("97")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
-                case 98:
-                    //BLOCK_METADATA
-                    print("98")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
-                case 100:
-                    //UNKNOWN
-                    print("100")
-                    transactionStateLabel.text = localLanguage(keyString: "wallet_transaction_detail_unknow_success_title")
-                default:
-                    print("others")
                 }
                 transactionStateImageView.image = UIImage.init(named: "transaction_detail_finish")
             } else {
@@ -525,7 +520,7 @@ class TransactionDetailView: UIView {
     }
     
 //    var messageTransaction: MessageTransactionDetailDataModel? {
-//        
+//
 //    }
     
 }

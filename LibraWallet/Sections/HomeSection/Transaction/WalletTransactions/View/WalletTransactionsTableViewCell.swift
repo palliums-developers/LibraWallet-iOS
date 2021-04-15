@@ -342,77 +342,77 @@ class WalletTransactionsTableViewCell: UITableViewCell {
             }
             dateLabel.text = timestampToDateString(timestamp: model.expiration_time ?? 0, dateFormat: "yyyy-MM-dd HH:mm:ss")
             let amount = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.amount ?? 0)),
-                                                      scale: 6,
-                                                      unit: 1000000)
+                                                scale: 6,
+                                                unit: 1000000)
             var amountColor = ""
-            if libraModel?.status == "Executed" {
+            if violasModel?.status == "Executed" {
                 amountColor = "13B788"
             } else {
                 amountColor = "E54040"
             }
             switch model.type {
-            case 0:
+            case "ADD_CURRENCY_TO_ACCOUNT":
                 //ADD_CURRENCY_TO_ACCOUNT
                 print("0")
                 amountLabel.text = amount
                 amountLabel.textColor = UIColor.init(hex: "FB8F0B")
                 transactionTypeImageView.image = UIImage.init(named: "publish_sign")
                 addressLabel.text = model.sender
-            case 1:
+            case "ADD_VALIDATOR":
                 //ADD_VALIDATOR
                 print("1")
-            case 2:
+            case "BURN":
                 //BURN
                 print("2")
-            case 3:
+            case "BURN_TXN_FEES":
                 //BURN_TXN_FEES
                 print("3")
-            case 4:
+            case "CANCEL_BURN":
                 //CANCEL_BURN
                 print("4")
-            case 5:
+            case "CREATE_CHILD_VASP_ACCOUNT":
                 //CREATE_CHILD_VASP_ACCOUNT
                 print("5")
-            case 6:
+            case "CREATE_DESIGNATED_DEALER":
                 //CREATE_DESIGNATED_DEALER
                 print("6")
-            case 7:
+            case "CREATE_PARENT_VASP_ACCOUNT":
                 //CREATE_PARENT_VASP_ACCOUNT
                 print("7")
-            case 8:
+            case "CREATE_VALIDATOR_ACCOUNT":
                 //CREATE_VALIDATOR_ACCOUNT
                 print("8")
-            case 9:
+            case "EMPTY_SCRIPT":
                 //EMPTY_SCRIPT
                 print("9")
-            case 10:
+            case "FREEZE_ACCOUNT":
                 //FREEZE_ACCOUNT
                 print("10")
-            case 11:
+            case "MINT_LBR":
                 // MINT_LBR
                 print("11")
                 amountLabel.text = "+" + amount
                 amountLabel.textColor = UIColor.init(hex: "FB8F0B")
                 transactionTypeImageView.image = UIImage.init(named: "mint_sign")
                 addressLabel.text = model.sender
-            case 12:
+            case "MINT_LBR_TO_ADDRESS":
                 //MINT_LBR_TO_ADDRESS
                 print("12")
                 amountLabel.text = "+" + amount
                 amountLabel.textColor = UIColor.init(hex: "FB8F0B")
                 transactionTypeImageView.image = UIImage.init(named: "mint_sign")
                 addressLabel.text = model.sender
-            case 13:
+            case "MINT":
                 //MINT
                 print("13")
                 amountLabel.text = "+" + amount
                 amountLabel.textColor = UIColor.init(hex: "FB8F0B")
                 transactionTypeImageView.image = UIImage.init(named: "mint_sign")
                 addressLabel.text = model.sender
-            case 14:
+            case "MODIFY_PUBLISHING_OPTION":
                 //MODIFY_PUBLISHING_OPTION
                 print("14")
-            case 15:
+            case "PEER_TO_PEER_WITH_METADATA":
                 //PEER_TO_PEER_WITH_METADATA
                 print("15")
                 if model.transaction_type == 0 {
@@ -428,72 +428,100 @@ class WalletTransactionsTableViewCell: UITableViewCell {
                     transactionTypeImageView.image = UIImage.init(named: "receive_sign")
                     addressLabel.text = model.sender
                 }
-            case 16:
+            case "PREBURN":
                 //PREBURN
                 print("16")
-            case 17:
+            case "PUBLISH_SHARED_ED25519_PUBLIC_KEY":
                 //PUBLISH_SHARED_ED25519_PUBLIC_KEY
                 print("17")
-            case 18:
+            case "REGISTER_PREBURNER":
                 //REGISTER_PREBURNER
                 print("18")
-            case 19:
+            case "REGISTER_VALIDATOR":
                 //REGISTER_VALIDATOR
                 print("19")
-            case 20:
+            case "REMOVE_ASSOCIATION_PRIVILEGE":
                 //REMOVE_ASSOCIATION_PRIVILEGE
                 print("20")
-            case 21:
+            case "REMOVE_VALIDATOR":
                 //REMOVE_VALIDATOR
                 print("21")
-            case 22:
+            case "ROTATE_AUTHENTICATION_KEY":
                 //ROTATE_AUTHENTICATION_KEY
                 print("22")
-            case 23:
+            case "ROTATE_AUTHENTICATION_KEY_WITH_NONCE":
                 //ROTATE_AUTHENTICATION_KEY_WITH_NONCE
                 print("23")
-            case 24:
+            case "ROTATE_BASE_URL":
                 //ROTATE_BASE_URL
                 print("24")
-            case 25:
+            case "ROTATE_COMPLIANCE_PUBLIC_KEY":
                 //ROTATE_COMPLIANCE_PUBLIC_KEY
                 print("25")
-            case 26:
+            case "ROTATE_CONSENSUS_PUBKEY":
                 //ROTATE_CONSENSUS_PUBKEY
                 print("26")
-            case 27:
+            case "ROTATE_SHARED_ED25519_PUBLIC_KEY":
                 //ROTATE_SHARED_ED25519_PUBLIC_KEY
                 print("27")
-            case 28:
+            case "ROTATE_VALIDATOR_CONFIG":
                 //ROTATE_VALIDATOR_CONFIG
                 print("28")
-            case 29:
+            case "TIERED_MINT":
                 //TIERED_MINT
                 print("29")
-            case 30:
+            case "UNFREEZE_ACCOUNT":
                 //UNFREEZE_ACCOUNT
                 print("30")
-            case 31:
+            case "UNMINT_LBR":
                 //UNMINT_LBR
                 print("31")
-            case 32:
+            case "UPDATE_EXCHANGE_RATE":
                 //UPDATE_EXCHANGE_RATE
                 print("32")
-            case 33:
+            case "UPDATE_LIBRA_VERSION":
                 //UPDATE_LIBRA_VERSION
                 print("33")
-            case 34:
+            case "UPDATE_MINTING_ABILITY":
                 //UPDATE_MINTING_ABILITY
                 print("34")
-            case 97:
+            case "CHANGE_SET":
                 //CHANGE_SET
                 print("97")
-            case 98:
+            case "BLOCK_METADATA":
                 //BLOCK_METADATA
                 print("98")
-            case 100:
+            case "UNKNOWN":
                 //UNKNOWN
                 print("100")
+            case "LOCK2":
+                //存款
+                print("LOCK2")
+                amountLabel.text = "-" + amount
+                amountLabel.textColor = UIColor.init(hex: amountColor)
+                transactionTypeImageView.image = UIImage.init(named: "transfer_sign")
+                addressLabel.text = model.receiver
+            case "BORROW2":
+                //借款
+                print("BORROW2")
+                amountLabel.text = "+" + amount
+                amountLabel.textColor = UIColor.init(hex: amountColor)
+                transactionTypeImageView.image = UIImage.init(named: "receive_sign")
+                addressLabel.text = model.sender
+            case "REPAY_BORROW2":
+                //还款
+                print("REPAY_BORROW2")
+                amountLabel.text = "-" + amount
+                amountLabel.textColor = UIColor.init(hex: amountColor)
+                transactionTypeImageView.image = UIImage.init(named: "transfer_sign")
+                addressLabel.text = model.receiver
+            case "REDEEM2":
+                //取款
+                print("REDEEM2")
+                amountLabel.text = "+" + amount
+                amountLabel.textColor = UIColor.init(hex: amountColor)
+                transactionTypeImageView.image = UIImage.init(named: "receive_sign")
+                addressLabel.text = model.sender
             default:
                 print("others")
             }
