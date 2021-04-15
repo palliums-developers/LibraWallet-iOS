@@ -20,7 +20,7 @@ struct outputs: Codable {
     var addresses: [String]?
     var value: Int?
     var type: String?
-//    var spent_by_tx: String?
+    //    var spent_by_tx: String?
     var spent_by_tx_position: Int?
 }
 struct BTCTransaction: Codable {
@@ -150,7 +150,7 @@ struct LibraDataModel: Codable {
     var transaction_type: Int?
 }
 struct LibraResponseModel: Codable {
-//    var transactions: [LibraDataModel]?
+    //    var transactions: [LibraDataModel]?
     var code: Int?
     var message: String?
     var data: [LibraDataModel]?
@@ -201,6 +201,7 @@ class WalletTransactionsModel: NSObject {
     private var requests: [Cancellable] = []
     @objc dynamic var dataDic: NSMutableDictionary = [:]
     private var transactionList: [ViolasDataModel]?
+    private var btcTotalPages: Int = 0
     /// 获取BTC交易记录
     /// - Parameters:
     ///   - address: 地址
@@ -208,38 +209,42 @@ class WalletTransactionsModel: NSObject {
     ///   - pageSize: 数量
     func getBTCTransactionHistory(address: String, page: Int, pageSize: Int, requestStatus: Int) {
         let type = requestStatus == 0 ? "BTCTransactionHistoryOrigin":"BTCTransactionHistoryMore"
+        if page > self.btcTotalPages && type == "BTCTransactionHistoryMore" {
+            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.noMoreData), type: type)
+            self.setValue(data, forKey: "dataDic")
+            return
+        }
         let request = BTCModuleProvide.request(.TrezorBTCTransactions(address, page, pageSize)) {[weak self](result) in
-                switch  result {
-                case let .success(response):
-                    do {
-                        let json = try response.map(TrezorBTCTransactionMainModel.self)
-                        guard let models = json.transactions, models.isEmpty == false else {
-                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: type)
-                            self?.setValue(data, forKey: "dataDic")
-                            return
-                        }
-                        let resultModel = self!.dealTransactionAmount(models: models, requestAddress: address)
-                                                                           
-//                        let data = setKVOData(type: type, data: (json.data?.list)!)
-                       let data = setKVOData(type: type, data: resultModel)
-                       self?.setValue(data, forKey: "dataDic")
-                        
-                    } catch {
-                        print("解析异常\(error.localizedDescription)")
-                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: type)
+            switch  result {
+            case let .success(response):
+                do {
+                    let json = try response.map(TrezorBTCTransactionMainModel.self)
+                    guard let models = json.transactions, models.isEmpty == false else {
+                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataEmpty), type: type)
                         self?.setValue(data, forKey: "dataDic")
-                    }
-                case let .failure(error):
-                    guard error.errorCode != -999 else {
-                        print("网络请求已取消")
                         return
                     }
-                    print(error.localizedDescription)
-                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.networkInvalid), type: type)
+                    self?.btcTotalPages = json.totalPages ?? 0
+                    let resultModel = self!.dealTransactionAmount(models: models, requestAddress: address)
+                    let data = setKVOData(type: type, data: resultModel)
+                    self?.setValue(data, forKey: "dataDic")
+                    
+                } catch {
+                    print("解析异常\(error.localizedDescription)")
+                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: type)
                     self?.setValue(data, forKey: "dataDic")
                 }
+            case let .failure(error):
+                guard error.errorCode != -999 else {
+                    print("网络请求已取消")
+                    return
+                }
+                print(error.localizedDescription)
+                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.networkInvalid), type: type)
+                self?.setValue(data, forKey: "dataDic")
             }
-            self.requests.append(request)
+        }
+        self.requests.append(request)
     }
     /// 获取Violas交易记录
     /// - Parameters:
@@ -267,7 +272,7 @@ class WalletTransactionsModel: NSObject {
                         let result = self?.dealViolasTransactions(models: json.data!, walletAddress: address, tokenList: [ViolasTokenModel]())
                         let data = setKVOData(type: type, data: result)
                         self?.setValue(data, forKey: "dataDic")
-    //                    self?.transactionList = json.data
+                        //                    self?.transactionList = json.data
                     } else {
                         print("\(type)_状态异常")
                         if let message = json.message, message.isEmpty == false {
@@ -303,51 +308,51 @@ class WalletTransactionsModel: NSObject {
     func getLibraTransactionHistory(address: String, module: String, requestType: String, page: Int, pageSize: Int, requestStatus: Int) {
         let type = requestStatus == 0 ? "LibraTransactionHistoryOrigin":"LibraTransactionHistoryMore"
         let request = libraModuleProvide.request(.accountTransactions(address, module, requestType, page, pageSize)) {[weak self](result) in
-                switch  result {
-                case let .success(response):
-                    do {
-                        let json = try response.map(LibraResponseModel.self)
-                        if json.code == 2000 {
-                            guard json.data?.isEmpty == false else {
-                                if requestStatus == 0 {
-                                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .dataEmpty), type: type)
-                                    self?.setValue(data, forKey: "dataDic")
-                                } else {
-                                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .noMoreData), type: type)
-                                    self?.setValue(data, forKey: "dataDic")
-                                }
-                                return
-                            }
-                            let result = self?.dealLibraTransactions(models: json.data!, walletAddress: address)
-                            let data = setKVOData(type: type, data: result)
-                            self?.setValue(data, forKey: "dataDic")
-                        } else {
-                            print("\(type)_状态异常")
-                            if let message = json.message, message.isEmpty == false {
-                                let data = setKVOData(error: LibraWalletError.error(message), type: type)
+            switch  result {
+            case let .success(response):
+                do {
+                    let json = try response.map(LibraResponseModel.self)
+                    if json.code == 2000 {
+                        guard json.data?.isEmpty == false else {
+                            if requestStatus == 0 {
+                                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .dataEmpty), type: type)
                                 self?.setValue(data, forKey: "dataDic")
                             } else {
-                                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: type)
+                                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: .noMoreData), type: type)
                                 self?.setValue(data, forKey: "dataDic")
                             }
+                            return
                         }
-
-                    } catch {
-                        print("解析异常\(error.localizedDescription)")
-                        let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: type)
+                        let result = self?.dealLibraTransactions(models: json.data!, walletAddress: address)
+                        let data = setKVOData(type: type, data: result)
                         self?.setValue(data, forKey: "dataDic")
+                    } else {
+                        print("\(type)_状态异常")
+                        if let message = json.message, message.isEmpty == false {
+                            let data = setKVOData(error: LibraWalletError.error(message), type: type)
+                            self?.setValue(data, forKey: "dataDic")
+                        } else {
+                            let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.dataCodeInvalid), type: type)
+                            self?.setValue(data, forKey: "dataDic")
+                        }
                     }
-                case let .failure(error):
-                    guard error.errorCode != -999 else {
-                        print("网络请求已取消")
-                        return
-                    }
-                    print(error.localizedDescription)
-                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.networkInvalid), type: type)
+                    
+                } catch {
+                    print("解析异常\(error.localizedDescription)")
+                    let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.parseJsonError), type: type)
                     self?.setValue(data, forKey: "dataDic")
                 }
+            case let .failure(error):
+                guard error.errorCode != -999 else {
+                    print("网络请求已取消")
+                    return
+                }
+                print(error.localizedDescription)
+                let data = setKVOData(error: LibraWalletError.WalletRequest(reason: LibraWalletError.RequestError.networkInvalid), type: type)
+                self?.setValue(data, forKey: "dataDic")
             }
-            self.requests.append(request)
+        }
+        self.requests.append(request)
     }
     deinit {
         requests.forEach { cancellable in
@@ -368,7 +373,7 @@ class WalletTransactionsModel: NSObject {
 //                }
                 var inputFromMe = false
                 for input in inputs {
-                    for address in input.addresses ?? [""] {
+                    for address in input.addresses ?? [String]() {
                         if address == requestAddress {
                             inputFromMe = true
                             break
@@ -381,9 +386,19 @@ class WalletTransactionsModel: NSObject {
                 if inputFromMe == false {
                     //收款
                     tempModel.transaction_type = 1
-                    
-                    
-                    let result = NSDecimalNumber.init(string: tempModel.valueIn ?? "0").subtracting(NSDecimalNumber.init(string: tempModel.fees ?? "0"))
+                    var result = NSDecimalNumber.init(string: tempModel.valueIn ?? "0").subtracting(NSDecimalNumber.init(string: tempModel.fees ?? "0"))
+                    for model in (tempModel.vout ?? [TrezorBTCVoutModel]()) {
+                        var isMe = false
+                        for address in (model.addresses ?? [String]()) {
+                            if address == requestAddress {
+                                isMe = true
+                                break
+                            }
+                        }
+                        if isMe == false {
+                            result = result.subtracting(NSDecimalNumber.init(string: model.value ?? "0"))
+                        }
+                    }
                     tempModel.transaction_value = result.int64Value
                 } else {
                     //转账
