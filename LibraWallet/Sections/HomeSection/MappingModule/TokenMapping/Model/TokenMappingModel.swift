@@ -709,6 +709,8 @@ extension TokenMappingModel {
                     }
                 } else if data.to_coin?.coin_type?.lowercased() == "btc" {
                     tempItem.to_coin?.assert?.active_state = true
+                } else if data.to_coin?.coin_type?.lowercased() == "eth" {
+                    tempItem.to_coin?.assert?.active_state = true
                 } else {
                     tempItem.to_coin?.assert?.active_state = false
                 }
