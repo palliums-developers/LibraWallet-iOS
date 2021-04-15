@@ -208,14 +208,14 @@ class TokenMappingHeaderView: UIView {
         label.text = "---"
         return label
     }()
-    lazy var outputAddressTextField: WYDTextField = {
-        let textField = WYDTextField.init()
+    lazy var outputAddressTextField: UITextField = {
+        let textField = UITextField.init()
         textField.textAlignment = NSTextAlignment.left
         textField.textColor = UIColor.init(hex: "333333")
-        textField.font = UIFont.init(name: "DIN Alternate Bold", size: 14)
-        textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_mapping_input_amount_textfield_placeholder"),
+        textField.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_mapping_eth_address_textfield_placeholder"),
                                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "BABABA"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)])
-        textField.keyboardType = .decimalPad
+        textField.keyboardType = .asciiCapable
         textField.tintColor = DefaultGreenColor
         textField.layer.borderColor = UIColor.init(hex: "D8D7DA").cgColor
         textField.layer.borderWidth = 1

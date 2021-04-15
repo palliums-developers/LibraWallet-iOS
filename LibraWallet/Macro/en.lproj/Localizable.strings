@@ -300,6 +300,7 @@ wallet_mapping_confirm_title = "Confirm";
 wallet_mapping_pay_amount_least_title = "Least pay amount：";
 wallet_mapping_exchange_amount_least_title = "Least exchange amount：";
 wallet_mapping_token_search_textfield_placeholder = "Search";
+wallet_mapping_eth_address_textfield_placeholder = "ETH receive address";
 // 错误
 wallet_market_mapping_token_unpublish_error = "The stable token you are going to mapping has not yet been published. It will consume a certain amount of gas fee to open it. Whether to open and exchange it immediately?";
 // 提示
