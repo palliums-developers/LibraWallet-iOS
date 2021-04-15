@@ -93,25 +93,39 @@ class TransactionDetailModel: NSObject {
                                                          title: localLanguage(keyString: "wallet_transaction_detail_gas_title"),
                                                          value: gas.stringValue + " " + "BTC"))
         var senderAddress = "---"
-        if let inputs = transaction.vin, inputs.isEmpty == false {
-            for input in inputs {
-                for address in input.addresses ?? [""] {
-                    if address == requestAddress {
-                        senderAddress = requestAddress
+        if transaction.transaction_type == 0 {
+            // 转账
+            for item in transaction.vout ?? [TrezorBTCVoutModel]() {
+                guard item.isAddress == true else {
+                    continue
+                }
+                for address in item.addresses ?? [String]() {
+                    if address != Wallet.shared.btcAddress {
+                        senderAddress = address
                         break
                     }
                 }
             }
-            if senderAddress == "---" {
-                senderAddress = inputs.first?.addresses?.first ?? "---"
+        } else {
+            // 收款
+            for item in transaction.vin ?? [TrezorBTCVinModel]() {
+                guard item.isAddress == true else {
+                    continue
+                }
+                for address in item.addresses ?? [String]() {
+                    if address != Wallet.shared.btcAddress {
+                        senderAddress = address
+                        break
+                    }
+                }
             }
         }
         tempArray.append(TransactionDetailDataModel.init(type: "CellAddress",
                                                          title: localLanguage(keyString: "wallet_transaction_detail_transfer_address_title"),
-                                                         value: senderAddress))
+                                                         value: transaction.transaction_type == 0 ? (Wallet.shared.btcAddress ?? "---"):senderAddress))
         tempArray.append(TransactionDetailDataModel.init(type: "CellAddress",
                                                          title: localLanguage(keyString: "wallet_transaction_detail_receive_address_title"),
-                                                         value: transaction.vout?.first?.addresses?.first ?? "---"))
+                                                         value: transaction.transaction_type == 0 ? senderAddress:(Wallet.shared.btcAddress ?? "---")))
         tempArray.append(TransactionDetailDataModel.init(type: "CellAddress",
                                                          title: localLanguage(keyString: "wallet_transaction_detail_version_title"),
                                                          value: transaction.txid ?? "---"))

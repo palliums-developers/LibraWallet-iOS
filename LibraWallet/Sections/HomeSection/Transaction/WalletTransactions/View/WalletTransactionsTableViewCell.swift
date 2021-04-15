@@ -133,13 +133,34 @@ class WalletTransactionsTableViewCell: UITableViewCell {
                 amountLabel.text = "-" + amount
                 amountLabel.textColor = UIColor.init(hex: color)
                 transactionTypeImageView.image = UIImage.init(named: "transfer_sign")
-                addressLabel.text = model.vin?.first?.addresses?.first
+                for item in model.vout ?? [TrezorBTCVoutModel]() {
+                    guard item.isAddress == true else {
+                        continue
+                    }
+                    for address in item.addresses ?? [String]() {
+                        if address != Wallet.shared.btcAddress {
+                            addressLabel.text = address
+                            return
+                        }
+                    }
+                }
             } else {
                 // 收款
                 amountLabel.text = "+" + amount
                 amountLabel.textColor = UIColor.init(hex: color)
                 transactionTypeImageView.image = UIImage.init(named: "receive_sign")
-                addressLabel.text = model.vout?.first?.addresses?.first
+//                addressLabel.text = model.vin?.first?.addresses?.first
+                for item in model.vin ?? [TrezorBTCVinModel]() {
+                    guard item.isAddress == true else {
+                        continue
+                    }
+                    for address in item.addresses ?? [String]() {
+                        if address != Wallet.shared.btcAddress {
+                            addressLabel.text = address
+                            return
+                        }
+                    }
+                }
             }
         }
     }
