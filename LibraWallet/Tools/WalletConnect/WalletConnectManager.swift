@@ -133,7 +133,7 @@ class WalletConnectManager: NSObject {
                        Wallet.shared.libraAddress ?? ""]
         let walletInfo = Session.WalletInfo(approved: state,
                                             accounts: address,
-                                            chainId: 4,
+                                            chainId: VIOLAS_PUBLISH_NET.chainId,
                                             peerId: UUID().uuidString,
                                             peerMeta: walletMeta)
         return walletInfo
