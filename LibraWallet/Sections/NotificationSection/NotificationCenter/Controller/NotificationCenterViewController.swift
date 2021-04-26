@@ -35,7 +35,9 @@ class NotificationCenterViewController: BaseViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         if let action = self.successReadClosure {
-            action(self.unreadMessageDataModel!)
+            if let model = self.unreadMessageDataModel {
+                action(model)
+            }
         }
     }
     deinit {
