@@ -204,12 +204,26 @@ func setConfirmPrivateAndUseLegalState(show: Bool) {
 func getConfirmPrivateAndUseLegalState() -> Bool {
     return UserDefaults.standard.bool(forKey: "PrivateAndUseLegal")
 }
-///************* 设置请求Token *******************/
+///************* 设置全局请求Token *******************/
 func setRequestToken(token: String) {
     UserDefaults.standard.set(token, forKey: "RequestToken")
 }
 func getRequestToken() -> String {
     return UserDefaults.standard.string(forKey: "RequestToken") ?? ""
+}
+///************* 设置FCMToken *******************/
+func setFCMToken(token: String) {
+    UserDefaults.standard.set(token, forKey: "FCMToken")
+}
+func getFCMToken() -> String {
+    return UserDefaults.standard.string(forKey: "FCMToken") ?? ""
+}
+///************* 设置DeviceToken *******************/
+func setDeviceToken(token: String) {
+    UserDefaults.standard.set(token, forKey: "DeviceToken")
+}
+func getDeviceToken() -> String {
+    return UserDefaults.standard.string(forKey: "DeviceToken") ?? ""
 }
 /***************************************/
 func helpCenterURL() -> String {

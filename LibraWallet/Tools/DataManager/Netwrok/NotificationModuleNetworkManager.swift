@@ -13,8 +13,8 @@ import Localize_Swift
 let notificationModuleProvide = MoyaProvider<NotificationModuleRequest>()
 //let mainProvide = MoyaProvider<mainRequest>(stubClosure: MoyaProvider.immediatelyStub)
 enum NotificationModuleRequest {
-    /// 注册设备（钱包地址，FCM Token， Token）
-    case registerNotification(String, String, String)
+    /// 注册设备（钱包地址，Device Token，FCM Token， Token）
+    case registerNotification(String, String, String, String)
     /// 钱包通知（钱包地址、FCM Token、offset、limit）
     case walletMessages(String, String, Int, Int)
     /// 获取钱包通知交易详情（钱包地址、Version）
@@ -31,7 +31,7 @@ enum NotificationModuleRequest {
 extension NotificationModuleRequest: TargetType {
     var baseURL: URL {
         switch self {
-        case .registerNotification(_, _, _),
+        case .registerNotification(_, _, _, _),
              .walletMessages(_, _, _, _),
              .getTransactionMessageDetail(_, _),
              .systemMessages(_, _, _, _),
@@ -43,7 +43,7 @@ extension NotificationModuleRequest: TargetType {
     }
     var path: String {
         switch self {
-        case .registerNotification(_, _, _):
+        case .registerNotification(_, _, _, _):
             return "/1.0/violas/device/info"
         case .walletMessages(_, _, _, _):
             return "/1.0/violas/message/transfers"
@@ -65,7 +65,7 @@ extension NotificationModuleRequest: TargetType {
     }
     var method: Moya.Method {
         switch self {
-        case .registerNotification(_, _, let token):
+        case .registerNotification(_, _, _, let token):
             if token.isEmpty == true {
                 return .post
             } else {
@@ -92,9 +92,10 @@ extension NotificationModuleRequest: TargetType {
     }
     var task: Task {
         switch self {
-        case .registerNotification(let address, let FCMToken, let token):
+        case .registerNotification(let address, let deviceToken, let FCMToken, let token):
             return .requestParameters(parameters: ["token": token,
                                                    "address": address,
+                                                   "device_token": deviceToken,
                                                    "fcm_token": FCMToken,
                                                    "platform": "apple",
                                                    "language": Localize.currentLanguage()],

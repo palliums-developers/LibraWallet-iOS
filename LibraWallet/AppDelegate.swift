@@ -73,6 +73,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        }
 
         print("我的deviceToken：\(deviceTokenString)")
+        setDeviceToken(token: deviceTokenString)
+        if getFCMToken().isEmpty == true {
+            let dataDict: [String: String] = ["token": "", "deviceToken": deviceTokenString]
+            NotificationCenter.default.post(name: Notification.Name("FCMToken"), object: nil, userInfo: dataDict)
+        }
     }
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         print(error.localizedDescription)
@@ -136,7 +141,8 @@ extension AppDelegate: MessagingDelegate {
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         if let token = Messaging.messaging().fcmToken {
             print("FCM Token: \(token)")
-            let dataDict:[String: String] = ["token": fcmToken ?? ""]
+            setFCMToken(token: token)
+            let dataDict: [String: String] = ["token": token, "deviceToken": getDeviceToken()]
             NotificationCenter.default.post(name: Notification.Name("FCMToken"), object: nil, userInfo: dataDict)
         } else {
             print("FCM Token: nil")

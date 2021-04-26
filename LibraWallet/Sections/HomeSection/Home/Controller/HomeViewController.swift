@@ -421,7 +421,10 @@ extension HomeViewController {
         guard let fcmToken = notification.userInfo?["token"] as? String else {
             return
         }
-        self.dataModel.registerFCMToken(address: address, fcmToken: fcmToken, token: getRequestToken()) { [weak self] (result) in
+        guard let deviceToken = notification.userInfo?["deviceToken"] as? String else {
+            return
+        }
+        self.dataModel.registerFCMToken(address: address, deviceToken: deviceToken, fcmToken: fcmToken, token: getRequestToken()) { [weak self] (result) in
             switch result {
             case let .success(token):
                 print("Register Token: \(token)")
