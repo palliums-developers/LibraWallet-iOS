@@ -169,9 +169,13 @@ class MarketTokenSelectView: UIView {
     }
 }
 extension MarketTokenSelectView {
-    func initialView() {
+    func initialView(type: String) {
         // 重置标题
-        titleLabel.text = localLanguage(keyString: "wallet_market_assets_pool_input_amount_title")
+        if type == "in" {
+            titleLabel.text = localLanguage(keyString: "wallet_market_assets_pool_input_amount_title")
+        } else {
+            titleLabel.text = localLanguage(keyString: "wallet_market_assets_pool_output_token_title")
+        }
         // 重置按钮
         tokenButton.setTitle(localLanguage(keyString: "wallet_market_exchange_input_token_button_title"), for: UIControl.State.normal)
         tokenButton.snp.remakeConstraints { (make) in

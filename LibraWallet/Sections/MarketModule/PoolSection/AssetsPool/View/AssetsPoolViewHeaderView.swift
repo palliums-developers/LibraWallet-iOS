@@ -242,14 +242,15 @@ extension AssetsPoolViewHeaderView: DropperDelegate {
         exchangeRateLabel.snp.remakeConstraints { (make) in
             make.top.equalTo(tokenSelectViewB.snp.bottom).offset(6)
         }
+        confirmButton.setTitle(localLanguage(keyString: "wallet_market_assets_pool_add_liquidity_confirm_button_title"), for: UIControl.State.normal)
         confirmButton.snp.remakeConstraints { (make) in
             make.top.equalTo(tokenSelectViewB.snp.bottom).offset(66)
             make.size.equalTo(CGSize.init(width: 238, height: 40))
             make.centerX.equalTo(self)
         }
         // 重置页面
-        self.tokenSelectViewA.initialView()
-        self.tokenSelectViewB.initialView()
+        self.tokenSelectViewA.initialView(type: "in")
+        self.tokenSelectViewB.initialView(type: "in")
     }
     private func initialRemoveLiquidityView() {
         self.addLiquidityMode = false
@@ -259,13 +260,14 @@ extension AssetsPoolViewHeaderView: DropperDelegate {
         exchangeRateLabel.snp.remakeConstraints { (make) in
             make.top.equalTo(tokenSelectViewB.snp.bottom).offset(6 + 15)
         }
+        confirmButton.setTitle(localLanguage(keyString: "wallet_market_assets_pool_remove_liquidity_confirm_button_title"), for: UIControl.State.normal)
         confirmButton.snp.remakeConstraints { (make) in
             make.top.equalTo(tokenSelectViewB.snp.bottom).offset(66 + 15)
             make.size.equalTo(CGSize.init(width: 238, height: 40))
             make.centerX.equalTo(self)
         }
         // 重置页面
-        self.tokenSelectViewA.initialView()
+        self.tokenSelectViewA.initialView(type: "out")
         self.tokenRemoveLiquidityView.initialView()
     }
 }
