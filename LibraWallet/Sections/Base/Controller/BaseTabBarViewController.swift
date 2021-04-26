@@ -90,6 +90,9 @@ class BaseTabBarViewController: UITabBarController {
             if item.isKind(of: MarketViewController.classForCoder()) {
                 item.tabBarItem.title = localLanguage(keyString: "wallet_tabbar_market_title")
             }
+            if item.isKind(of: BankViewController.classForCoder()) {
+                item.tabBarItem.title = localLanguage(keyString: "wallet_tabbar_bank_title")
+            }
             if item.isKind(of: MineViewController.classForCoder()) {
                 item.tabBarItem.title = localLanguage(keyString: "wallet_tabbar_mine_title")
             }
