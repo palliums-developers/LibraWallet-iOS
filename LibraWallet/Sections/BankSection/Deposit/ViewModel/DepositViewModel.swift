@@ -186,7 +186,7 @@ extension DepositViewModel: DepositViewDelegate {
         }
         let amount = NSDecimalNumber.init(string: amountString).multiplying(by: NSDecimalNumber.init(value: 1000000))
         // 检查是否比余额多
-        guard amount.uint64Value < (header.productModel?.token_balance ?? 0) else {
+        guard amount.uint64Value <= (header.productModel?.token_balance ?? 0) else {
             throw LibraWalletError.WalletBankDeposit(reason: .balanceInsufficient)
         }
         // 检查是否比最少充值金额多
