@@ -125,7 +125,7 @@ extension RepaymentViewModel: RepaymentViewDelegate {
             throw LibraWalletError.WalletBankRepayment(reason: .amountTooLarge)
         }
         // 检查是否超过余额
-        guard amount.uint64Value < NSDecimalNumber.init(value: self.repaymentModel?.token_balance ?? 0).uint64Value else {
+        guard amount.uint64Value <= NSDecimalNumber.init(value: self.repaymentModel?.token_balance ?? 0).uint64Value else {
             throw LibraWalletError.WalletBankRepayment(reason: .balanceInsufficient)
         }
         return (amount.uint64Value, self.repaymentModel?.token_active_state ?? false)
