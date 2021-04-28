@@ -29,7 +29,7 @@ struct DepositOrdersMainDataModel: Codable {
     /// 订单可提取数量
     var available_quantity: UInt64?
     /// 订单收益
-    var earnings: UInt64?
+    var earnings: Int64?
     /// 订单ID
     var id: String?
     /// 订单币种图片
