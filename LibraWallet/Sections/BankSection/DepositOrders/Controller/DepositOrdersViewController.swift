@@ -226,7 +226,7 @@ extension DepositOrdersViewController {
                 }
             } else if type == "SendViolasBankWithdrawTransaction" {
                 self?.detailView.toastView?.hide(tag: 99)
-                self?.withdrawAlert.makeToast(localLanguage(keyString: "wallet_bank_loan_submit_successful"), duration: toastDuration, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
+                self?.withdrawAlert.makeToast(localLanguage(keyString: "wallet_bank_deposit_submit_successful"), duration: toastDuration, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
                     self?.withdrawAlert.hide(tag: 199)
                     self?.detailView.tableView.mj_header?.beginRefreshing()
                 })
