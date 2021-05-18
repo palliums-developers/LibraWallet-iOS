@@ -181,7 +181,11 @@ extension ExchangeViewController: UITextFieldDelegate {
                 return false
             }
         } else {
-            return true
+            if amount <= self.viewModel.tokenModelB?.amount ?? 0 {
+                return true
+            } else {
+                return false
+            }
         }
     }
 }
