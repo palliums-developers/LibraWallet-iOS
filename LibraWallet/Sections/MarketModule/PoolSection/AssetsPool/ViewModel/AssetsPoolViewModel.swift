@@ -125,6 +125,10 @@ extension AssetsPoolViewModel {
         if amount.doubleValue > 0 {
             let number = amount.multiplying(by: NSDecimalNumber.init(value: 1000000))
             let coinAValue = NSDecimalNumber.init(value: self.modelABLiquidityInfo?.coina?.value ?? 0)
+            // 首次添加流动性无需计算
+            guard coinAValue != 0 else {
+                return
+            }
             let rate = number.dividing(by: coinAValue)
             let amountB = getDecimalNumber(amount: NSDecimalNumber.init(value: self.modelABLiquidityInfo?.coinb?.value ?? 0).multiplying(by: rate),
                                            scale: 6,
@@ -141,6 +145,10 @@ extension AssetsPoolViewModel {
         if amount.doubleValue > 0 {
             let amount = NSDecimalNumber.init(string: content).multiplying(by: NSDecimalNumber.init(value: 1000000))
             let coinBValue = NSDecimalNumber.init(value: self.modelABLiquidityInfo?.coinb?.value ?? 0)
+            // 首次添加流动性无需计算
+            guard coinBValue != 0 else {
+                return
+            }
             let rate = amount.dividing(by: coinBValue)
             let amountA = getDecimalNumber(amount: NSDecimalNumber.init(value: self.modelABLiquidityInfo?.coina?.value ?? 0).multiplying(by: rate),
                                            scale: 6,
