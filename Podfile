@@ -1,12 +1,13 @@
 # Uncomment the next line to define a global platform for your project
- platform :ios, '11.0'
+ platform :ios, '12.0'
+ inhibit_all_warnings!
 
 target 'LibraWallet' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
   
   pod 'CryptoSwift'
-  pod 'SwiftProtobuf'
+#  pod 'SwiftProtobuf'
   pod 'BigInt'
 #  pod 'SwiftGRPC'
   pod 'SnapKit'
@@ -29,12 +30,11 @@ target 'LibraWallet' do
   pod 'Device'
   pod 'JXSegmentedView'
   pod 'WalletConnectSwift'
+  pod 'Firebase/Messaging'
+  pod "DropDownMenuKit"
+  pod 'WKWebViewJavascriptBridge'
   # Pods for LibraWallet
 
-  target 'LibraWallet_Publish' do
-    inherit! :search_paths
-    # Pods for testing
-  end
   target 'LibraWalletTests' do
     inherit! :search_paths
     # Pods for testing
@@ -45,4 +45,12 @@ target 'LibraWallet' do
     # Pods for testing
   end
 
+end
+
+post_install do |installer|
+    installer.pods_project.targets.each do |target|
+        target.build_configurations.each do |config|
+            config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '12.0'
+        end
+    end
 end

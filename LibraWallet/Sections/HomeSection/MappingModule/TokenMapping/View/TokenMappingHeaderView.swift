@@ -8,43 +8,32 @@
 
 import UIKit
 protocol TokenMappingHeaderViewDelegate: NSObjectProtocol {
-    func chooseAddress()
-    func confirmTransfer(amount: Double, address: String, fee: Double)
-    func showMappingTokenList()
+    func chooseToken()
+    func confirmTransfer()
 }
 class TokenMappingHeaderView: UIView {
     weak var delegate: TokenMappingHeaderViewDelegate?
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = UIColor.clear
-        addSubview(backgroundImageView)
-        backgroundImageView.addSubview(leftCoinButton)
-        backgroundImageView.addSubview(rightCoinButton)
-        backgroundImageView.addSubview(exchangeCoinSpaceLabel)
+        addSubview(whiteBackgroundView)
+        whiteBackgroundView.addSubview(balanceIndicatorImageView)
+        whiteBackgroundView.addSubview(balanceLabel)
+        whiteBackgroundView.addSubview(inputAmountTextField)
         
-        backgroundImageView.addSubview(exchangeCoinButton)
-        backgroundImageView.addSubview(exchangeAmountSpaceLabel)
+        whiteBackgroundView.addSubview(mappingIndicatorImageView)
+        whiteBackgroundView.addSubview(outputAmountTextField)
         
-        backgroundImageView.addSubview(leftAmountTextField)
-        backgroundImageView.addSubview(rightAmountTextField)
+        whiteBackgroundView.addSubview(outputAddressTextField)
         
-        backgroundImageView.addSubview(exchangeToAddressSpaceLabel)
-        backgroundImageView.addSubview(exchangeToAddressTextField)
-        backgroundImageView.addSubview(exchangeToAddressTitleLabel)
-        backgroundImageView.addSubview(addressScanButton)
+        whiteBackgroundView.addSubview(mappingSpaceImageView)
         
-        backgroundImageView.addSubview(exchangeRateTitleLabel)
-        backgroundImageView.addSubview(exchangeRateLabel)
-        backgroundImageView.addSubview(exchangeRateSpaceLabel)
+        whiteBackgroundView.addSubview(mappingRateTitleLabel)
+        whiteBackgroundView.addSubview(mappingRateLabel)
+        whiteBackgroundView.addSubview(minerFeesTitleLabel)
+        whiteBackgroundView.addSubview(minerFeesLabel)
         
-        backgroundImageView.addSubview(transferFeeTitleLabel)
-        backgroundImageView.addSubview(transferSpeedLeftTitleLabel)
-        backgroundImageView.addSubview(transferSpeedRightTitleLabel)
-        backgroundImageView.addSubview(transferFeeLabel)
-        backgroundImageView.addSubview(transferFeeSlider)
-        
-        backgroundImageView.addSubview(confirmButton)
-        NotificationCenter.default.addObserver(self, selector: #selector(textFieldDidChange), name: UITextField.textDidChangeNotification, object: nil)
+        whiteBackgroundView.addSubview(confirmButton)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -55,300 +44,227 @@ class TokenMappingHeaderView: UIView {
     //MARK: - 布局
     override func layoutSubviews() {
         super.layoutSubviews()
-        backgroundImageView.snp.makeConstraints { (make) in
+        whiteBackgroundView.snp.makeConstraints { (make) in
             make.top.equalTo(self).offset(0)
             make.left.equalTo(self).offset(15)
             make.right.equalTo(self.snp.right).offset(-15)
-            make.height.equalTo(438)
+            make.height.equalTo(436).priority(250)
         }
-        leftCoinButton.snp.makeConstraints { (make) in
-            make.bottom.equalTo(exchangeCoinSpaceLabel.snp.top)
-            make.left.equalTo(exchangeCoinSpaceLabel)
-            make.right.equalTo(exchangeCoinButton.snp.left)
-            make.height.equalTo(58)
-            make.width.equalTo(rightCoinButton)
+        balanceIndicatorImageView.snp.makeConstraints { (make) in
+            make.top.equalTo(whiteBackgroundView).offset(30)
+            make.left.equalTo(whiteBackgroundView).offset(15)
+            make.size.equalTo(CGSize.init(width: 12, height: 12))
         }
-        rightCoinButton.snp.makeConstraints { (make) in
-            make.bottom.equalTo(exchangeCoinSpaceLabel.snp.top)
-            make.left.equalTo(exchangeCoinButton.snp.right)
-            make.right.equalTo(exchangeCoinSpaceLabel.snp.right)
-            make.height.equalTo(58)
+        balanceLabel.snp.makeConstraints { (make) in
+            make.centerY.equalTo(balanceIndicatorImageView)
+            make.left.equalTo(balanceIndicatorImageView.snp.right).offset(4)
         }
-        exchangeCoinSpaceLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(backgroundImageView).offset(69)
-            make.left.equalTo(backgroundImageView).offset(17)
-            make.right.equalTo(backgroundImageView.snp.right).offset(-17)
-            make.height.equalTo(1)
+        inputAmountTextField.snp.makeConstraints { (make) in
+            make.top.equalTo(balanceIndicatorImageView.snp.bottom).offset(16)
+            make.left.equalTo(whiteBackgroundView).offset(15)
+            make.right.equalTo(whiteBackgroundView.snp.right).offset(-15)
+            make.height.equalTo(48)
         }
-        exchangeCoinButton.snp.makeConstraints { (make) in
-            make.centerY.equalTo(leftCoinButton)
-            make.centerX.equalTo(exchangeCoinSpaceLabel)
+        mappingIndicatorImageView.snp.makeConstraints { (make) in
+            make.centerX.equalTo(whiteBackgroundView)
+            make.top.equalTo(inputAmountTextField.snp.bottom).offset(12)
+            make.size.equalTo(CGSize.init(width: 12, height: 12))
         }
-        leftAmountTextField.snp.makeConstraints { (make) in
-            make.left.equalTo(exchangeAmountSpaceLabel)
-            make.height.equalTo(36)
-            make.right.equalTo(rightAmountTextField.snp.left)
-            make.bottom.equalTo(exchangeAmountSpaceLabel)
-            make.width.equalTo(rightAmountTextField)
+        outputAmountTextField.snp.makeConstraints { (make) in
+            make.top.equalTo(mappingIndicatorImageView.snp.bottom).offset(12)
+            make.left.equalTo(whiteBackgroundView).offset(15)
+            make.right.equalTo(whiteBackgroundView.snp.right).offset(-15)
+            make.height.equalTo(48)
         }
-        rightAmountTextField.snp.makeConstraints { (make) in
-            make.right.equalTo(exchangeAmountSpaceLabel.snp.right)
-            make.height.equalTo(36)
-            make.bottom.equalTo(exchangeAmountSpaceLabel)
+        outputAddressTextField.snp.makeConstraints { (make) in
+            make.top.equalTo(outputAmountTextField.snp.bottom).offset(16)
+            make.left.equalTo(whiteBackgroundView).offset(15)
+            make.right.equalTo(whiteBackgroundView.snp.right).offset(-15)
+            make.height.equalTo(0).priority(250)
         }
-        exchangeAmountSpaceLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(exchangeCoinSpaceLabel.snp.bottom).offset(63)
-            make.left.equalTo(backgroundImageView).offset(17)
-            make.right.equalTo(backgroundImageView.snp.right).offset(-17)
-            make.height.equalTo(1)
+        mappingSpaceImageView.snp.makeConstraints { (make) in
+            make.top.equalTo(outputAmountTextField.snp.bottom).offset(30).priority(250)
+            make.left.equalTo(whiteBackgroundView).offset(30)
+            make.right.equalTo(whiteBackgroundView.snp.right).offset(-30)
+            make.height.equalTo(2)
         }
-        exchangeToAddressTitleLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(exchangeAmountSpaceLabel.snp.bottom).offset(10)
-            make.left.equalTo(exchangeToAddressSpaceLabel)
+        mappingRateTitleLabel.snp.makeConstraints { (make) in
+            make.top.equalTo(mappingSpaceImageView.snp.bottom).offset(27)
+            make.left.equalTo(whiteBackgroundView).offset(31)
         }
-        exchangeToAddressTextField.snp.makeConstraints { (make) in
-            make.left.equalTo(exchangeToAddressSpaceLabel)
-//            make.right.equalTo(exchangeToAddressSpaceLabel)
-            make.height.equalTo(36)
-            make.bottom.equalTo(exchangeToAddressSpaceLabel)
+        mappingRateLabel.snp.makeConstraints { (make) in
+            make.centerY.equalTo(mappingRateTitleLabel)
+            make.left.equalTo(whiteBackgroundView).offset(110)
         }
-        exchangeToAddressSpaceLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(exchangeAmountSpaceLabel.snp.bottom).offset(63)
-            make.left.equalTo(backgroundImageView).offset(17)
-            make.right.equalTo(backgroundImageView.snp.right).offset(-17)
-            make.height.equalTo(1)
+        minerFeesTitleLabel.snp.makeConstraints { (make) in
+            make.top.equalTo(mappingRateTitleLabel.snp.bottom).offset(8)
+            make.left.equalTo(whiteBackgroundView).offset(31)
         }
-        addressScanButton.snp.makeConstraints { (make) in
-            make.left.equalTo(exchangeToAddressTextField.snp.right)
-            make.size.equalTo(CGSize.init(width: 36, height: 36))
-            make.bottom.equalTo(exchangeToAddressSpaceLabel)
-            make.right.equalTo(backgroundImageView.snp.right).offset(-17)
-        }
-        exchangeRateTitleLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(exchangeToAddressSpaceLabel.snp.bottom).offset(10)
-            make.left.equalTo(exchangeToAddressSpaceLabel)
-        }
-        exchangeRateLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(exchangeRateTitleLabel.snp.bottom).offset(10)
-            make.left.equalTo(exchangeToAddressSpaceLabel)
-        }
-        exchangeRateSpaceLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(exchangeToAddressSpaceLabel.snp.bottom).offset(63)
-            make.left.equalTo(backgroundImageView).offset(17)
-            make.right.equalTo(backgroundImageView.snp.right).offset(-17)
-            make.height.equalTo(1)
-        }
-        transferFeeTitleLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(exchangeRateSpaceLabel.snp.bottom).offset(10)
-            make.left.equalTo(backgroundImageView).offset(15)
-        }
-        transferSpeedLeftTitleLabel.snp.makeConstraints { (make) in
-            make.bottom.equalTo(self.transferFeeSlider.snp.top).offset(-4)
-            make.left.equalTo(self.transferFeeSlider.snp.left)
-        }
-        transferSpeedRightTitleLabel.snp.makeConstraints { (make) in
-            make.bottom.equalTo(self.transferFeeSlider.snp.top).offset(-4)
-            make.right.equalTo(self.transferFeeSlider.snp.right)
-        }
-        transferFeeLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(self.transferFeeSlider.snp.bottom).offset(6)
-            make.left.equalTo(backgroundImageView).offset(15)
-        }
-        transferFeeSlider.snp.makeConstraints { (make) in
-            make.top.equalTo(exchangeRateSpaceLabel.snp.bottom).offset(50)
-            make.left.equalTo(backgroundImageView).offset(15)
-            make.right.equalTo(backgroundImageView).offset(-15)
+        minerFeesLabel.snp.makeConstraints { (make) in
+            make.centerY.equalTo(minerFeesTitleLabel)
+            make.left.equalTo(whiteBackgroundView).offset(110)
         }
         confirmButton.snp.makeConstraints { (make) in
-            make.bottom.equalTo(backgroundImageView.snp.bottom).offset(-28)
+            make.top.equalTo(mappingSpaceImageView.snp.bottom).offset(90)
             make.left.equalTo(self).offset(69)
             make.right.equalTo(self).offset(-69)
             make.height.equalTo(40)
         }
     }
     //MARK: - 懒加载对象
-    private lazy var backgroundImageView : UIImageView = {
+    private lazy var whiteBackgroundView : UIView = {
+        let view = UIView.init()
+        view.backgroundColor = UIColor.white
+        return view
+    }()
+    lazy var balanceIndicatorImageView : UIImageView = {
         let imageView = UIImageView.init()
-        imageView.image = UIImage.init(named: "market_background")
+        imageView.image = UIImage.init(named: "mapping_balance")
         imageView.isUserInteractionEnabled = true
-        // 定义阴影颜色
-        imageView.layer.shadowColor = UIColor.black.cgColor
-        // 阴影的模糊半径
-        imageView.layer.shadowRadius = 3
-        // 阴影的偏移量
-        imageView.layer.shadowOffset = CGSize(width: 0, height: 3)
-        // 阴影的透明度，默认为0，不设置则不会显示阴影****
-        imageView.layer.shadowOpacity = 0.05
         return imageView
     }()
-    lazy var leftCoinButton: UIButton = {
-        let button = UIButton(type: .custom)
-        // 设置字体
-        button.setTitle("---", for: UIControl.State.normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: UIFont.Weight.regular)
-        button.setTitleColor(UIColor.init(hex: "3C3848"), for: UIControl.State.normal)
-        button.addTarget(self, action: #selector(selectExchangeToken(button:)), for: UIControl.Event.touchUpInside)
-        button.tag = 20
-        return button
-    }()
-    lazy var rightCoinButton: UIButton = {
-        let button = UIButton(type: .custom)
-        // 设置字体
-        button.setTitle("---", for: UIControl.State.normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: UIFont.Weight.regular)
-        button.setTitleColor(UIColor.init(hex: "3C3848"), for: UIControl.State.normal)
-//        button.addTarget(self, action: #selector(selectExchangeToken(button:)), for: UIControl.Event.touchUpInside)
-        button.tag = 30
-        return button
-    }()
-    lazy var exchangeCoinSpaceLabel: UILabel = {
+    lazy var balanceLabel: UILabel = {
         let label = UILabel.init()
-        label.backgroundColor = DefaultSpaceColor
+        label.textAlignment = NSTextAlignment.center
+        label.textColor = UIColor.init(hex: "3C3848")
+//        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 12)
+        label.text = localLanguage(keyString: "wallet_mapping_balance_title")
         return label
     }()
-    lazy var exchangeCoinButton: UIButton = {
-        let button = UIButton.init(type: UIButton.ButtonType.custom)
-        button.setImage(UIImage.init(named: "mapping_path"), for: UIControl.State.normal)
-//        button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
-        // 定义阴影颜色
-        button.layer.shadowColor = UIColor.black.cgColor
-        // 阴影的模糊半径
-        button.layer.shadowRadius = 3
-        // 阴影的偏移量
-        button.layer.shadowOffset = CGSize(width: 0, height: 0)
-        // 阴影的透明度，默认为0，不设置则不会显示阴影****
-        button.layer.shadowOpacity = 0.2
-        button.tag = 50
-        return button
-    }()
-    lazy var exchangeAmountSpaceLabel: UILabel = {
-        let label = UILabel.init()
-        label.backgroundColor = DefaultSpaceColor
-        return label
-    }()
-    lazy var leftAmountTextField: WYDTextField = {
+    lazy var inputAmountTextField: WYDTextField = {
         let textField = WYDTextField.init()
         textField.textAlignment = NSTextAlignment.left
-        textField.textColor = UIColor.init(hex: "263C4E")
-        textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_market_transfer_amount_textfield_placeholder"),
-                                                             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C5C8DB"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)])
+        textField.textColor = UIColor.init(hex: "333333")
+        textField.font = UIFont.init(name: "DIN Alternate Bold", size: 14)
+        textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_mapping_input_amount_textfield_placeholder"),
+                                                             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "BABABA"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)])
         textField.keyboardType = .decimalPad
-        textField.delegate = self
+        textField.tintColor = DefaultGreenColor
+        textField.layer.borderColor = UIColor.init(hex: "D8D7DA").cgColor
+        textField.layer.borderWidth = 1
+        textField.layer.cornerRadius = 8
+        let holderView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: 16, height: 48))
+        textField.leftView = holderView
+        textField.leftViewMode = .always
+        let rightView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: 120, height: 48))
+        rightView.addSubview(coinSelectButton)
+        textField.rightView = rightView
+        textField.rightViewMode = .always
         textField.tag = 10
         return textField
     }()
-    lazy var rightAmountTextField: WYDTextField = {
-        let textField = WYDTextField.init()
-        textField.textAlignment = NSTextAlignment.right
-        textField.textColor = UIColor.init(hex: "263C4E")
-        textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_market_receive_amount_textfield_placeholder"),
-                                                             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C5C8DB"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)])
-        textField.keyboardType = .decimalPad
-        textField.delegate = self
-        textField.tag = 20
-        return textField
-    }()
-    lazy var exchangeToAddressSpaceLabel: UILabel = {
-        let label = UILabel.init()
-        label.backgroundColor = DefaultSpaceColor
-        return label
-    }()
-    lazy var exchangeToAddressTextField: UITextField = {
-        let textField = UITextField.init()
-        textField.textAlignment = NSTextAlignment.left
-        textField.textColor = UIColor.init(hex: "263C4E")
-        textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_market_receive_address_textfield_placeholder"),
-                                                             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C5C8DB"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)])
-//        textField.rightView = addressScanButton
-//        textField.rightViewMode = .always
-        textField.isEnabled = false
-        return textField
-    }()
-    lazy var exchangeToAddressTitleLabel: UILabel = {
-        let label = UILabel.init()
-        label.textAlignment = NSTextAlignment.center
-        label.textColor = UIColor.init(hex: "3C3848")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "wallet_market_receive_address_title")
-        return label
-    }()
-    lazy var addressScanButton: UIButton = {
-        let button = UIButton.init(frame: CGRect.init(x: 0, y: 0, width: 28, height: 48))
-        button.setImage(UIImage.init(named: "market_address_book"), for: UIControl.State.normal)
+    lazy var coinSelectButton: UIButton = {
+        let width = 9 + libraWalletTool.ga_widthForComment(content: localLanguage(keyString: "wallet_transfer_token_default_title"), fontSize: 12, height: 22) + 9 + 7
+        let button = UIButton.init(frame: CGRect.init(x: 120 - width - 9, y: (24 - 11), width: width, height: 22))
+        // 设置字体
+        button.setTitle(localLanguage(keyString: "wallet_transfer_token_default_title"), for: UIControl.State.normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
+        button.setTitleColor(UIColor.init(hex: "7038FD"), for: UIControl.State.normal)
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
-//        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -4, bottom: 0, right: 4)
+        button.setImage(UIImage.init(named: "arrow_down"), for: UIControl.State.normal)
+        // 调整位置
+        button.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 9, height: 5.5))
+        button.layer.borderColor = UIColor.init(hex: "7038FD").cgColor
+        button.layer.borderWidth = 0.5
+        button.layer.cornerRadius = 11
         button.tag = 10
         return button
     }()
-    lazy var exchangeRateTitleLabel: UILabel = {
-        let label = UILabel.init()
-        label.textAlignment = NSTextAlignment.center
-        label.textColor = UIColor.init(hex: "3C3848")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "wallet_market_exchange_fee_title")
-        return label
-    }()
-    lazy var exchangeRateLabel: UILabel = {
-        let label = UILabel.init()
-        label.textAlignment = NSTextAlignment.center
-        label.textColor = UIColor.init(hex: "3C3848")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 16), weight: UIFont.Weight.regular)
-        label.text = "---"
-        return label
-    }()
-    lazy var exchangeRateSpaceLabel: UILabel = {
-        let label = UILabel.init()
-        label.backgroundColor = DefaultSpaceColor
-        return label
-    }()
-    lazy var transferFeeTitleLabel: UILabel = {
-        let label = UILabel.init()
-        label.textColor = UIColor.init(hex: "3C3848")
-        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
-        label.text = localLanguage(keyString: "wallet_transfer_transaction_fee_title")
-        return label
-    }()
-    lazy var transferFeeSlider: TransferFeeSliderCustom = {
-        let slide = TransferFeeSliderCustom.init()
-        slide.value = 0.2
-        slide.setThumbImage(UIImage.init(named: "slide_button"), for: UIControl.State.normal)
-        slide.setThumbImage(UIImage.init(named: "slide_button"), for: UIControl.State.highlighted)
-        slide.setMinimumTrackImage(UIImage().imageWithColor(color: UIColor.init(hex: "9339F3")), for: UIControl.State.normal)
-        slide.setMinimumTrackImage(UIImage().imageWithColor(color: UIColor.init(hex: "9339F3")), for: UIControl.State.highlighted)
-        slide.setMaximumTrackImage(UIImage().imageWithColor(color: UIColor.init(hex: "F5F5F5")), for: UIControl.State.normal)
-        slide.setMaximumTrackImage(UIImage().imageWithColor(color: UIColor.init(hex: "F5F5F5")), for: UIControl.State.highlighted)
-        slide.addTarget(self, action: #selector(slideValueDidChange(slide:)
-            ), for: UIControl.Event.valueChanged)
-        return slide
-    }()
-    lazy var transferSliderBackground : UIImageView = {
+    lazy var mappingIndicatorImageView : UIImageView = {
         let imageView = UIImageView.init()
-        imageView.image = UIImage.init(named: "slider_background")
+        imageView.image = UIImage.init(named: "exchange_transaction_detail_amount_indicator")
         imageView.isUserInteractionEnabled = true
         return imageView
     }()
-    lazy var transferSpeedLeftTitleLabel: UILabel = {
-        let label = UILabel.init()
-        label.textColor = UIColor.init(hex: "3C3848")
-        label.font = UIFont.systemFont(ofSize: 12)
-        label.text = localLanguage(keyString: "wallet_transfer_transaction_fee_least_title")
-        return label
+    lazy var outputAmountTextField: WYDTextField = {
+        let textField = WYDTextField.init()
+        textField.textAlignment = NSTextAlignment.left
+        textField.textColor = UIColor.init(hex: "333333")
+        textField.font = UIFont.init(name: "DIN Alternate Bold", size: 14)
+        textField.text = "0"
+        textField.keyboardType = .decimalPad
+        textField.tintColor = DefaultGreenColor
+        textField.layer.backgroundColor = UIColor.init(hex: "F7F7F9").cgColor
+        textField.layer.cornerRadius = 8
+        let holderView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: 16, height: 48))
+        textField.leftView = holderView
+        textField.leftViewMode = .always
+        textField.isUserInteractionEnabled = false
+        let rightView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: 100, height: 48))
+        rightView.addSubview(outputTokenUnitTitleLabel)
+        textField.rightView = rightView
+        textField.rightViewMode = .always
+        textField.tag = 20
+        return textField
     }()
-    lazy var transferSpeedRightTitleLabel: UILabel = {
-        let label = UILabel.init()
-        label.textColor = UIColor.init(hex: "3C3848")
-        label.font = UIFont.systemFont(ofSize: 12)
-        label.text = localLanguage(keyString: "wallet_transfer_transaction_fee_max_title")
-        return label
-    }()
-    lazy var transferFeeLabel: UILabel = {
-        let label = UILabel.init()
-        label.textColor = UIColor.init(hex: "3C3848")
-        label.font = UIFont.boldSystemFont(ofSize: 10)
+    lazy var outputTokenUnitTitleLabel: UILabel = {
+        let width = 16 + libraWalletTool.ga_widthForComment(content: localLanguage(keyString: "---"), fontSize: 12, height: 22) + 16
+
+        let label = UILabel.init(frame: CGRect.init(x: 100 - width, y: 0, width: width, height: 48))
         label.textAlignment = NSTextAlignment.center
-        let fee = Float(transferFeeMax - transferFeeMin) * Float(0.2) + Float(transferFeeMin)
-        let fee8 = NSString.init(format: "%.8f", fee)
-        label.text = "\(fee8) vtoken"
+        label.textColor = UIColor.init(hex: "3C3848")
+        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 12), weight: UIFont.Weight.regular)
+        label.text = "---"
+        return label
+    }()
+    lazy var outputAddressTextField: UITextField = {
+        let textField = UITextField.init()
+        textField.textAlignment = NSTextAlignment.left
+        textField.textColor = UIColor.init(hex: "333333")
+        textField.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_mapping_eth_address_textfield_placeholder"),
+                                                             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "BABABA"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)])
+        textField.keyboardType = .asciiCapable
+        textField.tintColor = DefaultGreenColor
+        textField.layer.borderColor = UIColor.init(hex: "D8D7DA").cgColor
+        textField.layer.borderWidth = 1
+        textField.layer.cornerRadius = 8
+        let holderView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: 16, height: 48))
+        textField.leftView = holderView
+        textField.leftViewMode = .always
+        textField.tag = 30
+        textField.alpha = 0
+        return textField
+    }()
+    lazy var mappingSpaceImageView: UIImageView = {
+        let imageView = UIImageView.init()
+        imageView.image = UIImage.init(named: "mapping_space")
+        imageView.isUserInteractionEnabled = true
+        return imageView
+    }()
+    lazy var mappingRateTitleLabel: UILabel = {
+        let label = UILabel.init()
+        label.textAlignment = NSTextAlignment.left
+        label.textColor = UIColor.init(hex: "999999")
+        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: UIFont.Weight.regular)
+        label.text = localLanguage(keyString: "wallet_mapping_mapping_rate_title")
+        return label
+    }()
+    lazy var mappingRateLabel: UILabel = {
+        let label = UILabel.init()
+        label.textAlignment = NSTextAlignment.left
+        label.textColor = UIColor.init(hex: "333333")
+//        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: UIFont.Weight.regular)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 10)
+        label.text = "---"
+        return label
+    }()
+    lazy var minerFeesTitleLabel: UILabel = {
+        let label = UILabel.init()
+        label.textAlignment = NSTextAlignment.left
+        label.textColor = UIColor.init(hex: "999999")
+        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: UIFont.Weight.regular)
+        label.text = localLanguage(keyString: "wallet_mapping_mapping_miner_fees_title")
+        return label
+    }()
+    lazy var minerFeesLabel: UILabel = {
+        let label = UILabel.init()
+        label.textAlignment = NSTextAlignment.left
+        label.textColor = UIColor.init(hex: "333333")
+//        label.font = UIFont.systemFont(ofSize: adaptFont(fontSize: 10), weight: UIFont.Weight.regular)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 10)
+        label.text = "---"
         return label
     }()
     lazy var confirmButton: UIButton = {
@@ -366,164 +282,66 @@ class TokenMappingHeaderView: UIView {
         button.tag = 100
         return button
     }()
-    @objc func slideValueDidChange(slide: UISlider) {
-        let fee = Float(transferFeeMax - transferFeeMin) * slide.value + Float(transferFeeMin)
-        let fee8 = NSString.init(format: "%.8f", fee)
-        self.transferFeeLabel.text = "\(fee8) vtoken"
-    }
     @objc func buttonClick(button: UIButton) {
         if button.tag == 10 {
-            self.delegate?.chooseAddress()
+            inputAmountTextField.resignFirstResponder()
+            self.delegate?.chooseToken()
         } else {
             // 兑换
-//            guard model != nil else {
-//                return
-//            }
-            self.leftAmountTextField.resignFirstResponder()
-            self.rightAmountTextField.resignFirstResponder()
-            guard let payAmountString = leftAmountTextField.text, payAmountString.isEmpty == false else {
-                self.makeToast(LibraWalletError.WalletMarket(reason: .payAmountEmpty).localizedDescription, position: .center)
-                return
-            }
-            guard isPurnDouble(string: payAmountString) == true else {
-                self.makeToast(LibraWalletError.WalletMarket(reason: .payAmountInvalid).localizedDescription, position: .center)
-                return
-            }
-            let payAmount = NSDecimalNumber.init(string: payAmountString).doubleValue
-            guard payAmount != 0 else {
-                self.makeToast(localLanguage(keyString: "wallet_market_pay_amount_least_title") + "\(transferViolasLeast)", position: .center)
-                return
-            }
-            guard let exchangeAmountString = rightAmountTextField.text, exchangeAmountString.isEmpty == false else {
-                self.makeToast(LibraWalletError.WalletMarket(reason: .exchangeAmountEmpty).localizedDescription, position: .center)
-                return
-            }
-            guard isPurnDouble(string: exchangeAmountString) == true else {
-                self.makeToast(LibraWalletError.WalletMarket(reason: .exchangeAmountInvalid).localizedDescription, position: .center)
-                return
-            }
-            let exchangeAmount = NSDecimalNumber.init(string: exchangeAmountString).doubleValue
-            guard exchangeAmount != 0 else {
-                self.makeToast(localLanguage(keyString: "wallet_market_exchange_amount_least_title") + "\(transferViolasLeast)", position: .center)
-                return
-            }
-            guard let address = exchangeToAddressTextField.text, address.isEmpty == false else {
-                self.makeToast(localLanguage(keyString: "请选择钱包"), position: .center)
-                return
-            }
-            let feeString = self.transferFeeLabel.text
-            let fee = Double(feeString!.replacingOccurrences(of: " vtoken", with: ""))!
-    //        self.delegate?.exchangeToken(payToken: tempLeftModel,
-    //                                     receiveToken: tempRightModel,
-    //                                     amount: payAmount,
-    //                                     exchangeAmount: exchangeAmount)
-            self.delegate?.confirmTransfer(amount: payAmount,
-                                           address: address,
-                                           fee: fee)
+            self.delegate?.confirmTransfer()
         }
     }
-    @objc func selectExchangeToken(button: UIButton) {
-        guard self.walletType == .Violas else {
-            return
-        }
-        self.delegate?.showMappingTokenList()
-    }
-    var rate: Double? {
+    var inputModel: TokenMappingListDataModel? {
         didSet {
-            let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
-                                                           scale: 4,
-                                                           raiseOnExactness: false,
-                                                           raiseOnOverflow: false,
-                                                           raiseOnUnderflow: false,
-                                                           raiseOnDivideByZero: false)
-            self.exchangeRateLabel.text =  NSDecimalNumber.init(value: rate ?? 0).multiplying(by: NSDecimalNumber.init(value: 1), withBehavior: numberConfig).stringValue
-        }
-    }
-    var model: TokenMappingDataModel? {
-        didSet {
-            self.leftCoinButton.setTitle(model?.pay_name, for: UIControl.State.normal)
-            self.rightCoinButton.setTitle(model?.name, for: UIControl.State.normal)
-            self.exchangeRateLabel.text = "1\(model?.pay_name ?? "") = \(model?.rate ?? 0)\(model?.pay_name ?? "")"
-        }
-    }
-    var reverseModel: TokenMappingListDataModel? {
-        didSet {
-            self.leftCoinButton.setTitle(reverseModel?.name, for: UIControl.State.normal)
-            self.rightCoinButton.setTitle(reverseModel?.map_name, for: UIControl.State.normal)
-            self.exchangeRateLabel.text = "1\(reverseModel?.name ?? "") = \(reverseModel?.rate ?? 0)\(reverseModel?.map_name ?? "")"
-        }
-    }
-    var walletType: WalletType?
-    @objc func textFieldDidChange() {
-        guard let payAmountString = leftAmountTextField.text else {
-            return
-        }
-        guard let exchangeAmountString = rightAmountTextField.text else {
-            return
-        }
-        if leftAmountTextField.isFirstResponder {
-            guard isPurnDouble(string: payAmountString) else {
+            guard let model = inputModel else {
                 return
             }
-            //正在编辑左边
-            let numberConfig = NSDecimalNumberHandler.init(roundingMode: .down,
-                                                           scale: 4,
-                                                           raiseOnExactness: false,
-                                                           raiseOnOverflow: false,
-                                                           raiseOnUnderflow: false,
-                                                           raiseOnDivideByZero: false)
-            let number = NSDecimalNumber.init(string: payAmountString).multiplying(by: NSDecimalNumber.init(string: self.exchangeRateLabel.text ?? "0"), withBehavior: numberConfig)
-            rightAmountTextField.text = number.stringValue
-        } else {
-            guard isPurnDouble(string: exchangeAmountString) else {
-                return
-            }
-            //正在编辑右边
-            let numberConfig = NSDecimalNumberHandler.init(roundingMode: .up,
-                                                           scale: 4,
-                                                           raiseOnExactness: false,
-                                                           raiseOnOverflow: false,
-                                                           raiseOnUnderflow: false,
-                                                           raiseOnDivideByZero: false)
-            let number = NSDecimalNumber.init(string: exchangeAmountString).dividing(by: NSDecimalNumber.init(string: self.exchangeRateLabel.text ?? "0"), withBehavior: numberConfig)
-            leftAmountTextField.text = number.stringValue
-        }
-    }
-}
-extension TokenMappingHeaderView: UITextFieldDelegate {
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        guard let content = textField.text else {
-            return true
-        }
-        let textLength = content.count + string.count - range.length
-        if textField.tag == 10 {
-            if textLength == 0 {
-                rightAmountTextField.text = ""
-            }
-        } else {
-            if textLength == 0 {
-                leftAmountTextField.text = ""
-            }
-        }
-        if content.contains(".") {
-            let firstContent = content.split(separator: ".").first?.description ?? "0"
-            if (textLength - firstContent.count) < 6 {
-                return true
+            if model.to_coin?.coin_type == "eth" {
+                UIView.animate(withDuration: 0.3) {
+                    self.whiteBackgroundView.snp.remakeConstraints { (make) in
+                        make.height.equalTo(470)
+                    }
+                    self.outputAddressTextField.alpha = 1
+                    self.outputAddressTextField.snp.remakeConstraints { (make) in
+                        make.height.equalTo(48)
+                    }
+                    self.mappingSpaceImageView.snp.remakeConstraints { (make) in
+                        make.top.equalTo(self.outputAddressTextField.snp.bottom).offset(30)
+                    }
+                    self.layoutIfNeeded()
+                }
             } else {
-                return false
+                if oldValue?.to_coin?.coin_type == "eth" {
+                    UIView.animate(withDuration: 0.3) {
+                        self.whiteBackgroundView.snp.remakeConstraints { (make) in
+                            make.height.equalTo(436)
+                        }
+                        self.outputAddressTextField.alpha = 0
+                        self.outputAddressTextField.snp.remakeConstraints { (make) in
+                            make.height.equalTo(0)
+                        }
+                        self.mappingSpaceImageView.snp.remakeConstraints { (make) in
+                            make.top.equalTo(self.outputAmountTextField.snp.bottom).offset(30)
+                        }
+                        self.layoutIfNeeded()
+                    }
+                }
             }
-        } else {
-            return textLength <= ApplyTokenAmountLengthLimit
-        }
-        
-    }
-    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        if self.leftCoinButton.titleLabel?.text != "---" && self.rightCoinButton.titleLabel?.text != "---" {
-            print("true")
-            return true
-        } else {
-            print("false")
-            return false
+            var unit = 1000000
+            if model.from_coin?.coin_type == "btc" {
+                unit = 100000000
+            }
+            let balance = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: model.from_coin?.assert?.amount ?? 0),
+                                                 scale: 6,
+                                                 unit: unit)
+            balanceLabel.text = localLanguage(keyString: "wallet_mapping_balance_title") + balance + " \(model.from_coin?.assert?.show_name ?? "")"
+            coinSelectButton.setTitle(model.from_coin?.assert?.show_name, for: UIControl.State.normal)
+            coinSelectButton.imagePosition(at: .right, space: 3, imageViewSize: CGSize.init(width: 9, height: 5.5))
+            let oldFrame = coinSelectButton.frame
+            let width = 9 + libraWalletTool.ga_widthForComment(content: model.from_coin?.assert?.show_name ?? "", fontSize: 12, height: 22) + 9 + 7
+            coinSelectButton.frame = CGRect.init(x: 120 - width - 9, y: oldFrame.origin.y, width: width, height: oldFrame.size.height)
+            outputTokenUnitTitleLabel.text = model.to_coin?.assert?.show_name ?? "---"
+            mappingRateLabel.text = "1" + " \(model.from_coin?.assert?.show_name ?? "---")" + "=" + " \(model.mapping_rate ?? 1)" + " \(model.to_coin?.assert?.show_name ?? "---")"
         }
     }
 }

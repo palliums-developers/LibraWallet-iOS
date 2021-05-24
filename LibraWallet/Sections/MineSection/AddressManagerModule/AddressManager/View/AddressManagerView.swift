@@ -33,7 +33,7 @@ class AddressManagerView: UIView {
         tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
         tableView.estimatedRowHeight = 0;
         tableView.estimatedSectionHeaderHeight = 0;
-        tableView.backgroundColor = UIColor.white
+        tableView.backgroundColor = UIColor.init(hex: "F7F7F9")
         return tableView
     }()
 }

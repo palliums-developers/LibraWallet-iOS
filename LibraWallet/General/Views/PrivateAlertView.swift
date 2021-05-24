@@ -130,7 +130,7 @@ class PrivateAlertView: UIView {
             abort()
         } else {
             setConfirmPrivateAndUseLegalState(show: true)
-            self.hide()
+            self.hide(tag: 199)
         }
     }
     typealias openPrivateLegalClosure = () -> Void

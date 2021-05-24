@@ -25,6 +25,8 @@ public enum LibraWalletError: Error {
         case walletVersionExpired
         /// 网络无法访问
         case networkInvalid
+        /// 钱包尚未激活
+        case walletUnActive
     }
     case WalletRequest(reason: RequestError)
     
@@ -113,6 +115,8 @@ public enum LibraWalletError: Error {
         case addressTypeInvalidError
         /// 地址添加失败
         case addressInsertError
+        /// 地址已存在
+        case addressExistError
     }
     case WalletAddAddress(reason: AddAddressError)
     
@@ -137,6 +141,8 @@ public enum LibraWalletError: Error {
         case passwordTooLongError
         /// 密码太短
         case passwordTooShortError
+        /// 不同意协议
+        case notAgreeLegalError
     }
     case WalletAddWallet(reason: AddWalletError)
     
@@ -154,18 +160,6 @@ public enum LibraWalletError: Error {
     }
     case WalletImportWallet(reason: ImportWalletError)
     
-    public enum ChangeWalletNameError {
-        /// 钱包名称无效
-        case walletNameInvalidError
-        /// 钱包名称为空
-        case walletNameEmptyError
-        /// 钱包名称和以前相同
-        case walletNameSameAsOld
-        /// 改名失败
-        case changeWalletNameFailed
-    }
-    case WalletChangeWalletName(reason: ChangeWalletNameError)
-    
     public enum CheckPasswordError {
         /// 密码无效
         case passwordInvalidError
@@ -173,10 +167,13 @@ public enum LibraWalletError: Error {
         case passwordEmptyError
         /// 密码不正确
         case passwordCheckFailed
+        /// 取消密码验证
+        case cancel
     }
     case WalletCheckPassword(reason: CheckPasswordError)
     
     public enum TransferError {
+        case tokenInvalid
         /// 数量无效
         case amountInvalid
         /// 数量为空
@@ -203,18 +200,26 @@ public enum LibraWalletError: Error {
         case btcAddressInvalid
         /// Violas地址无效
         case violasAddressInvalid
-        /// Libra地址无效
-        case libraAddressInvalid
         /// Violas稳定币名字为空
         case violasTokenNameEmpty
         /// Violas稳定币合约未开启或不支持
-        case violasTokenContractInvalid
+        case violasModuleInvalid
+        /// Libra地址无效
+        case libraAddressInvalid
+        /// Libra稳定币名字为空
+        case libraTokenNameEmpty
+        /// Libra稳定币合约未开启或不支持
+        case libraModuleInvalid
         /// 解析失败，不支持
         case handleInvalid
     }
     case WalletScan(reason: ScanError)
     
     public enum ExchangeMarketError {
+        /// 交易所维护中
+        case marketOffline
+        /// 交易所暂无流动性
+        case marketWithoutLiquidity
         /// 未开启不能调换
         case swpUnpublishTokenError
         /// 待兑换金额无效
@@ -242,6 +247,14 @@ public enum LibraWalletError: Error {
         case payAmountEmpty
         /// 兑换稳定币数量为空
         case exchangeAmountEmpty
+        
+//        /// 尚未选择通证
+//        case unselectToken
+//        /// 通证不足
+//        case tokenAmountNotEnough
+//        /// 通证超限
+//        case tokenAmountMaxLimit
+        
     }
     case WalletMarket(reason: ExchangeMarketError)
     
@@ -252,8 +265,98 @@ public enum LibraWalletError: Error {
         case mappingFounctionInvalid
         /// 映射稳定币为空
         case mappingCoinDataEmpty
+        /// ETH地址为空
+        case ethAddressEmpty
+        /// ETH无效
+        case ethAddressInvalid
     }
     case WalletMapping(reason: MappingError)
+    
+    public enum DataBaseError {
+        /// 数据打开失败
+        case openDataBaseError
+        /// 默认钱包不存在
+        case defaultWalletNotExist
+    }
+    case WalletDataBase(reason: DataBaseError)
+    
+    public enum BankDepositError {
+        /// 存款未开启
+        case tokenUnactivated
+        /// 余额为0
+        case balanceEmpty
+        /// 输入金额无效
+        case amountInvalid
+        /// 余额不足
+        case balanceInsufficient
+        /// 金额比最低充值限额低
+        case amountTooLittle
+        /// 额度不足
+        case quotaInsufficient
+        /// 数据异常
+        case dataInvalid
+    }
+    case WalletBankDeposit(reason: BankDepositError)
+    
+    public enum BankLoanError {
+        /// 借款币未开启
+        case tokenUnactivated
+        /// 未输入金额
+        case amountEmpty
+        /// 输入金额无效
+        case amountInvalid
+        /// 金额比最低充值限额低
+        case amountTooLittle
+        /// 额度不足
+        case quotaInsufficient
+        /// 数据异常
+        case dataInvalid
+        /// 未同意借款协议
+        case disagreeLegal
+    }
+    case WalletBankLoan(reason: BankLoanError)
+    
+    public enum BankRepaymentError {
+        /// 借款币未开启
+        case tokenUnactivated
+        /// 未输入金额
+        case amountEmpty
+        /// 输入金额无效
+        case amountInvalid
+        /// 金额比最低还贷额低
+        case amountTooLittle
+        /// 金额太多
+        case amountTooLarge
+        /// 余额不足
+        case balanceInsufficient
+        /// 数据异常
+        case dataInvalid
+    }
+    case WalletBankRepayment(reason: BankRepaymentError)
+    
+    public enum BankWithdrawError {
+        /// 提款币未开启
+        case tokenUnactivated
+        /// 未输入金额
+        case amountEmpty
+        /// 输入金额无效
+        case amountInvalid
+        /// 金额太多
+        case amountTooLarge
+        /// 数据异常
+        case dataInvalid
+    }
+    case WalletBankWithdraw(reason: BankWithdrawError)
+    
+    public enum VerifyMobilePhoneError {
+        /// 区域未选择
+        case phoneAreaUnselect
+        /// 手机号未输入
+        case phoneNumberEmpty
+        /// 验证码未输入
+        case secureCodeEmpty
+    }
+    case WalletVerifyMobile(reason: VerifyMobilePhoneError)
 }
 extension LibraWalletError: LocalizedError {
     public var errorDescription: String? {
@@ -276,8 +379,6 @@ extension LibraWalletError: LocalizedError {
             return reason.localizedDescription
         case .WalletImportWallet(let reason):
             return reason.localizedDescription
-        case .WalletChangeWalletName(let reason):
-            return reason.localizedDescription
         case .WalletCheckPassword(let reason):
             return reason.localizedDescription
         case .WalletTransfer(let reason):
@@ -287,6 +388,18 @@ extension LibraWalletError: LocalizedError {
         case .WalletMarket(let reason):
             return reason.localizedDescription
         case .WalletMapping(let reason):
+            return reason.localizedDescription
+        case .WalletDataBase(reason: let reason):
+            return reason.localizedDescription
+        case .WalletBankDeposit(reason: let reason):
+            return reason.localizedDescription
+        case .WalletBankLoan(reason: let reason):
+            return reason.localizedDescription
+        case .WalletBankRepayment(reason: let reason):
+            return reason.localizedDescription
+        case .WalletBankWithdraw(reason: let reason):
+            return reason.localizedDescription
+        case .WalletVerifyMobile(reason: let reason):
             return reason.localizedDescription
         }
     }
@@ -308,6 +421,8 @@ extension LibraWalletError.RequestError {
             return localLanguage(keyString: "wallet_request_version_invalid_error")
         case .networkInvalid:
             return localLanguage(keyString: "wallet_request_network_invalid_error")
+        case .walletUnActive:
+            return localLanguage(keyString: "wallet_request_wallet_unactive_error")
         }
     }
 }
@@ -429,6 +544,8 @@ extension LibraWalletError.AddAddressError {
             return localLanguage(keyString: "wallet_add_address_remarks_length_invalid_error")
         case .addressTypeInvalidError:
             return localLanguage(keyString: "wallet_add_address_type_invalid_error")
+        case .addressExistError:
+            return localLanguage(keyString: "wallet_add_address_exist_error")
         }
     }
 }
@@ -455,6 +572,9 @@ extension LibraWalletError.AddWalletError {
             return localLanguage(keyString: "wallet_add_wallet_password_length_limit_long_error")
         case .passwordTooShortError:
             return localLanguage(keyString: "wallet_add_wallet_password_length_limit_short_error")
+        case .notAgreeLegalError:
+            return localLanguage(keyString: "wallet_add_wallet_not_agree_legal_error")
+
         }
     }
 }
@@ -474,20 +594,6 @@ extension LibraWalletError.ImportWalletError {
         }
     }
 }
-extension LibraWalletError.ChangeWalletNameError {
-    var localizedDescription: String {
-        switch self {
-        case .walletNameInvalidError:
-            return localLanguage(keyString: "wallet_change_name_invalid_error")
-        case .walletNameEmptyError:
-            return localLanguage(keyString: "wallet_change_name_empty_error")
-        case .walletNameSameAsOld:
-            return localLanguage(keyString: "wallet_change_name_same_as_old_error")
-        case .changeWalletNameFailed:
-            return localLanguage(keyString: "wallet_change_name_failed_error")
-        }
-    }
-}
 extension LibraWalletError.CheckPasswordError {
     var localizedDescription: String {
         switch self {
@@ -497,12 +603,16 @@ extension LibraWalletError.CheckPasswordError {
             return localLanguage(keyString: "wallet_check_password_empty_error")
         case .passwordCheckFailed:
             return localLanguage(keyString: "wallet_check_password_failed_error")
+        case .cancel:
+            return "Cancel"
         }
     }
 }
 extension LibraWalletError.TransferError {
     var localizedDescription: String {
         switch self {
+        case .tokenInvalid:
+            return localLanguage(keyString: "wallet_transfer_token_invalid_error")
         case .amountInvalid:
             return localLanguage(keyString: "wallet_transfer_amount_invalid_error")
         case .amountEmpty:
@@ -534,12 +644,16 @@ extension LibraWalletError.ScanError {
             return localLanguage(keyString: "wallet_scan_result_address_btc_invalid_error")
         case .violasAddressInvalid:
             return localLanguage(keyString: "wallet_scan_result_address_violas_invalid_error")
+        case .violasTokenNameEmpty:
+            return localLanguage(keyString: "wallet_scan_result_address_violas_module_empty_error")
+        case .violasModuleInvalid:
+            return localLanguage(keyString: "wallet_scan_result_address_violas_module_invalid_error")
         case .libraAddressInvalid:
             return localLanguage(keyString: "wallet_scan_result_address_libra_invalid_error")
-        case .violasTokenNameEmpty:
-            return localLanguage(keyString: "wallet_scan_result_address_violas_module_name_empty_error")
-        case .violasTokenContractInvalid:
-            return localLanguage(keyString: "wallet_scan_result_address_contract_invalid_error")
+        case .libraTokenNameEmpty:
+            return localLanguage(keyString: "wallet_scan_result_address_libra_module_empty_error")
+        case .libraModuleInvalid:
+            return localLanguage(keyString: "wallet_scan_result_address_libra_module_invalid_error")
         case .handleInvalid:
             return localLanguage(keyString: "wallet_scan_result_not_support_error")
         }
@@ -548,6 +662,12 @@ extension LibraWalletError.ScanError {
 extension LibraWalletError.ExchangeMarketError {
     var localizedDescription: String {
         switch self {
+        // 交易所维护中
+        case .marketOffline:
+            return localLanguage(keyString: "wallet_market_offline")
+        // 交易所无流动性
+        case .marketWithoutLiquidity:
+            return localLanguage(keyString: "wallet_market_exchange_without_liquidity")
         // 未开启不能调换
         case .swpUnpublishTokenError:
             return localLanguage(keyString: "wallet_market_swap_unpublisheda_error")
@@ -600,6 +720,136 @@ extension LibraWalletError.MappingError {
             return localLanguage(keyString: "wallet_mapping_info_alert_content")
         case .mappingCoinDataEmpty:
             return localLanguage(keyString: "wallet_mapping_info_data_empty_alert_content")
+        case .ethAddressEmpty:
+            return localLanguage(keyString: "wallet_mapping_eth_address_empty")
+        case .ethAddressInvalid:
+            return localLanguage(keyString: "wallet_mapping_eth_address_invalid")
+        }
+    }
+}
+extension LibraWalletError.DataBaseError {
+    var localizedDescription: String {
+        switch self {
+        /// 暂未映射
+        case .openDataBaseError:
+            return localLanguage(keyString: "DataBase Invalid")
+        case .defaultWalletNotExist:
+            return localLanguage(keyString: "DataBase not exist default wallet")
+        }
+    }
+}
+extension LibraWalletError.BankDepositError {
+    var localizedDescription: String {
+        switch self {
+        /// 充值币未开启
+        case .tokenUnactivated:
+            return localLanguage(keyString: "wallet_bank_deposit_token_unactivated_error")
+        /// 余额为0
+        case .balanceEmpty:
+            return localLanguage(keyString: "wallet_bank_deposit_balance_empty_error")
+        /// 输入金额无效
+        case .amountInvalid:
+            return localLanguage(keyString: "wallet_bank_deposit_amount_invalid_error")
+        /// 余额不足
+        case .balanceInsufficient:
+            return localLanguage(keyString: "wallet_bank_deposit_balance_insufficient_error")
+        /// 金额比最低充值限额低
+        case .amountTooLittle:
+            return localLanguage(keyString: "wallet_bank_deposit_amount_too_little_error")
+        /// 额度不足
+        case .quotaInsufficient:
+            return localLanguage(keyString: "wallet_bank_deposit_quota_insufficient_error")
+        case .dataInvalid:
+            return localLanguage(keyString: "wallet_bank_deposit_data_invalid_error")
+        }
+    }
+}
+extension LibraWalletError.BankLoanError {
+    var localizedDescription: String {
+        switch self {
+        /// 充值币未开启
+        case .tokenUnactivated:
+            return localLanguage(keyString: "wallet_bank_loan_token_unactivated_error")
+        /// 余额为0
+        case .amountEmpty:
+            return localLanguage(keyString: "wallet_bank_loan_amount_empty_error")
+        /// 输入金额无效
+        case .amountInvalid:
+            return localLanguage(keyString: "wallet_bank_loan_amount_invalid_error")
+        /// 金额比最低充值限额低
+        case .amountTooLittle:
+            return localLanguage(keyString: "wallet_bank_loan_amount_too_little_error")
+        /// 额度不足
+        case .quotaInsufficient:
+            return localLanguage(keyString: "wallet_bank_loan_quota_insufficient_error")
+        /// 数据异常
+        case .dataInvalid:
+            return localLanguage(keyString: "wallet_bank_loan_data_invalid_error")
+        /// 余额不足
+        case .disagreeLegal:
+            return localLanguage(keyString: "wallet_bank_loan_disagree_legal_error")
+        }
+    }
+}
+extension LibraWalletError.BankRepaymentError {
+    var localizedDescription: String {
+        switch self {
+        /// 还贷币未开启
+        case .tokenUnactivated:
+            return localLanguage(keyString: "wallet_bank_repayment_token_unactivated_error")
+        /// 余额为0
+        case .amountEmpty:
+            return localLanguage(keyString: "wallet_bank_repayment_amount_empty_error")
+        /// 输入金额无效
+        case .amountInvalid:
+            return localLanguage(keyString: "wallet_bank_repayment_amount_invalid_error")
+        /// 金额比最低还贷额低
+        case .amountTooLittle:
+            return localLanguage(keyString: "wallet_bank_repayment_amount_too_little_error")
+        case .amountTooLarge:
+            return localLanguage(keyString: "wallet_bank_repayment_amount_too_large_error")
+        /// 余额不足
+        case .balanceInsufficient:
+            return localLanguage(keyString: "wallet_bank_repayment_balance_insufficient_error")
+        /// 数据异常
+        case .dataInvalid:
+            return localLanguage(keyString: "wallet_bank_repayment_data_invalid_error")
+        }
+    }
+}
+extension LibraWalletError.BankWithdrawError {
+    var localizedDescription: String {
+        switch self {
+        /// 还贷币未开启
+        case .tokenUnactivated:
+            return localLanguage(keyString: "wallet_bank_withdraw_token_unactivated_error")
+        /// 余额为0
+        case .amountEmpty:
+            return localLanguage(keyString: "wallet_bank_withdraw_amount_empty_error")
+        /// 输入金额无效
+        case .amountInvalid:
+            return localLanguage(keyString: "wallet_bank_withdraw_amount_invalid_error")
+        /// 金额太多
+        case .amountTooLarge:
+            return localLanguage(keyString: "wallet_bank_withdraw_amount_too_large_error")
+        /// 数据异常
+        case .dataInvalid:
+            return localLanguage(keyString: "wallet_bank_withdraw_data_invalid_error")
+        }
+    }
+}
+extension LibraWalletError.VerifyMobilePhoneError {
+    var localizedDescription: String {
+        switch self {
+        /// 手机区域未选择
+        case .phoneAreaUnselect:
+            return localLanguage(keyString: "wallet_verify_mobile_phone_area_unselect_error")
+        /// 手机号为空
+        case .phoneNumberEmpty:
+            return localLanguage(keyString: "wallet_verify_mobile_phone_number_empty_error")
+        /// 验证码为空
+        case .secureCodeEmpty:
+            return localLanguage(keyString: "wallet_verify_mobile_secure_code_empty_error")
         }
     }
 }

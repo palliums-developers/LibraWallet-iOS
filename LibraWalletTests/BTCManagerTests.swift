@@ -7,7 +7,10 @@
 //
 
 import XCTest
-@testable import Violas
+@testable import ViolasPay
+import BigInt
+import BitcoinKit
+
 class BTCManagerTests: XCTestCase {
 
     override func setUp() {
@@ -32,12 +35,13 @@ class BTCManagerTests: XCTestCase {
     func testBTC() {
         let mnemonicArray = ["net", "dice", "divide", "amount", "stamp", "flock", "brave", "nuclear", "fox", "aim", "father", "apology"]
         let wallet = try! BTCManager().getWallet(mnemonic: mnemonicArray)
+        //BIP39 Seed
         XCTAssertEqual("f12e202e367bd9b24354b264b347eba79ac325ea429580425cc0a8d74cd9622ac3aeac1c40286b08e7ab7a29ae18c1fc5f15ba1376cbebcdf822d01a81bae503", wallet.seed.toHexString())
+        //BIP32 Root Key
         XCTAssertEqual("tprv8ZgxMBicQKsPezAPNT5LRtjx51VvYgtTcT4mRZTMLXrLvX6kwnpBWPAY97pbYKPuMBfYTzPLV1ZnFyYSriqf8Lqjq4F37ujEcdpe4t8Rn2D", wallet.rootXPrivKey.qrcodeString)
         print()
         print(wallet.privKeys)
         print(wallet.externalIndex)
-
     }
     func testPublish() {
 //        let result = ViolasManager().getViolasPublishCode(content: "05599ef248e215849cc599f563b4883fc8aff31f1e43dff1e3ebe4de1370e054")
@@ -59,26 +63,23 @@ class BTCManagerTests: XCTestCase {
         let result4 = ViolasManager.isValidViolasAddress(address: str4)
         XCTAssertEqual(result4, false)
     }
-    func testCaculll() {
-        let code = getProgramCode(content: ViolasPublishScriptCode)
-        print(code.toHexString())
-        let range: Range = code.toHexString().range(of: "7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614")!
-        let location: Int = code.toHexString().distance(from: code.toHexString().startIndex, to: range.lowerBound)
-        print("location = \((location / 2) - 1)")
-        let location2 = ViolasManager().getViolasTokenContractLocation(code: ViolasPublishScriptCode, contract: "7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614")
-        print(location2)
-        
-        let data = ViolasManager.getCodeData(move: ViolasPublishScriptCode, address: "238adce0d1b40db648145473a7ba42e42d637dfbe8f7dd007c49a85f0e3a5d89")
-        print(data.toHexString())
-    }
     func testExchange() {
-        let code = getProgramCode(content: ViolasStableCoinScriptWithDataCode)
-        print(code.toHexString())
-        let range: Range = code.toHexString().range(of: "7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614")!
-        let location: Int = code.toHexString().distance(from: code.toHexString().startIndex, to: range.lowerBound)
-        print("location = \((location / 2) - 1)")
-        let location2 = ViolasManager().getViolasTokenContractLocation(code: ViolasStableCoinScriptWithDataCode, contract: "7257c2417e4d1038e1817c8f283ace2e1041b3396cdbb099eb357bbee024d614")
-        print(location2)
+//        let seed = Data.init(Array<UInt8>(hex: "f12e202e367bd9b24354b264b347eba79ac325ea429580425cc0a8d74cd9622ac3aeac1c40286b08e7ab7a29ae18c1fc5f15ba1376cbebcdf822d01a81bae500"))
+//        let wallet = HDWallet.init(seed: seed, externalIndex: 0, internalIndex: 0, network: .mainnetBTC)
+//        print(wallet.privKeys)
+//        let testBigUInt = BigUInt.init(seed) + 256
+//        print(testBigUInt.serialize().toHexString())
+//        let privateKey = PrivateKey.init()
+//        print(privateKey.data.toHexString())
+        //998befae8fbe932299e61cab53084be05ca01d7d9a886f5ad20cc218bcaa7c20
+        let privateKeyData = Data.init(Array<UInt8>(hex: "998befae8fbe932299e61cab53084be05ca01d7d9a886f5ad20cc218bcaa7c20"))
+
+//        let privateKeyNumber = BigUInt.init(Data.init(Array<UInt8>(hex: "998befae8fbe932299e61cab53084be05ca01d7d9a886f5ad20cc218bcaa7c20")))
+        let privateKey = PrivateKey.init(data: privateKeyData, network: .mainnetBTC, isPublicKeyCompressed: true)
+        let address = privateKey.publicKey().toBitcoinAddress()
+        print(address)
+        print("final")
+
     }
     func testPasswordLogic() {
         XCTAssertEqual(false, handlePassword(password: "A"))
@@ -93,12 +94,21 @@ class BTCManagerTests: XCTestCase {
 
     }
     func testBTCToVBTC() {
-        let script = BTCManager().getBTCToVBTCScript(address: "f086b6a2348ac502c708ac41d06fe824c91806cabcd5b2b5fa25ae1c50bed3c6", tokenContract: "cd0476e85ecc5fa71b61d84b9cf2f7fd524689a4f870c46d6a5d901b5ac1fdb2")
-        let data = BTCManager().getData(script: script)
-        print(data.toHexString())
-        XCTAssertEqual("6a4c5276696f6c617300003000f086b6a2348ac502c708ac41d06fe824c91806cabcd5b2b5fa25ae1c50bed3c600000004b4054431cd0476e85ecc5fa71b61d84b9cf2f7fd524689a4f870c46d6a5d901b5ac1fdb2", data.toHexString())
-//        data += Data.init(Array<UInt8>(hex: ("f086b6a2348ac502c708ac41d06fe824c91806cabcd5b2b5fa25ae1c50bed3c6")))
-//        data += UInt64(20200113201).bigEndian
-//        data += Data.init(Array<UInt8>(hex: ("cd0476e85ecc5fa71b61d84b9cf2f7fd524689a4f870c46d6a5d901b5ac1fdb2")))
+        let script = BTCManager().getBTCScript(address: "1", type: "vls", tokenContract: "123", amount: 1000)
+        print(script.toHexString())
+        print(BTCManager().getData(script: script).toHexString())
+    }
+    private func getLengthData(length: UInt64, appendBytesCount: Int) -> Data {
+        var newData = Data()
+        let lengthData = BigUInt(length).serialize()
+        // 补全长度
+        for _ in 0..<(appendBytesCount - lengthData.count) {
+            newData.append(Data.init(hex: "00"))
+        }
+        // 追加原始数据
+        newData.append(lengthData)
+        // 倒序输出
+        let reversedAmount = newData.bytes.reversed()
+        return Data() + reversedAmount
     }
 }

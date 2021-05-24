@@ -15,10 +15,11 @@ class CheckBackupView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.init(hex: "F7F7F9")
-        addSubview(titleLabel)
-        addSubview(checkCollectionView)
-        addSubview(selectCollectionView)
-        addSubview(confirmButton)
+        addSubview(scrollView)
+        scrollView.addSubview(titleLabel)
+        scrollView.addSubview(checkCollectionView)
+        scrollView.addSubview(selectCollectionView)
+        scrollView.addSubview(confirmButton)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -33,12 +34,15 @@ class CheckBackupView: UIView {
     //MARK: - 布局
     override func layoutSubviews() {
         super.layoutSubviews()
+        scrollView.snp.makeConstraints { (make) in
+            make.top.left.right.bottom.equalTo(self)
+        }
         titleLabel.snp.makeConstraints { (make) in
             make.centerX.equalTo(self)
             make.top.equalTo(16)
         }
         checkCollectionView.snp.makeConstraints { (make) in
-            make.top.equalTo(self).offset(69)
+            make.top.equalTo(scrollView).offset(69)
             make.left.equalTo(self).offset(15)
             make.right.equalTo(self.snp.right).offset(-15)
             make.height.equalTo(self.collectionViewHeight ?? 238).priority(250)
@@ -55,9 +59,14 @@ class CheckBackupView: UIView {
             make.right.equalTo(self).offset(-69)
             make.height.equalTo(40)
         }
-        
+        scrollView.contentSize = CGSize.init(width: mainWidth, height: confirmButton.frame.maxY + 20)
     }
-    //MARK: - 懒加载对象
+    // MARK: - 懒加载对象
+    private lazy var scrollView : UIScrollView = {
+        let scrollView = UIScrollView.init()
+        scrollView.showsHorizontalScrollIndicator = false
+        return scrollView
+    }()
     lazy var titleLabel: UILabel = {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.center
@@ -66,7 +75,6 @@ class CheckBackupView: UIView {
         label.text = localLanguage(keyString: "wallet_backup_check_mnemonic_title")
         return label
     }()
-    //
     lazy var checkCollectionView: UICollectionView = {
         let collectionView = UICollectionView.init(frame: self.bounds, collectionViewLayout: BackupMnemonicFlowLayout())
         collectionView.backgroundColor = UIColor.white
@@ -104,7 +112,7 @@ class CheckBackupView: UIView {
     var collectionViewHeight: Int? {
         didSet {
             checkCollectionView.snp.remakeConstraints { (make) in
-                make.top.equalTo(self).offset(69)
+                make.top.equalTo(scrollView).offset(69)
                 make.left.equalTo(self).offset(15)
                 make.right.equalTo(self.snp.right).offset(-15)
                 make.height.equalTo(self.collectionViewHeight ?? 0)

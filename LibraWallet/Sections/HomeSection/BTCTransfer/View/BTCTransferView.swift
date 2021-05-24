@@ -81,6 +81,7 @@ class BTCTransferView: UIView {
         addressContactButton.snp.makeConstraints { (make) in
             make.bottom.equalTo(addressTextField.snp.top).offset(-7)
             make.right.equalTo(walletWhiteBackgroundView.snp.right).offset(-19)
+            make.size.equalTo(CGSize.init(width: 20, height: 20))
         }
         transferFeeTitleLabel.snp.makeConstraints { (make) in
             make.top.equalTo(addressTextField.snp.bottom).offset(27)
@@ -148,7 +149,8 @@ class BTCTransferView: UIView {
         textField.keyboardType = .decimalPad
         textField.tintColor = DefaultGreenColor
         textField.layer.borderColor = UIColor.init(hex: "D8D7DA").cgColor
-        textField.layer.borderWidth = 1
+        textField.layer.borderWidth = 0.5
+        textField.layer.cornerRadius = 16
         let holderView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: 7, height: 48))
         textField.leftView = holderView
         textField.leftViewMode = .always
@@ -158,7 +160,8 @@ class BTCTransferView: UIView {
         let label = UILabel.init()
         label.textAlignment = NSTextAlignment.center
         label.textColor = UIColor.init(hex: "3C3848")
-        label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+//        label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        label.font = UIFont.init(name: "DIN Alternate Bold", size: 14)
         label.text = localLanguage(keyString: "wallet_transfer_balance_title") + " --- BTC"
         return label
     }()
@@ -174,17 +177,21 @@ class BTCTransferView: UIView {
         let textField = UITextField.init()
         textField.textAlignment = NSTextAlignment.left
         textField.textColor = UIColor.init(hex: "333333")
+        textField.font = UIFont.init(name: "DIN Alternate Bold", size: 14)
         textField.attributedPlaceholder = NSAttributedString(string: localLanguage(keyString: "wallet_transfer_address_btc_textfield_placeholder"),
                                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: "C4C3C7"),NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16)])
         //        textField.delegate = self
         textField.keyboardType = .default
         textField.tintColor = DefaultGreenColor
         textField.layer.borderColor = UIColor.init(hex: "D8D7DA").cgColor
-        textField.layer.borderWidth = 1
+        textField.layer.borderWidth = 0.5
+        textField.layer.cornerRadius = 16
         let holderView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: 7, height: 48))
         textField.leftView = holderView
         textField.leftViewMode = .always
-        textField.rightView = addressScanButton
+        let rightView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: 31.5, height: 48))
+        rightView.addSubview(addressScanButton)
+        textField.rightView = rightView
         textField.rightViewMode = .always
         return textField
     }()
@@ -192,15 +199,13 @@ class BTCTransferView: UIView {
         let button = UIButton.init(frame: CGRect.init(x: 0, y: 0, width: 28, height: 48))
         button.setImage(UIImage.init(named: "scan"), for: UIControl.State.normal)
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
-        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -4, bottom: 0, right: 4)
+//        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -4, bottom: 0, right: 4)
         button.tag = 10
         return button
     }()
     lazy var addressContactButton: UIButton = {
         let button = UIButton.init(type: UIButton.ButtonType.custom)
-        button.setTitle(localLanguage(keyString: "wallet_transfer_address_contact_title"), for: UIControl.State.normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
-        button.setTitleColor(UIColor.init(hex: "3C3848"), for: UIControl.State.normal)
+        button.setImage(UIImage.init(named: "contact_address"), for: UIControl.State.normal)
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
         button.tag = 15
         return button
@@ -306,9 +311,8 @@ class BTCTransferView: UIView {
                               position: .center)
                return
             }
-            #warning("待处理")
             // 金额大于我的金额
-            guard (amount + fee) <= (Double(wallet?.walletBalance ?? 0) / 100000000.0) else {
+            guard (amount + fee) <= (Double(wallet?.tokenBalance ?? 0) / 100000000.0) else {
                self.makeToast(LibraWalletError.WalletTransfer(reason: .amountOverload).localizedDescription,
                               position: .center)
                return
@@ -363,12 +367,13 @@ class BTCTransferView: UIView {
         let fee8 = NSString.init(format: "%.8f", fee)
         self.transferFeeLabel.text = "\(fee8) BTC"
     }
-    var wallet: LibraWalletManager? {
+    var wallet: Token? {
         didSet {
             guard let model = wallet else {
                 return
             }
-            let balance = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.walletBalance ?? 0)),
+            amountTitleLabel.text = "BTC"
+            let balance = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: (model.tokenBalance)),
                                                  scale: 8,
                                                  unit: 100000000)
             walletBalanceLabel.text = localLanguage(keyString: "wallet_transfer_balance_title") + balance + " BTC"

@@ -84,7 +84,7 @@ open class LBXScanWrapper: NSObject {
         }
         
         // 识别类型
-        #warning("objType数量未统计")
+//        #warning("objType数量未统计")
         output.metadataObjectTypes = objType
         // 设置识别区域
         if !cropRect.equalTo(CGRect.zero) {

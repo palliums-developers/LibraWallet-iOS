@@ -9,7 +9,7 @@
 import CryptoSwift
 import BigInt
 struct ViolasMultiPrivateKeyModel {
-    var raw: Data
+    var privateKey: ViolasHDPrivateKey
     var sequence: Int
 }
 struct ViolasMultiPrivateKey {
@@ -17,6 +17,7 @@ struct ViolasMultiPrivateKey {
     let raw: [ViolasMultiPrivateKeyModel]
     /// 最少签名数
     let threshold: Int
+    
     /// 初始化
     /// - Parameters:
     ///   - privateKeys: 私钥数组
@@ -25,77 +26,49 @@ struct ViolasMultiPrivateKey {
         self.raw = privateKeys
         self.threshold = threshold
     }
+    
     /// 获取私钥
     /// - Returns: Hex私钥
     func toHexString() -> String {
         var privateKeyData = Data()
         privateKeyData += ViolasUtils.uleb128Format(length: self.raw.count)
         privateKeyData += self.raw.reduce(Data(), {
-            $0 + LibraUtils.uleb128Format(length: $1.raw.count) + $1.raw
+            $0 + ViolasUtils.uleb128Format(length: $1.privateKey.raw.count) + $1.privateKey.raw
         })
         privateKeyData += BigUInt(self.threshold).serialize()
         return privateKeyData.toHexString()
     }
+    
     /// 获取公钥
+    /// - Parameter network: 钱包网络类型
     /// - Returns: 多签公钥
-    public func extendedPublicKey() -> ViolasMultiPublicKey {
+    public func extendedPublicKey(network: ViolasNetworkState) -> ViolasMultiPublicKey {
         var tempPublicKeys = [ViolasMultiPublicKeyModel]()
         for model in self.raw {
-            let data = Ed25519.calcPublicKey(secretKey: model.raw.bytes)
+            let data = Ed25519.calcPublicKey(secretKey: model.privateKey.raw.bytes)
             let publickKey = ViolasMultiPublicKeyModel.init(raw: Data.init(bytes: data, count: data.count),
-                                                      sequence: model.sequence)
+                                                            sequence: model.sequence)
             tempPublicKeys.append(publickKey)
         }
-        return ViolasMultiPublicKey.init(data: tempPublicKeys, threshold: threshold)
+        return ViolasMultiPublicKey.init(data: tempPublicKeys, threshold: threshold, network: network)
     }
-    /// 签名交易
-    /// - Parameter transaction: 交易数据
-    /// - Returns: 返回序列化结果
-    func signMultiTransaction(transaction: ViolasRawTransaction, publicKey: ViolasMultiPublicKey) -> Data {
-        // 交易第一部分-原始数据
-        let transactionRaw = transaction.serialize()
-        
-        // 交易第二部分-交易类型
-        let signType = Data.init(Array<UInt8>(hex: "01"))
-        
-        // 交易第三部分-公钥
-        var publicKeyData = Data()
-        // 追加MultiPublicKey
-        let multiPublickKey = publicKey.toMultiPublicKey()
-
-        publicKeyData += ViolasUtils.uleb128Format(length: multiPublickKey.bytes.count)
-        publicKeyData += multiPublickKey
-        
-        // 交易第四部分-签名
-        // 4.1待签数据追加盐
-        var sha3Data = Data.init(Array<UInt8>(hex: (ViolasSignSalt.sha3(SHA3.Variant.sha256))))
-        // 4.2追加待签数据
-        sha3Data += transactionRaw
-        // 4.3签名数据
-        var signData = Data()
-        // 4.4追加签名
-        var bitmap = "00000000000000000000000000000000"
-        for i in 0..<self.threshold {
-            let sign = Ed25519.sign(message: sha3Data.sha3(.sha256).bytes, secretKey: self.raw[i].raw.bytes)
-            signData += sign
-            bitmap = setBitmap(bitmap: bitmap, index: self.raw[i].sequence)
-        }
-        let convert = ViolasUtils.binary2dec(num: bitmap)
-        signData += BigUInt(convert).serialize()
-        print("bitmap = \(BigUInt(convert).serialize().toHexString())")
-        let result = transactionRaw + signType + publicKeyData + ViolasUtils.uleb128Format(length: signData.count) + signData//uleb128Format(length: signData.count) + signData
-        return result
-    }
-    func setBitmap(bitmap: String, index: Int) -> String {
-//        var tempBitmap = bitmap
-//        let bucket = index / 8
-//        // It's always invoked with index < 32, thus there is no need to check range.
-//        let bucket_pos = index - (bucket * 8)
-//        tempBitmap[bucket] |= 128 >> bucket_pos
-//        return tempBitmap
+    private func setBitmap(bitmap: String, index: Int) -> String {
         var tempBitmap = bitmap
         let range = tempBitmap.index(tempBitmap.startIndex, offsetBy: index)...tempBitmap.index(tempBitmap.startIndex, offsetBy: index)
         tempBitmap.replaceSubrange(range, with: "1")
         return tempBitmap
+    }
+    func signData(data: Data) -> (Data) {
+        var signData = Data()
+        var bitmap = "00000000000000000000000000000000"
+        for i in 0..<self.threshold {
+            let sign = self.raw[i].privateKey.signData(data: data)
+            signData.append(sign)
+            bitmap = setBitmap(bitmap: bitmap, index: self.raw[i].sequence)
+        }
+        let bitmapNumber = DiemUtils.binary2dec(num: bitmap)
+        let bitmapData = BigUInt(bitmapNumber).serialize()
+        signData.append(bitmapData)
+        return signData
     }
 }

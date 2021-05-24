@@ -11,36 +11,12 @@ import Hue
 import SnapKit
 import Toast_Swift
 import Localize_Swift
-/************* Libra节点 *******************/
 
-let MarketAddress = "c71caa520e123d122c310177c08fa0d2"
-
-let ViolasMainContract = "e1be1ab8360a35a0259f1c93e3eac736"
-
-func getProgramCode(content: String) -> Data {
-//    let temp = stringValueDic(content)
-//    let code = temp!["code"] as! [UInt8]
-//    let dataArray = "\(code ?? "")".split(separator: ",")
-    
-    let data = Data.init(Array<UInt8>(hex: content))//Data.init(bytes: content, count: code.count)
-    
-    return data
-}
-func stringValueDic(_ str: String) -> [String : Any]? {
-    let data = str.data(using: String.Encoding.utf8)
-    if let dict = try? JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as? [String : Any] {
-        return dict
-    }
-    return nil
-}
 /***************************************/
 /// 待iOS支持最低版本位11的时候启用UIColor.init(named: "DefaultBackgroundColor")
 let defaultBackgroundColor = UIColor.white
-let DefaultSpaceColor = UIColor.init(hex: "F7F7F9")
+let DefaultSpaceColor = UIColor.init(hex: "DEDEDE")
 let DefaultGreenColor = UIColor.init(hex: "9339F3")
-let DefaultFontColor = UIColor.init(hex: "3D3949")
-// 主色50%
-let DefaultFontMiddleColor = UIColor.init(hex: "9D9CA3")
 ///******************* 全局设置语言 *******************/
 /// 全局设置语言
 ///
@@ -57,7 +33,7 @@ func localLanguage(keyString: String) -> String {
 ///   - type: 请求类型
 ///   - data: 数据
 /// - Returns: 字典结果
-func setKVOData(error: LibraWalletError? = nil, type: String?, data: Any? = nil) -> NSMutableDictionary {
+func setKVOData(error: LibraWalletError? = nil, type: String, data: Any? = nil) -> NSMutableDictionary {
     let dic = NSMutableDictionary()
     dic.setValue(error, forKey: "error")
     dic.setValue(type, forKey: "type")
@@ -65,11 +41,11 @@ func setKVOData(error: LibraWalletError? = nil, type: String?, data: Any? = nil)
     return dic
 }
 struct RequestHandleModel {
-    var type: String?
+    var type: String
     var error: LibraWalletError?
     var data: Any?
 }
-func setKVOModel(error: LibraWalletError? = nil, type: String?, data: Any? = nil) -> RequestHandleModel {
+func setKVOModel(error: LibraWalletError? = nil, type: String, data: Any? = nil) -> RequestHandleModel {
     let model = RequestHandleModel.init(type: type,
                                         error: error,
                                         data: data)
@@ -82,6 +58,17 @@ let mainWidth = UIScreen.main.bounds.width
 let mainHeight = UIScreen.main.bounds.height
 /// 缩放比例
 let ratio = 1
+func ratio(number: Int) -> Int {
+    let numberConfig = NSDecimalNumberHandler.init(roundingMode: .plain,
+                                                   scale: 0,
+                                                   raiseOnExactness: false,
+                                                   raiseOnOverflow: false,
+                                                   raiseOnUnderflow: false,
+                                                   raiseOnDivideByZero: false)
+    let rate = NSDecimalNumber.init(string: "\(mainWidth)").dividing(by: NSDecimalNumber.init(value: 375))
+    let result = rate.multiplying(by: NSDecimalNumber.init(value: number), withBehavior: numberConfig).intValue
+    return result
+}
 /***************************************/
 /// 获取必要信息
 private let infoDictionary = Bundle.main.infoDictionary
@@ -98,7 +85,7 @@ let identifierNumber = UIDevice.current.identifierForVendor
 /// 设备名称
 let systemName = UIDevice.current.systemName
 /// 设备型号
-let model = UIDevice.current.model
+let mobileModel = UIDevice.current.model
 /// 设备区域化型号 如 A1533
 let localizedModel = UIDevice.current.localizedModel
 /// bundle ID
@@ -107,6 +94,19 @@ let bundleID = Bundle.main.bundleIdentifier
 let statusBarHeight = UIApplication.shared.statusBarFrame.size.height
 /// 导航栏 + 状态栏高度
 let navigationBarHeight = statusBarHeight + 44
+var isFullScreen: Bool {
+    if #available(iOS 11, *) {
+          guard let w = UIApplication.shared.delegate?.window, let unwrapedWindow = w else {
+              return false
+          }
+          
+          if unwrapedWindow.safeAreaInsets.left > 0 || unwrapedWindow.safeAreaInsets.bottom > 0 {
+              print(unwrapedWindow.safeAreaInsets)
+              return true
+          }
+    }
+    return false
+}
 func getVersionCode() -> String {
     var systemInfo = utsname()
     uname(&systemInfo)
@@ -190,19 +190,40 @@ func setWelcomeState(show: Bool) {
 func getWelcomeState() -> Bool {
     return UserDefaults.standard.bool(forKey: "Welcome")
 }
-///************* 获取身份钱包 *******************/
+/************* 获取身份钱包 *******************/
 func setIdentityWalletState(show: Bool) {
     UserDefaults.standard.set(show, forKey: "IdentityWallet")
 }
 func getIdentityWalletState() -> Bool {
     return UserDefaults.standard.bool(forKey: "IdentityWallet")
 }
-///************* 设置同意用户协议 *******************/
+/************* 设置同意用户协议 *******************/
 func setConfirmPrivateAndUseLegalState(show: Bool) {
     UserDefaults.standard.set(show, forKey: "PrivateAndUseLegal")
 }
 func getConfirmPrivateAndUseLegalState() -> Bool {
     return UserDefaults.standard.bool(forKey: "PrivateAndUseLegal")
+}
+///************* 设置全局请求Token *******************/
+func setRequestToken(token: String) {
+    UserDefaults.standard.set(token, forKey: "RequestToken")
+}
+func getRequestToken() -> String {
+    return UserDefaults.standard.string(forKey: "RequestToken") ?? ""
+}
+///************* 设置FCMToken *******************/
+func setFCMToken(token: String) {
+    UserDefaults.standard.set(token, forKey: "FCMToken")
+}
+func getFCMToken() -> String {
+    return UserDefaults.standard.string(forKey: "FCMToken") ?? ""
+}
+///************* 设置DeviceToken *******************/
+func setDeviceToken(token: String) {
+    UserDefaults.standard.set(token, forKey: "DeviceToken")
+}
+func getDeviceToken() -> String {
+    return UserDefaults.standard.string(forKey: "DeviceToken") ?? ""
 }
 /***************************************/
 func helpCenterURL() -> String {
@@ -213,7 +234,7 @@ func helpCenterURL() -> String {
         return "https://help.sealpay.io/en/help.html"
     }
 }
-///************* 获取身份钱包 *******************/
+///************* 设置WalletConnect *******************/
 func setWalletConnectSession(session: Data) {
     UserDefaults.standard.set(session, forKey: "WalletConnectSession")
 }
@@ -253,6 +274,9 @@ func removeWalletConnectSession() {
 /************* 限制 *******************/
 let privateLegalURL = "https://violas.io/violas_service_html/Privacy_Policy/"
 let useLegalURL = "https://violas.io/violas_service_html/Terms_of_Service/"
+let invitationRewardURL = "https://wallet.violas.io/homepage/home/inviteRewards"
+let yieldFarmingURL = "https://wallet.violas.io/homepage/home/miningAwards"
+let yieldFarmingRulesURL = "https://wallet.violas.io/homepage/home/ruleDescription"
 let transferFeeMax = 0.001
 let transferFeeMin = 0.0001
 let transferBTCLeast = 0.0001
@@ -264,10 +288,29 @@ let PasswordMaxLimit = 20
 let NameMaxLimit = 20
 /// 发币数量位数
 let ApplyTokenAmountLengthLimit = 12
-/// 最大发币9000亿
-let ApplyTokenMaxLimit: Int64 = 900000000000
 
 let officialAddress = "https://violas.io"
-let officialEmail = "violas_blockchain@violas.io"
+let officialEmail = "violas.team@violas.io"
 /************* 弹出提示隐藏时间 *******************/
 let toastDuration = 0.5
+/************* Violas运行环境切换 *******************/
+extension ViolasNetworkState {
+    public var serviceURL: String {
+        switch self {
+        case .mainnet:
+            return "https://api.violas.io"
+        case .testnet:
+            return "https://api4.violas.io"
+        case .devnet:
+            return "https://api4.violas.io"
+        case .testing:
+            return "https://api4.violas.io"
+        case .premainnet:
+            return "https://api.violas.io"
+        }
+    }
+}
+let VIOLAS_PUBLISH_NET = ViolasNetworkState.testnet
+/************* Diem运行环境切换 *******************/
+let DIEM_PUBLISH_NET = DiemNetworkState.testnet
+/************* BTC运行环境切换 *******************/

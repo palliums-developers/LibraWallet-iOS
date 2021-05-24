@@ -7,7 +7,7 @@
 //
 
 import UIKit
-//import Kingfisher
+
 class MineHeaderView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -25,33 +25,32 @@ class MineHeaderView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         headerBackground.snp.makeConstraints { (make) in
-            make.top.left.right.bottom.equalTo(self)
+            make.top.equalTo(self).offset(28)
+            make.left.equalTo(self).offset(18)
+            make.right.equalTo(self.snp.right).offset(-18)
+            make.height.equalTo(123)
         }
         avatarImageView.snp.makeConstraints { (make) in
-            make.centerX.equalTo(self)
-            make.centerY.equalTo(self)
-            make.size.equalTo(CGSize.init(width: 60, height: 60))
+            make.top.equalTo(headerBackground).offset(30)
+            make.centerX.equalTo(headerBackground)
+            make.size.equalTo(CGSize.init(width: 44, height: 44))
         }
         nickNameLabel.snp.makeConstraints { (make) in
             make.centerX.equalTo(avatarImageView)
-            make.top.equalTo(avatarImageView.snp.bottom).offset(14)
+            make.top.equalTo(avatarImageView.snp.bottom).offset(8)
         }
     }
     
-    //MARK: - 懒加载对象
+    // MARK: - 懒加载对象
     private lazy var headerBackground : UIImageView = {
         let imageView = UIImageView.init()
-        imageView.image = UIImage.init(named: "home_top_background")
+        imageView.image = UIImage.init(named: "mine_header_background")
         return imageView
     }()
     private lazy var avatarImageView : UIImageView = {
         let imageView = UIImageView.init()
         imageView.image = UIImage.init(named: "mine_default_avatar")
         imageView.isUserInteractionEnabled = true
-//        imageView.layer.cornerRadius = 30
-//        imageView.layer.borderColor = UIColor.white.cgColor
-//        imageView.layer.borderWidth = 1
-//        imageView.layer.masksToBounds = true
         return imageView
     }()
     lazy var nickNameLabel: UILabel = {
@@ -62,16 +61,4 @@ class MineHeaderView: UIView {
         label.text = "ViolasPay"
         return label
     }()
-//    var model: WalletData? {
-//        didSet {
-//            let url = URL(string: model?.walletAvatarURL ?? "")
-//            avatarImageView.kf.setImage(with: url, placeholder: UIImage.init(named: "default_avatar"))
-//            if let nickName = model?.walletNickName, nickName.isEmpty == false {
-//                nickNameLabel.text = nickName
-//            }
-//            if let uid = model?.walletUID {
-//                uidLabel.text = "UID: \(uid)"
-//            }
-//        }
-//    }
 }

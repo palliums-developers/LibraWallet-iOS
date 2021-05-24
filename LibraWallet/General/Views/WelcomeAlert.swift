@@ -27,20 +27,18 @@ class WelcomeAlert: UIView {
         backgroundImageView.snp.makeConstraints { (make) in
             make.centerX.equalTo(self)
             make.centerY.equalTo(self).offset(-11)
-            make.size.equalTo(CGSize.init(width: 272, height: 380))
+            make.size.equalTo(CGSize.init(width: 320, height: 185))
         }
         titleLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(backgroundImageView).offset(37)
-            make.centerX.equalTo(backgroundImageView)
+            make.top.equalTo(backgroundImageView).offset(51)
+            make.left.equalTo(backgroundImageView).offset(20)
         }
         describeLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(titleLabel.snp.bottom)
-            make.centerX.equalTo(backgroundImageView)
+            make.top.equalTo(titleLabel.snp.bottom).offset(5)
+            make.left.equalTo(backgroundImageView).offset(20)
         }
         confirmButton.snp.makeConstraints { (make) in
-            make.bottom.equalTo(backgroundImageView.snp.bottom).offset(14)
-            make.left.equalTo(backgroundImageView).offset(16)
-            make.right.equalTo(backgroundImageView.snp.right).offset(-16)
+            make.left.right.bottom.equalTo(backgroundImageView)
             make.height.equalTo(40)
         }
     }
@@ -68,32 +66,24 @@ class WelcomeAlert: UIView {
     private lazy var describeLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor.white
-        label.font = UIFont.systemFont(ofSize: 38, weight: UIFont.Weight.semibold)
+        label.font = UIFont.systemFont(ofSize: 28, weight: UIFont.Weight.semibold)
         label.text = localLanguage(keyString: "wallet_alert_welcome_detail_title")
         return label
     }()
     lazy var confirmButton: UIButton = {
         let button = UIButton.init(type: UIButton.ButtonType.custom)
         button.setTitle(localLanguage(keyString: "wallet_alert_welcome_confirm_button_title"), for: UIControl.State.normal)
-        button.setTitleColor(UIColor.init(hex: "934701"), for: UIControl.State.normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: UIFont.Weight.semibold)
+        button.setTitleColor(UIColor.white, for: UIControl.State.normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.semibold)
         button.addTarget(self, action: #selector(buttonClick(button:)), for: UIControl.Event.touchUpInside)
-        button.layer.backgroundColor = UIColor.init(hex: "FFD701").cgColor
-        button.layer.cornerRadius = 3
-//        button.layer.masksToBounds = true
+        button.layer.insertSublayer(colorGradualChange(size: CGSize.init(width: 320, height: 40)), at: 0)
+        button.layer.cornerRadius = 5
         button.tag = 30
-        // 定义阴影颜色
-        button.layer.shadowColor =  UIColor.init(hex: "FFD701").cgColor
-        // 阴影的模糊半径
-        button.layer.shadowRadius = 5
-        // 阴影的偏移量
-        button.layer.shadowOffset = CGSize(width: 0, height: 5)
-        // 阴影的透明度，默认为0，不设置则不会显示阴影****
-        button.layer.shadowOpacity = 0.3
+        button.layer.masksToBounds = true
         return button
     }()
     @objc func buttonClick(button: UIButton) {
-        self.hide()
+        self.hide(tag: 99)
         setWelcomeState(show: true)
     }
 }

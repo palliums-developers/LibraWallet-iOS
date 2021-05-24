@@ -83,6 +83,7 @@ extension AddAddressViewController {
                 // 数据状态异常
             }
             self.detailView.hideToastActivity()
+            self.detailView.makeToast(error.localizedDescription, position: .center)
             return
         }
         let type = jsonData.value(forKey: "type") as! String
@@ -94,58 +95,41 @@ extension AddAddressViewController {
                 self.navigationController?.popViewController(animated: true)
             }
         }
-        self.view.hideToastActivity()
+        self.detailView.hideToastActivity()
     }
 }
 extension AddAddressViewController: AddAddressViewDelegate {
     func confirmAddAddress(address: String, remarks: String, type: String) {
-        self.view.makeToastActivity(.center)
+        self.detailView.makeToastActivity(.center)
         self.dataModel.addWithdrawAddress(address: address, remarks: remarks, type: type)
     }
-    func showTypeSelecter() {
-        let alert = UIAlertController.init(title: localLanguage(keyString: "wallet_address_add_type_title"), message: localLanguage(keyString: "wallet_address_add_type_action_alert_content"), preferredStyle: .actionSheet)
-        let violasAction = UIAlertAction.init(title: "Violas", style: .default) { (UIAlertAction) in
-            self.detailView.typeButton.setTitle("Violas", for: UIControl.State.normal)
-        }
-        let libraAction = UIAlertAction.init(title: "Libra", style: .default) { (UIAlertAction) in
-            self.detailView.typeButton.setTitle("Libra", for: UIControl.State.normal)
-        }
-        let btcAction = UIAlertAction.init(title: "BTC", style: .default) { (UIAlertAction) in
-            self.detailView.typeButton.setTitle("BTC", for: UIControl.State.normal)
-        }
-        let cancelAction = UIAlertAction.init(title: localLanguage(keyString: "wallet_address_add_type_action_alert_cancel_button_title"), style: .cancel) { (UIAlertAction) in
-        }
-        alert.addAction(violasAction)
-        alert.addAction(libraAction)
-        alert.addAction(btcAction)
-        alert.addAction(cancelAction)
-        self.present(alert, animated: true, completion: nil)
-    }
-    
     func scanAddress() {
         let vc = ScanViewController()
         vc.actionClosure = { address in
             do {
-                let result = try libraWalletTool.scanResultHandle(content: address, contracts: [])
+                let result = try ScanHandleManager.scanResultHandle(content: address, contracts: [])
                 if result.type == .transfer {
                     switch result.addressType {
                     case .Violas:
                         self.detailView.addressTextField.text = result.address
+                        self.detailView.buttonClick(button: self.detailView.violasAddressButton)
                     case .Libra:
                         self.detailView.addressTextField.text = result.address
+                        self.detailView.buttonClick(button: self.detailView.libraAddressButton)
                     case .BTC:
                         self.detailView.addressTextField.text = result.address
+                        self.detailView.buttonClick(button: self.detailView.bitcoinAddressButton)
                     default:
                         self.detailView.addressTextField.text?.removeAll()
                         self.view.makeToast(LibraWalletError.WalletScan(reason: LibraWalletError.ScanError.handleInvalid).localizedDescription,
                                             position: .center)
                     }
                 } else {
-                    self.view.makeToast(LibraWalletError.WalletScan(reason: LibraWalletError.ScanError.handleInvalid).localizedDescription,
+                    self.detailView.makeToast(LibraWalletError.WalletScan(reason: LibraWalletError.ScanError.handleInvalid).localizedDescription,
                                         position: .center)
                 }
             } catch {
-                self.view.makeToast(error.localizedDescription, position: .center)
+                self.detailView.makeToast(error.localizedDescription, position: .center)
             }
        }
         self.navigationController?.pushViewController(vc, animated: true)

@@ -12,7 +12,6 @@ class MineView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(mineHeaderView)
-        
         self.addSubview(self.tableView)
     }
     required init?(coder aDecoder: NSCoder) {
@@ -25,8 +24,9 @@ class MineView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         mineHeaderView.snp.makeConstraints { (make) in
-            make.top.left.right.equalTo(self)
-            make.height.equalTo(208)
+            make.top.equalTo(self).offset(statusBarHeight)
+            make.left.right.equalTo(self)
+            make.height.equalTo(175)
         }
         self.tableView.snp.makeConstraints { (make) in
             make.top.equalTo(mineHeaderView.snp.bottom)
@@ -44,11 +44,12 @@ class MineView: UIView {
         } else {
             // Fallback on earlier versions
         }
-        tableView.backgroundColor = UIColor.init(hex: "F7F7F9")//defaultBackgroundColor
+        tableView.backgroundColor = UIColor.init(hex: "F7F7F9")
         tableView.register(MineTableViewCell.classForCoder(), forCellReuseIdentifier: "CellNormal")
+        tableView.isScrollEnabled = false
         return tableView
     }()
-    private lazy var mineHeaderView : MineHeaderView = {
+    lazy var mineHeaderView : MineHeaderView = {
         let view = MineHeaderView.init()
 //        view.model = WalletData.wallet
         return view

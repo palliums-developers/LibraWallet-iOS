@@ -20,19 +20,18 @@ class MineTableViewManager: NSObject {
 }
 extension MineTableViewManager: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 68
+        return 60
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
-                
         self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath)
     }
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let view = UIView()
         view.backgroundColor = UIColor.init(hex: "F7F7F9")
         return view
     }
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 10
     }
 }
@@ -48,14 +47,12 @@ extension MineTableViewManager: UITableViewDataSource {
         if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? MineTableViewCell {
             if let data = dataModel, data.isEmpty == false {
                 cell.model = data[indexPath.section][indexPath.row]
-                cell.hideSpcaeLineState = (data[indexPath.section].count - 1) == indexPath.row ? true:false
             }
             return cell
         } else {
             let cell = MineTableViewCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
             if let data = dataModel, data.isEmpty == false {
                 cell.model = data[indexPath.section][indexPath.row]
-                cell.hideSpcaeLineState = (data[indexPath.section].count - 1) == indexPath.row ? true:false
             }
             return cell
         }

@@ -8,29 +8,48 @@
 
 import UIKit
 import Moya
-struct MappingTransactionsMainDataModel: Codable {
-    ///
-    var date: Int?
-    ///
-    var amount: Int?
-    ///
-    var status: Int?
-    ///
-    var address: String?
-    ///
-    var coin: String?
+
+struct MappingTransactionsMainDataDetailModel: Codable {
+//    var amount: Int64
+//    var chain: String?
+//    var name: String?
+//    var show_name: String?
+}
+struct MappingTransactionsDataModel: Codable {
+//    var amount_from: MappingTransactionsMainDataDetailModel?
+//    var amount_to: MappingTransactionsMainDataDetailModel?
+//    var confirmed_time: Int64?
+//    var status: Int?
+//    var version_or_block_height: Int64?
+    var expiration_time: Int?
+    var from_chain: String?
+    var in_amount: UInt64?
+    var in_show_name: String?
+    var in_token: String?
+    var opttype: String?
+    var out_amount: UInt64?
+    var out_show_name: String?
+    var out_token: String?
+    var state: String?
+    var times: Int?
+    var timestamps: UInt64?
+    var to_address: String?
+    var to_chain: String?
+    var tran_id: String?
+    var type: String?
+    var version: Int?
 }
 struct MappingTransactionsMainModel: Codable {
     var code: Int?
     var message: String?
-    var data: [MappingTransactionsMainDataModel]?
+    var data: [MappingTransactionsDataModel]?
 }
 class MappingTransactionsModel: NSObject {
     private var requests: [Cancellable] = []
     @objc dynamic var dataDic: NSMutableDictionary = [:]
-    func getMappingTransactions(walletAddress: String, page: Int, pageSize: Int, requestType: String, requestStatus: Int) {
+    func getMappingTransactions(walletAddress: String, page: Int, pageSize: Int, requestStatus: Int) {
         let type = requestStatus == 0 ? "MappingTransactionsOrigin":"MappingTransactionsMore"
-        let request = mainProvide.request(.GetMappingTransactions(walletAddress, page, pageSize, requestType)) {[weak self](result) in
+        let request = mappingModuleProvide.request(.mappingTransactions(walletAddress, page, pageSize)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {

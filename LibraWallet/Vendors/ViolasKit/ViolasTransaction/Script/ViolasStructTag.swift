@@ -10,7 +10,7 @@ import UIKit
 
 enum ViolasStructTagType {
     case ViolasDefault
-    case Publish
+    case Normal(String)
 }
 struct ViolasStructTag {
     var address: String
@@ -28,14 +28,14 @@ extension ViolasStructTag {
     init(type: ViolasStructTagType) {
         switch type {
         case .ViolasDefault:
-            self.address = "00000000000000000000000000000000"
-            self.module = "LBR"
-            self.name = "T"
+            self.address = "00000000000000000000000000000001"
+            self.module = "VLS"
+            self.name = "VLS"
             self.typeParams = [String]()
-        case .Publish:
-            self.address = ""
-            self.module = ""
-            self.name = "publish"
+        case .Normal(let module):
+            self.address = "00000000000000000000000000000001"
+            self.module = module
+            self.name = module
             self.typeParams = [String]()
         }
 

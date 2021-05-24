@@ -11,8 +11,12 @@ import Toast_Swift
 class AddWalletViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        // 设置标题
+        self.title = localLanguage(keyString: "wallet_create_choose_type_create_button_title")
         // 加载子View
         self.view.addSubview(detailView)
+        // 初始化KVO
+        self.initKVO()
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -25,131 +29,100 @@ class AddWalletViewController: BaseViewController {
             make.left.right.equalTo(self.view)
         }
     }
-    //子View
-    private lazy var detailView : AddWalletView = {
-        let view = AddWalletView.init()
-        view.type = self.type
-        view.delegate = self
-        return view
-    }()
     deinit {
         print("AddWalletViewController销毁了")
     }
-    var type: String?
-    var myContext = 0
-
+    override func back() {
+        self.dismiss(animated: true, completion: nil)
+    }
+    /// 子View
+    private lazy var detailView : AddWalletView = {
+        let view = AddWalletView.init()
+        view.delegate = self
+        return view
+    }()
+    /// 网络请求、数据模型
+    lazy var dataModel: AddWalletModel = {
+        let model = AddWalletModel.init()
+        return model
+    }()
+    /// 数据监听KVO
+    var observer: NSKeyValueObservation?
+    var successCreateClosure: (()->Void)?
 }
 extension AddWalletViewController: AddWalletViewDelegate {
-    func confirmAddWallet(name: String, password: String) {
-        print(name, password)
-//        self.view.makeToastActivity(.center)
-        if type == "BTC" {
-            self.createBTCWallet(name: name, password: password)
-        } else if type == "Lib" {
-            self.createLibraWallet(name: name, password: password)
-        } else {
-            self.createViolasWallet(name: name, password: password)
-        }
+    func confirmAddWallet(password: String) {
+        self.detailView.toastView.show(tag: 99)
+        self.dataModel.createWallet(password: password)
     }
-    func createBTCWallet(name: String, password: String) {
-        self.detailView.toastView.show()
-        let quene = DispatchQueue.init(label: "createWalletQuene")
-        quene.async {
-            let mnemonic = BTCManager().getMnemonic()
-            let wallet = try! BTCManager().getWallet(mnemonic: mnemonic)
-            let walletModel = LibraWalletManager.init(walletID: 999,
-                                                      walletBalance: 0,
-                                                      walletAddress: wallet.address.description,
-                                                      walletRootAddress: "BTC_" + wallet.address.description,
-                                                      walletCreateTime: Int(NSDate().timeIntervalSince1970),
-                                                      walletName: name,
-                                                      walletCurrentUse: false,
-                                                      walletBiometricLock: false,
-                                                      walletIdentity: 1,
-                                                      walletType: .BTC,
-                                                      walletBackupState: true)
-            
-            let createModel = CreateWalletModel.init(password: password,
-                                                     mnemonic: mnemonic,
-                                                     wallet: walletModel)
-            DispatchQueue.main.async(execute: {
-                self.detailView.toastView.hide()
-                let vc = BackupWarningViewController()
-                vc.FirstInApp = false
-                vc.tempWallet = createModel
-                self.navigationController?.pushViewController(vc, animated: true)
-            })
-        }
+    func openPrivacyPolicy() {
+        let vc = PrivateLegalViewController()
+        vc.needDismissViewController = true
+        let navi = UINavigationController.init(rootViewController: vc)
+        self.present(navi, animated: true, completion: nil)
     }
-    func createViolasWallet(name: String, password: String) {
-        self.detailView.toastView.show()
-        let quene = DispatchQueue.init(label: "createWalletQuene")
-        quene.async {
-            do {
-                let mnemonic = try ViolasManager.getLibraMnemonic()
-                let wallet = try ViolasManager.getWallet(mnemonic: mnemonic)
-
-                let walletModel = LibraWalletManager.init(walletID: 999,
-                                                          walletBalance: 0,
-                                                          walletAddress: wallet.publicKey.toLegacy(),
-                                                          walletRootAddress: "Violas_" + wallet.publicKey.toLegacy(),
-                                                          walletCreateTime: Int(NSDate().timeIntervalSince1970),
-                                                          walletName: name,
-                                                          walletCurrentUse: false,
-                                                          walletBiometricLock: false,
-                                                          walletIdentity: 1,
-                                                          walletType: .Violas,
-                                                          walletBackupState: true,
-                                                          walletAuthenticationKey: wallet.publicKey.toActive())
-                
-                let createModel = CreateWalletModel.init(password: password,
-                                                         mnemonic: mnemonic,
-                                                         wallet: walletModel)
-                DispatchQueue.main.async(execute: {
-                    self.detailView.toastView.hide()
-                    let vc = BackupWarningViewController()
-                    vc.FirstInApp = false
-                    vc.tempWallet = createModel
-                    self.navigationController?.pushViewController(vc, animated: true)
-                })
-            } catch {
-                print(error.localizedDescription)
+    func openServiceAgreement() {
+        let vc = ServiceLegalViewController()
+        vc.needDismissViewController = true
+        let navi = UINavigationController.init(rootViewController: vc)
+        self.present(navi, animated: true, completion: nil)
+    }
+}
+//MARK: - 网络请求数据处理中心
+extension AddWalletViewController {
+    func initKVO() {
+        self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
+            guard let dataDic = change.newValue, dataDic.count != 0 else {
+                self?.detailView.hideToastActivity()
+                self?.detailView.toastView.hide(tag: 99)
+//                self?.endLoading()
+                return
             }
-        }
-    }
-    func createLibraWallet(name: String, password: String) {
-        self.detailView.toastView.show()
-        let quene = DispatchQueue.init(label: "createWalletQuene")
-        quene.async {
-            do {
-                let mnemonic = try LibraManager.getLibraMnemonic()
-                let wallet = try LibraManager.getWallet(mnemonic: mnemonic)
-                let walletModel = LibraWalletManager.init(walletID: 999,
-                                                          walletBalance: 0,
-                                                          walletAddress: wallet.publicKey.toAddress(),
-                                                          walletRootAddress: "Libra_" + wallet.publicKey.toAddress(),
-                                                          walletCreateTime: Int(NSDate().timeIntervalSince1970),
-                                                          walletName: name,
-                                                          walletCurrentUse: false,
-                                                          walletBiometricLock: false,
-                                                          walletIdentity: 1,
-                                                          walletType: .Libra,
-                                                          walletBackupState: true,
-                                                          walletAuthenticationKey: wallet.publicKey.toActive())
-                
-                let createModel = CreateWalletModel.init(password: password,
-                                                         mnemonic: mnemonic,
-                                                         wallet: walletModel)
-                DispatchQueue.main.async(execute: {
-                    self.detailView.toastView.hide()
-                    let vc = BackupWarningViewController()
-                    vc.FirstInApp = false
-                    vc.tempWallet = createModel
-                    self.navigationController?.pushViewController(vc, animated: true)
-                })
-            } catch {
-                print(error.localizedDescription)
+            let type = dataDic.value(forKey: "type") as! String
+            if let error = dataDic.value(forKey: "error") as? LibraWalletError {
+                if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
+                    // 网络无法访问
+                    print(error.localizedDescription)
+                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionExpired).localizedDescription {
+                    // 版本太久
+                    print(error.localizedDescription)
+                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
+                    // 解析失败
+                    print(error.localizedDescription)
+                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
+                    print(error.localizedDescription)
+                    // 数据为空
+                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
+                    print(error.localizedDescription)
+                    // 数据返回状态异常
+                }
+                self?.detailView.hideToastActivity()
+                self?.detailView.toastView.hide(tag: 99)
+                self?.detailView.makeToast(localLanguage(keyString: "wallet_create_wallet_failed_title"))
+                return
             }
-        }
+            self?.detailView.toastView.hide(tag: 99)
+            if type == "CreateWallet" {
+                // 加载本地默认钱包
+                if let tempData = dataDic.value(forKey: "data") as? [String] {
+                    self?.view.makeToast(localLanguage(keyString: "wallet_create_wallet_success_title"), duration: 0.5, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
+                        do {
+                            try WalletManager.getDefaultWallet()
+                            if let success = self?.successCreateClosure {
+                                success()
+                            }
+                            DispatchQueue.main.async(execute: {
+                                let vc = BackupWarningViewController()
+                                vc.FirstInApp = true
+                                vc.tempWallet = tempData
+                                self?.navigationController?.pushViewController(vc, animated: true)
+                            })
+                        } catch {
+                            self?.detailView.makeToast(localLanguage(keyString: "wallet_create_wallet_failed_title"))
+                        }
+                    })
+                }
+            }
+        })
     }
 }

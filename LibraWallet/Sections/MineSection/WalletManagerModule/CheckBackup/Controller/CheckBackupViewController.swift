@@ -29,7 +29,7 @@ class CheckBackupViewController: BaseViewController {
     deinit {
         print("CheckBackupViewController销毁了")
     }
-    typealias nextActionClosure = (ControllerAction, LibraWalletManager) -> Void
+    typealias nextActionClosure = (ControllerAction, Token) -> Void
     var actionClosure: nextActionClosure?
     lazy var viewModel: CheckBackupViewModel = {
         let viewModel = CheckBackupViewModel.init()
@@ -37,9 +37,9 @@ class CheckBackupViewController: BaseViewController {
         return viewModel
     }()
     var FirstInApp: Bool?
-    var tempWallet: CreateWalletModel? {
+    var tempWallet: [String]? {
         didSet {
-            self.viewModel.dataArray = tempWallet?.mnemonic
+            self.viewModel.dataArray = tempWallet
         }
     }
 }
@@ -48,41 +48,15 @@ extension CheckBackupViewController: CheckBackupViewDelegate {
         do {
             try self.viewModel.checkIsAllValid()
             if FirstInApp == true {
-                #warning("缺少更新失败操作")
-                let result = DataBaseManager.DBManager.updateDefaultViolasWalletBackupState()
-                print("更新钱包备份状态-\(result)")
+
+                try WalletManager.updateWalletBackupState()
                 self.view.makeToast(localLanguage(keyString: "wallet_check_mnemonic_success_title"), duration: 0.5, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
-                    let tabbar = BaseTabBarViewController.init()
-                    UIApplication.shared.keyWindow?.rootViewController = tabbar
-                    UIApplication.shared.keyWindow?.makeKeyAndVisible()
+                    self.dismiss(animated: true, completion: nil)
                 })
             } else {
-                let result = DataBaseManager.DBManager.isExistAddressInWallet(address: tempWallet!.wallet!.walletRootAddress!)//insertWallet(model: tempWallet!.wallet!)
                 self.view.hideToastActivity()
-                if result == false {
-                    // 不存在
-                    #warning("缺少更新失败操作")
-//                    let insertResult = DataBaseManager.DBManager.insertWallet(model: tempWallet!.wallet!)
-                    do {
-                        try LibraWalletManager().saveMnemonicToKeychain(mnemonic: tempWallet!.mnemonic!, password: tempWallet!.password!, walletRootAddress: tempWallet?.wallet?.walletRootAddress ?? "")
-                        self.view.makeToast(localLanguage(keyString: localLanguage(keyString: "wallet_create_wallet_success_title")), duration: 1, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { [weak self](bool) in
-                            self?.jumpToWalletManagerController()
-                        })
-                    } catch {
-                        print(error.localizedDescription)
-                        //删除从数据库创建好钱包
-                        _ = DataBaseManager.DBManager.deleteWalletFromTable(model: tempWallet!.wallet!)
-                    }
-                } else {
-                    // 已存在
-                    #warning("缺少更新失败操作")
-//                    let updateBackupResult = DataBaseManager.DBManager.updateWalletBackupState(walletID: tempWallet!.wallet!.walletID!, state: true)
-                    LibraWalletManager.shared.changeWalletBackupState(state: true)
-
-                    self.view.makeToast(localLanguage(keyString: localLanguage(keyString: "wallet_check_mnemonic_success_title")), duration: 1, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { [weak self](bool) in
-                        self?.jumpToWalletManagerController()
-                    })
-                }
+                try WalletManager.updateWalletBackupState()
+                self.jumpToWalletManagerController()
             }
         } catch {
             self.view.makeToast(error.localizedDescription,
@@ -93,8 +67,8 @@ extension CheckBackupViewController: CheckBackupViewDelegate {
         if let vc = UIApplication.shared.keyWindow?.rootViewController, vc.children.isEmpty == false {
             if let mineControllers = vc.children.last?.children, mineControllers.isEmpty == false {
                 for con in mineControllers {
-                    if con.isKind(of: WalletManagerViewController.classForCoder()) {
-                        (con as! WalletManagerViewController).needRefresh = true
+                    if con.isKind(of: WalletConfigViewController.classForCoder()) {
+//                        (con as! WalletDetailViewController).needRefresh = true
                         self.navigationController?.popToViewController(con, animated: true)
                         return
                     }

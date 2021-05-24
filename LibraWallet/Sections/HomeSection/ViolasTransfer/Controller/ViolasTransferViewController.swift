@@ -10,15 +10,11 @@ import UIKit
 class ViolasTransferViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = (self.wallet?.walletType?.description ?? "") + " " + localLanguage(keyString: "wallet_transfer_navigation_title")
+        self.title = (self.wallet?.tokenName ?? "") + " " + localLanguage(keyString: "wallet_transfer_navigation_title")
 
         self.view.addSubview(detailView)
-        self.detailView.sendViolasTokenState = self.sendViolasTokenState
-        if self.sendViolasTokenState == false {
-            self.detailView.wallet = self.wallet
-        } else {
-            self.detailView.vtoken = self.vtokenModel
-        }
+//        self.detailView.sendViolasTokenState = self.sendViolasTokenState
+        self.detailView.wallet = self.wallet
         self.initKVO()
     }
     override func viewWillLayoutSubviews() {
@@ -48,10 +44,10 @@ class ViolasTransferViewController: BaseViewController {
     }()
     typealias successClosure = () -> Void
     var actionClosure: successClosure?
-    var wallet: LibraWalletManager?
+    var wallet: Token?
     
-    var sendViolasTokenState: Bool?
-    var vtokenModel: ViolasTokenModel?
+//    var sendViolasTokenState: Bool?
+//    var vtokenModel: ViolasTokenModel?
     /// 数据监听KVO
     private var observer: NSKeyValueObservation?
     var address: String? {
@@ -59,13 +55,13 @@ class ViolasTransferViewController: BaseViewController {
            self.detailView.addressTextField.text = address
         }
     }
-    var amount: Int64? {
+    var amount: UInt64? {
         didSet {
             guard let tempAmount = amount else {
                 return
             }
             let amountContent = getDecimalNumberAmount(amount: NSDecimalNumber.init(value: tempAmount),
-                                                       scale: 4,
+                                                       scale: 6,
                                                        unit: 1000000)
             self.detailView.amountTextField.text = "\(amountContent)"
         }
@@ -75,14 +71,9 @@ extension ViolasTransferViewController: ViolasTransferViewDelegate {
     func scanAddressQRcode() {
         let vc = ScanViewController()
         vc.actionClosure = { address in
-//            do {
-//                let tempAddressModel = try handleScanContent(content: address)
-//                self.detailView.addressTextField.text = tempAddressModel.address
-//            } catch {
-//                self.detailView.makeToast(error.localizedDescription, position: .center)
-//            }
             do {
-                let result = try libraWalletTool.scanResultHandle(content: address, contracts: [])
+                let result = try ScanHandleManager.scanResultHandle(content: address, contracts: [self.wallet!])
+                print(result)
                 if result.type == .transfer {
                     switch result.addressType {
                     case .Violas:
@@ -104,72 +95,33 @@ extension ViolasTransferViewController: ViolasTransferViewDelegate {
         }
         self.navigationController?.pushViewController(vc, animated: true)
     }
-    
     func chooseAddress() {
         let vc = AddressManagerViewController()
         vc.actionClosure = { address in
             self.detailView.addressTextField.text = address
         }
-        vc.addressType = "Violas"
+        vc.addressType = "1"
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
-    func confirmTransfer(amount: Double, address: String, fee: Double) {
-        if LibraWalletManager.shared.walletBiometricLock == true {
-            KeychainManager().getPasswordWithBiometric(walletAddress: LibraWalletManager.shared.walletRootAddress ?? "") { [weak self](result, error) in
-                if result.isEmpty == false {
-                    do {
-                        let mnemonic = try LibraWalletManager.shared.getMnemonicFromKeychain(password: result, walletRootAddress: LibraWalletManager.shared.walletRootAddress ?? "")
-                        self?.detailView.toastView?.show()
-                        if self?.sendViolasTokenState == false {
-                            self?.dataModel.sendViolasTransaction(sendAddress: (self?.wallet?.walletAddress)!,
-                                                                  receiveAddress: address,
-                                                                  amount: amount,
-                                                                  fee: fee,
-                                                                  mnemonic: mnemonic)
-                        } else {
-                            self?.dataModel.sendViolasTokenTransaction(sendAddress: (self?.wallet?.walletAddress)!,
-                                                                       receiveAddress: address,
-                                                                       amount: amount,
-                                                                       fee: fee,
-                                                                       mnemonic: mnemonic,
-                                                                       tokenIndex: "\(self?.vtokenModel?.id ?? 9999)")
-                        }
-                    } catch {
-                        self?.detailView.makeToast(error.localizedDescription, position: .center)
-                    }
-                    
-                } else {
-                    self?.detailView.makeToast(error,
-                                              position: .center)
-                }
-            }
-        } else {
-            let alert = passowordAlert(rootAddress: (self.wallet?.walletRootAddress)!, mnemonic: { [weak self] (mnemonic) in
-                self?.detailView.toastView?.show()
-                if self?.sendViolasTokenState == false {
-                    self?.dataModel.sendViolasTransaction(sendAddress: (self?.wallet?.walletAddress)!,
-                                                          receiveAddress: address,
-                                                          amount: amount,
-                                                          fee: fee,
-                                                          mnemonic: mnemonic)
-                } else {
-                    self?.dataModel.sendViolasTokenTransaction(sendAddress: (self?.wallet?.walletAddress)!,
-                                                               receiveAddress: address,
-                                                               amount: amount,
-                                                               fee: fee,
-                                                               mnemonic: mnemonic,
-                                                               tokenIndex: "\(self?.vtokenModel?.id ?? 9999)")
-                }
-            }) { [weak self] (errorContent) in
-                guard errorContent != "Cancel" else {
-                    self?.detailView.toastView?.hide()
+    func confirmTransfer(amount: UInt64, address: String, fee: UInt64) {
+        WalletManager.unlockWallet { [weak self] (result) in
+            switch result {
+            case let .success(mnemonic):
+                self?.detailView.toastView?.show(tag: 99)
+                self?.dataModel.sendViolasTransaction(sendAddress: self?.wallet?.tokenAddress ?? "",
+                                                      receiveAddress: address,
+                                                      amount: amount,
+                                                      fee: fee,
+                                                      mnemonic: mnemonic,
+                                                      module: self?.wallet?.tokenModule ?? "")
+            case let .failure(error):
+                guard error.localizedDescription != "Cancel" else {
+                    self?.detailView.toastView?.hide(tag: 99)
                     return
                 }
-                self?.view.makeToast(errorContent, position: .center)
+                self?.detailView.makeToast(error.localizedDescription, position: .center)
             }
-            self.present(alert, animated: true, completion: nil)
-
         }
     }
 }
@@ -178,7 +130,7 @@ extension ViolasTransferViewController {
         self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
             guard let dataDic = change.newValue, dataDic.count != 0 else {
                 self?.detailView.hideToastActivity()
-//                self?.endLoading()
+                self?.detailView.toastView?.hide(tag: 99)
                 return
             }
             let type = dataDic.value(forKey: "type") as! String
@@ -200,12 +152,14 @@ extension ViolasTransferViewController {
                     // 数据返回状态异常
                 }
                 self?.detailView.hideToastActivity()
+                self?.detailView.toastView?.hide(tag: 99)
                 self?.view.makeToast(error.localizedDescription, position: .center)
                 return
             }
             if type == "SendViolasTransaction" {
-                self?.detailView.toastView?.hide()
-                self?.view.makeToast(localLanguage(keyString: "wallet_transfer_success_alert"), position: .center)
+                self?.detailView.toastView?.hide(tag: 99)
+                self?.view.makeToast(localLanguage(keyString: "wallet_transfer_success_alert"),
+                                     position: .center)
                 if let action = self?.actionClosure {
                     action()
                     self?.navigationController?.popViewController(animated: true)

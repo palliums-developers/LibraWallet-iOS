@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import BigInt
 
 func screenSnapshot() -> UIImage? {
     
@@ -24,8 +25,8 @@ func screenSnapshot() -> UIImage? {
     return image
 }
 extension UIImage {
-    func imageWithColor(color:UIColor) -> UIImage {
-        let rect = CGRect(x: 0.0, y: 0.0, width: 1.0, height: 1.0)
+    func imageWithColor(color:UIColor, width: CGFloat? = 1.0, height: CGFloat? = 1.0) -> UIImage {
+        let rect = CGRect(x: 0.0, y: 0.0, width: width ?? 1.0, height: height ?? 1.0)
         UIGraphicsBeginImageContext(rect.size)
         let context:CGContext = UIGraphicsGetCurrentContext()!
         context.setFillColor(color.cgColor);
@@ -37,20 +38,37 @@ extension UIImage {
         return image!
     }
 }
-func colorGradualChange(size: CGSize) -> CAGradientLayer {
+extension UIView {
+    /// 部分圆角
+    ///
+    /// - Parameters:
+    ///   - corners: 需要实现为圆角的角，可传入多个
+    ///   - radii: 圆角半径
+    func corner(byRoundingCorners corners: UIRectCorner, radii: CGFloat) {
+        let maskPath = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radii, height: radii))
+        let maskLayer = CAShapeLayer()
+        maskLayer.frame = self.bounds
+        maskLayer.path = maskPath.cgPath
+        self.layer.mask = maskLayer
+    }
+}
+func colorGradualChange(size: CGSize, cornerRadius: CGFloat = 0) -> CAGradientLayer {
     let gradientLayer = CAGradientLayer.init()
     gradientLayer.frame = CGRect.init(x: 0, y: 0, width: size.width, height: size.height)
     gradientLayer.startPoint = CGPoint.init(x: 0, y: 0)
     gradientLayer.endPoint = CGPoint.init(x: 1, y: 0)
     gradientLayer.locations = [0,1.0]
     gradientLayer.colors = [UIColor.init(hex: "9339F3").cgColor, UIColor.init(hex: "7038FD").cgColor]
+    if cornerRadius > 0 {
+        gradientLayer.cornerRadius = cornerRadius
+    }
     return gradientLayer
 }
 func checkMnenoicInvalid(mnemonicArray: [String]) -> Bool {
     guard mnemonicArray.count != 0 else {
         return false
     }
-    let wordList: [String.SubSequence] =  LibraWordList.english
+    let wordList: [String.SubSequence] =  DiemWordList.english
     for i in 0...mnemonicArray.count - 1 {
         let status = wordList.contains(Substring.init(mnemonicArray[i]))
         if status == false {
@@ -77,81 +95,7 @@ func isPurnDouble(string: String) -> Bool {
     return scan.scanDouble(&val) && scan.isAtEnd
     
 }
-func passowordAlert(rootAddress: String, message: String? = localLanguage(keyString: "wallet_type_in_password_content"), mnemonic: @escaping (([String])->Void), errorContent: @escaping ((String)->Void)) -> UIAlertController {
-    let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: message, preferredStyle: .alert)
-    alertContr.addTextField {
-        (textField: UITextField!) -> Void in
-        textField.placeholder = localLanguage(keyString: "wallet_type_in_password_textfield_placeholder")
-        textField.tintColor = DefaultGreenColor
-        textField.isSecureTextEntry = true
-    }
-    alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_confirm_button_title"), style: .default) { clickHandler in
-        let passwordTextField = alertContr.textFields!.first! as UITextField
-        guard let password = passwordTextField.text else {
-            errorContent(LibraWalletError.WalletCheckPassword(reason: .passwordInvalidError).localizedDescription)
-            return
-        }
-        guard password.isEmpty == false else {
-            errorContent(LibraWalletError.WalletCheckPassword(reason: .passwordEmptyError).localizedDescription)
-            return
-        }
-        NSLog("Password:\(password)")
-        do {
-//            let state = try LibraWalletManager.shared.isValidPaymentPassword(walletRootAddress: rootAddress, password: password)
-//            guard state == true else {
-//                errorContent(LibraWalletError.WalletCheckPassword(reason: .passwordCheckFailed).localizedDescription)
-//                return
-//            }
-            let tempMenmonic = try LibraWalletManager.shared.getMnemonicFromKeychain(password: password, walletRootAddress: rootAddress)
-            mnemonic(tempMenmonic)
-        } catch {
-            errorContent(error.localizedDescription)
-        }
-    })
-    alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_cancel_button_title"), style: .cancel){
-        clickHandler in
-        NSLog("点击了取消")
-        errorContent("Cancel")
-    })
-    return alertContr
-}
-func passowordCheckAlert(rootAddress: String, message: String? = localLanguage(keyString: "wallet_type_in_password_content"), passwordContent: @escaping ((String)->Void), errorContent: @escaping ((String)->Void)) -> UIAlertController {
-    let alertContr = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: message, preferredStyle: .alert)
-    alertContr.addTextField {
-        (textField: UITextField!) -> Void in
-        textField.placeholder = localLanguage(keyString: "wallet_type_in_password_textfield_placeholder")
-        textField.tintColor = DefaultGreenColor
-        textField.isSecureTextEntry = true
-    }
-    alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_confirm_button_title"), style: .default) { clickHandler in
-        let passwordTextField = alertContr.textFields!.first! as UITextField
-        guard let password = passwordTextField.text else {
-            errorContent(LibraWalletError.WalletCheckPassword(reason: .passwordInvalidError).localizedDescription)
-            return
-        }
-        guard password.isEmpty == false else {
-            errorContent(LibraWalletError.WalletCheckPassword(reason: .passwordEmptyError).localizedDescription)
-            return
-        }
-        NSLog("Password:\(password)")
-        do {
-            let result = try LibraWalletManager.shared.getMnemonicFromKeychain(password: password, walletRootAddress: rootAddress)
-            guard result.isEmpty == false else {
-                errorContent(LibraWalletError.WalletCheckPassword(reason: .passwordCheckFailed).localizedDescription)
-                return
-            }
-            passwordContent(password)
-        } catch {
-            errorContent(error.localizedDescription)
-        }
-    })
-    alertContr.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_cancel_button_title"), style: .cancel){
-        clickHandler in
-        NSLog("点击了取消")
-        errorContent("Cancel")
-    })
-    return alertContr
-}
+
 func handlePassword(password: String) -> Bool {
     guard (password.count >= PasswordMinLimit) && (password.count <= PasswordMaxLimit) else {
         return false
@@ -174,7 +118,6 @@ fileprivate func isContainAlphabet(content: String) -> Bool {
     }
 }
 fileprivate func isContainNumber(content: String) -> Bool {
-
     let email = "^.*[0-9]+.*$"
     let regextestmobile = NSPredicate(format: "SELF MATCHES %@",email)
     if (regextestmobile.evaluate(with: content) == true) {
@@ -183,6 +126,34 @@ fileprivate func isContainNumber(content: String) -> Bool {
         return false
     }
 }
+func isValidETHAddress(address: String) -> Bool {
+    if address.isEmpty == true || address.hasPrefix("0x") == false {
+        return false
+    } else {
+        let index = address.index(address.startIndex, offsetBy: 2)
+        let content = address.suffix(from: index)
+        guard content.count == 40 else {
+            return false
+        }
+        let number = BigInt.init(Data.init(Array<UInt8>(hex: String(content))))
+        guard NSDecimalNumber.init(string: number.description).intValue > 0 else {
+            return false
+        }
+        return true
+    }
+}
+//    return WalletUtils.isValidAddress(input);
+//public static boolean isValidAddress(String input) {
+//        String cleanInput = Numeric.cleanHexPrefix(input);
+//
+//        try {
+//            Numeric.toBigIntNoPrefix(cleanInput);
+//        } catch (NumberFormatException e) {
+//            return false;
+//        }
+//
+//        return cleanInput.length() == ADDRESS_LENGTH_IN_HEX;
+//    }
 func getDecimalNumberAmount(amount: NSDecimalNumber, scale: Int16, unit: Int) -> String {
 //    NSRoundPlain:四舍五入
 //    NSRoundDown:只舍不入
@@ -211,132 +182,11 @@ func getDecimalNumber(amount: NSDecimalNumber, scale: Int16, unit: Int) -> NSDec
     let number = amount.dividing(by: NSDecimalNumber.init(value: unit), withBehavior: numberConfig)
     return number
 }
+// MARK: 二维码解析相关模块
 struct libraWalletTool {
-    public static func scanResultHandle(content: String, contracts: [ViolasTokenModel]?) throws -> QRCodeHandleResult {
-         if content.hasPrefix("bitcoin:") {
-            let (contentPrefix, amount) = self.handleAmount(content: content)
-             let tempAddress = contentPrefix.replacingOccurrences(of: "bitcoin:", with: "")
-             guard BTCManager.isValidBTCAddress(address: tempAddress) else {
-                 throw LibraWalletError.WalletScan(reason: .btcAddressInvalid)
-             }
-             return QRCodeHandleResult.init(addressType: .BTC,
-                                            originContent: content,
-                                            address: tempAddress,
-                                            amount: amount,
-                                            contract: nil,
-                                            type: .transfer)
-         } else if content.hasPrefix("libra:") {
-             let (contentPrefix, amount) = handleAmount(content: content)
-             let tempAddress = contentPrefix.replacingOccurrences(of: "libra:", with: "")
-             guard LibraManager.isValidLibraAddress(address: tempAddress) else {
-                throw LibraWalletError.WalletScan(reason: .libraAddressInvalid)
-             }
-             return QRCodeHandleResult.init(addressType: .Libra,
-                                            originContent: content,
-                                            address: tempAddress,
-                                            amount: amount,
-                                            contract: nil,
-                                            type: .transfer)
-         } else if content.hasPrefix("violas:") {
-             let (contentPrefix, amount) = handleAmount(content: content)
-             let tempAddress = contentPrefix.replacingOccurrences(of: "violas:", with: "")
-             guard ViolasManager.isValidViolasAddress(address: tempAddress) else {
-                 throw LibraWalletError.WalletScan(reason: .violasAddressInvalid)
-             }
-             return QRCodeHandleResult.init(addressType: .Violas,
-                                            originContent: content,
-                                            address: tempAddress,
-                                            amount: amount,
-                                            contract: nil,
-                                            type: .transfer)
-         } else if content.hasPrefix("violas-") {
-             let (contentPrefix, amount) = handleAmount(content: content)
-             let coinAddress = contentPrefix.split(separator: ":").last?.description
-             let addressPrifix = contentPrefix.split(separator: ":").first?.description
-             let coinNames = addressPrifix?.split(separator: "-")
-             guard coinNames?.count == 2 else {
-                 print("token名称为空")
-                 throw LibraWalletError.WalletScan(reason: .violasTokenNameEmpty)
-             }
-             let contract = contracts?.filter({ item in
-                 item.name?.lowercased() == coinNames?.last?.description.lowercased()
-             })
-             guard (contract?.count ?? 0) > 0 else {
-                 // 不支持或未开启
-                 print("不支持或未开启")
-                 throw LibraWalletError.WalletScan(reason: .violasTokenContractInvalid)
-             }
-             guard ViolasManager.isValidViolasAddress(address: coinAddress ?? "") else {
-                 throw LibraWalletError.WalletScan(reason: .violasAddressInvalid)
-             }
-             return QRCodeHandleResult.init(addressType: .Violas,
-                                            originContent: content,
-                                            address: coinAddress,
-                                            amount: amount,
-                                            contract: contract?.first,
-                                            type: .transfer)
-         } else if content.hasPrefix("wc:") {
-            return QRCodeHandleResult.init(addressType: nil,
-                                           originContent: content,
-                                           address: nil,
-                                           amount: nil,
-                                           contract: nil,
-                                           type: .walletConnect)
-         } else {
-             do {
-                 let model = try JSONDecoder().decode(ScanLoginDataModel.self, from: content.data(using: .utf8)!)
-                 guard model.type == 2 else {
-                     return QRCodeHandleResult.init(addressType: nil,
-                                                    originContent: content,
-                                                    address: nil,
-                                                    amount: nil,
-                                                    contract: nil,
-                                                    type: .others)
-                 }
-                 return QRCodeHandleResult.init(addressType: nil,
-                                                originContent: content,
-                                                address: model.session_id,
-                                                amount: nil,
-                                                contract: nil,
-                                                type: .login)
-             } catch {
-                 return QRCodeHandleResult.init(addressType: nil,
-                                                originContent: content,
-                                                address: nil,
-                                                amount: nil,
-                                                contract: nil,
-                                                type: .others)
-             }
-         }
-     }
-     struct QRCodeHandleResult {
-        var addressType: WalletType?
-        var originContent: String
-        var address: String?
-        var amount: Int64?
-        var contract: ViolasTokenModel?
-        var type: QRCodeType
-     }
-     enum QRCodeType {
-        case transfer
-        case login
-        case others
-        case walletConnect
-     }
-     private static func handleAmount(content: String) -> (String, Int64?) {
-         let contentArray = content.split(separator: "?")
-         if contentArray.count == 2 {
-             let amountContent = contentArray[1].split(separator: "&")
-             let amountString = amountContent[0].replacingOccurrences(of: "amount=", with: "")
-             let amount = NSDecimalNumber.init(string: amountString)
-             
-             return (contentArray.first!.description, amount.int64Value)
-         } else {
-             return (content, nil)
-         }
-         
-     }
+    
 }
+// MARK: 计算文字宽高
 extension libraWalletTool {
     static func ga_heightForComment(content: String, fontSize: CGFloat, width: CGFloat) -> CGFloat {
         let rect = NSString(string: content).boundingRect(with: CGSize(width: width, height: CGFloat(MAXFLOAT)),
@@ -345,5 +195,124 @@ extension libraWalletTool {
                                                           context: nil)
         return ceil(rect.height)
     }
-
+    static func ga_widthForComment(content: String, fontSize: CGFloat, height: CGFloat) -> CGFloat {
+        let rect = NSString(string: content).boundingRect(with: CGSize(width: CGFloat(MAXFLOAT), height: height),
+                                                          options: .usesLineFragmentOrigin,
+                                                          attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: fontSize)],
+                                                          context: nil)
+        return ceil(rect.width)
+    }
+}
+// MARK: 密码验证
+extension libraWalletTool {
+    /// 验证密码获取助记词
+    /// - Parameters:
+    ///   - message: 提示内容
+    ///   - completion: 返回结果
+    /// - Returns: UIAlertController
+    static func passowordAlert(message: String? = localLanguage(keyString: "wallet_type_in_password_content"), completion: @escaping (Result<[String], Error>)-> Void) -> UIAlertController {
+        let alertController = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: message, preferredStyle: .alert)
+        alertController.addTextField {
+            (textField: UITextField!) -> Void in
+            textField.placeholder = localLanguage(keyString: "wallet_type_in_password_textfield_placeholder")
+            textField.tintColor = DefaultGreenColor
+            textField.isSecureTextEntry = true
+        }
+        alertController.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_confirm_button_title"), style: .default) { clickHandler in
+            guard let password = alertController.textFields?.first?.text else {
+                completion(.failure(LibraWalletError.WalletCheckPassword(reason: .passwordInvalidError)))
+                return
+            }
+            guard password.isEmpty == false else {
+                completion(.failure(LibraWalletError.WalletCheckPassword(reason: .passwordEmptyError)))
+                return
+            }
+            NSLog("Password:\(password)")
+            do {
+                let mnemonic = try WalletManager.getMnemonicFromKeychain(password: password)
+                completion(.success(mnemonic))
+            } catch {
+                completion(.failure(error))
+            }
+        })
+        alertController.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_cancel_button_title"), style: .cancel){
+            clickHandler in
+            NSLog("点击了取消")
+            completion(.failure(LibraWalletError.WalletCheckPassword(reason: .cancel)))
+        })
+        return alertController
+    }
+    /// 验证密码
+    /// - Parameters:
+    ///   - message: 提示内容
+    ///   - completion: 返回结果
+    /// - Returns: UIAlertController
+    static func passowordCheckAlert(message: String? = localLanguage(keyString: "wallet_type_in_password_content"),  completion: @escaping (Result<String, Error>)-> Void) -> UIAlertController {
+        let alertController = UIAlertController(title: localLanguage(keyString: "wallet_type_in_password_title"), message: message, preferredStyle: .alert)
+        alertController.addTextField {
+            (textField: UITextField!) -> Void in
+            textField.placeholder = localLanguage(keyString: "wallet_type_in_password_textfield_placeholder")
+            textField.tintColor = DefaultGreenColor
+            textField.isSecureTextEntry = true
+        }
+        alertController.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_confirm_button_title"), style: .default) { clickHandler in
+            guard let password = alertController.textFields?.first?.text else {
+                completion(.failure(LibraWalletError.WalletCheckPassword(reason: .passwordInvalidError)))
+                return
+            }
+            guard password.isEmpty == false else {
+                completion(.failure(LibraWalletError.WalletCheckPassword(reason: .passwordEmptyError)))
+                return
+            }
+            NSLog("Password:\(password)")
+            do {
+                _ = try WalletManager.getMnemonicFromKeychain(password: password)
+                completion(.success(password))
+            } catch {
+                completion(.failure(error))
+            }
+        })
+        alertController.addAction(UIAlertAction(title: localLanguage(keyString: "wallet_type_in_password_cancel_button_title"), style: .cancel){
+            clickHandler in
+            NSLog("点击了取消")
+            completion(.failure(LibraWalletError.WalletCheckPassword(reason: .cancel)))
+        })
+        return alertController
+    }
+    static func deleteWalletAlert(confirm: @escaping ()-> Void) -> UIAlertController {
+        let alert = UIAlertController.init(title: localLanguage(keyString: "wallet_alert_delete_wallet_title"), message: localLanguage(keyString: "wallet_alert_delete_wallet_content"), preferredStyle: UIAlertController.Style.alert)
+        let confirmAction = UIAlertAction.init(title: localLanguage(keyString: "wallet_alert_delete_wallet_confirm_button_title"), style: UIAlertAction.Style.destructive) { (UIAlertAction) in
+            confirm()
+        }
+        let cancelAction = UIAlertAction.init(title: localLanguage(keyString: "wallet_alert_delete_wallet_cancel_button_title"), style: UIAlertAction.Style.cancel) { (UIAlertAction) in
+            print("Delete Wallet Cancel")
+        }
+        alert.addAction(cancelAction)
+        alert.addAction(confirmAction)
+        return alert
+    }
+    static func currencyUnactivatedAlert(confirm: @escaping ()->Void, cancel: @escaping ()->Void) -> UIAlertController {
+        let alert = UIAlertController.init(title: localLanguage(keyString: "wallet_add_asset_alert_title"),
+                                           message: localLanguage(keyString: "wallet_add_asset_alert_content"),
+                                           preferredStyle: .alert)
+        let cancelAction = UIAlertAction.init(title:localLanguage(keyString: "wallet_add_asset_alert_cancel_button_title"), style: .default) { okAction in
+            cancel()
+        }
+        let confirmAction = UIAlertAction.init(title:localLanguage(keyString: "wallet_add_asset_alert_confirm_button_title"), style: .default) { okAction in
+            confirm()
+        }
+        alert.addAction(cancelAction)
+        alert.addAction(confirmAction)
+        return alert
+    }
+    static func walletUnactivatedAlert(walletType: WalletType, confirm: @escaping ()->Void) -> UIAlertController {
+        let alert = UIAlertController.init(title: localLanguage(keyString: "wallet_add_asset_alert_title"),
+                                           message: localLanguage(keyString: "wallet_unactivated_alert_content_prifix") + walletType.description.lowercased() + localLanguage(keyString: "wallet_unactivated_alert_content"),
+                                           preferredStyle: .alert)
+        let confirmAction = UIAlertAction.init(title:localLanguage(keyString: "wallet_add_asset_alert_confirm_button_title"), style: .default) { okAction in
+            confirm()
+        }
+        alert.addAction(confirmAction)
+        return alert
+    }
 }

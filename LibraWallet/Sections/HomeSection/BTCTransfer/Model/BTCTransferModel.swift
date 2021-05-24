@@ -117,9 +117,21 @@ class BTCTransferModel: NSObject {
 //        }
 //        self.requests.append(request)
 //    }
-    func getUnspentUTXO(address: String, semaphore: DispatchSemaphore) {
+    func makeTransaction(wallet: HDWallet, amount: Double, fee: Double, toAddress: String) {
+        let semaphore = DispatchSemaphore.init(value: 1)
+        let queue = DispatchQueue.init(label: "SendQueue")
+        queue.async {
+            self.getUnspentUTXO(address: wallet.addresses.first!.description, semaphore: semaphore)
+        }
+        queue.async {
+            semaphore.wait()
+            self.selectUTXOMakeSignature(utxos: self.utxos!, wallet: wallet, amount: amount, fee: fee, toAddress: toAddress)
+            semaphore.signal()
+        }
+    }
+    private func getUnspentUTXO(address: String, semaphore: DispatchSemaphore) {
         semaphore.wait()
-        let request = mainProvide.request(.TrezorBTCUnspentUTXO(address)) {[weak self](result) in
+        let request = BTCModuleProvide.request(.TrezorBTCUnspentUTXO(address)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {
@@ -155,18 +167,7 @@ class BTCTransferModel: NSObject {
         self.requests.append(request)
     }
 
-    func makeTransaction(wallet: HDWallet, amount: Double, fee: Double, toAddress: String) {
-        let semaphore = DispatchSemaphore.init(value: 1)
-        let queue = DispatchQueue.init(label: "SendQueue")
-        queue.async {
-            self.getUnspentUTXO(address: wallet.addresses.first!.description, semaphore: semaphore)
-        }
-        queue.async {
-            semaphore.wait()
-            self.selectUTXOMakeSignature(utxos: self.utxos!, wallet: wallet, amount: amount, fee: fee, toAddress: toAddress)
-            semaphore.signal()
-        }
-    }
+
     
 //    func selectUTXOMakeSignature(utxos: [BTCUnspentUTXOListModel], wallet: HDWallet, amount: Double, fee: Double, toAddress: String) {
 //        let amountt: UInt64 = UInt64(amount * 100000000)
@@ -200,7 +201,7 @@ class BTCTransferModel: NSObject {
 //
 //        self.sendBTCTransaction(signature: result!.serialized().toHexString())
 //    }
-    func selectUTXOMakeSignature(utxos: [TrezorBTCUTXOMainModel], wallet: HDWallet, amount: Double, fee: Double, toAddress: String) {
+    private func selectUTXOMakeSignature(utxos: [TrezorBTCUTXOMainModel], wallet: HDWallet, amount: Double, fee: Double, toAddress: String) {
         let amountt: UInt64 = UInt64(amount * 100000000)
         let feee: UInt64 = UInt64(fee * 100000000)
 //        let change: UInt64     =  balance - amountt - feee
@@ -232,8 +233,8 @@ class BTCTransferModel: NSObject {
         
         self.sendBTCTransaction(signature: result!.serialized().toHexString())
     }
-    func sendBTCTransaction(signature: String) {
-        let request = mainProvide.request(.TrezorBTCPushTransaction(signature)) {[weak self](result) in
+    private func sendBTCTransaction(signature: String) {
+        let request = BTCModuleProvide.request(.TrezorBTCPushTransaction(signature)) {[weak self](result) in
             switch  result {
             case let .success(response):
                 do {

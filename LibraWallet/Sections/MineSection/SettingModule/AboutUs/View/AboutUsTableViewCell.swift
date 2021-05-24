@@ -37,7 +37,7 @@ class AboutUsTableViewCell: UITableViewCell {
             make.left.equalTo(contentView).offset(20)
             make.right.equalTo(contentView.snp.right).offset(-20)
             make.bottom.equalTo(contentView)
-            make.height.equalTo(1)
+            make.height.equalTo(0.5)
         }
     }
     //MARK: - 懒加载对象

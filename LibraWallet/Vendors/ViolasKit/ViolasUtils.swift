@@ -9,7 +9,7 @@
 import UIKit
 import BigInt
 struct ViolasUtils {
-    static func getLengthData(length: Int, appendBytesCount: Int) -> Data {
+    static func getLengthData(length: UInt64, appendBytesCount: Int) -> Data {
         var newData = Data()
         let lengthData = BigUInt(length).serialize()
         // 补全长度
@@ -28,7 +28,6 @@ struct ViolasUtils {
             return Data.init(hex: "00")
         }
         let erjinzhi = String.init(BigUInt(length), radix: 2)
-        print(erjinzhi)
         let result = erjinzhi.count / 7
         let remainder = erjinzhi.count % 7
         var tempString = String.init()
@@ -93,5 +92,28 @@ struct ViolasUtils {
         }
         let convert = binary2dec(num: tempString)
         return convert
+    }
+    static func getMoveCode(name: String) -> String {
+        // 1.获取Bundle路径
+        let marketContractBundlePath = Bundle.main.path(forResource:"ViolasContracts", ofType:"bundle") ?? ""
+        guard marketContractBundlePath.isEmpty == false else {
+            return ""
+        }
+        // 2.获取Bundle
+        guard let marketContractBundle = Bundle.init(path: marketContractBundlePath) else {
+            return ""
+        }
+        // 3.获取Bundle下合约
+        guard let path = marketContractBundle.path(forResource:name, ofType:"mv", inDirectory:""), path.isEmpty == false else {
+            return ""
+        }
+        // 4.读取此合约
+        do {
+            let data = try Data.init(contentsOf: URL.init(fileURLWithPath: path))
+            return data.toHexString()
+        } catch {
+            print(error.localizedDescription)
+            return ""
+        }
     }
 }

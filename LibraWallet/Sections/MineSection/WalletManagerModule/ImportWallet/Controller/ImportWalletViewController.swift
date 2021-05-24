@@ -11,221 +11,106 @@ import Toast_Swift
 class ImportWalletViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        // 设置标题
+        self.title = localLanguage(keyString: "wallet_create_choose_type_import_button_title")
         // 加载子View
         self.view.addSubview(detailView)
+        // 初始化KVO
+        self.initKVO()
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         detailView.snp.makeConstraints { (make) in
-            if #available(iOS 11.0, *) {
-                make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
-            } else {
-                make.top.bottom.equalTo(self.view)
-            }
-            make.left.right.equalTo(self.view)
+            make.top.bottom.left.right.equalTo(self.view.safeAreaLayoutGuide)
         }
     }
-    //子View
+    deinit {
+        print("ImportWalletViewController销毁了")
+    }
+    override func back() {
+        self.dismiss(animated: true, completion: nil)
+    }
+    /// 子View
     private lazy var detailView : ImportWalletView = {
         let view = ImportWalletView.init()
-        view.type = self.type
         view.delegate = self
         return view
     }()
-    //网络请求、数据模型
+    /// 网络请求、数据模型
     lazy var dataModel: ImportWalletModel = {
         let model = ImportWalletModel.init()
         return model
     }()
-    deinit {
-        print("ImportWalletViewController销毁了")
-    }
-    var type: String?
-    var myContext = 0
-
+    /// 数据监听KVO
+    var observer: NSKeyValueObservation?
+    /// 导入成功回调
+    var successImportClosure: (()->Void)?
 }
 extension ImportWalletViewController: ImportWalletViewDelegate {
-    func confirmAddWallet(name: String, password: String, mnemonicArray: [String]) {
-        if type == "BTC" {
-            self.importBTCWallet(name: name, password: password, mnemonicArray: mnemonicArray)
-        } else if type == "Libra" {
-            self.importLibraWallet(name: name, password: password, mnemonicArray: mnemonicArray)
-        } else {
-            self.importViolasWallet(name: name, password: password, mnemonicArray: mnemonicArray)
-        }
+    func confirmImportWallet(password: String, mnemonics: [String]) {
+        self.detailView.toastView.show(tag: 99)
+        self.dataModel.importWallet(password: password, mnemonic: mnemonics)
     }
-    func importBTCWallet(name: String, password: String, mnemonicArray: [String]) {
-        self.detailView.toastView.show()
-        let quene = DispatchQueue.init(label: "createWalletQuene")
-        quene.async {
-            let wallet = try! BTCManager().getWallet(mnemonic: mnemonicArray)
-            let walletModel = LibraWalletManager.init(walletID: 999,
-                                                      walletBalance: 0,
-                                                      walletAddress: wallet.address.description,
-                                                      walletRootAddress: "BTC_" + wallet.address.description,
-                                                      walletCreateTime: Int(NSDate().timeIntervalSince1970),
-                                                      walletName: name,
-                                                      walletCurrentUse: false,
-                                                      walletBiometricLock: false,
-                                                      walletIdentity: 1,
-                                                      walletType: .BTC,
-                                                      walletBackupState: true)
-            guard DataBaseManager.DBManager.isExistAddressInWallet(address: walletModel.walletRootAddress ?? "") == false else {
-                DispatchQueue.main.async(execute: {
-                    self.detailView.toastView.hide()
-                    self.view.makeToast(LibraWalletError.WalletCreate(reason: .walletExist).localizedDescription, position: .center)
-                })
+    func openPrivacyPolicy() {
+        let vc = PrivateLegalViewController()
+        vc.needDismissViewController = true
+        let navi = UINavigationController.init(rootViewController: vc)
+        self.present(navi, animated: true, completion: nil)
+    }
+    func openServiceAgreement() {
+        let vc = ServiceLegalViewController()
+        vc.needDismissViewController = true
+        let navi = UINavigationController.init(rootViewController: vc)
+        self.present(navi, animated: true, completion: nil)
+    }
+}
+//MARK: - 网络请求数据处理中心
+extension ImportWalletViewController {
+    func initKVO() {
+        self.observer = dataModel.observe(\.dataDic, options: [.new], changeHandler: { [weak self](model, change) in
+            guard let dataDic = change.newValue, dataDic.count != 0 else {
+                self?.detailView.hideToastActivity()
+                self?.detailView.toastView.hide(tag: 99)
                 return
             }
-            let result = DataBaseManager.DBManager.insertWallet(model: walletModel)
-            if result == true {
-                do {
-                    try LibraWalletManager().saveMnemonicToKeychain(mnemonic: mnemonicArray, password: password, walletRootAddress: walletModel.walletRootAddress ?? "")
-                    DispatchQueue.main.async(execute: {
-                        self.detailView.toastView.hide()
-                        self.view.makeToast(localLanguage(keyString: "wallet_import_wallet_success_title"), duration: 1, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { [weak self](bool) in
-                            self?.jumpToWalletManagerController()
-                        })
-                    })
-                } catch {
-                    // 插入数据库失败
-                    DispatchQueue.main.async(execute: {
-                        //删除从数据库创建好钱包
-                        _ = DataBaseManager.DBManager.deleteWalletFromTable(model: walletModel)
-                        self.detailView.toastView.hide()
-                        self.view.makeToast(LibraWalletError.WalletCreate(reason: .walletImportFailed).localizedDescription, position: .center)
-                    })
+            let type = dataDic.value(forKey: "type") as! String
+            if let error = dataDic.value(forKey: "error") as? LibraWalletError {
+                if error.localizedDescription == LibraWalletError.WalletRequest(reason: .networkInvalid).localizedDescription {
+                    // 网络无法访问
                     print(error.localizedDescription)
-                }
-            } else {
-                DispatchQueue.main.async(execute: {
-                    self.detailView.toastView.hide()
-                    self.view.makeToast(LibraWalletError.WalletCreate(reason: .walletImportFailed).localizedDescription, position: .center)
-                })
-            }
-        }
-    }
-    func importViolasWallet(name: String, password: String, mnemonicArray: [String]) {
-        self.detailView.toastView.show()
-        let quene = DispatchQueue.init(label: "createWalletQuene")
-        quene.async {
-            do {
-                let wallet = try ViolasManager.getWallet(mnemonic: mnemonicArray)
-
-                let walletModel = LibraWalletManager.init(walletID: 999,
-                                                          walletBalance: 0,
-                                                          walletAddress: wallet.publicKey.toLegacy(),
-                                                          walletRootAddress: "Violas_" + wallet.publicKey.toLegacy(),
-                                                          walletCreateTime: Int(NSDate().timeIntervalSince1970),
-                                                          walletName: name,
-                                                          walletCurrentUse: false,
-                                                          walletBiometricLock: false,
-                                                          walletIdentity: 1,
-                                                          walletType: .Violas,
-                                                          walletBackupState: true,
-                                                          walletAuthenticationKey: wallet.publicKey.toActive())
-                guard DataBaseManager.DBManager.isExistAddressInWallet(address: walletModel.walletRootAddress ?? "") == false else {
-                    DispatchQueue.main.async(execute: {
-                        self.detailView.toastView.hide()
-                        self.view.makeToast(LibraWalletError.WalletCreate(reason: .walletExist).localizedDescription, position: .center)
-                    })
-                    return
-                }
-                let result = DataBaseManager.DBManager.insertWallet(model: walletModel)
-                if result == true {
-                    try LibraWalletManager().saveMnemonicToKeychain(mnemonic: mnemonicArray, password: password, walletRootAddress: walletModel.walletRootAddress ?? "")
-                    DispatchQueue.main.async(execute: {
-                        self.detailView.toastView.hide()
-                        self.view.makeToast(localLanguage(keyString: "wallet_import_wallet_success_title"), duration: 1, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { [weak self](bool) in
-                            self?.jumpToWalletManagerController()
-                        })
-                    })
-                } else {
-                    // 插入数据库失败
-                    DispatchQueue.main.async(execute: {
-                        self.detailView.toastView.hide()
-                        self.view.makeToast(LibraWalletError.WalletCreate(reason: .walletImportFailed).localizedDescription, position: .center)
-                    })
-                }
-            } catch {
-                DispatchQueue.main.async(execute: {
-                    self.detailView.toastView.hide()
+                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .walletVersionExpired).localizedDescription {
+                    // 版本太久
                     print(error.localizedDescription)
-                    self.view.makeToast(LibraWalletError.WalletCreate(reason: .walletImportFailed).localizedDescription, position: .center)
-                })
-            }
-        }
-    }
-    func importLibraWallet(name: String, password: String, mnemonicArray: [String]) {
-        self.detailView.toastView.show()
-        let quene = DispatchQueue.init(label: "createWalletQuene")
-        quene.async {
-            do {
-                let wallet = try LibraManager.getWallet(mnemonic: mnemonicArray)
-
-                let walletModel = LibraWalletManager.init(walletID: 999,
-                                                          walletBalance: 0,
-                                                          walletAddress: wallet.publicKey.toAddress(),
-                                                          walletRootAddress: "Libra_" + wallet.publicKey.toAddress(),
-                                                          walletCreateTime: Int(NSDate().timeIntervalSince1970),
-                                                          walletName: name,
-                                                          walletCurrentUse: false,
-                                                          walletBiometricLock: false,
-                                                          walletIdentity: 1,
-                                                          walletType: .Libra,
-                                                          walletBackupState: true,
-                                                          walletAuthenticationKey: wallet.publicKey.toActive())
-                guard DataBaseManager.DBManager.isExistAddressInWallet(address: walletModel.walletRootAddress ?? "") == false else {
-                    DispatchQueue.main.async(execute: {
-                        self.detailView.toastView.hide()
-                        self.view.makeToast(LibraWalletError.WalletCreate(reason: .walletExist).localizedDescription, position: .center)
-                    })
-                    return
-                }
-                let result = DataBaseManager.DBManager.insertWallet(model: walletModel)
-                if result == true {
-                    try LibraWalletManager().saveMnemonicToKeychain(mnemonic: mnemonicArray, password: password, walletRootAddress: walletModel.walletRootAddress ?? "")
-                    DispatchQueue.main.async(execute: {
-                        self.detailView.toastView.hide()
-                        self.view.makeToast(localLanguage(keyString: "wallet_import_wallet_success_title"), duration: 1, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { [weak self](bool) in
-                            self?.jumpToWalletManagerController()
-                        })
-                    })
-                } else {
-                    // 插入数据库失败
-                    DispatchQueue.main.async(execute: {
-                        self.detailView.toastView.hide()
-                        self.view.makeToast(LibraWalletError.WalletCreate(reason: .walletImportFailed).localizedDescription, position: .center)
-                    })
-                }
-            } catch {
-                DispatchQueue.main.async(execute: {
-                    self.detailView.toastView.hide()
+                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .parseJsonError).localizedDescription {
+                    // 解析失败
                     print(error.localizedDescription)
-                    self.view.makeToast(LibraWalletError.WalletCreate(reason: .walletImportFailed).localizedDescription, position: .center)
-                })
+                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataEmpty).localizedDescription {
+                    print(error.localizedDescription)
+                    // 数据为空
+                } else if error.localizedDescription == LibraWalletError.WalletRequest(reason: .dataCodeInvalid).localizedDescription {
+                    print(error.localizedDescription)
+                    // 数据返回状态异常
+                }
+                self?.detailView.hideToastActivity()
+                self?.detailView.toastView.hide(tag: 99)
+                self?.detailView.makeToast(localLanguage(keyString: "wallet_import_wallet_failed_title"))
+                return
             }
-        }
-    }
-    func jumpToWalletManagerController() {
-        if let vc = UIApplication.shared.keyWindow?.rootViewController, vc.children.isEmpty == false {
-            if let mineControllers = vc.children.last?.children, mineControllers.isEmpty == false {
-                for con in mineControllers {
-                    if con.isKind(of: WalletManagerViewController.classForCoder()) {
-                        (con as! WalletManagerViewController).needRefresh = true
-                        self.navigationController?.popToViewController(con, animated: true)
-                        return
+            if type == "ImportWallet" {
+                // 加载本地默认钱包
+                self?.detailView.makeToast(localLanguage(keyString: "wallet_import_wallet_success_title"), duration: 0.5, position: .center, title: nil, image: nil, style: ToastManager.shared.style, completion: { (bool) in
+                    do {
+                        try WalletManager.getDefaultWallet()
+                        if let success = self?.successImportClosure {
+                            success()
+                        }
+                    } catch {
+                        self?.detailView.makeToast(localLanguage(keyString: "wallet_import_wallet_failed_title"))
                     }
-                }
-                self.navigationController?.popToRootViewController(animated: true)
-            } else {
-                self.navigationController?.popToRootViewController(animated: true)
+                    self?.dismiss(animated: true, completion: nil)
+                })
             }
-        } else {
-            // 根控制器为空,重置App
-            let tabbar = BaseTabBarViewController.init()
-            UIApplication.shared.keyWindow?.rootViewController = tabbar
-            UIApplication.shared.keyWindow?.makeKeyAndVisible()
-        }
+            self?.detailView.toastView.hide(tag: 99)
+        })
     }
 }

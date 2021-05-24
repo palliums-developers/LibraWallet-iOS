@@ -27,7 +27,7 @@ extension AddressManagerTableViewManager: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: false)
         
         let data = self.dataModel![indexPath.row]
-        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, address: data.address ?? "")
+        self.delegate?.tableViewDidSelectRowAtIndexPath(indexPath: indexPath, address: data.address )
     }
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true

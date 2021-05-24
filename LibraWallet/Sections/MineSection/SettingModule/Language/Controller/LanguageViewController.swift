@@ -24,11 +24,11 @@ class LanguageViewController: BaseViewController {
         super.viewWillLayoutSubviews()
         detailView.snp.makeConstraints { (make) in
             if #available(iOS 11.0, *) {
-                make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
+                make.top.equalTo(self.view.safeAreaLayoutGuide)
             } else {
-                make.top.bottom.equalTo(self.view)
+                make.top.equalTo(self.view)
             }
-            make.left.right.equalTo(self.view)
+            make.left.right.bottom.equalTo(self.view)
         }
     }
     //tableView管理类

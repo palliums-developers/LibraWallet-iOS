@@ -11,7 +11,27 @@ import SQLite
 struct DataBaseManager {
     static var DBManager = DataBaseManager()
     var db: Connection?
-    mutating func creatLibraDB() {
+    mutating func initDataBase() {
+        do {
+            try connectDataBase()
+            if isExistTable(name: "Wallet") == false {
+                print("首次进入创建Wallet表")
+                try createWalletTable()
+            }
+            if isExistTable(name: "TransferAddress") == false {
+                print("首次进入创建TransferAddress表")
+                try createTransferAddressListTable()
+            }
+            if isExistTable(name: "Tokens") == false {
+                print("首次进入创建Tokens表")
+                try createViolasTokenTable()
+            }
+            try getDefaultWallet()
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    private mutating func connectDataBase() throws {
         /// 获取沙盒地址
         let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
         /// 拼接路径
@@ -20,501 +40,256 @@ struct DataBaseManager {
         do {
             self.db = try Connection(filePath)
         } catch {
-            print("createDataError")
-        }
-    }
-    func createWalletTable() {
-        /// 判断是否存在表
-        guard isExistTable(name: "Wallet") == false else {
-            return
-        }
-        do {
-            let walletTable = Table("Wallet")
-            // 设置字段
-            let walletID = Expression<Int64>("wallet_id")
-            // 钱包金额
-            let walletBalance = Expression<Int64>("wallet_balance")
-            // 钱包地址
-            let walletAddress = Expression<String>("wallet_address")
-            // Libra_、Violas_或BTC_ 前缀 + 钱包0层地址
-            let walletRootAddress = Expression<String>("wallet_root_address")
-            // 钱包创建时间
-            let walletCreateTime = Expression<Int>("wallet_creat_time")
-            // 钱包名字
-            let walletName = Expression<String>("wallet_name")
-            // 钱包助记词
-//            let walletMnemonic = Expression<String>("wallet_mnemonic")
-            // 当前使用钱包
-            let walletCurrentUse = Expression<Bool>("wallet_current_use")
-            // 是否使用生物解锁
-            let walletBiometricLock = Expression<Bool>("wallet_biometric_lock")
-            // 账户类型身份钱包、其他钱包(0=身份钱包、1=其它导入钱包)
-            let walletIdentity = Expression<Int>("wallet_identity")
-            // 钱包类型(0=Libra、1=Violas、2=BTC)
-            let walletType = Expression<Int>("wallet_type")
-            // 钱包是否已备份
-            let walletBackupState = Expression<Bool>("wallet_backup_state")
-            // 授权Key
-            let authenticationKey = Expression<String>("wallet_authentication_key")
-            // 钱包激活状态
-            let walletActiveState = Expression<Bool>("wallet_active_state")
-            // 建表
-            try db!.run(walletTable.create { t in
-                t.column(walletID, primaryKey: true)
-                t.column(walletAddress)
-                t.column(walletRootAddress, unique: true)
-                t.column(walletBalance)
-                t.column(walletCreateTime)
-                t.column(walletName)
-                t.column(walletCurrentUse)
-                t.column(walletBiometricLock)
-                t.column(walletIdentity)
-                t.column(walletType)
-                t.column(walletBackupState)
-                t.column(authenticationKey)
-                t.column(walletActiveState)
-            })
-        } catch {
-            let errorString = error.localizedDescription
-            if errorString.hasSuffix("already exists") == true {
-                return
-            } else {
-                print(errorString)
-            }
+            print("ConnectDataBaseError")
+            throw error
         }
     }
     func isExistTable(name: String) -> Bool {
         do {
             let walletTable = Table(name)
-            _ = try db!.scalar(walletTable.count)
+            _ = try self.db!.scalar(walletTable.count)
             return true
         } catch {
             print(error.localizedDescription)
             return false
         }
     }
-    func insertWallet(model: LibraWalletManager) -> Bool {
-        let homeTable = Table("Wallet")
+}
+// MARK: 创建Wallet表
+extension DataBaseManager {
+    private func createWalletTable() throws {
+        guard let tempDB = self.db else {
+            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+        }
         do {
-            if let tempDB = self.db {
-                let insert = homeTable.insert(
-                    Expression<Int64>("wallet_balance") <- model.walletBalance ?? 0,
-                    Expression<String>("wallet_address") <- model.walletAddress ?? "",
-                    Expression<String>("wallet_root_address") <- model.walletRootAddress ?? "",
-
-                    Expression<Int>("wallet_creat_time") <- model.walletCreateTime ?? 0,
-                    Expression<String>("wallet_name") <- model.walletName ?? "",
-                    Expression<Bool>("wallet_current_use") <- model.walletCurrentUse ?? true,
-                    Expression<Bool>("wallet_biometric_lock") <- model.walletBiometricLock ?? false,
-                    Expression<Int>("wallet_identity") <- model.walletIdentity ?? 999,
-                    Expression<Int>("wallet_type") <- model.walletType!.value,
-                    Expression<Bool>("wallet_backup_state") <- model.walletBackupState ?? false,
-                    Expression<String>("wallet_authentication_key") <- model.walletAuthenticationKey ?? "",
-                    Expression<Bool>("wallet_active_state") <- model.walletActiveState ?? false)
-                let rowid = try tempDB.run(insert)
-                print(rowid)
-                return true
-            } else {
-                return false
-            }
+            let walletTable = Table("Wallet")
+            // 钱包序号
+            let walletID = Expression<Int64>("wallet_id")
+            // 钱包名字
+            let walletName = Expression<String>("wallet_name")
+            // 钱包创建时间
+            let walletCreateTime = Expression<Double>("wallet_creat_time")
+            // 是否使用生物解锁
+            let walletBiometricLock = Expression<Bool>("wallet_biometric_lock")
+            // 钱包创建类型(0导入、1创建)
+            let walletCreateType = Expression<Int>("wallet_create_type")
+            // 钱包是否已备份
+            let walletBackupState = Expression<Bool>("wallet_backup_state")
+            // 当前WalletConnect订阅钱包
+            let walletSubscription = Expression<Bool>("wallet_subscription")
+            // 助记词哈希
+            let walletMnemonicHash = Expression<String>("wallet_mnemonic_hash")
+            // 钱包使用状态
+            let walletUseState = Expression<Bool>("wallet_use_state")
+            // 钱包BTC地址
+            let walletBTCAddress = Expression<String>("wallet_btc_address")
+            // 钱包Violas地址
+            let walletViolasAddress = Expression<String>("wallet_violas_address")
+            // 钱包Libra地址
+            let walletLibraAddress = Expression<String>("wallet_libra_address")
+            // 是否是新钱包
+            let isNewWallet = Expression<Bool>("wallet_new_state")
+            // 建表
+            try tempDB.run(walletTable.create { t in
+                t.column(walletID, primaryKey: true)
+                t.column(walletCreateTime)
+                t.column(walletName)
+                t.column(walletSubscription)
+                t.column(walletBiometricLock)
+                t.column(walletCreateType)
+                t.column(walletBackupState)
+                t.column(walletMnemonicHash, unique: true)
+                t.column(walletUseState)
+                t.column(walletBTCAddress)
+                t.column(walletViolasAddress)
+                t.column(walletLibraAddress)
+                t.column(isNewWallet)
+            })
         } catch {
-            print(error.localizedDescription)
-            return false
+            let errorString = error.localizedDescription
+            if errorString.hasSuffix("already exists") == true {
+                return
+            } else {
+                throw error
+            }
         }
     }
-    func isExistAddressInWallet(address: String) -> Bool {
+    func insertWallet(model: Wallet) throws {
+        guard let tempDB = self.db else {
+            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+        }
         let walletTable = Table("Wallet")
         do {
-            if let tempDB = self.db {
-                let transection = walletTable.filter(Expression<String>("wallet_root_address") == address)
-                let count = try tempDB.scalar(transection.count)
-                guard count != 0 else {
-                    return false
-                }
-                return true
-            } else {
-                return false
-            }
-        } catch {
-            print(error.localizedDescription)
-            return false
-        }
-    }
-    func getLocalWallets() -> [[LibraWalletManager]] {
-        let walletTable = Table("Wallet")
-        do {
-            // 身份钱包
-            var allWallets = [[LibraWalletManager]]()
-            var originWallets = [LibraWalletManager]()
-            var importWallets = [LibraWalletManager]()
-            if let tempDB = self.db {
-                for wallet in try tempDB.prepare(walletTable) {
-                    // 钱包ID
-                    let walletID = wallet[Expression<Int64>("wallet_id")]
-                    // 钱包金额
-                    let walletBalance = wallet[Expression<Int64>("wallet_balance")]
-                    // 钱包地址
-                    let walletAddress = wallet[Expression<String>("wallet_address")]
-                    // Libra_、Violas_或BTC_ 前缀 + 钱包0层地址
-                    let walletRootAddress = wallet[Expression<String>("wallet_root_address")]
-                    // 钱包创建时间
-                    let walletCreateTime = wallet[Expression<Int>("wallet_creat_time")]
-                    // 钱包名字
-                    let walletName = wallet[Expression<String>("wallet_name")]
-                    // 钱包助记词
-//                    let walletMnemonic = wallet[Expression<String>("wallet_mnemonic")]
-                    // 当前使用用户
-                    let walletCurrentUse = wallet[Expression<Bool>("wallet_current_use")]
-                    // 账户是否开启生物锁定
-                    let walletBiometricLock = wallet[Expression<Bool>("wallet_biometric_lock")]
-                    // 账户类型身份钱包、其他钱包(0=身份钱包、1=其它导入钱包)
-                    let walletIdentity = wallet[Expression<Int>("wallet_identity")]
-                    // 钱包类型(0=Libra、1=Violas、2=BTC)
-                    let walletType = wallet[Expression<Int>("wallet_type")]
-                    // 授权Key
-                    let authenticationKey = wallet[Expression<String>("wallet_authentication_key")]
-                    // 钱包激活状态
-                    let walletActiveState = wallet[Expression<Bool>("wallet_active_state")]
-                    
-                    let type: WalletType
-                    if walletType == 0 {
-                        type = .Libra
-                    } else if walletType == 1 {
-                        type = .Violas
-                    } else {
-                        type = .BTC
-                    }
-                    // 钱包是否已备份
-                    let walletBackupState = wallet[Expression<Bool>("wallet_backup_state")]
-                    
-                    let wallet = LibraWalletManager.init(walletID: walletID,
-                                                         walletBalance: walletBalance,
-                                                         walletAddress: walletAddress,
-                                                         walletRootAddress: walletRootAddress,
-                                                         walletCreateTime: walletCreateTime,
-                                                         walletName: walletName,
-                                                         walletCurrentUse: walletCurrentUse,
-                                                         walletBiometricLock: walletBiometricLock,
-                                                         walletIdentity: walletIdentity,
-                                                         walletType: type,
-                                                         walletBackupState: walletBackupState,
-                                                         walletAuthenticationKey: authenticationKey,
-                                                         walletActiveState: walletActiveState)
-                    if walletIdentity == 0 {
-                        originWallets.append(wallet)
-                    } else {
-                        importWallets.append(wallet)
-                    }
-                }
-                allWallets.append(originWallets)
-                allWallets.append(importWallets)
-                return allWallets
-            } else {
-                return allWallets
-            }
-        } catch {
-            print(error.localizedDescription)
-            return [[LibraWalletManager]]()
-        }
-    }
-    func getCurrentUseWallet() throws -> LibraWalletManager {
-        let walletTable = Table("Wallet").filter(Expression<Bool>("wallet_current_use") == true)
-        do {
-            if let tempDB = self.db {
-                for wallet in try tempDB.prepare(walletTable) {
-                    // 钱包ID
-                    let walletID = wallet[Expression<Int64>("wallet_id")]
-                    // 钱包金额
-                    let walletBalance = wallet[Expression<Int64>("wallet_balance")]
-                    // 钱包地址
-                    let walletAddress = wallet[Expression<String>("wallet_address")]
-                    // Libra_、Violas_或BTC_ 前缀 + 钱包0层地址
-                    let walletRootAddress = wallet[Expression<String>("wallet_root_address")]
-                    // 钱包创建时间
-                    let walletCreateTime = wallet[Expression<Int>("wallet_creat_time")]
-                    // 钱包名字
-                    let walletName = wallet[Expression<String>("wallet_name")]
-                    // 钱包助记词
-//                    let walletMnemonic = wallet[Expression<String>("wallet_mnemonic")]
-                    // 当前使用用户
-                    let walletCurrentUse = wallet[Expression<Bool>("wallet_current_use")]
-                    // 账户是否开启生物锁定
-                    let walletBiometricLock = wallet[Expression<Bool>("wallet_biometric_lock")]
-                    // 账户类型身份钱包、其他钱包(0=身份钱包、1=其它导入钱包)
-                    let walletIdentity = wallet[Expression<Int>("wallet_identity")]
-                    // 钱包类型(0=Libra、1=Violas、2=BTC)
-                    let walletType = wallet[Expression<Int>("wallet_type")]
-                    var tempWalletType = WalletType.Libra
-                    if walletType == 1 {
-                        tempWalletType = WalletType.Violas
-                    } else if walletType == 2 {
-                        tempWalletType = WalletType.BTC
-                    }
-                    // 钱包是否已备份
-                    let walletBackupState = wallet[Expression<Bool>("wallet_backup_state")]
-                    // 授权Key
-                    let authenticationKey = wallet[Expression<String>("wallet_authentication_key")]
-                    // 钱包激活状态
-                    let walletActiveState = wallet[Expression<Bool>("wallet_active_state")]
-                    
-                    LibraWalletManager.shared.initWallet(walletID: walletID,
-                                                         walletBalance: walletBalance,
-                                                         walletAddress: walletAddress,
-                                                         walletRootAddress: walletRootAddress,
-                                                         walletCreateTime: walletCreateTime,
-                                                         walletName: walletName,
-                                                         walletCurrentUse: walletCurrentUse,
-                                                         walletBiometricLock: walletBiometricLock,
-                                                         walletIdentity: walletIdentity,
-                                                         walletType: tempWalletType,
-                                                         walletBackupState: walletBackupState,
-                                                         walletAuthenticationKey: authenticationKey,
-                                                         walletActiveState: walletActiveState)
-                    return LibraWalletManager.shared
-                }
-                throw LibraWalletError.error("获取当前使用钱包检索失败")
-            } else {
-                throw LibraWalletError.error("读取数据库失败")
-            }
+            let insert = walletTable.insert(
+                Expression<String>("wallet_name") <- model.walletName ?? "",
+                Expression<Double>("wallet_creat_time") <- model.walletCreateTime ?? 0,
+                Expression<Bool>("wallet_biometric_lock") <- model.walletBiometricLock ?? false,
+                Expression<Int>("wallet_create_type") <- model.walletCreateType ?? 999,
+                Expression<Bool>("wallet_backup_state") <- model.walletBackupState ?? false,
+                Expression<Bool>("wallet_subscription") <- model.walletSubscription ?? false,
+                Expression<String>("wallet_mnemonic_hash") <- model.walletMnemonicHash ?? "",
+                Expression<Bool>("wallet_use_state") <- model.walletUseState ?? false,
+                Expression<String>("wallet_btc_address") <- model.btcAddress ?? "",
+                Expression<String>("wallet_violas_address") <- model.violasAddress ?? "",
+                Expression<String>("wallet_libra_address") <- model.libraAddress ?? "",
+                Expression<Bool>("wallet_new_state") <- model.isNewWallet ?? true)
+            let rowid = try tempDB.run(insert)
+            print(rowid)
         } catch {
             print(error.localizedDescription)
             throw error
         }
     }
-    func getWalletWithType(walletType: WalletType) -> [[LibraWalletManager]] {
-        let walletTable = Table("Wallet").filter(Expression<Int>("wallet_type") == walletType.value)
-        do {
-            // 身份钱包
-            var allWallets = [[LibraWalletManager]]()
-            var originWallets = [LibraWalletManager]()
-            var importWallets = [LibraWalletManager]()
-            if let tempDB = self.db {
-                for wallet in try tempDB.prepare(walletTable) {
-                    // 钱包ID
-                    let walletID = wallet[Expression<Int64>("wallet_id")]
-                    // 钱包金额
-                    let walletBalance = wallet[Expression<Int64>("wallet_balance")]
-                    // 钱包地址
-                    let walletAddress = wallet[Expression<String>("wallet_address")]
-                    // Libra_、Violas_或BTC_ 前缀 + 钱包0层地址
-                    let walletRootAddress = wallet[Expression<String>("wallet_root_address")]
-                    // 钱包创建时间
-                    let walletCreateTime = wallet[Expression<Int>("wallet_creat_time")]
-                    // 钱包名字
-                    let walletName = wallet[Expression<String>("wallet_name")]
-                    // 钱包助记词
-//                    let walletMnemonic = wallet[Expression<String>("wallet_mnemonic")]
-                    // 当前使用用户
-                    let walletCurrentUse = wallet[Expression<Bool>("wallet_current_use")]
-                    // 账户是否开启生物锁定
-                    let walletBiometricLock = wallet[Expression<Bool>("wallet_biometric_lock")]
-                    // 账户类型身份钱包、其他钱包(0=身份钱包、1=其它导入钱包)
-                    let walletIdentity = wallet[Expression<Int>("wallet_identity")]
-                    // 钱包类型(0=Libra、1=Violas、2=BTC)
-                    let walletType = wallet[Expression<Int>("wallet_type")]
-                    
-                    let type: WalletType
-                    if walletType == 0 {
-                        type = .Libra
-                    } else if walletType == 1 {
-                        type = .Violas
-                    } else {
-                        type = .BTC
-                    }
-                    // 钱包是否已备份
-                    let walletBackupState = wallet[Expression<Bool>("wallet_backup_state")]
-                    // 授权Key
-                    let authenticationKey = wallet[Expression<String>("wallet_authentication_key")]
-                    // 钱包激活状态
-                    let walletActiveState = wallet[Expression<Bool>("wallet_active_state")]
-                    
-                    let wallet = LibraWalletManager.init(walletID: walletID,
-                                                         walletBalance: walletBalance,
-                                                         walletAddress: walletAddress,
-                                                         walletRootAddress: walletRootAddress,
-                                                         walletCreateTime: walletCreateTime,
-                                                         walletName: walletName,
-                                                         walletCurrentUse: walletCurrentUse,
-                                                         walletBiometricLock: walletBiometricLock,
-                                                         walletIdentity: walletIdentity,
-                                                         walletType: type,
-                                                         walletBackupState: walletBackupState,
-                                                         walletAuthenticationKey: authenticationKey,
-                                                         walletActiveState: walletActiveState)
-                    if walletIdentity == 0 {
-                        originWallets.append(wallet)
-                    } else {
-                        importWallets.append(wallet)
-                    }
-                }
-                allWallets.append(originWallets)
-                allWallets.append(importWallets)
-                return allWallets
-            } else {
-                return allWallets
-            }
-        } catch {
-            print(error.localizedDescription)
-            return [[LibraWalletManager]]()
+    func isExistWalletInTable(wallet: Wallet) throws -> Bool {
+        guard let tempDB = self.db else {
+            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
         }
-    }
-    func updateDefaultViolasWallet() -> Bool {
-        let walletTable = Table("Wallet").filter(Expression<Int>("wallet_identity") == 0 && Expression<Int>("wallet_type") == 1)
+        let walletTable = Table("Wallet").filter(Expression<String>("wallet_mnemonic_hash") == wallet.walletMnemonicHash ?? "")
         do {
-            if let tempDB = self.db {
-                try tempDB.run(walletTable.update(Expression<Bool>("wallet_current_use") <- true))
-                return true
-            } else {
+            let count = try tempDB.scalar(walletTable.count)
+            guard count != 0 else {
                 return false
             }
+            return true
         } catch {
             print(error.localizedDescription)
-            return false
+            throw error
         }
     }
-    func deleteWalletFromTable(model: LibraWalletManager) -> Bool {
-        let transectionAddressHistoryTable = Table("Wallet")
+    func getDefaultWallet() throws {
+        guard let tempDB = self.db else {
+            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+        }
+        let walletTable = Table("Wallet").filter(Expression<Bool>("wallet_use_state") == true)
         do {
-            if let tempDB = self.db {
-                let contract = transectionAddressHistoryTable.filter(Expression<Int64>("wallet_id") == model.walletID!)
-                let rowid = try tempDB.run(contract.delete())
-                print(rowid)
-                return true
-            } else {
-                return false
+            for wallet in try tempDB.prepare(walletTable) {
+                // 钱包序号
+                let walletID = wallet[Expression<Int64>("wallet_id")]
+                // 钱包名字
+                let walletName = wallet[Expression<String>("wallet_name")]
+                // 钱包创建时间
+                let walletCreateTime = wallet[Expression<Double>("wallet_creat_time")]
+                // 是否使用生物解锁
+                let walletBiometricLock = wallet[Expression<Bool>("wallet_biometric_lock")]
+                // 钱包创建类型(0导入、1创建)
+                let walletCreateType = wallet[Expression<Int>("wallet_create_type")]
+                // 钱包是否已备份
+                let walletBackupState = wallet[Expression<Bool>("wallet_backup_state")]
+                // 当前WalletConnect订阅钱包
+                let walletSubscription = wallet[Expression<Bool>("wallet_subscription")]
+                // 助记词哈希
+                let walletMnemonicHash = wallet[Expression<String>("wallet_mnemonic_hash")]
+                // 钱包使用状态
+                let walletUseState = wallet[Expression<Bool>("wallet_use_state")]
+                // 钱包BTC地址
+                let walletBTCAddress = wallet[Expression<String>("wallet_btc_address")]
+                // 钱包Violas地址
+                let walletViolasAddress = wallet[Expression<String>("wallet_violas_address")]
+                // 钱包Libra地址
+                let walletLibraAddress = wallet[Expression<String>("wallet_libra_address")]
+                // 是否是新钱包
+                let isNewWallet = wallet[Expression<Bool>("wallet_new_state")]
+                
+                Wallet.shared.initWallet(walletID: walletID,
+                                         walletName: walletName,
+                                         walletCreateTime: walletCreateTime,
+                                         walletBiometricLock: walletBiometricLock,
+                                         walletCreateType: walletCreateType,
+                                         walletBackupState: walletBackupState,
+                                         walletSubscription: walletSubscription,
+                                         walletMnemonicHash: walletMnemonicHash,
+                                         walletUseState: walletUseState,
+                                         btcAddress: walletBTCAddress,
+                                         violasAddress: walletViolasAddress,
+                                         libraAddress: walletLibraAddress,
+                                         isNewWallet: isNewWallet)
+                return
             }
+            // 未获取到默认钱包
+            setIdentityWalletState(show: false)
+            throw LibraWalletError.WalletDataBase(reason: .defaultWalletNotExist)
         } catch {
-            print(error.localizedDescription)
-            return false
+            throw error
         }
     }
-    func updateWalletBalance(walletID: Int64, balance: Int64) -> Bool {
+    func deleteWalletFromTable(model: Wallet) throws {
+        guard let tempDB = self.db else {
+            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+        }
+        let walletTable = Table("Wallet").filter(Expression<Int64>("wallet_id") == model.walletID ?? 9999)
+        do {
+            try tempDB.run(walletTable.delete())
+        } catch {
+            print(error.localizedDescription)
+            throw error
+        }
+    }
+    func updateWalletBiometricLockState(walletID: Int64, state: Bool) throws {
+        guard let tempDB = self.db else {
+            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+        }
+        let walletTable = Table("Wallet").filter(Expression<Int64>("wallet_id") == walletID)
+        do {
+            try tempDB.run(walletTable.update(Expression<Bool>("wallet_biometric_lock") <- state))
+        } catch {
+            print(error.localizedDescription)
+            throw error
+        }
+    }
+    func updateWalletCurrentUseState(walletID: Int64, state: Bool) throws {
+        guard let tempDB = self.db else {
+            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+        }
+        let walletTable = Table("Wallet").filter(Expression<Int64>("wallet_id") == walletID)
+        do {
+            try tempDB.run(walletTable.update(Expression<Bool>("wallet_use_state") <- state))
+        } catch {
+            print(error.localizedDescription)
+            throw error
+        }
+    }
+    func updateWalletBackupState(wallet: Wallet) throws {
+        guard let tempDB = self.db else {
+            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+        }
+        let walletTable = Table("Wallet").filter(Expression<Int64>("wallet_id") == wallet.walletID ?? 9999)
+        do {
+            try tempDB.run(walletTable.update(Expression<Bool>("wallet_backup_state") <- true))
+        } catch {
+            print(error.localizedDescription)
+            throw error
+        }
+    }
+    func deleteHDWallet() throws {
+        guard let tempDB = self.db else {
+            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+        }
         let walletTable = Table("Wallet")
         do {
-            if let tempDB = self.db {
-                let contract = walletTable.filter(Expression<Int64>("wallet_id") == walletID)
-                try tempDB.run(contract.update(Expression<Int64>("wallet_balance") <- balance))
-                return true
-            } else {
-                return false
-            }
+            try tempDB.run(walletTable.delete())
         } catch {
             print(error.localizedDescription)
-            return false
+            throw error
         }
     }
-    func updateWalletName(walletID: Int64, name: String) -> Bool {
-        let walletTable = Table("Wallet")
+    func updateIsNewWalletState(wallet: Wallet) throws {
+        guard let tempDB = self.db else {
+            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+        }
+        let walletTable = Table("Wallet").filter(Expression<Int64>("wallet_id") == wallet.walletID ?? 9999)
         do {
-            if let tempDB = self.db {
-                let contract = walletTable.filter(Expression<Int64>("wallet_id") == walletID)
-                try tempDB.run(contract.update(Expression<String>("wallet_name") <- name))
-                return true
-            } else {
-                return false
-            }
+            try tempDB.run(walletTable.update(Expression<Bool>("wallet_new_state") <- wallet.isNewWallet ?? true))
         } catch {
             print(error.localizedDescription)
-            return false
+            throw error
         }
     }
-    func updateWalletBiometricLockState(walletID: Int64, state: Bool) -> Bool {
-        let walletTable = Table("Wallet")
-        do {
-            if let tempDB = self.db {
-                let contract = walletTable.filter(Expression<Int64>("wallet_id") == walletID)
-                try tempDB.run(contract.update(Expression<Bool>("wallet_biometric_lock") <- state))
-                return true
-            } else {
-                return false
-            }
-        } catch {
-            print(error.localizedDescription)
-            return false
-        }
-    }
-    func updateWalletCurrentUseState(walletID: Int64, state: Bool) -> Bool {
-        let walletTable = Table("Wallet")
-        do {
-            if let tempDB = self.db {
-                let contract = walletTable.filter(Expression<Int64>("wallet_id") == walletID)
-                try tempDB.run(contract.update(Expression<Bool>("wallet_current_use") <- state))
-                return true
-            } else {
-                return false
-            }
-        } catch {
-            print(error.localizedDescription)
-            return false
-        }
-    }
-    func updateWalletBackupState(walletID: Int64, state: Bool) -> Bool {
-        let walletTable = Table("Wallet")
-        do {
-            if let tempDB = self.db {
-                let contract = walletTable.filter(Expression<Int64>("wallet_id") == walletID)
-                try tempDB.run(contract.update(Expression<Bool>("wallet_backup_state") <- state))
-                return true
-            } else {
-                return false
-            }
-        } catch {
-            print(error.localizedDescription)
-            return false
-        }
-    }
-    func updateDefaultViolasWalletBackupState() -> Bool {
-        let walletTable = Table("Wallet").filter(Expression<Int>("wallet_identity") == 0)
-        do {
-            if let tempDB = self.db {
-                try tempDB.run(walletTable.update(Expression<Bool>("wallet_backup_state") <- true))
-                return true
-            } else {
-                return false
-            }
-        } catch {
-            print(error.localizedDescription)
-            return false
-        }
-    }
-    func updateWalletActiveState(walletID: Int64, state: Bool) -> Bool {
-        let walletTable = Table("Wallet")
-        do {
-            if let tempDB = self.db {
-                let contract = walletTable.filter(Expression<Int64>("wallet_id") == walletID)
-                try tempDB.run(contract.update(Expression<Bool>("wallet_active_state") <- state))
-                return true
-            } else {
-                return false
-            }
-        } catch {
-            print(error.localizedDescription)
-            return false
-        }
-    }
-    func userExistInLocal(walletID: Int64) -> Bool {
-        let walletTable = Table("Wallet")
-        do {
-            if let tempDB = self.db {
-                let transection = walletTable.filter(Expression<Int64>("wallet_id") == walletID)
-                let count = try tempDB.scalar(transection.count)
-                if count == 0 {
-                    return false
-                } else {
-                    return true
-                }
-            } else {
-                return false
-            }
-        } catch {
-            print(error.localizedDescription)
-            return false
-        }
-    }
-    func createTransferAddressListTable() {
-        /// 判断是否存在表
-        guard isExistTable(name: "TransferAddress") == false else {
-            return
+}
+// MARK: 创建Address表
+extension DataBaseManager {
+    func createTransferAddressListTable() throws {
+        guard let tempDB = self.db else {
+            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
         }
         do {
             let addressTable = Table("TransferAddress")
@@ -524,293 +299,493 @@ struct DataBaseManager {
             let addressName = Expression<String>("address_name")
             // 地址
             let address = Expression<String>("address")
-            // 地址类型(0=Libra、1=Violas、2=BTC)
+            // 地址类型（0=Libra、1=Violas、2=BTC）
             let addressType = Expression<String>("address_type")
-            
             // 建表
-            try db!.run(addressTable.create { t in
+            try tempDB.run(addressTable.create { t in
                 t.column(addressID, primaryKey: true)
                 t.column(addressName)
-                t.column(address, unique: true)
+                t.column(address)
                 t.column(addressType)
+                t.unique([address, addressType])
             })
         } catch {
             let errorString = error.localizedDescription
             if errorString.hasSuffix("already exists") == true {
                 return
             } else {
-                print(errorString)
+                throw error
             }
         }
     }
-    func insertTransferAddress(model: AddressModel) -> Bool {
+    func insertTransferAddress(model: AddressModel) throws {
+        guard let tempDB = self.db else {
+            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+        }
         let addressTable = Table("TransferAddress")
         do {
-            if let tempDB = self.db {
-                let insert = addressTable.insert(
-                    
-                    Expression<String>("address_name") <- model.addressName ?? "",
-                    Expression<String>("address") <- "\(model.addressType!)_" + (model.address ?? ""),
-                    Expression<String>("address_type") <- model.addressType ?? "")
-                
-                let rowid = try tempDB.run(insert)
-                print(rowid)
-                return true
-            } else {
-                return false
-            }
-        } catch {
-            print(error.localizedDescription)
-            return false
-        }
-    }
-    func getTransferAddress(type: String) -> NSMutableArray {
-        let addressTable = type.isEmpty == true ? Table("TransferAddress") : Table("TransferAddress").filter(Expression<String>("address_type") == type)
-        do {
-            if let tempDB = self.db {
-                let addressArray = NSMutableArray()
-                for wallet in try tempDB.prepare(addressTable) {
-                    // 地址ID
-                    let addressID = wallet[Expression<Int64>("address_id")]
-                    // 地址名字
-                    let addressName = wallet[Expression<String>("address_name")]
-                    // 地址
-                    let address = wallet[Expression<String>("address")]
-                    // 地址类型(0=Libra、1=Violas、2=BTC)
-                    let addressType = wallet[Expression<String>("address_type")]
-
-                    let contentArray = address.split(separator: "_").compactMap { (item) -> String in
-                        return "\(item)"
-                    }
-                    guard contentArray.count == 2 else {
-                        continue
-                    }
-                    let model = AddressModel.init(addressID: addressID,
-                                                  address: contentArray.last,
-                                                  addressName: addressName,
-                                                  addressType: addressType)
-
-                    addressArray.add(model)
-                }
-                return addressArray
-            } else {
-                return NSMutableArray()
-            }
-        } catch {
-            print(error.localizedDescription)
-            return NSMutableArray()
-        }
-    }
-    func updateTransferAddressName(model: AddressModel, name: String) -> Bool {
-        let addressTable = Table("TransferAddress")
-        do {
-            if let tempDB = self.db {
-                let item = addressTable.filter(Expression<String>("address") == model.address!)
-                try tempDB.run(item.update(Expression<String>("address_name") <- name))
-                return true
-            } else {
-                return false
-            }
-        } catch {
-            print(error.localizedDescription)
-            return false
-        }
-    }
-    func deleteTransferAddressFromTable(model: AddressModel) -> Bool {
-        let transectionAddressHistoryTable = Table("TransferAddress")
-        do {
-            if let tempDB = self.db {
-                let contract = transectionAddressHistoryTable.filter(Expression<String>("address") == "\(model.addressType!)_" + model.address!)
-                let rowid = try tempDB.run(contract.delete())
-                print(rowid)
-                if rowid == 0 {
-                    return false
-                }
-                return true
-            } else {
-                return false
-            }
-        } catch {
-            print(error.localizedDescription)
-            return false
-        }
-    }    
-}
-// MARK: 创建ViolasToken表
-extension DataBaseManager {
-    func createViolasTokenTable() {
-        /// 判断是否存在表
-        guard isExistTable(name: "ViolasToken") == false else {
-            return
-        }
-        do {
-            let addressTable = Table("ViolasToken")
-            // 设置字段
-            let tokenID = Expression<Int64>("token_id")
-            // 代币图片
-            let tokenIcon = Expression<String>("token_icon")
-            // 代币名字
-            let tokenName = Expression<String>("token_name")
-            // 代币描述
-            let tokenDescription = Expression<String>("token_description")
-            // 代币地址
-            let tokenAddress = Expression<String>("token_address")
-            // 代币绑定钱包
-            let tokenBindingWalletID = Expression<Int64>("token_binding_wallet_id")
-            // 代币金额
-            let tokenAmount = Expression<Int64>("token_amount")
-            // 代币启用状态
-            let tokenEnable = Expression<Bool>("token_enable")
-            // 代币编号
-            let tokenNumber = Expression<Int64>("token_number")
-            // 建表
-            try db!.run(addressTable.create { t in
-                t.column(tokenID, primaryKey: true)
-                t.column(tokenIcon)
-                t.column(tokenName)
-                t.column(tokenDescription)
-                t.column(tokenAddress)
-                t.column(tokenBindingWalletID)
-                t.column(tokenAmount)
-                t.column(tokenEnable)
-                t.column(tokenNumber)
-                t.unique([tokenBindingWalletID, tokenAddress, tokenNumber])
-            })
-        } catch {
-            let errorString = error.localizedDescription
-            if errorString.hasSuffix("already exists") == true {
-                return
-            } else {
-                print(errorString)
-            }
-        }
-    }
-    func insertViolasToken(walletID: Int64, model: ViolasTokenModel) -> Bool {
-        let addressTable = Table("ViolasToken")
-        do {
-            if let tempDB = self.db {
-                let insert = addressTable.insert(
-                    Expression<String>("token_icon") <- model.icon ?? "",
-                    Expression<String>("token_name") <- model.name ?? "",
-                    Expression<String>("token_description") <- model.description ?? "",
-                    Expression<String>("token_address") <- model.address ?? "",
-                    Expression<Int64>("token_binding_wallet_id") <- walletID,
-                    Expression<Int64>("token_amount") <- 0,
-                    Expression<Bool>("token_enable") <- model.enable ?? false,
-                    Expression<Int64>("token_number") <- model.id ?? 0)
-                let rowid = try tempDB.run(insert)
-                print(rowid)
-                return true
-            } else {
-                return false
-            }
-        } catch {
-            print(error.localizedDescription)
-            return false
-        }
-    }
-    func isExistViolasToken(walletID: Int64, contract: String, tokenNumber: Int64) -> Bool {
-        let walletTable = Table("ViolasToken")
-        do {
-            if let tempDB = self.db {
-                let transection = walletTable.filter(Expression<String>("token_address") == contract && Expression<Int64>("token_binding_wallet_id") == walletID && Expression<Int64>("token_number") == tokenNumber)
-                let count = try tempDB.scalar(transection.count)
-                guard count != 0 else {
-                    return false
-                }
-                return true
-            } else {
-                return false
-            }
-        } catch {
-            print(error.localizedDescription)
-            return false
-        }
-    }
-    func getViolasTokens(walletID: Int64) throws -> [ViolasTokenModel] {
-        let walletTable = Table("ViolasToken").filter(Expression<Int64>("token_binding_wallet_id") == walletID)
-        do {
-            if let tempDB = self.db {
-                var models = [ViolasTokenModel]()
-                for wallet in try tempDB.prepare(walletTable) {
-                    // 代币图片
-                    let tokenIcon = wallet[Expression<String>("token_icon")]
-                    // 代币名字
-                    let tokenName = wallet[Expression<String>("token_name")]
-                    // 代币描述
-                    let tokenDescription = wallet[Expression<String>("token_description")]
-                    // 代币地址
-                    let tokenAddress = wallet[Expression<String>("token_address")]
-                    // 余额
-                    let balance = wallet[Expression<Int64>("token_amount")]
-                    // 开启状态
-                    let enable = wallet[Expression<Bool>("token_enable")]
-                    // 代币编号
-                    let tokenNumber = wallet[Expression<Int64>("token_number")]
-                    
-                    let wallet = ViolasTokenModel.init(name: tokenName,
-                                                       description: tokenDescription,
-                                                       address: tokenAddress,
-                                                       icon: tokenIcon,
-                                                       enable: enable,
-                                                       balance: balance,
-                                                       registerState: true,
-                                                       id: tokenNumber)
-                    models.append(wallet)
-                }
-                return models
-            } else {
-                throw LibraWalletError.error("读取数据库失败")
-            }
+            let insert = addressTable.insert(
+                Expression<String>("address_name") <- model.addressName,
+                Expression<String>("address") <- (model.address),
+                Expression<String>("address_type") <- model.addressType)
+            try tempDB.run(insert)
         } catch {
             print(error.localizedDescription)
             throw error
         }
     }
-    func deleteViolasToken(walletID: Int64, address: String, tokenNumber: Int64) -> Bool {
-        let violasTokenTable = Table("ViolasToken")
+    func getTransferAddress(type: String) throws -> [AddressModel] {
+        guard let tempDB = self.db else {
+            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+        }
+        let addressTable = type.isEmpty == true ? Table("TransferAddress") : Table("TransferAddress").filter(Expression<String>("address_type") == type)
         do {
-            if let tempDB = self.db {
-                let contract = violasTokenTable.filter(Expression<String>("token_address") == address && Expression<Int64>("token_binding_wallet_id") == walletID && Expression<Int64>("token_number") == tokenNumber)
-                let rowid = try tempDB.run(contract.delete())
-                print(rowid)
-                return true
-            } else {
-                return false
+            var addressArray = [AddressModel]()
+            for wallet in try tempDB.prepare(addressTable) {
+                // 地址ID
+                let addressID = wallet[Expression<Int64>("address_id")]
+                // 地址名字
+                let addressName = wallet[Expression<String>("address_name")]
+                // 地址
+                let address = wallet[Expression<String>("address")]
+                // 地址类型（0=Libra、1=Violas、2=BTC）
+                let addressType = wallet[Expression<String>("address_type")]
+                
+                let model = AddressModel.init(addressID: addressID,
+                                              address: address,
+                                              addressName: addressName,
+                                              addressType: addressType)
+                
+                addressArray.append(model)
             }
+            return addressArray
         } catch {
             print(error.localizedDescription)
-            return false
+            return [AddressModel]()
         }
     }
-    func updateViolasTokenState(walletID: Int64, tokenAddress: String, tokenNumber: Int64, state: Bool) -> Bool {
-        let violasTokenTable = Table("ViolasToken")
+    func updateTransferAddressName(model: AddressModel, name: String) throws {
+        guard let tempDB = self.db else {
+            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+        }
+        let addressTable = Table("TransferAddress").filter(Expression<String>("address") == model.address)
         do {
-            if let tempDB = self.db {
-                let item = violasTokenTable.filter(Expression<Int64>("token_binding_wallet_id") == walletID && Expression<String>("token_address") == tokenAddress && Expression<Int64>("token_number") == tokenNumber)
-                try tempDB.run(item.update(Expression<Bool>("token_enable") <- state))
-                return true
-            } else {
-                return false
-            }
+            try tempDB.run(addressTable.update(Expression<String>("address_name") <- name))
         } catch {
             print(error.localizedDescription)
-            return false
+            throw error
         }
     }
-    func updateViolasTokenBalance(walletID: Int64, model: BalanceViolasModulesModel) -> Bool {
-        let violasTokenTable = Table("ViolasToken")
+    func deleteTransferAddressFromTable(model: AddressModel) throws {
+        guard let tempDB = self.db else {
+            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+        }
+        let addressTable = Table("TransferAddress").filter(Expression<String>("address") == model.address && Expression<String>("address_type") == model.addressType)
         do {
-            if let tempDB = self.db {
-                let item = violasTokenTable.filter(Expression<Int64>("token_binding_wallet_id") == walletID && Expression<String>("token_address") == model.address ?? "" && Expression<Int64>("token_number") == model.id ?? 0)
-                try tempDB.run(item.update(Expression<Int64>("token_amount") <- model.balance ?? 0))
-                return true
-            } else {
-                return false
-            }
+            try tempDB.run(addressTable.delete())
         } catch {
             print(error.localizedDescription)
-            return false
+            throw error
+        }
+    }
+    func isExistAddress(model: AddressModel) throws -> Bool {
+        guard let tempDB = self.db else {
+            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+        }
+        let tokenTable = Table("TransferAddress").filter(Expression<String>("address") == model.address && Expression<String>("address_type") == model.addressType)
+        do {
+            let count = try tempDB.scalar(tokenTable.count)
+            guard count != 0 else {
+                return false
+            }
+            return true
+        } catch {
+            print(error.localizedDescription)
+            throw error
         }
     }
 }
+// MARK: 创建Token表
+extension DataBaseManager {
+    func createViolasTokenTable() throws {
+        guard let tempDB = self.db else {
+            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+        }
+        do {
+            let tokenTable = Table("Tokens")
+            // 币ID
+            let tokenID = Expression<Int64>("token_id")
+            // 币名字
+            let tokenName = Expression<String>("token_name")
+            // 币地址
+            let tokenAddress = Expression<String>("token_address")
+            // 币金额
+            let tokenBalance = Expression<Int64>("token_balance")
+            // 币授权Key
+            let tokenAuthenticationKey = Expression<String>("token_authentication_key")
+            // 币激活状态
+            let walletActiveState = Expression<Bool>("token_active_state")
+            // 币类型(0=Libra、1=Violas、2=BTC)
+            let tokenType = Expression<Int64>("token_type")
+            // 币当前使用层数
+            let tokenIndex = Expression<Int64>("token_index")
+            // 币合约地址
+            let tokenContract = Expression<String>("token_contract")
+            // 币合约名称
+            let tokenModule = Expression<String>("token_module")
+            // 币合约名称
+            let tokenModuleName = Expression<String>("token_module_name")
+            // 币启用状态
+            let tokenEnable = Expression<Bool>("token_enable")
+            // 币图片
+            let tokenIcon = Expression<String>("token_icon")
+            // 币价
+            let tokenPrice = Expression<String>("token_price")
+            // 建表
+            try tempDB.run(tokenTable.create { t in
+                t.column(tokenID, primaryKey: true)
+                t.column(tokenName)
+                t.column(tokenAddress)
+                t.column(tokenBalance)
+                t.column(tokenAuthenticationKey)
+                t.column(walletActiveState)
+                t.column(tokenType)
+                t.column(tokenIndex)
+                t.column(tokenContract)
+                t.column(tokenModule)
+                t.column(tokenModuleName)
+                t.column(tokenEnable)
+                t.column(tokenIcon)
+                t.column(tokenPrice)
+                t.unique([tokenAddress, tokenModule, tokenType])
+            })
+        } catch {
+            let errorString = error.localizedDescription
+            if errorString.hasSuffix("already exists") == true {
+                return
+            } else {
+                throw error
+            }
+        }
+    }
+    func insertToken(token: Token) throws {
+        guard let tempDB = self.db else {
+            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+        }
+        let tokenTable = Table("Tokens")
+        do {
+            let insert = tokenTable.insert(
+                // 币名字
+                Expression<String>("token_name") <- token.tokenName,
+                // 币地址
+                Expression<String>("token_address") <- token.tokenAddress,
+                // 币金额
+                Expression<Int64>("token_balance") <- token.tokenBalance,
+                // 币授权Key
+                Expression<String>("token_authentication_key") <- token.tokenAuthenticationKey,
+                // 币激活状态
+                Expression<Bool>("token_active_state") <- token.tokenActiveState,
+                // 币类型(0=Libra、1=Violas、2=BTC)
+                Expression<Int64>("token_type") <- token.tokenType.value,
+                // 币当前使用层数
+                Expression<Int64>("token_index") <- token.tokenIndex,
+                // 币合约地址
+                Expression<String>("token_contract") <- token.tokenContract,
+                // 币合约名称
+                Expression<String>("token_module") <- token.tokenModule,
+                // 币合约名称
+                Expression<String>("token_module_name") <- token.tokenModuleName,
+                // 币启用状态
+                Expression<Bool>("token_enable") <- token.tokenEnable,
+                // 币图片
+                Expression<String>("token_icon") <- token.tokenIcon,
+                // 币价
+                Expression<String>("token_price") <- token.tokenPrice)
+            try tempDB.run(insert)
+        } catch {
+            print(error.localizedDescription)
+            throw error
+        }
+    }
+    func isExistViolasToken(tokenAddress: String, tokenModule: String, tokenType: WalletType) throws -> Bool {
+        guard let tempDB = self.db else {
+            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+        }
+        let tokenTable = Table("Tokens").filter(Expression<String>("token_address") == tokenAddress && Expression<String>("token_module") == tokenModule && Expression<Int64>("token_type") == tokenType.value)
+        do {
+            let count = try tempDB.scalar(tokenTable.count)
+            guard count != 0 else {
+                return false
+            }
+            return true
+        } catch {
+            print(error.localizedDescription)
+            throw error
+        }
+    }
+    func getTokens() throws -> [Token] {
+        guard let tempDB = self.db else {
+            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+        }
+        let tokenTable = Table("Tokens").filter(Expression<Bool>("token_enable") == true)
+        do {
+            var models = [Token]()
+            for wallet in try tempDB.prepare(tokenTable) {
+                // 币ID
+                let tokenID = wallet[Expression<Int64>("token_id")]
+                // 币名字
+                let tokenName = wallet[Expression<String>("token_name")]
+                // 币地址
+                let tokenAddress = wallet[Expression<String>("token_address")]
+                // 币金额
+                let tokenBalance = wallet[Expression<Int64>("token_balance")]
+                // 币授权Key
+                let tokenAuthenticationKey = wallet[Expression<String>("token_authentication_key")]
+                // 币激活状态
+                let walletActiveState = wallet[Expression<Bool>("token_active_state")]
+                // 币类型(0=Libra、1=Violas、2=BTC)
+                let tokenType = wallet[Expression<Int64>("token_type")]
+                // 币当前使用层数
+                let tokenIndex = wallet[Expression<Int64>("token_index")]
+                // 币合约地址
+                let tokenContract = wallet[Expression<String>("token_contract")]
+                // 币合约名称
+                let tokenModule = wallet[Expression<String>("token_module")]
+                // 币合约名称
+                let tokenModuleName = wallet[Expression<String>("token_module_name")]
+                // 币启用状态
+                let tokenEnable = wallet[Expression<Bool>("token_enable")]
+                // 币图片
+                let tokenIcon = wallet[Expression<String>("token_icon")]
+                // 币价
+                let tokenPrice = wallet[Expression<String>("token_price")]
+                let type: WalletType
+                if tokenType == 0 {
+                    type = .Libra
+                } else if tokenType == 1 {
+                    type = .Violas
+                } else {
+                    type = .BTC
+                }
+                let wallet = Token.init(tokenID: tokenID,
+                                        tokenName: tokenName,
+                                        tokenBalance: tokenBalance,
+                                        tokenAddress: tokenAddress,
+                                        tokenType: type,
+                                        tokenIndex: tokenIndex,
+                                        tokenAuthenticationKey: tokenAuthenticationKey,
+                                        tokenActiveState: walletActiveState,
+                                        tokenIcon: tokenIcon,
+                                        tokenContract: tokenContract,
+                                        tokenModule: tokenModule,
+                                        tokenModuleName: tokenModuleName,
+                                        tokenEnable: tokenEnable,
+                                        tokenPrice: tokenPrice)
+                models.append(wallet)
+            }
+            // 初始化钱包币种
+            Wallet.shared.initWalletTokens(tokens: models)
+            return models
+        } catch {
+            print(error.localizedDescription)
+            throw error
+        }
+    }
+    func updateViolasTokenState(tokenAddress: String, tokenModule: String, tokenType: WalletType, state: Bool) throws {
+        guard let tempDB = self.db else {
+            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+        }
+        let tokenTable = Table("Tokens").filter(Expression<String>("token_address") == tokenAddress && Expression<String>("token_module") == tokenModule && Expression<Int64>("token_type") == tokenType.value)
+        do {
+            try tempDB.run(tokenTable.update(Expression<Bool>("token_enable") <- state))
+        } catch {
+            print(error.localizedDescription)
+            throw error
+        }
+    }
+    func updateTokenBalance(tokenID: Int64, balance: Int64) throws {
+        guard let tempDB = self.db else {
+            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+        }
+        let tokenTable = Table("Tokens").filter(Expression<Int64>("token_id") == tokenID)
+        do {
+            try tempDB.run(tokenTable.update(Expression<Int64>("token_balance") <- balance))
+        } catch {
+            print(error.localizedDescription)
+            throw error
+        }
+    }
+    func updateTokenActiveState(tokenID: Int64, state: Bool) throws {
+        guard let tempDB = self.db else {
+            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+        }
+        let tokenTable = Table("Tokens").filter(Expression<Int64>("token_id") == tokenID)
+        do {
+            try tempDB.run(tokenTable.update(Expression<Bool>("token_active_state") <- state))
+        } catch {
+            print(error.localizedDescription)
+            throw error
+        }
+    }
+    func updateTokenPrice(tokenID: Int64, price: String) throws {
+        guard let tempDB = self.db else {
+            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+        }
+        let tokenTable = Table("Tokens").filter(Expression<Int64>("token_id") == tokenID)
+        do {
+            try tempDB.run(tokenTable.update(Expression<String>("token_price") <- price))
+        } catch {
+            print(error.localizedDescription)
+            throw error
+        }
+    }
+    func deleteAllTokens() throws {
+        guard let tempDB = self.db else {
+            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+        }
+        let tokensTable = Table("Tokens")
+        do {
+            try tempDB.run(tokensTable.delete())
+        } catch {
+            print(error.localizedDescription)
+            throw error
+        }
+    }
+}
+// MARK: 创建通知表
+/*extension DataBaseManager {
+    func createNotificationListTable() throws {
+        guard let tempDB = self.db else {
+            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+        }
+        do {
+            let addressTable = Table("Notification")
+            // 消息ID（本地）
+            let id = Expression<Int64>("message_id")
+            // 标题
+            let title = Expression<String>("message_title")
+            // 内容
+            let body = Expression<String>("message_body")
+            // 发送时间
+            let date = Expression<String>("message_date")
+            // 消息类型
+            let service = Expression<String>("message_service")
+            // 消息已读状态
+            let readState = Expression<Bool>("message_read_state")
+            // 消息详细关键字段
+            let content = Expression<String>("message_content")
+            // 消息ID（服务端）
+            let messageServerID = Expression<String>("message_server_id")
+            // 钱包消息交易类型(钱包消息使用（PEER_TO_PEER_WITH_METADATA等），系统消息默认空)
+            let messageTransactionType = Expression<String>("message_transaction_type")
+            // 钱包消息交易状态(钱包消息使用（Executed、Failed），系统消息默认空)
+            let messageTransactionStatus = Expression<String>("message_transaction_status")
+            // 建表
+            try tempDB.run(addressTable.create { t in
+                t.column(id, primaryKey: true)
+                t.column(title)
+                t.column(body)
+                t.column(date)
+                t.column(service)
+                t.column(readState)
+                t.column(content)
+                t.column(messageServerID, unique: true)
+                t.column(messageTransactionType)
+                t.column(messageTransactionStatus)
+            })
+        } catch {
+            let errorString = error.localizedDescription
+            if errorString.hasSuffix("already exists") == true {
+                return
+            } else {
+                throw error
+            }
+        }
+    }
+    func insertNotification(model: AddressModel) throws {
+        guard let tempDB = self.db else {
+            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+        }
+        let addressTable = Table("TransferAddress")
+        do {
+            let insert = addressTable.insert(
+                Expression<String>("address_name") <- model.addressName,
+                Expression<String>("address") <- (model.address),
+                Expression<String>("address_type") <- model.addressType)
+            try tempDB.run(insert)
+        } catch {
+            print(error.localizedDescription)
+            throw error
+        }
+    }
+    func getNotifications(type: String) throws -> [AddressModel] {
+        guard let tempDB = self.db else {
+            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+        }
+        let addressTable = type.isEmpty == true ? Table("TransferAddress") : Table("TransferAddress").filter(Expression<String>("address_type") == type)
+        do {
+            var addressArray = [AddressModel]()
+            for wallet in try tempDB.prepare(addressTable) {
+                // 地址ID
+                let addressID = wallet[Expression<Int64>("address_id")]
+                // 地址名字
+                let addressName = wallet[Expression<String>("address_name")]
+                // 地址
+                let address = wallet[Expression<String>("address")]
+                // 地址类型（0=Libra、1=Violas、2=BTC）
+                let addressType = wallet[Expression<String>("address_type")]
+
+                let model = AddressModel.init(addressID: addressID,
+                                              address: address,
+                                              addressName: addressName,
+                                              addressType: addressType)
+                
+                addressArray.append(model)
+            }
+            return addressArray
+        } catch {
+            print(error.localizedDescription)
+            return [AddressModel]()
+        }
+    }
+//    func updateTransferAddressName(model: AddressModel, name: String) throws {
+//        guard let tempDB = self.db else {
+//            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+//        }
+//        let addressTable = Table("TransferAddress").filter(Expression<String>("address") == model.address)
+//        do {
+//            try tempDB.run(addressTable.update(Expression<String>("address_name") <- name))
+//        } catch {
+//            print(error.localizedDescription)
+//            throw error
+//        }
+//    }
+//    func deleteTransferAddressFromTable(model: AddressModel) throws {
+//        guard let tempDB = self.db else {
+//            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+//        }
+//        let addressTable = Table("TransferAddress").filter(Expression<String>("address") == model.address && Expression<String>("address_type") == model.addressType)
+//        do {
+//            try tempDB.run(addressTable.delete())
+//        } catch {
+//            print(error.localizedDescription)
+//            throw error
+//        }
+//    }
+//    func isExistAddress(model: AddressModel) throws -> Bool {
+//        guard let tempDB = self.db else {
+//            throw LibraWalletError.WalletDataBase(reason: .openDataBaseError)
+//        }
+//        let tokenTable = Table("TransferAddress").filter(Expression<String>("address") == model.address && Expression<String>("address_type") == model.addressType)
+//        do {
+//            let count = try tempDB.scalar(tokenTable.count)
+//            guard count != 0 else {
+//                return false
+//            }
+//            return true
+//        } catch {
+//            print(error.localizedDescription)
+//            throw error
+//        }
+//    }
+}*/

@@ -70,7 +70,7 @@ class BackupWarningViewController: BaseViewController {
         UIApplication.shared.keyWindow?.rootViewController = tabbar
         UIApplication.shared.keyWindow?.makeKeyAndVisible()
     }
-    var tempWallet: CreateWalletModel?
+    var tempWallet: [String]?
 }
 extension BackupWarningViewController: BackupWarningViewDelegate {
     func checkBackupMnemonic() {

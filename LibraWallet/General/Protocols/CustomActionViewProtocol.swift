@@ -9,69 +9,44 @@
 import Foundation
 import UIKit
 protocol actionViewProtocol {
-    func show()
-    func hide()
+    func show(tag: Int)
+    func hide(tag: Int)
 }
 extension actionViewProtocol where Self: UIView {
-    func show() {
+    func show(tag: Int) {
         if let app = UIApplication.shared.delegate as? AppDelegate, let window = app.window {
             self.frame = window.frame
             let blurEffect = UIBlurEffect(style: .dark)
             let blurView = UIVisualEffectView(effect: blurEffect)
             blurView.frame.size = CGSize(width: window.frame.size.width, height: window.frame.size.height)
             blurView.center = window.center
-            blurView.alpha = 0.3
-            
+            blurView.alpha = 0.2
+            blurView.tag = tag + 1
             blurView.isUserInteractionEnabled = true
             let tap = UITapGestureRecognizer.init()
 //            tap.addTarget(self, action: #selector(self.hideActionView))
             blurView.addGestureRecognizer(tap)
-            
             self.insertSubview(blurView, at: 0)
-            self.tag = 99
+            self.tag = tag
             window.addSubview(self)
         }
     }
-    func hide() {
+    func hide(tag: Int) {
         if let app = UIApplication.shared.delegate as? AppDelegate, let window = app.window {
-            for views in window.subviews{
-                views.viewWithTag(99)?.removeFromSuperview()
+            for views in window.subviews {
+                if views.tag == tag {
+                    views.viewWithTag(tag + 1)?.removeFromSuperview()
+                    views.removeFromSuperview()
+                }
             }
-        }
-        for views in self.subviews{
-            views.removeFromSuperview()
+        } else {
+            for views in self.subviews {
+                views.removeFromSuperview()
+            }
         }
     }
 }
 protocol actionViewAnimationProtocol {
     func showAnimation()
-    func hideAnimation()
-}
-extension actionViewAnimationProtocol where Self: TokenPickerViewAlert {
-    func showAnimation() {
-        DispatchQueue.main.asyncAfter(deadline: .now()+0.001) {
-            UIView.animate(withDuration: 0.3, animations: {
-                self.whiteBackgroundView.snp.remakeConstraints { (make) in
-                    make.bottom.equalTo(self.snp.bottom).offset(0);
-                    make.left.right.equalTo(self)
-                    make.height.equalTo(358)
-                }
-                self.layoutIfNeeded()
-            })
-        }
-    }
-    func hideAnimation() {
-        DispatchQueue.main.asyncAfter(deadline: .now()+0.001) {
-            UIView.animate(withDuration: 0.3, animations: {
-                self.whiteBackgroundView.snp.remakeConstraints { (make) in
-                    make.bottom.equalTo(self.snp.bottom).offset(358);
-                    make.left.right.equalTo(self)
-                    make.height.equalTo(358)
-                }
-                self.layoutIfNeeded()
-            }, completion: { (status) in
-                self.hide()
-            })
-        }
-    }
+    func hideAnimation(tag: Int)
 }
