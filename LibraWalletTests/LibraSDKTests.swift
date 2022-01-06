@@ -159,7 +159,7 @@ class LibraSDKTests: XCTestCase {
         do {
             let salt: Array<UInt8> = Array("LIBRA WALLET: mnemonic salt prefix$LIBRA".utf8)
             let mnemonicTemp = mnemonic.joined(separator: " ")
-            let dk = try PKCS5.PBKDF2(password: Array(mnemonicTemp.utf8), salt: salt, iterations: 2048, keyLength: 32, variant: .sha3_256).calculate()
+            let dk = try PKCS5.PBKDF2(password: Array(mnemonicTemp.utf8), salt: salt, iterations: 2048, keyLength: 32, variant: .sha3(SHA3.Variant.sha256)).calculate()
             let keyPairManager = Ed25519.calcPublicKey(secretKey: dk)
 
             print(keyPairManager.sha3(SHA3.Variant.sha256).toHexString())

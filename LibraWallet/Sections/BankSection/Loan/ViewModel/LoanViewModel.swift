@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Toast_Swift
+import Toast
 
 protocol LoanViewModelDelegate: NSObjectProtocol {
     func successDeposit()

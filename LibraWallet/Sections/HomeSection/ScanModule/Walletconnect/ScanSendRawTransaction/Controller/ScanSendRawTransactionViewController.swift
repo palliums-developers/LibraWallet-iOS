@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Toast_Swift
+import Toast
 class ScanSendRawTransactionViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()

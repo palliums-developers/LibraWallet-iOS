@@ -56,7 +56,7 @@ public struct ViolasHDWallet {
                                            salt:Array("DIEM WALLET: main key salt$".utf8),
                                            info: tempInfo.bytes,
                                            keyLength: 32,
-                                           variant: .sha3_256).calculate()
+                                           variant: .sha3(SHA3.Variant.sha256)).calculate()
             self.init(seed: seed, privateKey: privateKey, depth: depth, network: network)
         } catch {
             throw error
@@ -64,7 +64,7 @@ public struct ViolasHDWallet {
     }
     func getMasterKey() throws -> Data {
         do {
-            let masterKey = try HMAC.init(key: "DIEM WALLET: main key salt$", variant: .sha3_256).authenticate(seed)
+            let masterKey = try HMAC.init(key: "DIEM WALLET: main key salt$", variant: .sha3(SHA3.Variant.sha256)).authenticate(seed)
             return Data.init(bytes: masterKey, count: masterKey.count)
             
         } catch {

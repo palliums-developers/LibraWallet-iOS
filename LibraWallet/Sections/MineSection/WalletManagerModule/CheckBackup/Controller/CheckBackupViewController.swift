@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Toast_Swift
+import Toast
 class CheckBackupViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()

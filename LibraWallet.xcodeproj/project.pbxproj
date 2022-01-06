@@ -3,12 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		01694EF4D3F368EB6A685132 /* Pods_LibraWalletUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7658E656E8E8976B3E75152 /* Pods_LibraWalletUITests.framework */; };
-		1A8251333880EBAB4D609292 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		361051422563ABD7008407F5 /* BankModuleNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361051412563ABD7008407F5 /* BankModuleNetworkManager.swift */; };
 		361051472563BDC7008407F5 /* MarketModuleNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361051462563BDC7008407F5 /* MarketModuleNetworkManager.swift */; };
 		361051542563C61E008407F5 /* MappingModuleNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361051532563C61E008407F5 /* MappingModuleNetworkManager.swift */; };
@@ -333,13 +332,25 @@
 		36F8270C24BEAA7E0007ACC3 /* DropperExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F8270624BEAA7E0007ACC3 /* DropperExtensions.swift */; };
 		36F8270D24BEAA7E0007ACC3 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 36F8270724BEAA7E0007ACC3 /* LICENSE */; };
 		36F8270E24BEAA7F0007ACC3 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 36F8270824BEAA7E0007ACC3 /* README.md */; };
-		79E14A1ECB7CE5CBF4ADDA48 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		84F942D4E0AB7CC3C4350654 /* Pods_LibraWalletTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68DEF872B52FD220FD8C8434 /* Pods_LibraWalletTests.framework */; };
 		867CEFE69FDCACEE3E68EB96 /* Pods_LibraWallet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 807ADD830AA2F2AEA1FA4239 /* Pods_LibraWallet.framework */; };
 		9D08AD372330BA75004687E8 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D08AD362330BA75004687E8 /* NetworkManager.swift */; };
 		9D08AD4B2330D8E6004687E8 /* TransactionDetailWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D08AD4A2330D8E6004687E8 /* TransactionDetailWebViewController.swift */; };
 		9D08AD4D2330D8F5004687E8 /* TransactionDetailWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D08AD4C2330D8F5004687E8 /* TransactionDetailWebView.swift */; };
 		9D1A614C233204E2009DDA07 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D1A614B233204E2009DDA07 /* BaseViewController.swift */; };
+		9D2FBB12278574E700471A4C /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 9D2FBB11278574E700471A4C /* CryptoSwift */; };
+		9D2FBB152785754500471A4C /* BigInt in Frameworks */ = {isa = PBXBuildFile; productRef = 9D2FBB142785754500471A4C /* BigInt */; };
+		9D2FBB182785759800471A4C /* Toast in Frameworks */ = {isa = PBXBuildFile; productRef = 9D2FBB172785759800471A4C /* Toast */; };
+		9D2FBB1B27857C8D00471A4C /* Hue in Frameworks */ = {isa = PBXBuildFile; productRef = 9D2FBB1A27857C8D00471A4C /* Hue */; };
+		9D2FBB1E27857CCE00471A4C /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = 9D2FBB1D27857CCE00471A4C /* SQLite */; };
+		9D2FBB2127857D6600471A4C /* Localize_Swift in Frameworks */ = {isa = PBXBuildFile; productRef = 9D2FBB2027857D6600471A4C /* Localize_Swift */; };
+		9D2FBB2427857EA300471A4C /* WalletConnectSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 9D2FBB2327857EA300471A4C /* WalletConnectSwift */; };
+		9D2FBB2727857F6C00471A4C /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 9D2FBB2627857F6C00471A4C /* KeychainAccess */; };
+		9D2FBB2A27857FB300471A4C /* MJRefresh in Frameworks */ = {isa = PBXBuildFile; productRef = 9D2FBB2927857FB300471A4C /* MJRefresh */; };
+		9D2FBB2E2785827800471A4C /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 9D2FBB2D2785827800471A4C /* FirebaseMessaging */; };
+		9D2FBB312785834F00471A4C /* BiometricAuthentication in Frameworks */ = {isa = PBXBuildFile; productRef = 9D2FBB302785834F00471A4C /* BiometricAuthentication */; };
+		9D2FBB342785844300471A4C /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 9D2FBB332785844300471A4C /* IQKeyboardManagerSwift */; };
+		9D2FBB37278585AB00471A4C /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = 9D2FBB36278585AB00471A4C /* SocketIO */; };
 		9D3954FE235D4C0F0068019F /* BTCManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3954FD235D4C0F0068019F /* BTCManager.swift */; };
 		9D56EA4823516C3C00A55F02 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D56EA4723516C3C00A55F02 /* KeychainManager.swift */; };
 		9D5B4E5E236976D500F4D99C /* HomeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B4E5D236976D500F4D99C /* HomeTableViewCell.swift */; };
@@ -373,6 +384,8 @@
 		9D712441232F621B009DED52 /* LibraWalletTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D712440232F621B009DED52 /* LibraWalletTool.swift */; };
 		9D712443232F7662009DED52 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D712442232F7662009DED52 /* Assets.xcassets */; };
 		9D712445232F7C36009DED52 /* LibraTransferModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D712444232F7C36009DED52 /* LibraTransferModel.swift */; };
+		9D96BCEB27859B7A001E25F8 /* JXSegmentedView in Frameworks */ = {isa = PBXBuildFile; productRef = 9D96BCEA27859B7A001E25F8 /* JXSegmentedView */; };
+		9D96BCEE27859FB6001E25F8 /* WKWebViewJavascriptBridge in Frameworks */ = {isa = PBXBuildFile; productRef = 9D96BCED27859FB6001E25F8 /* WKWebViewJavascriptBridge */; };
 		9D9B49AA235DA76100354EF0 /* AddressManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9B499C235DA76100354EF0 /* AddressManagerViewController.swift */; };
 		9D9B49AB235DA76100354EF0 /* AddressManagerTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9B499D235DA76100354EF0 /* AddressManagerTableViewManager.swift */; };
 		9D9B49AC235DA76100354EF0 /* AddressManagerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9B499F235DA76100354EF0 /* AddressManagerModel.swift */; };
@@ -432,10 +445,15 @@
 		9DA0265723702AED0084905B /* BackupWarningViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA0265623702AED0084905B /* BackupWarningViewController.swift */; };
 		9DA0265923702AFE0084905B /* BackupWarningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA0265823702AFE0084905B /* BackupWarningView.swift */; };
 		9DA0265B23710FDB0084905B /* WelcomeAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA0265A23710FDB0084905B /* WelcomeAlert.swift */; };
+		9DA594E02785954F00DF908C /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 9DA594DF2785954F00DF908C /* Alamofire */; };
+		9DA594E3278595FE00DF908C /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = 9DA594E2278595FE00DF908C /* Moya */; };
+		9DA594E62785975200DF908C /* RSKPlaceholderTextView in Frameworks */ = {isa = PBXBuildFile; productRef = 9DA594E52785975200DF908C /* RSKPlaceholderTextView */; };
 		9DA8E2A22317ABC400E28D07 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA8E2A12317ABC400E28D07 /* AppDelegate.swift */; };
 		9DA8E2AC2317ABC600E28D07 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9DA8E2AA2317ABC600E28D07 /* LaunchScreen.storyboard */; };
 		9DA8E2B72317ABC600E28D07 /* LibraWalletTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA8E2B62317ABC600E28D07 /* LibraWalletTests.swift */; };
 		9DA8E2C22317ABC600E28D07 /* LibraWalletUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA8E2C12317ABC600E28D07 /* LibraWalletUITests.swift */; };
+		9DB2393327844AD50034EEC1 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 9DB2393227844AD50034EEC1 /* SnapKit */; };
+		9DB2393627844B2B0034EEC1 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 9DB2393527844B2B0034EEC1 /* Kingfisher */; };
 		9DB515A823A327640069A909 /* ViolasMnemonic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515A723A327640069A909 /* ViolasMnemonic.swift */; };
 		9DB515AC23A32B530069A909 /* ViolasCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515AB23A32B530069A909 /* ViolasCommon.swift */; };
 		9DB515AE23A32B7C0069A909 /* ViolasNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB515AD23A32B7C0069A909 /* ViolasNetwork.swift */; };
@@ -507,7 +525,6 @@
 		9DFFA88123683C4400EA74F9 /* WalletTransactionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DFFA88023683C4400EA74F9 /* WalletTransactionsViewController.swift */; };
 		9DFFA88323683C5700EA74F9 /* WalletTransactionsTableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DFFA88223683C5700EA74F9 /* WalletTransactionsTableViewManager.swift */; };
 		9DFFA88723683E1C00EA74F9 /* WalletTransactionsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DFFA88623683E1C00EA74F9 /* WalletTransactionsTableViewCell.swift */; };
-		CB52B783A96F9C03BDB8D5C5 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1050,11 +1067,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9D2FBB2E2785827800471A4C /* FirebaseMessaging in Frameworks */,
+				9D2FBB37278585AB00471A4C /* SocketIO in Frameworks */,
+				9DB2393327844AD50034EEC1 /* SnapKit in Frameworks */,
+				9DA594E02785954F00DF908C /* Alamofire in Frameworks */,
+				9D2FBB2727857F6C00471A4C /* KeychainAccess in Frameworks */,
 				9D628AC923A086D100E222FB /* MessageUI.framework in Frameworks */,
-				1A8251333880EBAB4D609292 /* (null) in Frameworks */,
-				CB52B783A96F9C03BDB8D5C5 /* (null) in Frameworks */,
-				79E14A1ECB7CE5CBF4ADDA48 /* (null) in Frameworks */,
+				9D96BCEB27859B7A001E25F8 /* JXSegmentedView in Frameworks */,
+				9D2FBB342785844300471A4C /* IQKeyboardManagerSwift in Frameworks */,
+				9D2FBB1B27857C8D00471A4C /* Hue in Frameworks */,
+				9D2FBB182785759800471A4C /* Toast in Frameworks */,
+				9D2FBB152785754500471A4C /* BigInt in Frameworks */,
 				867CEFE69FDCACEE3E68EB96 /* Pods_LibraWallet.framework in Frameworks */,
+				9D2FBB2427857EA300471A4C /* WalletConnectSwift in Frameworks */,
+				9D2FBB2A27857FB300471A4C /* MJRefresh in Frameworks */,
+				9D2FBB312785834F00471A4C /* BiometricAuthentication in Frameworks */,
+				9DB2393627844B2B0034EEC1 /* Kingfisher in Frameworks */,
+				9DA594E62785975200DF908C /* RSKPlaceholderTextView in Frameworks */,
+				9D2FBB2127857D6600471A4C /* Localize_Swift in Frameworks */,
+				9D2FBB1E27857CCE00471A4C /* SQLite in Frameworks */,
+				9DA594E3278595FE00DF908C /* Moya in Frameworks */,
+				9D2FBB12278574E700471A4C /* CryptoSwift in Frameworks */,
+				9D96BCEE27859FB6001E25F8 /* WKWebViewJavascriptBridge in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5079,6 +5113,28 @@
 			dependencies = (
 			);
 			name = LibraWallet;
+			packageProductDependencies = (
+				9DB2393227844AD50034EEC1 /* SnapKit */,
+				9DB2393527844B2B0034EEC1 /* Kingfisher */,
+				9D2FBB11278574E700471A4C /* CryptoSwift */,
+				9D2FBB142785754500471A4C /* BigInt */,
+				9D2FBB172785759800471A4C /* Toast */,
+				9D2FBB1A27857C8D00471A4C /* Hue */,
+				9D2FBB1D27857CCE00471A4C /* SQLite */,
+				9D2FBB2027857D6600471A4C /* Localize_Swift */,
+				9D2FBB2327857EA300471A4C /* WalletConnectSwift */,
+				9D2FBB2627857F6C00471A4C /* KeychainAccess */,
+				9D2FBB2927857FB300471A4C /* MJRefresh */,
+				9D2FBB2D2785827800471A4C /* FirebaseMessaging */,
+				9D2FBB302785834F00471A4C /* BiometricAuthentication */,
+				9D2FBB332785844300471A4C /* IQKeyboardManagerSwift */,
+				9D2FBB36278585AB00471A4C /* SocketIO */,
+				9DA594DF2785954F00DF908C /* Alamofire */,
+				9DA594E2278595FE00DF908C /* Moya */,
+				9DA594E52785975200DF908C /* RSKPlaceholderTextView */,
+				9D96BCEA27859B7A001E25F8 /* JXSegmentedView */,
+				9D96BCED27859FB6001E25F8 /* WKWebViewJavascriptBridge */,
+			);
 			productName = LibraWallet;
 			productReference = 9DA8E29E2317ABC400E28D07 /* ViolasPay.app */;
 			productType = "com.apple.product-type.application";
@@ -5155,6 +5211,28 @@
 				"zh-Hans",
 			);
 			mainGroup = 9DA8E2952317ABC400E28D07;
+			packageReferences = (
+				9DB2393127844AD50034EEC1 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				9DB2393427844B2B0034EEC1 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				9D2FBB10278574E700471A4C /* XCRemoteSwiftPackageReference "CryptoSwift" */,
+				9D2FBB132785754500471A4C /* XCRemoteSwiftPackageReference "BigInt" */,
+				9D2FBB162785759800471A4C /* XCRemoteSwiftPackageReference "Toast-Swift" */,
+				9D2FBB1927857C8D00471A4C /* XCRemoteSwiftPackageReference "Hue" */,
+				9D2FBB1C27857CCE00471A4C /* XCRemoteSwiftPackageReference "SQLite.swift" */,
+				9D2FBB1F27857D6600471A4C /* XCRemoteSwiftPackageReference "Localize-Swift" */,
+				9D2FBB2227857EA300471A4C /* XCRemoteSwiftPackageReference "WalletConnectSwift" */,
+				9D2FBB2527857F6C00471A4C /* XCRemoteSwiftPackageReference "KeychainAccess" */,
+				9D2FBB2827857FB300471A4C /* XCRemoteSwiftPackageReference "MJRefresh" */,
+				9D2FBB2C2785827800471A4C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				9D2FBB2F2785834E00471A4C /* XCRemoteSwiftPackageReference "BiometricAuthentication" */,
+				9D2FBB322785844200471A4C /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
+				9D2FBB35278585AA00471A4C /* XCRemoteSwiftPackageReference "socket.io-client-swift" */,
+				9DA594DE2785954E00DF908C /* XCRemoteSwiftPackageReference "Alamofire" */,
+				9DA594E1278595FD00DF908C /* XCRemoteSwiftPackageReference "Moya" */,
+				9DA594E42785975200DF908C /* XCRemoteSwiftPackageReference "RSKPlaceholderTextView" */,
+				9D96BCE927859B79001E25F8 /* XCRemoteSwiftPackageReference "JXSegmentedView" */,
+				9D96BCEC27859FB6001E25F8 /* XCRemoteSwiftPackageReference "WKWebViewJavascriptBridge" */,
+			);
 			productRefGroup = 9DA8E29F2317ABC400E28D07 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -6153,6 +6231,272 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		9D2FBB10278574E700471A4C /* XCRemoteSwiftPackageReference "CryptoSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/krzyzanowskim/CryptoSwift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+		9D2FBB132785754500471A4C /* XCRemoteSwiftPackageReference "BigInt" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/attaswift/BigInt.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+		9D2FBB162785759800471A4C /* XCRemoteSwiftPackageReference "Toast-Swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/scalessec/Toast-Swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+		9D2FBB1927857C8D00471A4C /* XCRemoteSwiftPackageReference "Hue" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/zenangst/Hue.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+		9D2FBB1C27857CCE00471A4C /* XCRemoteSwiftPackageReference "SQLite.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/stephencelis/SQLite.swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.2;
+			};
+		};
+		9D2FBB1F27857D6600471A4C /* XCRemoteSwiftPackageReference "Localize-Swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/marmelroy/Localize-Swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
+		9D2FBB2227857EA300471A4C /* XCRemoteSwiftPackageReference "WalletConnectSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/WalletConnect/WalletConnectSwift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+		9D2FBB2527857F6C00471A4C /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
+		9D2FBB2827857FB300471A4C /* XCRemoteSwiftPackageReference "MJRefresh" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/CoderMJLee/MJRefresh.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
+		9D2FBB2C2785827800471A4C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
+		9D2FBB2F2785834E00471A4C /* XCRemoteSwiftPackageReference "BiometricAuthentication" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/rushisangani/BiometricAuthentication.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
+		9D2FBB322785844200471A4C /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.0.0;
+			};
+		};
+		9D2FBB35278585AA00471A4C /* XCRemoteSwiftPackageReference "socket.io-client-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/socketio/socket.io-client-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 15.0.0;
+			};
+		};
+		9D96BCE927859B79001E25F8 /* XCRemoteSwiftPackageReference "JXSegmentedView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pujiaxin33/JXSegmentedView.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+		9D96BCEC27859FB6001E25F8 /* XCRemoteSwiftPackageReference "WKWebViewJavascriptBridge" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Lision/WKWebViewJavascriptBridge.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+		9DA594DE2785954E00DF908C /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+		9DA594E1278595FD00DF908C /* XCRemoteSwiftPackageReference "Moya" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Moya/Moya.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 15.0.0;
+			};
+		};
+		9DA594E42785975200DF908C /* XCRemoteSwiftPackageReference "RSKPlaceholderTextView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ruslanskorb/RSKPlaceholderTextView.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.0.0;
+			};
+		};
+		9DB2393127844AD50034EEC1 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+		9DB2393427844B2B0034EEC1 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		9D2FBB11278574E700471A4C /* CryptoSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9D2FBB10278574E700471A4C /* XCRemoteSwiftPackageReference "CryptoSwift" */;
+			productName = CryptoSwift;
+		};
+		9D2FBB142785754500471A4C /* BigInt */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9D2FBB132785754500471A4C /* XCRemoteSwiftPackageReference "BigInt" */;
+			productName = BigInt;
+		};
+		9D2FBB172785759800471A4C /* Toast */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9D2FBB162785759800471A4C /* XCRemoteSwiftPackageReference "Toast-Swift" */;
+			productName = Toast;
+		};
+		9D2FBB1A27857C8D00471A4C /* Hue */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9D2FBB1927857C8D00471A4C /* XCRemoteSwiftPackageReference "Hue" */;
+			productName = Hue;
+		};
+		9D2FBB1D27857CCE00471A4C /* SQLite */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9D2FBB1C27857CCE00471A4C /* XCRemoteSwiftPackageReference "SQLite.swift" */;
+			productName = SQLite;
+		};
+		9D2FBB2027857D6600471A4C /* Localize_Swift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9D2FBB1F27857D6600471A4C /* XCRemoteSwiftPackageReference "Localize-Swift" */;
+			productName = Localize_Swift;
+		};
+		9D2FBB2327857EA300471A4C /* WalletConnectSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9D2FBB2227857EA300471A4C /* XCRemoteSwiftPackageReference "WalletConnectSwift" */;
+			productName = WalletConnectSwift;
+		};
+		9D2FBB2627857F6C00471A4C /* KeychainAccess */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9D2FBB2527857F6C00471A4C /* XCRemoteSwiftPackageReference "KeychainAccess" */;
+			productName = KeychainAccess;
+		};
+		9D2FBB2927857FB300471A4C /* MJRefresh */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9D2FBB2827857FB300471A4C /* XCRemoteSwiftPackageReference "MJRefresh" */;
+			productName = MJRefresh;
+		};
+		9D2FBB2D2785827800471A4C /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9D2FBB2C2785827800471A4C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+		9D2FBB302785834F00471A4C /* BiometricAuthentication */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9D2FBB2F2785834E00471A4C /* XCRemoteSwiftPackageReference "BiometricAuthentication" */;
+			productName = BiometricAuthentication;
+		};
+		9D2FBB332785844300471A4C /* IQKeyboardManagerSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9D2FBB322785844200471A4C /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
+			productName = IQKeyboardManagerSwift;
+		};
+		9D2FBB36278585AB00471A4C /* SocketIO */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9D2FBB35278585AA00471A4C /* XCRemoteSwiftPackageReference "socket.io-client-swift" */;
+			productName = SocketIO;
+		};
+		9D96BCEA27859B7A001E25F8 /* JXSegmentedView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9D96BCE927859B79001E25F8 /* XCRemoteSwiftPackageReference "JXSegmentedView" */;
+			productName = JXSegmentedView;
+		};
+		9D96BCED27859FB6001E25F8 /* WKWebViewJavascriptBridge */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9D96BCEC27859FB6001E25F8 /* XCRemoteSwiftPackageReference "WKWebViewJavascriptBridge" */;
+			productName = WKWebViewJavascriptBridge;
+		};
+		9DA594DF2785954F00DF908C /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9DA594DE2785954E00DF908C /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		9DA594E2278595FE00DF908C /* Moya */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9DA594E1278595FD00DF908C /* XCRemoteSwiftPackageReference "Moya" */;
+			productName = Moya;
+		};
+		9DA594E52785975200DF908C /* RSKPlaceholderTextView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9DA594E42785975200DF908C /* XCRemoteSwiftPackageReference "RSKPlaceholderTextView" */;
+			productName = RSKPlaceholderTextView;
+		};
+		9DB2393227844AD50034EEC1 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9DB2393127844AD50034EEC1 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		9DB2393527844B2B0034EEC1 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9DB2393427844B2B0034EEC1 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 9DA8E2962317ABC400E28D07 /* Project object */;
 }

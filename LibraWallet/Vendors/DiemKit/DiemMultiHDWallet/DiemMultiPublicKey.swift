@@ -8,6 +8,8 @@
 
 import CryptoSwift
 import BigInt
+import Foundation
+
 struct DiemMultiPublicKeyModel {
     var raw: Data
     var sequence: Int

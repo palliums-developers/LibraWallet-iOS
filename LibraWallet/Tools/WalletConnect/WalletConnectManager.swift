@@ -8,6 +8,9 @@
 
 import Foundation
 import WalletConnectSwift
+import Foundation
+import UIKit
+
 struct WCBTCRawTransaction: Codable {
     var from: String?
     var amount: String?
@@ -227,6 +230,9 @@ extension WalletConnectManager: ServerDelegate {
                 self.disConnect!()
             }
         }
+    }
+    func server(_ server: Server, didUpdate session: Session) {
+        print("didUpdate")
     }
 }
 class SendRawTransactionHandler: RequestHandler {

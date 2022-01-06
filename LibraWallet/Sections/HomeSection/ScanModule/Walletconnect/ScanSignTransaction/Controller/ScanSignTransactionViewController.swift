@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Toast_Swift
+import Toast
 class ScanSignTransactionViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()

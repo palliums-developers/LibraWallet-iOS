@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Toast_Swift
+import Toast
 class ScanLogoutViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
