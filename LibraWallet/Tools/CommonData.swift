@@ -9,7 +9,7 @@
 import UIKit
 import Hue
 import SnapKit
-import Toast_Swift
+import Toast
 import Localize_Swift
 
 /***************************************/

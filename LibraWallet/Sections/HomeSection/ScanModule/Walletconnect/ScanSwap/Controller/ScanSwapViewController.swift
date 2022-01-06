@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Toast_Swift
+import Toast
 
 class ScanSwapViewController: UIViewController {
     override func viewDidLoad() {

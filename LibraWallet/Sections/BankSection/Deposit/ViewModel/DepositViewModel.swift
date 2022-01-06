@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Toast_Swift
+import Toast
 protocol DepositViewModelDelegate: NSObjectProtocol {
     func successDeposit()
 }

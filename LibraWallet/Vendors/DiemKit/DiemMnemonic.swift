@@ -64,7 +64,7 @@ struct DiemMnemonic {
         let salt: Array<UInt8> = Array("DIEM WALLET: mnemonic salt prefix$DIEM".utf8)
         let mnemonicTemp = mnemonic.joined(separator: " ")
         do {
-            let dk = try PKCS5.PBKDF2(password: Array(mnemonicTemp.utf8), salt: salt, iterations: 2048, keyLength: 32, variant: .sha3_256).calculate()
+            let dk = try PKCS5.PBKDF2(password: Array(mnemonicTemp.utf8), salt: salt, iterations: 2048, keyLength: 32, variant: .sha3(SHA3.Variant.sha256)).calculate()
 //            let seed = try Seed.init(bytes: dk)
 //            return seed
             return dk

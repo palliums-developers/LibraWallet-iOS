@@ -8,6 +8,8 @@
 
 import CryptoSwift
 import BigInt
+import Foundation
+
 struct ViolasMultiPublicKeyModel {
     var raw: Data
     var sequence: Int

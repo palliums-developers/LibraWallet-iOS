@@ -7,6 +7,7 @@
 //
 import CryptoSwift
 import BigInt
+import Foundation
 
 struct DiemMultiPrivateKeyModel {
     var privateKey: DiemHDPrivateKey

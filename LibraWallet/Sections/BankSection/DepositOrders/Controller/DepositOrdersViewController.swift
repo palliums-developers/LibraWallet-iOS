@@ -8,7 +8,7 @@
 
 import UIKit
 import MJRefresh
-import Toast_Swift
+import Toast
 
 class DepositOrdersViewController: BaseViewController {
     

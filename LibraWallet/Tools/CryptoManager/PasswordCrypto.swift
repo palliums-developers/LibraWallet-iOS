@@ -29,11 +29,12 @@ struct PasswordCrypto {
                 throw LibraWalletError.WalletCrypto(reason: .encryptResultEmptyError)
             }
             // 拆包检查
-            guard let encrypt = result.toBase64() else {
-                throw LibraWalletError.WalletCrypto(reason: .encryptToBase64FailedError)
-            }
+            let encrypt = result.toBase64()
+//            guard let encrypt = result.toBase64() else {
+//                throw LibraWalletError.WalletCrypto(reason: .encryptToBase64FailedError)
+//            }
             // 检查Base64后数据是否为空
-            guard encrypt.isEmpty == false else {
+            guard result.toBase64().isEmpty == false else {
                 throw LibraWalletError.WalletCrypto(reason: .encryptToBase64EmptyError)
             }
             return encrypt
