@@ -1,0 +1,810 @@
+/* 
+  Localizable.strings
+  ViolasWallet
+
+  Created by palliums on 2019/9/12.
+  Copyright © 2019 palliums. All rights reserved.
+*/
+/************* 底部导航栏 *******************/
+wallet_tabbar_wallet_title = "钱包";
+wallet_tabbar_market_title = "市场";
+wallet_tabbar_bank_title = "数字银行";
+wallet_tabbar_mine_title = "我的";
+
+/************* 首页 *******************/
+// 内容
+wallet_home_transfer_button_title = "转账";
+wallet_home_receive_button_title = "收款";
+wallet_home_mapping_button_title = "映射";
+wallet_home_wallet_asset_title = "资产";
+wallet_home_wallet_total_asset_title = "总资产";
+wallet_home_exchange_title = "兑换";
+wallet_wallet_connect_state_title = "网页钱包已登录";
+// 提示
+// 用户协议与隐私保护
+wallet_user_and_private_agreement_title = "用户协议与隐私政策";
+wallet_user_agreement_title = "《服务协议》";
+wallet_private_agreement_title = "《隐私政策》";
+wallet_private_and_use_legal_cancel_button_title = "不同意";
+wallet_private_and_use_legal_confirm_button_title = "同意";
+wallet_private_and_use_legal_content = "感谢您选择了SSO APP\n我们极度重视您的用户隐私。您在使用我们的服务时，我们可能会收集和使用您的相关信息。在使用我们的产品前，请务必审慎阅读《隐私政策》和《服务协议》内的所有内容，来了解我们如何收集、使用、储存和分享这些信息，以及我们为您提供的访问、更新、控制和保护这些信息的方式。";
+// 备份提醒弹出页面
+wallet_alert_backup_warning_title = "安全提醒";
+wallet_alert_backup_warning_detail_title = "您的助记词未备份，请务必备份助记词，助记词可用于恢复钱包资产，防止忘记密码、应用删除、手机丢失等情况导致资产损失";
+wallet_alert_backup_warning_button_title = "立即备份";
+
+/************* 扫描二维码 *******************/
+// 错误
+wallet_scan_result_address_btc_invalid_error = "BTC地址无效";
+wallet_scan_result_address_violas_invalid_error = "Violas地址无效";
+wallet_scan_result_address_libra_invalid_error = "Libra地址无效";
+wallet_scan_result_address_violas_module_empty_error = "Violas稳定币名字为空";
+wallet_scan_result_address_violas_module_invalid_error = "Violas稳定币合约未开启或不支持";
+wallet_scan_result_address_libra_module_empty_error = "Libra稳定币名字为空";
+wallet_scan_result_address_libra_module_invalid_error = "Libra稳定币合约未开启或不支持";
+wallet_scan_result_not_support_error = "扫描内容不支持";
+
+/************* 添加币种 *******************/
+// 标题
+wallet_assert_add_navigation_title = "添加币种";
+
+/************* 收款 *******************/
+// 标题
+wallet_receive_navigation_title = "收款";
+// 内容
+wallet_receive_qrcode_title = "收款地址";
+wallet_receive_copy_button_title = "复制地址";
+// 提示
+wallet_copy_address_success_title = "复制成功";
+
+/************* 转账 *******************/
+// 标题
+wallet_transfer_navigation_title = "转账";
+// 内容
+wallet_transfer_amount_title = "数量";
+wallet_transfer_balance_title = "余额：";
+wallet_transfer_amount_textfield_placeholder = "输入金额";
+wallet_transfer_address_title = "收款地址";
+wallet_transfer_address_contact_title = "地址簿";
+wallet_transfer_address_btc_textfield_placeholder = "输入收款地址";
+wallet_transfer_address_libra_textfield_placeholder = "输入收款地址";
+wallet_transfer_address_violas_textfield_placeholder = "输入收款地址";
+wallet_transfer_transaction_fee_title = "手续费";
+wallet_transfer_transaction_fee_least_title = "慢";
+wallet_transfer_transaction_fee_max_title = "快";
+wallet_transfer_confirm_button_title = "确认转账";
+wallet_transfer_token_default_title = "选择币种";
+// 错误
+wallet_transfer_token_invalid_error = "请选择要转账的币";
+wallet_transfer_amount_invalid_error = "转账数量无效";
+wallet_transfer_amount_empty_error = "转账数量为空";
+wallet_transfer_amount_overload_error = "数量超过自己余额";
+wallet_transfer_amount_limit_error = "最少转账金额为";
+wallet_transfer_address_invalid_error = "转账地址无效";
+wallet_transfer_address_empty_error = "转账地址为空";
+wallet_transfer_to_self_error = "向自己转账无效";
+// 提示
+wallet_transfer_success_alert = "转账成功";
+
+/************* 交易历史 *******************/
+wallet_transactions_empty_default_title = "暂无交易记录";
+
+/************* 创建钱包 *******************/
+// 内容
+wallet_add_wallet_password_textfield_placeholder = "设置钱包密码";
+wallet_add_wallet_password_confirm_textfield_placeholder = "再次确认密码";
+wallet_add_wallet_confirm_button_title = "创建";
+// 错误（参考密码相关错误）
+// 添加钱包
+wallet_add_wallet_name_invalid_error = "钱包名字无效";
+wallet_add_wallet_name_empty_error = "钱包名字为空";
+wallet_add_wallet_name_too_long_error = "钱包名字长度超限";
+wallet_add_wallet_password_invalid_error = "密码需同时包含大小写字母、数字，长度8-20位";
+wallet_add_wallet_password_empty_error = "密码为空";
+wallet_add_wallet_password_cofirm_invalid_error = "确认密码无效";
+wallet_add_wallet_password_cofirm_empty_error = "确认密码为空";
+wallet_add_wallet_password_check_failed_error = "密码不一致";
+wallet_add_wallet_password_length_limit_long_error = "密码长度超限";
+wallet_add_wallet_password_length_limit_short_error = "密码长度太短";
+wallet_add_wallet_not_agree_legal_error = "请阅读并同意《隐私政策》和《服务协议》";
+// 提示
+wallet_create_wallet_success_title = "创建钱包成功";
+wallet_create_wallet_failed_title = "创建钱包失败";
+
+/************* 导入钱包 *******************/
+// 内容
+wallet_import_mnemonic_textview_placeholder = "请输入助记词,并用空格分割";
+wallet_import_wallet_confirm_button_title = "开始导入";
+wallet_import_wallet_legal_content_title = "我已阅读并同意《服务协议》和《隐私政策》";
+// 错误（以下 + 参考密码相关错误）
+// 助记词排查相关
+wallet_mnemonic_invalid_error = "助记词无效";
+wallet_mnemonic_empty_error = "助记词为空";
+wallet_mnemonic_split_failed_error = "助记词分隔失败";
+wallet_mnemonic_count_unsupport_error = "助记词数量不支持";
+wallet_mnemonic_check_failed_error = "助记词无效(包含无效词)";
+// 导出成功后
+wallet_create_wallet_exist_error = "钱包已存在";
+wallet_create_wallet_failed_error = "钱包创建失败";
+wallet_import_wallet_failed_error = "钱包导入失败";
+// 提示
+wallet_import_wallet_success_title = "导入钱包成功";
+wallet_import_wallet_failed_title = "导入钱包失败";
+
+/************* 个人中心 *******************/
+// 内容
+wallet_mine_manager_wallet_title = "钱包管理";
+wallet_mine_address_manager_title = "地址簿";
+wallet_mine_setting_title = "设置";
+wallet_mine_yield_farming_button_title = "挖矿奖励及规则";
+wallet_mine_invitation_reward_title = "邀请奖励";
+
+/************* 钱包详情 *******************/
+// 标题
+wallet_manager_navigation_title = "管理";
+wallet_wallet_manager_navigation_title = "钱包管理";
+// 内容
+wallet_manager_detail_delete_button_title = "删除";
+wallet_manager_detail_export_mnemonic_title = "导出助记词";
+wallet_manager_biological_face_id_title = "面容识别";
+wallet_manager_biological_finger_touch_id_title = "指纹识别";
+wallet_biometric_alert_fingerprint_describe = "確認指紋以進行身份驗證。";
+wallet_biometric_alert_face_id_describe = "確認面容以進行身份驗證。";
+// 错误
+wallet_biometric_face_id_not_enrolled_error = "未设置面容识别。 请转到设备 设置 -> 面容ID与密码 并注册您的面容。";
+wallet_biometric_touch_id_not_enrolled_error = "未设置指纹识别。 请转到设备 设置 -> 指纹ID与密码 并注册您的指纹。";
+wallet_biometric_face_id_locked_error = "由于失败尝试过多，面容ID已被锁定。 输入密码以解锁面容ID。";
+wallet_biometric_touch_id_locked_error = "由于失败尝试过多，指纹ID已被锁定。 输入密码以解锁指纹ID。";
+wallet_biometric_not_available_error = "生物识别身份验证不适用于此设备。";
+wallet_biometric_face_id_failed_error = "面容ID无法识别您的脸部。 请用您注册的面容再试一次。";
+wallet_biometric_touch_id_failed_error = "指纹ID无法识别您的指纹。 请用您注册的指纹再试一次。";
+wallet_biometric_face_id_without_password_error = "请设置设备密码以使用面容ID进行身份验证。";
+wallet_biometric_touch_id_without_password_error = "请设置设备密码以使用指纹ID进行身份验证。";
+// 提示
+wallet_delete_wallet_success_title = "删除钱包成功";
+wallet_alert_delete_wallet_title = "警告";
+wallet_alert_delete_wallet_content = "确定要删除钱包吗";
+wallet_alert_delete_wallet_cancel_button_title = "取消";
+wallet_alert_delete_wallet_confirm_button_title = "确定";
+
+/************* 地址簿 *******************/
+// 标题
+wallet_address_navigation_title = "地址簿";
+// 提示
+wallet_address_manager_empty_data_title = "暂时没有地址";
+wallet_alert_delete_address_title = "提示";
+wallet_alert_delete_address_content = "确定要删除此地址吗";
+wallet_alert_delete_address_cancel_button_title = "取消";
+wallet_alert_delete_address_confirm_button_title = "确定";
+
+/************* 添加地址 *******************/
+// 标题
+wallet_address_add_navigation_title = "添加地址";
+// 内容
+wallet_address_add_remarks_title = "备注";
+wallet_address_add_remarks_textfield_placeholder = "备注信息少于20个字";
+wallet_address_add_address_title = "地址";
+wallet_address_add_address_textfield_placeholder = "输入地址";
+wallet_address_add_confirm_button_title = "确认添加";
+wallet_address_add_type_title = "类型";
+// 错误
+wallet_add_address_insert_error = "地址保存失败";
+wallet_add_address_invalid_error = "地址无效";
+wallet_add_address_empty_error = "地址为空";
+wallet_add_address_btc_address_invalid_error = "BTC地址无效";
+wallet_add_address_violas_address_invalid_error = "Violas地址无效";
+wallet_add_address_libra_address_invalid_error = "Libra地址无效";
+wallet_add_address_remarks_invalid_error = "备注名无效";
+wallet_add_address_remarks_empty_error = "备注名为空";
+wallet_add_address_remarks_length_invalid_error = "备注名超长";
+wallet_add_address_type_invalid_error = "类型未选择";
+wallet_add_address_exist_error = "地址已存在";
+
+/************* 备份助记词警告 *******************/
+// 标题
+wallet_backup_mnemonic_warning_navigationbar_title = "备份提示";
+// 内容
+wallet_backup_mnemonic_warning_title = "获取助记词";
+wallet_backup_mnemonic_warning_navigation_right_bar_title = "稍后备份";
+wallet_backup_mnemonic_warning_title_detail = "等于拥有钱包资产所有权";
+wallet_backup_mnemonic_warning_item_one_title = "备份助记词";
+wallet_backup_mnemonic_warning_item_one_detail = "使用纸和笔正确抄写助记词\n如果你的手机丢失、被盗、损坏，助记词将可以恢复你的资产";
+wallet_backup_mnemonic_warning_item_two_title = "离线保管";
+wallet_backup_mnemonic_warning_item_two_detail = "请妥善保管至隔离网络的安全地方\n请勿将助记词在联网环境下分享和存储，比如邮件、相册、社交应用等";
+wallet_backup_mnemonic_warning_confirm_button_title = "开始备份";
+
+/************* 备份助记词 *******************/
+// 标题
+wallet_backup_mnemonic_show_navigationbar_title = "备份助记词";
+// 内容
+wallet_backup_mnemonic_title = "请将这些词按顺序写在纸上";
+wallet_backup_mnemonic_alert_detail = "不要截屏或复制到剪切板\n这将可能被第三方恶意软件收集\n造成资产损失";
+wallet_backup_mnemonic_confirm_button_title = "下一步";
+
+/************* 校验助记词 *******************/
+// 标题
+wallet_backup_mnemonic_check_navigationbar_title = "确认助记词";
+// 内容
+wallet_backup_check_mnemonic_title = "请将这些词按顺序写在纸上";
+wallet_backup_check_mnemonic_final_title = "请按顺序点击助记词，以确认您正确备份";
+wallet_backup_check_mnemonic_confirm_button_title = "完成";
+// 错误
+wallet_mnemonic_check_array_not_enough_error = "未选择全部";
+wallet_mnemonic_order_invalid_error = "助记词顺序不正确，请校对";
+// 提示
+wallet_check_mnemonic_success_title = "备份成功";
+
+/************* 欢迎来到Violas弹出View *******************/
+wallet_alert_welcome_title = "欢迎来到";
+wallet_alert_welcome_detail_title = "Violas";
+wallet_alert_welcome_confirm_button_title = "马上进入";
+
+/************* 选择钱包创建方式页面 *******************/
+wallet_create_choose_type_create_button_title = "创建钱包";
+wallet_create_choose_type_import_button_title = "导入钱包";
+
+/************* 关于我们 *******************/
+// 标题
+wallet_about_us_navigation_title = "关于我们";
+// 内容
+wallet_about_us_navigation_right_bar_title = "问题反馈";
+wallet_mine_about_us_official_address = "官方网站";
+wallet_mine_about_us_official_email = "邮箱";
+
+/************* 设置页面 *******************/
+// 标题
+wallet_setting_navigation_title = "设置";
+// 内容
+wallet_setting_language_title = "多语言";
+wallet_setting_service_legal_title = "服务协议";
+wallet_private_service_legal_title = "隐私协议";
+wallet_setting_about_us_title = "关于我们";
+wallet_setting_help_center_title = "帮助与反馈";
+
+/************* 帮助中心 *******************/
+// 标题
+wallet_feedback_navigation_title = "服务与反馈";
+
+/************* 隐私政策 *******************/
+// 标题
+wallet_private_navigation_title = "隐私政策";
+
+/************* 隐私政策 *******************/
+// 标题
+wallet_service_navigation_title = "服务协议";
+
+/************* 多语言 *******************/
+// 标题
+wallet_language_navigation_title = "多语言";
+// 提示
+wallet_language_change_success = "切换成功";
+
+/************* 问题反馈 *******************/
+// 提示
+wallet_alert_feedback_title = "问题反馈";
+wallet_alert_feedback_textview_placeholder = "请输入内容";
+wallet_alert_feedback_textfield_placeholder = "请输入您的联系方式";
+wallet_alert_feedback_confirm_button_title = "确认";
+wallet_alert_feedback_content_empty = "请输入反馈内容";
+wallet_alert_feedback_contact_empty = "请输入联系方式";
+
+/************* 映射 *******************/
+// 标题
+wallet_mapping_navigationbar_title = "兑换";
+// 内容
+wallet_mapping_balance_title = "可用余额：";
+wallet_mapping_input_amount_textfield_placeholder = "转出数量";
+wallet_mapping_mapping_rate_title = "汇率";
+wallet_mapping_mapping_miner_fees_title = "矿工费用：";
+wallet_mapping_confirm_title = "确认";
+wallet_mapping_pay_amount_least_title = "最少付出金额：";
+wallet_mapping_exchange_amount_least_title = "最少兑换金额：";
+wallet_mapping_token_search_textfield_placeholder = "搜索";
+wallet_mapping_eth_address_textfield_placeholder = "ETH 收款地址";
+// 错误
+wallet_market_mapping_token_unpublish_error = "您将要映射的稳定币尚未开启，开启需要消耗一定数量Gas费，是否立即开启并映射？";
+// 提示
+wallet_mapping_submit_successful = "映射订单提交成功";
+wallet_mapping_submit_failed = "映射订单提交失败";
+wallet_mapping_output_token_unactived = "您想要映射的稳定币尚未激活，是否立即激活并映射";
+// 获取映射信息
+wallet_mapping_info_alert_title = "提示";
+wallet_mapping_info_alert_content = "获取映射信息失败，请稍后重试";
+wallet_mapping_info_alert_confirm_button_title = "确定";
+// 获取反向映射信息
+wallet_mapping_info_data_empty_alert_content = "尚未拥有任何映射币，请映射后再重试";
+// ETH地址为空
+wallet_mapping_eth_address_empty = "ETH 地址为空";
+// ETH地址无效
+wallet_mapping_eth_address_invalid = "ETH 地址无效";
+
+/************* 映射交易列表 *******************/
+// 内容
+wallet_mapping_transactions_state_processing_title = "映射中";
+wallet_mapping_transactions_state_success_title = "映射成功";
+wallet_mapping_transactions_state_failed_title = "映射失败";
+wallet_mapping_transactions_state_canceled_title = "映射取消";
+wallet_mapping_transactions_fees_title = "矿工费：";
+
+/************* WalletConnect *******************/
+// 内容
+wallet_wallet_connect_login_title = "网页 ViolasPay 登录确认";
+wallet_wallet_connect_logout_title = "网页 ViolasPay 已登录";
+wallet_wallet_connect_exchange_title = "网页 ViolasPay 兑换确认";
+wallet_wallet_connect_sign_title = "网页 ViolasPay 请求签名";
+wallet_wallet_connect_transfer_title = "网页 ViolasPay 转账";
+wallet_wallet_connect_publish_title = "网页 ViolasPay 注册币种";
+wallet_wallet_connect_swap_title = "网页 ViolasPay 兑换币种";
+wallet_wallet_connect_add_liquidity_title = "网页 ViolasPay 添加流动性";
+wallet_wallet_connect_remove_liquidity_title = "网页 ViolasPay 移除流动性";
+wallet_wallet_connect_bank_deposit_title = "网页 ViolasPay 存款";
+wallet_wallet_connect_bank_withdraw_title = "网页 ViolasPay 取款";
+wallet_wallet_connect_bank_loan_title = "网页 ViolasPay 借款";
+wallet_wallet_connect_bank_repayment_title = "网页 ViolasPay 还款";
+wallet_wallet_connect_bank_excitation_title = "网页 ViolasPay 提取数字银行激励";
+wallet_wallet_connect_market_excitation_title = "网页 ViolasPay 提取交易所激励";
+wallet_wallet_connect_transfer_receive_address_title = "转账地址";
+wallet_wallet_connect_transfer_amount_title = "金额";
+wallet_wallet_connect_publish_module_title = "注册币种";
+wallet_wallet_connect_publish_address_title = "注册地址";
+wallet_wallet_connect_login_warnning_content = "网页 ViolasPay 正在申请访问你的钱包地址，你确认将钱包地址公开给此网站吗？";
+wallet_wallet_connect_login_warnning_describe = "*其使用行为同样适用《用户协议》和《隐私协议》";
+wallet_wallet_connect_transfer_confirm_button_title = "确认转账";
+wallet_wallet_connect_login_confirm_button_title = "确认登录";
+wallet_wallet_connect_exchange_confirm_button_title = "确认兑换";
+wallet_wallet_connect_sign_button_title = "确认签名";
+wallet_wallet_connect_publish_confirm_button_title = "确认注册";
+wallet_scan_login_cancel_button_title = "取消";
+wallet_wallet_connect_logout_button_title = "退出网页钱包";
+wallet_wallet_connect_bank_withdraw_total_title = "全部提取";
+wallet_wallet_connect_bank_repayment_total_title = "全部还款";
+wallet_wallet_connect_bank_market_withdraw_excitation_button_title = "确认";
+// 提示
+wallet_connect_connect_time_invalid_title = "连接失败，请稍后重试";
+wallet_connect_disconnect_success_title = "退出成功";
+wallet_connect_publish_success_title = "注册成功";
+wallet_scan_login_alert_success_title = "登录成功";
+
+/************* 币详情 *******************/
+// 内容
+wallet_coin_detail_transaction_total_transactions_title = "全部";
+wallet_coin_detail_transaction_transfer_transactions_title = "转出";
+wallet_coin_detail_transaction_rreceive_transactions_title = "转入";
+
+/************* 交易记录详情 *******************/
+// 标题
+wallet_transactions_navigation_title = "交易记录";
+// 内容
+wallet_transaction_detail_transfer_success_title = "转账成功";
+wallet_transaction_detail_receive_success_title = "收款成功";
+wallet_transaction_detail_uncheck_title = "交易中";
+wallet_transaction_detail_publish_success_title = "稳定币激活成功";
+wallet_transaction_detail_mint_authority_success_title = "铸币授权成功";
+wallet_transaction_detail_transaction_failed_title = "交易失败";
+wallet_transaction_detail_unknow_success_title = "交易成功";
+wallet_transaction_detail_amount_title = "金额：";
+wallet_transaction_detail_gas_title = "矿工费：";
+wallet_transaction_detail_transfer_address_title = "付款地址：";
+wallet_transaction_detail_receive_address_title = "收款地址：";
+wallet_transaction_detail_version_title = "交易号：";
+wallet_transaction_detail_explorer_check_title = "浏览器查询更详细信息 >";
+
+/************* 添加资产 *******************/
+wallet_add_assets_get_test_coin_title = "获取体验币";
+// 提示
+wallet_add_asset_alert_title = "提醒";
+wallet_add_asset_alert_content = "首次开启需向系统支付少量费用激活，系统将默认选择同一链上有余额的币种进行支付";
+wallet_add_asset_alert_cancel_button_title = "取消";
+wallet_add_asset_alert_confirm_button_title = "确定";
+wallet_add_asset_alert_success_title = "开启成功";
+
+/************* 交易所兑换 *******************/
+// 标题
+wallet_market_exchange_navigation_title = "兑换";
+// 内容
+wallet_market_exchange_input_amount_title = "输入";
+wallet_market_exchange_output_amount_title = "输出";
+wallet_market_exchange_fee_title = "费率：";
+wallet_market_exchange_rate_title = "兑换率：";
+wallet_market_exchange_miner_fee_title = "矿工费：";
+wallet_market_exchange_button_title = "兑换";
+wallet_market_exchange_input_token_button_title = "选择通证";
+wallet_market_exchange_output_token_button_title = "选择通证";
+wallet_market_exchange_token_title = "当前资产：";
+// 错误
+wallet_market_offline = "交易所维护中，请稍后";
+wallet_market_exchange_without_liquidity = "交易所暂无流动性";
+wallet_market_swap_unpublisheda_error = "未开启不能调换";
+wallet_market_exchange_amount_error = "待兑换金额无效";
+wallet_market_exchange_amount_max_limit_error = "您需要兑换的稳定币数量过大，不支持交换，请减少兑换数量后交换";
+wallet_market_pay_amount_invalid_error = "付出金额无效";
+wallet_market_pay_amount_max_limit_error = "您付出的稳定币数量过大，不支持交换，请减少付出数量后交换";
+wallet_market_amount_not_enough_error = "余额不足以兑换，请确认";
+wallet_market_exchange_token_unpublish_error = "您将要兑换的稳定币尚未开启，开启需要消耗一定数量Gas费，是否立即开启并兑换";
+wallet_market_published_list_empty_error = "尚未开启任何稳定币";
+wallet_market_token_list_empty_error = "获取交易所稳定币列表为空";
+wallet_market_pay_token_not_select_error = "付出稳定币未选择";
+wallet_market_exchange_token_not_select_error = "待兑换稳定币未选择";
+wallet_market_pay_amount_empty_error = "付出稳定币数量为空";
+wallet_market_exchange_amount_empty_error = "兑换稳定币数量为空";
+// 提示
+wallet_market_exchange_currency_empty_error = "交易所维护中";
+wallet_market_exchange_input_token_unselect = "请选择一个付出兑换的稳定币";
+wallet_market_exchange_input_token_unactived = "您选择的付出币尚未激活";
+wallet_market_exchange_output_token_unselect = "请选择一个想要兑换的稳定币";
+wallet_market_exchange_output_token_unactived = "您想要兑换的稳定币尚未激活，是否立即激活并兑换";
+wallet_market_exchange_submit_exchange_successful = "兑换订单提交成功";
+wallet_market_exchange_submit_exchange_failed = "兑换订单提交失败";
+
+/************* 交易所兑换交易记录 *******************/
+// 标题
+wallet_market_exchange_transactions_navigationbar_title = "兑换记录";
+// 内容
+wallet_market_exchange_transaction_status_success_title = "兑换成功";
+wallet_market_exchange_transaction_status_failed_title = "兑换失败";
+wallet_market_exchange_transaction_status_processing_title = "兑换中";
+wallet_market_exchange_transaction_status_cancel_title = "已取消";
+wallet_market_exchange_transaction_retry_button_title = "重试";
+
+/************* 资金池个人中心 *******************/
+// 标题
+wallet_market_assets_pool_mine_navigationbar_title = "我的资金池";
+// 内容
+wallet_market_mine_tokens_title = "资金池通证";
+wallet_market_mine_assets_pool_transfer_in_title = "转入";
+wallet_market_mine_assets_pool_transfer_out_title = "转出";
+wallet_market_mine_assets_pool_token_assets_transactions_title = "资产";
+
+/************* 交易所资金池 *******************/
+// 标题
+wallet_market_assets_pool_navigation_title = "资金池";
+// 内容
+wallet_market_assets_pool_add_liquidity_token_title = "当前资产：";
+wallet_market_assets_pool_remove_liquidity_token_title = "当前通证：";
+wallet_market_assets_pool_add_liquidity_fee_title = "转入资金池可获取手续费收益";
+wallet_market_assets_pool_exchange_rate_title = "兑换率：";
+wallet_market_assets_pool_add_liquidity_confirm_button_title = "转入";
+wallet_market_assets_pool_remove_liquidity_confirm_button_title = "转出";
+wallet_market_assets_pool_input_amount_title = "转入";
+wallet_market_assets_pool_output_token_title = "资金池通证";
+wallet_market_assets_pool_output_amount_title = "转出";
+wallet_market_assets_pool_output_token_wallet_connect_title = "通证：";
+wallet_assets_pool_transfer_in_title = "转入";
+wallet_assets_pool_transfer_out_title = "转出";
+wallet_market_assets_pool_yield_farming_title = "挖矿福利";
+wallet_market_assets_pool_yield_farming_describe = "现在加入资金池可获得同手续费奖励等价的VLS挖矿福利";
+// 提示
+// 交易所移除流动性
+wallet_assets_pool_remove_liquidity_unselect_token = "请选择通证";
+wallet_assets_pool_remove_liquidity_not_enough_token = "您的通证不足";
+wallet_assets_pool_remove_liquidity_successful = "移除流动性交易提交成功";
+wallet_assets_pool_remove_liquidity_failed = "移除流动性交易提交失败";
+// 交易所添加流动性
+wallet_assets_pool_add_liquidity_unselect_first_deposit_token_content = "请选择一个存款稳定币";
+wallet_assets_pool_add_liquidity_unselect_second_deposit_token_content = "请选择另一个存款稳定币";
+wallet_assets_pool_add_liquidity_token_unpublish_content = " 尚未激活，请激活充值后重试";
+wallet_assets_pool_add_liquidity_successful = "添加流动性交易提交成功";
+wallet_assets_pool_add_liquidity_failed = "添加流动性交易提交失败";
+
+/************* 资金池交易记录 *******************/
+// 标题
+wallet_market_assets_pool_transactions_navigationbar_title = "资金池记录";
+// 内容
+wallet_assets_pool_transaction_token_title = "通证：";
+wallet_assets_pool_transaction_status_transfer_in_success_title = "转入成功";
+wallet_assets_pool_transaction_status_transfer_in_failed_title = "转入失败";
+wallet_assets_pool_transaction_status_transfer_out_success_title = "转出成功";
+wallet_assets_pool_transaction_status_transfer_out_failed_title = "转出失败";
+wallet_assets_pool_transaction_status_transfer_invalid_title = "状态异常";
+
+/************* 交易所资金池交易记录详情 *******************/
+// 标题
+wallet_market_assets_pool_transaction_detail_navigationbar_title = "详情";
+wallet_market_exchange_transaction_detail_navigationbar_title = "兑换详情";
+// 内容
+wallet_market_transaction_status_submitted_title = "已提交";
+wallet_market_transaction_status_packing_title = "打包中";
+wallet_market_transaction_status_transfer_in_successful_title = "转入成功";
+wallet_market_transaction_status_transfer_out_successful_title = "转出成功";
+wallet_market_transaction_status_transfer_in_failed_title = "转入失败";
+wallet_market_transaction_status_transfer_out_failed_title = "转出失败";
+wallet_market_transaction_status_exchange_failed_title = "兑换失败";
+wallet_market_transaction_status_exchange_fsuccessful_title = "兑换成功";
+wallet_market_transaction_status_exchanging_title = "兑换中";
+wallet_market_transaction_content_token_title = "通证：";
+wallet_market_transaction_content_exchange_rate_title = "汇率：";
+wallet_market_transaction_content_miner_fee_title = "矿工费用：";
+wallet_market_transaction_content_order_time_title = "下单时间：";
+wallet_market_transaction_content_order_done_time_title = "成交时间：";
+wallet_market_transaction_content_order_fee_title = "手续费：";
+
+/************* 数字银行首页 *******************/
+// 内容
+wallet_bank_total_deposit_title = "存款总额（$）";
+wallet_bank_loan_amount_limit_title = "可借总额（$）";
+wallet_bank_total_benefit_title = "累计收益（$）";
+wallet_bank_yesterday_earnings_button_title = "昨日收益";
+wallet_bank_deposit_market_title = "存款市场";
+wallet_bank_loan_market_title = "借款市场";
+wallet_bank_deposit_orders_alert_title = "存款订单";
+wallet_bank_loan_orders_alert_title = "借款订单";
+wallet_bank_yield_framing_rules_button_title = "存 | 借挖矿规则";
+
+/************* 数字银行存款订单 *******************/
+// 标题
+wallet_bank_deposit_orders_navigationbar_title = "存款订单";
+// 内容
+wallet_deposit_orders_title = "当前存款";
+wallet_deposit_orders_order_state_title = "收益中";
+wallet_deposit_orders_order_withdraw_button_title = "提取";
+wallet_deposit_orders_total_amount_title = "本金";
+wallet_deposit_orders_income_title = "收益";
+wallet_deposit_orders_annualized_return_title = "年化收益率";
+wallet_deposit_orders_empty_title = "暂无数据";
+// 提示
+// 数字银行赎回
+wallet_bank_redeem_alert_title = "提取";
+wallet_bank_redeem_alert_textfield_placeholder = "请输入提取数量";
+wallet_bank_redeem_alert_amount_title = "可提数量：";
+wallet_bank_redeem_alert_amount_select_total_title = "全部";
+wallet_bank_redeem_alert_warring_content = "如果您当前有借贷操作，则需将部分存款作为质押金。提取质押金需还对应数量的借款金额。";
+wallet_bank_redeem_alert_confirm_button_title = "提取";
+// 错误
+wallet_bank_withdraw_token_unactivated_error = "提款币尚未开启，请确认";
+wallet_bank_withdraw_amount_empty_error = "未输入";
+wallet_bank_withdraw_amount_invalid_error = "输入无效";
+wallet_bank_withdraw_amount_too_large_error = "输入金额高于贷款金额";
+wallet_bank_withdraw_data_invalid_error = "数据异常";
+
+/************* 数字银行存款明细 *******************/
+// 标题
+wallet_bank_deposit_orders_list_navigationbar_title = "存款明细";
+// 内容
+wallet_deposit_list_order_token_select_title = "全部币种";
+wallet_deposit_list_order_status_title = "全部状态";
+wallet_deposit_list_order_status_withdrawal_finish_title = "已提取";
+wallet_deposit_list_order_status_withdrawal_failed_title = "提取失败";
+wallet_deposit_list_order_status_withdrawal_processing_title = "提取中";
+wallet_deposit_list_order_status_deposit_finish_title = "已存款";
+wallet_deposit_list_order_status_deposit_failed_title = "存款失败";
+wallet_deposit_list_order_status_deposit_processing_title = "存款中";
+
+/************* 数字银行借款订单 *******************/
+// 标题
+wallet_bank_loan_orders_navigationbar_title = "借款订单";
+wallet_bank_loan_detail_navigationbar_title = "借款详情";
+// 内容
+wallet_bank_loan_orders_title = "当前借款";
+wallet_bank_loan_order_amount_title = "待还金额";
+wallet_bank_loan_orders_empty_title = "暂无数据";
+
+/************* 数字银行借款明细 *******************/
+// 标题
+wallet_bank_loan_orders_list_navigationbar_title = "借款明细";
+// 内容
+wallet_bank_loan_detail_remaining_payment_amount_title = "待还金额";
+wallet_bank_loan_detail_loan_detail_title = "借款明细";
+wallet_bank_loan_detail_deposit_detail_title = "还款明细";
+wallet_bank_loan_detail_clearing_detail_title = "清算明细";
+wallet_bank_loan_detail_loan_detail_time_title = "时间";
+wallet_bank_loan_detail_loan_detail_amount_title = "数量";
+wallet_bank_loan_detail_loan_detail_status_title = "状态";
+wallet_bank_loan_detail_clearing_detail_clearing_amount_title = "被清算";
+wallet_bank_loan_detail_clearing_detail_deduction_amount_title = "已抵扣";
+wallet_bank_loan_detail_clearing_detail_status_title = "已清算";
+wallet_bank_loan_detail_deposit_status_deposited_title = "已还款";
+wallet_bank_loan_detail_deposit_status_depositing_title = "还款中";
+wallet_bank_loan_detail_loan_status_loaned_title = "已借款";
+wallet_bank_loan_detail_loan_status_loaning_title = "借款中";
+wallet_bank_loan_detail_loan_status_failed_title = "借款失败";
+wallet_bank_loan_detail_deposit_status_failed_title = "还款失败";
+wallet_bank_loan_detail_repayment_button_title = "立即还款";
+
+/************* 数字银行还款 *******************/
+// 标题
+wallet_bank_repayment_navigationbar_title = "还款";
+// 内容
+wallet_bank_repayment_button_title = "立即还款";
+wallet_bank_repayment_title = "我要还";
+wallet_bank_repayment_textfield_placeholder_a = "起";
+wallet_bank_repayment_textfield_placeholder_b = "每";
+wallet_bank_repayment_textfield_placeholder_c = "递增";
+wallet_bank_repayment_repayment_amount_title = "待还金额：";
+wallet_bank_repayment_repayment_amount_total_button_title = "全部";
+wallet_bank_repayment_loan_rate_title = "借贷率";
+wallet_bank_repayment_miner_fees_title = "矿工费用";
+wallet_bank_repayment_pay_account_title = "还款账户";
+wallet_bank_repayment_pay_account_content = "账户余额";
+// 还款WalletConnect
+wallet_bank_repayment_loan_interest_title = "贷款利息";
+wallet_bank_repayment_repayment_total_amount_title = "还款总额";
+// 错误
+wallet_bank_repayment_token_unactivated_error = "还款币尚未开启，请确认";
+wallet_bank_repayment_amount_empty_error = "未输入";
+wallet_bank_repayment_amount_invalid_error = "输入无效";
+wallet_bank_repayment_amount_too_little_error = "输入金额低于最低还贷金额";
+wallet_bank_repayment_amount_too_large_error = "输入金额高于贷款金额";
+wallet_bank_repayment_balance_insufficient_error = "余额不足";
+wallet_bank_repayment_data_invalid_error = "数据异常";
+// 提示
+wallet_bank_repayment_submit_successful = "还款订单提交成功";
+wallet_bank_repayment_submit_failed = "还款订单提交失败";
+
+/************* 数字银行存款 *******************/
+// 标题
+wallet_bank_deposit_navigationbar_title = "存款";
+// 内容
+wallet_bank_deposit_button_title = "立即存款";
+wallet_bank_deposit_title = "我要存";
+wallet_bank_deposit_select_token_button_title = "选择币种";
+wallet_bank_deposit_amount_title = "可用余额：";
+wallet_bank_deposit_limit_amount_title = "每日限额：";
+wallet_bank_deposit_year_rate_title = "存款年利率";
+wallet_bank_deposit_pledge_rate_title = "质押率";
+wallet_bank_deposit_pledge_rate_descript_title = "质押率=借贷数量/存款数量";
+wallet_bank_deposit_pay_account_title = "支付方式";
+wallet_bank_deposit_pay_account_content = "钱包余额";
+wallet_bank_deposit_describe_title = "产品说明";
+wallet_bank_deposit_question_title = "常见问题";
+// 错误
+wallet_bank_deposit_token_unactivated_error = "存款币尚未开启，请确认";
+wallet_bank_deposit_balance_empty_error = "余额为0";
+wallet_bank_deposit_amount_invalid_error = "输入无效";
+wallet_bank_deposit_balance_insufficient_error = "余额不足";
+wallet_bank_deposit_amount_too_little_error = "输入金额低于最低充值额度";
+wallet_bank_deposit_quota_insufficient_error = "存款额度不足";
+wallet_bank_deposit_data_invalid_error = "数据异常";
+// 提示
+wallet_bank_deposit_submit_successful = "存款订单提交成功";
+wallet_bank_deposit_submit_failed = "存款订单提交失败";
+
+/************* 数字银行借贷 *******************/
+// 标题
+wallet_bank_loan_navigationbar_title = "借款";
+// 内容
+wallet_bank_loan_button_title = "立即借款";
+wallet_bank_loan_title = "我要借";
+wallet_bank_loan_balance_title = "可借额度：";
+wallet_bank_loan_year_rate_title = "借款利率";
+wallet_bank_loan_pledge_rate_title = "质押率";
+wallet_bank_loan_pledge_rate_descript_title = "质押率=借贷数量/存款数量";
+wallet_bank_loan_pay_account_title = "质押账户";
+wallet_bank_loan_pay_account_content = "银行余额";
+wallet_bank_loan_describe_title = "产品说明";
+wallet_bank_loan_question_title = "常见问题";
+wallet_bank_loan_legal_button_conent = "我已阅读并同意《质押借款服务协议》";
+wallet_bank_loan_legal_agreement_match_contnet = "《质押借款服务协议》";
+// 错误
+wallet_bank_loan_token_unactivated_error = "借款币尚未开启，请确认";
+wallet_bank_loan_amount_empty_error = "未输入";
+wallet_bank_loan_amount_invalid_error = "输入无效";
+wallet_bank_loan_amount_too_little_error = "输入金额低于最低借贷金额";
+wallet_bank_loan_quota_insufficient_error = "借款额度不足";
+wallet_bank_loan_data_invalid_error = "数据异常";
+wallet_bank_loan_disagree_legal_error = "请阅读并同意《质押借款服务协议》";
+// 提示
+wallet_bank_loan_token_unactivated_alert_title = "提示";
+wallet_bank_loan_token_unactivated_alert_content = "您选择的贷款币种，尚未激活，是否立即激活并贷款";
+wallet_bank_loan_token_unactivated_alert_cancel_button_title = "取消";
+wallet_bank_loan_token_unactivated_alert_confirm_button_title = "确定";
+wallet_bank_loan_submit_successful = "借款订单提交成功";
+wallet_bank_loan_submit_failed = "借款订单提交失败";
+
+/************* 数字银行赎回 *******************/
+wallet_bank_redeem_amount_title = "提取数量";
+
+/************* 绑定手机 *******************/
+// 标题
+wallet_phone_verify_navigation_title = "验证手机号";
+// 内容
+wallet_bind_phone_get_secure_code_button_title = "获取验证码";
+wallet_bind_phone_tips_content = "1. 每个手机号有三次验证机会\n2. 请您放心，手机号不会绑定您的钱包\n3. 验证成功后可获取 10 VLS";
+wallet_bind_phone_phone_number_textfield_placeholder = "请输入手机号";
+wallet_bind_phone_phone_secure_code_textfield_placeholder = "请输入验证码";
+wallet_bind_phone_phone_invited_textfield_placeholder = "邀请人VLS地址（选填）";
+wallet_bind_phone_confirm_button_title = "立即获取";
+// 错误
+wallet_verify_mobile_phone_area_unselect_error = "请选择您的手机号区域";
+wallet_verify_mobile_phone_number_empty_error = "请填写手机号";
+wallet_verify_mobile_secure_code_empty_error = "请填写验证码";
+// 提示
+wallet_verify_mobile_phone_successful = "验证成功";
+
+/************* 国家和地区 *******************/
+// 标题
+wallet_phone_area_navigation_title = "国家和地区";
+
+/************* 收益明细 *******************/
+// 标题
+wallet_profit_list_navigation_title = "收益明细";
+// 内容
+wallet_profit_invitation_title = "邀请好友";
+wallet_profit_pool_title = "资金池";
+wallet_profit_bank_title = "数字银行";
+wallet_profit_invitation_address_title = "被邀请账号";
+wallet_profit_invitation_amount_title = "挖矿收益";
+wallet_profit_invitation_date_title = "邀请时间";
+wallet_profit_invitation_status_title = "状态";
+wallet_profit_invitation_status_success_title = "已到账";
+wallet_profit_invitation_status_processing_title = "未到账";
+wallet_profit_invitation_status_unknown_title = "状态异常";
+wallet_profit_pool_type_title = "操作类型";
+wallet_profit_pool_type_withdraw_title = "提取";
+wallet_profit_pool_type_loan_title = "借款";
+wallet_profit_pool_type_deposit_title = "存款";
+wallet_profit_pool_type_withdraw_title = "取款";
+wallet_profit_pool_type_repayment_title = "还款";
+wallet_profit_pool_type_profit_title = "一键提取";
+wallet_profit_pool_amount_title = "提取数量";
+wallet_profit_pool_date_title = "提取时间";
+wallet_profit_bank_market_withdraw_excitation_title = "我要提";
+wallet_profit_bank_withdraw_excitation_content = "资金池全部挖矿奖励";
+wallet_profit_market_withdraw_excitation_content = "数字银行全部挖矿奖励";
+
+/************* 消息通知中心 *******************/
+// 标题
+wallet_notification_navigation_title = "消息中心";
+// 内容
+wallet_notification_wallet_messages_title = "转账通知";
+wallet_notification_system_messages_title = "系统通知";
+wallet_notification_empty_default_title = "暂无消息";
+// 提示
+wallet_notification_clean_unread_success = "设置成功";
+wallet_notification_clean_unread_failed = "设置失败";
+
+/************* 系统通知详情 *******************/
+// 标题
+wallet_notification_system_message_detail_navigation_title = "详情";
+
+/************* 邀请奖励 *******************/
+// 标题
+wallet_invitatioin_reward_navigation_title = "邀请奖励";
+
+/************* 弹出提示（通用） *******************/
+// 解锁钱包
+wallet_type_in_password_title = "提示";
+wallet_type_in_password_content = "输入密码";
+wallet_type_in_password_textfield_placeholder = "密码";
+wallet_type_in_password_cancel_button_title = "取消";
+wallet_type_in_password_confirm_button_title = "确定";
+// 提示
+wallet_service_legal_loaded_error_title = "加载失败";
+wallet_service_legal_loaded_error_cancel_button_title = "确定";
+wallet_unactivated_alert_content_prifix = "您的";
+wallet_unactivated_alert_content = "钱包尚未激活，请激活后尝试添加资产";
+wallet_transaction_submit_success_content = "交易提交成功";
+
+/************* App错误（通用） *******************/
+// 请求遇到错误
+wallet_request_parse_json_error = "数据解析失败";
+wallet_request_data_code_error = "数据状态异常";
+wallet_request_data_empty_error = "数据返回为空";
+wallet_request_data_no_more_error = "没有更多数据";
+wallet_request_version_invalid_error = "App版本太旧";
+wallet_request_network_invalid_error = "网络异常";
+wallet_request_wallet_unactive_error = "钱包尚未激活";
+// 钥匙串相关错误
+wallet_keychain_set_password_failed_error = "保存密码失败";
+wallet_keychain_set_mnemonic_failed_error = "保存助记词失败";
+wallet_keychain_get_password_failed_error = "获取密码失败";
+wallet_keychain_get_password_empty_error = "获取密码为空";
+wallet_keychain_get_mnemonic_failed_error = "获取助记词失败";
+wallet_keychain_get_mnemonic_empty_error ="获取助记词为空";
+wallet_keychain_delete_password_failed_error ="删除密码失败";
+wallet_keychain_delete_mnemonic_failed_error ="删除助记词失败";
+wallet_keychain_search_sign_empty_error ="查询标示为空";
+// 加密相关
+wallet_crypto_password_empty_error = "待加密密码为空";
+wallet_crypto_password_invalid_error = "密码无效";
+wallet_crypto_mnemonic_empty_error = "待加密助记词为空";
+wallet_crypto_result_empty_error = "加密结果为空";
+wallet_crypto_result_to_base64_failed_error = "加密结果转Base64失败";
+wallet_crypto_result_to_base64_empty_error = "加密结果转Base64为空";
+wallet_crypto_decrypt_content_empty_error = "待解密密文为空";
+wallet_crypto_decrypt_result_empty_error = "解密结果为空";
+wallet_crypto_decrypt_result_failed_error = "解密失败";
+wallet_crypto_decrypt_result_to_mnemonic_array_failed_error = "解密结果转助记词数组失败";
+// 校验密码相关
+wallet_check_password_invalid_error = "密码需同时包含大小写字母、数字，长度8-20位";
+wallet_check_password_empty_error = "密码为空";
+wallet_check_password_failed_error = "密码不正确";

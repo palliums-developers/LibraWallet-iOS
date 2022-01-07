@@ -2,7 +2,7 @@
  platform :ios, '12.0'
  inhibit_all_warnings!
 
-target 'LibraWallet' do
+target 'ViolasWallet' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
   
@@ -33,14 +33,14 @@ target 'LibraWallet' do
 #  pod 'Firebase/Messaging'
   pod "DropDownMenuKit"
 #  pod 'WKWebViewJavascriptBridge'
-  # Pods for LibraWallet
+  # Pods for ViolasWallet
 
-  target 'LibraWalletTests' do
+  target 'ViolasWalletTests' do
     inherit! :search_paths
     # Pods for testing
   end
 
-  target 'LibraWalletUITests' do
+  target 'ViolasWalletUITests' do
     inherit! :search_paths
     # Pods for testing
   end
